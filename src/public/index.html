@@ -16,8 +16,31 @@
         </div>
       </header>
 
-      <main class="chat">
-        <!-- Messages will render here dynamically -->
+      <main class="layout">
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <div class="sidebar-title">Conversations</div>
+            <button class="new-chat">+ New</button>
+          </div>
+          <ul class="chat-list">
+            <li class="chat-item active">
+              <div class="chat-name">Welcome thread</div>
+              <div class="chat-sub">Last message · just now</div>
+            </li>
+            <li class="chat-item">
+              <div class="chat-name">Product updates</div>
+              <div class="chat-sub">Yesterday</div>
+            </li>
+            <li class="chat-item">
+              <div class="chat-name">Design sync</div>
+              <div class="chat-sub">Mon 2:14 PM</div>
+            </li>
+          </ul>
+        </aside>
+
+        <section class="chat">
+          <!-- Messages will render here dynamically -->
+        </section>
       </main>
 
       <footer class="composer">

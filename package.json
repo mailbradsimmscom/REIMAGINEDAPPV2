@@ -5,11 +5,16 @@
     "description": "Enterprise app scaffold (Node 20, ESM)",
     "type": "module",
     "engines": {
-      "node": ">=20.0.0"
+        "node": ">=20.0.0"
     },
     "scripts": {
-      "dev": "node --watch ./src/index.js",
-      "start": "node ./src/index.js",
-      "test": "node --test"
+        "dev": "node --watch ./src/start.js",
+        "start": "node ./src/start.js",
+        "test": "node --test"
+    },
+    "dependencies": {
+        "@pinecone-database/pinecone": "6.1.2",
+        "@supabase/supabase-js": "2.56.0",
+        "dotenv": "16.6.1"
     }
-  }
+}

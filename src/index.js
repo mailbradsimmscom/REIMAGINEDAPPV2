@@ -1,7 +1,13 @@
+import 'dotenv/config';
 import { createServer } from 'node:http';
 import { healthRoute } from './routes/health.route.js';
 import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
+import { debugTablesRoute } from './routes/debug.tables.route.js';
+import { debugEnvRoute } from './routes/debug.env.route.js';
+import { debugTableCheckRoute } from './routes/debug.tableCheck.route.js';
+import { debugPineconeRoute } from './routes/debug.pinecone.route.js';
+import { systemsListRoute, systemsGetRoute, systemsSearchRoute } from './routes/systems.routes.js';
 
 const server = createServer(async (req, res) => {
   try {
@@ -27,6 +33,34 @@ const server = createServer(async (req, res) => {
 
     if (req.url === '/health' && req.method === 'GET') {
       return healthRoute(req, res);
+    }
+
+    if (req.url === '/debug/tables' && req.method === 'GET') {
+      return debugTablesRoute(req, res);
+    }
+
+    if (req.url === '/debug/env' && req.method === 'GET') {
+      return debugEnvRoute(req, res);
+    }
+
+    if (req.url.startsWith('/debug/table') && req.method === 'GET') {
+      return debugTableCheckRoute(req, res);
+    }
+
+    if (req.url.startsWith('/debug/pinecone') && req.method === 'GET') {
+      return debugPineconeRoute(req, res);
+    }
+
+    if (req.url.startsWith('/systems/search') && req.method === 'GET') {
+      return systemsSearchRoute(req, res);
+    }
+
+    if (req.url === '/systems' && req.method === 'GET') {
+      return systemsListRoute(req, res);
+    }
+
+    if (req.url.startsWith('/systems/') && req.method === 'GET') {
+      return systemsGetRoute(req, res);
     }
 
     res.statusCode = 404;
