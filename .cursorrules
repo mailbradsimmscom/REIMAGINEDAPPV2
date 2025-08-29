@@ -1,0 +1,53 @@
+# STRICT RULES - NEVER VIOLATE
+
+## NEVER DO:
+- DELETE working code
+- Remove existing functionality  
+- Access database outside /repositories folder
+- Use console.log in production code
+- Hardcode API keys or URLs
+- Create test-*.js files in root
+- Modify .env or secrets
+
+## ALWAYS DO:
+- Use repository pattern for ALL database access
+- Keep database logic in /repositories only
+- Use environment variables from .env
+- Preserve existing functionality
+- Follow existing code patterns
+- Test changes before committing
+
+## ARCHITECTURE:
+- /repositories - ONLY place for database queries
+- /services - Business logic only
+- /routes - HTTP endpoints only
+- Never mix these layers
+
+# MODULE REQUIREMENTS
+
+## STRICT ESM MODE:
+- Use ONLY ES modules (import/export)
+- NEVER use require() or module.exports
+- Type: "module" must be in package.json
+- File extensions: .js with ESM syntax
+- Import must include .js extension: import x from './file.js'
+
+## NO MONOLITHIC FILES:
+- Max 150 lines per file
+- One class or service per file
+- Split large functions into smaller helpers
+- Separate concerns into different files
+- If a file does 2+ things, split it
+
+## FILE STRUCTURE:
+- Each route in separate file
+- Each repository in separate file  
+- Each service in separate file
+- Utils broken into small modules
+- One exported function/class per file
+
+## NODE 20 FEATURES:
+- Use native fetch() not axios
+- Use native crypto not bcrypt
+- Use native test runner not jest
+- Use top-level await

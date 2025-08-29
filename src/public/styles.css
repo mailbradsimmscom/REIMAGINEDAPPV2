@@ -1,0 +1,42 @@
+:root {
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --inbound: #f3f4f6;
+  --outbound: #10b981;
+  --outbound-text: #ffffff;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #f97316; /* orange */
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: #0b1320;
+}
+
+.app { max-width: 1100px; margin: 0 auto; min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; padding: 8px 16px 16px; }
+
+.header { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
+.status-dot { width: 10px; height: 10px; border-radius: 999px; background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.15); }
+.title { font-weight: 600; }
+.subtitle { color: var(--muted); font-size: 12px; }
+
+.chat { background: var(--panel); border: 1px solid var(--accent); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 18px; min-height: 300px; }
+
+.message { display: none; }
+
+.composer { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
+.composer input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border); background: #ffffff; color: #0b1320; outline: none; }
+.composer input::placeholder { color: #9ca3af; }
+.actions { display: flex; gap: 10px; }
+.composer button { height: 40px; padding: 0 14px; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent); color: white; cursor: pointer; }
+.composer button.secondary { background: transparent; color: var(--accent); }
+
+@media (max-width: 640px) {
+  .bubble { max-width: 92vw; }
+}
+
+

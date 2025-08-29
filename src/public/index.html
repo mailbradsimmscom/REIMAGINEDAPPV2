@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="status-dot" aria-hidden="true"></div>
+        <div>
+          <div class="title">Chat Interface</div>
+          <div class="subtitle">Online</div>
+        </div>
+      </header>
+
+      <main class="chat">
+        <!-- Messages will render here dynamically -->
+      </main>
+
+      <footer class="composer">
+        <input id="messageInput" type="text" placeholder="Type your message..." />
+        <div class="actions">
+          <button id="sendBtn" aria-label="Send">➤</button>
+          <button id="newTopicBtn" class="secondary">+ New Topic</button>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+  </html>
+
+
