@@ -472,6 +472,36 @@
                 </div>
 
                 <div class="card">
+                    <h3>Vector Database</h3>
+                    <div id="vector-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Pinecone Status</span>
+                            <span class="metric-value" id="pinecone-status">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Index Name</span>
+                            <span class="metric-value" id="pinecone-index">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Namespace</span>
+                            <span class="metric-value" id="pinecone-namespace">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Vector Count</span>
+                            <span class="metric-value" id="pinecone-vectors">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Dimension</span>
+                            <span class="metric-value" id="pinecone-dimension">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Index Fullness</span>
+                            <span class="metric-value" id="pinecone-fullness">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
                     <h3>Performance</h3>
                     <div id="performance-metrics">
                         <div class="metric">
@@ -600,6 +630,7 @@
         async function initDashboard() {
             await loadHealthData();
             await loadSystemsData();
+            await loadPineconeData();
             await loadLogs();
             await loadManufacturers();
             setDefaultRevisionDate();
@@ -607,6 +638,7 @@
             // Set up auto-refresh every 30 seconds
             refreshInterval = setInterval(async () => {
                 await loadHealthData();
+                await loadPineconeData();
                 await loadLogs();
             }, 30000);
         }
@@ -691,6 +723,40 @@
                 }
             } catch (error) {
                 console.error('Failed to load health data:', error);
+            }
+        }
+
+        // Load Pinecone data
+        async function loadPineconeData() {
+            try {
+                const response = await fetch('/admin/pinecone');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const pinecone = data.data;
+                    
+                    document.getElementById('pinecone-status').textContent = pinecone.status;
+                    document.getElementById('pinecone-index').textContent = pinecone.index;
+                    document.getElementById('pinecone-namespace').textContent = pinecone.namespace;
+                    document.getElementById('pinecone-vectors').textContent = pinecone.vectors;
+                    document.getElementById('pinecone-dimension').textContent = pinecone.dimension;
+                    document.getElementById('pinecone-fullness').textContent = pinecone.indexFullness;
+                } else {
+                    document.getElementById('pinecone-status').textContent = 'Error';
+                    document.getElementById('pinecone-index').textContent = 'N/A';
+                    document.getElementById('pinecone-namespace').textContent = 'N/A';
+                    document.getElementById('pinecone-vectors').textContent = 'N/A';
+                    document.getElementById('pinecone-dimension').textContent = 'N/A';
+                    document.getElementById('pinecone-fullness').textContent = 'N/A';
+                }
+            } catch (error) {
+                console.error('Failed to load Pinecone data:', error);
+                document.getElementById('pinecone-status').textContent = 'Error';
+                document.getElementById('pinecone-index').textContent = 'N/A';
+                document.getElementById('pinecone-namespace').textContent = 'N/A';
+                document.getElementById('pinecone-vectors').textContent = 'N/A';
+                document.getElementById('pinecone-dimension').textContent = 'N/A';
+                document.getElementById('pinecone-fullness').textContent = 'N/A';
             }
         }
 

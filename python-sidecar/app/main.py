@@ -57,6 +57,25 @@ async def get_version():
         parser_version="1.0.0"
     )
 
+@app.get("/v1/pinecone/stats")
+async def get_pinecone_stats():
+    """Get Pinecone index statistics"""
+    try:
+        logger.info("Getting Pinecone index statistics")
+        
+        # Get stats from Pinecone client
+        stats = pinecone_client.get_index_stats()
+        
+        if not stats["success"]:
+            raise HTTPException(status_code=500, detail=stats["error"])
+        
+        logger.info(f"Retrieved Pinecone stats: {stats['total_vector_count']} total vectors")
+        return JSONResponse(content=stats)
+        
+    except Exception as e:
+        logger.error(f"Failed to get Pinecone stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/v1/parse", response_model=ParseResponse)
 async def parse_pdf(
     file: UploadFile = File(...),

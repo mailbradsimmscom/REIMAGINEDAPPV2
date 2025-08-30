@@ -8,7 +8,7 @@ import { debugEnvRoute } from './routes/debug.env.route.js';
 import { debugTableCheckRoute } from './routes/debug.tableCheck.route.js';
 import { systemsListRoute, systemsGetRoute, systemsSearchRoute } from './routes/systems.routes.js';
 import { chatProcessMessageRoute, chatGetHistoryRoute, chatListChatsRoute, chatGetContextRoute } from './routes/chat.routes.js';
-import { adminDashboardRoute, adminHealthRoute, adminLogsRoute, adminSystemsRoute, adminManufacturersRoute, adminModelsRoute } from './routes/admin.routes.js';
+import { adminDashboardRoute, adminHealthRoute, adminLogsRoute, adminSystemsRoute, adminManufacturersRoute, adminModelsRoute, adminPineconeRoute } from './routes/admin.routes.js';
 import { documentIngestRoute, documentJobStatusRoute, documentListJobsRoute, documentListDocumentsRoute, documentGetDocumentRoute } from './routes/document.routes.js';
 import { logger } from './utils/logger.js';
 import jobProcessor from './services/job.processor.js';
@@ -136,6 +136,10 @@ const server = createServer(async (req, res) => {
 
     if (req.url.startsWith('/admin/systems/models') && req.method === 'GET') {
       return adminModelsRoute(req, res);
+    }
+
+    if (req.url === '/admin/pinecone' && req.method === 'GET') {
+      return adminPineconeRoute(req, res);
     }
 
     // Document processing routes

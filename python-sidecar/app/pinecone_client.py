@@ -56,6 +56,42 @@ class PineconeClient:
                 "processing_time": time.time() - start_time
             }
     
+    def get_index_stats(self) -> Dict[str, Any]:
+        """Get Pinecone index statistics"""
+        try:
+            if not self.index:
+                logger.warning("Pinecone not initialized, cannot get stats")
+                return {
+                    "success": False,
+                    "error": "Pinecone not initialized"
+                }
+            
+            # Get index statistics
+            stats = self.index.describe_index_stats()
+            
+            # Convert namespaces to JSON-serializable format
+            namespaces_dict = {}
+            if stats.namespaces:
+                for namespace_name, namespace_data in stats.namespaces.items():
+                    namespaces_dict[namespace_name] = {
+                        "vector_count": namespace_data.vector_count
+                    }
+            
+            return {
+                "success": True,
+                "total_vector_count": stats.total_vector_count,
+                "namespaces": namespaces_dict,
+                "dimension": stats.dimension,
+                "index_fullness": stats.index_fullness
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to get index stats: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
     def upsert_vectors(self, vectors: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Upsert vectors to Pinecone"""
         start_time = time.time()

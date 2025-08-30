@@ -187,11 +187,83 @@ export async function adminModelsRoute(req, res) {
   }
 }
 
+// Get Pinecone status and metrics
+export async function adminPineconeRoute(req, res) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    // Call Python sidecar to get Pinecone status
+    const sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+    
+    // First check health
+    const healthResponse = await fetch(`${sidecarUrl}/health`);
+    if (!healthResponse.ok) {
+      throw new Error(`Sidecar health check failed: ${healthResponse.status}`);
+    }
+    
+    const healthData = await healthResponse.json();
+    
+    // Then get Pinecone stats
+    const statsResponse = await fetch(`${sidecarUrl}/v1/pinecone/stats`);
+    let statsData = null;
+    
+    if (statsResponse.ok) {
+      statsData = await statsResponse.json();
+      requestLogger.info('Pinecone stats retrieved', { 
+        totalVectors: statsData?.total_vector_count,
+        dimension: statsData?.dimension
+      });
+    } else {
+      requestLogger.warn('Failed to get Pinecone stats', { 
+        status: statsResponse.status,
+        statusText: statsResponse.statusText 
+      });
+    }
+    
+    // Get basic Pinecone info from environment
+    const pineconeData = {
+      status: healthData.status === 'healthy' ? 'Connected' : 'Disconnected',
+      index: process.env.PINECONE_INDEX || 'reimaginedsv',
+      namespace: process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS',
+      vectors: statsData?.total_vector_count || 'N/A',
+      totalVectors: statsData?.total_vector_count || 0,
+      dimension: statsData?.dimension || 'N/A',
+      indexFullness: '0.0%',
+      lastChecked: new Date().toISOString()
+    };
+    
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify({
+      success: true,
+      data: pineconeData
+    }));
+    
+    requestLogger.info('Pinecone status retrieved', { 
+      status: pineconeData.status,
+      index: pineconeData.index,
+      vectorCount: pineconeData.vectors
+    });
+    
+  } catch (error) {
+    requestLogger.error('Failed to get Pinecone status', { error: error.message });
+    
+    res.statusCode = 500;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify({
+      success: false,
+      error: 'Failed to get Pinecone status',
+      details: error.message
+    }));
+  }
+}
+
 export const adminRoutes = {
   adminDashboardRoute,
   adminHealthRoute,
   adminLogsRoute,
   adminSystemsRoute,
   adminManufacturersRoute,
-  adminModelsRoute
+  adminModelsRoute,
+  adminPineconeRoute
 };
