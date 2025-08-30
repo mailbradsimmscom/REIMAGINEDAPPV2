@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Chat Interface</title>
+    <title>Enterprise Chat System</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -11,49 +11,63 @@
       <header class="header">
         <div class="status-dot" aria-hidden="true"></div>
         <div>
-          <div class="title">Chat Interface</div>
-          <div class="subtitle">Online</div>
+          <div class="title">Enterprise Chat System</div>
+          <div class="subtitle">Connected to Systems Database</div>
         </div>
       </header>
 
       <main class="layout">
         <aside class="sidebar">
           <div class="sidebar-header">
-            <div class="sidebar-title">Conversations</div>
-            <button class="new-chat">+ New</button>
+            <div class="sidebar-title">Chat Sessions</div>
+            <button class="new-chat" id="newChatBtn">+ New Chat</button>
           </div>
-          <ul class="chat-list">
-            <li class="chat-item active">
-              <div class="chat-name">Welcome thread</div>
-              <div class="chat-sub">Last message · just now</div>
-            </li>
-            <li class="chat-item">
-              <div class="chat-name">Product updates</div>
-              <div class="chat-sub">Yesterday</div>
-            </li>
-            <li class="chat-item">
-              <div class="chat-name">Design sync</div>
-              <div class="chat-sub">Mon 2:14 PM</div>
-            </li>
-          </ul>
+          <div class="chat-list" id="chatList">
+            <!-- Chat sessions will be loaded here dynamically -->
+          </div>
         </aside>
 
         <section class="chat">
-          <!-- Messages will render here dynamically -->
+          <div class="chat-header">
+            <h2 id="currentChatName">Start a New Conversation</h2>
+            <p id="currentChatDescription">Ask questions about your systems and get intelligent responses</p>
+          </div>
+          
+          <div class="messages" id="messages">
+            <!-- Messages will be rendered here dynamically -->
+            <div class="message system">
+              <div class="message-content">
+                <p>Welcome! I can help you with information about your systems. Try asking:</p>
+                <ul>
+                  <li>"Tell me about my watermaker"</li>
+                  <li>"What GPS systems do I have?"</li>
+                  <li>"Show me my navigation equipment"</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
       <footer class="composer">
-        <input id="messageInput" type="text" placeholder="Type your message..." />
-        <div class="actions">
-          <button id="sendBtn" aria-label="Send">➤</button>
-          <button id="newTopicBtn" class="secondary">+ New Topic</button>
+        <div class="input-container">
+          <input 
+            id="messageInput" 
+            type="text" 
+            placeholder="Type your message..." 
+            autocomplete="off"
+          />
         </div>
+        <button id="sendBtn" aria-label="Send message">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+          </svg>
+        </button>
       </footer>
     </div>
 
     <script type="module" src="/app.js"></script>
   </body>
-  </html>
+</html>
 
 

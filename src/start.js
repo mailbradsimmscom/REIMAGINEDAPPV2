@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
-await import('./index.js');
+import './index.js';
 
 

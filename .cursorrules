@@ -16,6 +16,7 @@
 - Preserve existing functionality
 - Follow existing code patterns
 - Test changes before committing
+- Make active additions to the admin logging dashboard to log and visual new functionality properly
 
 ## ARCHITECTURE:
 - /repositories - ONLY place for database queries
@@ -33,7 +34,7 @@
 - Import must include .js extension: import x from './file.js'
 
 ## NO MONOLITHIC FILES:
-- Max 150 lines per file
+- Max 250 lines per file
 - One class or service per file
 - Split large functions into smaller helpers
 - Separate concerns into different files

@@ -13,7 +13,6 @@
         "test": "node --test"
     },
     "dependencies": {
-        "@pinecone-database/pinecone": "6.1.2",
         "@supabase/supabase-js": "2.56.0",
         "dotenv": "16.6.1"
     }
