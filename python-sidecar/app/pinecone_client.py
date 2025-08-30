@@ -2,7 +2,7 @@ import os
 import time
 import uuid
 from typing import List, Dict, Any
-import pinecone
+from pinecone import Pinecone
 from openai import OpenAI
 import logging
 
@@ -12,14 +12,13 @@ class PineconeClient:
     def __init__(self):
         self.openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
         self.pinecone_api_key = os.getenv('PINECONE_API_KEY')
-        self.pinecone_environment = os.getenv('PINECONE_ENVIRONMENT', 'us-east-1-aws')
         self.index_name = os.getenv('PINECONE_INDEX', 'reimaginedsv')
         self.namespace = os.getenv('PINECONE_NAMESPACE', 'REIMAGINEDDOCS')
         
         # Initialize Pinecone
         if self.pinecone_api_key:
-            pinecone.init(api_key=self.pinecone_api_key, environment=self.pinecone_environment)
-            self.index = pinecone.Index(self.index_name)
+            self.pinecone = Pinecone(api_key=self.pinecone_api_key)
+            self.index = self.pinecone.Index(self.index_name)
         else:
             logger.warning("PINECONE_API_KEY not found, Pinecone operations will be simulated")
             self.index = None

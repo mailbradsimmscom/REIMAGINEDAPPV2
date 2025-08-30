@@ -4,6 +4,10 @@ import json
 import logging
 from typing import Optional, Dict, Any
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv('../../.env')
 
 from parser import PDFParser
 from models import (

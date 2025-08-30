@@ -9,6 +9,7 @@ class DocumentService {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
     this.supabase = getSupabaseClient();
+    this.supabaseStorage = getSupabaseStorageClient();
   }
 
   // Generate deterministic doc_id from file content
@@ -21,7 +22,7 @@ class DocumentService {
     try {
       const filePath = `manuals/${docId}/${fileName}`;
       
-      const { data, error } = await this.supabase.storage
+      const { data, error } = await this.supabaseStorage.storage
         .from('documents')
         .upload(filePath, fileBuffer, {
           contentType: 'application/pdf',
@@ -209,9 +210,15 @@ class DocumentService {
         throw new Error('Document not found');
       }
 
+      // Get file name from job storage path
+      const fileName = job.storage_path ? job.storage_path.split('/').pop() : null;
+      if (!fileName) {
+        throw new Error('File name not found in job storage path');
+      }
+
       // Get file from Supabase Storage
-      const filePath = `manuals/${job.doc_id}/${document.file_name}`;
-      const { data: fileData, error: fileError } = await this.supabase.storage
+      const filePath = `manuals/${job.doc_id}/${fileName}`;
+      const { data: fileData, error: fileError } = await this.supabaseStorage.storage
         .from('documents')
         .download(filePath);
 
@@ -219,8 +226,15 @@ class DocumentService {
         throw new Error(`Failed to download file: ${fileError.message}`);
       }
 
+      if (!fileData || typeof fileData.arrayBuffer !== 'function') {
+        throw new Error(`Failed to download file: Invalid file data`);
+      }
+
+      // Convert to buffer
+      const fileBuffer = await fileData.arrayBuffer();
+
       // Call Python sidecar for processing
-      const processingResult = await this.callPythonSidecar(fileData, job, document);
+      const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
 
       // Update job with results
       await documentRepository.updateJobProgress(jobId, {
@@ -258,13 +272,13 @@ class DocumentService {
   }
 
   // Call Python sidecar for document processing
-  async callPythonSidecar(fileBuffer, job, document) {
+  async callPythonSidecar(fileBuffer, job, document, fileName) {
     try {
       const formData = new FormData();
       
       // Add file
       const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-      formData.append('file', blob, document.file_name);
+      formData.append('file', blob, fileName);
       
       // Add metadata
       const metadata = {
@@ -274,7 +288,7 @@ class DocumentService {
         revision_date: document.revision_date,
         language: document.language,
         job_id: job.job_id,
-        file_name: document.file_name
+        file_name: fileName
       };
       formData.append('doc_metadata', JSON.stringify(metadata));
       
