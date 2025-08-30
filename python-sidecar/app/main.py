@@ -76,6 +76,45 @@ async def get_pinecone_stats():
         logger.error(f"Failed to get Pinecone stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/v1/pinecone/search")
+async def search_pinecone(request: dict):
+    """Search Pinecone vectors"""
+    try:
+        logger.info("Searching Pinecone vectors")
+        
+        # Parse request body properly
+        query = request.get("query", "")
+        top_k = request.get("topK", 10)
+        namespace = request.get("namespace", "REIMAGINEDDOCS")
+        filter_dict = request.get("filter", {})
+        include_metadata = request.get("includeMetadata", True)
+        include_values = request.get("includeValues", False)
+        
+        logger.info(f"Search params: query='{query}', top_k={top_k}, namespace='{namespace}'")
+        
+        if not query:
+            raise HTTPException(status_code=400, detail="Query is required")
+        
+        # Search vectors
+        search_results = pinecone_client.search_vectors(
+            query=query,
+            top_k=top_k,
+            namespace=namespace,
+            filter_dict=filter_dict,
+            include_metadata=include_metadata,
+            include_values=include_values
+        )
+        
+        if not search_results["success"]:
+            raise HTTPException(status_code=500, detail=search_results["error"])
+        
+        logger.info(f"Search completed: {len(search_results['matches'])} results")
+        return JSONResponse(content=search_results)
+        
+    except Exception as e:
+        logger.error(f"Failed to search Pinecone: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/v1/parse", response_model=ParseResponse)
 async def parse_pdf(
     file: UploadFile = File(...),

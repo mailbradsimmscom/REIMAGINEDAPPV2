@@ -91,6 +91,63 @@ class PineconeClient:
                 "success": False,
                 "error": str(e)
             }
+
+    def search_vectors(self, query: str, top_k: int = 10, namespace: str = None, 
+                      filter_dict: Dict[str, Any] = None, include_metadata: bool = True, 
+                      include_values: bool = False) -> Dict[str, Any]:
+        """Search vectors in Pinecone"""
+        try:
+            if not self.index:
+                logger.warning("Pinecone not initialized, simulating search")
+                return {
+                    "success": True,
+                    "matches": [],
+                    "namespace": namespace or self.namespace,
+                    "simulated": True
+                }
+            
+            # Generate embedding for query
+            embedding_result = self.generate_embedding(query)
+            if not embedding_result["success"]:
+                return {
+                    "success": False,
+                    "error": f"Failed to generate embedding: {embedding_result['error']}"
+                }
+            
+            # Search in Pinecone
+            search_results = self.index.query(
+                vector=embedding_result["vector"],
+                top_k=top_k,
+                namespace=namespace or self.namespace,
+                filter=filter_dict,
+                include_metadata=include_metadata,
+                include_values=include_values
+            )
+            
+            # Convert matches to JSON-serializable format
+            matches = []
+            for match in search_results.matches:
+                match_dict = {
+                    "id": match.id,
+                    "score": match.score,
+                    "metadata": match.metadata or {},
+                    "values": match.values if include_values else None
+                }
+                matches.append(match_dict)
+            
+            return {
+                "success": True,
+                "matches": matches,
+                "namespace": namespace or self.namespace,
+                "query": query
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to search vectors: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
     
     def upsert_vectors(self, vectors: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Upsert vectors to Pinecone"""

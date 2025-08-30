@@ -10,6 +10,7 @@ import { systemsListRoute, systemsGetRoute, systemsSearchRoute } from './routes/
 import { chatProcessMessageRoute, chatGetHistoryRoute, chatListChatsRoute, chatGetContextRoute } from './routes/chat.routes.js';
 import { adminDashboardRoute, adminHealthRoute, adminLogsRoute, adminSystemsRoute, adminManufacturersRoute, adminModelsRoute, adminPineconeRoute } from './routes/admin.routes.js';
 import { documentIngestRoute, documentJobStatusRoute, documentListJobsRoute, documentListDocumentsRoute, documentGetDocumentRoute } from './routes/document.routes.js';
+import { pineconeSearchRoute, pineconeStatsRoute, pineconeDocumentChunksRoute, pineconeQueryRoute } from './routes/pinecone.routes.js';
 import { logger } from './utils/logger.js';
 import jobProcessor from './services/job.processor.js';
 
@@ -157,6 +158,23 @@ const server = createServer(async (req, res) => {
 
     if (req.url.startsWith('/admin/docs/documents') && req.method === 'GET') {
       return documentListDocumentsRoute(req, res);
+    }
+
+    // Pinecone routes
+    if (req.url === '/pinecone/search' && req.method === 'POST') {
+      return pineconeSearchRoute(req, res);
+    }
+
+    if (req.url === '/pinecone/stats' && req.method === 'GET') {
+      return pineconeStatsRoute(req, res);
+    }
+
+    if (req.url.startsWith('/pinecone/document/') && req.url.includes('/chunks') && req.method === 'GET') {
+      return pineconeDocumentChunksRoute(req, res);
+    }
+
+    if (req.url === '/pinecone/query' && req.method === 'POST') {
+      return pineconeQueryRoute(req, res);
     }
 
     res.statusCode = 404;
