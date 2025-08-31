@@ -1,5 +1,6 @@
 import pineconeRepository from '../repositories/pinecone.repository.js';
 import { logger } from '../utils/logger.js';
+import { env } from '../config/env.js';
 
 class PineconeService {
   constructor() {
@@ -234,7 +235,7 @@ class PineconeService {
     try {
       const {
         topK = 50,
-        namespace = process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS'
+        namespace = env.pineconeNamespace
       } = options;
 
       // Search for chunks from specific document

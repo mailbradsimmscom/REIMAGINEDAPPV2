@@ -12,11 +12,12 @@ import { adminDashboardRoute, adminHealthRoute, adminLogsRoute, adminSystemsRout
 import { documentIngestRoute, documentJobStatusRoute, documentListJobsRoute, documentListDocumentsRoute, documentGetDocumentRoute } from './routes/document.routes.js';
 import { pineconeSearchRoute, pineconeStatsRoute, pineconeDocumentChunksRoute, pineconeQueryRoute } from './routes/pinecone.routes.js';
 import { logger } from './utils/logger.js';
+import { env } from './config/env.js';
 import jobProcessor from './services/job.processor.js';
 
 // Sidecar health check function
 async function checkSidecarHealth() {
-  const sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+  const sidecarUrl = env.pythonSidecarUrl;
   const maxRetries = 10;
   const retryDelay = 3000;
   
@@ -225,7 +226,7 @@ const server = createServer(async (req, res) => {
   }
 });
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+  const port = env.port;
 
 // Start server with sidecar health check
 async function startServer() {
@@ -240,8 +241,8 @@ async function startServer() {
     server.listen(port, async () => {
       await logger.info('Server started', { 
         port, 
-        environment: process.env.NODE_ENV || 'development',
-        version: process.env.APP_VERSION || '1.0.0',
+            environment: env.nodeEnv,
+    version: env.appVersion,
         sidecarHealthy
       });
       

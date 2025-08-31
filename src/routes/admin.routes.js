@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { logger } from '../utils/logger.js';
+import { env } from '../config/env.js';
 import { getSupabaseClient } from '../repositories/supabaseClient.js';
 
 // Admin authentication middleware (simple for now)
@@ -31,8 +32,8 @@ export async function adminHealthRoute(req, res) {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       memory: process.memoryUsage(),
-      environment: process.env.NODE_ENV || 'development',
-      version: process.env.APP_VERSION || '1.0.0'
+      environment: env.nodeEnv,
+      version: env.appVersion
     };
 
     res.statusCode = 200;
@@ -193,7 +194,7 @@ export async function adminPineconeRoute(req, res) {
   
   try {
     // Call Python sidecar to get Pinecone status
-    const sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+    const sidecarUrl = env.pythonSidecarUrl;
     
     // Check sidecar health
     let sidecarHealth = { status: 'unknown', error: null };
@@ -241,8 +242,8 @@ export async function adminPineconeRoute(req, res) {
     // Get basic Pinecone info from environment
     const pineconeData = {
       status: healthData.status === 'healthy' ? 'Connected' : 'Disconnected',
-      index: process.env.PINECONE_INDEX || 'reimaginedsv',
-      namespace: process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS',
+      index: env.pineconeIndex,
+      namespace: env.pineconeNamespace,
       vectors: statsData?.total_vector_count || 'N/A',
       totalVectors: statsData?.total_vector_count || 0,
       dimension: statsData?.dimension || 'N/A',

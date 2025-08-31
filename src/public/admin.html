@@ -1002,9 +1002,11 @@
                 fileName: uploadQueue[0].file.name
             };
             
-            // Debug: Log metadata being sent
-            console.log('Uploading with metadata:', metadata);
-            console.log('File:', uploadQueue[0].file.name, 'Size:', uploadQueue[0].file.size);
+            // Debug: Log metadata being sent (development only)
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.log('Uploading with metadata:', metadata);
+                console.log('File:', uploadQueue[0].file.name, 'Size:', uploadQueue[0].file.size);
+            }
             
             // Upload first file (for now, handle one at a time)
             const file = uploadQueue[0].file;
@@ -1072,7 +1074,10 @@
             uploadQueue = [];
             updateUploadQueueDisplay();
             
-            console.log('Upload form reset successfully');
+            // Form reset confirmation (development only)
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.log('Upload form reset successfully');
+            }
         }
 
         async function pollJobStatus(jobId) {
@@ -1082,7 +1087,10 @@
                 
                 if (result.success) {
                     const status = result.data.status;
-                    console.log(`Job ${jobId} status: ${status}`);
+                    // Job status logging (development only)
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.log(`Job ${jobId} status: ${status}`);
+                    }
                     
                     if (status === 'completed') {
                         alert(`Job completed successfully!`);

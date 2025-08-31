@@ -47,7 +47,12 @@ export const env = Object.freeze({
   // Python sidecar configuration
   pythonSidecarUrl: process.env.PYTHON_SIDECAR_URL ?? 'http://localhost:8000',
   sidecarHealthCheckInterval: Number(process.env.SIDECAR_HEALTH_CHECK_INTERVAL ?? '30000'),
-  sidecarStartupTimeout: Number(process.env.SIDECAR_STARTUP_TIMEOUT ?? '30000')
+  sidecarStartupTimeout: Number(process.env.SIDECAR_STARTUP_TIMEOUT ?? '30000'),
+  
+  // Application configuration
+  nodeEnv: process.env.NODE_ENV ?? 'development',
+  appVersion: process.env.APP_VERSION ?? '1.0.0',
+  port: Number(process.env.PORT ?? '3000')
 });
 
 export default env;

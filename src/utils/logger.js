@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { env } from '../config/env.js';
 
 class Logger {
   constructor() {
@@ -25,8 +26,8 @@ class Logger {
       message,
       correlationId: meta.correlationId || randomUUID(),
       service: 'reimagined-app',
-      version: process.env.APP_VERSION || '1.0.0',
-      environment: process.env.NODE_ENV || 'development',
+      version: env.appVersion,
+      environment: env.nodeEnv,
       ...meta
     };
 

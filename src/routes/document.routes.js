@@ -118,9 +118,11 @@ export async function documentIngestRoute(req, res) {
     // Add file name to metadata
     metadata.fileName = fileName || 'document.pdf';
     
-    // Debug: Check if fileBuffer is corrupted
-    console.log('fileBuffer.length:', fileBuffer?.length);
-    console.log('docIdFromEmpty:', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'); // sha256("")
+                // Debug: Check if fileBuffer is corrupted
+            requestLogger.info('File buffer validation', { 
+              fileBufferLength: fileBuffer?.length,
+              docIdFromEmpty: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' // sha256("")
+            });
     
     // Create ingest job with synchronous upload
     const result = await documentService.createIngestJob(fileBuffer, metadata);

@@ -1,9 +1,10 @@
 import { logger } from '../utils/logger.js';
+import { env } from '../config/env.js';
 
 class PineconeRepository {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
-    this.sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+    this.sidecarUrl = env.pythonSidecarUrl;
   }
 
   // Get index statistics
@@ -34,7 +35,7 @@ class PineconeRepository {
     try {
       const {
         topK = 10,
-        namespace = process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS',
+        namespace = env.pineconeNamespace,
         filter = {},
         includeMetadata = true,
         includeValues = false
@@ -81,7 +82,7 @@ class PineconeRepository {
   }
 
   // Get vector by ID
-  async getVectorById(vectorId, namespace = process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS') {
+  async getVectorById(vectorId, namespace = env.pineconeNamespace) {
     try {
       const response = await fetch(`${this.sidecarUrl}/v1/pinecone/fetch`, {
         method: 'POST',
@@ -114,7 +115,7 @@ class PineconeRepository {
   }
 
   // Delete vectors by ID
-  async deleteVectors(vectorIds, namespace = process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS') {
+  async deleteVectors(vectorIds, namespace = env.pineconeNamespace) {
     try {
       const response = await fetch(`${this.sidecarUrl}/v1/pinecone/delete`, {
         method: 'POST',
@@ -150,7 +151,7 @@ class PineconeRepository {
   }
 
   // Get namespace statistics
-  async getNamespaceStats(namespace = process.env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS') {
+  async getNamespaceStats(namespace = env.pineconeNamespace) {
     try {
       const stats = await this.getIndexStats();
       

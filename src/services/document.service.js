@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/supabaseClient.js';
 import documentRepository from '../repositories/document.repository.js';
 import { logger } from '../utils/logger.js';
+import { env } from '../config/env.js';
 
 class DocumentService {
   constructor() {
@@ -22,7 +23,7 @@ class DocumentService {
     try {
       const filePath = `manuals/${docId}/${fileName}`;
       
-      console.log('Starting upload:', { docId, fileName, filePath, fileSize: fileBuffer.length });
+      this.requestLogger.info('Starting file upload', { docId, fileName, filePath, fileSize: fileBuffer.length });
       
       const { data, error } = await this.supabaseStorage.storage
         .from('documents')
@@ -32,19 +33,19 @@ class DocumentService {
         });
 
       if (error) {
-        console.error('Supabase upload error:', { 
-          error: error.message, 
-          code: error.code, 
-          details: error.details,
-          hint: error.hint,
-          docId, 
-          fileName,
-          filePath
-        });
+              this.requestLogger.error('Supabase upload error', { 
+        error: error.message, 
+        code: error.code, 
+        details: error.details,
+        hint: error.hint,
+        docId, 
+        fileName,
+        filePath
+      });
         throw error;
       }
       
-      console.log('Upload successful:', { 
+      this.requestLogger.info('Upload successful', { 
         docId, 
         fileName, 
         filePath: data.path,
@@ -59,7 +60,7 @@ class DocumentService {
       
       return data.path;
     } catch (error) {
-      console.error('Upload failed with details:', {
+      this.requestLogger.error('Upload failed with details', {
         error: error.message,
         stack: error.stack,
         docId,
@@ -98,8 +99,10 @@ class DocumentService {
       const finalDocId = doc_id || this.generateDocId(fileBuffer);
       
       // Debug: Check if we're getting empty file
-      console.log('finalDocId:', finalDocId);
-      console.log('fileBuffer.length in service:', fileBuffer?.length);
+      this.requestLogger.info('Document ingest job creation', { 
+        finalDocId, 
+        fileBufferLength: fileBuffer?.length 
+      });
       
       // Create job record
       const jobData = {
@@ -142,17 +145,17 @@ class DocumentService {
       // Upload file to storage synchronously
       try {
         const storagePath = await this.uploadFile(fileBuffer, metadata.fileName || 'document.pdf', finalDocId);
-        console.log('Upload successful, storagePath:', storagePath);
+                  this.requestLogger.info('Upload successful, storagePath', { storagePath });
         
         // Update job with storage path
         await documentRepository.updateJobStatus(job.job_id, 'queued', { storage_path: storagePath });
         
         // Update document with storage path
         await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
-      } catch (uploadError) {
-        console.error('Upload failed:', uploadError.message);
-        throw uploadError;
-      }
+              } catch (uploadError) {
+          this.requestLogger.error('Upload failed', { error: uploadError.message });
+          throw uploadError;
+        }
 
       this.requestLogger.info('Ingest job created', { 
         jobId: job.job_id, 
@@ -333,7 +336,7 @@ class DocumentService {
       formData.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
 
       // Call Python sidecar
-      const sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+      const sidecarUrl = env.pythonSidecarUrl;
       const response = await fetch(`${sidecarUrl}/v1/process-document`, {
         method: 'POST',
         body: formData
