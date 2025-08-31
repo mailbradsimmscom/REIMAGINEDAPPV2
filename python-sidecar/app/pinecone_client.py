@@ -212,7 +212,8 @@ class PineconeClient:
                         "chunk_index": i,
                         "chunk_type": chunk.get("type", "text"),
                         "page": chunk.get("page", 0),
-                        "chunk_id": chunk.get("id", str(uuid.uuid4()))
+                        "chunk_id": chunk.get("id", str(uuid.uuid4())),
+                        "content": chunk["content"]
                     }
                 )
                 

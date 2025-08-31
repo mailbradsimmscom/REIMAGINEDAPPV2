@@ -130,7 +130,7 @@ function buildQueryEnhancementPrompt(userQuery, systemsContext) {
   if (systemsContext.length > 0) {
     prompt += `Relevant Systems Context:\n`;
     systemsContext.forEach((system, index) => {
-      prompt += `${index + 1}. ${system.canonical_model_id}\n`;
+      prompt += `${index + 1}. ${system.id}\n`;
     });
     prompt += `\nEnhance the user query by incorporating relevant context from the systems data. Make it more specific and actionable for searching technical documentation.`;
   } else {
@@ -150,7 +150,7 @@ function buildSummarizationPrompt(messages, systemsContext) {
   if (systemsContext.length > 0) {
     prompt += `\nRelevant Systems Context:\n`;
     systemsContext.forEach((system, index) => {
-      prompt += `${index + 1}. ${system.canonical_model_id}\n`;
+      prompt += `${index + 1}. ${system.id}\n`;
     });
   }
   
@@ -169,7 +169,7 @@ function buildNamingPrompt(messages, systemsContext) {
   });
   
   if (systemsContext.length > 0) {
-    prompt += `\nSystems discussed: ${systemsContext.map(s => s.canonical_model_id).join(', ')}`;
+    prompt += `\nSystems discussed: ${systemsContext.map(s => s.id).join(', ')}`;
   }
   
   prompt += `\nGenerate a concise, descriptive name that captures the main topic or question.`;

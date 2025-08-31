@@ -479,6 +479,14 @@
                             <span class="metric-value" id="pinecone-status">Loading...</span>
                         </div>
                         <div class="metric">
+                            <span class="metric-label">Sidecar Status</span>
+                            <span class="metric-value" id="sidecar-status">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Sidecar Version</span>
+                            <span class="metric-value" id="sidecar-version">Loading...</span>
+                        </div>
+                        <div class="metric">
                             <span class="metric-label">Index Name</span>
                             <span class="metric-value" id="pinecone-index">Loading...</span>
                         </div>
@@ -741,6 +749,27 @@
                     document.getElementById('pinecone-vectors').textContent = pinecone.vectors;
                     document.getElementById('pinecone-dimension').textContent = pinecone.dimension;
                     document.getElementById('pinecone-fullness').textContent = pinecone.indexFullness;
+                    
+                    // Display sidecar health
+                    if (pinecone.sidecarHealth) {
+                        const sidecar = pinecone.sidecarHealth;
+                        document.getElementById('sidecar-status').textContent = sidecar.status;
+                        document.getElementById('sidecar-version').textContent = sidecar.version || 'N/A';
+                        
+                        // Color code the status
+                        const statusElement = document.getElementById('sidecar-status');
+                        statusElement.className = 'metric-value';
+                        if (sidecar.status === 'healthy') {
+                            statusElement.style.color = '#16a34a';
+                        } else if (sidecar.status === 'unhealthy') {
+                            statusElement.style.color = '#dc2626';
+                        } else {
+                            statusElement.style.color = '#f59e0b';
+                        }
+                    } else {
+                        document.getElementById('sidecar-status').textContent = 'Unknown';
+                        document.getElementById('sidecar-version').textContent = 'N/A';
+                    }
                 } else {
                     document.getElementById('pinecone-status').textContent = 'Error';
                     document.getElementById('pinecone-index').textContent = 'N/A';
@@ -748,6 +777,8 @@
                     document.getElementById('pinecone-vectors').textContent = 'N/A';
                     document.getElementById('pinecone-dimension').textContent = 'N/A';
                     document.getElementById('pinecone-fullness').textContent = 'N/A';
+                    document.getElementById('sidecar-status').textContent = 'Error';
+                    document.getElementById('sidecar-version').textContent = 'N/A';
                 }
             } catch (error) {
                 console.error('Failed to load Pinecone data:', error);
@@ -757,6 +788,8 @@
                 document.getElementById('pinecone-vectors').textContent = 'N/A';
                 document.getElementById('pinecone-dimension').textContent = 'N/A';
                 document.getElementById('pinecone-fullness').textContent = 'N/A';
+                document.getElementById('sidecar-status').textContent = 'Error';
+                document.getElementById('sidecar-version').textContent = 'N/A';
             }
         }
 

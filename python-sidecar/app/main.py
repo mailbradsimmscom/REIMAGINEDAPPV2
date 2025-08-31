@@ -9,12 +9,12 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv('../../.env')
 
-from parser import PDFParser
-from models import (
+from .parser import PDFParser
+from .models import (
     ParseRequest, ParseResponse, HealthResponse, VersionResponse,
     EmbeddingRequest, EmbeddingResponse, PineconeUpsertRequest, PineconeUpsertResponse
 )
-from pinecone_client import pinecone_client
+from .pinecone_client import pinecone_client
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

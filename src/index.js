@@ -3,16 +3,52 @@ import { createServer } from 'node:http';
 import { healthRoute } from './routes/health.route.js';
 import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
-import { debugTablesRoute } from './routes/debug.tables.route.js';
-import { debugEnvRoute } from './routes/debug.env.route.js';
-import { debugTableCheckRoute } from './routes/debug.tableCheck.route.js';
+
+
 import { systemsListRoute, systemsGetRoute, systemsSearchRoute } from './routes/systems.routes.js';
-import { chatProcessMessageRoute, chatGetHistoryRoute, chatListChatsRoute, chatGetContextRoute } from './routes/chat.routes.js';
+
+import { enhancedChatProcessMessageRoute, enhancedChatGetHistoryRoute, enhancedChatListChatsRoute, enhancedChatGetContextRoute } from './routes/enhanced-chat.routes.js';
 import { adminDashboardRoute, adminHealthRoute, adminLogsRoute, adminSystemsRoute, adminManufacturersRoute, adminModelsRoute, adminPineconeRoute } from './routes/admin.routes.js';
 import { documentIngestRoute, documentJobStatusRoute, documentListJobsRoute, documentListDocumentsRoute, documentGetDocumentRoute } from './routes/document.routes.js';
 import { pineconeSearchRoute, pineconeStatsRoute, pineconeDocumentChunksRoute, pineconeQueryRoute } from './routes/pinecone.routes.js';
 import { logger } from './utils/logger.js';
 import jobProcessor from './services/job.processor.js';
+
+// Sidecar health check function
+async function checkSidecarHealth() {
+  const sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+  const maxRetries = 10;
+  const retryDelay = 3000;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(`${sidecarUrl}/health`);
+      if (response.ok) {
+        await logger.info('Python sidecar is healthy', { 
+          sidecarUrl,
+          attempt 
+        });
+        return true;
+      }
+    } catch (error) {
+      await logger.warn('Python sidecar health check failed', { 
+        sidecarUrl,
+        attempt,
+        error: error.message 
+      });
+    }
+    
+    if (attempt < maxRetries) {
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+    }
+  }
+  
+  await logger.error('Python sidecar failed to start after maximum retries', { 
+    sidecarUrl,
+    maxRetries 
+  });
+  return false;
+}
 
 const server = createServer(async (req, res) => {
   const requestLogger = logger.createRequestLogger();
@@ -67,22 +103,7 @@ const server = createServer(async (req, res) => {
       return healthRoute(req, res);
     }
 
-    // Development-only debug routes
-    if (process.env.NODE_ENV !== 'production') {
-      if (req.url === '/debug/tables' && req.method === 'GET') {
-        return debugTablesRoute(req, res);
-      }
 
-      if (req.url === '/debug/env' && req.method === 'GET') {
-        return debugEnvRoute(req, res);
-      }
-
-      if (req.url.startsWith('/debug/table') && req.method === 'GET') {
-        return debugTableCheckRoute(req, res);
-      }
-
-
-    }
 
     // Systems routes
     if (req.url.startsWith('/systems/search') && req.method === 'GET') {
@@ -97,21 +118,23 @@ const server = createServer(async (req, res) => {
       return systemsGetRoute(req, res);
     }
 
-    // Chat routes
-    if (req.url === '/chat/process' && req.method === 'POST') {
-      return chatProcessMessageRoute(req, res);
+
+
+    // Enhanced Chat routes (with Pinecone integration)
+    if (req.url === '/chat/enhanced/process' && req.method === 'POST') {
+      return enhancedChatProcessMessageRoute(req, res);
     }
 
-    if (req.url.startsWith('/chat/history') && req.method === 'GET') {
-      return chatGetHistoryRoute(req, res);
+    if (req.url.startsWith('/chat/enhanced/history') && req.method === 'GET') {
+      return enhancedChatGetHistoryRoute(req, res);
     }
 
-    if (req.url.startsWith('/chat/list') && req.method === 'GET') {
-      return chatListChatsRoute(req, res);
+    if (req.url.startsWith('/chat/enhanced/list') && req.method === 'GET') {
+      return enhancedChatListChatsRoute(req, res);
     }
 
-    if (req.url.startsWith('/chat/context') && req.method === 'GET') {
-      return chatGetContextRoute(req, res);
+    if (req.url.startsWith('/chat/enhanced/context') && req.method === 'GET') {
+      return enhancedChatGetContextRoute(req, res);
     }
 
     // Admin routes
@@ -203,21 +226,40 @@ const server = createServer(async (req, res) => {
 });
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-server.listen(port, async () => {
-  await logger.info('Server started', { 
-    port, 
-    environment: process.env.NODE_ENV || 'development',
-    version: process.env.APP_VERSION || '1.0.0'
-  });
-  
-  // Start the job processor
+
+// Start server with sidecar health check
+async function startServer() {
   try {
-    await jobProcessor.start();
-    await logger.info('Job processor started');
+    // Check sidecar health before starting server
+    const sidecarHealthy = await checkSidecarHealth();
+    
+    if (!sidecarHealthy) {
+      await logger.warn('Starting server without healthy sidecar - some features may not work');
+    }
+    
+    server.listen(port, async () => {
+      await logger.info('Server started', { 
+        port, 
+        environment: process.env.NODE_ENV || 'development',
+        version: process.env.APP_VERSION || '1.0.0',
+        sidecarHealthy
+      });
+      
+      // Start the job processor
+      try {
+        await jobProcessor.start();
+        await logger.info('Job processor started');
+      } catch (error) {
+        await logger.error('Failed to start job processor', { error: error.message });
+      }
+    });
   } catch (error) {
-    await logger.error('Failed to start job processor', { error: error.message });
+    await logger.error('Failed to start server', { error: error.message });
+    process.exit(1);
   }
-});
+}
+
+startServer();
 
 export default server;
 

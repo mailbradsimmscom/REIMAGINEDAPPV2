@@ -210,7 +210,7 @@ async function processMessage(message) {
     addMessage(message, 'outbound');
     
     // Send to chat API
-    const response = await fetch('/chat/process', {
+    const response = await fetch('/chat/enhanced/process', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -195,6 +195,24 @@ export async function adminPineconeRoute(req, res) {
     // Call Python sidecar to get Pinecone status
     const sidecarUrl = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
     
+    // Check sidecar health
+    let sidecarHealth = { status: 'unknown', error: null };
+    try {
+      const healthResponse = await fetch(`${sidecarUrl}/health`);
+      if (healthResponse.ok) {
+        const healthData = await healthResponse.json();
+        sidecarHealth = { 
+          status: 'healthy', 
+          version: healthData.version,
+          tesseractAvailable: healthData.tesseract_available
+        };
+      } else {
+        sidecarHealth = { status: 'unhealthy', error: `HTTP ${healthResponse.status}` };
+      }
+    } catch (error) {
+      sidecarHealth = { status: 'unreachable', error: error.message };
+    }
+    
     // First check health
     const healthResponse = await fetch(`${sidecarUrl}/health`);
     if (!healthResponse.ok) {
@@ -229,7 +247,8 @@ export async function adminPineconeRoute(req, res) {
       totalVectors: statsData?.total_vector_count || 0,
       dimension: statsData?.dimension || 'N/A',
       indexFullness: '0.0%',
-      lastChecked: new Date().toISOString()
+      lastChecked: new Date().toISOString(),
+      sidecarHealth: sidecarHealth
     };
     
     res.statusCode = 200;

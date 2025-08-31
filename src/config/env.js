@@ -42,7 +42,12 @@ export const env = Object.freeze({
   openaiModel: process.env.OPENAI_MODEL ?? 'gpt-4',
   
   // Chat configuration
-  summaryFrequency: Number(process.env.SUMMARY_FREQUENCY ?? '5')
+  summaryFrequency: Number(process.env.SUMMARY_FREQUENCY ?? '5'),
+  
+  // Python sidecar configuration
+  pythonSidecarUrl: process.env.PYTHON_SIDECAR_URL ?? 'http://localhost:8000',
+  sidecarHealthCheckInterval: Number(process.env.SIDECAR_HEALTH_CHECK_INTERVAL ?? '30000'),
+  sidecarStartupTimeout: Number(process.env.SIDECAR_STARTUP_TIMEOUT ?? '30000')
 });
 
 export default env;

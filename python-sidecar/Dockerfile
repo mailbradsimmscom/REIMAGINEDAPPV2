@@ -5,7 +5,7 @@ FROM python:3.11-slim as base
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-eng \
-    libgl1-mesa-glx \
+    curl \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
@@ -18,10 +18,10 @@ FROM base as deps
 WORKDIR /app
 
 # Copy requirements files
-COPY requirements.txt requirements.lock ./
+COPY requirements.txt ./
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.lock
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Final stage
 FROM base

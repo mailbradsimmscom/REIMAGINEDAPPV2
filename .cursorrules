@@ -8,11 +8,12 @@
 - Hardcode API keys or URLs
 - Create test-*.js files in root
 - Modify .env or secrets
+- Access process.env directly (use centralized env.js instead)
 
 ## ALWAYS DO:
 - Use repository pattern for ALL database access
 - Keep database logic in /repositories only
-- Use environment variables from .env
+- Use environment variables from centralized env.js configuration
 - Preserve existing functionality
 - Follow existing code patterns
 - Test changes before committing

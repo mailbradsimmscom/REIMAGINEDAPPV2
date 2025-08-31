@@ -82,8 +82,8 @@ export async function searchSystems(query, { limit = 10 } = {}) {
         throw err;
       }
       
-      if (!row.canonical_model_id || typeof row.canonical_model_id !== 'string') {
-        const err = new Error(`Missing or invalid canonical_model_id at index ${index}`);
+      if (!row.id || typeof row.id !== 'string') {
+        const err = new Error(`Missing or invalid id at index ${index}`);
         err.context = { 
           operation: 'search_rpc', 
           query, 
@@ -106,7 +106,7 @@ export async function searchSystems(query, { limit = 10 } = {}) {
         throw err;
       }
       
-      return { id: row.canonical_model_id, rank: row.rank };
+      return { id: row.id, rank: row.rank };
     });
     
     return results;

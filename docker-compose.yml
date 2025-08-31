@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Node.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PYTHON_SIDECAR_URL=http://python-sidecar:8000
+      - SIDECAR_HEALTH_CHECK_INTERVAL=30000
+      - SIDECAR_STARTUP_TIMEOUT=30000
+    env_file:
+      - .env
+    depends_on:
+      python-sidecar:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Python Sidecar Service
+  python-sidecar:
+    build:
+      context: ./python-sidecar
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX=${PINECONE_INDEX}
+      - PINECONE_REGION=${PINECONE_REGION}
+      - PINECONE_CLOUD=${PINECONE_CLOUD}
+      - PINECONE_NAMESPACE=${PINECONE_NAMESPACE}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    env_file:
+      - .env
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local

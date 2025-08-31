@@ -9,12 +9,6 @@ import numpy as np
 
 from .models import ParseResponse, PageElement, Table, TableCell, BoundingBox
 
-# Configuration constants
-OCR_DPI = 300
-OCR_MIN_CONF = 0.35
-TEXT_MIN_LEN = 20
-TEXT_MIN_ALNUM = 10
-
 logger = logging.getLogger(__name__)
 
 class PDFParser:
@@ -48,32 +42,30 @@ class PDFParser:
                 for page_num, page in enumerate(pdf.pages, 1):
                     logger.info(f"Processing page {page_num}/{pages_total}")
                     
-                                    # Check if page has text layer using proper detection
-                has_text_layer = bool(page.chars)
-                
-                logger.info(f"Processing page {page_num}/{pages_total} has_text_layer={has_text_layer}")
-                
-                if has_text_layer:
-                    # Extract text elements
-                    text_elements = self._extract_text_elements(page, page_num)
-                    elements.extend(text_elements)
+                    # Check if page has text layer
+                    has_text_layer = bool(page.extract_text())
                     
-                    # Extract tables if requested
-                    if extract_tables:
-                        page_tables = self._extract_tables(page, page_num)
-                        tables.extend(page_tables)
-                        tables_found += len(page_tables)
-                    
-                    pages_parsed += 1
-                else:
-                    # No text layer, use OCR if enabled
-                    if ocr_enabled and self.tesseract_available:
-                        ocr_elements = await self._extract_ocr_elements(page, page_num)
-                        elements.extend(ocr_elements)
-                        pages_ocr += 1
+                    if has_text_layer:
+                        # Extract text elements
+                        text_elements = self._extract_text_elements(page, page_num)
+                        elements.extend(text_elements)
+                        
+                        # Extract tables if requested
+                        if extract_tables:
+                            page_tables = self._extract_tables(page, page_num)
+                            tables.extend(page_tables)
+                            tables_found += len(page_tables)
+                        
                         pages_parsed += 1
                     else:
-                        logger.warning(f"Page {page_num} no text layer and OCR disabled — skipped")
+                        # No text layer, use OCR if enabled
+                        if ocr_enabled and self.tesseract_available:
+                            ocr_elements = await self._extract_ocr_elements(page, page_num)
+                            elements.extend(ocr_elements)
+                            pages_ocr += 1
+                            pages_parsed += 1
+                        else:
+                            logger.warning(f"Page {page_num} has no text layer and OCR is disabled")
                 
                 # Calculate processing time
                 processing_time = time.time() - start_time
@@ -124,25 +116,25 @@ class PDFParser:
         """Extract text elements from page"""
         elements = []
         
-        # Extract text using proper API
-        text = (page.extract_text() or "").strip()
+        # Extract text blocks
+        text_blocks = page.extract_text_blocks()
         
-        if text:
-            element = PageElement(
-                page=page_num,
-                element_type='text',
-                content=text,
-                bbox=BoundingBox(
-                    x0=0,
-                    y0=0,
-                    x1=page.width,
-                    y1=page.height
-                ),
-                has_text_layer=True,
-                ocr_used=False
-            )
-            elements.append(element)
-            logger.info(f"Text layer extracted {len(text)} characters from page {page_num}")
+        for block in text_blocks:
+            if block.get('text', '').strip():
+                element = PageElement(
+                    page=page_num,
+                    element_type='text',
+                    content=block['text'],
+                    bbox=BoundingBox(
+                        x0=block['x0'],
+                        y0=block['y0'],
+                        x1=block['x1'],
+                        y1=block['y1']
+                    ),
+                    has_text_layer=True,
+                    ocr_used=False
+                )
+                elements.append(element)
         
         return elements
     
@@ -195,24 +187,18 @@ class PDFParser:
         return tables
     
     async def _extract_ocr_elements(self, page, page_num: int) -> List[PageElement]:
-        """Extract text using OCR with confidence checking"""
+        """Extract text using OCR"""
         elements = []
         
         try:
-            # Convert page to image at higher DPI
-            page_image = page.to_image(resolution=300)
+            # Convert page to image
+            page_image = page.to_image()
             image = page_image.original
             
-            # Perform OCR with better settings
-            ocr_text = pytesseract.image_to_string(image, lang="eng", config="--psm 6")
-            ocr_text = (ocr_text or "").strip()
+            # Perform OCR
+            ocr_text = pytesseract.image_to_string(image)
             
-            # Skip empty OCR results
-            if not ocr_text:
-                logger.warning(f"OCR produced empty text on page {page_num}")
-                return []
-            
-            # Create OCR element with full page bbox
+            # Create OCR element
             element = PageElement(
                 page=page_num,
                 element_type='ocr',
@@ -220,8 +206,8 @@ class PDFParser:
                 bbox=BoundingBox(
                     x0=0,
                     y0=0,
-                    x1=page.width,
-                    y1=page.height
+                    x1=image.width,
+                    y1=image.height
                 ),
                 has_text_layer=False,
                 ocr_used=True,
@@ -229,11 +215,20 @@ class PDFParser:
             )
             elements.append(element)
             
-            logger.info(f"OCR completed for page {page_num}: {len(ocr_text)} characters")
+            logger.info(f"OCR completed for page {page_num}")
             
         except Exception as e:
             logger.error(f"OCR failed for page {page_num}: {e}")
-            # Don't create empty elements on OCR failure
-            return []
+            # Create error element
+            element = PageElement(
+                page=page_num,
+                element_type='ocr',
+                content="",
+                bbox=BoundingBox(x0=0, y0=0, x1=100, y1=100),
+                has_text_layer=False,
+                ocr_used=True,
+                confidence=0.0
+            )
+            elements.append(element)
         
         return elements
