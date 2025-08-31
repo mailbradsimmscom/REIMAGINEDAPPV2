@@ -22,6 +22,8 @@ class DocumentService {
     try {
       const filePath = `manuals/${docId}/${fileName}`;
       
+      console.log('Starting upload:', { docId, fileName, filePath, fileSize: fileBuffer.length });
+      
       const { data, error } = await this.supabaseStorage.storage
         .from('documents')
         .upload(filePath, fileBuffer, {
@@ -29,7 +31,25 @@ class DocumentService {
           upsert: false
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase upload error:', { 
+          error: error.message, 
+          code: error.code, 
+          details: error.details,
+          hint: error.hint,
+          docId, 
+          fileName,
+          filePath
+        });
+        throw error;
+      }
+      
+      console.log('Upload successful:', { 
+        docId, 
+        fileName, 
+        filePath: data.path,
+        fileSize: fileBuffer.length
+      });
       
       this.requestLogger.info('File uploaded to storage', { 
         docId, 
@@ -39,6 +59,15 @@ class DocumentService {
       
       return data.path;
     } catch (error) {
+      console.error('Upload failed with details:', {
+        error: error.message,
+        stack: error.stack,
+        docId,
+        fileName,
+        fileSize: fileBuffer?.length,
+        filePath: `manuals/${docId}/${fileName}`
+      });
+      
       this.requestLogger.error('Failed to upload file', { 
         error: error.message, 
         docId, 
@@ -67,6 +96,10 @@ class DocumentService {
 
       // Generate doc_id if not provided
       const finalDocId = doc_id || this.generateDocId(fileBuffer);
+      
+      // Debug: Check if we're getting empty file
+      console.log('finalDocId:', finalDocId);
+      console.log('fileBuffer.length in service:', fileBuffer?.length);
       
       // Create job record
       const jobData = {
@@ -106,17 +139,20 @@ class DocumentService {
 
       await documentRepository.createOrUpdateDocument(documentData);
 
-      // Upload file to storage (async, don't wait)
-      this.uploadFile(fileBuffer, metadata.fileName || 'document.pdf', finalDocId)
-        .then(storagePath => {
-          documentRepository.updateJobStatus(job.job_id, 'queued', { storage_path: storagePath });
-        })
-        .catch(error => {
-          this.requestLogger.error('Failed to upload file after job creation', { 
-            error: error.message, 
-            jobId: job.job_id 
-          });
-        });
+      // Upload file to storage synchronously
+      try {
+        const storagePath = await this.uploadFile(fileBuffer, metadata.fileName || 'document.pdf', finalDocId);
+        console.log('Upload successful, storagePath:', storagePath);
+        
+        // Update job with storage path
+        await documentRepository.updateJobStatus(job.job_id, 'queued', { storage_path: storagePath });
+        
+        // Update document with storage path
+        await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
+      } catch (uploadError) {
+        console.error('Upload failed:', uploadError.message);
+        throw uploadError;
+      }
 
       this.requestLogger.info('Ingest job created', { 
         jobId: job.job_id, 

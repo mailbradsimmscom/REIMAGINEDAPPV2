@@ -592,6 +592,9 @@
                                 OCR Allowed (for pages without text)
                             </label>
                         </div>
+                        <div class="form-group">
+                            <button type="button" class="btn secondary" onclick="resetUploadForm()">Reset Form</button>
+                        </div>
                     </div>
                 </div>
 
@@ -999,6 +1002,10 @@
                 fileName: uploadQueue[0].file.name
             };
             
+            // Debug: Log metadata being sent
+            console.log('Uploading with metadata:', metadata);
+            console.log('File:', uploadQueue[0].file.name, 'Size:', uploadQueue[0].file.size);
+            
             // Upload first file (for now, handle one at a time)
             const file = uploadQueue[0].file;
             uploadFile(file, metadata);
@@ -1006,6 +1013,18 @@
 
         async function uploadFile(file, metadata) {
             try {
+                // Validate required fields
+                if (!metadata.manufacturer || !metadata.model || !metadata.revision_date) {
+                    alert('Please fill in all required fields: Manufacturer, Model, and Revision Date');
+                    return;
+                }
+                
+                // Validate file
+                if (!file || file.size === 0) {
+                    alert('Please select a valid file');
+                    return;
+                }
+                
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('metadata', JSON.stringify(metadata));
@@ -1026,6 +1045,9 @@
                     // Clear the queue
                     uploadQueue = [];
                     updateUploadQueueDisplay();
+                    
+                    // Reset form state
+                    resetUploadForm();
                 } else {
                     alert(`Upload failed: ${result.error}`);
                 }
@@ -1033,6 +1055,24 @@
                 console.error('Upload failed:', error);
                 alert(`Upload failed: ${error.message}`);
             }
+        }
+        
+        function resetUploadForm() {
+            // Reset form fields
+            document.getElementById('doc-id').value = '';
+            document.getElementById('manufacturer').value = '';
+            document.getElementById('model').value = '';
+            document.getElementById('revision-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('ocr-enabled').checked = true;
+            
+            // Clear file input
+            document.getElementById('file-input').value = '';
+            
+            // Reset upload queue
+            uploadQueue = [];
+            updateUploadQueueDisplay();
+            
+            console.log('Upload form reset successfully');
         }
 
         async function pollJobStatus(jobId) {

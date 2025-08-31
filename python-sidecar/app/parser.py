@@ -9,6 +9,17 @@ import numpy as np
 
 from .models import ParseResponse, PageElement, Table, TableCell, BoundingBox
 
+def _to_bbox(b):
+    # Accept BoundingBox | dict | (x0,y0,x1,y1) tuple/list
+    if isinstance(b, BoundingBox):
+        return b
+    if isinstance(b, (list, tuple)) and len(b) == 4:
+        x0, y0, x1, y1 = b
+        return BoundingBox(x0=float(x0), y0=float(y0), x1=float(x1), y1=float(y1))
+    if isinstance(b, dict):
+        return BoundingBox(x0=float(b["x0"]), y0=float(b["y0"]), x1=float(b["x1"]), y1=float(b["y1"]))
+    raise ValueError(f"Unsupported bbox format: {type(b)} -> {b}")
+
 # Configuration constants
 OCR_DPI = 300
 OCR_MIN_CONF = 0.35
@@ -48,35 +59,46 @@ class PDFParser:
                 for page_num, page in enumerate(pdf.pages, 1):
                     logger.info(f"Processing page {page_num}/{pages_total}")
                     
-                                    # Check if page has text layer using proper detection
-                has_text_layer = bool(page.chars)
-                
-                logger.info(f"Processing page {page_num}/{pages_total} has_text_layer={has_text_layer}")
-                
-                if has_text_layer:
-                    # Extract text elements
-                    text_elements = self._extract_text_elements(page, page_num)
-                    elements.extend(text_elements)
+                    # Check if page has text layer using proper detection
+                    has_text_layer = bool(page.chars)
                     
-                    # Extract tables if requested
-                    if extract_tables:
-                        page_tables = self._extract_tables(page, page_num)
-                        tables.extend(page_tables)
-                        tables_found += len(page_tables)
+                    logger.info(f"Processing page {page_num}/{pages_total} has_text_layer={has_text_layer}")
                     
-                    pages_parsed += 1
-                else:
-                    # No text layer, use OCR if enabled
-                    if ocr_enabled and self.tesseract_available:
-                        ocr_elements = await self._extract_ocr_elements(page, page_num)
-                        elements.extend(ocr_elements)
-                        pages_ocr += 1
+                    if has_text_layer:
+                        # Extract text elements
+                        text_elements = self._extract_text_elements(page, page_num)
+                        elements.extend(text_elements)
+                        
+                        # If text extraction failed (no elements), fall back to OCR
+                        if not text_elements and ocr_enabled:
+                            logger.info(f"Text extraction failed on page {page_num}, falling back to OCR")
+                            ocr_elements = await self._extract_ocr_elements(page, page_num)
+                            elements.extend(ocr_elements)
+                            pages_ocr += 1
+                        
+                        # Extract tables if requested
+                        if extract_tables:
+                            page_tables = self._extract_tables(page, page_num)
+                            tables.extend(page_tables)
+                            tables_found += len(page_tables)
+                        
                         pages_parsed += 1
                     else:
-                        logger.warning(f"Page {page_num} no text layer and OCR disabled — skipped")
+                        # No text layer, use OCR if enabled
+                        if ocr_enabled and self.tesseract_available:
+                            ocr_elements = await self._extract_ocr_elements(page, page_num)
+                            elements.extend(ocr_elements)
+                            pages_ocr += 1
+                            pages_parsed += 1
+                        else:
+                            logger.warning(f"Page {page_num} no text layer and OCR disabled — skipped")
                 
                 # Calculate processing time
                 processing_time = time.time() - start_time
+                
+                # Sanity check: ensure elements is a list (catch un-awaited coroutines)
+                if not isinstance(elements, list):
+                    raise Exception(f"Elements should be a list, got {type(elements)}. This indicates an un-awaited async function call.")
                 
                 # Create response
                 response = ParseResponse(
@@ -127,6 +149,10 @@ class PDFParser:
         # Extract text using proper API
         text = (page.extract_text() or "").strip()
         
+        # If text extraction failed, return empty list to trigger OCR fallback
+        if not text:
+            return []
+        
         if text:
             element = PageElement(
                 page=page_num,
@@ -157,8 +183,9 @@ class PDFParser:
             if not table_data:
                 continue
             
-            # Get table bounding box
-            table_bbox = page.find_tables()[table_idx].bbox if page.find_tables() else None
+            # Get table bounding box and normalize it
+            raw_table_bbox = page.find_tables()[table_idx].bbox if page.find_tables() else None
+            table_bbox = _to_bbox(raw_table_bbox) if raw_table_bbox else BoundingBox(x0=0, y0=0, x1=100, y1=100)
             
             # Create table cells
             cells = []
@@ -185,7 +212,7 @@ class PDFParser:
                 table = Table(
                     table_id=f"table_{page_num}_{table_idx}",
                     page=page_num,
-                    bbox=table_bbox or BoundingBox(x0=0, y0=0, x1=100, y1=100),
+                    bbox=table_bbox,
                     cells=cells,
                     rows=len(table_data),
                     cols=len(table_data[0]) if table_data else 0

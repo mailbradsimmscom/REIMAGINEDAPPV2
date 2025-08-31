@@ -156,6 +156,28 @@ class DocumentRepository {
     }
   }
 
+  async updateDocumentStoragePath(docId, storagePath) {
+    try {
+      const { data, error } = await this.supabase
+        .from('documents')
+        .update({
+          storage_path: storagePath,
+          updated_at: new Date().toISOString()
+        })
+        .eq('doc_id', docId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      this.requestLogger.info('Document storage path updated', { docId, storagePath });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update document storage path', { error: error.message, docId });
+      throw error;
+    }
+  }
+
   // Document Chunks Management
   async createChunks(chunks) {
     try {

@@ -1,6 +1,14 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+
+def _coerce_bbox(v):
+    if isinstance(v, BoundingBox):
+        return v
+    if isinstance(v, (list, tuple)) and len(v) == 4:
+        x0, y0, x1, y1 = v
+        return {"x0": x0, "y0": y0, "x1": x1, "y1": y1}
+    return v
 
 class ParseRequest(BaseModel):
     file_url: str = Field(..., description="URL of the PDF file to parse")
@@ -19,6 +27,10 @@ class TableCell(BaseModel):
     row: int
     col: int
 
+    @field_validator("bbox", mode="before")
+    @classmethod
+    def _bbox_tuple_ok(cls, v): return _coerce_bbox(v)
+
 class Table(BaseModel):
     table_id: str
     page: int
@@ -26,6 +38,10 @@ class Table(BaseModel):
     cells: List[TableCell]
     rows: int
     cols: int
+
+    @field_validator("bbox", mode="before")
+    @classmethod
+    def _bbox_tuple_ok(cls, v): return _coerce_bbox(v)
 
 class PageElement(BaseModel):
     page: int
@@ -35,6 +51,10 @@ class PageElement(BaseModel):
     has_text_layer: bool
     ocr_used: bool = False
     confidence: Optional[float] = None
+
+    @field_validator("bbox", mode="before")
+    @classmethod
+    def _bbox_tuple_ok(cls, v): return _coerce_bbox(v)
 
 class ParseResponse(BaseModel):
     success: bool

@@ -1,81 +1,142 @@
 import documentService from '../services/document.service.js';
 import { logger } from '../utils/logger.js';
+import Busboy from 'busboy';
 
 // POST /admin/docs/ingest - Create document ingest job
 export async function documentIngestRoute(req, res) {
   const requestLogger = logger.createRequestLogger();
   
   try {
-    // Parse multipart form data
-    const chunks = [];
-    req.on('data', chunk => chunks.push(chunk));
+    // Parse multipart form data using busboy
+    const busboy = Busboy({ 
+      headers: req.headers,
+      limits: {
+        fileSize: 50 * 1024 * 1024, // 50MB limit
+        files: 1
+      }
+    });
     
-    req.on('end', async () => {
-      try {
-        const body = Buffer.concat(chunks);
-        
-        // Parse the multipart data (simplified for now)
-        const boundary = req.headers['content-type']?.split('boundary=')[1];
-        if (!boundary) {
-          throw new Error('No boundary found in content-type');
+    let fileBuffer = null;
+    let metadata = {};
+    let fileName = null;
+    let hasError = false;
+    let isFinished = false;
+    
+    // Create a promise to wait for busboy completion
+    const busboyPromise = new Promise((resolve, reject) => {
+      // Handle file upload
+      busboy.on('file', (fieldname, file, info) => {
+        if (fieldname !== 'file') {
+          file.resume(); // Skip non-file fields
+          return;
         }
         
-        // Extract file and metadata from multipart
-        const parts = body.toString().split(`--${boundary}`);
-        let fileBuffer = null;
-        let metadata = {};
+        fileName = info.filename;
+        const chunks = [];
         
-        for (const part of parts) {
-          if (part.includes('Content-Disposition: form-data')) {
-            if (part.includes('name="file"')) {
-              // Extract file content
-              const fileStart = part.indexOf('\r\n\r\n') + 4;
-              const fileEnd = part.lastIndexOf('\r\n');
-              fileBuffer = Buffer.from(part.substring(fileStart, fileEnd));
-            } else if (part.includes('name="metadata"')) {
-              // Extract metadata
-              const metaStart = part.indexOf('\r\n\r\n') + 4;
-              const metaEnd = part.lastIndexOf('\r\n');
-              const metaStr = part.substring(metaStart, metaEnd);
-              metadata = JSON.parse(metaStr);
-            }
+        file.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
+        
+        file.on('end', () => {
+          fileBuffer = Buffer.concat(chunks);
+          requestLogger.info('File received', { 
+            fileName, 
+            fileSize: fileBuffer.length 
+          });
+        });
+        
+        file.on('error', (error) => {
+          requestLogger.error('File upload error', { error: error.message });
+          hasError = true;
+        });
+      });
+      
+      // Handle form fields
+      busboy.on('field', (fieldname, value) => {
+        if (fieldname === 'metadata') {
+          try {
+            metadata = JSON.parse(value);
+          } catch (error) {
+            requestLogger.error('Invalid metadata JSON', { error: error.message });
+            hasError = true;
           }
         }
-        
-        if (!fileBuffer) {
-          throw new Error('No file provided');
-        }
-        
-        // Add file name to metadata
-        metadata.fileName = metadata.fileName || 'document.pdf';
-        
-        // Create ingest job
-        const result = await documentService.createIngestJob(fileBuffer, metadata);
-        
-        res.statusCode = 200;
-        res.setHeader('content-type', 'application/json');
-        res.end(JSON.stringify({
-          success: true,
-          data: result
-        }));
-        
-        requestLogger.info('Document ingest job created', { 
-          jobId: result.job_id, 
-          docId: result.doc_id 
-        });
-        
-      } catch (error) {
-        requestLogger.error('Failed to process document ingest', { 
-          error: error.message 
-        });
-        
-        res.statusCode = 400;
-        res.setHeader('content-type', 'application/json');
-        res.end(JSON.stringify({
-          success: false,
-          error: error.message
-        }));
-      }
+      });
+      
+      // Handle completion
+      busboy.on('finish', () => {
+        isFinished = true;
+        resolve();
+      });
+      
+      // Handle busboy errors
+      busboy.on('error', (error) => {
+        requestLogger.error('Busboy error', { error: error.message });
+        hasError = true;
+        reject(error);
+      });
+    });
+    
+    // Pipe request to busboy
+    req.pipe(busboy);
+    
+    // Wait for busboy to finish processing
+    await busboyPromise;
+    
+    // Now process the results
+    if (hasError) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'File upload failed'
+      }));
+      return;
+    }
+    
+    if (!fileBuffer) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'No file provided'
+      }));
+      return;
+    }
+    
+    if (!metadata || Object.keys(metadata).length === 0) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Metadata is required'
+      }));
+      return;
+    }
+    
+    // Add file name to metadata
+    metadata.fileName = fileName || 'document.pdf';
+    
+    // Debug: Check if fileBuffer is corrupted
+    console.log('fileBuffer.length:', fileBuffer?.length);
+    console.log('docIdFromEmpty:', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'); // sha256("")
+    
+    // Create ingest job with synchronous upload
+    const result = await documentService.createIngestJob(fileBuffer, metadata);
+    
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify({
+      success: true,
+      data: result
+    }));
+    
+    requestLogger.info('Document ingest job created', { 
+      jobId: result.job_id, 
+      docId: result.doc_id,
+      fileName,
+      fileSize: fileBuffer.length
     });
     
   } catch (error) {
