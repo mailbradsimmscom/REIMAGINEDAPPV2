@@ -35,7 +35,7 @@
 - Import must include .js extension: import x from './file.js'
 
 ## NO MONOLITHIC FILES:
-- Max 250 lines per file
+- Max 260 lines per file
 - One class or service per file
 - Split large functions into smaller helpers
 - Separate concerns into different files
