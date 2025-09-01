@@ -107,7 +107,7 @@ class PineconeService {
         return {
           id: match.id,
           score: match.score,
-          content: metadata.text || '',
+          content: metadata.content || metadata.text || '',
           documentId: metadata.doc_id || '',
           manufacturer: metadata.manufacturer || '',
           model: metadata.model || '',
@@ -115,7 +115,7 @@ class PineconeService {
           chunkIndex: metadata.chunk_index || 0,
           chunkType: metadata.chunk_type || 'text',
           revisionDate: metadata.revision_date || '',
-          filename: metadata.filename || '',
+          filename: metadata.file_name || metadata.filename || '',
           relevanceScore: this.calculateRelevanceScore(match, originalQuery, context)
         };
       });

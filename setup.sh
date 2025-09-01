@@ -37,6 +37,37 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Function to install Node.js 20+ if not present
+install_nodejs() {
+    print_status "Installing Node.js 20+..."
+    
+    # Check if Homebrew is installed
+    if ! command_exists brew; then
+        print_status "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+        # Add Homebrew to PATH
+        if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [[ -f "/usr/local/bin/brew" ]]; then
+            echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+        print_success "Homebrew installed"
+    fi
+    
+    # Install Node.js 20
+    print_status "Installing Node.js 20..."
+    brew install node@20
+    
+    # Add Node.js to PATH
+    echo 'export PATH="/opt/homebrew/opt/node@20/bin:$PATH"' >> ~/.zshrc
+    export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+    
+    print_success "Node.js 20+ installed"
+}
+
 # Function to check Node.js version
 check_node_version() {
     if command_exists node; then
@@ -45,11 +76,11 @@ check_node_version() {
             print_success "Node.js version $(node --version) is compatible"
             return 0
         else
-            print_error "Node.js version $(node --version) is too old. Required: 20+"
+            print_warning "Node.js version $(node --version) is too old. Required: 20+"
             return 1
         fi
     else
-        print_error "Node.js is not installed"
+        print_warning "Node.js is not installed"
         return 1
     fi
 }
@@ -189,9 +220,13 @@ main() {
     print_status "Checking prerequisites..."
     
     if ! check_node_version; then
-        print_error "Please install Node.js 20+ before continuing"
-        print_status "Visit: https://nodejs.org/"
-        exit 1
+        print_warning "Node.js 20+ not found. Installing automatically..."
+        install_nodejs
+        # Verify installation
+        if ! check_node_version; then
+            print_error "Failed to install Node.js 20+"
+            exit 1
+        fi
     fi
     
     if ! check_docker; then

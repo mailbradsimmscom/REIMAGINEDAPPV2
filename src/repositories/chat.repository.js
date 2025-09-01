@@ -310,6 +310,81 @@ export async function updateChatThread(threadId, updates) {
   }
 }
 
+export async function deleteChatMessages(threadId) {
+  try {
+    const supabase = getSupabaseClient();
+    
+    const { error } = await supabase
+      .from(MESSAGES_TABLE)
+      .delete()
+      .eq('thread_id', threadId);
+    
+    if (error) {
+      const err = new Error(`Failed to delete chat messages: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_messages', threadId, table: MESSAGES_TABLE };
+      throw err;
+    }
+    
+    return { success: true };
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'delete_messages', threadId, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function deleteChatThreads(sessionId) {
+  try {
+    const supabase = getSupabaseClient();
+    
+    const { error } = await supabase
+      .from(THREADS_TABLE)
+      .delete()
+      .eq('session_id', sessionId);
+    
+    if (error) {
+      const err = new Error(`Failed to delete chat threads: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_threads', sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+    
+    return { success: true };
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'delete_threads', sessionId, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function deleteChatSession(sessionId) {
+  try {
+    const supabase = getSupabaseClient();
+    
+    const { error } = await supabase
+      .from(SESSIONS_TABLE)
+      .delete()
+      .eq('id', sessionId);
+    
+    if (error) {
+      const err = new Error(`Failed to delete chat session: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_session', sessionId, table: SESSIONS_TABLE };
+      throw err;
+    }
+    
+    return { success: true };
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'delete_session', sessionId, table: SESSIONS_TABLE };
+    }
+    throw error;
+  }
+}
+
 export default {
   createChatSession,
   getChatSession,
@@ -320,5 +395,8 @@ export default {
   createChatMessage,
   getChatMessages,
   updateChatSession,
-  updateChatThread
+  updateChatThread,
+  deleteChatMessages,
+  deleteChatThreads,
+  deleteChatSession
 };

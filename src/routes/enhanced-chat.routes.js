@@ -328,9 +328,76 @@ async function getRequestBody(req) {
   }
 }
 
+export async function enhancedChatDeleteRoute(req, res) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    if (req.method !== 'DELETE') {
+      res.statusCode = 405;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({ error: 'Method not allowed' }));
+      return;
+    }
+
+    let body;
+    try {
+      body = await getRequestBody(req);
+    } catch (parseError) {
+      requestLogger.error('Failed to parse request body', { error: parseError.message });
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({ error: 'Invalid JSON in request body' }));
+      return;
+    }
+
+    const { sessionId } = body;
+    
+    if (!sessionId) {
+      requestLogger.error('Missing sessionId parameter');
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({ error: 'sessionId is required' }));
+      return;
+    }
+
+    requestLogger.info('Deleting enhanced chat session', { sessionId });
+
+    await enhancedChatService.deleteChatSession(sessionId);
+
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify({
+      success: true,
+      data: {
+        sessionId: sessionId,
+        deleted: true
+      },
+      timestamp: new Date().toISOString()
+    }));
+
+    requestLogger.info('Enhanced chat session deleted successfully', { sessionId });
+
+  } catch (error) {
+    requestLogger.error('Failed to delete enhanced chat session', { 
+      error: error.message,
+      stack: error.stack
+    });
+
+    res.statusCode = 500;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify({
+      success: false,
+      error: 'Failed to delete chat session',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    }));
+  }
+}
+
 export const enhancedChatRoutes = {
   enhancedChatProcessMessageRoute,
   enhancedChatGetHistoryRoute,
   enhancedChatListChatsRoute,
-  enhancedChatGetContextRoute
+  enhancedChatGetContextRoute,
+  enhancedChatDeleteRoute
 };

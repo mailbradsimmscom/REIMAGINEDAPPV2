@@ -6,8 +6,21 @@ from typing import Optional, Dict, Any
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv('../../.env')
+# Load environment variables - try multiple paths for compatibility
+import os
+from pathlib import Path
+
+# Try to load .env from multiple possible locations
+env_paths = [
+    '.env',  # Current directory
+    '../.env',  # Parent directory
+    '../../.env',  # Two levels up (original path)
+]
+
+for env_path in env_paths:
+    if os.path.exists(env_path):
+        load_dotenv(env_path)
+        break
 
 from .parser import PDFParser
 from .models import (

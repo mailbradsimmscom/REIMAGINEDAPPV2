@@ -1,4 +1,5 @@
 import { env } from '../config/env.js';
+import { personality } from '../config/personality.js';
 
 export async function enhanceQuery(userQuery, systemsContext = []) {
   try {
@@ -15,7 +16,9 @@ export async function enhanceQuery(userQuery, systemsContext = []) {
         messages: [
           {
             role: 'system',
-            content: 'You are an expert assistant that helps enhance user queries by incorporating relevant context from systems data. Return only the enhanced query, nothing else.'
+            content: `${personality.systemPrompt}
+
+You are enhancing a user query by incorporating relevant context from systems data. Return only the enhanced query, nothing else.`
           },
           {
             role: 'user',
@@ -23,7 +26,7 @@ export async function enhanceQuery(userQuery, systemsContext = []) {
           }
         ],
         max_tokens: 200,
-        temperature: 0.3
+        temperature: env.openaiTemperature
       })
     });
 
@@ -53,7 +56,9 @@ export async function summarizeConversation(messages, systemsContext = []) {
         messages: [
           {
             role: 'system',
-            content: 'You are an expert at summarizing conversations. Provide a concise summary that captures the key points and context. Return only the summary, nothing else.'
+            content: `${personality.systemPrompt}
+
+You are summarizing a conversation. Provide a concise summary that captures the key points and context. Return only the summary, nothing else.`
           },
           {
             role: 'user',
@@ -61,7 +66,7 @@ export async function summarizeConversation(messages, systemsContext = []) {
           }
         ],
         max_tokens: 300,
-        temperature: 0.3
+        temperature: env.openaiTemperature
       })
     });
 
@@ -73,6 +78,48 @@ export async function summarizeConversation(messages, systemsContext = []) {
     return data.choices[0].message.content.trim();
   } catch (error) {
     throw new Error(`Failed to summarize conversation: ${error.message}`);
+  }
+}
+
+export async function synthesizeAnswer(userQuery, categorizedResults) {
+  try {
+    const prompt = buildSynthesisPrompt(userQuery, categorizedResults);
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.openaiApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: env.openaiModel,
+        messages: [
+          {
+            role: 'system',
+            content: `${personality.systemPrompt}
+
+You are providing clear, direct answers to user questions about equipment and systems. Based on the provided categorized information, synthesize a comprehensive answer that directly addresses the user's question.
+
+IMPORTANT: Always maintain the optimistic, curious, people-person tone throughout your response. Start with an encouraging opening, show genuine interest in helping the user, and end with an optimistic note about how this information can help them.`
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        max_tokens: 800,
+        temperature: env.openaiTemperature
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content.trim();
+  } catch (error) {
+    throw new Error(`Failed to synthesize answer: ${error.message}`);
   }
 }
 
@@ -91,7 +138,9 @@ export async function generateChatName(messages, systemsContext = []) {
         messages: [
           {
             role: 'system',
-            content: 'You are an expert at creating concise, descriptive names for chat conversations. Create a 2-6 word summary that captures the main topic or question. Return only the name, nothing else. Examples: "Watermaker Installation", "GPS System Troubleshooting", "Navigation Equipment Setup".'
+            content: `${personality.systemPrompt}
+
+You are creating a concise, descriptive name for a chat conversation. Create a 2-6 word summary that captures the main topic or question. Return only the name, nothing else. Examples: "Watermaker Installation", "GPS System Troubleshooting", "Navigation Equipment Setup".`
           },
           {
             role: 'user',
@@ -99,7 +148,7 @@ export async function generateChatName(messages, systemsContext = []) {
           }
         ],
         max_tokens: 50,
-        temperature: 0.3
+        temperature: env.openaiTemperature
       })
     });
 
@@ -159,6 +208,87 @@ function buildSummarizationPrompt(messages, systemsContext) {
   return prompt;
 }
 
+function buildSynthesisPrompt(userQuery, categorizedResults) {
+  let prompt = `User Question: "${userQuery}"\n\n`;
+  
+  prompt += `Categorized Technical Information:\n\n`;
+  
+  categorizedResults.forEach((result, index) => {
+    prompt += `Equipment: ${result.manufacturer} ${result.model}\n`;
+    prompt += `Relevance Score: ${result.bestScore.toFixed(3)}\n\n`;
+    
+    if (result.chunks && result.chunks.length > 0) {
+      // Group content by type
+      const specifications = [];
+      const operation = [];
+      const safety = [];
+      const installation = [];
+      const general = [];
+      
+      result.chunks.forEach((chunk) => {
+        if (chunk.content && chunk.content.trim()) {
+          const content = chunk.content.toLowerCase();
+          if (content.includes('specification') || content.includes('voltage') || content.includes('amp') || content.includes('watt') || content.includes('model') || content.includes('pressure') || content.includes('flow') || content.includes('capacity')) {
+            specifications.push(chunk.content);
+          } else if (content.includes('operation') || content.includes('use') || content.includes('cook') || content.includes('timer') || content.includes('start') || content.includes('stop') || content.includes('function')) {
+            operation.push(chunk.content);
+          } else if (content.includes('safety') || content.includes('warning') || content.includes('danger') || content.includes('fire') || content.includes('caution')) {
+            safety.push(chunk.content);
+          } else if (content.includes('install') || content.includes('unpack') || content.includes('setup') || content.includes('mount')) {
+            installation.push(chunk.content);
+          } else {
+            general.push(chunk.content);
+          }
+        }
+      });
+      
+      if (specifications.length > 0) {
+        prompt += `📋 Specifications:\n`;
+        specifications.forEach((spec, i) => {
+          prompt += `• ${spec.substring(0, 200)}${spec.length > 200 ? '...' : ''}\n`;
+        });
+        prompt += `\n`;
+      }
+      
+      if (operation.length > 0) {
+        prompt += `🔧 Operation & Usage:\n`;
+        operation.forEach((op, i) => {
+          prompt += `• ${op.substring(0, 200)}${op.length > 200 ? '...' : ''}\n`;
+        });
+        prompt += `\n`;
+      }
+      
+      if (safety.length > 0) {
+        prompt += `⚠️ Safety Information:\n`;
+        safety.forEach((safe, i) => {
+          prompt += `• ${safe.substring(0, 200)}${safe.length > 200 ? '...' : ''}\n`;
+        });
+        prompt += `\n`;
+      }
+      
+      if (installation.length > 0) {
+        prompt += `🔨 Installation & Setup:\n`;
+        installation.forEach((inst, i) => {
+          prompt += `• ${inst.substring(0, 200)}${inst.length > 200 ? '...' : ''}\n`;
+        });
+        prompt += `\n`;
+      }
+      
+      if (general.length > 0 && specifications.length === 0 && operation.length === 0 && safety.length === 0 && installation.length === 0) {
+        prompt += `📄 General Information:\n`;
+        general.forEach((gen, i) => {
+          prompt += `• ${gen.substring(0, 200)}${gen.length > 200 ? '...' : ''}\n`;
+        });
+        prompt += `\n`;
+      }
+    }
+  });
+  
+  prompt += `\nBased on this categorized technical information, provide a clear, direct answer to the user's question. Focus on the most relevant information and provide specific details when available. Be professional, accurate, and helpful.`;
+  
+  return prompt;
+}
+
 function buildNamingPrompt(messages, systemsContext) {
   let prompt = `Create a descriptive name for this chat conversation:\n\n`;
   
@@ -180,5 +310,6 @@ function buildNamingPrompt(messages, systemsContext) {
 export default {
   enhanceQuery,
   summarizeConversation,
-  generateChatName
+  generateChatName,
+  synthesizeAnswer
 };

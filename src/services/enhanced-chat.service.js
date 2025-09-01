@@ -1,9 +1,10 @@
 import { searchSystems } from '../repositories/systems.repository.js';
 import pineconeService from './pinecone.service.js';
-import { enhanceQuery, summarizeConversation, generateChatName } from './llm.service.js';
-import chatRepository from '../repositories/chat.repository.js';
+import { enhanceQuery, summarizeConversation, generateChatName, synthesizeAnswer } from './llm.service.js';
+import chatRepository, { deleteChatMessages, deleteChatThreads, deleteChatSession as deleteSessionFromRepo } from '../repositories/chat.repository.js';
 import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { personality } from '../config/personality.js';
 
 export async function processUserMessage(userQuery, { sessionId, threadId, contextSize = 5 } = {}) {
   const requestLogger = logger.createRequestLogger();
@@ -201,7 +202,9 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       sessionId, 
       threadId, 
       responseLength: assistantResponse.content.length,
-      sourcesCount: assistantResponse.sources.length
+      sourcesCount: assistantResponse.sources.length,
+      sourceTypes: assistantResponse.sources.map(s => s.type),
+      personalityApplied: true
     });
     
     return {
@@ -237,6 +240,16 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       response += `I found ${systemsContext.length} relevant systems in your database:\n`;
       systemsContext.forEach((system, index) => {
         response += `${index + 1}. **${system.id}** (relevance: ${system.rank.toFixed(2)})\n`;
+        
+        // Add systems as sources with type classification
+        const systemSource = {
+          id: system.id,
+          type: 'system',
+          rank: system.rank,
+          manufacturer: system.manufacturer || system.id.split('_')[0],
+          model: system.model || system.id
+        };
+        sources.push(systemSource);
       });
       response += `\n`;
     } else {
@@ -246,7 +259,18 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
     
     // Add Pinecone documentation results
     if (pineconeResults.length > 0) {
-      response += `## Documentation Found\n`;
+      // Stage 2: Generate synthesized answer using LLM
+      let synthesizedAnswer = '';
+      try {
+        synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults);
+        response += `## Direct Answer\n`;
+        response += `${synthesizedAnswer}\n\n`;
+      } catch (synthesisError) {
+        // Fallback to categorized content if synthesis fails
+        console.warn('Synthesis failed, using categorized content:', synthesisError.message);
+      }
+      
+      response += `## Detailed Documentation\n`;
       response += `I found relevant documentation for your question:\n\n`;
       
       pineconeResults.forEach((result, index) => {
@@ -254,22 +278,89 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
         response += `**Relevance Score:** ${result.bestScore.toFixed(3)}\n`;
         
         if (result.chunks && result.chunks.length > 0) {
-          response += `**Document Information:**\n`;
-          result.chunks.forEach((chunk, chunkIndex) => {
+          // Group content by type and create structured response
+          const specifications = [];
+          const operation = [];
+          const safety = [];
+          const installation = [];
+          const general = [];
+          
+          result.chunks.forEach((chunk) => {
             if (chunk.content && chunk.content.trim()) {
-              response += `> ${chunk.content.substring(0, 200)}${chunk.content.length > 200 ? '...' : ''}\n`;
-            } else {
-              response += `> Page ${chunk.page} - Document section available\n`;
+              const content = chunk.content.toLowerCase();
+              if (content.includes('specification') || content.includes('voltage') || content.includes('amp') || content.includes('watt') || content.includes('model')) {
+                specifications.push(chunk);
+              } else if (content.includes('operation') || content.includes('use') || content.includes('cook') || content.includes('timer')) {
+                operation.push(chunk);
+              } else if (content.includes('safety') || content.includes('warning') || content.includes('danger') || content.includes('fire')) {
+                safety.push(chunk);
+              } else if (content.includes('install') || content.includes('unpack') || content.includes('setup')) {
+                installation.push(chunk);
+              } else {
+                general.push(chunk);
+              }
             }
           });
           
-          // Add source attribution
+          // Add structured content sections
+          if (specifications.length > 0) {
+            response += `**📋 Specifications:**\n`;
+            specifications.forEach((chunk) => {
+              const cleanContent = chunk.content.replace(/\s+/g, ' ').trim();
+              response += `• ${cleanContent.substring(0, 150)}${cleanContent.length > 150 ? '...' : ''}\n`;
+            });
+            response += `\n`;
+          }
+          
+          if (operation.length > 0) {
+            response += `**🔧 Operation & Usage:**\n`;
+            operation.forEach((chunk) => {
+              const cleanContent = chunk.content.replace(/\s+/g, ' ').trim();
+              response += `• ${cleanContent.substring(0, 150)}${cleanContent.length > 150 ? '...' : ''}\n`;
+            });
+            response += `\n`;
+          }
+          
+          if (safety.length > 0) {
+            response += `**⚠️ Safety Information:**\n`;
+            safety.forEach((chunk) => {
+              const cleanContent = chunk.content.replace(/\s+/g, ' ').trim();
+              response += `• ${cleanContent.substring(0, 150)}${cleanContent.length > 150 ? '...' : ''}\n`;
+            });
+            response += `\n`;
+          }
+          
+          if (installation.length > 0) {
+            response += `**🔨 Installation & Setup:**\n`;
+            installation.forEach((chunk) => {
+              const cleanContent = chunk.content.replace(/\s+/g, ' ').trim();
+              response += `• ${cleanContent.substring(0, 150)}${cleanContent.length > 150 ? '...' : ''}\n`;
+            });
+            response += `\n`;
+          }
+          
+          if (general.length > 0 && specifications.length === 0 && operation.length === 0 && safety.length === 0 && installation.length === 0) {
+            response += `**📄 Document Information:**\n`;
+            general.forEach((chunk) => {
+              const cleanContent = chunk.content.replace(/\s+/g, ' ').trim();
+              response += `• ${cleanContent.substring(0, 150)}${cleanContent.length > 150 ? '...' : ''}\n`;
+            });
+            response += `\n`;
+          }
+          
+          // Add source attribution with type classification
           const source = {
             manufacturer: result.manufacturer,
             model: result.model,
             filename: result.filename || 'Unknown Document',
             pages: [...new Set(result.chunks.map(c => c.page).filter(p => p))],
-            score: result.bestScore
+            score: result.bestScore,
+            type: 'pinecone', // Classify as Pinecone source
+            content: result.chunks.map(chunk => ({
+              content: chunk.content,
+              page: chunk.page,
+              score: chunk.score
+            }))
           };
           sources.push(source);
         }
@@ -277,8 +368,8 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
         response += `\n`;
       });
       
-      response += `Based on this documentation, I can help you with specific questions about these systems. `;
-      response += `What would you like to know more about?\n\n`;
+      response += `Based on this documentation, I can provide detailed information about specifications, operation, safety, and installation. `;
+      response += `Feel free to ask specific questions about any aspect of your equipment!\n\n`;
     } else if (pineconeError) {
       response += `## Documentation Search\n`;
       response += `I encountered an issue searching the documentation database. `;
@@ -296,13 +387,14 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       response += `Feel free to ask follow-up questions or request more specific information.\n\n`;
     }
     
-    // Add source attribution footer
+    // Add source attribution footer with type metadata
     if (sources.length > 0) {
       response += `---\n`;
       response += `**Sources:**\n`;
       sources.forEach((source, index) => {
-        const pages = source.pages.length > 0 ? ` (Pages: ${source.pages.join(', ')})` : '';
-        response += `${index + 1}. ${source.manufacturer} ${source.model}${pages}\n`;
+        const pages = source.pages && source.pages.length > 0 ? ` (Pages: ${source.pages.join(', ')})` : '';
+        const sourceType = source.type || 'unknown';
+        response += `${index + 1}. ${source.manufacturer || source.id} ${source.model || ''}${pages} [${sourceType}]\n`;
       });
     }
     
@@ -313,6 +405,8 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
     return { content: fallbackResponse, sources: [] };
   }
 }
+
+
 
 export async function getChatHistory(threadId, { limit = 50 } = {}) {
   try {
@@ -365,9 +459,50 @@ export async function getChatContext(threadId) {
   }
 }
 
+export async function deleteChatSession(sessionId) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    requestLogger.info('Deleting chat session', { sessionId });
+    
+    // Get the session to find all associated threads
+    const session = await chatRepository.getChatSession(sessionId);
+    if (!session) {
+      throw new Error('Session not found');
+    }
+    
+    // Get all threads for this session
+    const threads = await chatRepository.listChatThreads(sessionId);
+    
+    // Delete all messages for each thread
+    for (const thread of threads) {
+      await deleteChatMessages(thread.id);
+      requestLogger.info('Deleted messages for thread', { threadId: thread.id });
+    }
+    
+    // Delete all threads for this session
+    await deleteChatThreads(sessionId);
+    requestLogger.info('Deleted threads for session', { sessionId });
+    
+    // Delete the session itself
+    await deleteSessionFromRepo(sessionId);
+    requestLogger.info('Deleted chat session', { sessionId });
+    
+    return { success: true, sessionId };
+  } catch (error) {
+    requestLogger.error('Failed to delete chat session', { 
+      error: error.message,
+      stack: error.stack,
+      sessionId
+    });
+    throw error;
+  }
+}
+
 export default {
   processUserMessage,
   getChatHistory,
   listUserChats,
-  getChatContext
+  getChatContext,
+  deleteChatSession
 };

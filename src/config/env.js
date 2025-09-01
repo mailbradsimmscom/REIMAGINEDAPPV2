@@ -40,6 +40,7 @@ export const env = Object.freeze({
   // OpenAI configuration
   openaiApiKey: readRequired('OPENAI_API_KEY'),
   openaiModel: process.env.OPENAI_MODEL ?? 'gpt-4',
+  openaiTemperature: Number(process.env.LLM_TEMPERATURE ?? '0.7'),
   
   // Chat configuration
   summaryFrequency: Number(process.env.SUMMARY_FREQUENCY ?? '5'),

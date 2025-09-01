@@ -7,7 +7,7 @@ import { extname, join } from 'node:path';
 
 import { systemsListRoute, systemsGetRoute, systemsSearchRoute } from './routes/systems.routes.js';
 
-import { enhancedChatProcessMessageRoute, enhancedChatGetHistoryRoute, enhancedChatListChatsRoute, enhancedChatGetContextRoute } from './routes/enhanced-chat.routes.js';
+import { enhancedChatProcessMessageRoute, enhancedChatGetHistoryRoute, enhancedChatListChatsRoute, enhancedChatGetContextRoute, enhancedChatDeleteRoute } from './routes/enhanced-chat.routes.js';
 import { adminDashboardRoute, adminHealthRoute, adminLogsRoute, adminSystemsRoute, adminManufacturersRoute, adminModelsRoute, adminPineconeRoute } from './routes/admin.routes.js';
 import { documentIngestRoute, documentJobStatusRoute, documentListJobsRoute, documentListDocumentsRoute, documentGetDocumentRoute } from './routes/document.routes.js';
 import { pineconeSearchRoute, pineconeStatsRoute, pineconeDocumentChunksRoute, pineconeQueryRoute } from './routes/pinecone.routes.js';
@@ -136,6 +136,10 @@ const server = createServer(async (req, res) => {
 
     if (req.url.startsWith('/chat/enhanced/context') && req.method === 'GET') {
       return enhancedChatGetContextRoute(req, res);
+    }
+
+    if (req.url === '/chat/enhanced/delete' && req.method === 'DELETE') {
+      return enhancedChatDeleteRoute(req, res);
     }
 
     // Admin routes
