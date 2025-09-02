@@ -6,6 +6,8 @@ import {
   documentJobsResponseSchema,
   documentDocumentsQuerySchema,
   documentDocumentsResponseSchema,
+  documentGetQuerySchema,
+  documentGetResponseSchema,
   documentErrorSchema 
 } from '../schemas/document.schema.js';
 import Busboy from 'busboy';
@@ -344,26 +346,40 @@ export async function documentGetDocumentRoute(req, res) {
     const url = new URL(req.url, 'http://localhost');
     const docId = url.pathname.split('/').pop();
     
-    if (!docId) {
+    // Validate query parameters (docId from URL path)
+    const validationResult = documentGetQuerySchema.safeParse({ docId });
+    if (!validationResult.success) {
+      requestLogger.error('Invalid document ID', { errors: validationResult.error.errors });
       res.statusCode = 400;
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({
         success: false,
-        error: 'Document ID required'
+        error: 'Invalid document ID',
+        details: validationResult.error.errors
       }));
       return;
     }
+
+    const { docId: validatedDocId } = validationResult.data;
     
-    const document = await documentService.getDocument(docId);
+    const document = await documentService.getDocument(validatedDocId);
     
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: document
-    }));
+    };
+
+    // Validate response data
+    const responseValidation = documentGetResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
     
-    requestLogger.info('Document details retrieved', { docId });
+    requestLogger.info('Document details retrieved', { docId: validatedDocId });
     
   } catch (error) {
     requestLogger.error('Failed to get document', { 

@@ -11,11 +11,23 @@ export {
   chatListQuerySchema, 
   chatListResponseSchema, 
   chatProcessRequestSchema,
+  chatHistoryQuerySchema,
+  chatHistoryResponseSchema,
+  chatDeleteRequestSchema,
+  chatDeleteResponseSchema,
   chatErrorSchema 
 } from './chat.schema.js';
 
 // Document schemas
-export { documentUploadSchema, documentQuerySchema } from './document.schema.js';
+export { 
+  documentJobsQuerySchema,
+  documentJobsResponseSchema,
+  documentDocumentsQuerySchema,
+  documentDocumentsResponseSchema,
+  documentGetQuerySchema,
+  documentGetResponseSchema,
+  documentErrorSchema
+} from './document.schema.js';
 
 // Systems schemas
 export { 
@@ -31,7 +43,15 @@ export {
 export { pineconeSearchSchema, pineconeQuerySchema, pineconeStatsQuerySchema, pineconeStatsResponseSchema, pineconeSearchRequestSchema, pineconeSearchResponseSchema, pineconeErrorSchema } from './pinecone.schema.js';
 
 // Admin schemas
-export { adminQuerySchema } from './admin.schema.js';
+export { 
+  adminLogsQuerySchema,
+  adminLogsResponseSchema,
+  adminSystemsResponseSchema,
+  adminPineconeResponseSchema,
+  adminManufacturersResponseSchema,
+  adminModelsQuerySchema,
+  adminModelsResponseSchema
+} from './admin.schema.js';
 
 // Common schemas
 export { 

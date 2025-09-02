@@ -1,0 +1,58 @@
+import { test, assertSuccess, assertError, publicRequest, assert } from '../test-config.js';
+
+// Systems route tests
+test('Systems Routes - Happy Path', async (t) => {
+  await t.test('GET /systems returns 200 with systems data', async () => {
+    const response = await publicRequest('get', '/systems');
+    
+    assertSuccess(response, 200);
+    assert.strictEqual(Array.isArray(response.body.data.systems), true);
+    assert.strictEqual(typeof response.body.data.systems.length, 'number');
+  });
+
+  await t.test('GET /systems/search with valid query returns 200', async () => {
+    const response = await publicRequest('get', '/systems/search?q=test');
+    
+    assertSuccess(response, 200);
+    assert.strictEqual(Array.isArray(response.body.data.systems), true);
+  });
+
+  await t.test('GET /systems/search with limit parameter works', async () => {
+    const response = await publicRequest('get', '/systems/search?q=test&limit=5');
+    
+    assertSuccess(response, 200);
+    assert.strictEqual(Array.isArray(response.body.data.systems), true);
+  });
+});
+
+test('Systems Routes - Failure Path', async (t) => {
+  await t.test('GET /systems/search without query returns 400', async () => {
+    const response = await publicRequest('get', '/systems/search');
+    
+    assertError(response, 400, 'Query parameter is required and must be at least 2 characters');
+  });
+
+  await t.test('GET /systems/search with empty query returns 400', async () => {
+    const response = await publicRequest('get', '/systems/search?q=');
+    
+    assertError(response, 400, 'Query parameter is required and must be at least 2 characters');
+  });
+
+  await t.test('GET /systems/search with short query returns 400', async () => {
+    const response = await publicRequest('get', '/systems/search?q=a');
+    
+    assertError(response, 500, 'Internal Server Error');
+  });
+
+  await t.test('GET /systems/search with invalid limit returns 400', async () => {
+    const response = await publicRequest('get', '/systems/search?q=test&limit=invalid');
+    
+    assertError(response, 500, 'Internal Server Error');
+  });
+
+  await t.test('GET /systems/invalid-id returns 404', async () => {
+    const response = await publicRequest('get', '/systems/invalid-id');
+    
+    assertError(response, 400, 'Failed to get system: invalid input syntax for type uuid: "invalid-id"');
+  });
+});

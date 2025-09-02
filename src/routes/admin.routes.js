@@ -34,6 +34,9 @@ import {
   adminPineconeResponseSchema,
   adminJobsResponseSchema,
   adminDocumentsResponseSchema,
+  adminManufacturersResponseSchema,
+  adminModelsQuerySchema,
+  adminModelsResponseSchema,
   adminErrorSchema 
 } from '../schemas/admin.schema.js';
 
@@ -172,6 +175,8 @@ export async function adminSystemsRoute(req, res) {
 
 // Get manufacturers for dropdown
 export async function adminManufacturersRoute(req, res) {
+  const requestLogger = logger.createRequestLogger();
+  
   try {
     const supabase = getSupabaseClient();
     const { data: manufacturers, error } = await supabase
@@ -185,18 +190,28 @@ export async function adminManufacturersRoute(req, res) {
     // Get unique manufacturers
     const uniqueManufacturers = [...new Set(manufacturers.map(item => item.manufacturer_norm))];
     
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: { manufacturers: uniqueManufacturers }
-    }));
+    };
+
+    // Validate response data
+    const responseValidation = adminManufacturersResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
   } catch (error) {
-    const requestLogger = logger.createRequestLogger();
     requestLogger.error('Failed to fetch manufacturers', { error: error.message });
     res.statusCode = 500;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({ error: 'Failed to fetch manufacturers' }));
+    res.end(JSON.stringify({ 
+      success: false,
+      error: 'Failed to fetch manufacturers' 
+    }));
   }
 }
 

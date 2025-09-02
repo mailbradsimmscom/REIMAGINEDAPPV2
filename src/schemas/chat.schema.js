@@ -1,6 +1,44 @@
 import { z } from 'zod';
 import { paginationSchema } from './common.schema.js';
 
+// Chat history query parameters
+export const chatHistoryQuerySchema = z.object({
+  threadId: z.string().min(1, 'threadId is required'),
+  limit: z.coerce.number().int().min(1).max(100).default(50)
+});
+
+// Chat history response schema
+export const chatHistoryResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    threadId: z.string(),
+    messages: z.array(z.object({
+      id: z.string(),
+      content: z.string(),
+      role: z.string(),
+      createdAt: z.string(),
+      metadata: z.record(z.any()).optional()
+    })),
+    count: z.number()
+  }),
+  timestamp: z.string()
+});
+
+// Chat delete request schema
+export const chatDeleteRequestSchema = z.object({
+  sessionId: z.string().min(1, 'sessionId is required')
+});
+
+// Chat delete response schema
+export const chatDeleteResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    sessionId: z.string(),
+    deleted: z.literal(true)
+  }),
+  timestamp: z.string()
+});
+
 // Chat list query parameters
 export const chatListQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
@@ -29,12 +67,7 @@ export const chatListResponseSchema = z.object({
         name: z.string(),
         createdAt: z.string(),
         updatedAt: z.string(),
-        metadata: z.object({
-          summary: z.string().optional(),
-          systemsContext: z.array(z.string()),
-          pineconeResults: z.number(),
-          lastSummarizedAt: z.string().optional()
-        }).optional()
+        metadata: z.record(z.any()).optional()
       }).optional()
     })),
     count: z.number(),

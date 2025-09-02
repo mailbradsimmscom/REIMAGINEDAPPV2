@@ -1,6 +1,27 @@
 import { z } from 'zod';
 import { paginationSchema } from './common.schema.js';
 
+// Admin manufacturers response schema
+export const adminManufacturersResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    manufacturers: z.array(z.string())
+  })
+});
+
+// Admin models query parameters
+export const adminModelsQuerySchema = z.object({
+  manufacturer: z.string().min(1, 'Manufacturer parameter is required')
+});
+
+// Admin models response schema
+export const adminModelsResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    models: z.array(z.string())
+  })
+});
+
 // Admin logs query parameters
 export const adminLogsQuerySchema = z.object({
   level: z.enum(['all', 'error', 'warn', 'info', 'debug']).default('all'),

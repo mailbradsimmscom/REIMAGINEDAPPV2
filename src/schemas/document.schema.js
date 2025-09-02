@@ -64,6 +64,33 @@ export const documentDocumentsResponseSchema = z.object({
   })
 });
 
+// Document get by ID query parameters (from URL path)
+export const documentGetQuerySchema = z.object({
+  docId: z.string().min(1, 'Document ID is required')
+});
+
+// Document get by ID response schema
+export const documentGetResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    doc_id: z.string(),
+    manufacturer: z.string().nullable(),
+    model: z.string().nullable(),
+    revision_date: z.string().nullable(),
+    language: z.string().nullable(),
+    brand_family: z.string().nullable(),
+    source_url: z.string().nullable(),
+    last_ingest_version: z.string().nullable(),
+    last_job_id: z.string().nullable(),
+    last_ingested_at: z.string().nullable(),
+    chunk_count: z.number(),
+    table_count: z.number(),
+    pages_total: z.number(),
+    created_at: z.string(),
+    updated_at: z.string()
+  })
+});
+
 // Document error response schema
 export const documentErrorSchema = z.object({
   success: z.literal(false),

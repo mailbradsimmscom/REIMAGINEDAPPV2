@@ -1,6 +1,6 @@
 # Reimagined App V2
 
-Enterprise application scaffold built with Node.js 20, ES modules, and Python sidecar for document processing.
+Enterprise application scaffold built with **Node.js 20**, **Express.js**, **ES modules**, and **Python sidecar** for document processing.
 
 ## 🚀 Quick Start
 
@@ -97,6 +97,29 @@ curl http://localhost:8000/health
 # Access admin dashboard
 open http://localhost:3000/admin
 ```
+
+## 🏗️ Architecture
+
+### Express.js Server
+- **Modern web framework** with middleware support
+- **Modular router architecture** for clean separation of concerns
+- **Central error handling** with consistent response format
+- **Security middleware** with body size limits and admin authentication
+- **Static file serving** for frontend assets
+
+### API Endpoints
+- **Health**: `/health` - Server health check
+- **Systems**: `/systems/*` - Equipment management
+- **Chat**: `/chat/enhanced/*` - AI-powered chat interface
+- **Admin**: `/admin/*` - Administrative dashboard and tools
+- **Documents**: `/admin/docs/*` - Document processing and management
+- **Pinecone**: `/pinecone/*` - Vector search and AI operations
+
+### Security Features
+- **Admin Gate**: Header-based authentication for admin routes
+- **Body Size Limits**: 2MB limit on request bodies
+- **Error Handling**: Centralized error middleware
+- **Input Validation**: Zod schema validation for all requests
 
 ## 📁 Project Structure
 

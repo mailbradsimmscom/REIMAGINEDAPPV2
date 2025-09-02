@@ -436,16 +436,16 @@ async function processMessage(message) {
     addLoadingAnimation();
     
     // Send to chat API
+    const requestBody = { message };
+    if (currentSessionId) requestBody.sessionId = currentSessionId;
+    if (currentThreadId) requestBody.threadId = currentThreadId;
+    
     const response = await fetch('/chat/enhanced/process', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        message,
-        sessionId: currentSessionId,
-        threadId: currentThreadId
-      })
+      body: JSON.stringify(requestBody)
     });
     
     // Remove loading animation
