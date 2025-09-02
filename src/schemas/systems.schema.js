@@ -6,6 +6,11 @@ export const systemsListQuerySchema = z.object({
   cursor: z.string().optional()
 }).passthrough();
 
+// Systems get path parameters
+export const systemsGetPathSchema = z.object({
+  assetUid: z.string().min(1, 'Asset UID is required')
+});
+
 // Systems list response schema
 export const systemsListResponseSchema = z.object({
   success: z.literal(true),

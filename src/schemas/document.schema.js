@@ -1,6 +1,16 @@
 import { z } from 'zod';
 import { paginationSchema } from './common.schema.js';
 
+// Document ingest metadata schema
+export const documentIngestMetadataSchema = z.object({
+  manufacturer: z.string().optional(),
+  model: z.string().optional(),
+  revisionDate: z.string().optional(),
+  language: z.string().optional(),
+  brandFamily: z.string().optional(),
+  sourceUrl: z.string().optional()
+}).passthrough();
+
 // Document jobs query parameters
 export const documentJobsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),

@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { logger } from '../utils/logger.js';
 
 /**
  * Validation middleware factory
@@ -19,25 +18,34 @@ export function validate(schema, target = 'body') {
         // For empty query, use default values from schema
         const result = schema.safeParse({});
         if (result.success) {
-          req[target] = result.data;
-          return next();
+          // Don't try to assign to req.query as it's read-only
+          // Just call next() with the validated data
+          next();
+        } else {
+          // If validation fails for empty query, return 400 with validation error
+          const errors = result.error.errors ? result.error.errors.map(err => ({
+            field: err.path.join('.'),
+            message: err.message,
+            code: err.code
+          })) : [{ field: 'unknown', message: 'Validation failed', code: 'invalid_type' }];
+          
+          return res.status(400).json({
+            success: false,
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid request data',
+            details: errors
+          });
         }
       }
       
       const result = schema.safeParse(data);
       
       if (!result.success) {
-        const errors = result.error.errors.map(err => ({
+        const errors = result.error.errors ? result.error.errors.map(err => ({
           field: err.path.join('.'),
           message: err.message,
           code: err.code
-        }));
-        
-        logger.warn('Validation failed', {
-          target,
-          errors,
-          data: target === 'body' ? '[REDACTED]' : data
-        });
+        })) : [{ field: 'unknown', message: 'Validation failed', code: 'invalid_type' }];
         
         return res.status(400).json({
           success: false,
@@ -47,16 +55,11 @@ export function validate(schema, target = 'body') {
         });
       }
       
-      // Replace the data with validated data
-      req[target] = result.data;
+      // Don't try to assign to req properties as they might be read-only
+      // Just call next() with the validated data
       next();
       
     } catch (error) {
-      logger.error('Validation middleware error', {
-        error: error.message,
-        stack: error.stack
-      });
-      
       return res.status(500).json({
         success: false,
         code: 'INTERNAL_ERROR',

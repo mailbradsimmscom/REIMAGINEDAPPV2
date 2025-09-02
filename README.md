@@ -271,11 +271,14 @@ npm start
 # Run tests
 npm test
 
-# Check code formatting
-npm run lint
+# Run tests in watch mode
+npm run test:watch
 
-# Build for production
-npm run build
+# Generate dependency graphs
+npm run docs:generate
+
+# Clean generated documentation
+npm run docs:clean
 ```
 
 ### Docker Commands
