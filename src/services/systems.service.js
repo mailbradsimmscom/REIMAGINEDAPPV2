@@ -12,7 +12,7 @@ export async function listSystemsSvc({ limit, cursor } = {}) {
     const safeLimit = validateLimit(limit);
     const rows = await listSystems({ limit: safeLimit, cursor });
     const nextCursor = rows.length > 0 ? rows[rows.length - 1].asset_uid : null;
-    return { items: rows, nextCursor };
+    return { systems: rows, nextCursor };
   } catch (error) {
     // Enhance error with service context
     error.context = { 
@@ -64,7 +64,7 @@ export async function searchSystemsSvc(q, { limit } = {}) {
     const filtered = raw.filter((r) => Number(r.rank) >= env.searchRankFloor).slice(0, maxRows);
     
     return { 
-      items: filtered, 
+      systems: filtered, 
       meta: { 
         floor: env.searchRankFloor, 
         maxRows: env.searchMaxRows, 

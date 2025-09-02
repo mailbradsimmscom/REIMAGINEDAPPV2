@@ -25,6 +25,18 @@ export async function adminDashboardRoute(req, res) {
   }
 }
 
+import { validate } from '../middleware/validate.js';
+import { healthQuerySchema, adminHealthResponseSchema, adminHealthErrorSchema } from '../schemas/health.schema.js';
+import { 
+  adminLogsQuerySchema, 
+  adminLogsResponseSchema, 
+  adminSystemsResponseSchema, 
+  adminPineconeResponseSchema,
+  adminJobsResponseSchema,
+  adminDocumentsResponseSchema,
+  adminErrorSchema 
+} from '../schemas/admin.schema.js';
+
 // Get system health status
 export async function adminHealthRoute(req, res) {
   try {
@@ -36,12 +48,14 @@ export async function adminHealthRoute(req, res) {
       version: env.appVersion
     };
 
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: healthData
-    }));
+    };
+
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
   } catch (error) {
     res.statusCode = 500;
     res.setHeader('content-type', 'application/json');
@@ -56,26 +70,57 @@ export async function adminHealthRoute(req, res) {
 export async function adminLogsRoute(req, res) {
   try {
     const url = new URL(req.url, 'http://localhost');
-    const level = url.searchParams.get('level') || 'all';
-    const limit = url.searchParams.get('limit') || '100';
+    const queryParams = {};
+    
+    // Only add parameters if they exist
+    const level = url.searchParams.get('level');
+    const limit = url.searchParams.get('limit');
     const correlationId = url.searchParams.get('correlationId');
+    
+    if (level !== null) queryParams.level = level;
+    if (limit !== null) queryParams.limit = limit;
+    if (correlationId !== null) queryParams.correlationId = correlationId;
+
+    // Validate query parameters
+    const validationResult = adminLogsQuerySchema.safeParse(queryParams);
+    
+    if (!validationResult.success) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Invalid query parameters',
+        details: validationResult.error.errors
+      }));
+      return;
+    }
+
+    const { level: validatedLevel, limit: validatedLimit, correlationId: validatedCorrelationId } = validationResult.data;
 
     const logs = await logger.readLogs({
-      level,
-      limit: parseInt(limit),
-      correlationId
+      level: validatedLevel,
+      limit: validatedLimit,
+      correlationId: validatedCorrelationId
     });
 
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: {
         logs,
         count: logs.length,
         timestamp: new Date().toISOString()
       }
-    }));
+    };
+
+    // Validate response data
+    const responseValidation = adminLogsResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
   } catch (error) {
     res.statusCode = 500;
     res.setHeader('content-type', 'application/json');
@@ -101,13 +146,21 @@ export async function adminSystemsRoute(req, res) {
       documentsCount: documentsCount || 0,
       jobsCount: jobsCount || 0
     };
+
+    const responseData = {
+      success: true,
+      data: systemsData
+    };
+    
+    // Validate response data
+    const responseValidation = adminSystemsResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
     
     res.statusCode = 200;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
-      success: true,
-      data: systemsData
-    }));
+    res.end(JSON.stringify(responseData));
   } catch (dbError) {
     const requestLogger = logger.createRequestLogger();
     requestLogger.error('Failed to fetch systems data', { error: dbError.message });
@@ -251,13 +304,21 @@ export async function adminPineconeRoute(req, res) {
       lastChecked: new Date().toISOString(),
       sidecarHealth: sidecarHealth
     };
+
+    const responseData = {
+      success: true,
+      data: pineconeData
+    };
+
+    // Validate response data
+    const responseValidation = adminPineconeResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
     
     res.statusCode = 200;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
-      success: true,
-      data: pineconeData
-    }));
+    res.end(JSON.stringify(responseData));
     
     requestLogger.info('Pinecone status retrieved', { 
       status: pineconeData.status,

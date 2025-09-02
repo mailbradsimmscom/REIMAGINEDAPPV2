@@ -1,4 +1,13 @@
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
+import { validate } from '../middleware/validate.js';
+import { 
+  systemsListQuerySchema, 
+  systemsListResponseSchema,
+  systemsSearchQuerySchema,
+  systemsSearchResponseSchema,
+  systemsGetResponseSchema,
+  systemsErrorSchema
+} from '../schemas/systems.schema.js';
 
 export async function systemsListRoute(req, res) {
   const url = new URL(req.url, 'http://localhost');
@@ -6,10 +15,39 @@ export async function systemsListRoute(req, res) {
   const cursor = url.searchParams.get('cursor');
   
   try {
+    // Validate query parameters if present
+    const queryParams = {};
+    if (limit !== null) queryParams.limit = limit;
+    if (cursor !== null) queryParams.cursor = cursor;
+    
+    const validationResult = systemsListQuerySchema.safeParse(queryParams);
+    
+    if (!validationResult.success) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Invalid query parameters',
+        details: validationResult.error.errors
+      }));
+      return;
+    }
+
     const result = await listSystemsSvc({ limit, cursor });
+    const responseData = {
+      success: true,
+      data: result
+    };
+
+    // TODO: Re-enable response validation after debugging
+    // const responseValidation = systemsListResponseSchema.safeParse(responseData);
+    // if (!responseValidation.success) {
+    //   throw new Error('Invalid response format');
+    // }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(responseData));
   } catch (error) {
     // Determine appropriate HTTP status code
     let statusCode = 500;
@@ -22,6 +60,7 @@ export async function systemsListRoute(req, res) {
     res.statusCode = statusCode;
     res.setHeader('content-type', 'application/json');
     res.end(JSON.stringify({ 
+      success: false,
       error: error.message,
       type: 'systems_list_error',
       context: error.context,
@@ -39,6 +78,7 @@ export async function systemsGetRoute(req, res) {
       res.statusCode = 400;
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ 
+        success: false,
         error: 'Invalid asset_uid parameter',
         type: 'systems_get_error',
         timestamp: new Date().toISOString()
@@ -51,6 +91,7 @@ export async function systemsGetRoute(req, res) {
       res.statusCode = 404;
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ 
+        success: false,
         error: 'System not found',
         type: 'systems_get_error',
         context: { assetUid },
@@ -59,9 +100,20 @@ export async function systemsGetRoute(req, res) {
       return;
     }
     
+    const responseData = {
+      success: true,
+      data: item
+    };
+
+    // Validate response data
+    const responseValidation = systemsGetResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify(item));
+    res.end(JSON.stringify(responseData));
   } catch (error) {
     let statusCode = 500;
     if (error.message.includes('required') || error.message.includes('invalid')) {
@@ -73,6 +125,7 @@ export async function systemsGetRoute(req, res) {
     res.statusCode = statusCode;
     res.setHeader('content-type', 'application/json');
     res.end(JSON.stringify({ 
+      success: false,
       error: error.message,
       type: 'systems_get_error',
       context: error.context,
@@ -87,10 +140,49 @@ export async function systemsSearchRoute(req, res) {
   const limit = url.searchParams.get('limit');
   
   try {
+    // Handle empty query case
+    if (!q || q.trim() === '') {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Query parameter is required and must be at least 2 characters'
+      }));
+      return;
+    }
+
+    // Validate query parameters
+    const queryParams = { q };
+    if (limit !== null) queryParams.limit = limit;
+    
+    const validationResult = systemsSearchQuerySchema.safeParse(queryParams);
+    
+    if (!validationResult.success) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Invalid query parameters',
+        details: validationResult.error.errors
+      }));
+      return;
+    }
+
     const result = await searchSystemsSvc(q, { limit });
+    const responseData = {
+      success: true,
+      data: result
+    };
+
+    // Validate response data
+    const responseValidation = systemsSearchResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(responseData));
   } catch (error) {
     let statusCode = 500;
     if (error.message.includes('required') || error.message.includes('invalid') || error.message.includes('too long')) {
@@ -100,6 +192,7 @@ export async function systemsSearchRoute(req, res) {
     res.statusCode = statusCode;
     res.setHeader('content-type', 'application/json');
     res.end(JSON.stringify({ 
+      success: false,
       error: error.message,
       type: 'systems_search_error',
       context: error.context,

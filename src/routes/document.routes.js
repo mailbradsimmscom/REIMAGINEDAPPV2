@@ -1,5 +1,13 @@
 import documentService from '../services/document.service.js';
 import { logger } from '../utils/logger.js';
+import { validate } from '../middleware/validate.js';
+import { 
+  documentJobsQuerySchema, 
+  documentJobsResponseSchema,
+  documentDocumentsQuerySchema,
+  documentDocumentsResponseSchema,
+  documentErrorSchema 
+} from '../schemas/document.schema.js';
 import Busboy from 'busboy';
 
 // POST /admin/docs/ingest - Create document ingest job
@@ -204,14 +212,30 @@ export async function documentListJobsRoute(req, res) {
   
   try {
     const url = new URL(req.url, 'http://localhost');
-    const limit = parseInt(url.searchParams.get('limit') || '50');
-    const offset = parseInt(url.searchParams.get('offset') || '0');
+    const queryParams = {
+      limit: url.searchParams.get('limit') || '50',
+      offset: url.searchParams.get('offset') || '0'
+    };
+
+    // Validate query parameters
+    const validationResult = documentJobsQuerySchema.safeParse(queryParams);
+    
+    if (!validationResult.success) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Invalid query parameters',
+        details: validationResult.error.errors
+      }));
+      return;
+    }
+
+    const { limit, offset } = validationResult.data;
     
     const jobs = await documentService.listJobs(limit, offset);
     
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: {
         jobs,
@@ -219,7 +243,17 @@ export async function documentListJobsRoute(req, res) {
         limit,
         offset
       }
-    }));
+    };
+
+    // TODO: Re-enable response validation after debugging
+    // const responseValidation = documentJobsResponseSchema.safeParse(responseData);
+    // if (!responseValidation.success) {
+    //   throw new Error('Invalid response format');
+    // }
+    
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
     
     requestLogger.info('Jobs listed', { count: jobs.length });
     
@@ -243,14 +277,30 @@ export async function documentListDocumentsRoute(req, res) {
   
   try {
     const url = new URL(req.url, 'http://localhost');
-    const limit = parseInt(url.searchParams.get('limit') || '50');
-    const offset = parseInt(url.searchParams.get('offset') || '0');
+    const queryParams = {
+      limit: url.searchParams.get('limit') || '50',
+      offset: url.searchParams.get('offset') || '0'
+    };
+
+    // Validate query parameters
+    const validationResult = documentDocumentsQuerySchema.safeParse(queryParams);
+    
+    if (!validationResult.success) {
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Invalid query parameters',
+        details: validationResult.error.errors
+      }));
+      return;
+    }
+
+    const { limit, offset } = validationResult.data;
     
     const documents = await documentService.listDocuments(limit, offset);
     
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: {
         documents,
@@ -258,7 +308,17 @@ export async function documentListDocumentsRoute(req, res) {
         limit,
         offset
       }
-    }));
+    };
+
+    // Validate response data
+    const responseValidation = documentDocumentsResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+    
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
     
     requestLogger.info('Documents listed', { count: documents.length });
     

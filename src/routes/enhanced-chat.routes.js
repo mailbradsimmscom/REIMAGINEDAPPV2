@@ -1,5 +1,12 @@
 import enhancedChatService from '../services/enhanced-chat.service.js';
 import { logger } from '../utils/logger.js';
+import { validate } from '../middleware/validate.js';
+import { 
+  chatListQuerySchema, 
+  chatListResponseSchema,
+  chatProcessRequestSchema,
+  chatErrorSchema 
+} from '../schemas/chat.schema.js';
 
 export async function enhancedChatProcessMessageRoute(req, res) {
   const requestLogger = logger.createRequestLogger();
@@ -8,7 +15,10 @@ export async function enhancedChatProcessMessageRoute(req, res) {
     if (req.method !== 'POST') {
       res.statusCode = 405;
       res.setHeader('content-type', 'application/json');
-      res.end(JSON.stringify({ error: 'Method not allowed' }));
+      res.end(JSON.stringify({ 
+        success: false,
+        error: 'Method not allowed' 
+      }));
       return;
     }
 
@@ -19,29 +29,51 @@ export async function enhancedChatProcessMessageRoute(req, res) {
       requestLogger.error('Failed to parse request body', { error: parseError.message });
       res.statusCode = 400;
       res.setHeader('content-type', 'application/json');
-      res.end(JSON.stringify({ error: 'Invalid JSON in request body' }));
+      res.end(JSON.stringify({ 
+        success: false,
+        error: 'Invalid JSON in request body' 
+      }));
       return;
     }
 
     const { message, sessionId, threadId } = body;
     
-    if (!message || typeof message !== 'string') {
-      requestLogger.error('Invalid message parameter', { message: typeof message });
+    // Validate request body
+    const validationResult = chatProcessRequestSchema.safeParse(body);
+    if (!validationResult.success) {
+      requestLogger.error('Invalid request body', { errors: validationResult.error.errors });
       res.statusCode = 400;
       res.setHeader('content-type', 'application/json');
-      res.end(JSON.stringify({ error: 'Message is required and must be a string' }));
+      res.end(JSON.stringify({ 
+        success: false,
+        error: 'Invalid request data',
+        details: validationResult.error.errors
+      }));
+      return;
+    }
+
+    const { message: validatedMessage, sessionId: validatedSessionId, threadId: validatedThreadId } = validationResult.data;
+    
+    if (!validatedMessage || typeof validatedMessage !== 'string') {
+      requestLogger.error('Invalid message parameter', { message: typeof validatedMessage });
+      res.statusCode = 400;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({ 
+        success: false,
+        error: 'Message is required and must be a string' 
+      }));
       return;
     }
 
     requestLogger.info('Processing enhanced chat message', { 
-      messageLength: message.length,
-      sessionId: sessionId || 'new',
-      threadId: threadId || 'new'
+      messageLength: validatedMessage.length,
+      sessionId: validatedSessionId || 'new',
+      threadId: validatedThreadId || 'new'
     });
 
-    const result = await enhancedChatService.processUserMessage(message, {
-      sessionId,
-      threadId,
+    const result = await enhancedChatService.processUserMessage(validatedMessage, {
+      sessionId: validatedSessionId,
+      threadId: validatedThreadId,
       contextSize: 5
     });
 
@@ -175,16 +207,18 @@ export async function enhancedChatListChatsRoute(req, res) {
     }
 
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const limit = parseInt(url.searchParams.get('limit') || '25');
-    const cursor = url.searchParams.get('cursor');
+    const queryParams = {
+      limit: url.searchParams.get('limit') || '25',
+      cursor: url.searchParams.get('cursor')
+    };
+
+    const { limit, cursor } = queryParams;
 
     requestLogger.info('Listing enhanced chat sessions', { limit, cursor: cursor || 'none' });
 
     const chats = await enhancedChatService.listUserChats({ limit, cursor });
 
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: {
         chats: chats.map(chat => ({
@@ -205,7 +239,11 @@ export async function enhancedChatListChatsRoute(req, res) {
         nextCursor: chats.length === limit ? chats[chats.length - 1]?.updated_at : null
       },
       timestamp: new Date().toISOString()
-    }));
+    };
+
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
 
     requestLogger.info('Enhanced chat sessions listed successfully', {
       sessionCount: chats.length,

@@ -1,4 +1,4 @@
-export function healthRoute(_req, res) {
+export function healthRoute(req, res) {
   res.statusCode = 200;
   res.setHeader('content-type', 'application/json');
   res.end(

@@ -1,5 +1,13 @@
 import pineconeService from '../services/pinecone.service.js';
 import { logger } from '../utils/logger.js';
+import { validate } from '../middleware/validate.js';
+import { 
+  pineconeSearchRequestSchema, 
+  pineconeSearchResponseSchema,
+  pineconeStatsQuerySchema,
+  pineconeStatsResponseSchema,
+  pineconeErrorSchema 
+} from '../schemas/pinecone.schema.js';
 
 // POST /pinecone/search - Search documents
 export async function pineconeSearchRoute(req, res) {
@@ -15,25 +23,35 @@ export async function pineconeSearchRoute(req, res) {
         const body = Buffer.concat(chunks);
         const requestData = JSON.parse(body.toString());
         
+        // Validate request data
+        const validationResult = pineconeSearchRequestSchema.safeParse(requestData);
+        
+        if (!validationResult.success) {
+          res.statusCode = 400;
+          res.setHeader('content-type', 'application/json');
+          res.end(JSON.stringify({
+            success: false,
+            error: 'Invalid request data',
+            details: validationResult.error.errors
+          }));
+          return;
+        }
+
         const {
           query,
           context = {},
           topK = 10,
           includeMetadata = true
-        } = requestData;
-
-        if (!query || typeof query !== 'string') {
-          res.statusCode = 400;
-          res.setHeader('content-type', 'application/json');
-          res.end(JSON.stringify({
-            success: false,
-            error: 'Query is required and must be a string'
-          }));
-          return;
-        }
+        } = validationResult.data;
 
         // Search documents
         const searchResults = await pineconeService.searchDocuments(query, context);
+
+        // Validate response data
+        const responseValidation = pineconeSearchResponseSchema.safeParse(searchResults);
+        if (!responseValidation.success) {
+          throw new Error('Invalid response format');
+        }
 
         res.statusCode = 200;
         res.setHeader('content-type', 'application/json');
@@ -75,12 +93,14 @@ export async function pineconeStatsRoute(req, res) {
   try {
     const stats = await pineconeService.getIndexStatistics();
     
-    res.statusCode = 200;
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({
+    const responseData = {
       success: true,
       data: stats
-    }));
+    };
+    
+    res.statusCode = 200;
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(responseData));
 
     requestLogger.info('Pinecone stats retrieved', {
       totalVectors: stats.totalVectors,

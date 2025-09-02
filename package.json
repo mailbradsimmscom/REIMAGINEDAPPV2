@@ -10,7 +10,9 @@
     "scripts": {
         "dev": "node --watch ./src/start.js",
         "start": "node ./src/start.js",
-        "test": "node --test"
+        "test": "node --test",
+        "test:baseline": "./tests/run-baseline.sh",
+        "test:watch": "node --test --watch"
     },
     "dependencies": {
         "@supabase/supabase-js": "2.56.0",

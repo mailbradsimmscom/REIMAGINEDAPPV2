@@ -207,7 +207,10 @@ const server = createServer(async (req, res) => {
 
     res.statusCode = 404;
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify({ error: 'Not Found' }));
+    res.end(JSON.stringify({ 
+      success: false,
+      error: 'Not Found' 
+    }));
     
     requestLogger.warn('404 Not Found', { url: req.url });
   } catch (error) {
