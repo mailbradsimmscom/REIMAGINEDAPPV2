@@ -100,10 +100,8 @@ const startServer = () => {
         systems: `http://localhost:${env.port}/systems`,
         chat: `http://localhost:${env.port}/chat/enhanced`,
         admin: `http://localhost:${env.port}/admin`,
-        documents: `http://localhost:${env.port}/admin/docs`,
         pinecone: `http://localhost:${env.port}/pinecone`
-      },
-      adminGate: 'x-admin-token required'
+      }
     });
   });
 };

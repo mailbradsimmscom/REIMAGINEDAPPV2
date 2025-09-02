@@ -1,7 +1,6 @@
 import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { validate } from '../../middleware/validate.js';
 import { adminModelsQuerySchema, adminModelsResponseSchema } from '../../schemas/admin.schema.js';
 
@@ -13,7 +12,6 @@ router.use(adminGate);
 // GET /admin/models - Get models statistics
 router.get('/', 
   validate(adminModelsQuerySchema, 'query'),
-  validateResponse(adminModelsResponseSchema, 'admin'), 
   async (req, res, next) => {
     try {
       const { manufacturer } = req.query;

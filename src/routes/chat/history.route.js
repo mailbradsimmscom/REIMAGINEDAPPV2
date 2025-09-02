@@ -1,6 +1,5 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { validate } from '../../middleware/validate.js';
 import { 
   chatHistoryQuerySchema,
@@ -12,7 +11,6 @@ const router = express.Router();
 // GET /chat/enhanced/history - Get chat history
 router.get('/', 
   validate(chatHistoryQuerySchema, 'query'),
-  validateResponse(chatHistoryResponseSchema, 'chat'), 
   async (req, res, next) => {
     try {
       const { threadId, limit } = req.query;

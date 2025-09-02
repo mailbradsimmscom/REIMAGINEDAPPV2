@@ -1,7 +1,8 @@
 import express from 'express';
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
-// TEMPORARILY DISABLED: import { validateResponse } from '../middleware/responseValidation.js';
 import { validate } from '../middleware/validate.js';
+import { z } from 'zod';
+import { enforceResponse } from '../middleware/enforceResponse.js';
 import { 
   systemsListQuerySchema, 
   systemsListResponseSchema,
@@ -13,23 +14,27 @@ import {
 
 const router = express.Router();
 
+const EnvelopeOk = z.object({
+  success: z.literal(true),
+  data: z.any()
+});
+
 // GET /systems/search - Search systems (MUST come before /:assetUid)
 router.get('/search', 
   validate(systemsSearchQuerySchema, 'query'),
-  // TEMPORARILY DISABLED: validateResponse(systemsSearchResponseSchema, 'systems'), 
   async (req, res, next) => {
     try {
       const { q, limit } = req.query;
       
       const result = await searchSystemsSvc(q, { limit });
-      const responseData = {
+      const envelope = {
         success: true,
         data: result
       };
 
-      res.json(responseData);
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
@@ -37,20 +42,19 @@ router.get('/search',
 // GET /systems - List systems
 router.get('/', 
   validate(systemsListQuerySchema, 'query'),
-  // TEMPORARILY DISABLED: validateResponse(systemsListResponseSchema, 'systems'), 
   async (req, res, next) => {
     try {
       const { limit, cursor } = req.query;
       
       const result = await listSystemsSvc({ limit, cursor });
-      const responseData = {
+      const envelope = {
         success: true,
         data: result
       };
 
-      res.json(responseData);
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
@@ -58,7 +62,6 @@ router.get('/',
 // GET /systems/:assetUid - Get specific system
 router.get('/:assetUid', 
   validate(systemsGetPathSchema, 'params'),
-  // TEMPORARILY DISABLED: validateResponse(systemsGetResponseSchema, 'systems'), 
   async (req, res, next) => {
     try {
       const { assetUid } = req.params;
@@ -71,14 +74,14 @@ router.get('/:assetUid',
         throw error;
       }
       
-      const responseData = {
+      const envelope = {
         success: true,
         data: item
       };
 
-      res.json(responseData);
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );

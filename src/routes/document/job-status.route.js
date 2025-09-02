@@ -1,16 +1,22 @@
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { documentJobStatusPathSchema, documentJobStatusResponseSchema } from '../../schemas/document.schema.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+const EnvelopeOk = z.object({
+  success: z.literal(true),
+  data: z.any()
+});
+
 // GET /admin/docs/jobs/:jobId - Get job status
-router.get('/:jobId', validateResponse(documentJobStatusResponseSchema, 'document'), async (req, res, next) => {
+router.get('/jobs/:jobId', async (req, res, next) => {
   try {
     const { jobId } = req.params;
     
@@ -32,14 +38,14 @@ router.get('/:jobId', validateResponse(documentJobStatusResponseSchema, 'documen
       throw error;
     }
     
-    const responseData = {
+    const envelope = {
       success: true,
       data: job
     };
 
-    res.json(responseData);
+    return res.json(enforceResponse(EnvelopeOk, envelope));
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

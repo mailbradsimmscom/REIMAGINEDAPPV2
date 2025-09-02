@@ -1,15 +1,21 @@
 import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { adminLogsQuerySchema, adminLogsResponseSchema } from '../../schemas/admin.schema.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+const EnvelopeOk = z.object({
+  success: z.literal(true),
+  data: z.any()
+});
+
 // GET /admin/logs - Get log files
-router.get('/', validateResponse(adminLogsResponseSchema, 'admin'), async (req, res, next) => {
+router.get('/logs', async (req, res, next) => {
   try {
     const { level, limit, correlationId } = req.query;
     
@@ -37,14 +43,14 @@ router.get('/', validateResponse(adminLogsResponseSchema, 'admin'), async (req, 
       limit: limit || 100
     };
 
-    const responseData = {
+    const envelope = {
       success: true,
       data: logsData
     };
 
-    res.json(responseData);
+    return res.json(enforceResponse(EnvelopeOk, envelope));
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

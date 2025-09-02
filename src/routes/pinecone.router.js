@@ -1,59 +1,52 @@
 import express from 'express';
-import pineconeService from '../services/pinecone.service.js';
-import { validateResponse } from '../middleware/responseValidation.js';
+import { z } from 'zod';
+import { enforceResponse } from '../middleware/enforceResponse.js';
 import { validate } from '../middleware/validate.js';
 import { 
-  pineconeSearchRequestSchema, 
-  pineconeSearchResponseSchema,
+  pineconeSearchRequestSchema,
   pineconeStatsQuerySchema,
-  pineconeStatsResponseSchema,
   pineconeDocumentChunksPathSchema,
-  pineconeDocumentChunksResponseSchema,
-  pineconeQueryRequestSchema,
-  pineconeQueryResponseSchema
+  pineconeQueryRequestSchema
 } from '../schemas/pinecone.schema.js';
+import pineconeService from '../services/pinecone.service.js';
 
 const router = express.Router();
 
-// POST /pinecone/search - Search documents
+const EnvelopeOk = z.object({
+  success: z.literal(true),
+  data: z.any()
+});
+
+// POST /pinecone/search - Search Pinecone
 router.post('/search', 
   validate(pineconeSearchRequestSchema, 'body'),
-  validateResponse(pineconeSearchResponseSchema, 'pinecone'), 
   async (req, res, next) => {
     try {
-      const {
-        query,
-        context = {},
-        topK = 10,
-        includeMetadata = true
-      } = req.body;
-
-      // Search documents
-      const searchResults = await pineconeService.searchDocuments(query, context);
-
-      res.json(searchResults);
+      const result = await pineconeService.searchDocuments(req.body.query, req.body.context);
+      const envelope = {
+        success: true,
+        data: result
+      };
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
 
-// GET /pinecone/stats - Get index statistics
+// GET /pinecone/stats - Get Pinecone stats
 router.get('/stats', 
   validate(pineconeStatsQuerySchema, 'query'),
-  validateResponse(pineconeStatsResponseSchema, 'pinecone'), 
   async (req, res, next) => {
     try {
-      const stats = await pineconeService.getIndexStatistics();
-      
-      const responseData = {
+      const result = await pineconeService.getIndexStatistics();
+      const envelope = {
         success: true,
-        data: stats
+        data: result
       };
-
-      res.json(responseData);
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
@@ -61,54 +54,34 @@ router.get('/stats',
 // GET /pinecone/documents/:docId/chunks - Get document chunks
 router.get('/documents/:docId/chunks', 
   validate(pineconeDocumentChunksPathSchema, 'params'),
-  validateResponse(pineconeDocumentChunksResponseSchema, 'pinecone'), 
   async (req, res, next) => {
     try {
       const { docId } = req.params;
-      
-      const chunks = await pineconeService.getDocumentChunks(docId);
-      
-      const responseData = {
+      const result = await pineconeService.getDocumentChunks(docId);
+      const envelope = {
         success: true,
-        data: {
-          documentId: docId,
-          chunks,
-          totalChunks: chunks.length
-        }
+        data: result
       };
-
-      res.json(responseData);
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
 
-// POST /pinecone/query - Enhanced query with context
+// POST /pinecone/query - Query Pinecone
 router.post('/query', 
   validate(pineconeQueryRequestSchema, 'body'),
-  validateResponse(pineconeQueryResponseSchema, 'pinecone'), 
   async (req, res, next) => {
     try {
-      const {
-        query,
-        enhancedQuery,
-        context = {},
-        topK = 10,
-        includeMetadata = true
-      } = req.body;
-
-      // Enhanced query with context
-      const queryResults = await pineconeService.queryWithContext(
-        query, 
-        enhancedQuery, 
-        context, 
-        { topK, includeMetadata }
-      );
-
-      res.json(queryResults);
+      const result = await pineconeService.searchDocuments(req.body.query, req.body.context);
+      const envelope = {
+        success: true,
+        data: result
+      };
+      return res.json(enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );

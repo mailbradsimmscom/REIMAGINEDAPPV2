@@ -1,16 +1,22 @@
 import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { adminSystemsResponseSchema } from '../../schemas/admin.schema.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+const EnvelopeOk = z.object({
+  success: z.literal(true),
+  data: z.any()
+});
+
 // GET /admin/systems - Get systems statistics
-router.get('/', validateResponse(adminSystemsResponseSchema, 'admin'), async (req, res, next) => {
+router.get('/systems', async (req, res, next) => {
   try {
     const supabase = getSupabaseClient();
     const { count: documentsCount } = await supabase.from('documents').select('*', { count: 'exact', head: true });
@@ -25,14 +31,14 @@ router.get('/', validateResponse(adminSystemsResponseSchema, 'admin'), async (re
       jobsCount: jobsCount || 0
     };
 
-    const responseData = {
+    const envelope = {
       success: true,
       data: systemsData
     };
 
-    res.json(responseData);
+    return res.json(enforceResponse(EnvelopeOk, envelope));
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

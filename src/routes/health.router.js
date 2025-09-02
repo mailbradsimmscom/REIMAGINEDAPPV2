@@ -1,18 +1,31 @@
 import express from 'express';
-// TEMPORARILY DISABLED: import { validateResponse } from '../middleware/responseValidation.js';
-import { healthResponseSchema } from '../schemas/health.schema.js';
+import { z } from 'zod';
+import { enforceResponse } from '../middleware/enforceResponse.js';
 
 const router = express.Router();
 
+const HealthOk = z.object({
+  success: z.literal(true),
+  data: z.object({
+    status: z.literal('ok'),
+    ts: z.string()
+  })
+});
+
 // GET /health - Health check endpoint
-router.get('/', 
-  // TEMPORARILY DISABLED: validateResponse(healthResponseSchema, 'health'), 
-  (req, res) => {
-    res.json({
-      status: 'ok',
-      uptimeSeconds: Math.floor(process.uptime())
-    });
+router.get('/', (req, res, next) => {
+  try {
+    const envelope = {
+      success: true,
+      data: { 
+        status: 'ok', 
+        ts: new Date().toISOString() 
+      }
+    };
+    return res.status(200).json(enforceResponse(HealthOk, envelope));
+  } catch (e) {
+    return next(e);
   }
-);
+});
 
 export default router;

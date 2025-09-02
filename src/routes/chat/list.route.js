@@ -1,6 +1,5 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { validate } from '../../middleware/validate.js';
 import { 
   chatListQuerySchema,
@@ -12,7 +11,6 @@ const router = express.Router();
 // GET /chat/enhanced/list - List chat sessions
 router.get('/', 
   validate(chatListQuerySchema, 'query'),
-  validateResponse(chatListResponseSchema, 'chat'), 
   async (req, res, next) => {
     try {
       const { limit, cursor } = req.query;

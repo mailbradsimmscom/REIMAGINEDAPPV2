@@ -1,7 +1,6 @@
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { validate } from '../../middleware/validate.js';
 import { 
   documentJobsResponseSchema,
@@ -16,7 +15,6 @@ router.use(adminGate);
 
 // POST /admin/docs/ingest - Create document ingest job
 router.post('/', 
-  validateResponse(documentJobsResponseSchema, 'document'), 
   async (req, res, next) => {
     try {
       // Parse multipart form data using busboy

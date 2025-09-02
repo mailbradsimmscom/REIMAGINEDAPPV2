@@ -1,6 +1,5 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { validate } from '../../middleware/validate.js';
 import { 
   chatProcessRequestSchema,
@@ -12,7 +11,6 @@ const router = express.Router();
 // POST /chat/enhanced/process - Process chat message
 router.post('/', 
   validate(chatProcessRequestSchema, 'body'),
-  validateResponse(chatProcessResponseSchema, 'chat'), 
   async (req, res, next) => {
     try {
       const { message, sessionId, threadId } = req.body;

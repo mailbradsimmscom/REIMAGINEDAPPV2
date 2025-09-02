@@ -1,6 +1,5 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { validate } from '../../middleware/validate.js';
 import { 
   chatDeleteRequestSchema,
@@ -12,7 +11,6 @@ const router = express.Router();
 // DELETE /chat/enhanced/delete - Delete chat session (body)
 router.delete('/', 
   validate(chatDeleteRequestSchema, 'body'),
-  validateResponse(chatDeleteResponseSchema, 'chat'), 
   async (req, res, next) => {
     try {
       const { sessionId } = req.body;

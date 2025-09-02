@@ -2,16 +2,22 @@ import express from 'express';
 import { logger } from '../../utils/logger.js';
 import { env } from '../../config/env.js';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/responseValidation.js';
 import { adminPineconeResponseSchema } from '../../schemas/admin.schema.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+const EnvelopeOk = z.object({
+  success: z.literal(true),
+  data: z.any()
+});
+
 // GET /admin/pinecone - Get Pinecone status
-router.get('/', validateResponse(adminPineconeResponseSchema, 'admin'), async (req, res, next) => {
+router.get('/pinecone', async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
     const sidecarUrl = env.sidecarUrl || 'http://localhost:8000';
@@ -72,12 +78,12 @@ router.get('/', validateResponse(adminPineconeResponseSchema, 'admin'), async (r
       sidecarHealth: sidecarHealth
     };
 
-    const responseData = {
+    const envelope = {
       success: true,
       data: pineconeData
     };
 
-    res.json(responseData);
+    return res.json(enforceResponse(EnvelopeOk, envelope));
     
     requestLogger.info('Pinecone status retrieved', { 
       status: pineconeData.status,
@@ -86,7 +92,7 @@ router.get('/', validateResponse(adminPineconeResponseSchema, 'admin'), async (r
     });
     
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
