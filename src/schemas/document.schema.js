@@ -17,9 +17,9 @@ export const documentJobsResponseSchema = z.object({
       doc_id: z.string(),
       upload_id: z.string().nullable(),
       storage_path: z.string().nullable(),
-      params: z.record(z.any()),
-      counters: z.record(z.any()),
-      error: z.record(z.any()).nullable(),
+      params: z.record(z.string(), z.any()),
+      counters: z.record(z.string(), z.any()),
+      error: z.record(z.string(), z.any()).nullable(),
       created_at: z.string(),
       started_at: z.string().nullable(),
       updated_at: z.string(),
@@ -88,6 +88,30 @@ export const documentGetResponseSchema = z.object({
     pages_total: z.number(),
     created_at: z.string(),
     updated_at: z.string()
+  })
+});
+
+// Document job status path parameters
+export const documentJobStatusPathSchema = z.object({
+  jobId: z.string().min(1, 'Job ID is required')
+});
+
+// Document job status response schema
+export const documentJobStatusResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    job_id: z.string(),
+    status: z.string(),
+    doc_id: z.string(),
+    upload_id: z.string().nullable(),
+    storage_path: z.string().nullable(),
+    params: z.record(z.string(), z.any()),
+    counters: z.record(z.string(), z.any()),
+    error: z.record(z.string(), z.any()).nullable(),
+    created_at: z.string(),
+    started_at: z.string().nullable(),
+    updated_at: z.string(),
+    completed_at: z.string().nullable()
   })
 });
 

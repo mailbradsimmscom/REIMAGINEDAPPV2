@@ -5,7 +5,11 @@ import { paginationSchema } from './common.schema.js';
 export const adminManufacturersResponseSchema = z.object({
   success: z.literal(true),
   data: z.object({
-    manufacturers: z.array(z.string())
+    total: z.number(),
+    top: z.array(z.object({
+      manufacturer_norm: z.string()
+    })),
+    lastUpdated: z.string()
   })
 });
 
@@ -18,7 +22,13 @@ export const adminModelsQuerySchema = z.object({
 export const adminModelsResponseSchema = z.object({
   success: z.literal(true),
   data: z.object({
-    models: z.array(z.string())
+    models: z.array(z.object({
+      model_norm: z.string(),
+      manufacturer_norm: z.string()
+    })),
+    count: z.number(),
+    manufacturer: z.string(),
+    lastUpdated: z.string()
   })
 });
 

@@ -98,6 +98,54 @@ curl http://localhost:8000/health
 open http://localhost:3000/admin
 ```
 
+## 🧪 Testing
+
+This project uses a comprehensive test suite with:
+- **Node.js native test runner** (`node:test`)
+- **Supertest** for HTTP integration testing
+- **59 integration tests** covering all endpoints
+- **Security testing** (headers, CORS, rate limiting, authentication)
+- **Validation testing** (Zod schema validation)
+
+### Test Coverage
+- ✅ **Health endpoints** - System health monitoring
+- ✅ **Systems endpoints** - System management and search
+- ✅ **Chat endpoints** - Enhanced chat functionality
+- ✅ **Admin endpoints** - Administrative functions (with authentication)
+- ✅ **Document endpoints** - Document management
+- ✅ **Pinecone endpoints** - Vector database operations
+- ✅ **Security features** - Headers, CORS, rate limiting
+
+### Running Tests
+```bash
+# Run all integration tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run all tests (unit + integration)
+npm run test:all
+```
+
+## 🔄 CI/CD
+
+This project includes a GitHub Actions CI pipeline that:
+- **Runs on every push and pull request**
+- **Tests against Node.js 20.x**
+- **Validates all 59 integration tests**
+- **Ensures Express migration stability**
+- **Guards against regressions**
+
+### CI Pipeline Features
+- ✅ **Automated testing** on push/PR
+- ✅ **Environment validation** with mock credentials
+- ✅ **Test result reporting** with detailed summaries
+- ✅ **Cache optimization** for faster builds
+- ✅ **Multi-platform support** (Ubuntu)
+
+The CI pipeline is configured in `.github/workflows/test.yml` and runs automatically when you push to `main` or `develop` branches or create pull requests.
+
 ## 🏗️ Architecture
 
 ### Express.js Server

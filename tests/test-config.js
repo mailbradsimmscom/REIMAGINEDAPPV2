@@ -29,14 +29,14 @@ export const assertError = (response, statusCode = 400, errorMessage = null) => 
   assert.strictEqual(response.status, statusCode);
   assert.strictEqual(response.body.success, false);
   if (errorMessage) {
-    assert.strictEqual(response.body.error, errorMessage);
+    assert.strictEqual(response.body.message, errorMessage);
   }
 };
 
 export const assertUnauthorized = (response) => {
   assert.strictEqual(response.status, 401);
   assert.strictEqual(response.body.success, false);
-  assert.strictEqual(response.body.error, 'Unauthorized - Admin access required');
+  assert.strictEqual(response.body.message, 'Admin access required');
 };
 
 export { test, assert, request };

@@ -46,17 +46,17 @@ test('Pinecone Routes - Failure Path', async (t) => {
     const response = await publicRequest('post', '/pinecone/query')
       .send({});
     
-    assertError(response, 400, 'Query is required and must be a string');
+    assertError(response, 400, 'Invalid request data');
   });
 
   await t.test('POST /pinecone/query with non-string query returns 400', async () => {
     const response = await publicRequest('post', '/pinecone/query')
       .send({ query: 123 });
     
-    assertError(response, 400, 'Query is required and must be a string');
+    assertError(response, 400, 'Invalid request data');
   });
 
-  await t.test('GET /pinecone/documents/invalid-id/chunks returns 404', async () => {
+  await t.test('GET /pinecone/documents/invalid-id/chunks returns 500', async () => {
     const response = await publicRequest('get', '/pinecone/documents/invalid-id/chunks');
     
     assertError(response, 500, 'Internal Server Error');

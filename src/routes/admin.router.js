@@ -167,11 +167,10 @@ router.get('/manufacturers', async (req, res, next) => {
     };
 
     // Validate response data
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = adminManufacturersResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
+    const responseValidation = adminManufacturersResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
 
     res.json(responseData);
   } catch (error) {
@@ -221,11 +220,10 @@ router.get('/models', async (req, res, next) => {
     };
 
     // Validate response data
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = adminModelsResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
+    const responseValidation = adminModelsResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
 
     res.json(responseData);
   } catch (error) {

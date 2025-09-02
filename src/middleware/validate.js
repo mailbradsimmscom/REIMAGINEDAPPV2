@@ -13,6 +13,17 @@ export function validate(schema, target = 'body') {
   return (req, res, next) => {
     try {
       const data = req[target];
+      
+      // Handle empty query/params gracefully
+      if (target === 'query' && (!data || Object.keys(data).length === 0)) {
+        // For empty query, use default values from schema
+        const result = schema.safeParse({});
+        if (result.success) {
+          req[target] = result.data;
+          return next();
+        }
+      }
+      
       const result = schema.safeParse(data);
       
       if (!result.success) {
@@ -23,7 +34,6 @@ export function validate(schema, target = 'body') {
         }));
         
         logger.warn('Validation failed', {
-          correlationId: req.correlationId,
           target,
           errors,
           data: target === 'body' ? '[REDACTED]' : data
@@ -31,7 +41,8 @@ export function validate(schema, target = 'body') {
         
         return res.status(400).json({
           success: false,
-          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid request data',
           details: errors
         });
       }
@@ -42,14 +53,14 @@ export function validate(schema, target = 'body') {
       
     } catch (error) {
       logger.error('Validation middleware error', {
-        correlationId: req.correlationId,
         error: error.message,
         stack: error.stack
       });
       
       return res.status(500).json({
         success: false,
-        error: 'Internal validation error'
+        code: 'INTERNAL_ERROR',
+        message: 'Internal validation error'
       });
     }
   };

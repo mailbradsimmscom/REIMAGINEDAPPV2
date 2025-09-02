@@ -17,7 +17,7 @@ export const chatHistoryResponseSchema = z.object({
       content: z.string(),
       role: z.string(),
       createdAt: z.string(),
-      metadata: z.record(z.any()).optional()
+      metadata: z.record(z.string(), z.any()).optional()
     })),
     count: z.number()
   }),
@@ -67,13 +67,53 @@ export const chatListResponseSchema = z.object({
         name: z.string(),
         createdAt: z.string(),
         updatedAt: z.string(),
-        metadata: z.record(z.any()).optional()
+        metadata: z.record(z.string(), z.any()).optional()
       }).optional()
     })),
     count: z.number(),
     nextCursor: z.string().optional()
   }),
   timestamp: z.string()
+});
+
+// Chat context query parameters
+export const chatContextQuerySchema = z.object({
+  threadId: z.string().min(1, 'threadId is required')
+});
+
+// Chat context response schema
+export const chatContextResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    session: z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      createdAt: z.string(),
+      updatedAt: z.string()
+    }),
+    thread: z.object({
+      id: z.string(),
+      name: z.string(),
+      createdAt: z.string(),
+      updatedAt: z.string(),
+      metadata: z.record(z.string(), z.any()).optional()
+    }),
+    messages: z.array(z.object({
+      id: z.string(),
+      content: z.string(),
+      role: z.string(),
+      createdAt: z.string(),
+      metadata: z.record(z.string(), z.any()).optional()
+    })),
+    context: z.any()
+  }),
+  timestamp: z.string()
+});
+
+// Chat delete by path parameter
+export const chatDeletePathSchema = z.object({
+  sessionId: z.string().min(1, 'Session ID is required')
 });
 
 // Chat error response schema

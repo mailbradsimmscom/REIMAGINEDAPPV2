@@ -1,16 +1,22 @@
 import express from 'express';
 import documentService from '../services/document.service.js';
+import { adminGate } from '../middleware/admin.js';
 import { 
   documentJobsQuerySchema, 
   documentJobsResponseSchema,
   documentDocumentsQuerySchema,
   documentDocumentsResponseSchema,
   documentGetQuerySchema,
-  documentGetResponseSchema
+  documentGetResponseSchema,
+  documentJobStatusPathSchema,
+  documentJobStatusResponseSchema
 } from '../schemas/document.schema.js';
 import Busboy from 'busboy';
 
 const router = express.Router();
+
+// Apply admin gate middleware to all document routes
+router.use(adminGate);
 
 // POST /admin/docs/ingest - Create document ingest job
 router.post('/ingest', async (req, res, next) => {
@@ -120,7 +126,17 @@ router.get('/jobs/:jobId', async (req, res, next) => {
   try {
     const { jobId } = req.params;
     
-    const job = await documentService.getJobStatus(jobId);
+    // Validate path parameters
+    const pathValidation = documentJobStatusPathSchema.safeParse({ jobId });
+    if (!pathValidation.success) {
+      const error = new Error('Invalid path parameters');
+      error.name = 'ZodError';
+      error.errors = pathValidation.error.errors;
+      throw error;
+    }
+
+    const { jobId: validatedJobId } = pathValidation.data;
+    const job = await documentService.getJobStatus(validatedJobId);
     
     if (!job) {
       const error = new Error('Job not found');
@@ -128,10 +144,18 @@ router.get('/jobs/:jobId', async (req, res, next) => {
       throw error;
     }
     
-    res.json({
+    const responseData = {
       success: true,
       data: job
-    });
+    };
+
+    // Validate response data
+    const responseValidation = documentJobStatusResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
+    res.json(responseData);
   } catch (error) {
     next(error);
   }
@@ -259,11 +283,11 @@ router.get('/documents/:docId', async (req, res, next) => {
       data: document
     };
 
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = documentGetResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
+    // Validate response data
+    const responseValidation = documentGetResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
 
     res.json(responseData);
   } catch (error) {

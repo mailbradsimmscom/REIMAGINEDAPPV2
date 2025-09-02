@@ -4,7 +4,10 @@ import {
   pineconeSearchRequestSchema, 
   pineconeSearchResponseSchema,
   pineconeStatsQuerySchema,
-  pineconeStatsResponseSchema
+  pineconeStatsResponseSchema,
+  pineconeDocumentChunksPathSchema,
+  pineconeDocumentChunksResponseSchema,
+  pineconeQueryRequestSchema
 } from '../schemas/pinecone.schema.js';
 
 const router = express.Router();
@@ -54,11 +57,11 @@ router.get('/stats', async (req, res, next) => {
       data: stats
     };
 
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = pineconeStatsResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
+    // Validate response data
+    const responseValidation = pineconeStatsResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
 
     res.json(responseData);
   } catch (error) {
@@ -71,22 +74,34 @@ router.get('/documents/:docId/chunks', async (req, res, next) => {
   try {
     const { docId } = req.params;
     
-    if (!docId) {
-      const error = new Error('Document ID is required');
-      error.status = 400;
+    // Validate path parameters
+    const pathValidation = pineconeDocumentChunksPathSchema.safeParse({ docId });
+    if (!pathValidation.success) {
+      const error = new Error('Invalid path parameters');
+      error.name = 'ZodError';
+      error.errors = pathValidation.error.errors;
       throw error;
     }
 
-    const chunks = await pineconeService.getDocumentChunks(docId);
+    const { docId: validatedDocId } = pathValidation.data;
+    const chunks = await pineconeService.getDocumentChunks(validatedDocId);
     
-    res.json({
+    const responseData = {
       success: true,
       data: {
-        documentId: docId,
+        documentId: validatedDocId,
         chunks,
         totalChunks: chunks.length
       }
-    });
+    };
+
+    // Validate response data
+    const responseValidation = pineconeDocumentChunksResponseSchema.safeParse(responseData);
+    if (!responseValidation.success) {
+      throw new Error('Invalid response format');
+    }
+
+    res.json(responseData);
   } catch (error) {
     next(error);
   }
@@ -95,17 +110,16 @@ router.get('/documents/:docId/chunks', async (req, res, next) => {
 // POST /pinecone/query - Enhanced query with context
 router.post('/query', async (req, res, next) => {
   try {
-    const {
-      query,
-      context = {},
-      options = {}
-    } = req.body;
-
-    if (!query || typeof query !== 'string') {
-      const error = new Error('Query is required and must be a string');
-      error.status = 400;
+    // Validate request body
+    const validationResult = pineconeQueryRequestSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      const error = new Error('Invalid request data');
+      error.name = 'ZodError';
+      error.errors = validationResult.error.errors;
       throw error;
     }
+
+    const { query, context, options } = validationResult.data;
 
     // Enhanced search with context
     const searchResults = await pineconeService.searchDocuments(query, context);

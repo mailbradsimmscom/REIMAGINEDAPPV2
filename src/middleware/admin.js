@@ -1,4 +1,5 @@
 import { logger } from '../utils/logger.js';
+import { env } from '../config/env.js';
 
 /**
  * Admin authentication middleware
@@ -9,7 +10,7 @@ export function adminGate(req, res, next) {
   
   // Simple admin token check
   const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
-  const expectedToken = process.env.ADMIN_TOKEN || 'admin-secret-key';
+  const expectedToken = env.adminToken;
   
   if (!adminToken || adminToken !== expectedToken) {
     requestLogger.warn('Admin access denied', {
@@ -20,7 +21,8 @@ export function adminGate(req, res, next) {
     
     return res.status(401).json({
       success: false,
-      error: 'Unauthorized - Admin access required'
+      code: 'UNAUTHORIZED',
+      message: 'Admin access required'
     });
   }
   
@@ -34,9 +36,9 @@ export function adminGate(req, res, next) {
  */
 export function optionalAdminGate(req, res, next) {
   const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
-  const expectedToken = process.env.ADMIN_TOKEN || 'admin-secret-key';
+  const expectedToken = env.adminToken;
   
-  if (adminToken && adminToken === expectedToken) {
+  if (expectedToken && adminToken && adminToken === expectedToken) {
     req.isAdmin = true;
   } else {
     req.isAdmin = false;

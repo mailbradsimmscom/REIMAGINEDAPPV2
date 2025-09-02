@@ -2,9 +2,12 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 import { logger } from './utils/logger.js';
 import { errorHandler, notFoundHandler } from './middleware/error.js';
 import { adminGate } from './middleware/admin.js';
+import { securityHeaders, basicRateLimit } from './middleware/security.js';
+import { env } from './config/env.js';
 
 // Import all Express routers
 import healthRouter from './routes/health.router.js';
@@ -21,7 +24,38 @@ const __dirname = path.dirname(__filename);
 // Create Express app
 const app = express();
 
-// Security middleware
+// Security middleware (must come first)
+app.use(securityHeaders);
+app.use(basicRateLimit);
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow admin origin (you can configure this in env)
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001'
+    ];
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-token']
+};
+
+app.use(cors(corsOptions));
+
+// Body parsing middleware with strict limits
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
@@ -39,42 +73,38 @@ app.use((req, res, next) => {
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve admin.html for /admin route (must come before admin router)
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
 // Serve index.html for root route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// API Routes
-app.use('/health', healthRouter);
-app.use('/systems', systemsRouter);
+// API Routes (order matters - more specific routes first)
+app.use('/admin/docs', documentRouter);  // More specific admin route first
+app.use('/admin', adminRouter);          // General admin route second
 app.use('/chat/enhanced', chatRouter);
-app.use('/admin', adminRouter);
-app.use('/admin/docs', documentRouter);
+app.use('/systems', systemsRouter);
 app.use('/pinecone', pineconeRouter);
+app.use('/health', healthRouter);
 
 // Error handling middleware
 app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Start server
-const port = process.env.PORT || 3000;
 const startServer = () => {
-  app.listen(port, () => {
-    console.log(`🚀 Express server running on port ${port}`);
-    console.log(`📊 Routes available:`);
-    console.log(`   ✅ Health: http://localhost:${port}/health`);
-    console.log(`   ✅ Systems: http://localhost:${port}/systems`);
-    console.log(`   ✅ Chat: http://localhost:${port}/chat/enhanced`);
-    console.log(`   ✅ Admin: http://localhost:${port}/admin`);
-    console.log(`   ✅ Documents: http://localhost:${port}/admin/docs`);
-    console.log(`   ✅ Pinecone: http://localhost:${port}/pinecone`);
-    console.log(`🔒 Admin gate: x-admin-token: admin-secret-key`);
-    logger.info('Express server started', { port });
+  app.listen(env.port, () => {
+    logger.info('Express server started', { 
+      port: env.port,
+      routes: {
+        health: `http://localhost:${env.port}/health`,
+        systems: `http://localhost:${env.port}/systems`,
+        chat: `http://localhost:${env.port}/chat/enhanced`,
+        admin: `http://localhost:${env.port}/admin`,
+        documents: `http://localhost:${env.port}/admin/docs`,
+        pinecone: `http://localhost:${env.port}/pinecone`
+      },
+      adminGate: 'x-admin-token required'
+    });
   });
 };
 

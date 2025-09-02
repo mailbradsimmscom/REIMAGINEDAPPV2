@@ -10,7 +10,7 @@ export const pineconeStatsResponseSchema = z.object({
     totalVectors: z.number(),
     dimension: z.number(),
     indexFullness: z.number(),
-    namespaces: z.record(z.object({
+    namespaces: z.record(z.string(), z.object({
       vector_count: z.number()
     })),
     lastUpdated: z.string()
@@ -51,6 +51,35 @@ export const pineconeSearchResponseSchema = z.object({
     totalResults: z.number(),
     searchTime: z.string()
   })
+});
+
+// Pinecone document chunks path parameters
+export const pineconeDocumentChunksPathSchema = z.object({
+  docId: z.string().min(1, 'Document ID is required')
+});
+
+// Pinecone document chunks response schema
+export const pineconeDocumentChunksResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    documentId: z.string(),
+    chunks: z.array(z.object({
+      id: z.string(),
+      score: z.number(),
+      content: z.string(),
+      page: z.number(),
+      chunkIndex: z.number(),
+      chunkType: z.string()
+    })),
+    totalChunks: z.number()
+  })
+});
+
+// Pinecone query request schema
+export const pineconeQueryRequestSchema = z.object({
+  query: z.string().min(1, 'Query is required and must be a non-empty string'),
+  context: z.record(z.string(), z.any()).optional().default({}),
+  options: z.record(z.string(), z.any()).optional().default({})
 });
 
 // Pinecone error response schema

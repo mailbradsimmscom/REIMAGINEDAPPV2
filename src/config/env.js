@@ -53,7 +53,10 @@ export const env = Object.freeze({
   // Application configuration
   nodeEnv: process.env.NODE_ENV ?? 'development',
   appVersion: process.env.APP_VERSION ?? '1.0.0',
-  port: Number(process.env.PORT ?? '3000')
+  port: Number(process.env.PORT ?? '3000'),
+  
+  // Admin configuration
+  adminToken: process.env.ADMIN_TOKEN ?? 'admin-secret-key'
 });
 
 export default env;
