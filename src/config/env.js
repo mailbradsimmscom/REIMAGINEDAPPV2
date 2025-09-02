@@ -56,7 +56,11 @@ export const env = Object.freeze({
   port: Number(process.env.PORT ?? '3000'),
   
   // Admin configuration
-  adminToken: process.env.ADMIN_TOKEN ?? 'admin-secret-key'
+  adminToken: process.env.ADMIN_TOKEN ?? 'admin-secret-key',
+  
+  // Response validation configuration
+  enableResponseValidation: process.env.RESPONSE_VALIDATE === '1',
+  responseValidationRoutes: process.env.RESPONSE_VALIDATE_ROUTES?.split(',') || []
 });
 
 export default env;

@@ -1,6 +1,24 @@
 import { z } from 'zod';
 import { paginationSchema } from './common.schema.js';
 
+// Admin health response schema
+export const adminHealthResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    status: z.string(),
+    timestamp: z.string(),
+    uptime: z.number(),
+    memory: z.object({
+      rss: z.number(),
+      heapTotal: z.number(),
+      heapUsed: z.number(),
+      external: z.number()
+    }),
+    environment: z.string(),
+    version: z.string()
+  })
+});
+
 // Admin manufacturers response schema
 export const adminManufacturersResponseSchema = z.object({
   success: z.literal(true),

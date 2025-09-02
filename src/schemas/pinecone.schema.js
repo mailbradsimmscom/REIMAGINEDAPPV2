@@ -82,6 +82,34 @@ export const pineconeQueryRequestSchema = z.object({
   options: z.record(z.string(), z.any()).optional().default({})
 });
 
+// Pinecone query response schema
+export const pineconeQueryResponseSchema = z.object({
+  success: z.literal(true),
+  query: z.string(),
+  enhancedQuery: z.string(),
+  results: z.array(z.object({
+    documentId: z.string(),
+    manufacturer: z.string(),
+    model: z.string(),
+    filename: z.string(),
+    revisionDate: z.string(),
+    bestScore: z.number(),
+    chunks: z.array(z.object({
+      id: z.string(),
+      score: z.number(),
+      relevanceScore: z.number(),
+      content: z.string(),
+      page: z.number(),
+      chunkIndex: z.number(),
+      chunkType: z.string()
+    }))
+  })),
+  metadata: z.object({
+    totalResults: z.number(),
+    searchTime: z.string()
+  })
+});
+
 // Pinecone error response schema
 export const pineconeErrorSchema = z.object({
   success: z.literal(false),

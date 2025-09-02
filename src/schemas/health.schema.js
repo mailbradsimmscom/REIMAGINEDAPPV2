@@ -1,15 +1,15 @@
 import { z } from 'zod';
 
-// Health check query parameters
-export const healthQuerySchema = z.object({
-  detailed: z.enum(['true', 'false']).optional().transform(val => val === 'true')
-}).passthrough();
-
-// Basic health check response schema
+// Health response schema
 export const healthResponseSchema = z.object({
-  status: z.literal('ok'),
-  uptimeSeconds: z.number()
+  status: z.string(),
+  uptimeSeconds: z.number().int().min(0)
 });
+
+// Health query schema (if needed for future endpoints)
+export const healthQuerySchema = z.object({
+  // Add query parameters if needed
+}).optional();
 
 // Admin health check response schema
 export const adminHealthResponseSchema = z.object({

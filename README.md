@@ -150,7 +150,8 @@ The CI pipeline is configured in `.github/workflows/test.yml` and runs automatic
 
 ### Express.js Server
 - **Modern web framework** with middleware support
-- **Modular router architecture** for clean separation of concerns
+- **Modular router architecture** with split endpoint files for maintainability
+- **Barrel export pattern** for clean import interfaces
 - **Central error handling** with consistent response format
 - **Security middleware** with body size limits and admin authentication
 - **Static file serving** for frontend assets
@@ -189,10 +190,33 @@ REIMAGINEDAPPV2/
 │   │   ├── pinecone.service.js
 │   │   └── systems.service.js
 │   ├── routes/                    # HTTP endpoints layer
-│   │   ├── document.routes.js
-│   │   ├── chat.routes.js
-│   │   ├── admin.routes.js
-│   │   └── health.route.js
+│   │   ├── health.router.js       # Health check endpoint
+│   │   ├── systems.router.js      # Systems management
+│   │   ├── pinecone.router.js     # Vector operations
+│   │   ├── admin/                 # Admin endpoints (split)
+│   │   │   ├── index.js           # Barrel export
+│   │   │   ├── dashboard.route.js  # Admin dashboard
+│   │   │   ├── health.route.js    # Admin health
+│   │   │   ├── systems.route.js   # Admin systems
+│   │   │   ├── logs.route.js      # Admin logs
+│   │   │   ├── manufacturers.route.js # Admin manufacturers
+│   │   │   ├── models.route.js    # Admin models
+│   │   │   └── pinecone.route.js  # Admin pinecone
+│   │   ├── document/              # Document endpoints (split)
+│   │   │   ├── index.js           # Barrel export
+│   │   │   ├── ingest.route.js    # Document ingestion
+│   │   │   ├── jobs.route.js      # Job listing
+│   │   │   ├── job-status.route.js # Job status
+│   │   │   ├── documents.route.js # Document listing
+│   │   │   └── get-one.route.js   # Single document
+│   │   └── chat/                  # Chat endpoints (split)
+│   │       ├── index.js           # Barrel export
+│   │       ├── process.route.js   # Message processing
+│   │       ├── history.route.js    # Chat history
+│   │       ├── list.route.js      # Chat listing
+│   │       ├── context.route.js   # Chat context
+│   │       ├── delete.route.js    # Body-based deletion
+│   │       └── session-delete.route.js # Path-based deletion
 │   ├── utils/
 │   │   └── logger.js              # Centralized logging
 │   ├── public/                    # Static files

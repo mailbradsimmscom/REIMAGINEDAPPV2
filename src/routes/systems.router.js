@@ -1,5 +1,6 @@
 import express from 'express';
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
+import { validateResponse } from '../middleware/responseValidation.js';
 import { 
   systemsListQuerySchema, 
   systemsListResponseSchema,
@@ -11,7 +12,7 @@ import {
 const router = express.Router();
 
 // GET /systems/search - Search systems (MUST come before /:assetUid)
-router.get('/search', async (req, res, next) => {
+router.get('/search', validateResponse(systemsSearchResponseSchema, 'systems'), async (req, res, next) => {
   try {
     const { q, limit } = req.query;
     
@@ -41,13 +42,6 @@ router.get('/search', async (req, res, next) => {
       data: result
     };
 
-    // Validate response data
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = systemsSearchResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
-
     res.json(responseData);
   } catch (error) {
     next(error);
@@ -55,7 +49,7 @@ router.get('/search', async (req, res, next) => {
 });
 
 // GET /systems - List systems
-router.get('/', async (req, res, next) => {
+router.get('/', validateResponse(systemsListResponseSchema, 'systems'), async (req, res, next) => {
   try {
     const { limit, cursor } = req.query;
     
@@ -79,12 +73,6 @@ router.get('/', async (req, res, next) => {
       data: result
     };
 
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = systemsListResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
-
     res.json(responseData);
   } catch (error) {
     next(error);
@@ -92,7 +80,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET /systems/:assetUid - Get specific system
-router.get('/:assetUid', async (req, res, next) => {
+router.get('/:assetUid', validateResponse(systemsGetResponseSchema, 'systems'), async (req, res, next) => {
   try {
     const { assetUid } = req.params;
     
@@ -114,13 +102,6 @@ router.get('/:assetUid', async (req, res, next) => {
       success: true,
       data: item
     };
-
-    // Validate response data
-    // TODO: Re-enable response validation after debugging
-    // const responseValidation = systemsGetResponseSchema.safeParse(responseData);
-    // if (!responseValidation.success) {
-    //   throw new Error('Invalid response format');
-    // }
 
     res.json(responseData);
   } catch (error) {

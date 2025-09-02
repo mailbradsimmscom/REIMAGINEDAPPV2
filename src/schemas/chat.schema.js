@@ -52,6 +52,32 @@ export const chatProcessRequestSchema = z.object({
   threadId: z.string().optional()
 });
 
+// Chat process response schema
+export const chatProcessResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    sessionId: z.string(),
+    threadId: z.string(),
+    userMessage: z.object({
+      id: z.string(),
+      content: z.string(),
+      role: z.string(),
+      createdAt: z.string()
+    }),
+    assistantMessage: z.object({
+      id: z.string(),
+      content: z.string(),
+      role: z.string(),
+      createdAt: z.string(),
+      sources: z.array(z.any()).optional()
+    }),
+    systemsContext: z.array(z.any()).optional(),
+    enhancedQuery: z.string().optional(),
+    sources: z.array(z.any()).optional()
+  }),
+  timestamp: z.string()
+});
+
 // Chat list response schema
 export const chatListResponseSchema = z.object({
   success: z.literal(true),

@@ -1,55 +1,217 @@
-# STRICT RULES - NEVER VIOLATE
+# REIMAGINEDAPPV2 – Cursor Rules (Do Not Drift)
 
-## NEVER DO:
-- DELETE working code
-- Remove existing functionality  
-- Access database outside /repositories folder
-- Use console.log in production code
-- Hardcode API keys or URLs
-- Create test-*.js files in root
-- Modify .env or secrets
-- Access process.env directly (use centralized env.js instead)
+These rules are **hard invariants** for any AI/code changes in this repo. If an action would violate a rule, STOP and propose a plan instead.
 
-## ALWAYS DO:
-- Use repository pattern for ALL database access
-- Keep database logic in /repositories only
-- Use environment variables from centralized env.js configuration
-- Preserve existing functionality
-- Follow existing code patterns
-- Test changes before committing
-- Make active additions to the admin logging dashboard to log and visual new functionality properly
+---
 
-## ARCHITECTURE:
-- /repositories - ONLY place for database queries
-- /services - Business logic only
-- /routes - HTTP endpoints only
-- Never mix these layers
+## 0) Project invariants (never change silently)
+- **Runtime**: Node 20, ESM modules only.
+- **Architecture**: `routes → services → repositories`.
+  - Routes **never** call repositories directly.
+  - Repositories contain **all** DB/storage/network I/O.
+- **Config**: Read env **only** via `src/config/env.js`. Never `process.env.X` elsewhere.
+- **Logging**: Use `src/utils/logger.js`. No `console.log` in app code.
+- **Public API contract**: Every HTTP response is an envelope:
+  ```json
+  { "success": true|false, "data"?: any, "error"?: { "code": string, "message": string, "details"?: any }, "requestId"?: string }
 
-# MODULE REQUIREMENTS
+Do not change this shape.
+1) Never do
 
-## STRICT ESM MODE:
-- Use ONLY ES modules (import/export)
-- NEVER use require() or module.exports
-- Type: "module" must be in package.json
-- File extensions: .js with ESM syntax
-- Import must include .js extension: import x from './file.js'
+    Delete working code or remove functionality.
 
-## NO MONOLITHIC FILES:
-- Max 260 lines per file
-- One class or service per file
-- Split large functions into smaller helpers
-- Separate concerns into different files
-- If a file does 2+ things, split it
+    Change HTTP paths, methods, or query/param names without updating schemas, tests, and docs in the same PR.
 
-## FILE STRUCTURE:
-- Each route in separate file
-- Each repository in separate file  
-- Each service in separate file
-- Utils broken into small modules
-- One exported function/class per file
+    Access DB/storage outside /repositories.
 
-## NODE 20 FEATURES:
-- Use native fetch() not axios
-- Use native crypto not bcrypt
-- Use native test runner not jest
-- Use top-level await
+    Touch .env or any secrets, or hardcode keys/URLs.
+
+    Add axios/other HTTP libs (use Node 20 fetch).
+
+    Introduce global state or singletons outside existing patterns.
+
+    Commit artifacts (node_modules/, venv/, logs/, dumps, PDFs).
+
+2) Always do
+
+    Keep request & response Zod at the route edge:
+
+        Validate params, query, and body on input.
+
+        Validate response to the envelope (can be gated by flag, below).
+
+    Return consistent error envelopes via centralized error handling.
+
+    Use services for business logic; keep routes thin.
+
+    Keep repositories pure I/O, no business rules.
+
+    Add tests for every route change (happy, invalid, unauthorized).
+
+    Preserve behavioral parity when refactoring; if behavior must change, feature-flag it and update tests/docs.
+
+3) Routing policy
+
+    Express routers live in src/routes/*.router.js.
+
+        Legacy *.routes.js files are deprecated—do not modify or reintroduce them.
+
+    New endpoints must be added to a router file, not index.js.
+
+    Each router file should expose ≤ 5 handlers and be ≤ ~200 lines. If it grows:
+
+        Split by endpoint (e.g., routes/chat/list.route.js).
+
+        Re-export with a small index.js/barrel if needed.
+
+4) Zod policy
+
+    Schemas live in src/schemas/*.
+
+    Every handler MUST:
+
+        Validate input with Zod (params, query, body).
+
+        Call a service.
+
+        Shape the response to the envelope and (optionally) validate the response schema.
+
+    Response validation is controlled by env flag:
+
+        RESPONSE_VALIDATE=1 → validate and throw on mismatch.
+
+        Default may be off in local dev; always on in CI.
+
+5) Security & limits
+
+    Admin endpoints under /admin/* are gated by x-admin-token (see src/middleware/admin.js if present or implement). Do not downgrade.
+
+    JSON body limits: default ≤ 2MB. Larger only on explicit upload endpoints.
+
+    CORS: only allowed origins from config; do not broaden.
+
+    Set security headers (Helmet or equivalent). Do not remove.
+
+6) File boundaries & size
+
+    Soft guardrail: ≤ 250 lines per file. Use this as a signal, not a law:
+
+        Split when a file mixes concerns (routing + validation + domain logic + formatting).
+
+        Extract helpers in services/* (e.g., context-builder, reranker, sidecar-client).
+
+    Prefer one exported unit per file where practical (function/class/module).
+
+7) Repos & data access
+
+    All DB and storage access must go through /repositories/*.
+
+    Supabase, Pinecone, and external services are wrapped in repository/service clients; do not bypass.
+
+    Any schema/data shape change requires:
+
+        A migration file (SQL) alongside code,
+
+        Updated Zod types,
+
+        Updated tests,
+
+        A note in README_MACHINE.md/API_DOCUMENTATION.md.
+
+8) Sidecar contract (Python)
+
+    Call the sidecar only via the sidecar client (no ad-hoc fetches).
+
+    Do not change sidecar endpoints, payloads, or timeouts without:
+
+        updating the client,
+
+        adding integration tests (mocked),
+
+        and documenting the version in the client.
+
+9) Testing policy (Supertest + node:test)
+
+    Use Supertest for HTTP integration tests. Each router file gets tests covering:
+
+        ✅ Happy path,
+
+        ❌ Invalid input (Zod rejects),
+
+        🔒 Unauthorized/forbidden for /admin/*.
+
+    No network calls in tests—mock repositories/clients.
+
+    CI must run the test suite on every PR; failing tests block merges.
+
+10) Error handling
+
+    Throw typed errors from services and map them to the envelope in a central error middleware.
+
+    Do not inline try/catch in every handler unless it adds context; prefer central handling.
+
+11) Performance & observability
+
+    Use request IDs in logs; include requestId in the envelope when available.
+
+    Avoid N+1 calls; batch or cache in services when adding new queries.
+
+    Do not bump timeouts or limits without explaining why in the PR.
+
+12) Dependencies
+
+    Prefer platform built-ins: fetch, URL, crypto.
+
+    Avoid heavy libs unless justified in PR (size, security, long-term maintenance).
+
+    Keep package.json lean; remove unused deps when noticed.
+
+13) Pull request checklist (must pass)
+
+No route path/method/query changes without matching schema + tests + docs.
+
+All new/changed routes validate input and (if flag on) response with Zod.
+
+Router files remain ≤ 200 lines or are split by endpoint.
+
+No repository access from routes; services mediate all logic.
+
+No process.env usage outside src/config/env.js.
+
+No console.log; uses logger.
+
+No secrets added; .env.example updated if new vars required.
+
+    Supertest coverage added/updated; CI green.
+
+14) Allowed safe refactors (no behavior change)
+
+    Splitting files by concern/endpoint.
+
+    Replacing inline validation with validate() middleware.
+
+    Moving repository calls from routes into services.
+
+    Extracting pure helpers (formatters, mappers) under services/*.
+
+    Converting console.log to logger calls.
+
+15) Propose-first changes (require plan before code)
+
+    Any breaking API change (paths, methods, params).
+
+    Any schema or DB migration.
+
+    Changing sidecar contracts or timeouts.
+
+    Raising global body size limits or widening CORS.
+
+    Switching libraries or introducing non-standard deps.
+
+16) Housekeeping
+
+    .gitignore must exclude: node_modules/, python-sidecar/venv/, .venv/, logs/, *.log, dist/, build/, coverage caches, OS cruft.
+
+    Remove literal ... placeholders from source files; they are not valid code.
+
+    Legacy *.routes.js files are kept only until deletion; do not modify.

@@ -12,9 +12,9 @@ import { env } from './config/env.js';
 // Import all Express routers
 import healthRouter from './routes/health.router.js';
 import systemsRouter from './routes/systems.router.js';
-import chatRouter from './routes/chat.router.js';
-import adminRouter from './routes/admin.router.js';
-import documentRouter from './routes/document.router.js';
+import chatRouter from './routes/chat/index.js';
+import adminRouter from './routes/admin/index.js';
+import documentRouter from './routes/document/index.js';
 import pineconeRouter from './routes/pinecone.router.js';
 
 // Get __dirname equivalent for ES modules
