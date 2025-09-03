@@ -1,18 +1,19 @@
-import { env } from '../config/env.js';
+import { getEnv } from '../config/env.js';
 import { personality } from '../config/personality.js';
 
 export async function enhanceQuery(userQuery, systemsContext = []) {
   try {
     const prompt = buildQueryEnhancementPrompt(userQuery, systemsContext);
+    const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.openaiApiKey}`,
+        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: env.openaiModel,
+        model: openaiModel,
         messages: [
           {
             role: 'system',
@@ -26,7 +27,7 @@ You are enhancing a user query by incorporating relevant context from systems da
           }
         ],
         max_tokens: 200,
-        temperature: env.openaiTemperature
+        temperature: Number(openaiTemperature)
       })
     });
 
@@ -44,15 +45,16 @@ You are enhancing a user query by incorporating relevant context from systems da
 export async function summarizeConversation(messages, systemsContext = []) {
   try {
     const prompt = buildSummarizationPrompt(messages, systemsContext);
+    const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.openaiApiKey}`,
+        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: env.openaiModel,
+        model: openaiModel,
         messages: [
           {
             role: 'system',
@@ -66,7 +68,7 @@ You are summarizing a conversation. Provide a concise summary that captures the 
           }
         ],
         max_tokens: 300,
-        temperature: env.openaiTemperature
+        temperature: Number(openaiTemperature)
       })
     });
 
@@ -84,15 +86,16 @@ You are summarizing a conversation. Provide a concise summary that captures the 
 export async function synthesizeAnswer(userQuery, categorizedResults) {
   try {
     const prompt = buildSynthesisPrompt(userQuery, categorizedResults);
+    const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.openaiApiKey}`,
+        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: env.openaiModel,
+        model: openaiModel,
         messages: [
           {
             role: 'system',
@@ -108,7 +111,7 @@ IMPORTANT: Always maintain the optimistic, curious, people-person tone throughou
           }
         ],
         max_tokens: 800,
-        temperature: env.openaiTemperature
+        temperature: Number(openaiTemperature)
       })
     });
 
@@ -126,15 +129,16 @@ IMPORTANT: Always maintain the optimistic, curious, people-person tone throughou
 export async function generateChatName(messages, systemsContext = []) {
   try {
     const prompt = buildNamingPrompt(messages, systemsContext);
+    const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.openaiApiKey}`,
+        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: env.openaiModel,
+        model: openaiModel,
         messages: [
           {
             role: 'system',
@@ -148,7 +152,7 @@ You are creating a concise, descriptive name for a chat conversation. Create a 2
           }
         ],
         max_tokens: 50,
-        temperature: env.openaiTemperature
+        temperature: Number(openaiTemperature)
       })
     });
 

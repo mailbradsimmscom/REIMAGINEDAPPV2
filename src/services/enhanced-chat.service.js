@@ -2,7 +2,7 @@ import { searchSystems } from '../repositories/systems.repository.js';
 import pineconeService from './pinecone.service.js';
 import { enhanceQuery, summarizeConversation, generateChatName, synthesizeAnswer } from './llm.service.js';
 import chatRepository, { deleteChatMessages, deleteChatThreads, deleteChatSession as deleteSessionFromRepo } from '../repositories/chat.repository.js';
-import { env } from '../config/env.js';
+import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 import { personality } from '../config/personality.js';
 
@@ -165,7 +165,8 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     
     // Step 10: Check if we should summarize (every N messages)
     const totalMessages = recentMessages.length + 2; // +2 for user and assistant messages we just added
-    if (totalMessages >= env.summaryFrequency) {
+    const { summaryFrequency = 5 } = getEnv({ loose: true });
+    if (totalMessages >= summaryFrequency) {
       try {
         const summary = await summarizeConversation(recentMessages, systemsContext);
         await chatRepository.updateChatThread(threadId, {

@@ -1,6 +1,6 @@
 import express from 'express';
 import { logger } from '../../utils/logger.js';
-import { env } from '../../config/env.js';
+import { getEnv } from '../../config/env.js';
 import { adminGate } from '../../middleware/admin.js';
 import { adminPineconeResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
@@ -20,7 +20,7 @@ const EnvelopeOk = z.object({
 router.get('/', async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
-    const sidecarUrl = env.sidecarUrl || 'http://localhost:8000';
+    const { PYTHON_SIDECAR_URL: sidecarUrl = 'http://localhost:8000', PINECONE_INDEX: pineconeIndex, PINECONE_NAMESPACE: pineconeNamespace = '__default__' } = getEnv({ loose: true });
     
     // Check sidecar health
     let sidecarHealth = { status: 'unknown', error: null };
@@ -68,8 +68,8 @@ router.get('/', async (req, res, next) => {
     // Get basic Pinecone info from environment
     const pineconeData = {
       status: healthData.status === 'healthy' ? 'Connected' : 'Disconnected',
-      index: env.pineconeIndex,
-      namespace: env.pineconeNamespace,
+      index: pineconeIndex,
+      namespace: pineconeNamespace,
       vectors: statsData?.total_vector_count || 'N/A',
       totalVectors: statsData?.total_vector_count || 0,
       dimension: statsData?.dimension || 'N/A',
@@ -83,7 +83,7 @@ router.get('/', async (req, res, next) => {
       data: pineconeData
     };
 
-    res.json(enforceResponse(EnvelopeOk, envelope));
+    return enforceResponse(res, envelope);
     
     requestLogger.info('Pinecone status retrieved', { 
       status: pineconeData.status,

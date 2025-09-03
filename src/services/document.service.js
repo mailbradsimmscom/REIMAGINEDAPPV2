@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/supabaseClient.js';
 import documentRepository from '../repositories/document.repository.js';
 import { logger } from '../utils/logger.js';
-import { env } from '../config/env.js';
+import { getEnv } from '../config/env.js';
 
 class DocumentService {
   constructor() {

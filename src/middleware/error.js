@@ -1,18 +1,10 @@
-import { env } from '../config/env.js';
-
 export function errorHandler(err, req, res, next) {
-  if (res.headersSent) return next(err); // <-- Prevent double-send
-
-  const status = Number(err.statusCode || err.status || 500);
-  const code = String(err.code || 'INTERNAL');
-
+  if (res.headersSent) return next(err);
+  const status = err.status || 500;
   return res.status(status).json({
     success: false,
-    error: {
-      code,
-      message: err.message || 'Internal server error',
-      ...(err.details ? { details: err.details } : {})
-    }
+    error: { code: err.code || 'INTERNAL', message: err.message || 'Unexpected error' },
+    requestId: res.locals?.requestId ?? null,
   });
 }
 

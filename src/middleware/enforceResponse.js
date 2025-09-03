@@ -1,14 +1,13 @@
+import { getEnv } from '../config/env.js';
+
 /** Validate BEFORE sending. Throw to error handler; never write here. */
-export async function enforceResponse(schema, envelope) {
-  const { env } = await import('../config/env.js');
-  if (!env.RESPONSE_VALIDATE || !schema) return envelope;
-  const parsed = schema.safeParse(envelope);
-  if (!parsed.success) {
-    const e = new Error('RESPONSE_SCHEMA_MISMATCH');
-    e.code = 'RESPONSE_SCHEMA_MISMATCH';
-    e.statusCode = 500;
-    e.details = parsed.error.issues;
-    throw e;
-  }
-  return parsed.data;
+export function enforceResponse(res, payload, status = 200) {
+  if (res.headersSent) return;
+  res.status(status).json({
+    success: !!payload?.success,
+    data: payload?.data ?? null,
+    error: payload?.error ?? null,
+    requestId: res.locals?.requestId ?? null,
+  });
+  return;
 }

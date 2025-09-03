@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
-import { env } from './config/env.js';
 
 // Create Express app
 const app = express();

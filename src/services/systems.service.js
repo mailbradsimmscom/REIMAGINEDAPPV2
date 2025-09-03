@@ -1,5 +1,5 @@
 import { listSystems, getSystemByAssetUid, searchSystems } from '../repositories/systems.repository.js';
-import { env } from '../config/env.js';
+import { getEnv } from '../config/env.js';
 
 function validateLimit(limit) {
   const n = Number(limit);
@@ -57,17 +57,18 @@ function validateQuery(q) {
 export async function searchSystemsSvc(q, { limit } = {}) {
   try {
     const safeQ = validateQuery(q);
+    const { searchMaxRows = 8, searchRankFloor = 0.5 } = getEnv({ loose: true });
     // Use explicit limit if provided, otherwise use env default
-    const maxRows = limit ? Math.min(Math.max(Number(limit), 1), env.searchMaxRows) : env.searchMaxRows;
+    const maxRows = limit ? Math.min(Math.max(Number(limit), 1), searchMaxRows) : searchMaxRows;
     
     const raw = await searchSystems(safeQ, { limit: maxRows });
-    const filtered = raw.filter((r) => Number(r.rank) >= env.searchRankFloor).slice(0, maxRows);
+    const filtered = raw.filter((r) => Number(r.rank) >= searchRankFloor).slice(0, maxRows);
     
     return { 
       systems: filtered, 
       meta: { 
-        floor: env.searchRankFloor, 
-        maxRows: env.searchMaxRows, 
+        floor: searchRankFloor, 
+        maxRows: searchMaxRows, 
         rawCount: raw.length,
         filteredCount: filtered.length,
         query: safeQ
@@ -75,13 +76,14 @@ export async function searchSystemsSvc(q, { limit } = {}) {
     };
   } catch (error) {
     // Enhance error with service context
+    const { searchRankFloor = 0.5, searchMaxRows = 8 } = getEnv({ loose: true });
     error.context = { 
       ...error.context, 
       service: 'searchSystemsSvc',
       input: { query: q, limit },
       config: { 
-        searchRankFloor: env.searchRankFloor, 
-        searchMaxRows: env.searchMaxRows 
+        searchRankFloor, 
+        searchMaxRows 
       }
     };
     throw error;
