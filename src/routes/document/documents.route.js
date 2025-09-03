@@ -20,21 +20,22 @@ router.get('/',
     try {
       const { limit, offset, status } = req.query;
       
-      const documents = await documentService.listDocuments(limit, offset, status);
+      const documents = await documentService.listDocuments(Number(limit), Number(offset), status);
       
       const envelope = {
         success: true,
         data: {
           documents,
           count: documents.length,
-          limit,
-          offset
-        }
+          limit: Number(limit),
+          offset: Number(offset)
+        },
+        error: null,
       };
 
-      res.json(enforceResponse(documentDocumentsResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 );
