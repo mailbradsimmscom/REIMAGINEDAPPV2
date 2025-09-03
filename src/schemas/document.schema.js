@@ -1,6 +1,16 @@
 import { z } from 'zod';
 import { paginationQuerySchema } from './common.schema.js';
 
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
 // Document ingest metadata schema
 export const documentIngestMetadataSchema = z.object({
   manufacturer: z.string().optional(),
@@ -17,8 +27,8 @@ export const documentJobsQuerySchema = z.object({
   offset: z.coerce.number().int().min(0).default(0)
 });
 
-// Document jobs response schema
-export const documentJobsResponseSchema = z.object({
+// Document jobs success response schema
+const DocumentJobsOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     jobs: z.array(z.object({
@@ -41,14 +51,17 @@ export const documentJobsResponseSchema = z.object({
   })
 });
 
+// Discriminated union for document jobs endpoint
+export const documentJobsResponseSchema = z.union([DocumentJobsOkSchema, ErrorEnvelopeSchema]);
+
 // Document documents query parameters
 export const documentDocumentsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0)
 });
 
-// Document documents response schema
-export const documentDocumentsResponseSchema = z.object({
+// Document documents success response schema
+const DocumentDocumentsOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     documents: z.array(z.object({
@@ -74,13 +87,16 @@ export const documentDocumentsResponseSchema = z.object({
   })
 });
 
+// Discriminated union for document documents endpoint
+export const documentDocumentsResponseSchema = z.union([DocumentDocumentsOkSchema, ErrorEnvelopeSchema]);
+
 // Document get by ID query parameters (from URL path)
 export const documentGetQuerySchema = z.object({
   docId: z.string().min(1, 'Document ID is required')
 });
 
-// Document get by ID response schema
-export const documentGetResponseSchema = z.object({
+// Document get by ID success response schema
+const DocumentGetOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     doc_id: z.string(),
@@ -101,13 +117,16 @@ export const documentGetResponseSchema = z.object({
   })
 });
 
+// Discriminated union for document get endpoint
+export const documentGetResponseSchema = z.union([DocumentGetOkSchema, ErrorEnvelopeSchema]);
+
 // Document job status path parameters
 export const documentJobStatusPathSchema = z.object({
   jobId: z.string().min(1, 'Job ID is required')
 });
 
-// Document job status response schema
-export const documentJobStatusResponseSchema = z.object({
+// Document job status success response schema
+const DocumentJobStatusOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     job_id: z.string(),
@@ -125,8 +144,5 @@ export const documentJobStatusResponseSchema = z.object({
   })
 });
 
-// Document error response schema
-export const documentErrorSchema = z.object({
-  success: z.literal(false),
-  error: z.string()
-});
+// Discriminated union for document job status endpoint
+export const documentJobStatusResponseSchema = z.union([DocumentJobStatusOkSchema, ErrorEnvelopeSchema]);

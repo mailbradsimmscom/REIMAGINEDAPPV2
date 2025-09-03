@@ -1,17 +1,33 @@
 import { z } from 'zod';
 
-// Health response schema
-export const healthResponseSchema = z.object({
-  status: z.string(),
-  uptimeSeconds: z.number().int().min(0)
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
 });
+
+// Health success response schema
+const HealthOkSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    status: z.literal('ok'),
+    ts: z.string()
+  })
+});
+
+// Discriminated union for health endpoint responses
+export const healthResponseSchema = z.union([HealthOkSchema, ErrorEnvelopeSchema]);
 
 // Health query schema (if needed for future endpoints)
 export const healthQuerySchema = z.object({
   // Add query parameters if needed
 }).optional();
 
-// Admin health check response schema
+// Admin health schemas (separate from main health domain)
 export const adminHealthResponseSchema = z.object({
   success: z.literal(true),
   data: z.object({
@@ -29,7 +45,6 @@ export const adminHealthResponseSchema = z.object({
   })
 });
 
-// Admin health error response schema
 export const adminHealthErrorSchema = z.object({
   error: z.string(),
   type: z.literal('admin_health_error')

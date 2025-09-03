@@ -51,6 +51,9 @@ router.post('/',
         timestamp: new Date().toISOString()
       };
 
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // chatProcessResponseSchema.parse(envelope);
+
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);

@@ -1,14 +1,24 @@
 import { z } from 'zod';
 import { paginationQuerySchema } from './common.schema.js';
 
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
 // Chat history query parameters
 export const chatHistoryQuerySchema = z.object({
   threadId: z.string().min(1, 'threadId is required'),
   limit: z.coerce.number().int().min(1).max(100).default(50)
 });
 
-// Chat history response schema
-export const chatHistoryResponseSchema = z.object({
+// Chat history success response schema
+const ChatHistoryOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     threadId: z.string(),
@@ -24,13 +34,16 @@ export const chatHistoryResponseSchema = z.object({
   timestamp: z.string()
 });
 
+// Discriminated union for chat history endpoint
+export const chatHistoryResponseSchema = z.union([ChatHistoryOkSchema, ErrorEnvelopeSchema]);
+
 // Chat delete request schema
 export const chatDeleteRequestSchema = z.object({
   sessionId: z.string().min(1, 'sessionId is required')
 });
 
-// Chat delete response schema
-export const chatDeleteResponseSchema = z.object({
+// Chat delete success response schema
+const ChatDeleteOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     sessionId: z.string(),
@@ -38,6 +51,9 @@ export const chatDeleteResponseSchema = z.object({
   }),
   timestamp: z.string()
 });
+
+// Discriminated union for chat delete endpoint
+export const chatDeleteResponseSchema = z.union([ChatDeleteOkSchema, ErrorEnvelopeSchema]);
 
 // Chat list query parameters
 export const chatListQuerySchema = z.object({
@@ -52,8 +68,8 @@ export const chatProcessRequestSchema = z.object({
   threadId: z.string().optional()
 });
 
-// Chat process response schema
-export const chatProcessResponseSchema = z.object({
+// Chat process success response schema
+const ChatProcessOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     sessionId: z.string(),
@@ -78,8 +94,11 @@ export const chatProcessResponseSchema = z.object({
   timestamp: z.string()
 });
 
-// Chat list response schema
-export const chatListResponseSchema = z.object({
+// Discriminated union for chat process endpoint
+export const chatProcessResponseSchema = z.union([ChatProcessOkSchema, ErrorEnvelopeSchema]);
+
+// Chat list success response schema
+const ChatListOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     chats: z.array(z.object({
@@ -102,13 +121,16 @@ export const chatListResponseSchema = z.object({
   timestamp: z.string()
 });
 
+// Discriminated union for chat list endpoint
+export const chatListResponseSchema = z.union([ChatListOkSchema, ErrorEnvelopeSchema]);
+
 // Chat context query parameters
 export const chatContextQuerySchema = z.object({
   threadId: z.string().min(1, 'threadId is required')
 });
 
-// Chat context response schema
-export const chatContextResponseSchema = z.object({
+// Chat context success response schema
+const ChatContextOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     session: z.object({
@@ -137,13 +159,10 @@ export const chatContextResponseSchema = z.object({
   timestamp: z.string()
 });
 
+// Discriminated union for chat context endpoint
+export const chatContextResponseSchema = z.union([ChatContextOkSchema, ErrorEnvelopeSchema]);
+
 // Chat delete by path parameter
 export const chatDeletePathSchema = z.object({
   sessionId: z.string().min(1, 'Session ID is required')
-});
-
-// Chat error response schema
-export const chatErrorSchema = z.object({
-  success: z.literal(false),
-  error: z.string()
 });

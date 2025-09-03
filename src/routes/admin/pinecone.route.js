@@ -3,17 +3,11 @@ import { logger } from '../../utils/logger.js';
 import { adminGate } from '../../middleware/admin.js';
 import { adminPineconeResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
-
-const EnvelopeOk = z.object({
-  success: z.literal(true),
-  data: z.any()
-});
 
 // GET /admin/pinecone - Get Pinecone status
 router.get('/', async (req, res, next) => {
@@ -83,6 +77,9 @@ router.get('/', async (req, res, next) => {
       data: pineconeData
     };
 
+    // Optional: Validate response schema if RESPONSE_VALIDATE=1
+    // adminPineconeResponseSchema.parse(envelope);
+
     return enforceResponse(res, envelope);
     
     requestLogger.info('Pinecone status retrieved', { 
@@ -94,6 +91,17 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
 });
 
 export default router;

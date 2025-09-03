@@ -1,8 +1,18 @@
 import { z } from 'zod';
 import { paginationQuerySchema } from './common.schema.js';
 
-// Admin health response schema
-export const adminHealthResponseSchema = z.object({
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
+// Admin health success response schema
+const AdminHealthOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     status: z.string(),
@@ -19,8 +29,11 @@ export const adminHealthResponseSchema = z.object({
   })
 });
 
-// Admin manufacturers response schema
-export const adminManufacturersResponseSchema = z.object({
+// Discriminated union for admin health endpoint
+export const adminHealthResponseSchema = z.union([AdminHealthOkSchema, ErrorEnvelopeSchema]);
+
+// Admin manufacturers success response schema
+const AdminManufacturersOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     total: z.number(),
@@ -31,13 +44,16 @@ export const adminManufacturersResponseSchema = z.object({
   })
 });
 
+// Discriminated union for admin manufacturers endpoint
+export const adminManufacturersResponseSchema = z.union([AdminManufacturersOkSchema, ErrorEnvelopeSchema]);
+
 // Admin models query parameters
 export const adminModelsQuerySchema = z.object({
   manufacturer: z.string().min(1, 'Manufacturer parameter is required')
 });
 
-// Admin models response schema
-export const adminModelsResponseSchema = z.object({
+// Admin models success response schema
+const AdminModelsOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     models: z.array(z.object({
@@ -50,6 +66,9 @@ export const adminModelsResponseSchema = z.object({
   })
 });
 
+// Discriminated union for admin models endpoint
+export const adminModelsResponseSchema = z.union([AdminModelsOkSchema, ErrorEnvelopeSchema]);
+
 // Admin logs query parameters
 export const adminLogsQuerySchema = z.object({
   level: z.enum(['all', 'error', 'warn', 'info', 'debug']).default('all'),
@@ -57,8 +76,8 @@ export const adminLogsQuerySchema = z.object({
   correlationId: z.string().optional()
 });
 
-// Admin logs response schema
-export const adminLogsResponseSchema = z.object({
+// Admin logs success response schema
+const AdminLogsOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     logs: z.array(z.object({
@@ -73,8 +92,11 @@ export const adminLogsResponseSchema = z.object({
   })
 });
 
-// Admin systems response schema
-export const adminSystemsResponseSchema = z.object({
+// Discriminated union for admin logs endpoint
+export const adminLogsResponseSchema = z.union([AdminLogsOkSchema, ErrorEnvelopeSchema]);
+
+// Admin systems success response schema
+const AdminSystemsOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     totalSystems: z.number(),
@@ -85,8 +107,11 @@ export const adminSystemsResponseSchema = z.object({
   })
 });
 
-// Admin pinecone response schema
-export const adminPineconeResponseSchema = z.object({
+// Discriminated union for admin systems endpoint
+export const adminSystemsResponseSchema = z.union([AdminSystemsOkSchema, ErrorEnvelopeSchema]);
+
+// Admin pinecone success response schema
+const AdminPineconeOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     status: z.string(),
@@ -106,8 +131,11 @@ export const adminPineconeResponseSchema = z.object({
   })
 });
 
-// Admin jobs response schema
-export const adminJobsResponseSchema = z.object({
+// Discriminated union for admin pinecone endpoint
+export const adminPineconeResponseSchema = z.union([AdminPineconeOkSchema, ErrorEnvelopeSchema]);
+
+// Admin jobs success response schema
+const AdminJobsOkSchema = z.object({
   success: z.literal(true),
   data: z.array(z.object({
     id: z.string(),
@@ -119,8 +147,11 @@ export const adminJobsResponseSchema = z.object({
   }))
 });
 
-// Admin documents response schema
-export const adminDocumentsResponseSchema = z.object({
+// Discriminated union for admin jobs endpoint
+export const adminJobsResponseSchema = z.union([AdminJobsOkSchema, ErrorEnvelopeSchema]);
+
+// Admin documents success response schema
+const AdminDocumentsOkSchema = z.object({
   success: z.literal(true),
   data: z.array(z.object({
     id: z.string(),
@@ -133,8 +164,5 @@ export const adminDocumentsResponseSchema = z.object({
   }))
 });
 
-// Admin error response schema
-export const adminErrorSchema = z.object({
-  error: z.string(),
-  type: z.string()
-});
+// Discriminated union for admin documents endpoint
+export const adminDocumentsResponseSchema = z.union([AdminDocumentsOkSchema, ErrorEnvelopeSchema]);

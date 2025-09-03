@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
 // Systems list query parameters
 export const systemsListQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).optional().default(25),
@@ -11,8 +21,8 @@ export const systemsGetPathSchema = z.object({
   assetUid: z.string().min(1, 'Asset UID is required')
 });
 
-// Systems list response schema
-export const systemsListResponseSchema = z.object({
+// Systems list success response schema
+const SystemsListOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     systems: z.array(z.object({
@@ -29,14 +39,17 @@ export const systemsListResponseSchema = z.object({
   })
 });
 
+// Discriminated union for systems list endpoint
+export const systemsListResponseSchema = z.union([SystemsListOkSchema, ErrorEnvelopeSchema]);
+
 // Systems search query parameters
 export const systemsSearchQuerySchema = z.object({
   q: z.string().min(2, 'Query must be at least 2 characters').max(100, 'Query too long'),
   limit: z.coerce.number().int().min(1).max(100).optional()
 }).passthrough();
 
-// Systems search response schema
-export const systemsSearchResponseSchema = z.object({
+// Systems search success response schema
+const SystemsSearchOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     systems: z.array(z.object({
@@ -60,8 +73,11 @@ export const systemsSearchResponseSchema = z.object({
   })
 });
 
-// Systems get by ID response schema
-export const systemsGetResponseSchema = z.object({
+// Discriminated union for systems search endpoint
+export const systemsSearchResponseSchema = z.union([SystemsSearchOkSchema, ErrorEnvelopeSchema]);
+
+// Systems get by ID success response schema
+const SystemsGetOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     asset_uid: z.string(),
@@ -75,11 +91,5 @@ export const systemsGetResponseSchema = z.object({
   })
 });
 
-// Systems error response schema
-export const systemsErrorSchema = z.object({
-  success: z.literal(false),
-  error: z.string(),
-  type: z.string().optional(),
-  context: z.any().optional(),
-  timestamp: z.string().optional()
-});
+// Discriminated union for systems get endpoint
+export const systemsGetResponseSchema = z.union([SystemsGetOkSchema, ErrorEnvelopeSchema]);

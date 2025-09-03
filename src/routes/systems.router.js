@@ -1,7 +1,6 @@
 import express from 'express';
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
 import { validate } from '../middleware/validate.js';
-import { z } from 'zod';
 import { enforceResponse } from '../middleware/enforceResponse.js';
 import { 
   systemsListQuerySchema, 
@@ -13,11 +12,6 @@ import {
 } from '../schemas/systems.schema.js';
 
 const router = express.Router();
-
-const EnvelopeOk = z.object({
-  success: z.literal(true),
-  data: z.any()
-});
 
 // GET /systems/search - Search systems (MUST come before /:assetUid)
 router.get('/search', 
@@ -31,6 +25,9 @@ router.get('/search',
         success: true,
         data: result
       };
+
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // systemsSearchResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope, 200);
     } catch (error) {
@@ -51,6 +48,9 @@ router.get('/',
         success: true,
         data: result
       };
+
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // systemsListResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope, 200);
     } catch (error) {
@@ -79,11 +79,36 @@ router.get('/:assetUid',
         data: item
       };
 
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // systemsGetResponseSchema.parse(envelope);
+
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
   }
 );
+
+// Method not allowed for all other methods on /systems/search
+router.all('/search', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
+
+// Method not allowed for all other methods on /systems
+router.all('/', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
 
 export default router;

@@ -1,28 +1,18 @@
 import express from 'express';
-import { z } from 'zod';
 import { enforceResponse } from '../middleware/enforceResponse.js';
 import { validate } from '../middleware/validate.js';
 import { 
   pineconeSearchRequestSchema,
   pineconeStatsQuerySchema,
   pineconeDocumentChunksPathSchema,
-  pineconeQueryRequestSchema
+  pineconeQueryRequestSchema,
+  pineconeSearchResponseSchema,
+  pineconeStatsResponseSchema,
+  pineconeDocumentChunksResponseSchema,
+  pineconeQueryResponseSchema
 } from '../schemas/pinecone.schema.js';
 
 const router = express.Router();
-
-const EnvelopeOk = z.object({
-  success: z.literal(true),
-  data: z.any()
-});
-
-const EnvelopeError = z.object({
-  success: z.literal(false),
-  error: z.object({
-    code: z.string(),
-    message: z.string()
-  })
-});
 
 // Lazy import to avoid failing at router import time
 async function getPineService() {
@@ -57,6 +47,8 @@ router.post('/search',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
+        // Optional: Validate response schema if RESPONSE_VALIDATE=1
+        // pineconeSearchResponseSchema.parse(envelope);
         return enforceResponse(res, envelope, 400);
       }
 
@@ -66,6 +58,8 @@ router.post('/search',
         success: true,
         data: result
       };
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // pineconeSearchResponseSchema.parse(envelope);
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
@@ -75,9 +69,6 @@ router.post('/search',
 
 // Add method not allowed for GET /pinecone/search
 router.all('/search', methodNotAllowed);
-
-// Add method not allowed for GET /pinecone/query
-router.all('/query', methodNotAllowed);
 
 // GET /pinecone/stats - Get Pinecone stats
 router.get('/stats', 
@@ -89,6 +80,8 @@ router.get('/stats',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
+        // Optional: Validate response schema if RESPONSE_VALIDATE=1
+        // pineconeStatsResponseSchema.parse(envelope);
         return enforceResponse(res, envelope, 400);
       }
 
@@ -98,6 +91,8 @@ router.get('/stats',
         success: true,
         data: result
       };
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // pineconeStatsResponseSchema.parse(envelope);
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
@@ -115,6 +110,8 @@ router.get('/documents/:docId/chunks',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
+        // Optional: Validate response schema if RESPONSE_VALIDATE=1
+        // pineconeDocumentChunksResponseSchema.parse(envelope);
         return enforceResponse(res, envelope, 400);
       }
 
@@ -125,6 +122,8 @@ router.get('/documents/:docId/chunks',
         success: true,
         data: result
       };
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // pineconeDocumentChunksResponseSchema.parse(envelope);
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
@@ -142,6 +141,8 @@ router.post('/query',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
+        // Optional: Validate response schema if RESPONSE_VALIDATE=1
+        // pineconeQueryResponseSchema.parse(envelope);
         return enforceResponse(res, envelope, 400);
       }
 
@@ -151,6 +152,8 @@ router.post('/query',
         success: true,
         data: result
       };
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // pineconeQueryResponseSchema.parse(envelope);
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);

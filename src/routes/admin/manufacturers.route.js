@@ -1,16 +1,11 @@
 import express from 'express';
-import { z } from 'zod';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
+import { adminManufacturersResponseSchema } from '../../schemas/admin.schema.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
-
-const EnvelopeOk = z.object({
-  success: z.literal(true),
-  data: z.any()
-});
 
 // Apply admin gate middleware
 router.use(adminGate);
@@ -35,6 +30,9 @@ router.get('/', async (req, res, next) => {
       data: data || []
     };
 
+    // Optional: Validate response schema if RESPONSE_VALIDATE=1
+    // adminManufacturersResponseSchema.parse(envelope);
+
     return enforceResponse(res, envelope);
     
     requestLogger.info('Manufacturers retrieved', { count: data?.length || 0 });
@@ -42,6 +40,17 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
 });
 
 export default router;

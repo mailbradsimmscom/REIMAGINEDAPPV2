@@ -1,10 +1,20 @@
 import { z } from 'zod';
 
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
 // Pinecone stats query parameters (currently none, but ready for future)
 export const pineconeStatsQuerySchema = z.object({});
 
-// Pinecone stats response schema
-export const pineconeStatsResponseSchema = z.object({
+// Pinecone stats success response schema
+const PineconeStatsOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     totalVectors: z.number(),
@@ -17,6 +27,9 @@ export const pineconeStatsResponseSchema = z.object({
   })
 });
 
+// Discriminated union for pinecone stats endpoint
+export const pineconeStatsResponseSchema = z.union([PineconeStatsOkSchema, ErrorEnvelopeSchema]);
+
 // Pinecone search request schema
 export const pineconeSearchRequestSchema = z.object({
   query: z.string().min(1, 'Query cannot be empty'),
@@ -25,8 +38,8 @@ export const pineconeSearchRequestSchema = z.object({
   filter: z.record(z.any()).optional()
 });
 
-// Pinecone search response schema
-export const pineconeSearchResponseSchema = z.object({
+// Pinecone search success response schema
+const PineconeSearchOkSchema = z.object({
   success: z.literal(true),
   query: z.string(),
   enhancedQuery: z.string(),
@@ -53,13 +66,16 @@ export const pineconeSearchResponseSchema = z.object({
   })
 });
 
+// Discriminated union for pinecone search endpoint
+export const pineconeSearchResponseSchema = z.union([PineconeSearchOkSchema, ErrorEnvelopeSchema]);
+
 // Pinecone document chunks path parameters
 export const pineconeDocumentChunksPathSchema = z.object({
   docId: z.string().min(1, 'Document ID is required')
 });
 
-// Pinecone document chunks response schema
-export const pineconeDocumentChunksResponseSchema = z.object({
+// Pinecone document chunks success response schema
+const PineconeDocumentChunksOkSchema = z.object({
   success: z.literal(true),
   data: z.object({
     documentId: z.string(),
@@ -75,6 +91,9 @@ export const pineconeDocumentChunksResponseSchema = z.object({
   })
 });
 
+// Discriminated union for pinecone document chunks endpoint
+export const pineconeDocumentChunksResponseSchema = z.union([PineconeDocumentChunksOkSchema, ErrorEnvelopeSchema]);
+
 // Pinecone query request schema
 export const pineconeQueryRequestSchema = z.object({
   query: z.string().min(1, 'Query is required and must be a non-empty string'),
@@ -82,8 +101,8 @@ export const pineconeQueryRequestSchema = z.object({
   options: z.record(z.string(), z.any()).optional().default({})
 });
 
-// Pinecone query response schema
-export const pineconeQueryResponseSchema = z.object({
+// Pinecone query success response schema
+const PineconeQueryOkSchema = z.object({
   success: z.literal(true),
   query: z.string(),
   enhancedQuery: z.string(),
@@ -110,8 +129,5 @@ export const pineconeQueryResponseSchema = z.object({
   })
 });
 
-// Pinecone error response schema
-export const pineconeErrorSchema = z.object({
-  success: z.literal(false),
-  error: z.string()
-});
+// Discriminated union for pinecone query endpoint
+export const pineconeQueryResponseSchema = z.union([PineconeQueryOkSchema, ErrorEnvelopeSchema]);

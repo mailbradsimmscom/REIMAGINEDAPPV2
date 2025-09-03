@@ -2,17 +2,11 @@ import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
 import { adminLogsQuerySchema, adminLogsResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
-
-const EnvelopeOk = z.object({
-  success: z.literal(true),
-  data: z.any()
-});
 
 // GET /admin/logs - Get log files
 router.get('/', async (req, res, next) => {
@@ -48,10 +42,24 @@ router.get('/', async (req, res, next) => {
       data: logsData
     };
 
+    // Optional: Validate response schema if RESPONSE_VALIDATE=1
+    // adminLogsResponseSchema.parse(envelope);
+
     return enforceResponse(res, envelope, 200);
   } catch (error) {
     next(error);
   }
+});
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
 });
 
 export default router;

@@ -27,9 +27,9 @@ export const adminRequest = async (method, path) => {
   return req.set('x-admin-token', TEST_CONFIG.ADMIN_TOKEN);
 };
 
-export const publicRequest = async (method, path) => {
-  const app = await getApp();
-  return request(app)[method](path);
+export const publicRequest = (method, path) => {
+  // Return a promise that resolves to the supertest request
+  return getApp().then(app => request(app)[method](path));
 };
 
 export const assertSuccess = (response, statusCode = 200) => {

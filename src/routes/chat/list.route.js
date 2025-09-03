@@ -44,11 +44,25 @@ router.get('/',
         timestamp: new Date().toISOString()
       };
 
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // chatListResponseSchema.parse(envelope);
+
       return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
   }
 );
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
 
 export default router;
