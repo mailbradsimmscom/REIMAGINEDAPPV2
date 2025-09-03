@@ -47,7 +47,7 @@ router.post('/',
         timestamp: new Date().toISOString()
       };
 
-      res.json(enforceResponse(chatProcessResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

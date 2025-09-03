@@ -32,7 +32,7 @@ router.get('/search',
         data: result
       };
 
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
@@ -52,7 +52,7 @@ router.get('/',
         data: result
       };
 
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
@@ -79,7 +79,7 @@ router.get('/:assetUid',
         data: item
       };
 
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

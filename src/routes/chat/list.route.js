@@ -44,7 +44,7 @@ router.get('/',
         timestamp: new Date().toISOString()
       };
 
-      res.json(enforceResponse(chatListResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

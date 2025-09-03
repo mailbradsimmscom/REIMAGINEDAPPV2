@@ -37,7 +37,7 @@ router.get('/',
         timestamp: new Date().toISOString()
       };
 
-      res.json(enforceResponse(chatHistoryResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

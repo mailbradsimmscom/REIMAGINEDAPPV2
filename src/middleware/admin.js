@@ -11,7 +11,7 @@ export function adminGate(req, res, next) {
   
   // Simple admin token check
   const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
-  const expectedToken = env.adminToken;
+  const expectedToken = env.ADMIN_TOKEN;
   
   if (!adminToken || adminToken !== expectedToken) {
     requestLogger.warn('Admin access denied', {
@@ -20,10 +20,13 @@ export function adminGate(req, res, next) {
       userAgent: req.headers['user-agent']
     });
     
-    return res.status(401).json({
+    const statusCode = !adminToken ? 401 : 403;
+    const message = !adminToken ? 'Admin token required' : 'Invalid admin token';
+    
+    return res.status(statusCode).json({
       success: false,
-      code: 'UNAUTHORIZED',
-      message: 'Admin access required'
+      code: !adminToken ? 'UNAUTHORIZED' : 'FORBIDDEN',
+      message
     });
   }
   
@@ -38,7 +41,7 @@ export function adminGate(req, res, next) {
 export function optionalAdminGate(req, res, next) {
   const env = getEnv({ loose: true });
   const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
-  const expectedToken = env.adminToken;
+  const expectedToken = env.ADMIN_TOKEN;
   
   if (expectedToken && adminToken && adminToken === expectedToken) {
     req.isAdmin = true;

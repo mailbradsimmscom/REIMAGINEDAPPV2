@@ -22,7 +22,7 @@ router.get('/', (req, res, next) => {
         ts: new Date().toISOString() 
       }
     };
-    return res.status(200).json(enforceResponse(HealthOk, envelope));
+    return enforceResponse(res, envelope, 200);
   } catch (e) {
     return next(e);
   }

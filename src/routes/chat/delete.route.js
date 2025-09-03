@@ -27,7 +27,7 @@ router.delete('/',
         timestamp: new Date().toISOString()
       };
 
-      res.json(enforceResponse(chatDeleteResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

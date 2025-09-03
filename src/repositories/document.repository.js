@@ -4,11 +4,11 @@ import { logger } from '../utils/logger.js';
 class DocumentRepository {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
-    this.supabase = getSupabaseClient();
   }
 
   // Job Management
   async createJob(jobData) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('jobs')
@@ -27,6 +27,7 @@ class DocumentRepository {
   }
 
   async getJob(jobId) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('jobs')
@@ -43,6 +44,7 @@ class DocumentRepository {
   }
 
   async updateJobStatus(jobId, status, updates = {}) {
+    const supabase = getSupabaseClient();
     try {
       const updateData = {
         status,
@@ -76,6 +78,7 @@ class DocumentRepository {
   }
 
   async updateJobProgress(jobId, counters) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('jobs')
@@ -97,6 +100,7 @@ class DocumentRepository {
 
   // Document Management
   async createOrUpdateDocument(docData) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('documents')
@@ -118,6 +122,7 @@ class DocumentRepository {
   }
 
   async getDocument(docId) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('documents')
@@ -134,6 +139,7 @@ class DocumentRepository {
   }
 
   async updateDocumentStats(docId, stats) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('documents')
@@ -157,6 +163,7 @@ class DocumentRepository {
   }
 
   async updateDocumentStoragePath(docId, storagePath) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('documents')
@@ -180,6 +187,7 @@ class DocumentRepository {
 
   // Document Chunks Management
   async createChunks(chunks) {
+    const supabase = getSupabaseClient();
     try {
       if (chunks.length === 0) return [];
 
@@ -199,6 +207,7 @@ class DocumentRepository {
   }
 
   async getChunksByDocId(docId) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('document_chunks')
@@ -215,6 +224,7 @@ class DocumentRepository {
   }
 
   async getJobsByStatus(status, limit = 10) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('jobs')
@@ -232,6 +242,7 @@ class DocumentRepository {
   }
 
   async getChunks(docId) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('document_chunks')
@@ -248,6 +259,7 @@ class DocumentRepository {
   }
 
   async checkChunkExists(chunkId) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('document_chunks')
@@ -265,6 +277,7 @@ class DocumentRepository {
 
   // Utility Methods
   async getJobStatus(jobId) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .rpc('get_job_status', { job_uuid: jobId });
@@ -278,6 +291,7 @@ class DocumentRepository {
   }
 
   async listJobs(limit = 50, offset = 0) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('jobs')
@@ -294,6 +308,7 @@ class DocumentRepository {
   }
 
   async listDocuments(limit = 50, offset = 0) {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await this.supabase
         .from('documents')

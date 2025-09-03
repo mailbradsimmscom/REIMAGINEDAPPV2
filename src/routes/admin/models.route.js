@@ -42,7 +42,7 @@ router.get('/',
         data: modelsData
       };
 
-      res.json(enforceResponse(adminModelsResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

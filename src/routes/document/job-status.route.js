@@ -43,7 +43,7 @@ router.get('/jobs/:jobId', async (req, res, next) => {
       data: job
     };
 
-    res.json(enforceResponse(EnvelopeOk, envelope));
+          return enforceResponse(res, envelope, 200);
   } catch (error) {
     next(error);
   }

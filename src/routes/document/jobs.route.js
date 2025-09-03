@@ -34,7 +34,7 @@ router.get('/',
         }
       };
 
-      res.json(enforceResponse(documentJobsResponseSchema, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

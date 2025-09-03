@@ -9,8 +9,20 @@ import { getEnv } from '../config/env.js';
 class DocumentService {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
-    this.supabase = getSupabaseClient();
-    this.supabaseStorage = getSupabaseStorageClient();
+  }
+
+  get supabase() {
+    if (!this._supabase) {
+      this._supabase = getSupabaseClient();
+    }
+    return this._supabase;
+  }
+
+  get supabaseStorage() {
+    if (!this._supabaseStorage) {
+      this._supabaseStorage = getSupabaseStorageClient();
+    }
+    return this._supabaseStorage;
   }
 
   // Generate deterministic doc_id from file content
@@ -336,7 +348,7 @@ class DocumentService {
       formData.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
 
       // Call Python sidecar
-      const sidecarUrl = env.pythonSidecarUrl;
+      const sidecarUrl = getEnv({ loose: true }).PYTHON_SIDECAR_URL;
       const response = await fetch(`${sidecarUrl}/v1/process-document`, {
         method: 'POST',
         body: formData

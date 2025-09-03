@@ -36,6 +36,17 @@ function isPineconeConfigured() {
   return PINECONE_API_KEY && PINECONE_INDEX;
 }
 
+// Method not allowed handler
+function methodNotAllowed(req, res) {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed for ${req.path}`
+    }
+  }, 405);
+}
+
 // POST /pinecone/search - Search Pinecone
 router.post('/search', 
   validate(pineconeSearchRequestSchema, 'body'),
@@ -46,7 +57,7 @@ router.post('/search',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
-        return res.json(enforceResponse(EnvelopeError, envelope));
+        return enforceResponse(res, envelope, 400);
       }
 
       const pineconeService = await getPineService();
@@ -55,12 +66,15 @@ router.post('/search',
         success: true,
         data: result
       };
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
   }
 );
+
+// Add method not allowed for GET /pinecone/search
+router.all('/search', methodNotAllowed);
 
 // GET /pinecone/stats - Get Pinecone stats
 router.get('/stats', 
@@ -72,7 +86,7 @@ router.get('/stats',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
-        return res.json(enforceResponse(EnvelopeError, envelope));
+        return enforceResponse(res, envelope, 400);
       }
 
       const pineconeService = await getPineService();
@@ -81,7 +95,7 @@ router.get('/stats',
         success: true,
         data: result
       };
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
@@ -98,7 +112,7 @@ router.get('/documents/:docId/chunks',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
-        return res.json(enforceResponse(EnvelopeError, envelope));
+        return enforceResponse(res, envelope, 400);
       }
 
       const { docId } = req.params;
@@ -108,7 +122,7 @@ router.get('/documents/:docId/chunks',
         success: true,
         data: result
       };
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
@@ -125,7 +139,7 @@ router.post('/query',
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
         };
-        return res.json(enforceResponse(EnvelopeError, envelope));
+        return enforceResponse(res, envelope, 400);
       }
 
       const pineconeService = await getPineService();
@@ -134,11 +148,14 @@ router.post('/query',
         success: true,
         data: result
       };
-      res.json(enforceResponse(EnvelopeOk, envelope));
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }
   }
 );
+
+// Add method not allowed for GET /pinecone/query
+router.all('/query', methodNotAllowed);
 
 export default router;

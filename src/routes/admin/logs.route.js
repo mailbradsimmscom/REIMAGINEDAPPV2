@@ -48,7 +48,7 @@ router.get('/', async (req, res, next) => {
       data: logsData
     };
 
-    res.json(enforceResponse(EnvelopeOk, envelope));
+    return enforceResponse(res, envelope, 200);
   } catch (error) {
     next(error);
   }

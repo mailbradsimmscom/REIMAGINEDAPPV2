@@ -44,7 +44,7 @@ router.get('/documents/:docId', async (req, res, next) => {
       data: document
     };
 
-    res.json(enforceResponse(EnvelopeOk, envelope));
+          return enforceResponse(res, envelope, 200);
   } catch (error) {
     next(error);
   }
