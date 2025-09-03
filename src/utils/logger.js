@@ -1,7 +1,6 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { env } from '../config/env.js';
 
 class Logger {
   constructor() {
@@ -9,6 +8,12 @@ class Logger {
     this.maxLogSize = 5 * 1024 * 1024; // 5MB
     this.maxLogFiles = 5;
     this.ensureLogsDirectory();
+  }
+
+  // Get environment values at runtime
+  async getEnv() {
+    const { env } = await import('../config/env.js');
+    return env;
   }
 
   async ensureLogsDirectory() {
@@ -20,6 +25,7 @@ class Logger {
   }
 
   async writeLog(level, message, meta = {}) {
+    const env = await this.getEnv();
     const logEntry = {
       timestamp: new Date().toISOString(),
       level: level.toUpperCase(),

@@ -1,7 +1,6 @@
-import { env } from '../config/env.js';
-
 /** Validate BEFORE sending. Throw to error handler; never write here. */
-export function enforceResponse(schema, envelope) {
+export async function enforceResponse(schema, envelope) {
+  const { env } = await import('../config/env.js');
   if (!env.RESPONSE_VALIDATE || !schema) return envelope;
   const parsed = schema.safeParse(envelope);
   if (!parsed.success) {

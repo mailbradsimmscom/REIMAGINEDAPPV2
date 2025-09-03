@@ -27,9 +27,9 @@ router.post('/search',
         success: true,
         data: result
       };
-      return res.json(enforceResponse(EnvelopeOk, envelope));
+      res.json(await enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 );
@@ -44,9 +44,9 @@ router.get('/stats',
         success: true,
         data: result
       };
-      return res.json(enforceResponse(EnvelopeOk, envelope));
+      res.json(await enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 );
@@ -62,9 +62,9 @@ router.get('/documents/:docId/chunks',
         success: true,
         data: result
       };
-      return res.json(enforceResponse(EnvelopeOk, envelope));
+      res.json(await enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 );
@@ -79,9 +79,9 @@ router.post('/query',
         success: true,
         data: result
       };
-      return res.json(enforceResponse(EnvelopeOk, envelope));
+      res.json(await enforceResponse(EnvelopeOk, envelope));
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 );

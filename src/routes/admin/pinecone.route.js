@@ -83,7 +83,7 @@ router.get('/', async (req, res, next) => {
       data: pineconeData
     };
 
-    return res.json(enforceResponse(EnvelopeOk, envelope));
+    res.json(enforceResponse(EnvelopeOk, envelope));
     
     requestLogger.info('Pinecone status retrieved', { 
       status: pineconeData.status,
@@ -92,7 +92,7 @@ router.get('/', async (req, res, next) => {
     });
     
   } catch (error) {
-    return next(error);
+    next(error);
   }
 });
 

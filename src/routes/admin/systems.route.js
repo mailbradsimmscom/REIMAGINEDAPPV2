@@ -36,9 +36,9 @@ router.get('/', async (req, res, next) => {
       data: systemsData
     };
 
-    return res.json(enforceResponse(EnvelopeOk, envelope));
+    res.json(enforceResponse(EnvelopeOk, envelope));
   } catch (error) {
-    return next(error);
+    next(error);
   }
 });
 

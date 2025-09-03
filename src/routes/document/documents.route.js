@@ -32,7 +32,7 @@ router.get('/',
         }
       };
 
-      return res.json(enforceResponse(documentDocumentsResponseSchema, envelope));
+      res.json(enforceResponse(documentDocumentsResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

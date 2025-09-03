@@ -121,7 +121,7 @@ router.post('/',
         }
       };
 
-      return res.json(enforceResponse(documentJobsResponseSchema, envelope));
+      res.json(enforceResponse(documentJobsResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

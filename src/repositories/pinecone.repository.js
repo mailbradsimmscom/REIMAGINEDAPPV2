@@ -1,16 +1,27 @@
 import { logger } from '../utils/logger.js';
-import { env } from '../config/env.js';
 
 class PineconeRepository {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
-    this.sidecarUrl = env.pythonSidecarUrl;
+  }
+
+  // Get sidecar URL at runtime
+  async getSidecarUrl() {
+    const { env } = await import('../config/env.js');
+    return env.pythonSidecarUrl;
+  }
+
+  // Get namespace at runtime
+  async getNamespace() {
+    const { env } = await import('../config/env.js');
+    return env.pineconeNamespace;
   }
 
   // Get index statistics
   async getIndexStats() {
     try {
-      const response = await fetch(`${this.sidecarUrl}/v1/pinecone/stats`);
+      const sidecarUrl = await this.getSidecarUrl();
+      const response = await fetch(`${sidecarUrl}/v1/pinecone/stats`);
       
       if (!response.ok) {
         throw new Error(`Failed to get Pinecone stats: ${response.status}`);
@@ -33,9 +44,11 @@ class PineconeRepository {
   // Search vectors with metadata filtering
   async searchVectors(query, options = {}) {
     try {
+      const sidecarUrl = await this.getSidecarUrl();
+      const namespace = await this.getNamespace();
+      
       const {
         topK = 10,
-        namespace = env.pineconeNamespace,
         filter = {},
         includeMetadata = true,
         includeValues = false
@@ -50,7 +63,7 @@ class PineconeRepository {
         includeValues
       };
 
-      const response = await fetch(`${this.sidecarUrl}/v1/pinecone/search`, {
+      const response = await fetch(`${sidecarUrl}/v1/pinecone/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -82,16 +95,20 @@ class PineconeRepository {
   }
 
   // Get vector by ID
-  async getVectorById(vectorId, namespace = env.pineconeNamespace) {
+  async getVectorById(vectorId, namespace = null) {
     try {
-      const response = await fetch(`${this.sidecarUrl}/v1/pinecone/fetch`, {
+      const sidecarUrl = await this.getSidecarUrl();
+      const defaultNamespace = await this.getNamespace();
+      const targetNamespace = namespace || defaultNamespace;
+      
+      const response = await fetch(`${sidecarUrl}/v1/pinecone/fetch`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ids: [vectorId],
-          namespace
+          namespace: targetNamespace
         })
       });
 
@@ -101,7 +118,7 @@ class PineconeRepository {
 
       const result = await response.json();
       
-      this.requestLogger.info('Vector fetched by ID', { vectorId, namespace });
+      this.requestLogger.info('Vector fetched by ID', { vectorId, namespace: targetNamespace });
       
       return result;
     } catch (error) {
@@ -115,16 +132,20 @@ class PineconeRepository {
   }
 
   // Delete vectors by ID
-  async deleteVectors(vectorIds, namespace = env.pineconeNamespace) {
+  async deleteVectors(vectorIds, namespace = null) {
     try {
-      const response = await fetch(`${this.sidecarUrl}/v1/pinecone/delete`, {
+      const sidecarUrl = await this.getSidecarUrl();
+      const defaultNamespace = await this.getNamespace();
+      const targetNamespace = namespace || defaultNamespace;
+      
+      const response = await fetch(`${sidecarUrl}/v1/pinecone/delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ids: vectorIds,
-          namespace
+          namespace: targetNamespace
         })
       });
 
@@ -136,7 +157,7 @@ class PineconeRepository {
       
       this.requestLogger.info('Vectors deleted', { 
         vectorIds: vectorIds.length,
-        namespace
+        namespace: targetNamespace
       });
       
       return result;
@@ -151,27 +172,30 @@ class PineconeRepository {
   }
 
   // Get namespace statistics
-  async getNamespaceStats(namespace = env.pineconeNamespace) {
+  async getNamespaceStats(namespace = null) {
     try {
+      const defaultNamespace = await this.getNamespace();
+      const targetNamespace = namespace || defaultNamespace;
+      
       const stats = await this.getIndexStats();
       
-      if (stats.namespaces && stats.namespaces[namespace]) {
+      if (stats.namespaces && stats.namespaces[targetNamespace]) {
         return {
-          namespace,
-          vectorCount: stats.namespaces[namespace].vector_count,
+          namespace: targetNamespace,
+          vectorCount: stats.namespaces[targetNamespace].vector_count,
           totalVectors: stats.total_vector_count
         };
       }
       
       return {
-        namespace,
+        namespace: targetNamespace,
         vectorCount: 0,
         totalVectors: stats.total_vector_count
       };
     } catch (error) {
       this.requestLogger.error('Failed to get namespace stats', { 
         error: error.message,
-        namespace
+        namespace: targetNamespace
       });
       throw error;
     }
