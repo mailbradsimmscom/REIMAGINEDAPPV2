@@ -1,14 +1,10 @@
 import express from 'express';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
-import { adminGate } from '../../middleware/admin.js';
 
 const router = express.Router();
 
-// Apply admin gate middleware
-router.use(adminGate);
-
-// GET /admin - Admin dashboard page
+// GET /admin - Admin dashboard page (no auth required for HTML)
 router.get('/', async (req, res, next) => {
   try {
     const adminHtmlPath = join(process.cwd(), 'src/public/admin.html');

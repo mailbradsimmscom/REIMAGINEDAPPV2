@@ -1,7 +1,6 @@
 import express from 'express';
 import { z } from 'zod';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { adminGate } from '../../middleware/admin.js';
 
 const router = express.Router();
 
@@ -13,9 +12,6 @@ const AdminHealthOk = z.object({
   })
 });
 
-// Apply admin gate middleware
-router.use(adminGate);
-
 // GET /admin/health - Get system health status
 router.get('/', (req, res, next) => {
   try {
@@ -26,7 +22,7 @@ router.get('/', (req, res, next) => {
         ts: new Date().toISOString() 
       } 
     };
-    return res.status(200).json(enforceResponse(AdminHealthOk, envelope));
+    return enforceResponse(res, envelope, 200);
   } catch (e) {
     return next(e);
   }

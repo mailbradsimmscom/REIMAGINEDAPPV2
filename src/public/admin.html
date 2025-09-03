@@ -636,6 +636,21 @@
     <script>
         // Auto-refresh interval
         let refreshInterval;
+        
+        // Admin token for API requests
+        const ADMIN_TOKEN = 'admin-secret-key';
+        
+        // Helper function to make authenticated requests
+        async function adminFetch(url, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'x-admin-token': ADMIN_TOKEN,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            };
+            return fetch(url, { ...defaultOptions, ...options });
+        }
 
         // Initialize dashboard
         async function initDashboard() {
@@ -657,7 +672,7 @@
         // Load manufacturers for dropdown
         async function loadManufacturers() {
             try {
-                const response = await fetch('/admin/systems/manufacturers');
+                const response = await adminFetch('/admin/systems/manufacturers');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -687,7 +702,7 @@
             }
             
             try {
-                const response = await fetch(`/admin/systems/models?manufacturer=${encodeURIComponent(manufacturer)}`);
+                const response = await adminFetch(`/admin/systems/models?manufacturer=${encodeURIComponent(manufacturer)}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -714,7 +729,7 @@
         // Load system health data
         async function loadHealthData() {
             try {
-                const response = await fetch('/admin/health');
+                const response = await adminFetch('/admin/health');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -740,7 +755,7 @@
         // Load Pinecone data
         async function loadPineconeData() {
             try {
-                const response = await fetch('/admin/pinecone');
+                const response = await adminFetch('/admin/pinecone');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -799,7 +814,7 @@
         // Load systems data
         async function loadSystemsData() {
             try {
-                const response = await fetch('/admin/systems');
+                const response = await adminFetch('/admin/systems');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -818,7 +833,7 @@
         // Load logs
         async function loadLogs() {
             try {
-                const response = await fetch('/admin/logs');
+                const response = await adminFetch('/admin/logs');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1031,9 +1046,13 @@
                 formData.append('file', file);
                 formData.append('metadata', JSON.stringify(metadata));
                 
-                const response = await fetch('/admin/docs/ingest', {
+                const response = await adminFetch('/admin/docs/ingest', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                        // Don't set Content-Type for FormData
+                    }
                 });
                 
                 const result = await response.json();
@@ -1082,7 +1101,7 @@
 
         async function pollJobStatus(jobId) {
             try {
-                const response = await fetch(`/admin/docs/ingest/${jobId}`);
+                const response = await adminFetch(`/admin/docs/ingest/${jobId}`);
                 const result = await response.json();
                 
                 if (result.success) {

@@ -30,7 +30,7 @@ app.use('/chat', chatRouter);  // alias for backward compatibility
 app.use('/admin/docs', documentRouter);
 app.use('/document', documentRouter);  // alias for backward compatibility
 app.use('/pinecone', pineconeRouter);
-app.use('/admin', adminGate, adminRouter);
+app.use('/admin', adminRouter);
 
 // --- static/public (optional; app.js already serves / and /app.js) ---
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
