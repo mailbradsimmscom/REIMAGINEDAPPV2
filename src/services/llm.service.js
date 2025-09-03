@@ -1,9 +1,9 @@
-import { getEnv } from '../config/env.js';
 import { personality } from '../config/personality.js';
 
 export async function enhanceQuery(userQuery, systemsContext = []) {
   try {
     const prompt = buildQueryEnhancementPrompt(userQuery, systemsContext);
+    const { getEnv } = await import('../config/env.js');
     const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -45,6 +45,7 @@ You are enhancing a user query by incorporating relevant context from systems da
 export async function summarizeConversation(messages, systemsContext = []) {
   try {
     const prompt = buildSummarizationPrompt(messages, systemsContext);
+    const { getEnv } = await import('../config/env.js');
     const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -86,6 +87,7 @@ You are summarizing a conversation. Provide a concise summary that captures the 
 export async function synthesizeAnswer(userQuery, categorizedResults) {
   try {
     const prompt = buildSynthesisPrompt(userQuery, categorizedResults);
+    const { getEnv } = await import('../config/env.js');
     const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -129,6 +131,7 @@ IMPORTANT: Always maintain the optimistic, curious, people-person tone throughou
 export async function generateChatName(messages, systemsContext = []) {
   try {
     const prompt = buildNamingPrompt(messages, systemsContext);
+    const { getEnv } = await import('../config/env.js');
     const { OPENAI_API_KEY: openaiApiKey, OPENAI_MODEL: openaiModel = 'gpt-4', LLM_TEMPERATURE: openaiTemperature = '0.7' } = getEnv({ loose: true });
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {

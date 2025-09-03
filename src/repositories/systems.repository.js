@@ -3,7 +3,7 @@ import { getSupabaseClient } from './supabaseClient.js';
 const TABLE = 'systems';
 
 export async function listSystems({ limit = 25, cursor } = {}) {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   let query = supabase.from(TABLE).select('*').order('asset_uid', { ascending: true }).limit(limit);
   if (cursor) {
     query = query.gt('asset_uid', cursor);
@@ -19,7 +19,7 @@ export async function listSystems({ limit = 25, cursor } = {}) {
 }
 
 export async function getSystemByAssetUid(assetUid) {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   const { data, error } = await supabase
     .from(TABLE)
     .select('*')
@@ -36,7 +36,7 @@ export async function getSystemByAssetUid(assetUid) {
 }
 
 export async function searchSystems(query, { limit = 10 } = {}) {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   
   try {
     const { data, error } = await supabase.rpc('search_systems', { q: query, top_n: limit });

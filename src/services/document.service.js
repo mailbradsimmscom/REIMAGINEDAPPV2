@@ -11,16 +11,16 @@ class DocumentService {
     this.requestLogger = logger.createRequestLogger();
   }
 
-  get supabase() {
+  async getSupabase() {
     if (!this._supabase) {
-      this._supabase = getSupabaseClient();
+      this._supabase = await getSupabaseClient();
     }
     return this._supabase;
   }
 
-  get supabaseStorage() {
+  async getSupabaseStorage() {
     if (!this._supabaseStorage) {
-      this._supabaseStorage = getSupabaseStorageClient();
+      this._supabaseStorage = await getSupabaseStorageClient();
     }
     return this._supabaseStorage;
   }
@@ -37,7 +37,8 @@ class DocumentService {
       
       this.requestLogger.info('Starting file upload', { docId, fileName, filePath, fileSize: fileBuffer.length });
       
-      const { data, error } = await this.supabaseStorage.storage
+      const supabaseStorage = await this.getSupabaseStorage();
+      const { data, error } = await supabaseStorage.storage
         .from('documents')
         .upload(filePath, fileBuffer, {
           contentType: 'application/pdf',
@@ -269,7 +270,8 @@ class DocumentService {
 
       // Get file from Supabase Storage
       const filePath = `manuals/${job.doc_id}/${fileName}`;
-      const { data: fileData, error: fileError } = await this.supabaseStorage.storage
+      const supabaseStorage = await this.getSupabaseStorage();
+      const { data: fileData, error: fileError } = await supabaseStorage.storage
         .from('documents')
         .download(filePath);
 
@@ -348,6 +350,7 @@ class DocumentService {
       formData.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
 
       // Call Python sidecar
+      const { getEnv } = await import('../config/env.js');
       const sidecarUrl = getEnv({ loose: true }).PYTHON_SIDECAR_URL;
       const response = await fetch(`${sidecarUrl}/v1/process-document`, {
         method: 'POST',

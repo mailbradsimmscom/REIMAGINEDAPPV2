@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
+import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
 
@@ -14,35 +15,30 @@ const EnvelopeOk = z.object({
 // Apply admin gate middleware
 router.use(adminGate);
 
-// GET /admin/manufacturers - Get manufacturers statistics
+// GET /admin/manufacturers - List manufacturers
 router.get('/', async (req, res, next) => {
   try {
-    const supabase = getSupabaseClient();
+    const requestLogger = logger.createRequestLogger();
+    const supabase = await getSupabaseClient();
     
-    // Get manufacturers count
-    const { count: manufacturersCount } = await supabase
-      .from('systems')
-      .select('manufacturer_norm', { count: 'exact', head: true });
+    const { data, error } = await supabase
+      .from('manufacturers')
+      .select('*')
+      .order('name');
 
-    // Get top manufacturers
-    const { data: topManufacturers } = await supabase
-      .from('systems')
-      .select('manufacturer_norm')
-      .not('manufacturer_norm', 'is', null)
-      .order('manufacturer_norm', { ascending: true });
-
-    const manufacturersData = {
-      total: manufacturersCount || 0,
-      top: topManufacturers || [],
-      lastUpdated: new Date().toISOString()
-    };
+    if (error) {
+      throw error;
+    }
 
     const envelope = {
       success: true,
-      data: manufacturersData
+      data: data || []
     };
 
-    return enforceResponse(res, envelope, 200);
+    return enforceResponse(res, envelope);
+    
+    requestLogger.info('Manufacturers retrieved', { count: data?.length || 0 });
+    
   } catch (error) {
     next(error);
   }

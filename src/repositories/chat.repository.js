@@ -6,7 +6,7 @@ const MESSAGES_TABLE = 'chat_messages';
 
 export async function createChatSession({ name, description, metadata = {} } = {}) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
@@ -38,7 +38,7 @@ export async function createChatSession({ name, description, metadata = {} } = {
 
 export async function getChatSession(sessionId) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
@@ -64,7 +64,7 @@ export async function getChatSession(sessionId) {
 
 export async function listChatSessions({ limit = 25, cursor } = {}) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     let query = supabase
       .from(SESSIONS_TABLE)
@@ -96,7 +96,7 @@ export async function listChatSessions({ limit = 25, cursor } = {}) {
 
 export async function createChatThread({ sessionId, name, metadata = {} } = {}) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(THREADS_TABLE)
@@ -128,7 +128,7 @@ export async function createChatThread({ sessionId, name, metadata = {} } = {}) 
 
 export async function getChatThread(threadId) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(THREADS_TABLE)
@@ -154,7 +154,7 @@ export async function getChatThread(threadId) {
 
 export async function listChatThreads(sessionId, { limit = 25, cursor } = {}) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     let query = supabase
       .from(THREADS_TABLE)
@@ -187,7 +187,7 @@ export async function listChatThreads(sessionId, { limit = 25, cursor } = {}) {
 
 export async function createChatMessage({ threadId, role, content, metadata = {} } = {}) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(MESSAGES_TABLE)
@@ -219,7 +219,7 @@ export async function createChatMessage({ threadId, role, content, metadata = {}
 
 export async function getChatMessages(threadId, { limit = 50, cursor } = {}) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     let query = supabase
       .from(MESSAGES_TABLE)
@@ -252,7 +252,7 @@ export async function getChatMessages(threadId, { limit = 50, cursor } = {}) {
 
 export async function updateChatSession(sessionId, updates) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
@@ -282,7 +282,7 @@ export async function updateChatSession(sessionId, updates) {
 
 export async function updateChatThread(threadId, updates) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { data, error } = await supabase
       .from(THREADS_TABLE)
@@ -312,7 +312,7 @@ export async function updateChatThread(threadId, updates) {
 
 export async function deleteChatMessages(threadId) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { error } = await supabase
       .from(MESSAGES_TABLE)
@@ -337,7 +337,7 @@ export async function deleteChatMessages(threadId) {
 
 export async function deleteChatThreads(sessionId) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { error } = await supabase
       .from(THREADS_TABLE)
@@ -362,7 +362,7 @@ export async function deleteChatThreads(sessionId) {
 
 export async function deleteChatSession(sessionId) {
   try {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     
     const { error } = await supabase
       .from(SESSIONS_TABLE)

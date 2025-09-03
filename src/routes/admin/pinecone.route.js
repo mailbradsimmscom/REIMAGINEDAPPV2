@@ -1,6 +1,5 @@
 import express from 'express';
 import { logger } from '../../utils/logger.js';
-import { getEnv } from '../../config/env.js';
 import { adminGate } from '../../middleware/admin.js';
 import { adminPineconeResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
@@ -20,6 +19,7 @@ const EnvelopeOk = z.object({
 router.get('/', async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
+    const { getEnv } = await import('../../config/env.js');
     const { PYTHON_SIDECAR_URL: sidecarUrl = 'http://localhost:8000', PINECONE_INDEX: pineconeIndex, PINECONE_NAMESPACE: pineconeNamespace = '__default__' } = getEnv({ loose: true });
     
     // Check sidecar health

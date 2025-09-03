@@ -1,12 +1,14 @@
 import { logger } from '../utils/logger.js';
-import { getEnv } from '../config/env.js';
 
 /**
  * Admin authentication middleware
  * Protects all /admin/* routes with simple header-based auth
  */
-export function adminGate(req, res, next) {
+export async function adminGate(req, res, next) {
   const requestLogger = req.requestLogger || logger.createRequestLogger();
+  
+  // Get env at runtime
+  const { getEnv } = await import('../config/env.js');
   const env = getEnv({ loose: true });
   
   // Simple admin token check
@@ -38,7 +40,9 @@ export function adminGate(req, res, next) {
  * Optional admin gate - only checks if token is provided
  * Useful for routes that can work with or without admin access
  */
-export function optionalAdminGate(req, res, next) {
+export async function optionalAdminGate(req, res, next) {
+  // Get env at runtime
+  const { getEnv } = await import('../config/env.js');
   const env = getEnv({ loose: true });
   const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
   const expectedToken = env.ADMIN_TOKEN;

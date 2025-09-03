@@ -1,5 +1,4 @@
 import { logger } from '../utils/logger.js';
-import { getEnv } from '../config/env.js';
 
 class PineconeRepository {
   constructor() {
@@ -8,12 +7,14 @@ class PineconeRepository {
 
   // Get sidecar URL at runtime
   async getSidecarUrl() {
+    const { getEnv } = await import('../config/env.js');
     const env = getEnv({ loose: true });
     return env.PYTHON_SIDECAR_URL;
   }
 
   // Get namespace at runtime
   async getNamespace() {
+    const { getEnv } = await import('../config/env.js');
     const env = getEnv({ loose: true });
     return env.PINECONE_NAMESPACE || env.DEFAULT_NAMESPACE || null;
   }

@@ -2,7 +2,7 @@ import { getSupabaseClient } from './supabaseClient.js';
 
 // Lists table names from the public schema using the service role key
 export async function listPublicTables() {
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   const { data, error } = await supabase
     .from('information_schema.tables')
     .select('table_name')

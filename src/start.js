@@ -1,9 +1,9 @@
 import app from './index.js';
-import { getEnv } from './config/env.js';
 import { logger } from './utils/logger.js';
 
 // Start server
-const startServer = () => {
+const startServer = async () => {
+  const { getEnv } = await import('./config/env.js');
   const env = getEnv({ loose: true });
   const port = env.PORT || 3000;
   

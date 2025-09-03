@@ -1,11 +1,11 @@
 // src/repositories/supabaseClient.js
 import { createClient } from '@supabase/supabase-js';
-import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
 let supabase = null;
 
-function getSupabaseConfig() {
+async function getSupabaseConfig() {
+  const { getEnv } = await import('../config/env.js');
   const env = getEnv({ loose: true });
   return {
     url: env.SUPABASE_URL,
@@ -18,10 +18,10 @@ function getSupabaseConfig() {
   };
 }
 
-export function getSupabaseClient() {
+export async function getSupabaseClient() {
   if (supabase) return supabase;
 
-  const { url, key } = getSupabaseConfig();
+  const { url, key } = await getSupabaseConfig();
   if (!url || !key) {
     logger.warn('Supabase disabled: missing SUPABASE_URL or service/anon key.', {
       hasUrl: !!url,
@@ -43,14 +43,14 @@ export function getSupabaseClient() {
 }
 
 // Convenience, if you want explicit storage access without extra clients:
-export function getSupabaseStorage() {
-  const client = getSupabaseClient();
+export async function getSupabaseStorage() {
+  const client = await getSupabaseClient();
   return client ? client.storage : null;
 }
 
 /** 👇 compat shim for older code */
-export function getSupabaseStorageClient() {
-  return getSupabaseClient();
+export async function getSupabaseStorageClient() {
+  return await getSupabaseClient();
 }
 
 // Prefer named exports; if you want a default, export the **getter**, not the instance:

@@ -4,6 +4,7 @@ import { adminGate } from '../../middleware/admin.js';
 import { adminSystemsResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { z } from 'zod';
+import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
 
@@ -15,28 +16,30 @@ const EnvelopeOk = z.object({
   data: z.any()
 });
 
-// GET /admin/systems - Get systems statistics
+// GET /admin/systems - List systems
 router.get('/', async (req, res, next) => {
   try {
-    const supabase = getSupabaseClient();
-    const { count: documentsCount } = await supabase.from('documents').select('*', { count: 'exact', head: true });
-    const { count: jobsCount } = await supabase.from('jobs').select('*', { count: 'exact', head: true });
-    const { count: totalSystems } = await supabase.from('systems').select('*', { count: 'exact', head: true });
+    const requestLogger = logger.createRequestLogger();
+    const supabase = await getSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('systems')
+      .select('*')
+      .order('asset_uid');
 
-    const systemsData = {
-      totalSystems: totalSystems || 0,
-      lastUpdated: new Date().toISOString(),
-      databaseStatus: 'connected',
-      documentsCount: documentsCount || 0,
-      jobsCount: jobsCount || 0
-    };
+    if (error) {
+      throw error;
+    }
 
     const envelope = {
       success: true,
-      data: systemsData
+      data: data || []
     };
 
-    return enforceResponse(res, envelope, 200);
+    return enforceResponse(res, envelope);
+    
+    requestLogger.info('Systems retrieved', { count: data?.length || 0 });
+    
   } catch (error) {
     next(error);
   }

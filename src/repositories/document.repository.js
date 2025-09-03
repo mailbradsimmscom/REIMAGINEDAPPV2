@@ -8,9 +8,9 @@ class DocumentRepository {
 
   // Job Management
   async createJob(jobData) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('jobs')
         .insert([jobData])
         .select()
@@ -27,9 +27,9 @@ class DocumentRepository {
   }
 
   async getJob(jobId) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('jobs')
         .select('*')
         .eq('job_id', jobId)
@@ -44,7 +44,7 @@ class DocumentRepository {
   }
 
   async updateJobStatus(jobId, status, updates = {}) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
       const updateData = {
         status,
@@ -60,7 +60,7 @@ class DocumentRepository {
         updateData.completed_at = new Date().toISOString();
       }
 
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('jobs')
         .update(updateData)
         .eq('job_id', jobId)
@@ -78,9 +78,9 @@ class DocumentRepository {
   }
 
   async updateJobProgress(jobId, counters) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('jobs')
         .update({ 
           counters,
@@ -100,9 +100,9 @@ class DocumentRepository {
 
   // Document Management
   async createOrUpdateDocument(docData) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('documents')
         .upsert([docData], { 
           onConflict: 'doc_id',
@@ -122,9 +122,9 @@ class DocumentRepository {
   }
 
   async getDocument(docId) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('documents')
         .select('*')
         .eq('doc_id', docId)
@@ -139,9 +139,9 @@ class DocumentRepository {
   }
 
   async updateDocumentStats(docId, stats) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('documents')
         .update({
           chunk_count: stats.chunk_count || 0,
@@ -163,9 +163,9 @@ class DocumentRepository {
   }
 
   async updateDocumentStoragePath(docId, storagePath) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('documents')
         .update({
           storage_path: storagePath,
@@ -187,11 +187,11 @@ class DocumentRepository {
 
   // Document Chunks Management
   async createChunks(chunks) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
       if (chunks.length === 0) return [];
 
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('document_chunks')
         .insert(chunks)
         .select();
@@ -207,9 +207,9 @@ class DocumentRepository {
   }
 
   async getChunksByDocId(docId) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('document_chunks')
         .select('*')
         .eq('doc_id', docId)
@@ -224,9 +224,9 @@ class DocumentRepository {
   }
 
   async getJobsByStatus(status, limit = 10) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('jobs')
         .select('*')
         .eq('status', status)
@@ -242,9 +242,9 @@ class DocumentRepository {
   }
 
   async getChunks(docId) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('document_chunks')
         .select('*')
         .eq('doc_id', docId)
@@ -259,9 +259,9 @@ class DocumentRepository {
   }
 
   async checkChunkExists(chunkId) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('document_chunks')
         .select('chunk_id')
         .eq('chunk_id', chunkId)
@@ -277,9 +277,9 @@ class DocumentRepository {
 
   // Utility Methods
   async getJobStatus(jobId) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .rpc('get_job_status', { job_uuid: jobId });
 
       if (error) throw error;
@@ -291,9 +291,9 @@ class DocumentRepository {
   }
 
   async listJobs(limit = 50, offset = 0) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('jobs')
         .select('*')
         .order('created_at', { ascending: false })
@@ -308,9 +308,9 @@ class DocumentRepository {
   }
 
   async listDocuments(limit = 50, offset = 0) {
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('documents')
         .select('*')
         .order('last_ingested_at', { ascending: false })

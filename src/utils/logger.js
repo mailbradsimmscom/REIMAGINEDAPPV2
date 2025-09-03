@@ -1,7 +1,6 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { getEnv } from '../config/env.js';
 
 class Logger {
   constructor() {
@@ -12,7 +11,8 @@ class Logger {
   }
 
   // Get environment values at runtime
-  getEnv() {
+  async getEnv() {
+    const { getEnv } = await import('../config/env.js');
     return getEnv({ loose: true });
   }
 
@@ -25,7 +25,7 @@ class Logger {
   }
 
   async writeLog(level, message, meta = {}) {
-    const env = this.getEnv();
+    const env = await this.getEnv();
     const logEntry = {
       timestamp: new Date().toISOString(),
       level: level.toUpperCase(),
