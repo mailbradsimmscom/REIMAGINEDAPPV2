@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// Empty query schema for simple GET routes
+export const EmptyQuery = z.object({}).passthrough();
+
 // Shared error envelope schema
 const ErrorEnvelopeSchema = z.object({
   success: z.literal(false),

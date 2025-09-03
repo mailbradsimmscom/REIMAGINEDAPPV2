@@ -1,17 +1,28 @@
 import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
 import { adminSystemsResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { logger } from '../../utils/logger.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+// Admin systems query schema
+const adminSystemsQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(25),
+  offset: z.coerce.number().int().min(0).default(0),
+  status: z.enum(['active', 'inactive', 'maintenance']).optional()
+}).passthrough();
+
 // GET /admin/systems - List systems
-router.get('/', async (req, res, next) => {
+router.get('/', 
+  validate(adminSystemsQuerySchema, 'query'),
+  async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
     const supabase = await getSupabaseClient();

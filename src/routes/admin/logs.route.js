@@ -1,5 +1,6 @@
 import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
 import { adminLogsQuerySchema, adminLogsResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 
@@ -9,7 +10,9 @@ const router = express.Router();
 router.use(adminGate);
 
 // GET /admin/logs - Get log files
-router.get('/', async (req, res, next) => {
+router.get('/', 
+  validate(adminLogsQuerySchema, 'query'),
+  async (req, res, next) => {
   try {
     const { level, limit, correlationId } = req.query;
     

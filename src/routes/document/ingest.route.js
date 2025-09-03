@@ -9,6 +9,7 @@ import {
   documentIngestMetadataSchema 
 } from '../../schemas/document.schema.js';
 import Busboy from 'busboy';
+import { z } from 'zod';
 
 const router = express.Router();
 
@@ -18,8 +19,14 @@ router.use(adminGate);
 // Add method not allowed for non-POST requests
 router.all('/', methodNotAllowed);
 
+// Document ingest body schema (for multipart form data)
+const documentIngestBodySchema = z.object({
+  // This will be validated after busboy processes the multipart data
+}).passthrough();
+
 // POST /admin/docs/ingest - Create document ingest job
 router.post('/', 
+  validate(documentIngestBodySchema, 'body'),
   async (req, res, next) => {
     try {
       // Parse multipart form data using busboy

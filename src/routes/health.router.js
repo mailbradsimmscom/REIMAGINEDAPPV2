@@ -1,11 +1,14 @@
 import express from 'express';
 import { enforceResponse } from '../middleware/enforceResponse.js';
-import { healthResponseSchema } from '../schemas/health.schema.js';
+import { validate } from '../middleware/validate.js';
+import { healthResponseSchema, EmptyQuery } from '../schemas/health.schema.js';
 
 const router = express.Router();
 
 // GET /health - Health check endpoint
-router.get('/', (req, res, next) => {
+router.get('/', 
+  validate(EmptyQuery, 'query'),
+  (req, res, next) => {
   try {
     const envelope = {
       success: true,

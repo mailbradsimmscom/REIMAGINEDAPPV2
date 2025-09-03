@@ -2,16 +2,27 @@ import express from 'express';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
 import { adminManufacturersResponseSchema } from '../../schemas/admin.schema.js';
 import { logger } from '../../utils/logger.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+// Admin manufacturers query schema
+const adminManufacturersQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(25),
+  offset: z.coerce.number().int().min(0).default(0),
+  status: z.enum(['active', 'inactive']).optional()
+}).passthrough();
+
 // GET /admin/manufacturers - List manufacturers
-router.get('/', async (req, res, next) => {
+router.get('/', 
+  validate(adminManufacturersQuerySchema, 'query'),
+  async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
     const supabase = await getSupabaseClient();

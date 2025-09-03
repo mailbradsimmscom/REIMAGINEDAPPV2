@@ -1,16 +1,23 @@
 import express from 'express';
 import { logger } from '../../utils/logger.js';
 import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
 import { adminPineconeResponseSchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { z } from 'zod';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
 
+// Admin pinecone query schema
+const adminPineconeQuerySchema = z.object({}).passthrough();
+
 // GET /admin/pinecone - Get Pinecone status
-router.get('/', async (req, res, next) => {
+router.get('/', 
+  validate(adminPineconeQuerySchema, 'query'),
+  async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
     const { getEnv } = await import('../../config/env.js');

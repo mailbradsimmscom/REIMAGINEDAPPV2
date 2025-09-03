@@ -1,6 +1,7 @@
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
 import { documentJobStatusPathSchema, documentJobStatusResponseSchema } from '../../schemas/document.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { z } from 'zod';
@@ -16,21 +17,13 @@ const EnvelopeOk = z.object({
 });
 
 // GET /admin/docs/jobs/:jobId - Get job status
-router.get('/jobs/:jobId', async (req, res, next) => {
+router.get('/jobs/:jobId', 
+  validate(documentJobStatusPathSchema, 'params'),
+  async (req, res, next) => {
   try {
     const { jobId } = req.params;
     
-    // Validate path parameters
-    const pathValidation = documentJobStatusPathSchema.safeParse({ jobId });
-    if (!pathValidation.success) {
-      const error = new Error('Invalid path parameters');
-      error.name = 'ZodError';
-      error.errors = pathValidation.error.errors;
-      throw error;
-    }
-
-    const { jobId: validatedJobId } = pathValidation.data;
-    const job = await documentService.getJobStatus(validatedJobId);
+    const job = await documentService.getJobStatus(jobId);
     
     if (!job) {
       const error = new Error('Job not found');
