@@ -9,6 +9,7 @@ import { logger } from './utils/logger.js';
 import { securityHeaders, basicRateLimit } from './middleware/security.js';
 import { errorHandler, notFoundHandler } from './middleware/error.js';
 import { adminGate } from './middleware/admin.js';
+import { trace404 } from './middleware/trace404.js';
 
 // Routers
 import healthRouter from './routes/health.router.js';
@@ -48,6 +49,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use('/public', (req, res, next) => next()); // placeholder if you add static later
 
 // --- 404 + error handlers (must be last) ---
+app.use(trace404);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

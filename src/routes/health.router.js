@@ -1,6 +1,7 @@
 import express from 'express';
 import { enforceResponse } from '../middleware/enforceResponse.js';
 import { validate } from '../middleware/validate.js';
+import { ERR } from '../constants/errorCodes.js';
 import { healthResponseSchema, EmptyQuery } from '../schemas/health.schema.js';
 
 const router = express.Router();
@@ -32,7 +33,7 @@ router.all('/', (req, res) => {
   return enforceResponse(res, {
     success: false,
     error: {
-      code: 'METHOD_NOT_ALLOWED',
+      code: ERR.METHOD_NOT_ALLOWED,
       message: `${req.method} not allowed`
     }
   }, 405);

@@ -1,6 +1,7 @@
 import express from 'express';
 import { enforceResponse } from '../middleware/enforceResponse.js';
 import { validate } from '../middleware/validate.js';
+import { ERR } from '../constants/errorCodes.js';
 import { 
   pineconeSearchRequestSchema,
   pineconeStatsQuerySchema,
@@ -31,7 +32,7 @@ function methodNotAllowed(req, res) {
   return enforceResponse(res, {
     success: false,
     error: {
-      code: 'METHOD_NOT_ALLOWED',
+      code: ERR.METHOD_NOT_ALLOWED,
       message: `${req.method} not allowed for ${req.path}`
     }
   }, 405);
@@ -45,7 +46,7 @@ router.post('/search',
       if (!(await isPineconeConfigured())) {
         const envelope = {
           success: false,
-          error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
+          error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeSearchResponseSchema.parse(envelope);
@@ -78,7 +79,7 @@ router.get('/stats',
       if (!(await isPineconeConfigured())) {
         const envelope = {
           success: false,
-          error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
+          error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeStatsResponseSchema.parse(envelope);
@@ -108,7 +109,7 @@ router.get('/documents/:docId/chunks',
       if (!(await isPineconeConfigured())) {
         const envelope = {
           success: false,
-          error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
+          error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeDocumentChunksResponseSchema.parse(envelope);

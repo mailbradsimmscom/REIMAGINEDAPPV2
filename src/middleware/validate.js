@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { enforceResponse } from './enforceResponse.js';
+import { ERR } from '../constants/errorCodes.js';
 
 /**
  * Validation middleware factory
@@ -28,7 +29,7 @@ export function validate(schema, target = 'body') {
           success: false,
           data: null,
           error: { 
-            code: 'BAD_REQUEST', 
+            code: ERR.BAD_REQUEST, 
             message: 'Validation failed', 
             details: issues 
           },
@@ -45,7 +46,7 @@ export function validate(schema, target = 'body') {
           success: false,
           data: null,
           error: { 
-            code: 'BAD_REQUEST', 
+            code: ERR.BAD_REQUEST, 
             message: 'Validation failed', 
             details: err.issues 
           },

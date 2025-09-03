@@ -1,4 +1,5 @@
 import { test, assertSuccess, assertError, publicRequest, assert } from '../test-config.js';
+import { ERR } from '../../src/constants/errorCodes.js';
 
 // Pinecone route tests
 test('Pinecone Routes - Happy Path', async (t) => {
@@ -33,7 +34,7 @@ test('Pinecone Routes - Method Not Allowed', async (t) => {
     
     assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
+    assert.strictEqual(response.body.error.code, ERR.METHOD_NOT_ALLOWED);
     // The actual message includes just the path, not the full URL
     assert.strictEqual(response.body.error.message.includes('GET not allowed'), true);
   });
@@ -43,7 +44,7 @@ test('Pinecone Routes - Method Not Allowed', async (t) => {
     
     assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
+    assert.strictEqual(response.body.error.code, ERR.METHOD_NOT_ALLOWED);
     assert.strictEqual(response.body.error.message.includes('PUT not allowed'), true);
   });
 
@@ -52,7 +53,7 @@ test('Pinecone Routes - Method Not Allowed', async (t) => {
     
     assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
+    assert.strictEqual(response.body.error.code, ERR.METHOD_NOT_ALLOWED);
     assert.strictEqual(response.body.error.message.includes('GET not allowed'), true);
   });
 
@@ -61,7 +62,7 @@ test('Pinecone Routes - Method Not Allowed', async (t) => {
     
     assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
+    assert.strictEqual(response.body.error.code, ERR.METHOD_NOT_ALLOWED);
     assert.strictEqual(response.body.error.message.includes('PUT not allowed'), true);
   });
 });

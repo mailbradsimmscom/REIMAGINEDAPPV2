@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { logger } from '../utils/logger.js';
+import { ERR } from '../constants/errorCodes.js';
 
 export function errorHandler(err, req, res, next) {
   if (res.headersSent) return next(err);
@@ -18,7 +19,7 @@ export function errorHandler(err, req, res, next) {
       success: false,
       data: null,
       error: { 
-        code: 'BAD_REQUEST', 
+        code: ERR.BAD_REQUEST, 
         message: 'Validation failed',
         details: err.issues 
       },
@@ -28,7 +29,7 @@ export function errorHandler(err, req, res, next) {
   
   // Handle other errors
   const status = Number(err.status) || 500;
-  const code = err.code || (status === 400 ? 'BAD_REQUEST' : 'INTERNAL');
+  const code = err.code || (status === 400 ? ERR.BAD_REQUEST : ERR.INTERNAL);
   const message = err.message || (status === 400 ? 'Validation failed' : 'Unexpected error');
 
   if (status >= 500) {
@@ -53,7 +54,7 @@ export function notFoundHandler(req, res) {
     success: false,
     data: null,
     error: {
-      code: 'NOT_FOUND',
+      code: ERR.NOT_FOUND,
       message: 'Route not found'
     }
   });
@@ -65,7 +66,7 @@ export function methodNotAllowed(allowedMethods = []) {
       success: false,
       data: null,
       error: {
-        code: 'METHOD_NOT_ALLOWED',
+        code: ERR.METHOD_NOT_ALLOWED,
         message: `${req.method} method not allowed for ${req.url}`,
         details: { allowedMethods }
       }

@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { ERR } from '../constants/errorCodes.js';
 
 function readAdminToken(req) {
   const h = req.headers;
@@ -30,15 +31,15 @@ export function adminGate(req, res, next) {
   const supplied = readAdminToken(req);
 
   if (!expected) {
-    return res.status(401).json({ success:false, data:null, error:{ code:'ADMIN_DISABLED', message:'Admin token not configured' }});
+    return res.status(401).json({ success:false, data:null, error:{ code:ERR.ADMIN_DISABLED, message:'Admin token not configured' }});
   }
   if (!supplied) {
     logger.info('Admin auth: missing token');
-    return res.status(401).json({ success:false, data:null, error:{ code:'UNAUTHORIZED', message:'Admin token required' }});
+    return res.status(401).json({ success:false, data:null, error:{ code:ERR.UNAUTHORIZED, message:'Admin token required' }});
   }
   if (supplied !== expected) {
     logger.warn('Admin auth: bad token', { supplied: mask(supplied), supplied_sha: tokenHash(supplied) });
-    return res.status(403).json({ success:false, data:null, error:{ code:'FORBIDDEN', message:'Invalid admin token' }});
+    return res.status(403).json({ success:false, data:null, error:{ code:ERR.FORBIDDEN, message:'Invalid admin token' }});
   }
 
   // success — don't log the raw token
