@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { getEnv } from '../config/env.js';
 
 class Logger {
   constructor() {
@@ -11,9 +12,8 @@ class Logger {
   }
 
   // Get environment values at runtime
-  async getEnv() {
-    const { env } = await import('../config/env.js');
-    return env;
+  getEnv() {
+    return getEnv({ loose: true });
   }
 
   async ensureLogsDirectory() {
@@ -25,15 +25,15 @@ class Logger {
   }
 
   async writeLog(level, message, meta = {}) {
-    const env = await this.getEnv();
+    const env = this.getEnv();
     const logEntry = {
       timestamp: new Date().toISOString(),
       level: level.toUpperCase(),
       message,
       correlationId: meta.correlationId || randomUUID(),
       service: 'reimagined-app',
-      version: env.appVersion,
-      environment: env.nodeEnv,
+      version: env.APP_VERSION || '1.0.0',
+      environment: env.NODE_ENV || 'development',
       ...meta
     };
 
