@@ -3,8 +3,10 @@ import { createClient } from '@supabase/supabase-js';
 import { logger } from '../utils/logger.js';
 
 let supabase = null;
+let hasLoggedConfig = false;
 
 async function getSupabaseConfig() {
+  // Import env synchronously for lazy loading
   const { getEnv } = await import('../config/env.js');
   const env = getEnv({ loose: true });
   return {
@@ -23,21 +25,26 @@ export async function getSupabaseClient() {
 
   const { url, key } = await getSupabaseConfig();
   if (!url || !key) {
-    logger.warn('Supabase disabled: missing SUPABASE_URL or service/anon key.', {
-      hasUrl: !!url,
-      hasKey: !!key,
-    });
+    if (!hasLoggedConfig) {
+      logger.warn('Supabase disabled: missing SUPABASE_URL or service/anon key.', {
+        hasUrl: !!url,
+        hasKey: !!key,
+      });
+      hasLoggedConfig = true;
+    }
     return null; // graceful degradation
   }
 
   supabase = createClient(url, key);
 
-  // Log once on first real init (safer than at import time)
-  const requestLogger = logger.createRequestLogger();
-  requestLogger.info('Supabase client initialized', {
-    supabaseUrlPrefix: url.split('//')[1]?.split('.')[0],
-    hasServiceKey: !!key,
-  });
+  // Log once on first real init
+  if (!hasLoggedConfig) {
+    logger.info('Supabase client initialized', {
+      supabaseUrlPrefix: url.split('//')[1]?.split('.')[0],
+      hasServiceKey: !!key,
+    });
+    hasLoggedConfig = true;
+  }
 
   return supabase;
 }
@@ -45,7 +52,7 @@ export async function getSupabaseClient() {
 // Convenience, if you want explicit storage access without extra clients:
 export async function getSupabaseStorage() {
   const client = await getSupabaseClient();
-  return client ? client.storage : null;
+  return client?.storage ?? null;
 }
 
 /** 👇 compat shim for older code */
