@@ -16,7 +16,7 @@ const EnvelopeOk = z.object({
 });
 
 // GET /admin/systems - Get systems statistics
-router.get('/systems', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const supabase = getSupabaseClient();
     const { count: documentsCount } = await supabase.from('documents').select('*', { count: 'exact', head: true });

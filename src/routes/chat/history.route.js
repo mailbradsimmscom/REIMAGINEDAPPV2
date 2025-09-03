@@ -1,6 +1,7 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { 
   chatHistoryQuerySchema,
   chatHistoryResponseSchema 
@@ -15,17 +16,28 @@ router.get('/',
     try {
       const { threadId, limit } = req.query;
       
-      const history = await enhancedChatService.getChatHistory(threadId, { limit });
+      const messages = await enhancedChatService.getChatHistory(threadId, { limit });
       
-      res.json({
+      // Transform the data to match the schema
+      const transformedMessages = messages.map(message => ({
+        id: message.id,
+        content: message.content,
+        role: message.role,
+        createdAt: message.created_at,
+        metadata: message.metadata || {}
+      }));
+      
+      const envelope = {
         success: true,
         data: {
           threadId,
-          messages: history.messages,
-          count: history.messages.length
+          messages: transformedMessages,
+          count: transformedMessages.length
         },
         timestamp: new Date().toISOString()
-      });
+      };
+
+      return res.json(enforceResponse(chatHistoryResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

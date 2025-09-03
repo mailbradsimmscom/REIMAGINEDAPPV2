@@ -1,6 +1,7 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { 
   chatListQuerySchema,
   chatListResponseSchema 
@@ -17,15 +18,33 @@ router.get('/',
       
       const chats = await enhancedChatService.listUserChats({ limit, cursor });
       
-      res.json({
+      // Transform the data to match the schema
+      const transformedChats = chats.map(chat => ({
+        id: chat.id,
+        name: chat.name,
+        description: chat.description || '',
+        createdAt: chat.created_at,
+        updatedAt: chat.updated_at,
+        latestThread: chat.latestThread ? {
+          id: chat.latestThread.id,
+          name: chat.latestThread.name,
+          createdAt: chat.latestThread.created_at,
+          updatedAt: chat.latestThread.updated_at,
+          metadata: chat.latestThread.metadata || {}
+        } : undefined
+      }));
+      
+      const envelope = {
         success: true,
         data: {
-          chats: chats.chats,
-          count: chats.chats.length,
-          nextCursor: chats.nextCursor
+          chats: transformedChats,
+          count: transformedChats.length,
+          nextCursor: null // TODO: implement cursor pagination
         },
         timestamp: new Date().toISOString()
-      });
+      };
+
+      return res.json(enforceResponse(chatListResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

@@ -59,6 +59,38 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
+// Real double-send guard (dev only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    const origJson = res.json.bind(res);
+    const origSend = res.send.bind(res);
+
+    res.json = (body) => {
+      if (res.headersSent) {
+        console.error('[DOUBLE_SEND:json]', {
+          method: req.method,
+          url: req.originalUrl,
+          stack: new Error().stack.split('\n').slice(0, 8),
+        });
+      }
+      return origJson(body);
+    };
+
+    res.send = (body) => {
+      if (res.headersSent) {
+        console.error('[DOUBLE_SEND:send]', {
+          method: req.method,
+          url: req.originalUrl,
+          stack: new Error().stack.split('\n').slice(0, 8),
+        });
+      }
+      return origSend(body);
+    };
+
+    next();
+  });
+}
+
 // Logging middleware
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.url}`, {
@@ -90,22 +122,6 @@ app.use('/health', healthRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Start server
-const startServer = () => {
-  app.listen(env.port, () => {
-    logger.info('Express server started', { 
-      port: env.port,
-      routes: {
-        health: `http://localhost:${env.port}/health`,
-        systems: `http://localhost:${env.port}/systems`,
-        chat: `http://localhost:${env.port}/chat/enhanced`,
-        admin: `http://localhost:${env.port}/admin`,
-        pinecone: `http://localhost:${env.port}/pinecone`
-      }
-    });
-  });
-};
-
 // Handle graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
@@ -116,9 +132,6 @@ process.on('SIGINT', () => {
   logger.info('SIGINT received, shutting down gracefully');
   process.exit(0);
 });
-
-// Start the server
-startServer();
 
 export default app;
 

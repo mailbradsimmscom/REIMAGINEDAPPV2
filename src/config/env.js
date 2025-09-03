@@ -58,13 +58,8 @@ export const env = Object.freeze({
   // Admin configuration
   adminToken: process.env.ADMIN_TOKEN ?? 'admin-secret-key',
   
-  // Response validation configuration - NEW FLAGS
-  RESPONSE_VALIDATE: process.env.RESPONSE_VALIDATE === '1',
-  ADMIN_TOKEN: process.env.ADMIN_TOKEN || 'admin-secret-key',
-  
-  // Legacy response validation (to be removed)
-  enableResponseValidation: process.env.RESPONSE_VALIDATE === '1',
-  responseValidationRoutes: process.env.RESPONSE_VALIDATE_ROUTES?.split(',') || []
+  // Response validation configuration
+  RESPONSE_VALIDATE: process.env.RESPONSE_VALIDATE === '1'
 });
 
 export default env;

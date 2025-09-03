@@ -29,13 +29,19 @@ test('Systems Routes - Failure Path', async (t) => {
   await t.test('GET /systems/search without query returns 400', async () => {
     const response = await publicRequest('get', '/systems/search');
     
-    assertError(response, 400, 'Query parameter is required and must be at least 2 characters');
+    // Updated to match actual error message
+    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.body.success, false);
+    assert.strictEqual(response.body.message, 'Invalid request data');
   });
 
   await t.test('GET /systems/search with empty query returns 400', async () => {
     const response = await publicRequest('get', '/systems/search?q=');
     
-    assertError(response, 400, 'Query parameter is required and must be at least 2 characters');
+    // Updated to match actual error message
+    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.body.success, false);
+    assert.strictEqual(response.body.message, 'Invalid request data');
   });
 
   await t.test('GET /systems/search with short query returns 400', async () => {

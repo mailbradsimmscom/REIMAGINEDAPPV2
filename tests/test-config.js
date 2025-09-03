@@ -1,7 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import request from 'supertest';
-import app from '../src/index.js';
 
 // Test configuration
 export const TEST_CONFIG = {
@@ -10,13 +9,26 @@ export const TEST_CONFIG = {
   TIMEOUT: 5000
 };
 
+// App factory to avoid importing during module load
+let appInstance = null;
+
+async function getApp() {
+  if (!appInstance) {
+    const { default: app } = await import('../src/index.js');
+    appInstance = app;
+  }
+  return appInstance;
+}
+
 // Helper functions for common test operations
-export const adminRequest = (method, path) => {
-  return request(app)[method](path)
-    .set('x-admin-token', TEST_CONFIG.ADMIN_TOKEN);
+export const adminRequest = async (method, path) => {
+  const app = await getApp();
+  const req = request(app)[method](path);
+  return req.set('x-admin-token', TEST_CONFIG.ADMIN_TOKEN);
 };
 
-export const publicRequest = (method, path) => {
+export const publicRequest = async (method, path) => {
+  const app = await getApp();
   return request(app)[method](path);
 };
 

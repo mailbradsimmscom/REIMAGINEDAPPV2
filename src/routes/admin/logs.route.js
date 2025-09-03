@@ -15,7 +15,7 @@ const EnvelopeOk = z.object({
 });
 
 // GET /admin/logs - Get log files
-router.get('/logs', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const { level, limit, correlationId } = req.query;
     

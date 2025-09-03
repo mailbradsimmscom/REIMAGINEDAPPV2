@@ -1,6 +1,7 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { 
   chatProcessRequestSchema,
   chatProcessResponseSchema 
@@ -21,7 +22,7 @@ router.post('/',
         contextSize: 5
       });
 
-      res.json({
+      const envelope = {
         success: true,
         data: {
           sessionId: result.sessionId,
@@ -44,7 +45,9 @@ router.post('/',
           sources: result.sources
         },
         timestamp: new Date().toISOString()
-      });
+      };
+
+      return res.json(enforceResponse(chatProcessResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

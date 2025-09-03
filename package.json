@@ -10,11 +10,12 @@
     "scripts": {
         "dev": "node --watch ./src/start.js",
         "start": "node ./src/start.js",
-        "test": "node --test tests/integration/",
+        "test": "node tests/run-tests-with-sidecar.js",
         "test:unit": "node --test tests/unit/",
         "test:all": "node --test tests/",
         "test:watch": "node --test --watch tests/",
         "test:baseline": "./tests/run-baseline.sh",
+        "test:no-sidecar": "node --test tests/integration/",
         "graph:js": "npx depcruise src --output-type text > docs/app-deps.txt",
         "graph:py": "~/.local/bin/pydeps python-sidecar/app -T svg -o docs/sidecar-deps.svg --noshow",
         "graph:madge": "madge --extensions js --image docs/app-madge.png src",

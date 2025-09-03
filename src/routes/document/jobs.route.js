@@ -2,6 +2,7 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { 
   documentJobsQuerySchema, 
   documentJobsResponseSchema,
@@ -23,7 +24,7 @@ router.get('/',
       
       const jobs = await documentService.listJobs(limit, offset, status);
       
-      const responseData = {
+      const envelope = {
         success: true,
         data: {
           jobs,
@@ -33,7 +34,7 @@ router.get('/',
         }
       };
 
-      res.json(responseData);
+      return res.json(enforceResponse(documentJobsResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

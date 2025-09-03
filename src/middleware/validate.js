@@ -18,53 +18,46 @@ export function validate(schema, target = 'body') {
         // For empty query, use default values from schema
         const result = schema.safeParse({});
         if (result.success) {
-          // Don't try to assign to req.query as it's read-only
-          // Just call next() with the validated data
+          // Store validated data for route handlers
+          req.validatedData = result.data;
           next();
         } else {
-          // If validation fails for empty query, return 400 with validation error
-          const errors = result.error.errors ? result.error.errors.map(err => ({
+          // If validation fails for empty query, pass error to error handler
+          const error = new Error('Invalid request data');
+          error.status = 400;
+          error.code = 'VALIDATION_ERROR';
+          error.details = result.error.errors ? result.error.errors.map(err => ({
             field: err.path.join('.'),
             message: err.message,
             code: err.code
           })) : [{ field: 'unknown', message: 'Validation failed', code: 'invalid_type' }];
-          
-          return res.status(400).json({
-            success: false,
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid request data',
-            details: errors
-          });
+          return next(error);
         }
       }
       
       const result = schema.safeParse(data);
       
       if (!result.success) {
-        const errors = result.error.errors ? result.error.errors.map(err => ({
+        const error = new Error('Invalid request data');
+        error.status = 400;
+        error.code = 'VALIDATION_ERROR';
+        error.details = result.error.errors ? result.error.errors.map(err => ({
           field: err.path.join('.'),
           message: err.message,
           code: err.code
         })) : [{ field: 'unknown', message: 'Validation failed', code: 'invalid_type' }];
-        
-        return res.status(400).json({
-          success: false,
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid request data',
-          details: errors
-        });
+        return next(error);
       }
       
-      // Don't try to assign to req properties as they might be read-only
-      // Just call next() with the validated data
+      // Store validated data for route handlers
+      req.validatedData = result.data;
       next();
       
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-        code: 'INTERNAL_ERROR',
-        message: 'Internal validation error'
-      });
+      const internalError = new Error('Internal validation error');
+      internalError.status = 500;
+      internalError.code = 'INTERNAL_ERROR';
+      return next(internalError);
     }
   };
 }

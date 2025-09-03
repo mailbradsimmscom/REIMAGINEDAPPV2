@@ -2,6 +2,7 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { 
   documentJobsResponseSchema,
   documentIngestMetadataSchema 
@@ -110,7 +111,7 @@ router.post('/',
       // Create ingest job
       const job = await documentService.createIngestJob(fileBuffer, fileName, metadata);
       
-      const responseData = {
+      const envelope = {
         success: true,
         data: {
           jobId: job.id,
@@ -120,7 +121,7 @@ router.post('/',
         }
       };
 
-      res.json(responseData);
+      return res.json(enforceResponse(documentJobsResponseSchema, envelope));
     } catch (error) {
       next(error);
     }

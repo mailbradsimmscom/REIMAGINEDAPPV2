@@ -17,7 +17,7 @@ const EnvelopeOk = z.object({
 });
 
 // GET /admin/pinecone - Get Pinecone status
-router.get('/pinecone', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
     const sidecarUrl = env.sidecarUrl || 'http://localhost:8000';

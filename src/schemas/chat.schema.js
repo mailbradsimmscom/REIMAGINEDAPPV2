@@ -97,7 +97,7 @@ export const chatListResponseSchema = z.object({
       }).optional()
     })),
     count: z.number(),
-    nextCursor: z.string().optional()
+    nextCursor: z.string().nullable().optional()
   }),
   timestamp: z.string()
 });

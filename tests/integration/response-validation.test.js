@@ -10,8 +10,9 @@ test('Response Validation - Flag Functionality', async (t) => {
     
     // Should work normally without validation
     assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.status, 'ok');
-    assert.strictEqual(typeof response.body.uptimeSeconds, 'number');
+    assert.strictEqual(response.body.success, true);
+    assert.strictEqual(response.body.data.status, 'ok');
+    assert.strictEqual(typeof response.body.data.ts, 'string');
   });
 
   await t.test('Response validation can be enabled via environment', async () => {
@@ -21,7 +22,8 @@ test('Response Validation - Flag Functionality', async (t) => {
     
     // Should still work normally
     assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.status, 'ok');
+    assert.strictEqual(response.body.success, true);
+    assert.strictEqual(response.body.data.status, 'ok');
   });
 });
 
@@ -34,7 +36,8 @@ test('Response Validation - Error Handling', async (t) => {
     
     // API should continue to function even if validation fails
     assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.status, 'ok');
+    assert.strictEqual(response.body.success, true);
+    assert.strictEqual(response.body.data.status, 'ok');
   });
 });
 
@@ -47,6 +50,7 @@ test('Response Validation - Logging', async (t) => {
     
     // API should continue to function
     assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.status, 'ok');
+    assert.strictEqual(response.body.success, true);
+    assert.strictEqual(response.body.data.status, 'ok');
   });
 });

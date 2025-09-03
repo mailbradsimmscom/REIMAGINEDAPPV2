@@ -2,6 +2,7 @@ import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { adminModelsQuerySchema, adminModelsResponseSchema } from '../../schemas/admin.schema.js';
 
 const router = express.Router();
@@ -36,12 +37,12 @@ router.get('/',
         lastUpdated: new Date().toISOString()
       };
 
-      const responseData = {
+      const envelope = {
         success: true,
         data: modelsData
       };
 
-      res.json(responseData);
+      return res.json(enforceResponse(adminModelsResponseSchema, envelope));
     } catch (error) {
       next(error);
     }
