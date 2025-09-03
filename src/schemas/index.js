@@ -55,7 +55,7 @@ export {
 
 // Common schemas
 export { 
-  paginationSchema, 
+  paginationQuerySchema, 
   idSchema, 
   querySchema, 
   emptySchema,

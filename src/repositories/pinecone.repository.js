@@ -1,4 +1,5 @@
 import { logger } from '../utils/logger.js';
+import { joinUrl } from '../utils/url.js';
 
 class PineconeRepository {
   constructor() {
@@ -8,22 +9,36 @@ class PineconeRepository {
   // Get sidecar URL at runtime
   async getSidecarUrl() {
     const { getEnv } = await import('../config/env.js');
-    const env = getEnv({ loose: true });
+    const env = getEnv();
     return env.PYTHON_SIDECAR_URL;
   }
 
   // Get namespace at runtime
   async getNamespace() {
     const { getEnv } = await import('../config/env.js');
+    const env = getEnv();
+    return env.PINECONE_NAMESPACE || env.DEFAULT_NAMESPACE || null;
+  }
+
+  // Resolve namespace with precedence: PINECONE_NAMESPACE > DEFAULT_NAMESPACE > null
+  async resolveNamespace() {
+    const { getEnv } = await import('../config/env.js');
     const env = getEnv({ loose: true });
     return env.PINECONE_NAMESPACE || env.DEFAULT_NAMESPACE || null;
+  }
+
+  // Log namespace choice once on boot in dev
+  async logNamespaceChoiceOnce() {
+    if (process.env.NODE_ENV === 'production') return;
+    const ns = await this.resolveNamespace();
+    logger.info('Pinecone namespace selected', { namespace: ns || '(none)' });
   }
 
   // Get index statistics
   async getIndexStats() {
     try {
       const sidecarUrl = await this.getSidecarUrl();
-      const response = await fetch(`${sidecarUrl}/v1/pinecone/stats`);
+      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/stats'));
       
       if (!response.ok) {
         throw new Error(`Failed to get Pinecone stats: ${response.status}`);
@@ -65,7 +80,7 @@ class PineconeRepository {
         includeValues
       };
 
-      const response = await fetch(`${sidecarUrl}/v1/pinecone/search`, {
+      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/search'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -103,7 +118,7 @@ class PineconeRepository {
       const defaultNamespace = await this.getNamespace();
       const targetNamespace = namespace || defaultNamespace;
       
-      const response = await fetch(`${sidecarUrl}/v1/pinecone/fetch`, {
+      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/fetch'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -140,7 +155,7 @@ class PineconeRepository {
       const defaultNamespace = await this.getNamespace();
       const targetNamespace = namespace || defaultNamespace;
       
-      const response = await fetch(`${sidecarUrl}/v1/pinecone/delete`, {
+      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/delete'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -18,9 +18,20 @@ import documentRouter from './routes/document/index.js';
 import pineconeRouter from './routes/pinecone.router.js';
 import adminRouter from './routes/admin/index.js';
 
+import pineconeRepository from './repositories/pinecone.repository.js';
+import { attachConfigInspector } from './debug/config.js';
+
 // --- global headers / rate limit (keep these light; helmet is already in app.js) ---
 app.use(securityHeaders);
 app.use(basicRateLimit);
+
+// Log namespace choice on startup (dev only)
+pineconeRepository.logNamespaceChoiceOnce().catch(err => {
+  logger.warn('Failed to log namespace choice', { error: err.message });
+});
+
+// Attach config inspector (dev only)
+attachConfigInspector(app);
 
 // --- mount routers ---
 app.use('/health', healthRouter);

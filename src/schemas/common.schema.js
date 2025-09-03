@@ -1,32 +1,30 @@
 import { z } from 'zod';
 
-// Common schemas used across multiple endpoints
-export const paginationSchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(20)
+// Standard query parameter schemas
+export const paginationQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+  offset: z.coerce.number().int().min(0).default(0)
 });
 
-export const idSchema = z.object({
-  id: z.string().min(1)
+export const searchQuerySchema = z.object({
+  q: z.string().trim().min(1, 'Search query cannot be empty'),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+  offset: z.coerce.number().int().min(0).default(0)
 });
 
-// Query parameter schemas
-export const querySchema = z.object({
-  q: z.string().optional(),
-  ...paginationSchema.shape
+// Standard parameter schemas
+export const uuidParamSchema = z.object({
+  id: z.string().uuid('Invalid UUID format')
 });
 
-// Empty object schema for endpoints with no parameters
-export const emptySchema = z.object({});
-
-// Global error response schema
-export const errorResponseSchema = z.object({
-  success: z.literal(false),
-  error: z.string().min(1, 'Error message is required')
+export const documentIdParamSchema = z.object({
+  docId: z.string().uuid('Invalid document UUID format')
 });
 
-// Global success response schema
-export const successResponseSchema = z.object({
-  success: z.literal(true),
-  data: z.any()
+export const sessionIdParamSchema = z.object({
+  sessionId: z.string().uuid('Invalid session UUID format')
+});
+
+export const threadIdParamSchema = z.object({
+  threadId: z.string().uuid('Invalid thread UUID format')
 });

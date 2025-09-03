@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
+import { testEnv } from './helpers/env.js';
 
 // Test configuration - use environment or defaults
-const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
-const TIMEOUT = parseInt(process.env.TEST_TIMEOUT || '10000');
-const PINECONE_NAMESPACE = process.env.PINECONE_NAMESPACE || '__default__';
+const BASE_URL = 'http://localhost:3000';
+const TIMEOUT = 10000;
 
 // Helper function to make HTTP requests
 async function makeRequest(method, path, body = null, headers = {}) {

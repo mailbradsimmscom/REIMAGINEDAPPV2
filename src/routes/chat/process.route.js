@@ -2,12 +2,16 @@ import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { methodNotAllowed } from '../../middleware/methodNotAllowed.js';
 import { 
   chatProcessRequestSchema,
   chatProcessResponseSchema 
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
+
+// Add method not allowed for non-POST requests
+router.all('/', methodNotAllowed);
 
 // POST /chat/enhanced/process - Process chat message
 router.post('/', 

@@ -32,7 +32,7 @@ async function getPineService() {
 // Helper function to check if Pinecone is configured
 async function isPineconeConfigured() {
   const { getEnv } = await import('../config/env.js');
-  const { PINECONE_API_KEY, PINECONE_INDEX } = getEnv({ loose: true });
+  const { PINECONE_API_KEY, PINECONE_INDEX } = getEnv();
   return PINECONE_API_KEY && PINECONE_INDEX;
 }
 
@@ -75,6 +75,9 @@ router.post('/search',
 
 // Add method not allowed for GET /pinecone/search
 router.all('/search', methodNotAllowed);
+
+// Add method not allowed for GET /pinecone/query
+router.all('/query', methodNotAllowed);
 
 // GET /pinecone/stats - Get Pinecone stats
 router.get('/stats', 

@@ -1,39 +1,49 @@
+import crypto from 'node:crypto';
+import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * Admin authentication middleware
- * Protects all /admin/* routes with simple header-based auth
- */
-export async function adminGate(req, res, next) {
-  const requestLogger = req.requestLogger || logger.createRequestLogger();
-  
-  // Get env at runtime
-  const { getEnv } = await import('../config/env.js');
-  const env = getEnv({ loose: true });
-  
-  // Simple admin token check
-  const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
-  const expectedToken = env.ADMIN_TOKEN;
-  
-  if (!adminToken || adminToken !== expectedToken) {
-    requestLogger.warn('Admin access denied', {
-      url: req.url,
-      ip: req.ip,
-      userAgent: req.headers['user-agent']
-    });
-    
-    const statusCode = !adminToken ? 401 : 403;
-    const message = !adminToken ? 'Admin token required' : 'Invalid admin token';
-    
-    return res.status(statusCode).json({
-      success: false,
-      code: !adminToken ? 'UNAUTHORIZED' : 'FORBIDDEN',
-      message
-    });
+function readAdminToken(req) {
+  const h = req.headers;
+  const x = h['x-admin-token'];
+  const auth = h['authorization'];
+  if (x && typeof x === 'string') return x.trim();
+  if (auth && typeof auth === 'string') {
+    const m = auth.match(/^Bearer\s+(.+)$/i);
+    if (m) return m[1].trim();
   }
-  
-  requestLogger.info('Admin access granted', { url: req.url });
-  next();
+  return null;
+}
+
+function mask(token) {
+  if (!token) return 'not-set';
+  if (token.length <= 8) return `${'*'.repeat(Math.max(0, token.length - 2))}${token.slice(-2)}`;
+  return `${token.slice(0,4)}…${token.slice(-4)}`;
+}
+
+function tokenHash(token) {
+  return token ? crypto.createHash('sha256').update(token).digest('hex').slice(0,12) : 'none';
+}
+
+export function adminGate(req, res, next) {
+  const env = getEnv({ loose: true });
+  const expected = env.ADMIN_TOKEN;
+  const supplied = readAdminToken(req);
+
+  if (!expected) {
+    return res.status(401).json({ success:false, data:null, error:{ code:'ADMIN_DISABLED', message:'Admin token not configured' }});
+  }
+  if (!supplied) {
+    logger.info('Admin auth: missing token');
+    return res.status(401).json({ success:false, data:null, error:{ code:'UNAUTHORIZED', message:'Admin token required' }});
+  }
+  if (supplied !== expected) {
+    logger.warn('Admin auth: bad token', { supplied: mask(supplied), supplied_sha: tokenHash(supplied) });
+    return res.status(403).json({ success:false, data:null, error:{ code:'FORBIDDEN', message:'Invalid admin token' }});
+  }
+
+  // success — don't log the raw token
+  logger.info('Admin auth: ok', { supplied_sha: tokenHash(supplied) });
+  return next();
 }
 
 /**
@@ -41,13 +51,11 @@ export async function adminGate(req, res, next) {
  * Useful for routes that can work with or without admin access
  */
 export async function optionalAdminGate(req, res, next) {
-  // Get env at runtime
-  const { getEnv } = await import('../config/env.js');
   const env = getEnv({ loose: true });
-  const adminToken = req.headers['x-admin-token'] || req.headers['authorization'];
-  const expectedToken = env.ADMIN_TOKEN;
+  const expected = env.ADMIN_TOKEN;
+  const supplied = readAdminToken(req);
   
-  if (expectedToken && adminToken && adminToken === expectedToken) {
+  if (expected && supplied && supplied === expected) {
     req.isAdmin = true;
   } else {
     req.isAdmin = false;

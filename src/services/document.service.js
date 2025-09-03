@@ -351,7 +351,7 @@ class DocumentService {
 
       // Call Python sidecar
       const { getEnv } = await import('../config/env.js');
-      const sidecarUrl = getEnv({ loose: true }).PYTHON_SIDECAR_URL;
+      const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
       const response = await fetch(`${sidecarUrl}/v1/process-document`, {
         method: 'POST',
         body: formData

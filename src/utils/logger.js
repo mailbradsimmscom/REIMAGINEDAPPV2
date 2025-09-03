@@ -13,7 +13,7 @@ class Logger {
   // Get environment values at runtime
   async getEnv() {
     const { getEnv } = await import('../config/env.js');
-    return getEnv({ loose: true });
+    return getEnv();
   }
 
   async ensureLogsDirectory() {

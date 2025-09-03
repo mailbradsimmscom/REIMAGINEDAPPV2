@@ -7,7 +7,7 @@ import { logger } from './src/utils/logger.js';
 import { errorHandler, notFoundHandler } from './src/middleware/error.js';
 import { adminGate } from './src/middleware/admin.js';
 import { securityHeaders, basicRateLimit } from './src/middleware/security.js';
-import { env } from './src/config/env.js';
+import { getEnv } from './src/config/env.js';
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -159,8 +159,11 @@ app.get('/debug/routes', (req, res) => {
 
 // Start server
 const startServer = () => {
-  app.listen(env.port, () => {
-    console.log('Express server started on port', env.port);
+  const env = getEnv();
+  const port = env.PORT || 3000;
+  
+  app.listen(port, () => {
+    console.log('Express server started on port', port);
     console.log('Available routes:');
     console.log('- GET /test');
     console.log('- GET /health');

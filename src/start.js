@@ -4,7 +4,7 @@ import { logger } from './utils/logger.js';
 // Start server
 const startServer = async () => {
   const { getEnv } = await import('./config/env.js');
-  const env = getEnv({ loose: true });
+  const env = getEnv();
   const port = env.PORT || 3000;
   
   app.listen(port, () => {

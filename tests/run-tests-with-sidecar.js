@@ -55,7 +55,7 @@ function startSidecar() {
     sidecarProcess = spawn('python', [SIDECAR_MAIN], {
       cwd: SIDECAR_DIR,
       stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...process.env, PYTHONPATH: SIDECAR_DIR }
+      env: { PYTHONPATH: SIDECAR_DIR }
     });
 
     // Handle sidecar output

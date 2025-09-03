@@ -20,12 +20,12 @@ router.get('/', async (req, res, next) => {
   try {
     const requestLogger = logger.createRequestLogger();
     const { getEnv } = await import('../../config/env.js');
-    const { PYTHON_SIDECAR_URL: sidecarUrl = 'http://localhost:8000', PINECONE_INDEX: pineconeIndex, PINECONE_NAMESPACE: pineconeNamespace = '__default__' } = getEnv({ loose: true });
+    const { PYTHON_SIDECAR_URL = 'http://localhost:8000', PINECONE_INDEX, PINECONE_NAMESPACE = '__default__' } = getEnv();
     
     // Check sidecar health
     let sidecarHealth = { status: 'unknown', error: null };
     try {
-      const healthResponse = await fetch(`${sidecarUrl}/health`);
+      const healthResponse = await fetch(`${PYTHON_SIDECAR_URL}/health`);
       if (healthResponse.ok) {
         const healthData = await healthResponse.json();
         sidecarHealth = { 
@@ -41,7 +41,7 @@ router.get('/', async (req, res, next) => {
     }
     
     // First check health
-    const healthResponse = await fetch(`${sidecarUrl}/health`);
+    const healthResponse = await fetch(`${PYTHON_SIDECAR_URL}/health`);
     if (!healthResponse.ok) {
       throw new Error(`Sidecar health check failed: ${healthResponse.status}`);
     }
@@ -49,7 +49,7 @@ router.get('/', async (req, res, next) => {
     const healthData = await healthResponse.json();
     
     // Then get Pinecone stats
-    const statsResponse = await fetch(`${sidecarUrl}/v1/pinecone/stats`);
+    const statsResponse = await fetch(`${PYTHON_SIDECAR_URL}/v1/pinecone/stats`);
     let statsData = null;
     
     if (statsResponse.ok) {
@@ -68,8 +68,8 @@ router.get('/', async (req, res, next) => {
     // Get basic Pinecone info from environment
     const pineconeData = {
       status: healthData.status === 'healthy' ? 'Connected' : 'Disconnected',
-      index: pineconeIndex,
-      namespace: pineconeNamespace,
+      index: PINECONE_INDEX,
+      namespace: PINECONE_NAMESPACE,
       vectors: statsData?.total_vector_count || 'N/A',
       totalVectors: statsData?.total_vector_count || 0,
       dimension: statsData?.dimension || 'N/A',

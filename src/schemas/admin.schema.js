@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { paginationSchema } from './common.schema.js';
+import { paginationQuerySchema } from './common.schema.js';
 
 // Admin health response schema
 export const adminHealthResponseSchema = z.object({

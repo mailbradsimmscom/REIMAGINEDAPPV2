@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { enforceResponse } from './enforceResponse.js';
 
 /**
  * Validation middleware factory
@@ -11,53 +12,46 @@ import { z } from 'zod';
 export function validate(schema, target = 'body') {
   return (req, res, next) => {
     try {
-      const data = req[target];
-      
-      // Handle empty query/params gracefully
-      if (target === 'query' && (!data || Object.keys(data).length === 0)) {
-        // For empty query, use default values from schema
-        const result = schema.safeParse({});
-        if (result.success) {
-          // Store validated data for route handlers
-          req.validatedData = result.data;
-          next();
-        } else {
-          // If validation fails for empty query, pass error to error handler
-          const error = new Error('Invalid request data');
-          error.status = 400;
-          error.code = 'VALIDATION_ERROR';
-          error.details = result.error.errors ? result.error.errors.map(err => ({
-            field: err.path.join('.'),
-            message: err.message,
-            code: err.code
-          })) : [{ field: 'unknown', message: 'Validation failed', code: 'invalid_type' }];
-          return next(error);
-        }
-      }
+      const data = req[target] ?? {};
       
       const result = schema.safeParse(data);
       
       if (!result.success) {
-        const error = new Error('Invalid request data');
-        error.status = 400;
-        error.code = 'VALIDATION_ERROR';
-        error.details = result.error.errors ? result.error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message,
-          code: err.code
-        })) : [{ field: 'unknown', message: 'Validation failed', code: 'invalid_type' }];
-        return next(error);
+        // Normalize Zod issues for the envelope
+        const issues = result.error.errors.map(e => ({
+          path: e.path.join('.'),
+          code: e.code,
+          message: e.message,
+        }));
+        
+        return enforceResponse(res, {
+          success: false,
+          data: null,
+          error: { 
+            code: 'BAD_REQUEST', 
+            message: 'Validation failed', 
+            details: issues 
+          },
+        }, 400);
       }
       
       // Store validated data for route handlers
-      req.validatedData = result.data;
+      (req.validated ??= {})[target] = result.data;
       next();
       
-    } catch (error) {
-      const internalError = new Error('Internal validation error');
-      internalError.status = 500;
-      internalError.code = 'INTERNAL_ERROR';
-      return next(internalError);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return enforceResponse(res, {
+          success: false,
+          data: null,
+          error: { 
+            code: 'BAD_REQUEST', 
+            message: 'Validation failed', 
+            details: err.issues 
+          },
+        }, 400);
+      }
+      return next(err);
     }
   };
 }

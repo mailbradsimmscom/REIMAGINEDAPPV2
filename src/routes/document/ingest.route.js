@@ -1,5 +1,6 @@
 import express from 'express';
 import documentService from '../../services/document.service.js';
+import { methodNotAllowed } from '../../middleware/methodNotAllowed.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
@@ -13,6 +14,9 @@ const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Add method not allowed for non-POST requests
+router.all('/', methodNotAllowed);
 
 // POST /admin/docs/ingest - Create document ingest job
 router.post('/', 

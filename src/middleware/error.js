@@ -1,9 +1,49 @@
+import { z } from 'zod';
+import { logger } from '../utils/logger.js';
+
 export function errorHandler(err, req, res, next) {
   if (res.headersSent) return next(err);
-  const status = err.status || 500;
+  
+  const requestLogger = req.requestLogger || logger.createRequestLogger();
+  
+  // Handle Zod validation errors
+  if (err instanceof z.ZodError) {
+    requestLogger.warn('Validation error', { 
+      url: req.url, 
+      method: req.method,
+      issues: err.issues 
+    });
+    
+    return res.status(400).json({
+      success: false,
+      data: null,
+      error: { 
+        code: 'BAD_REQUEST', 
+        message: 'Validation failed',
+        details: err.issues 
+      },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+  
+  // Handle other errors
+  const status = Number(err.status) || 500;
+  const code = err.code || (status === 400 ? 'BAD_REQUEST' : 'INTERNAL');
+  const message = err.message || (status === 400 ? 'Validation failed' : 'Unexpected error');
+
+  if (status >= 500) {
+    requestLogger.error('Server error', { 
+      error: err.message, 
+      stack: err.stack,
+      url: req.url,
+      method: req.method
+    });
+  }
+
   return res.status(status).json({
     success: false,
-    error: { code: err.code || 'INTERNAL', message: err.message || 'Unexpected error' },
+    data: null,
+    error: { code, message },
     requestId: res.locals?.requestId ?? null,
   });
 }
@@ -11,11 +51,26 @@ export function errorHandler(err, req, res, next) {
 export function notFoundHandler(req, res) {
   res.status(404).json({
     success: false,
+    data: null,
     error: {
       code: 'NOT_FOUND',
       message: 'Route not found'
     }
   });
+}
+
+export function methodNotAllowed(allowedMethods = []) {
+  return (req, res) => {
+    res.status(405).json({
+      success: false,
+      data: null,
+      error: {
+        code: 'METHOD_NOT_ALLOWED',
+        message: `${req.method} method not allowed for ${req.url}`,
+        details: { allowedMethods }
+      }
+    });
+  };
 }
 
 export default errorHandler;

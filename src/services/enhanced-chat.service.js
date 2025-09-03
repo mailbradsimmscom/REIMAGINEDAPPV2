@@ -165,7 +165,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     // Step 10: Check if we should summarize (every N messages)
     const totalMessages = recentMessages.length + 2; // +2 for user and assistant messages we just added
     const { getEnv } = await import('../config/env.js');
-    const { summaryFrequency = 5 } = getEnv({ loose: true });
+    const { summaryFrequency = 5 } = getEnv();
     if (totalMessages >= summaryFrequency) {
       try {
         const summary = await summarizeConversation(recentMessages, systemsContext);

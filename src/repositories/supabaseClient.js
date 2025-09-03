@@ -8,7 +8,7 @@ let hasLoggedConfig = false;
 async function getSupabaseConfig() {
   // Import env synchronously for lazy loading
   const { getEnv } = await import('../config/env.js');
-  const env = getEnv({ loose: true });
+  const env = getEnv();
   return {
     url: env.SUPABASE_URL,
     key:

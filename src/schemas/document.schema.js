@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { paginationSchema } from './common.schema.js';
+import { paginationQuerySchema } from './common.schema.js';
 
 // Document ingest metadata schema
 export const documentIngestMetadataSchema = z.object({
