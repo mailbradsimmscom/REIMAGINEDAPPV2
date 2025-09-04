@@ -2,12 +2,16 @@ import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { ChatHistoryEnvelope } from '../../schemas/chat.schema.js';
 import { 
-  chatHistoryQuerySchema,
-  chatHistoryResponseSchema 
+  chatHistoryQuerySchema
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(ChatHistoryEnvelope));
 
 // GET /chat/enhanced/history - Get chat history
 router.get('/', 

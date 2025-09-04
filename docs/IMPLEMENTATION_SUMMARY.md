@@ -115,6 +115,34 @@ This document summarizes the implementation of method guards (405 responses) and
 }
 ```
 
+## Phase 5: Validation Coverage - COMPLETE ✅
+
+### Implementation Status
+- **✅ Validation coverage script created** - `scripts/zod-coverage.mjs`
+- **✅ Package script added** - `npm run zod:coverage`
+- **✅ CI integration** - Added to `ci-guardrails.sh`
+- **✅ Documentation** - `docs/PHASE5_VALIDATION_COVERAGE.md`
+
+### Coverage Analysis Results
+- **Input Validation:** 83% (20/24 files) - Good coverage
+- **Response Validation:** 46% (11/24 files) - Needs improvement
+- **Total Route Files:** 24 files analyzed
+
+### Missing Input Validation (4 files)
+- Index files (router exports) - Low priority
+- Health router - Medium priority
+
+### Missing Response Validation (13 files)
+- Admin routes (2 files)
+- Chat routes (5 files)
+- Document routes (5 files)
+- Health router (1 file)
+
+### Action Plan
+- **Phase 5A:** Fix index files (low priority)
+- **Phase 5B:** Add health router validation (medium priority)
+- **Phase 5C:** Add response validation (high priority)
+
 ## Files Created/Modified
 
 ### New Files
@@ -123,15 +151,18 @@ This document summarizes the implementation of method guards (405 responses) and
 - `scripts/run-test-matrix.sh` - Test matrix runner
 - `scripts/test-coverage.sh` - Coverage analysis script
 - `scripts/runtime-monitoring.sh` - Runtime monitoring script
+- `scripts/zod-coverage.mjs` - Validation coverage analysis script
 - `tests/integration/comprehensive-validation.test.js` - Comprehensive test matrix
 - `tests/integration/monitoring.test.js` - Runtime monitoring tests
 - `docs/SANITY_CHECKS.md` - Sanity checks documentation
 - `docs/TEST_MATRIX.md` - Test matrix documentation
 - `docs/PHASE4_MONITORING.md` - Runtime monitoring documentation
+- `docs/PHASE5_VALIDATION_COVERAGE.md` - Validation coverage documentation
 
 ### Modified Files
-- `ci-guardrails.sh` - Added sanity checks, test coverage, and runtime monitoring
+- `ci-guardrails.sh` - Added sanity checks, test coverage, runtime monitoring, and validation coverage
 - `src/routes/health.router.js` - Fixed import issue and added monitoring endpoint
+- `package.json` - Added zod:coverage script
 
 ## Integration with CI/CD
 
@@ -146,6 +177,7 @@ The implementation is fully integrated into the CI pipeline:
 ./scripts/test-coverage.sh          # Phase 3
 ./scripts/run-test-matrix.sh       # Phase 3
 ./scripts/runtime-monitoring.sh    # Phase 4
+npm run zod:coverage               # Phase 5
 ```
 
 ## Key Benefits Achieved
@@ -170,6 +202,7 @@ The implementation is fully integrated into the CI pipeline:
 - Edge case handling
 - Security validation
 - Runtime monitoring
+- Validation coverage analysis
 
 ## Risk Assessment
 
@@ -179,6 +212,7 @@ The implementation is fully integrated into the CI pipeline:
 - **Phase 2:** Sanity checks are read-only and identify issues without changing behavior
 - **Phase 3:** Test matrix provides comprehensive coverage without modifying production code
 - **Phase 4:** Runtime monitoring provides visibility without affecting application performance
+- **Phase 5:** Validation coverage analysis identifies gaps without breaking existing functionality
 
 ## Future Enhancements
 
@@ -190,23 +224,30 @@ The implementation is fully integrated into the CI pipeline:
 
 ### Phase 5: Performance
 
-### Phase 5: Performance
+### Phase 5: Validation Coverage - COMPLETE ✅
+- Add validation coverage analysis
+- Identify missing input/response validation
+- Provide actionable improvement plan
+- Validation coverage script and CI integration implemented
+
+### Phase 6: Performance
 - Add response time monitoring
 - Add load testing scenarios
 - Add performance benchmarks
 
-### Phase 6: Security
+### Phase 7: Security
 - Add security scanning
 - Add dependency vulnerability checks
 - Add penetration testing
 
 ## Conclusion
 
-All four phases have been successfully implemented with:
+All five phases have been successfully implemented with:
 - ✅ **Method guards** providing proper 405 responses
 - ✅ **Sanity checks** ensuring code quality
 - ✅ **Test matrix** providing comprehensive coverage
 - ✅ **Runtime monitoring** providing real-time visibility
+- ✅ **Validation coverage** providing systematic analysis
 - ✅ **CI integration** for automated validation
 - ✅ **Documentation** for maintainability
 

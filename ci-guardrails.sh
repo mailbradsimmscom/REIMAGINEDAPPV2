@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CI Test Script for Guardrails
-# Tests: ESLint, Router imports, Route map, Sanity checks, Test matrix, Runtime monitoring
+# Tests: ESLint, Router imports, Route map, Sanity checks, Test matrix, Runtime monitoring, Zod coverage
 
 set -e  # Exit on any error
 
@@ -55,6 +55,14 @@ echo "✅ Running runtime monitoring..."
   exit 1
 }
 echo "✅ Runtime monitoring passed"
+
+# 7. Zod Coverage Analysis
+echo "✅ Running Zod coverage analysis..."
+npm run zod:coverage || {
+  echo "❌ Zod coverage analysis failed"
+  exit 1
+}
+echo "✅ Zod coverage analysis passed"
 
 echo ""
 echo "🎉 All CI guardrail tests passed!"

@@ -2,8 +2,10 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { documentGetQuerySchema, documentGetResponseSchema } from '../../schemas/document.schema.js';
+import { documentGetQuerySchema } from '../../schemas/document.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { DocumentGetOneEnvelope } from '../../schemas/document.schema.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -11,10 +13,8 @@ const router = express.Router();
 // Apply admin gate middleware
 router.use(adminGate);
 
-const EnvelopeOk = z.object({
-  success: z.literal(true),
-  data: z.any()
-});
+// Apply response validation to all routes in this file
+router.use(validateResponse(DocumentGetOneEnvelope));
 
 // GET /admin/docs/documents/:docId - Get document details
 router.get('/documents/:docId', 

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { paginationQuerySchema } from './common.schema.js';
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
 
 // Shared error envelope schema
 const ErrorEnvelopeSchema = z.object({
@@ -166,3 +167,66 @@ export const chatContextResponseSchema = z.union([ChatContextOkSchema, ErrorEnve
 export const chatDeletePathSchema = z.object({
   sessionId: z.string().min(1, 'Session ID is required')
 });
+
+// Tightened delete response data schemas
+const DeleteResponseData = z.object({
+  sessionId: z.string(),
+  deleted: z.literal(true)
+});
+
+// Delete operation envelope schemas
+export const ChatDeleteEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: DeleteResponseData }),
+  EnvelopeErrorSchema
+]);
+
+// Tightened chat history response data schema
+const ChatHistoryData = z.object({
+  threadId: z.string(),
+  messages: z.array(z.object({
+    id: z.string(),
+    content: z.string(),
+    role: z.enum(['system', 'user', 'assistant']),
+    createdAt: z.string(),
+    metadata: z.record(z.string(), z.any()).optional()
+  })),
+  count: z.number()
+});
+
+// Chat history envelope schema
+export const ChatHistoryEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ChatHistoryData }),
+  EnvelopeErrorSchema
+]);
+
+// Tightened chat context response data schema
+const ChatContextData = z.object({
+  session: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string()
+  }),
+  thread: z.object({
+    id: z.string(),
+    name: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    metadata: z.record(z.string(), z.any()).optional()
+  }),
+  messages: z.array(z.object({
+    id: z.string(),
+    content: z.string(),
+    role: z.enum(['system', 'user', 'assistant']),
+    createdAt: z.string(),
+    metadata: z.record(z.string(), z.any()).optional()
+  })),
+  context: z.any()
+});
+
+// Chat context envelope schema
+export const ChatContextEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ChatContextData }),
+  EnvelopeErrorSchema
+]);

@@ -2,14 +2,21 @@
 import express from 'express';
 import { getExternalServiceStatus } from '../services/guards/index.js';
 import { validate } from '../middleware/validate.js';
-import { healthResponseSchema } from '../schemas/health.schema.js';
+import { validateResponse } from '../middleware/validateResponse.js';
+import { 
+  BasicHealthEnvelope, 
+  ServiceStatusEnvelope, 
+  ReadinessEnvelope 
+} from '../schemas/health.schema.js';
 import { execSync } from 'child_process';
 import { logger } from '../utils/logger.js';
 
 const router = express.Router();
 
 // GET /health - Basic health check
-router.get('/', (req, res) => {
+router.get('/', 
+  validateResponse(BasicHealthEnvelope),
+  (req, res) => {
   res.json({
     success: true,
     data: {
@@ -22,7 +29,9 @@ router.get('/', (req, res) => {
 });
 
 // GET /health/services - Check external service status
-router.get('/services', async (req, res) => {
+router.get('/services', 
+  validateResponse(ServiceStatusEnvelope),
+  async (req, res) => {
   try {
     const serviceStatus = await getExternalServiceStatus();
     
@@ -52,7 +61,9 @@ router.get('/services', async (req, res) => {
 });
 
 // GET /health/ready - Readiness check (for Kubernetes)
-router.get('/ready', async (req, res) => {
+router.get('/ready', 
+  validateResponse(ReadinessEnvelope),
+  async (req, res) => {
   try {
     const serviceStatus = await getExternalServiceStatus();
     

@@ -5,8 +5,9 @@ import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { DocumentIngestEnvelope } from '../../schemas/document.schema.js';
 import { 
-  documentJobsResponseSchema,
   documentIngestMetadataSchema 
 } from '../../schemas/document.schema.js';
 import Busboy from 'busboy';
@@ -19,6 +20,9 @@ router.use(adminGate);
 
 // Apply service guards - document ingest requires Supabase and Sidecar
 router.use(requireServices(['supabase', 'sidecar']));
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(DocumentIngestEnvelope));
 
 // Add method not allowed for non-POST requests
 router.all('/', methodNotAllowed);

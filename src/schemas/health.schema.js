@@ -1,29 +1,53 @@
 import { z } from 'zod';
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
 
-// Empty query schema for simple GET routes
-export const EmptyQuery = z.object({}).passthrough();
-
-// Shared error envelope schema
-const ErrorEnvelopeSchema = z.object({
-  success: z.literal(false),
-  error: z.object({
-    code: z.string(),
-    message: z.string(),
-    details: z.any().optional()
-  })
+// Basic health check response data
+const BasicHealthData = z.object({
+  status: z.literal('healthy'),
+  timestamp: z.string().datetime(),
+  uptime: z.number()
 });
 
-// Health success response schema
-const HealthOkSchema = z.object({
-  success: z.literal(true),
-  data: z.object({
-    status: z.literal('ok'),
-    ts: z.string()
-  })
+// Service status response data
+const ServiceStatusData = z.object({
+  status: z.enum(['healthy', 'degraded']),
+  services: z.object({
+    supabase: z.boolean(),
+    pinecone: z.boolean(),
+    openai: z.boolean(),
+    sidecar: z.boolean()
+  }),
+  timestamp: z.string().datetime()
 });
 
-// Discriminated union for health endpoint responses
-export const healthResponseSchema = z.union([HealthOkSchema, ErrorEnvelopeSchema]);
+// Readiness check response data
+const ReadinessData = z.object({
+  status: z.literal('ready'),
+  timestamp: z.string().datetime()
+});
+
+// Health route envelope schemas
+export const BasicHealthEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: BasicHealthData }),
+  EnvelopeErrorSchema
+]);
+
+export const ServiceStatusEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ServiceStatusData }),
+  EnvelopeErrorSchema
+]);
+
+export const ReadinessEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ReadinessData }),
+  EnvelopeErrorSchema
+]);
+
+// Legacy schema for backward compatibility
+export const healthResponseSchema = z.object({
+  status: z.string(),
+  timestamp: z.string(),
+  uptime: z.number().optional()
+});
 
 // Health query schema (if needed for future endpoints)
 export const healthQuerySchema = z.object({

@@ -2,9 +2,14 @@ import express from 'express';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 import { z } from 'zod';
 
 const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(EnvelopeSchema));
 
 // Admin dashboard query schema
 const adminDashboardQuerySchema = z.object({}).passthrough();

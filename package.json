@@ -16,6 +16,7 @@
         "test:watch": "node --test --watch tests/",
         "test:baseline": "./tests/run-baseline.sh",
         "test:no-sidecar": "node --test tests/integration/",
+        "zod:coverage": "node scripts/zod-coverage.mjs",
         "graph:js": "npx depcruise src --output-type text > docs/app-deps.txt",
         "graph:py": "~/.local/bin/pydeps python-sidecar/app -T svg -o docs/sidecar-deps.svg --noshow",
         "graph:madge": "madge --extensions js --image docs/app-madge.png src",

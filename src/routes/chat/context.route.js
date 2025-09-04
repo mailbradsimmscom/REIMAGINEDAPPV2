@@ -2,12 +2,16 @@ import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { ChatContextEnvelope } from '../../schemas/chat.schema.js';
 import { 
-  chatContextQuerySchema,
-  chatContextResponseSchema 
+  chatContextQuerySchema
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(ChatContextEnvelope));
 
 // GET /chat/enhanced/context - Get chat context
 router.get('/', 
