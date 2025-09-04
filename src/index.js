@@ -21,6 +21,7 @@ import adminRouter from './routes/admin/index.js';
 
 import pineconeRepository from './repositories/pinecone.repository.js';
 import { attachConfigInspector } from './debug/config.js';
+import { mountRouteMap } from './debug/routes.js';
 
 // --- global headers / rate limit (keep these light; helmet is already in app.js) ---
 app.use(securityHeaders);
@@ -43,6 +44,9 @@ app.use('/admin/docs', documentRouter);
 app.use('/document', documentRouter);  // alias for backward compatibility
 app.use('/pinecone', pineconeRouter);
 app.use('/admin', adminRouter);
+
+// Mount route map (dev only) - AFTER routers are mounted
+mountRouteMap(app);
 
 // --- static/public (optional; app.js already serves / and /app.js) ---
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
