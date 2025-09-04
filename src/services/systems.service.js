@@ -76,7 +76,7 @@ export async function searchSystemsSvc(q, { limit } = {}) {
     
     const safeQ = validateQuery(q);
     const { getEnv } = await import('../config/env.js');
-    const { searchMaxRows = 8, searchRankFloor = 0.5 } = getEnv();
+    const { searchMaxRows = 8, searchRankFloor = 0.05 } = getEnv();
     // Use explicit limit if provided, otherwise use env default
     const maxRows = limit ? Math.min(Math.max(Number(limit), 1), searchMaxRows) : searchMaxRows;
     
@@ -96,7 +96,7 @@ export async function searchSystemsSvc(q, { limit } = {}) {
   } catch (error) {
     // Enhance error with service context
     const { getEnv } = await import('../config/env.js');
-    const { searchRankFloor = 0.5, searchMaxRows = 8 } = getEnv();
+    const { searchRankFloor = 0, searchMaxRows = 8 } = getEnv();
     error.context = { 
       ...error.context, 
       service: 'searchSystemsSvc',

@@ -57,7 +57,10 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     
     requestLogger.info('Systems search completed', { 
       query: userQuery.substring(0, 100), 
-      resultsCount: systemsContext.length 
+      searchTerms,
+      resultsCount: systemsContext.length,
+      systemsResults: systemsResults,
+      systemsContext: systemsContext
     });
     
     // Step 2: Enhance the query using LLM and systems context
@@ -83,8 +86,8 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     
     try {
       const searchContext = {
-        manufacturer: systemsContext[0]?.id?.split('_')[0] || null,
-        model: systemsContext[0]?.id || null,
+        manufacturer: systemsContext[0]?.asset_uid?.split('_')[0] || null,
+        model: systemsContext[0]?.asset_uid || null,
         previousMessages: [] // Will be populated if threadId exists
       };
       
@@ -134,7 +137,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
         sessionId,
         name: 'New Thread',
         metadata: { 
-          systemsContext: systemsContext.map(s => s.id),
+          systemsContext: systemsContext.map(s => s.asset_uid),
           pineconeResults: pineconeResults.length
         }
       });
@@ -153,7 +156,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       metadata: {
         originalQuery: userQuery,
         enhancedQuery,
-        systemsContext: systemsContext.map(s => s.id),
+        systemsContext: systemsContext.map(s => s.asset_uid),
         pineconeResults: pineconeResults.length
       }
     });
@@ -177,7 +180,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       role: 'assistant',
       content: assistantResponse.content,
       metadata: {
-        systemsContext: systemsContext.map(s => s.id),
+        systemsContext: systemsContext.map(s => s.asset_uid),
         enhancedQuery,
         pineconeResults: pineconeResults.length,
         sources: assistantResponse.sources,
@@ -268,15 +271,15 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       response += `## Systems Found\n`;
       response += `I found ${systemsContext.length} relevant systems in your database:\n`;
       systemsContext.forEach((system, index) => {
-        response += `${index + 1}. **${system.id}** (relevance: ${system.rank.toFixed(2)})\n`;
+        response += `${index + 1}. **${system.asset_uid}** (relevance: ${system.rank.toFixed(2)})\n`;
         
         // Add systems as sources with type classification
         const systemSource = {
-          id: system.id,
+          id: system.asset_uid,
           type: 'system',
           rank: system.rank,
-          manufacturer: system.manufacturer || system.id.split('_')[0],
-          model: system.model || system.id
+          manufacturer: system.manufacturer || system.asset_uid.split('_')[0],
+          model: system.model || system.asset_uid
         };
         sources.push(systemSource);
       });

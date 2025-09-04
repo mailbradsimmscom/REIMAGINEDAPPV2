@@ -306,7 +306,7 @@ function buildNamingPrompt(messages, systemsContext) {
   });
   
   if (systemsContext.length > 0) {
-    prompt += `\nSystems discussed: ${systemsContext.map(s => s.id).join(', ')}`;
+    prompt += `\nSystems discussed: ${systemsContext.map(s => s.asset_uid).join(', ')}`;
   }
   
   prompt += `\nGenerate a concise, descriptive name that captures the main topic or question.`;
