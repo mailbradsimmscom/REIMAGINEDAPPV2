@@ -35,6 +35,9 @@ app.use((req, res, next) => {
   const requestLogger = logger.createRequestLogger();
   const startTime = Date.now();
   
+  // DEBUG: Add request tracing
+  console.log('🔍 [APP] REQUEST START:', req.method, req.originalUrl, '→', req.url);
+  
   requestLogger.info('HTTP request received', { 
     method: req.method, 
     url: req.url,

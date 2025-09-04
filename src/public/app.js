@@ -472,7 +472,8 @@ async function processMessage(message) {
       
     } else {
       const errorData = await response.json();
-      addMessage(`Error: ${errorData.error}`, 'inbound');
+      const errorMessage = errorData.error?.message || errorData.error || 'Unknown error';
+      addMessage(`Error: ${errorMessage}`, 'inbound');
     }
   } catch (error) {
     // Remove loading animation on error

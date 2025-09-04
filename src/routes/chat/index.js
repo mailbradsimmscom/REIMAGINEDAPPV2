@@ -19,6 +19,16 @@ router.use('/history', historyRouter);
 router.use('/list', listRouter);
 router.use('/context', contextRouter);
 router.use('/delete', deleteRouter);
-router.use('/', sessionDeleteRouter); // This will handle /:sessionId
+
+// NEW: compatibility alias for the UI's /chat/enhanced/* paths
+router.use('/enhanced/process', processRouter);
+router.use('/enhanced/history', historyRouter);
+router.use('/enhanced/list', listRouter);
+router.use('/enhanced/context', contextRouter);
+router.use('/enhanced/delete', deleteRouter);
+
+// Keep this last so it doesn't swallow unknown subpaths
+// param-scoped delete, LAST (so it can't see 'enhanced')
+router.use('/:sessionId', sessionDeleteRouter);
 
 export default router;

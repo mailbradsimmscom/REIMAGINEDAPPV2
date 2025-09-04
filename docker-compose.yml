@@ -9,12 +9,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - ADMIN_TOKEN=dev-admin-token
       - PYTHON_SIDECAR_URL=http://python-sidecar:8000
       - SIDECAR_HEALTH_CHECK_INTERVAL=30000
       - SIDECAR_STARTUP_TIMEOUT=30000
-    env_file:
-      - .env
     depends_on:
       python-sidecar:
         condition: service_healthy
@@ -30,14 +29,12 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - PINECONE_API_KEY=${PINECONE_API_KEY}
-      - PINECONE_INDEX=${PINECONE_INDEX}
-      - PINECONE_REGION=${PINECONE_REGION}
-      - PINECONE_CLOUD=${PINECONE_CLOUD}
-      - PINECONE_NAMESPACE=${PINECONE_NAMESPACE}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    env_file:
-      - .env
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-}
+      - PINECONE_INDEX=${PINECONE_INDEX:-}
+      - PINECONE_REGION=${PINECONE_REGION:-}
+      - PINECONE_CLOUD=${PINECONE_CLOUD:-}
+      - PINECONE_NAMESPACE=${PINECONE_NAMESPACE:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     networks:
       - app-network
     restart: unless-stopped

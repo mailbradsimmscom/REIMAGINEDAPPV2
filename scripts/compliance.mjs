@@ -7,8 +7,8 @@
  *  - Tracked artifacts (node_modules/, logs, PDFs, builds, venvs)
  *  - process.env leaks outside src/config/env.js
  *  - Legacy *.routes.js present
- *  - Duplicate (method, path) routes (scoped per router segment)
- *  - Missing validateResponse() (per file OR segment barrel via index.js)
+ *  - Duplicate (method, path) routes using EFFECTIVE paths (segment mount + local path)
+ *  - Missing validateResponse() (per file OR covered by segment index.js barrel)
  *  - /admin router not gated by adminOnly
  *  - Routes importing from repositories (violates routes → services → repositories)
  *  - axios present (forbidden)
@@ -35,7 +35,7 @@ const asReportOnly = args.has('--report'); // chart only; do not fail
 function now() {
   const d = new Date();
   const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 async function exists(p) { try { await fs.access(p); return true; } catch { return false; } }
 async function walk(dir, filter = (f) => f.endsWith('.js')) {
@@ -54,7 +54,7 @@ async function walk(dir, filter = (f) => f.endsWith('.js')) {
 }
 function fmtResult(ok) { return ok ? 'PASS' : 'FAIL'; }
 function fmtWarn(ok) { return ok ? 'OK' : 'WARN'; }
-function truncList(arr, n = 3) { return arr.length <= n ? arr.join(', ') : `${arr.slice(0,n).join(', ')} … (+${arr.length-n} more)`; }
+function truncList(arr, n = 3) { return arr.length <= n ? arr.join(', ') : `${arr.slice(0, n).join(', ')} … (+${arr.length - n} more)`; }
 function columnize(rows) {
   const widths = rows[0].map((_, i) => Math.max(...rows.map(r => String(r[i]).length)));
   return rows.map(r => r.map((c, i) => String(c).padEnd(widths[i])).join('  ')).join('\n');
@@ -81,7 +81,7 @@ async function checkEnvLeaks() {
   for (const f of files) {
     if (f === ENV_JS) continue;
     const s = await fs.readFile(f, 'utf8');
-    if (/\bprocess\.env\./.test(s)) offenders.push(path.relative(ROOT, f).replaceAll('\\','/'));
+    if (/\bprocess\.env\./.test(s)) offenders.push(path.relative(ROOT, f).replaceAll('\\', '/'));
   }
   return { ok: offenders.length === 0, details: offenders };
 }
@@ -91,7 +91,7 @@ async function checkFileSizes() {
   const files = await walk(SRC, (p) => p.endsWith('.js'));
   const overs = [];
   for (const f of files) {
-    const rel = path.relative(ROOT, f).replaceAll('\\','/');
+    const rel = path.relative(ROOT, f).replaceAll('\\', '/');
     if (EXEMPT.some(r => r.test(rel))) continue;
     const lines = (await fs.readFile(f, 'utf8')).split('\n').length;
     if (lines > MAX_FILE_LINES) overs.push(`${rel}(${lines})`);
@@ -99,72 +99,107 @@ async function checkFileSizes() {
   return { ok: overs.length === 0, details: overs };
 }
 
-// Derive the router "segment" for a file under src/routes
+// Derive router "segment" for a file under src/routes
 function segmentOfRoutesFile(relFromRoutes) {
-  if (relFromRoutes.includes('/')) {
-    // e.g., "chat/history.route.js" → "chat"
-    return relFromRoutes.split('/')[0];
-  }
-  // root file: use filename (minus .js) without .router/.route suffix
+  if (relFromRoutes.includes('/')) return relFromRoutes.split('/')[0]; // e.g., chat/history.route.js → chat
   const base = path.basename(relFromRoutes, '.js');
   return base.replace(/\.(router|routes|route)$/i, '');
 }
 
 async function checkRoutesIntegrity() {
   const files = await walk(ROUTES_DIR, (p) => p.endsWith('.js'));
-  const legacy = files.filter(f => /\.routes\.js$/i.test(f)).map(f => path.relative(ROOT, f).replaceAll('\\','/'));
+  const legacy = files
+    .filter(f => /\.routes\.js$/i.test(f))
+    .map(f => path.relative(ROOT, f).replaceAll('\\', '/'));
 
-  // Pre-scan segment barrels for response gating
-  const segmentHasVR = new Map(); // segment -> boolean
-  for (const f of files) {
-    const rel = path.relative(ROOT, f).replaceAll('\\','/');
-    const relFromRoutes = rel.replace(/^src\/routes\//, '');
-    const seg = segmentOfRoutesFile(relFromRoutes);
-    const isSegmentIndex = relFromRoutes === `${seg}/index.js`;
-    if (isSegmentIndex) {
-      const s = await fs.readFile(f, 'utf8');
-      segmentHasVR.set(seg, /validateResponse\s*\(/.test(s));
+  // Build a map of segment -> (absLeafPath -> mount) by parsing segment's index.js
+  const byRel = new Map(files.map(f => [path.relative(ROUTES_DIR, f).replaceAll('\\', '/'), f]));
+  const segments = new Set(
+    [...byRel.keys()]
+      .map(rel => rel.split('/')[0])
+      .filter(seg => seg && byRel.has(`${seg}/index.js`))
+  );
+
+  const segmentMounts = new Map(); // seg -> Map(absLeafPath -> '/mount')
+  for (const seg of segments) {
+    const indexAbs = byRel.get(`${seg}/index.js`);
+    const indexSrc = await fs.readFile(indexAbs, 'utf8');
+
+    // import Alias from './foo.route.js'
+    const imports = new Map(); // alias -> abs path
+    const importRe = /import\s+([A-Za-z0-9_$]+)\s+from\s+['"]\.\/([^'"]+)['"]/g;
+    for (let m; (m = importRe.exec(indexSrc));) {
+      const alias = m[1];
+      let relLeaf = m[2];
+      if (!/\.js$/.test(relLeaf)) relLeaf += '.js';
+      const absLeaf = path.join(ROUTES_DIR, seg, relLeaf).replaceAll('\\', '/');
+      imports.set(alias, absLeaf);
     }
+
+    // router.use('/mount', Alias) OR r.use('/mount', Alias)
+    const mounts = new Map(); // abs leaf -> '/mount'
+    const useRe = /\b(?:router|r)\.use\(\s*['"]([^'"]+)['"]\s*,\s*([A-Za-z0-9_$]+)\s*\)/g;
+    for (let m; (m = useRe.exec(indexSrc));) {
+      const mount = m[1];
+      const alias = m[2];
+      const absLeaf = imports.get(alias);
+      if (absLeaf) mounts.set(absLeaf, mount);
+    }
+    segmentMounts.set(seg, mounts);
   }
 
   const routeRE = /\brouter\.(get|post|put|patch|delete)\s*\(/;
-  const routeMap = new Map(); // key = "METHOD path @segment" → [files]
-  const missingVR = [];       // handler files lacking VR (and not covered by segment barrel)
-  let handlerFiles = 0;
-  let withVR = 0;
+  const fileToSeg = (abs) => {
+    const relFromRoutes = path.relative(ROUTES_DIR, abs).replaceAll('\\', '/');
+    return relFromRoutes.includes('/') ? relFromRoutes.split('/')[0] : relFromRoutes.replace(/\.js$/, '').replace(/\.(router|route)$/i, '');
+  };
 
-  for (const f of files) {
-    const rel = path.relative(ROOT, f).replaceAll('\\','/');
-    const relFromRoutes = rel.replace(/^src\/routes\//, '');
-    const seg = segmentOfRoutesFile(relFromRoutes);
-    const s = await fs.readFile(f, 'utf8');
+  const duplicates = [];
+  const routeMap = new Map(); // "METHOD effectivePath" -> [files]
+  const missingVR = [];
+  let handlerFiles = 0, withVR = 0;
 
-    // collect routes, scoped per segment
-    const re = /\brouter\.(get|post|put|patch|delete)\s*\(\s*['"`]([^'"`]+)['"`]/g;
-    for (let m; (m = re.exec(s)); ) {
-      const key = `${m[1].toUpperCase()} ${m[2]} @${seg}`;
+  for (const abs of files) {
+    const relAbs = path.relative(ROOT, abs).replaceAll('\\', '/');
+    const seg = fileToSeg(abs);
+    const src = await fs.readFile(abs, 'utf8');
+
+    // Effective mount for this leaf (if any)
+    let mount = '';
+    const segMounts = segmentMounts.get(seg);
+    if (segMounts && segMounts.has(abs.replaceAll('\\', '/'))) mount = segMounts.get(abs.replaceAll('\\', '/'));
+
+    // Collect EFFECTIVE routes (mount + local path)
+    const localRouteRe = /\brouter\.(get|post|put|patch|delete)\s*\(\s*['"`]([^'"`]+)['"`]/g;
+    for (let m; (m = localRouteRe.exec(src));) {
+      const method = m[1].toUpperCase();
+      const localPath = m[2];
+      const effective = `${mount}${localPath}`.replace(/\/{2,}/g, '/');
+      const key = `${method} ${effective}`;
       const arr = routeMap.get(key) || [];
-      arr.push(rel);
+      arr.push(relAbs);
       routeMap.set(key, arr);
     }
 
-    // response gating coverage
-    const definesHandlers = routeRE.test(s);
-    if (!definesHandlers) continue;
-    handlerFiles++;
-
-    const hasFileVR = /validateResponse\s*\(/.test(s);
-    const coveredBySegment = segmentHasVR.get(seg) === true;
-    if (hasFileVR || coveredBySegment) {
-      withVR++;
-    } else {
-      missingVR.push(rel);
+    // Response gating coverage
+    if (routeRE.test(src)) {
+      handlerFiles++;
+      const hasFileVR = /validateResponse\s*\(/.test(src);
+      // Covered by segment barrel?
+      let segCovered = false;
+      const segIndexRel = `${seg}/index.js`;
+      if (byRel.has(segIndexRel)) {
+        const segIndexSrc = await fs.readFile(byRel.get(segIndexRel), 'utf8');
+        segCovered = /validateResponse\s*\(/.test(segIndexSrc);
+      }
+      if (hasFileVR || segCovered) withVR++; else missingVR.push(relAbs);
     }
   }
 
-  const duplicates = [...routeMap.entries()]
-    .filter(([, arr]) => arr.length > 1)
-    .map(([k, arr]) => `${k} ← ${arr.join(', ')}`);
+  // True duplicates: same METHOD + EFFECTIVE path seen in >1 file
+  for (const [k, arr] of routeMap.entries()) {
+    if (arr.length > 1) duplicates.push(`${k} ← ${arr.join(', ')}`);
+  }
 
   return {
     legacy,
@@ -189,7 +224,7 @@ async function checkRouteRepoBoundary() {
   const re = /from\s+['"][.\/]+(?:\.\.\/)+repositories\//; // ../../repositories/ or ../repositories/
   for (const f of files) {
     const s = await fs.readFile(f, 'utf8');
-    if (re.test(s)) offenders.push(path.relative(ROOT, f).replaceAll('\\','/'));
+    if (re.test(s)) offenders.push(path.relative(ROOT, f).replaceAll('\\', '/'));
   }
   return { ok: offenders.length === 0, details: offenders };
 }
@@ -200,7 +235,7 @@ async function checkAxiosForbidden() {
   for (const f of files) {
     const s = await fs.readFile(f, 'utf8');
     if (/\bfrom\s+['"]axios['"]/.test(s) || /\brequire\(\s*['"]axios['"]\s*\)/.test(s))
-      offenders.push(path.relative(ROOT, f).replaceAll('\\','/'));
+      offenders.push(path.relative(ROOT, f).replaceAll('\\', '/'));
   }
   return { ok: offenders.length === 0, details: offenders };
 }
@@ -209,8 +244,7 @@ async function checkZodInputCoverage() {
   // Only count files that actually define HTTP handlers
   const files = await walk(ROUTES_DIR, (p) => p.endsWith('.js'));
   const routeRE = /\brouter\.(get|post|put|patch|delete)\s*\(/;
-  // Heuristics for common validator names at the route edge
-  const validateInputRE = /\bvalidate(?:Input|Params|Query|Body)?\s*\(/;
+  const validateInputRE = /\bvalidate(?:Input|Params|Query|Body)?\s*\(/; // adjust if your middleware name differs
   let total = 0, withInput = 0;
   const missing = [];
   for (const f of files) {
@@ -218,7 +252,7 @@ async function checkZodInputCoverage() {
     if (!routeRE.test(src)) continue; // barrel-only router; skip counting
     total++;
     if (validateInputRE.test(src)) withInput++;
-    else missing.push(path.relative(ROOT, f).replaceAll('\\','/'));
+    else missing.push(path.relative(ROOT, f).replaceAll('\\', '/'));
   }
   return { ok: total > 0 && withInput === total, withInput, total, missing };
 }

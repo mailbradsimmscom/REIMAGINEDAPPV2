@@ -50,8 +50,7 @@ attachConfigInspector(app);
 // --- mount routers ---
 safeMount('/health', healthRouter);
 safeMount('/systems', systemsRouter);
-safeMount('/chat/enhanced', chatRouter);
-safeMount('/chat', chatRouter);  // alias for backward compatibility
+safeMount('/chat', chatRouter);
 safeMount('/admin/docs', documentRouter);
 safeMount('/document', documentRouter);  // alias for backward compatibility
 safeMount('/pinecone', pineconeRouter);

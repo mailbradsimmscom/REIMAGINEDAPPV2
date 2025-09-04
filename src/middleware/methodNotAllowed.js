@@ -9,6 +9,9 @@ import { logger } from '../utils/logger.js';
 export function methodNotAllowed(req, res, next) {
   const requestLogger = req.requestLogger || logger.createRequestLogger();
   
+  // DEBUG: Add methodNotAllowed tracing
+  console.log('🔍 [METHOD_NOT_ALLOWED]', req.method, req.originalUrl, '→', req.url, 'allowedMethods:', req.route?.methods || []);
+  
   requestLogger.warn('Method not allowed', {
     method: req.method,
     url: req.url,

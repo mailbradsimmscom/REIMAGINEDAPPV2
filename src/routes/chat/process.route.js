@@ -3,6 +3,7 @@ import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
+import { methodNotAllowed } from '../../utils/methodNotAllowed.js';
 import { 
   ChatProcessEnvelope,
   chatProcessRequestSchema,
@@ -11,14 +12,18 @@ import {
 
 const router = express.Router();
 
-// Apply service guards - chat processing requires Supabase, OpenAI, and Pinecone
-router.use(requireServices(['supabase', 'openai', 'pinecone']));
+// DEBUG: Add process route tracing
+router.use((req, res, next) => {
+  console.log('🔍 [PROCESS] ROUTE:', req.method, req.originalUrl, '→', req.url, 'path:', req.path);
+  next();
+});
 
-// Apply response validation to all routes in this file
+router.use(requireServices(['supabase','openai','pinecone']));
 router.use(validateResponse(ChatProcessEnvelope));
 
-// POST /chat/enhanced/process - Process chat message
-router.post('/', 
+// MUST be '/'
+router.post(
+  '/',
   validate(chatProcessRequestSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -61,15 +66,7 @@ router.post('/',
   }
 );
 
-// Method not allowed for all other methods
-router.all('/', (req, res) => {
-  return res.json({
-    success: false,
-    error: {
-      code: 'METHOD_NOT_ALLOWED',
-      message: `${req.method} not allowed`
-    }
-  }, 405);
-});
+// Catch-all AFTER; allow only POST on this leaf
+router.all('/', methodNotAllowed);
 
 export default router;
