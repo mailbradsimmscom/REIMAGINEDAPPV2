@@ -1,9 +1,9 @@
 import express from 'express';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminHealthEnvelope } from '../../schemas/admin.schema.js';
 import { EmptyQuery } from '../../schemas/health.schema.js';
+import { ENV } from '../../config/env.js';
 
 const router = express.Router();
 
@@ -22,12 +22,12 @@ router.get('/',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         memory: process.memoryUsage(),
-        environment: process.env.NODE_ENV || 'development',
+        environment: ENV.NODE_ENV || 'development',
         version: process.version
       } 
     };
 
-    return enforceResponse(res, envelope, 200);
+    return res.json(envelope);
   } catch (e) {
     return next(e);
   }
@@ -35,7 +35,7 @@ router.get('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

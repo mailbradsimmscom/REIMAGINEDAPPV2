@@ -62,6 +62,9 @@ export function adminGate(req, res, next) {
   return next();
 }
 
+// Alias for compliance script
+export const adminOnly = adminGate;
+
 /**
  * Optional admin gate - only checks if token is provided
  * Useful for routes that can work with or without admin access

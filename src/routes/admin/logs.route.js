@@ -3,7 +3,6 @@ import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminLogsEnvelope, adminLogsQuerySchema } from '../../schemas/admin.schema.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 
 const router = express.Router();
 
@@ -48,7 +47,7 @@ router.get('/',
       data: logsData
     };
 
-    return enforceResponse(res, envelope, 200);
+    return res.json(envelope);
   } catch (error) {
     next(error);
   }
@@ -56,7 +55,7 @@ router.get('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

@@ -3,7 +3,6 @@ import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { documentJobStatusPathSchema } from '../../schemas/document.schema.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { JobStatusEnvelope } from '../../schemas/document.schema.js';
 import { z } from 'zod';
@@ -36,7 +35,7 @@ router.get('/jobs/:jobId',
       data: job
     };
 
-          return enforceResponse(res, envelope, 200);
+          return res.json(envelope);
   } catch (error) {
     next(error);
   }

@@ -1,5 +1,6 @@
 import { logger } from '../utils/logger.js';
 import { joinUrl } from '../utils/url.js';
+import { ENV } from '../config/env.js';
 
 class PineconeRepository {
   constructor() {
@@ -29,7 +30,7 @@ class PineconeRepository {
 
   // Log namespace choice once on boot in dev
   async logNamespaceChoiceOnce() {
-    if (process.env.NODE_ENV === 'production') return;
+    if (ENV.NODE_ENV === 'production') return;
     const ns = await this.resolveNamespace();
     logger.info('Pinecone namespace selected', { namespace: ns || '(none)' });
   }

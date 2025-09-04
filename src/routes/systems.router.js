@@ -2,7 +2,6 @@ import express from 'express';
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
 import { validate } from '../middleware/validate.js';
 import { validateResponse } from '../middleware/validateResponse.js';
-import { enforceResponse } from '../middleware/enforceResponse.js';
 import { requireSupabase } from '../middleware/serviceGuards.js';
 import { 
   SystemsListEnvelope,
@@ -36,7 +35,7 @@ router.get('/search',
         data: result
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }
@@ -57,7 +56,7 @@ router.get('/',
         data: result
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }
@@ -76,7 +75,7 @@ router.get('/:assetUid',
         success: true,
         data: result
       };
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (err) {
       return next(err);
     }
@@ -85,7 +84,7 @@ router.get('/:assetUid',
 
 // Method not allowed for all other methods on /systems/search
 router.all('/search', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
@@ -96,7 +95,7 @@ router.all('/search', (req, res) => {
 
 // Method not allowed for all other methods on /systems
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

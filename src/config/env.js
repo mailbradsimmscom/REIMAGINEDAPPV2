@@ -21,6 +21,7 @@ const EnvSchema = z.object({
   ADMIN_TOKEN: z.string().optional(),
   PYTHON_SIDECAR_URL: z.string().optional(),
   APP_VERSION: z.string().optional(),
+  RESPONSE_VALIDATE: z.string().optional(),
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
@@ -51,3 +52,6 @@ export function getEnv({ loose = null } = {}) {
   MEMO = parsed.success ? parsed.data : {};
   return MEMO;
 }
+
+// Export environment variables directly for easy access
+export const ENV = getEnv();

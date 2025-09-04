@@ -2,7 +2,6 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { DocumentJobsEnvelope } from '../../schemas/document.schema.js';
 import { 
@@ -39,7 +38,7 @@ router.get('/',
         }
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }

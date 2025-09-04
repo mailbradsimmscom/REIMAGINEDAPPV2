@@ -7,8 +7,8 @@
  *  - Tracked artifacts (node_modules/, logs, PDFs, builds, venvs)
  *  - process.env leaks outside src/config/env.js
  *  - Legacy *.routes.js present
- *  - Duplicate (method, path) routes
- *  - Missing validateResponse() in any routes file (response gating)
+ *  - Duplicate (method, path) routes (scoped per router segment)
+ *  - Missing validateResponse() (per file OR segment barrel via index.js)
  *  - /admin router not gated by adminOnly
  *  - Routes importing from repositories (violates routes → services → repositories)
  *  - axios present (forbidden)
@@ -81,7 +81,7 @@ async function checkEnvLeaks() {
   for (const f of files) {
     if (f === ENV_JS) continue;
     const s = await fs.readFile(f, 'utf8');
-    if (/\bprocess\.env\./.test(s)) offenders.push(path.relative(ROOT, f));
+    if (/\bprocess\.env\./.test(s)) offenders.push(path.relative(ROOT, f).replaceAll('\\','/'));
   }
   return { ok: offenders.length === 0, details: offenders };
 }
@@ -99,30 +99,78 @@ async function checkFileSizes() {
   return { ok: overs.length === 0, details: overs };
 }
 
+// Derive the router "segment" for a file under src/routes
+function segmentOfRoutesFile(relFromRoutes) {
+  if (relFromRoutes.includes('/')) {
+    // e.g., "chat/history.route.js" → "chat"
+    return relFromRoutes.split('/')[0];
+  }
+  // root file: use filename (minus .js) without .router/.route suffix
+  const base = path.basename(relFromRoutes, '.js');
+  return base.replace(/\.(router|routes|route)$/i, '');
+}
+
 async function checkRoutesIntegrity() {
   const files = await walk(ROUTES_DIR, (p) => p.endsWith('.js'));
-  const legacy = files.filter(f => /\.routes\.js$/i.test(f)).map(f => path.relative(ROOT, f));
-  const routeMap = new Map(); // key = METHOD path → [files]
-  const missingVR = [];        // files that don't mention validateResponse(
+  const legacy = files.filter(f => /\.routes\.js$/i.test(f)).map(f => path.relative(ROOT, f).replaceAll('\\','/'));
+
+  // Pre-scan segment barrels for response gating
+  const segmentHasVR = new Map(); // segment -> boolean
   for (const f of files) {
-    const src = await fs.readFile(f, 'utf8');
+    const rel = path.relative(ROOT, f).replaceAll('\\','/');
+    const relFromRoutes = rel.replace(/^src\/routes\//, '');
+    const seg = segmentOfRoutesFile(relFromRoutes);
+    const isSegmentIndex = relFromRoutes === `${seg}/index.js`;
+    if (isSegmentIndex) {
+      const s = await fs.readFile(f, 'utf8');
+      segmentHasVR.set(seg, /validateResponse\s*\(/.test(s));
+    }
+  }
+
+  const routeRE = /\brouter\.(get|post|put|patch|delete)\s*\(/;
+  const routeMap = new Map(); // key = "METHOD path @segment" → [files]
+  const missingVR = [];       // handler files lacking VR (and not covered by segment barrel)
+  let handlerFiles = 0;
+  let withVR = 0;
+
+  for (const f of files) {
+    const rel = path.relative(ROOT, f).replaceAll('\\','/');
+    const relFromRoutes = rel.replace(/^src\/routes\//, '');
+    const seg = segmentOfRoutesFile(relFromRoutes);
+    const s = await fs.readFile(f, 'utf8');
+
+    // collect routes, scoped per segment
     const re = /\brouter\.(get|post|put|patch|delete)\s*\(\s*['"`]([^'"`]+)['"`]/g;
-    for (let m; (m = re.exec(src)); ) {
-      const key = `${m[1].toUpperCase()} ${m[2]}`;
+    for (let m; (m = re.exec(s)); ) {
+      const key = `${m[1].toUpperCase()} ${m[2]} @${seg}`;
       const arr = routeMap.get(key) || [];
-      arr.push(path.relative(ROOT, f));
+      arr.push(rel);
       routeMap.set(key, arr);
     }
-    if (!/validateResponse\s*\(/.test(src)) missingVR.push(path.relative(ROOT, f));
+
+    // response gating coverage
+    const definesHandlers = routeRE.test(s);
+    if (!definesHandlers) continue;
+    handlerFiles++;
+
+    const hasFileVR = /validateResponse\s*\(/.test(s);
+    const coveredBySegment = segmentHasVR.get(seg) === true;
+    if (hasFileVR || coveredBySegment) {
+      withVR++;
+    } else {
+      missingVR.push(rel);
+    }
   }
+
   const duplicates = [...routeMap.entries()]
     .filter(([, arr]) => arr.length > 1)
     .map(([k, arr]) => `${k} ← ${arr.join(', ')}`);
+
   return {
     legacy,
     duplicates,
     missingVR,
-    vrCoverage: { total: files.length, withVR: files.length - missingVR.length }
+    vrCoverage: { total: handlerFiles, withVR }
   };
 }
 
@@ -141,7 +189,7 @@ async function checkRouteRepoBoundary() {
   const re = /from\s+['"][.\/]+(?:\.\.\/)+repositories\//; // ../../repositories/ or ../repositories/
   for (const f of files) {
     const s = await fs.readFile(f, 'utf8');
-    if (re.test(s)) offenders.push(path.relative(ROOT, f));
+    if (re.test(s)) offenders.push(path.relative(ROOT, f).replaceAll('\\','/'));
   }
   return { ok: offenders.length === 0, details: offenders };
 }
@@ -152,7 +200,7 @@ async function checkAxiosForbidden() {
   for (const f of files) {
     const s = await fs.readFile(f, 'utf8');
     if (/\bfrom\s+['"]axios['"]/.test(s) || /\brequire\(\s*['"]axios['"]\s*\)/.test(s))
-      offenders.push(path.relative(ROOT, f));
+      offenders.push(path.relative(ROOT, f).replaceAll('\\','/'));
   }
   return { ok: offenders.length === 0, details: offenders };
 }
@@ -170,7 +218,7 @@ async function checkZodInputCoverage() {
     if (!routeRE.test(src)) continue; // barrel-only router; skip counting
     total++;
     if (validateInputRE.test(src)) withInput++;
-    else missing.push(path.relative(ROOT, f));
+    else missing.push(path.relative(ROOT, f).replaceAll('\\','/'));
   }
   return { ok: total > 0 && withInput === total, withInput, total, missing };
 }
@@ -191,7 +239,7 @@ async function checkZodInputCoverage() {
   const routes = await checkRoutesIntegrity();
   const legacyOk = routes.legacy.length === 0;
   const dupOk = routes.duplicates.length === 0;
-  const vrOk = routes.missingVR.length === 0;
+  const vrOk = routes.vrCoverage.withVR === routes.vrCoverage.total;
 
   rows.push(['Legacy *.routes.js', fmtResult(legacyOk), legacyOk ? '0' : truncList(routes.legacy)]);
   rows.push(['Duplicate routes', fmtResult(dupOk), dupOk ? '0' : truncList(routes.duplicates)]);

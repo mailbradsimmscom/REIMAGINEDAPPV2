@@ -1,11 +1,9 @@
 import express from 'express';
-import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminSystemsEnvelope } from '../../schemas/admin.schema.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { logger } from '../../utils/logger.js';
+import { adminService } from '../../services/admin.service.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -28,32 +26,20 @@ router.get('/',
   validate(adminSystemsQuerySchema, 'query'),
   async (req, res, next) => {
   try {
-    const requestLogger = logger.createRequestLogger();
-    const supabase = await getSupabaseClient();
-    
-    const { data, error } = await supabase
-      .from('systems')
-      .select('*')
-      .order('asset_uid');
-
-    if (error) {
-      throw error;
-    }
+    const data = await adminService.getSystems();
 
     const envelope = {
       success: true,
       data: {
-        totalSystems: data?.length || 0,
-        lastUpdated: new Date().toISOString(),
+        totalSystems: data.total,
+        lastUpdated: data.lastUpdated,
         databaseStatus: 'connected',
         documentsCount: 0,
         jobsCount: 0
       }
     };
 
-    return enforceResponse(res, envelope);
-    
-    requestLogger.info('Systems retrieved', { count: data?.length || 0 });
+    return res.json(envelope);
     
   } catch (error) {
     next(error);
@@ -62,7 +48,7 @@ router.get('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

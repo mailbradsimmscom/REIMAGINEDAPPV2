@@ -1,7 +1,6 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { ChatHistoryEnvelope } from '../../schemas/chat.schema.js';
 import { 
@@ -41,7 +40,7 @@ router.get('/',
         timestamp: new Date().toISOString()
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }

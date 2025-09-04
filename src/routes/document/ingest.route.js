@@ -3,7 +3,6 @@ import documentService from '../../services/document.service.js';
 import { methodNotAllowed } from '../../middleware/methodNotAllowed.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { DocumentIngestEnvelope } from '../../schemas/document.schema.js';
@@ -140,7 +139,7 @@ router.post('/',
         }
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }

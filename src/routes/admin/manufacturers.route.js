@@ -1,11 +1,9 @@
 import express from 'express';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminManufacturersEnvelope } from '../../schemas/admin.schema.js';
-import { logger } from '../../utils/logger.js';
+import { adminService } from '../../services/admin.service.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -28,30 +26,14 @@ router.get('/',
   validate(adminManufacturersQuerySchema, 'query'),
   async (req, res, next) => {
   try {
-    const requestLogger = logger.createRequestLogger();
-    const supabase = await getSupabaseClient();
-    
-    const { data, error } = await supabase
-      .from('manufacturers')
-      .select('*')
-      .order('name');
-
-    if (error) {
-      throw error;
-    }
+    const data = await adminService.getManufacturers();
 
     const envelope = {
       success: true,
-      data: {
-        total: data?.length || 0,
-        top: data?.slice(0, 10).map(m => ({ manufacturer_norm: m.name })) || [],
-        lastUpdated: new Date().toISOString()
-      }
+      data
     };
 
-    return enforceResponse(res, envelope);
-    
-    requestLogger.info('Manufacturers retrieved', { count: data?.length || 0 });
+    return res.json(envelope);
     
   } catch (error) {
     next(error);
@@ -60,7 +42,7 @@ router.get('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

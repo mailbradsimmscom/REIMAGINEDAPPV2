@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { enforceResponse } from './enforceResponse.js';
 import { ERR } from '../constants/errorCodes.js';
 
 /**
@@ -36,7 +35,7 @@ export function validate(schema, target = 'body') {
           message: e.message,
         }));
         
-        return enforceResponse(res, {
+        return res.json({
           success: false,
           data: null,
           error: { 
@@ -53,7 +52,7 @@ export function validate(schema, target = 'body') {
       
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return enforceResponse(res, {
+        return res.json({
           success: false,
           data: null,
           error: { 

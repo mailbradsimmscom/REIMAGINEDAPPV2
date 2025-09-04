@@ -3,11 +3,11 @@ import express from 'express';
 import { getExternalServiceStatus } from '../services/guards/index.js';
 import { validate } from '../middleware/validate.js';
 import { validateResponse } from '../middleware/validateResponse.js';
-import { enforceResponse } from '../middleware/enforceResponse.js';
 import { 
   BasicHealthEnvelope, 
   ServiceStatusEnvelope, 
-  ReadinessEnvelope 
+  ReadinessEnvelope,
+  EmptyQuery
 } from '../schemas/health.schema.js';
 import { execSync } from 'child_process';
 import { logger } from '../utils/logger.js';
@@ -16,6 +16,7 @@ const router = express.Router();
 
 // GET /health - Basic health check
 router.get('/', 
+  validate(EmptyQuery, 'query'),
   validateResponse(BasicHealthEnvelope),
   (req, res) => {
   const envelope = {
@@ -27,11 +28,12 @@ router.get('/',
     }
   };
 
-  return enforceResponse(res, envelope, 200);
+  return res.json(envelope);
 });
 
 // GET /health/services - Check external service status
 router.get('/services', 
+  validate(EmptyQuery, 'query'),
   validateResponse(ServiceStatusEnvelope),
   async (req, res) => {
   try {
@@ -48,7 +50,7 @@ router.get('/services',
       }
     };
 
-    return enforceResponse(res, envelope, 200);
+    return res.json(envelope);
   } catch (error) {
     const envelope = {
       success: false,
@@ -60,12 +62,13 @@ router.get('/services',
       }
     };
 
-    return enforceResponse(res, envelope, 503);
+    return res.status(503).json(envelope);
   }
 });
 
 // GET /health/ready - Readiness check (for Kubernetes)
 router.get('/ready', 
+  validate(EmptyQuery, 'query'),
   validateResponse(ReadinessEnvelope),
   async (req, res) => {
   try {
@@ -83,7 +86,7 @@ router.get('/ready',
         }
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } else {
       const envelope = {
         success: false,
@@ -95,7 +98,7 @@ router.get('/ready',
         }
       };
 
-      return enforceResponse(res, envelope, 503);
+      return res.status(503).json(envelope);
     }
   } catch (error) {
     const envelope = {
@@ -106,11 +109,11 @@ router.get('/ready',
         message: 'Failed to check readiness',
         details: { error: error.message }
       }
-    };
+          };
 
-    return enforceResponse(res, envelope, 503);
-  }
-});
+      return res.status(503).json(envelope);
+    }
+  });
 
 // GET /health/live - Liveness check (for Kubernetes)
 router.get('/live', (req, res) => {

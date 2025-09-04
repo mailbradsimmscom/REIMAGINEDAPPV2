@@ -1,0 +1,95 @@
+1:// src/routes/health.router.js
+18:router.get('/', 
+34:router.get('/services', 
+68:router.get('/ready', 
+116:router.get('/live', (req, res) => {
+129:router.get('/monitoring', async (req, res) => {
+15:router.use(validateResponse(ChatListEnvelope));
+18:router.get('/', 
+59:router.all('/', (req, res) => {
+14:router.use(validateResponse(ChatHistoryEnvelope));
+17:router.get('/', 
+14:router.use(validateResponse(ChatContextEnvelope));
+17:router.get('/', 
+14:router.use(validateResponse(EnvelopeSchema)); // gate all /chat/*
+17:router.use('/process', processRouter);
+18:router.use('/history', historyRouter);
+19:router.use('/list', listRouter);
+20:router.use('/context', contextRouter);
+21:router.use('/delete', deleteRouter);
+22:router.use('/', sessionDeleteRouter); // This will handle /:sessionId
+14:router.use(validateResponse(ChatDeleteEnvelope));
+17:router.delete('/', 
+16:router.use(requireServices(['supabase', 'openai', 'pinecone']));
+19:router.use(validateResponse(ChatProcessEnvelope));
+22:router.post('/', 
+66:router.all('/', (req, res) => {
+14:router.use(validateResponse(ChatDeleteEnvelope));
+17:router.delete('/:sessionId', 
+23:router.use(requireSupabase());
+26:router.get('/search', 
+47:router.get('/', 
+68:router.get('/:assetUid',
+87:router.all('/search', (req, res) => {
+98:router.all('/', (req, res) => {
+14:router.use(adminGate);
+17:router.use(validateResponse(AdminSystemsEnvelope));
+27:router.get('/', 
+64:router.all('/', (req, res) => {
+14:router.use(adminGate);
+17:router.use(validateResponse(AdminManufacturersEnvelope));
+27:router.get('/', 
+62:router.all('/', (req, res) => {
+11:router.use(validateResponse(AdminHealthEnvelope));
+14:router.get('/', 
+37:router.all('/', (req, res) => {
+14:router.use('/', dashboardRouter);
+17:router.use('/health', adminGate, healthRouter);
+18:router.use('/systems', adminGate, systemsRouter);
+19:router.use('/logs', adminGate, logsRouter);
+20:router.use('/manufacturers', adminGate, manufacturersRouter);
+21:router.use('/models', adminGate, modelsRouter);
+22:router.use('/pinecone', adminGate, pineconeRouter);
+13:router.use(adminGate);
+16:router.use(validateResponse(AdminModelsEnvelope));
+19:router.get('/', 
+59:router.all('/', (req, res) => {
+12:router.use(validateResponse(EnvelopeSchema));
+18:router.get('/', 
+13:router.use(adminGate);
+16:router.use(validateResponse(AdminPineconeEnvelope));
+22:router.get('/', 
+105:router.all('/', (req, res) => {
+11:router.use(adminGate);
+14:router.use(validateResponse(AdminLogsEnvelope));
+17:router.get('/', 
+58:router.all('/', (req, res) => {
+14:router.use(adminGate);
+17:router.use(validateResponse(DocumentGetOneEnvelope));
+20:router.get('/documents/:docId', 
+18:router.use(adminGate);
+21:router.use(validateResponse(DocumentJobsEnvelope));
+24:router.get('/', 
+13:router.use(validateResponse(EnvelopeSchema));
+16:router.use('/ingest', ingestRouter);
+17:router.use('/jobs', jobsRouter);
+18:router.use('/jobs', jobStatusRouter); // This will handle /jobs/:jobId
+19:router.use('/documents', documentsRouter);
+20:router.use('/documents', getOneRouter); // This will handle /documents/:docId
+19:router.use(adminGate);
+22:router.use(requireServices(['supabase', 'sidecar']));
+25:router.use(validateResponse(DocumentIngestEnvelope));
+28:router.all('/', methodNotAllowed);
+36:router.post('/', 
+14:router.use(adminGate);
+17:router.get('/', 
+47:router.all('/', (req, res) => {
+14:router.use(adminGate);
+17:router.use(validateResponse(JobStatusEnvelope));
+20:router.get('/jobs/:jobId', 
+38:router.post('/search', 
+68:router.all('/search', methodNotAllowed);
+71:router.get('/stats', 
+101:router.get('/documents/:docId/chunks', 
+132:router.post('/query', 
+162:router.all('/query', methodNotAllowed);

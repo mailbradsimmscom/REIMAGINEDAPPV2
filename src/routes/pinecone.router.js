@@ -1,6 +1,6 @@
 import express from 'express';
-import { enforceResponse } from '../middleware/enforceResponse.js';
 import { validate } from '../middleware/validate.js';
+import { validateResponse } from '../middleware/validateResponse.js';
 import { ERR } from '../constants/errorCodes.js';
 import { 
   pineconeSearchRequestSchema,
@@ -25,7 +25,7 @@ import { isPineconeConfigured } from '../services/pinecone.guard.js';
 
 // Method not allowed handler
 function methodNotAllowed(req, res) {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: ERR.METHOD_NOT_ALLOWED,
@@ -37,6 +37,7 @@ function methodNotAllowed(req, res) {
 // POST /pinecone/search - Search Pinecone
 router.post('/search', 
   validate(pineconeSearchRequestSchema, 'body'),
+  validateResponse(pineconeSearchResponseSchema),
   async (req, res, next) => {
     try {
       if (!isPineconeConfigured()) {
@@ -46,7 +47,7 @@ router.post('/search',
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeSearchResponseSchema.parse(envelope);
-        return enforceResponse(res, envelope, 400);
+        return res.status(400).json(envelope);
       }
 
       const pineconeService = await getPineService();
@@ -57,7 +58,7 @@ router.post('/search',
       };
       // Optional: Validate response schema if RESPONSE_VALIDATE=1
       // pineconeSearchResponseSchema.parse(envelope);
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }
@@ -70,6 +71,7 @@ router.all('/search', methodNotAllowed);
 // GET /pinecone/stats - Get Pinecone stats
 router.get('/stats', 
   validate(pineconeStatsQuerySchema, 'query'),
+  validateResponse(pineconeStatsResponseSchema),
   async (req, res, next) => {
     try {
       if (!isPineconeConfigured()) {
@@ -79,7 +81,7 @@ router.get('/stats',
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeStatsResponseSchema.parse(envelope);
-        return enforceResponse(res, envelope, 400);
+        return res.status(400).json(envelope);
       }
 
       const pineconeService = await getPineService();
@@ -90,7 +92,7 @@ router.get('/stats',
       };
       // Optional: Validate response schema if RESPONSE_VALIDATE=1
       // pineconeStatsResponseSchema.parse(envelope);
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }
@@ -100,6 +102,7 @@ router.get('/stats',
 // GET /pinecone/documents/:docId/chunks - Get document chunks
 router.get('/documents/:docId/chunks', 
   validate(pineconeDocumentChunksPathSchema, 'params'),
+  validateResponse(pineconeDocumentChunksResponseSchema),
   async (req, res, next) => {
     try {
       if (!isPineconeConfigured()) {
@@ -109,7 +112,7 @@ router.get('/documents/:docId/chunks',
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeDocumentChunksResponseSchema.parse(envelope);
-        return enforceResponse(res, envelope, 400);
+        return res.status(400).json(envelope);
       }
 
       const { docId } = req.params;
@@ -121,7 +124,7 @@ router.get('/documents/:docId/chunks',
       };
       // Optional: Validate response schema if RESPONSE_VALIDATE=1
       // pineconeDocumentChunksResponseSchema.parse(envelope);
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }
@@ -131,6 +134,7 @@ router.get('/documents/:docId/chunks',
 // POST /pinecone/query - Query Pinecone
 router.post('/query', 
   validate(pineconeQueryRequestSchema, 'body'),
+  validateResponse(pineconeQueryResponseSchema),
   async (req, res, next) => {
     try {
       if (!isPineconeConfigured()) {
@@ -140,7 +144,7 @@ router.post('/query',
         };
         // Optional: Validate response schema if RESPONSE_VALIDATE=1
         // pineconeQueryResponseSchema.parse(envelope);
-        return enforceResponse(res, envelope, 400);
+        return res.status(400).json(envelope);
       }
 
       const pineconeService = await getPineService();
@@ -151,7 +155,7 @@ router.post('/query',
       };
       // Optional: Validate response schema if RESPONSE_VALIDATE=1
       // pineconeQueryResponseSchema.parse(envelope);
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }

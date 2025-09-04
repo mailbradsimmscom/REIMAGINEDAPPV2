@@ -1,0 +1,19 @@
+src/debug/config.js:4:  if (process.env.NODE_ENV === 'production') return;
+src/debug/routes.js:5:  if (process.env.NODE_ENV === 'production') return;
+src/middleware/trace404.js:4:  if (process.env.NODE_ENV === 'production') return next();
+src/middleware/validateResponse.js:4:  if (process.env.RESPONSE_VALIDATE !== '1') return next();
+src/repositories/pinecone.repository.js:32:    if (process.env.NODE_ENV === 'production') return;
+src/routes/admin/health.route.js:25:        environment: process.env.NODE_ENV || 'development',
+src/services/guards/index.js:12:  if (process.env.NODE_ENV === 'test') {
+src/services/guards/index.js:14:      supabase: !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE || process.env.SERVICE_ROLE_KEY)),
+src/services/guards/index.js:15:      pinecone: !!process.env.PYTHON_SIDECAR_URL,
+src/services/guards/index.js:16:      openai: !!process.env.OPENAI_API_KEY,
+src/services/guards/index.js:17:      sidecar: !!process.env.PYTHON_SIDECAR_URL
+src/services/guards/openai.guard.js:6:  if (process.env.NODE_ENV === 'test') {
+src/services/guards/openai.guard.js:7:    return !!process.env.OPENAI_API_KEY;
+src/services/guards/pinecone.guard.js:6:  if (process.env.NODE_ENV === 'test') {
+src/services/guards/pinecone.guard.js:7:    return !!process.env.PYTHON_SIDECAR_URL;
+src/services/guards/sidecar.guard.js:6:  if (process.env.NODE_ENV === 'test') {
+src/services/guards/sidecar.guard.js:7:    return !!process.env.PYTHON_SIDECAR_URL;
+src/services/guards/supabase.guard.js:6:  if (process.env.NODE_ENV === 'test') {
+src/services/guards/supabase.guard.js:7:    return !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE || process.env.SERVICE_ROLE_KEY));

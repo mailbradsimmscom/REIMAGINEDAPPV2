@@ -1,0 +1,25 @@
+src/routes/admin/dashboard.route.js:12:router.use(validateResponse(EnvelopeSchema));
+src/routes/admin/health.route.js:11:router.use(validateResponse(AdminHealthEnvelope));
+src/routes/admin/logs.route.js:14:router.use(validateResponse(AdminLogsEnvelope));
+src/routes/admin/manufacturers.route.js:17:router.use(validateResponse(AdminManufacturersEnvelope));
+src/routes/admin/models.route.js:16:router.use(validateResponse(AdminModelsEnvelope));
+src/routes/admin/pinecone.route.js:16:router.use(validateResponse(AdminPineconeEnvelope));
+src/routes/admin/systems.route.js:17:router.use(validateResponse(AdminSystemsEnvelope));
+src/routes/chat/context.route.js:14:router.use(validateResponse(ChatContextEnvelope));
+src/routes/chat/delete.route.js:14:router.use(validateResponse(ChatDeleteEnvelope));
+src/routes/chat/history.route.js:14:router.use(validateResponse(ChatHistoryEnvelope));
+src/routes/chat/index.js:14:router.use(validateResponse(EnvelopeSchema)); // gate all /chat/*
+src/routes/chat/list.route.js:15:router.use(validateResponse(ChatListEnvelope));
+src/routes/chat/process.route.js:19:router.use(validateResponse(ChatProcessEnvelope));
+src/routes/chat/session-delete.route.js:14:router.use(validateResponse(ChatDeleteEnvelope));
+src/routes/document/get-one.route.js:17:router.use(validateResponse(DocumentGetOneEnvelope));
+src/routes/document/index.js:13:router.use(validateResponse(EnvelopeSchema));
+src/routes/document/ingest.route.js:25:router.use(validateResponse(DocumentIngestEnvelope));
+src/routes/document/job-status.route.js:17:router.use(validateResponse(JobStatusEnvelope));
+src/routes/document/jobs.route.js:21:router.use(validateResponse(DocumentJobsEnvelope));
+src/routes/health.router.js:19:  validateResponse(BasicHealthEnvelope),
+src/routes/health.router.js:35:  validateResponse(ServiceStatusEnvelope),
+src/routes/health.router.js:69:  validateResponse(ReadinessEnvelope),
+src/routes/systems.router.js:28:  validateResponse(SystemsSearchEnvelope),
+src/routes/systems.router.js:49:  validateResponse(SystemsListEnvelope),
+src/routes/systems.router.js:70:  validateResponse(SystemsGetEnvelope),

@@ -2,7 +2,7 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
 import { 
   documentDocumentsQuerySchema, 
   documentDocumentsResponseSchema 
@@ -12,6 +12,9 @@ const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Apply response validation
+router.use(validateResponse(documentDocumentsResponseSchema));
 
 // GET /admin/docs/documents - List documents
 router.get('/', 
@@ -36,7 +39,7 @@ router.get('/',
       // Optional: Validate response schema if RESPONSE_VALIDATE=1
       // documentDocumentsResponseSchema.parse(envelope);
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       return next(error);
     }
@@ -45,7 +48,7 @@ router.get('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

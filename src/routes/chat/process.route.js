@@ -2,7 +2,6 @@ import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
 import { 
   ChatProcessEnvelope,
@@ -55,7 +54,7 @@ router.post('/',
         }
       };
 
-      return enforceResponse(res, envelope, 200);
+      return res.json(envelope);
     } catch (error) {
       next(error);
     }
@@ -64,7 +63,7 @@ router.post('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',

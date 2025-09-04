@@ -4,7 +4,6 @@ import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminPineconeEnvelope } from '../../schemas/admin.schema.js';
-import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -88,7 +87,7 @@ router.get('/',
       data: pineconeData
     };
 
-    return enforceResponse(res, envelope);
+    return res.json(envelope);
     
     requestLogger.info('Pinecone status retrieved', { 
       status: pineconeData.status,
@@ -103,7 +102,7 @@ router.get('/',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return enforceResponse(res, {
+  return res.json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
