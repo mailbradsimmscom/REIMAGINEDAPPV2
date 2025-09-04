@@ -1,9 +1,13 @@
 import express from 'express';
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
 import { validate } from '../middleware/validate.js';
+import { validateResponse } from '../middleware/validateResponse.js';
 import { enforceResponse } from '../middleware/enforceResponse.js';
 import { requireSupabase } from '../middleware/serviceGuards.js';
 import { 
+  SystemsListEnvelope,
+  SystemsSearchEnvelope,
+  SystemsGetEnvelope,
   systemsListQuerySchema, 
   systemsListResponseSchema,
   systemsSearchQuerySchema,
@@ -21,6 +25,7 @@ router.use(requireSupabase());
 // GET /systems/search - Search systems (MUST come before /:assetUid)
 router.get('/search', 
   validate(systemsSearchQuerySchema, 'query'),
+  validateResponse(SystemsSearchEnvelope),
   async (req, res, next) => {
     try {
       const { q, limit } = req.query;
@@ -30,9 +35,6 @@ router.get('/search',
         success: true,
         data: result
       };
-
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // systemsSearchResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope, 200);
     } catch (error) {
@@ -44,6 +46,7 @@ router.get('/search',
 // GET /systems - List systems
 router.get('/', 
   validate(systemsListQuerySchema, 'query'),
+  validateResponse(SystemsListEnvelope),
   async (req, res, next) => {
     try {
       const { limit, cursor } = req.query;
@@ -53,9 +56,6 @@ router.get('/',
         success: true,
         data: result
       };
-
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // systemsListResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope, 200);
     } catch (error) {
@@ -67,6 +67,7 @@ router.get('/',
 // GET /systems/:assetUid - Get specific system
 router.get('/:assetUid',
   validate(UUIDParam, 'params'),
+  validateResponse(SystemsGetEnvelope),
   async (req, res, next) => {
     try {
       const { assetUid } = req.validated?.params ?? req.params;
@@ -75,8 +76,6 @@ router.get('/:assetUid',
         success: true,
         data: result
       };
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // systemsGetResponseSchema.parse(envelope);
       return enforceResponse(res, envelope, 200);
     } catch (err) {
       return next(err);

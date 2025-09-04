@@ -172,7 +172,7 @@ export const chatDeletePathSchema = z.object({
 const DeleteResponseData = z.object({
   sessionId: z.string(),
   deleted: z.literal(true)
-});
+}).passthrough();
 
 // Delete operation envelope schemas
 export const ChatDeleteEnvelope = z.union([
@@ -228,5 +228,57 @@ const ChatContextData = z.object({
 // Chat context envelope schema
 export const ChatContextEnvelope = z.union([
   EnvelopeSuccessSchema.extend({ data: ChatContextData }),
+  EnvelopeErrorSchema
+]);
+
+// Chat process envelope schema
+const ChatProcessData = z.object({
+  sessionId: z.string(),
+  threadId: z.string(),
+  userMessage: z.object({
+    id: z.string(),
+    content: z.string(),
+    role: z.string(),
+    createdAt: z.string()
+  }),
+  assistantMessage: z.object({
+    id: z.string(),
+    content: z.string(),
+    role: z.string(),
+    createdAt: z.string(),
+    sources: z.array(z.any()).optional()
+  }),
+  systemsContext: z.array(z.any()).optional(),
+  enhancedQuery: z.string().optional(),
+  sources: z.array(z.any()).optional()
+});
+
+export const ChatProcessEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ChatProcessData }),
+  EnvelopeErrorSchema
+]);
+
+// Chat list envelope schema
+const ChatListData = z.object({
+  chats: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    latestThread: z.object({
+      id: z.string(),
+      name: z.string(),
+      createdAt: z.string(),
+      updatedAt: z.string(),
+      metadata: z.record(z.string(), z.any()).optional()
+    }).optional()
+  })),
+  count: z.number(),
+  nextCursor: z.string().nullable().optional()
+});
+
+export const ChatListEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ChatListData }),
   EnvelopeErrorSchema
 ]);

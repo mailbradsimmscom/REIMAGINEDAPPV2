@@ -166,3 +166,111 @@ const AdminDocumentsOkSchema = z.object({
 
 // Discriminated union for admin documents endpoint
 export const adminDocumentsResponseSchema = z.union([AdminDocumentsOkSchema, ErrorEnvelopeSchema]);
+
+// Admin envelope schemas for Phase 3 tightening
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
+
+// Admin health envelope schema
+const AdminHealthData = z.object({
+  status: z.string(),
+  timestamp: z.string(),
+  uptime: z.number(),
+  memory: z.object({
+    rss: z.number(),
+    heapTotal: z.number(),
+    heapUsed: z.number(),
+    external: z.number()
+  }),
+  environment: z.string(),
+  version: z.string()
+});
+
+export const AdminHealthEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminHealthData }),
+  EnvelopeErrorSchema
+]);
+
+// Admin manufacturers envelope schema
+const AdminManufacturersData = z.object({
+  total: z.number(),
+  top: z.array(z.object({
+    manufacturer_norm: z.string()
+  })),
+  lastUpdated: z.string()
+});
+
+export const AdminManufacturersEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminManufacturersData }),
+  EnvelopeErrorSchema
+]);
+
+// Admin models envelope schema
+const AdminModelsData = z.object({
+  models: z.array(z.object({
+    model_norm: z.string(),
+    manufacturer_norm: z.string()
+  })),
+  count: z.number(),
+  manufacturer: z.string(),
+  lastUpdated: z.string()
+});
+
+export const AdminModelsEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminModelsData }),
+  EnvelopeErrorSchema
+]);
+
+// Admin logs envelope schema
+const AdminLogsData = z.object({
+  logs: z.array(z.object({
+    timestamp: z.string(),
+    level: z.string(),
+    message: z.string(),
+    correlationId: z.string().optional(),
+    metadata: z.record(z.any()).optional()
+  })),
+  count: z.number(),
+  timestamp: z.string()
+});
+
+export const AdminLogsEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminLogsData }),
+  EnvelopeErrorSchema
+]);
+
+// Admin systems envelope schema
+const AdminSystemsData = z.object({
+  totalSystems: z.number(),
+  lastUpdated: z.string(),
+  databaseStatus: z.string(),
+  documentsCount: z.number(),
+  jobsCount: z.number()
+});
+
+export const AdminSystemsEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminSystemsData }),
+  EnvelopeErrorSchema
+]);
+
+// Admin pinecone envelope schema
+const AdminPineconeData = z.object({
+  status: z.string(),
+  index: z.string(),
+  namespace: z.string(),
+  vectors: z.union([z.string(), z.number()]),
+  totalVectors: z.number(),
+  dimension: z.union([z.string(), z.number()]),
+  indexFullness: z.string(),
+  lastChecked: z.string(),
+  sidecarHealth: z.object({
+    status: z.string(),
+    version: z.string().optional(),
+    tesseractAvailable: z.boolean().optional(),
+    error: z.string().optional()
+  })
+});
+
+export const AdminPineconeEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminPineconeData }),
+  EnvelopeErrorSchema
+]);

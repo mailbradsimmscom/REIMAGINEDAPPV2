@@ -4,7 +4,7 @@ import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
-import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
+import { DocumentJobsEnvelope } from '../../schemas/document.schema.js';
 import { 
   documentJobsQuerySchema, 
   documentJobsResponseSchema,
@@ -18,7 +18,7 @@ const router = express.Router();
 router.use(adminGate);
 
 // Apply response validation to all routes in this file
-router.use(validateResponse(EnvelopeSchema));
+router.use(validateResponse(DocumentJobsEnvelope));
 
 // GET /admin/docs/jobs - List jobs
 router.get('/', 

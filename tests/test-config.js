@@ -27,9 +27,16 @@ export const adminRequest = async (method, path) => {
   return req.set('x-admin-token', TEST_CONFIG.ADMIN_TOKEN);
 };
 
-export const publicRequest = (method, path) => {
+export const publicRequest = async (method, path) => {
   // Return a promise that resolves to the supertest request
-  return getApp().then(app => request(app)[method](path));
+  const app = await getApp();
+  return request(app)[method](path);
+};
+
+// Helper for POST requests with body
+export const postRequest = async (path, body) => {
+  const app = await getApp();
+  return request(app).post(path).send(body);
 };
 
 export const assertSuccess = (response, statusCode = 200) => {
@@ -41,7 +48,7 @@ export const assertError = (response, statusCode = 400, errorMessage = null) => 
   assert.strictEqual(response.status, statusCode);
   assert.strictEqual(response.body.success, false);
   if (errorMessage) {
-    assert.strictEqual(response.body.message, errorMessage);
+    assert.strictEqual(response.body.error.code, errorMessage);
   }
 };
 

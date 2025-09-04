@@ -1,6 +1,6 @@
 import express from 'express';
-import { validateResponse } from '../middleware/validateResponse.js';
-import { EnvelopeSchema } from '../schemas/envelope.schema.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 import ingestRouter from './ingest.route.js';
 import jobsRouter from './jobs.route.js';
 import jobStatusRouter from './job-status.route.js';

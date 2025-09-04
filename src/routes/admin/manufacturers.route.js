@@ -3,7 +3,8 @@ import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { adminManufacturersResponseSchema } from '../../schemas/admin.schema.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminManufacturersEnvelope } from '../../schemas/admin.schema.js';
 import { logger } from '../../utils/logger.js';
 import { z } from 'zod';
 
@@ -11,6 +12,9 @@ const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminManufacturersEnvelope));
 
 // Admin manufacturers query schema
 const adminManufacturersQuerySchema = z.object({
@@ -38,11 +42,12 @@ router.get('/',
 
     const envelope = {
       success: true,
-      data: data || []
+      data: {
+        total: data?.length || 0,
+        top: data?.slice(0, 10).map(m => ({ manufacturer_norm: m.name })) || [],
+        lastUpdated: new Date().toISOString()
+      }
     };
-
-    // Optional: Validate response schema if RESPONSE_VALIDATE=1
-    // adminManufacturersResponseSchema.parse(envelope);
 
     return enforceResponse(res, envelope);
     

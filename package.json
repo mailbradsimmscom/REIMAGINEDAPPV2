@@ -16,6 +16,8 @@
         "test:watch": "node --test --watch tests/",
         "test:baseline": "./tests/run-baseline.sh",
         "test:no-sidecar": "node --test tests/integration/",
+        "test:performance": "node scripts/performance-monitor.js",
+        "test:ci": "npm run test:no-sidecar && npm run test:performance",
         "zod:coverage": "node scripts/zod-coverage.mjs",
         "graph:js": "npx depcruise src --output-type text > docs/app-deps.txt",
         "graph:py": "~/.local/bin/pydeps python-sidecar/app -T svg -o docs/sidecar-deps.svg --noshow",

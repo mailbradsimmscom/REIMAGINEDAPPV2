@@ -54,6 +54,9 @@ export const healthQuerySchema = z.object({
   // Add query parameters if needed
 }).optional();
 
+// Empty query schema for simple GET routes
+export const EmptyQuery = z.object({}).passthrough();
+
 // Admin health schemas (separate from main health domain)
 export const adminHealthResponseSchema = z.object({
   success: z.literal(true),

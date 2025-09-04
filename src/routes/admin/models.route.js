@@ -2,14 +2,18 @@ import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { adminModelsQuerySchema, adminModelsResponseSchema } from '../../schemas/admin.schema.js';
+import { AdminModelsEnvelope, adminModelsQuerySchema } from '../../schemas/admin.schema.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminModelsEnvelope));
 
 // GET /admin/models - List models
 router.get('/', 
@@ -30,11 +34,16 @@ router.get('/',
 
       const envelope = {
         success: true,
-        data: data || []
+        data: {
+          models: data?.map(m => ({ 
+            model_norm: m.name, 
+            manufacturer_norm: m.manufacturer || 'Unknown' 
+          })) || [],
+          count: data?.length || 0,
+          manufacturer: req.query.manufacturer || 'all',
+          lastUpdated: new Date().toISOString()
+        }
       };
-
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // adminModelsResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope);
       

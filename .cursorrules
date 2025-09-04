@@ -1,217 +1,45 @@
-# REIMAGINEDAPPV2 – Cursor Rules (Do Not Drift)
+Style & runtime
 
-These rules are **hard invariants** for any AI/code changes in this repo. If an action would violate a rule, STOP and propose a plan instead.
+Node 20. ESM only. No console.log (use src/utils/logger.js).
 
----
+Read env only via src/config/env.js.
 
-## 0) Project invariants (never change silently)
-- **Runtime**: Node 20, ESM modules only.
-- **Architecture**: `routes → services → repositories`.
-  - Routes **never** call repositories directly.
-  - Repositories contain **all** DB/storage/network I/O.
-- **Config**: Read env **only** via `src/config/env.js`. Never `process.env.X` elsewhere.
-- **Logging**: Use `src/utils/logger.js`. No `console.log` in app code.
-- **Public API contract**: Every HTTP response is an envelope:
-  ```json
-  { "success": true|false, "data"?: any, "error"?: { "code": string, "message": string, "details"?: any }, "requestId"?: string }
+Architecture
 
-Do not change this shape.
-1) Never do
+Flow: routes → services → repositories.
 
-    Delete working code or remove functionality.
+Routes: thin, no I/O or business logic.
 
-    Change HTTP paths, methods, or query/param names without updating schemas, tests, and docs in the same PR.
+Services: business logic only.
 
-    Access DB/storage outside /repositories.
+Repositories: all DB/storage/network I/O.
 
-    Touch .env or any secrets, or hardcode keys/URLs.
+Forbidden: route → repository imports.
 
-    Add axios/other HTTP libs (use Node 20 fetch).
+HTTP contract
 
-    Introduce global state or singletons outside existing patterns.
+Every response: { success, data?, error?, requestId? } unchanged.
 
-    Commit artifacts (node_modules/, venv/, logs/, dumps, PDFs).
+Zod: validate input at the route edge; response gated by RESPONSE_VALIDATE=1 (CI on, prod off until proven).
 
-2) Always do
+Security & limits
 
-    Keep request & response Zod at the route edge:
+/admin/* is behind adminOnly (x-admin-token).
 
-        Validate params, query, and body on input.
+JSON body ≤ 2 MB (except explicit upload routes).
 
-        Validate response to the envelope (can be gated by flag, below).
+CORS allow-list only. Security headers on.
 
-    Return consistent error envelopes via centralized error handling.
+Files
 
-    Use services for business logic; keep routes thin.
+Max 250 lines per file (soft for tests/migrations).
 
-    Keep repositories pure I/O, no business rules.
+No *.routes.js (legacy). Use *.router.js (barrels) and *.route.js (leaf endpoints).
 
-    Add tests for every route change (happy, invalid, unauthorized).
+No artifacts in repo: node_modules/, logs, dumps, PDFs, venvs, builds.
 
-    Preserve behavioral parity when refactoring; if behavior must change, feature-flag it and update tests/docs.
+Changes
 
-3) Routing policy
+Any schema/data change ships with: SQL migration + Zod + tests + docs (same PR).
 
-    Express routers live in src/routes/*.router.js.
-
-        Legacy *.routes.js files are deprecated—do not modify or reintroduce them.
-
-    New endpoints must be added to a router file, not index.js.
-
-    Each router file should expose ≤ 5 handlers and be ≤ ~200 lines. If it grows:
-
-        Split by endpoint (e.g., routes/chat/list.route.js).
-
-        Re-export with a small index.js/barrel if needed.
-
-4) Zod policy
-
-    Schemas live in src/schemas/*.
-
-    Every handler MUST:
-
-        Validate input with Zod (params, query, body).
-
-        Call a service.
-
-        Shape the response to the envelope and (optionally) validate the response schema.
-
-    Response validation is controlled by env flag:
-
-        RESPONSE_VALIDATE=1 → validate and throw on mismatch.
-
-        Default may be off in local dev; always on in CI.
-
-5) Security & limits
-
-    Admin endpoints under /admin/* are gated by x-admin-token (see src/middleware/admin.js if present or implement). Do not downgrade.
-
-    JSON body limits: default ≤ 2MB. Larger only on explicit upload endpoints.
-
-    CORS: only allowed origins from config; do not broaden.
-
-    Set security headers (Helmet or equivalent). Do not remove.
-
-6) File boundaries & size
-
-    Soft guardrail: ≤ 250 lines per file. Use this as a signal, not a law:
-
-        Split when a file mixes concerns (routing + validation + domain logic + formatting).
-
-        Extract helpers in services/* (e.g., context-builder, reranker, sidecar-client).
-
-    Prefer one exported unit per file where practical (function/class/module).
-
-7) Repos & data access
-
-    All DB and storage access must go through /repositories/*.
-
-    Supabase, Pinecone, and external services are wrapped in repository/service clients; do not bypass.
-
-    Any schema/data shape change requires:
-
-        A migration file (SQL) alongside code,
-
-        Updated Zod types,
-
-        Updated tests,
-
-        A note in README_MACHINE.md/API_DOCUMENTATION.md.
-
-8) Sidecar contract (Python)
-
-    Call the sidecar only via the sidecar client (no ad-hoc fetches).
-
-    Do not change sidecar endpoints, payloads, or timeouts without:
-
-        updating the client,
-
-        adding integration tests (mocked),
-
-        and documenting the version in the client.
-
-9) Testing policy (Supertest + node:test)
-
-    Use Supertest for HTTP integration tests. Each router file gets tests covering:
-
-        ✅ Happy path,
-
-        ❌ Invalid input (Zod rejects),
-
-        🔒 Unauthorized/forbidden for /admin/*.
-
-    No network calls in tests—mock repositories/clients.
-
-    CI must run the test suite on every PR; failing tests block merges.
-
-10) Error handling
-
-    Throw typed errors from services and map them to the envelope in a central error middleware.
-
-    Do not inline try/catch in every handler unless it adds context; prefer central handling.
-
-11) Performance & observability
-
-    Use request IDs in logs; include requestId in the envelope when available.
-
-    Avoid N+1 calls; batch or cache in services when adding new queries.
-
-    Do not bump timeouts or limits without explaining why in the PR.
-
-12) Dependencies
-
-    Prefer platform built-ins: fetch, URL, crypto.
-
-    Avoid heavy libs unless justified in PR (size, security, long-term maintenance).
-
-    Keep package.json lean; remove unused deps when noticed.
-
-13) Pull request checklist (must pass)
-
-No route path/method/query changes without matching schema + tests + docs.
-
-All new/changed routes validate input and (if flag on) response with Zod.
-
-Router files remain ≤ 200 lines or are split by endpoint.
-
-No repository access from routes; services mediate all logic.
-
-No process.env usage outside src/config/env.js.
-
-No console.log; uses logger.
-
-No secrets added; .env.example updated if new vars required.
-
-    Supertest coverage added/updated; CI green.
-
-14) Allowed safe refactors (no behavior change)
-
-    Splitting files by concern/endpoint.
-
-    Replacing inline validation with validate() middleware.
-
-    Moving repository calls from routes into services.
-
-    Extracting pure helpers (formatters, mappers) under services/*.
-
-    Converting console.log to logger calls.
-
-15) Propose-first changes (require plan before code)
-
-    Any breaking API change (paths, methods, params).
-
-    Any schema or DB migration.
-
-    Changing sidecar contracts or timeouts.
-
-    Raising global body size limits or widening CORS.
-
-    Switching libraries or introducing non-standard deps.
-
-16) Housekeeping
-
-    .gitignore must exclude: node_modules/, python-sidecar/venv/, .venv/, logs/, *.log, dist/, build/, coverage caches, OS cruft.
-
-    Remove literal ... placeholders from source files; they are not valid code.
-
-    Legacy *.routes.js files are kept only until deletion; do not modify.
+Breaking API or sidecar contract: propose first, then code.

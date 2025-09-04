@@ -1,13 +1,18 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { 
+  ChatListEnvelope,
   chatListQuerySchema,
   chatListResponseSchema 
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(ChatListEnvelope));
 
 // GET /chat/enhanced/list - List chat sessions
 router.get('/', 
@@ -40,12 +45,8 @@ router.get('/',
           chats: transformedChats,
           count: transformedChats.length,
           nextCursor: null // TODO: implement cursor pagination
-        },
-        timestamp: new Date().toISOString()
+        }
       };
-
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // chatListResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope, 200);
     } catch (error) {

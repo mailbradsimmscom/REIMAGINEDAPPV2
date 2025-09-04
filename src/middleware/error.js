@@ -81,7 +81,8 @@ export function notFoundHandler(req, res) {
     error: {
       code: ERR.NOT_FOUND,
       message: 'Route not found'
-    }
+    },
+    requestId: res.locals?.requestId ?? null,
   });
 }
 
@@ -94,7 +95,8 @@ export function methodNotAllowed(allowedMethods = []) {
         code: ERR.METHOD_NOT_ALLOWED,
         message: `${req.method} method not allowed for ${req.url}`,
         details: { allowedMethods }
-      }
+      },
+      requestId: res.locals?.requestId ?? null,
     });
   };
 }

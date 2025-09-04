@@ -1,6 +1,7 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
+import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { ChatDeleteEnvelope } from '../../schemas/chat.schema.js';
 import { 
@@ -21,14 +22,15 @@ router.delete('/:sessionId',
       
       await enhancedChatService.deleteChatSession(sessionId);
       
-      res.json({
+      const envelope = {
         success: true,
         data: {
           sessionId,
           deleted: true
-        },
-        timestamp: new Date().toISOString()
-      });
+        }
+      };
+
+      return enforceResponse(res, envelope, 200);
     } catch (error) {
       next(error);
     }

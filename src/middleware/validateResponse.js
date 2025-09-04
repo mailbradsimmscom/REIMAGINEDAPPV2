@@ -1,7 +1,7 @@
 // src/middleware/validateResponse.js
 export const validateResponse = (schema) => (req, res, next) => {
   // Only gate when flag is on (RESPONSE_VALIDATE=1 in CI)
-  if (!process.env.RESPONSE_VALIDATE) return next();
+  if (process.env.RESPONSE_VALIDATE !== '1') return next();
 
   const origJson = res.json.bind(res);
 

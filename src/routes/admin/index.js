@@ -1,7 +1,5 @@
 import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
-import { validateResponse } from '../../middleware/validateResponse.js';
-import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 import dashboardRouter from './dashboard.route.js';
 import healthRouter from './health.route.js';
 import systemsRouter from './systems.route.js';
@@ -11,9 +9,6 @@ import modelsRouter from './models.route.js';
 import pineconeRouter from './pinecone.route.js';
 
 const router = express.Router();
-
-// Apply response validation to all admin routes
-router.use(validateResponse(EnvelopeSchema));
 
 // Mount dashboard route (no auth required)
 router.use('/', dashboardRouter);

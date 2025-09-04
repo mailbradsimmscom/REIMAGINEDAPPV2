@@ -1,0 +1,23 @@
+// src/repositories/sidecar.client.js
+import { getEnv } from '../config/env.js';
+
+export async function parsePdf(/* args */) {
+  if (getEnv({ loose: true }).NODE_ENV === 'test' || getEnv({ loose: true }).SIDECAR_MOCK === '1') {
+    // fast, deterministic fake
+    return { 
+      pages: 2, 
+      tables: 0, 
+      elements: [{type:'text', text:'ok'}] 
+    };
+  }
+  
+  // real call - this would be the actual implementation
+  const res = await fetch(`${getEnv({ loose: true }).PYTHON_SIDECAR_URL}/parse`, { 
+    method: 'POST', 
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ /* args */ })
+  });
+  
+  if (!res.ok) throw new Error(`Sidecar ${res.status}`);
+  return res.json();
+}

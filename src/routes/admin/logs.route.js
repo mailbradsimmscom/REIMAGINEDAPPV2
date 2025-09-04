@@ -1,13 +1,17 @@
 import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { adminLogsQuerySchema, adminLogsResponseSchema } from '../../schemas/admin.schema.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminLogsEnvelope, adminLogsQuerySchema } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 
 const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminLogsEnvelope));
 
 // GET /admin/logs - Get log files
 router.get('/', 
@@ -36,17 +40,13 @@ router.get('/',
     const logsData = {
       logs: [],
       count: 0,
-      level: level || 'all',
-      limit: limit || 100
+      timestamp: new Date().toISOString()
     };
 
     const envelope = {
       success: true,
       data: logsData
     };
-
-    // Optional: Validate response schema if RESPONSE_VALIDATE=1
-    // adminLogsResponseSchema.parse(envelope);
 
     return enforceResponse(res, envelope, 200);
   } catch (error) {

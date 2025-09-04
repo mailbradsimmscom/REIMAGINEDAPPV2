@@ -1,9 +1,14 @@
 import express from 'express';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { validate } from '../../middleware/validate.js';
-import { adminHealthResponseSchema, EmptyQuery } from '../../schemas/health.schema.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminHealthEnvelope } from '../../schemas/admin.schema.js';
+import { EmptyQuery } from '../../schemas/health.schema.js';
 
 const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminHealthEnvelope));
 
 // GET /admin/health - Get system health status
 router.get('/', 
@@ -14,12 +19,13 @@ router.get('/',
       success: true, 
       data: { 
         status: 'ok', 
-        ts: new Date().toISOString() 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        environment: process.env.NODE_ENV || 'development',
+        version: process.version
       } 
     };
-
-    // Optional: Validate response schema if RESPONSE_VALIDATE=1
-    // adminHealthResponseSchema.parse(envelope);
 
     return enforceResponse(res, envelope, 200);
   } catch (e) {

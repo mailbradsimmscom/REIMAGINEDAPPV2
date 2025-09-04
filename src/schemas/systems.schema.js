@@ -98,3 +98,85 @@ const SystemsGetOkSchema = z.object({
 
 // Discriminated union for systems get endpoint
 export const systemsGetResponseSchema = z.union([SystemsGetOkSchema, ErrorEnvelopeSchema]);
+
+// Systems envelope schemas for Phase 3 tightening
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
+
+// Systems list envelope schema
+const SystemsListData = z.object({
+  systems: z.array(z.object({
+    asset_uid: z.string(),
+    system_norm: z.string(),
+    subsystem_norm: z.string(),
+    manufacturer_norm: z.string(),
+    model_norm: z.string(),
+    canonical_model_id: z.string(),
+    description: z.string().nullable(),
+    manual_url: z.string().nullable(),
+    oem_page: z.string().nullable(),
+    spec_keywords: z.string().nullable(),
+    synonyms_fts: z.string(),
+    synonyms_human: z.string(),
+    search: z.string()
+  })),
+  nextCursor: z.string().nullable()
+});
+
+export const SystemsListEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: SystemsListData }),
+  EnvelopeErrorSchema
+]);
+
+// Systems search envelope schema
+const SystemsSearchData = z.object({
+  systems: z.array(z.object({
+    asset_uid: z.string(),
+    system_norm: z.string(),
+    subsystem_norm: z.string(),
+    manufacturer_norm: z.string(),
+    model_norm: z.string(),
+    canonical_model_id: z.string(),
+    description: z.string().nullable(),
+    manual_url: z.string().nullable(),
+    oem_page: z.string().nullable(),
+    spec_keywords: z.string().nullable(),
+    synonyms_fts: z.string(),
+    synonyms_human: z.string(),
+    search: z.string(),
+    rank: z.number()
+  })),
+  meta: z.object({
+    floor: z.number(),
+    maxRows: z.number(),
+    rawCount: z.number(),
+    filteredCount: z.number(),
+    query: z.string()
+  })
+});
+
+export const SystemsSearchEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: SystemsSearchData }),
+  EnvelopeErrorSchema
+]);
+
+// Systems get envelope schema
+const SystemsGetData = z.object({
+  asset_uid: z.string(),
+  system_norm: z.string(),
+  subsystem_norm: z.string(),
+  manufacturer_norm: z.string(),
+  model_norm: z.string(),
+  canonical_model_id: z.string(),
+  description: z.string().nullable(),
+  manual_url: z.string().nullable(),
+  oem_page: z.string().nullable(),
+  spec_keywords: z.string().nullable(),
+  synonyms_fts: z.string(),
+  synonyms_human: z.string(),
+  search: z.string()
+});
+
+export const SystemsGetEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: SystemsGetData }),
+  EnvelopeErrorSchema
+]);

@@ -8,7 +8,7 @@ export const ErrorObjectSchema = z.object({
 });
 
 export const EnvelopeBase = {
-  requestId: z.string().optional(),
+  requestId: z.string().nullable().optional(),
 };
 
 export const EnvelopeSuccessSchema = z.object({
@@ -21,7 +21,7 @@ export const EnvelopeSuccessSchema = z.object({
 export const EnvelopeErrorSchema = z.object({
   ...EnvelopeBase,
   success: z.literal(false),
-  data: z.undefined().optional(),
+  data: z.null().optional(),
   error: ErrorObjectSchema,
 });
 

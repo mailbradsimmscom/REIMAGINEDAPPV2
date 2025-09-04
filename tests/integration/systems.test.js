@@ -29,36 +29,36 @@ test('Systems Routes - Failure Path', async (t) => {
   await t.test('GET /systems/search without query returns 400', async () => {
     const response = await publicRequest('get', '/systems/search');
     
-    // Updated to match actual error message
+    // Updated to match actual error structure
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.message, 'Invalid request data');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   await t.test('GET /systems/search with empty query returns 400', async () => {
     const response = await publicRequest('get', '/systems/search?q=');
     
-    // Updated to match actual error message
+    // Updated to match actual error structure
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.message, 'Invalid request data');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   await t.test('GET /systems/search with short query returns 400', async () => {
     const response = await publicRequest('get', '/systems/search?q=a');
     
-    assertError(response, 500, 'Internal Server Error');
+    assertError(response, 400, 'BAD_REQUEST');
   });
 
   await t.test('GET /systems/search with invalid limit returns 400', async () => {
     const response = await publicRequest('get', '/systems/search?q=test&limit=invalid');
     
-    assertError(response, 500, 'Internal Server Error');
+    assertError(response, 400, 'BAD_REQUEST');
   });
 
-  await t.test('GET /systems/invalid-id returns 404', async () => {
+  await t.test('GET /systems/invalid-id returns 400', async () => {
     const response = await publicRequest('get', '/systems/invalid-id');
     
-    assertError(response, 400, 'Failed to get system: invalid input syntax for type uuid: "invalid-id"');
+    assertError(response, 400, 'BAD_REQUEST');
   });
 });

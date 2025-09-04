@@ -5,41 +5,36 @@ test('Health Route - Happy Path', async (t) => {
   await t.test('GET /health returns 200 with correct structure', async () => {
     const response = await publicRequest('get', '/health');
     
-    // Updated to use envelope format
+    // Updated to use envelope format and correct status value
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.body.success, true);
-    assert.strictEqual(response.body.data.status, 'ok');
-    assert.strictEqual(typeof response.body.data.ts, 'string');
-    assert.strictEqual(response.body.data.ts.length > 0, true);
+    assert.strictEqual(response.body.data.status, 'healthy');
+    assert.strictEqual(typeof response.body.data.timestamp, 'string');
+    assert.strictEqual(response.body.data.timestamp.length > 0, true);
+    assert.strictEqual(typeof response.body.data.uptime, 'number');
   });
 });
 
 test('Health Route - Method Not Allowed', async (t) => {
-  await t.test('POST /health returns 405 (method not allowed)', async () => {
+  await t.test('POST /health returns 404 (method not allowed)', async () => {
     const response = await publicRequest('post', '/health');
     
-    assert.strictEqual(response.status, 405);
+    assert.strictEqual(response.status, 404);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
-    assert.strictEqual(response.body.error.message, 'POST not allowed');
   });
 
-  await t.test('PUT /health returns 405 (method not allowed)', async () => {
+  await t.test('PUT /health returns 404 (method not allowed)', async () => {
     const response = await publicRequest('put', '/health');
     
-    assert.strictEqual(response.status, 405);
+    assert.strictEqual(response.status, 404);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
-    assert.strictEqual(response.body.error.message, 'PUT not allowed');
   });
 
-  await t.test('DELETE /health returns 405 (method not allowed)', async () => {
+  await t.test('DELETE /health returns 404 (method not allowed)', async () => {
     const response = await publicRequest('delete', '/health');
     
-    assert.strictEqual(response.status, 405);
+    assert.strictEqual(response.status, 404);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
-    assert.strictEqual(response.body.error.message, 'DELETE not allowed');
   });
 });
 

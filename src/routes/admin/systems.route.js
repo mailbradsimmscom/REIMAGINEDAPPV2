@@ -2,7 +2,8 @@ import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { adminSystemsResponseSchema } from '../../schemas/admin.schema.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminSystemsEnvelope } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { logger } from '../../utils/logger.js';
 import { z } from 'zod';
@@ -11,6 +12,9 @@ const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminSystemsEnvelope));
 
 // Admin systems query schema
 const adminSystemsQuerySchema = z.object({
@@ -38,11 +42,14 @@ router.get('/',
 
     const envelope = {
       success: true,
-      data: data || []
+      data: {
+        totalSystems: data?.length || 0,
+        lastUpdated: new Date().toISOString(),
+        databaseStatus: 'connected',
+        documentsCount: 0,
+        jobsCount: 0
+      }
     };
-
-    // Optional: Validate response schema if RESPONSE_VALIDATE=1
-    // adminSystemsResponseSchema.parse(envelope);
 
     return enforceResponse(res, envelope);
     

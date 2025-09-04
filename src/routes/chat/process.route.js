@@ -1,10 +1,11 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
-import { methodNotAllowed } from '../../middleware/methodNotAllowed.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
 import { 
+  ChatProcessEnvelope,
   chatProcessRequestSchema,
   chatProcessResponseSchema 
 } from '../../schemas/chat.schema.js';
@@ -14,8 +15,8 @@ const router = express.Router();
 // Apply service guards - chat processing requires Supabase, OpenAI, and Pinecone
 router.use(requireServices(['supabase', 'openai', 'pinecone']));
 
-// Add method not allowed for non-POST requests
-router.all('/', methodNotAllowed);
+// Apply response validation to all routes in this file
+router.use(validateResponse(ChatProcessEnvelope));
 
 // POST /chat/enhanced/process - Process chat message
 router.post('/', 
@@ -51,12 +52,8 @@ router.post('/',
           systemsContext: result.systemsContext,
           enhancedQuery: result.enhancedQuery,
           sources: result.sources
-        },
-        timestamp: new Date().toISOString()
+        }
       };
-
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // chatProcessResponseSchema.parse(envelope);
 
       return enforceResponse(res, envelope, 200);
     } catch (error) {
@@ -64,5 +61,16 @@ router.post('/',
     }
   }
 );
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return enforceResponse(res, {
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
 
 export default router;

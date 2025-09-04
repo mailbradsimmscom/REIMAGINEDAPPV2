@@ -2,7 +2,8 @@ import express from 'express';
 import { logger } from '../../utils/logger.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
-import { adminPineconeResponseSchema } from '../../schemas/admin.schema.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminPineconeEnvelope } from '../../schemas/admin.schema.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { z } from 'zod';
 
@@ -10,6 +11,9 @@ const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminPineconeEnvelope));
 
 // Admin pinecone query schema
 const adminPineconeQuerySchema = z.object({}).passthrough();
@@ -83,9 +87,6 @@ router.get('/',
       success: true,
       data: pineconeData
     };
-
-    // Optional: Validate response schema if RESPONSE_VALIDATE=1
-    // adminPineconeResponseSchema.parse(envelope);
 
     return enforceResponse(res, envelope);
     

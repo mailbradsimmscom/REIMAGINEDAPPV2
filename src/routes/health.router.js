@@ -3,6 +3,7 @@ import express from 'express';
 import { getExternalServiceStatus } from '../services/guards/index.js';
 import { validate } from '../middleware/validate.js';
 import { validateResponse } from '../middleware/validateResponse.js';
+import { enforceResponse } from '../middleware/enforceResponse.js';
 import { 
   BasicHealthEnvelope, 
   ServiceStatusEnvelope, 
@@ -17,15 +18,16 @@ const router = express.Router();
 router.get('/', 
   validateResponse(BasicHealthEnvelope),
   (req, res) => {
-  res.json({
+  const envelope = {
     success: true,
     data: {
       status: 'healthy',
       timestamp: new Date().toISOString(),
       uptime: process.uptime()
-    },
-    requestId: res.locals?.requestId ?? null
-  });
+    }
+  };
+
+  return enforceResponse(res, envelope, 200);
 });
 
 // GET /health/services - Check external service status
@@ -37,26 +39,28 @@ router.get('/services',
     
     const allServicesHealthy = Object.values(serviceStatus).every(status => status === true);
     
-    res.json({
+    const envelope = {
       success: true,
       data: {
         status: allServicesHealthy ? 'healthy' : 'degraded',
         services: serviceStatus,
         timestamp: new Date().toISOString()
-      },
-      requestId: res.locals?.requestId ?? null
-    });
+      }
+    };
+
+    return enforceResponse(res, envelope, 200);
   } catch (error) {
-    res.status(503).json({
+    const envelope = {
       success: false,
       data: null,
       error: {
         code: 'HEALTH_CHECK_FAILED',
         message: 'Failed to check service status',
         details: { error: error.message }
-      },
-      requestId: res.locals?.requestId ?? null
-    });
+      }
+    };
+
+    return enforceResponse(res, envelope, 503);
   }
 });
 
@@ -71,37 +75,40 @@ router.get('/ready',
     const isReady = serviceStatus.supabase === true;
     
     if (isReady) {
-      res.json({
+      const envelope = {
         success: true,
         data: {
           status: 'ready',
           timestamp: new Date().toISOString()
-        },
-        requestId: res.locals?.requestId ?? null
-      });
+        }
+      };
+
+      return enforceResponse(res, envelope, 200);
     } else {
-      res.status(503).json({
+      const envelope = {
         success: false,
         data: null,
         error: {
           code: 'NOT_READY',
           message: 'Application not ready - core services unavailable',
           details: { services: serviceStatus }
-        },
-        requestId: res.locals?.requestId ?? null
-      });
+        }
+      };
+
+      return enforceResponse(res, envelope, 503);
     }
   } catch (error) {
-    res.status(503).json({
+    const envelope = {
       success: false,
       data: null,
       error: {
         code: 'READINESS_CHECK_FAILED',
         message: 'Failed to check readiness',
         details: { error: error.message }
-      },
-      requestId: res.locals?.requestId ?? null
-    });
+      }
+    };
+
+    return enforceResponse(res, envelope, 503);
   }
 });
 

@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "data": {
+    "status": "healthy",
+    "timestamp": "2025-09-04T13:05:00.000Z",
+    "uptime": 123.456
+  },
+  "requestId": null
+}
