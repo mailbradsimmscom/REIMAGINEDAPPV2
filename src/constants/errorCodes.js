@@ -8,5 +8,7 @@ export const ERR = {
   INTERNAL: 'INTERNAL',                    // 500
   ADMIN_DISABLED: 'ADMIN_DISABLED',        // 401 (admin not configured)
   PINECONE_DISABLED: 'PINECONE_DISABLED',  // 200/503 (choose one & stick to it)
-  SUPABASE_DISABLED: 'SUPABASE_DISABLED',
+  SUPABASE_DISABLED: 'SUPABASE_DISABLED',  // 503 (service unavailable)
+  OPENAI_DISABLED: 'OPENAI_DISABLED',      // 503 (service unavailable)
+  SIDECAR_DISABLED: 'SIDECAR_DISABLED',    // 503 (service unavailable)
 };

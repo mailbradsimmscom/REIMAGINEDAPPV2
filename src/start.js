@@ -1,27 +1,29 @@
+// src/start.js
+import 'dotenv/config';
 import app from './index.js';
+import { getEnv } from './config/env.js';
 import { logger } from './utils/logger.js';
 
-// Start server
-const startServer = async () => {
-  const { getEnv } = await import('./config/env.js');
-  const env = getEnv();
-  const port = env.PORT || 3000;
-  
-  app.listen(port, () => {
-    logger.info('Express server started', { 
-      port: port,
-      routes: {
-        health: `http://localhost:${port}/health`,
-        systems: `http://localhost:${port}/systems`,
-        chat: `http://localhost:${port}/chat/enhanced`,
-        admin: `http://localhost:${port}/admin`,
-        pinecone: `http://localhost:${port}/pinecone`
-      }
-    });
-  });
-};
+function getPort() {
+  const { PORT } = getEnv({ loose: true });
+  const port = Number(PORT) || 3000;
+  return Number.isFinite(port) ? port : 3000;
+}
 
-// Start the server
-startServer();
+const port = getPort();
+const server = app.listen(port, () => {
+  logger.info(`Server listening on http://localhost:${port}`);
+});
+
+// Never call process.exit() here.
+// Let the global error handler handle unexpected exceptions.
+process.on('unhandledRejection', (err) => {
+  logger.error('unhandledRejection', { message: err?.message });
+});
+process.on('uncaughtException', (err) => {
+  logger.error('uncaughtException', { message: err?.message });
+});
+
+export default server;
 
 

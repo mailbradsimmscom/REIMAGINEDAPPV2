@@ -21,7 +21,19 @@ import adminRouter from './routes/admin/index.js';
 
 import pineconeRepository from './repositories/pinecone.repository.js';
 import { attachConfigInspector } from './debug/config.js';
-import { mountRouteMap } from './debug/routes.js';
+import { attachRouteDebugger } from './debug/routes.js';
+
+// Safe mount function to identify failing routers
+function safeMount(base, router) {
+  try { 
+    app.use(base, router); 
+    logger.info('mounted', { base }); 
+  }
+  catch (e) { 
+    logger.error('MOUNT_FAILED', { base, error: e.message }); 
+    throw e; 
+  }
+}
 
 // --- global headers / rate limit (keep these light; helmet is already in app.js) ---
 app.use(securityHeaders);
@@ -36,17 +48,17 @@ pineconeRepository.logNamespaceChoiceOnce().catch(err => {
 attachConfigInspector(app);
 
 // --- mount routers ---
-app.use('/health', healthRouter);
-app.use('/systems', systemsRouter);
-app.use('/chat/enhanced', chatRouter);
-app.use('/chat', chatRouter);  // alias for backward compatibility
-app.use('/admin/docs', documentRouter);
-app.use('/document', documentRouter);  // alias for backward compatibility
-app.use('/pinecone', pineconeRouter);
-app.use('/admin', adminRouter);
+safeMount('/health', healthRouter);
+safeMount('/systems', systemsRouter);
+safeMount('/chat/enhanced', chatRouter);
+safeMount('/chat', chatRouter);  // alias for backward compatibility
+safeMount('/admin/docs', documentRouter);
+safeMount('/document', documentRouter);  // alias for backward compatibility
+safeMount('/pinecone', pineconeRouter);
+safeMount('/admin', adminRouter);
 
-// Mount route map (dev only) - AFTER routers are mounted
-mountRouteMap(app);
+// Mount route debugger (dev only) - AFTER routers are mounted
+attachRouteDebugger(app);
 
 // --- static/public (optional; app.js already serves / and /app.js) ---
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

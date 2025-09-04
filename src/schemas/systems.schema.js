@@ -21,6 +21,11 @@ export const systemsGetPathSchema = z.object({
   assetUid: z.string().min(1, 'Asset UID is required')
 });
 
+// UUID validation schema for params
+export const UUIDParam = z.object({
+  assetUid: z.string().uuid('assetUid must be a valid UUID'),
+});
+
 // Systems list success response schema
 const SystemsListOkSchema = z.object({
   success: z.literal(true),

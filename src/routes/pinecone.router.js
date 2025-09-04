@@ -21,11 +21,7 @@ async function getPineService() {
 }
 
 // Helper function to check if Pinecone is configured
-async function isPineconeConfigured() {
-  const { getEnv } = await import('../config/env.js');
-  const { PINECONE_API_KEY, PINECONE_INDEX } = getEnv();
-  return PINECONE_API_KEY && PINECONE_INDEX;
-}
+import { isPineconeConfigured } from '../services/pinecone.guard.js';
 
 // Method not allowed handler
 function methodNotAllowed(req, res) {
@@ -43,7 +39,7 @@ router.post('/search',
   validate(pineconeSearchRequestSchema, 'body'),
   async (req, res, next) => {
     try {
-      if (!(await isPineconeConfigured())) {
+      if (!isPineconeConfigured()) {
         const envelope = {
           success: false,
           error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
@@ -76,7 +72,7 @@ router.get('/stats',
   validate(pineconeStatsQuerySchema, 'query'),
   async (req, res, next) => {
     try {
-      if (!(await isPineconeConfigured())) {
+      if (!isPineconeConfigured()) {
         const envelope = {
           success: false,
           error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
@@ -106,7 +102,7 @@ router.get('/documents/:docId/chunks',
   validate(pineconeDocumentChunksPathSchema, 'params'),
   async (req, res, next) => {
     try {
-      if (!(await isPineconeConfigured())) {
+      if (!isPineconeConfigured()) {
         const envelope = {
           success: false,
           error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
@@ -137,7 +133,7 @@ router.post('/query',
   validate(pineconeQueryRequestSchema, 'body'),
   async (req, res, next) => {
     try {
-      if (!(await isPineconeConfigured())) {
+      if (!isPineconeConfigured()) {
         const envelope = {
           success: false,
           error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }

@@ -1,4 +1,5 @@
 import { listSystems, getSystemByAssetUid, searchSystems } from '../repositories/systems.repository.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
 
 function validateLimit(limit) {
   const n = Number(limit);
@@ -6,8 +7,20 @@ function validateLimit(limit) {
   return Math.min(n, 100);
 }
 
+// Helper function to check if Supabase is available
+async function checkSupabaseAvailability() {
+  if (!isSupabaseConfigured()) {
+    const error = new Error('Supabase not configured');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+}
+
 export async function listSystemsSvc({ limit, cursor } = {}) {
   try {
+    // Check Supabase availability before listing systems
+    await checkSupabaseAvailability();
+    
     const safeLimit = validateLimit(limit);
     const rows = await listSystems({ limit: safeLimit, cursor });
     const nextCursor = rows.length > 0 ? rows[rows.length - 1].asset_uid : null;
@@ -25,6 +38,9 @@ export async function listSystemsSvc({ limit, cursor } = {}) {
 
 export async function getSystemSvc(assetUid) {
   try {
+    // Check Supabase availability before getting system
+    await checkSupabaseAvailability();
+    
     if (!assetUid || String(assetUid).trim() === '') {
       throw new Error('asset_uid is required');
     }
@@ -55,6 +71,9 @@ function validateQuery(q) {
 
 export async function searchSystemsSvc(q, { limit } = {}) {
   try {
+    // Check Supabase availability before searching systems
+    await checkSupabaseAvailability();
+    
     const safeQ = validateQuery(q);
     const { getEnv } = await import('../config/env.js');
     const { searchMaxRows = 8, searchRankFloor = 0.5 } = getEnv();

@@ -4,11 +4,39 @@ import { enhanceQuery, summarizeConversation, generateChatName, synthesizeAnswer
 import chatRepository, { deleteChatMessages, deleteChatThreads, deleteChatSession as deleteSessionFromRepo } from '../repositories/chat.repository.js';
 import { logger } from '../utils/logger.js';
 import { personality } from '../config/personality.js';
+import { isSupabaseConfigured, isOpenAIConfigured, isPineconeConfigured } from '../services/guards/index.js';
+
+// Helper function to check if required services are available
+async function checkServiceAvailability() {
+  const errors = [];
+  
+  if (!isSupabaseConfigured()) {
+    errors.push('SUPABASE_DISABLED');
+  }
+  
+  if (!isOpenAIConfigured()) {
+    errors.push('OPENAI_DISABLED');
+  }
+  
+  if (!isPineconeConfigured()) {
+    errors.push('PINECONE_DISABLED');
+  }
+  
+  if (errors.length > 0) {
+    const error = new Error(`Required services not configured: ${errors.join(', ')}`);
+    error.code = errors[0]; // Use the first error code
+    error.disabledServices = errors;
+    throw error;
+  }
+}
 
 export async function processUserMessage(userQuery, { sessionId, threadId, contextSize = 5 } = {}) {
   const requestLogger = logger.createRequestLogger();
   
   try {
+    // Check service availability before processing
+    await checkServiceAvailability();
+    
     requestLogger.info('Processing user message', { 
       userQuery: userQuery.substring(0, 100), 
       sessionId, 
@@ -407,10 +435,15 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
   }
 }
 
-
-
 export async function getChatHistory(threadId, { limit = 50 } = {}) {
   try {
+    // Check Supabase availability before getting chat history
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
     const messages = await chatRepository.getChatMessages(threadId, { limit });
     return messages;
   } catch (error) {
@@ -420,6 +453,13 @@ export async function getChatHistory(threadId, { limit = 50 } = {}) {
 
 export async function listUserChats({ limit = 25, cursor } = {}) {
   try {
+    // Check Supabase availability before listing chats
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
     const sessions = await chatRepository.listChatSessions({ limit, cursor });
     
     // Get the latest thread for each session
@@ -441,6 +481,13 @@ export async function listUserChats({ limit = 25, cursor } = {}) {
 
 export async function getChatContext(threadId) {
   try {
+    // Check Supabase availability before getting chat context
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
     const thread = await chatRepository.getChatThread(threadId);
     const session = await chatRepository.getChatSession(thread.session_id);
     const messages = await chatRepository.getChatMessages(threadId, { limit: 10 });
@@ -464,6 +511,13 @@ export async function deleteChatSession(sessionId) {
   const requestLogger = logger.createRequestLogger();
   
   try {
+    // Check Supabase availability before deleting chat session
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
     requestLogger.info('Deleting chat session', { sessionId });
     
     // Get the session to find all associated threads

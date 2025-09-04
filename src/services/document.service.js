@@ -5,21 +5,50 @@ import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/sup
 import documentRepository from '../repositories/document.repository.js';
 import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
+import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
 
 class DocumentService {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
   }
 
+  // Helper method to check if Supabase is available
+  async checkSupabaseAvailability() {
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      const error = new Error('Supabase client not available');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
+    return supabase;
+  }
+
+  // Helper method to check if Python sidecar is available
+  checkSidecarAvailability() {
+    if (!isSidecarConfigured()) {
+      const error = new Error('Python sidecar not configured');
+      error.code = 'SIDECAR_DISABLED';
+      throw error;
+    }
+  }
+
   async getSupabase() {
     if (!this._supabase) {
-      this._supabase = await getSupabaseClient();
+      this._supabase = await this.checkSupabaseAvailability();
     }
     return this._supabase;
   }
 
   async getSupabaseStorage() {
     if (!this._supabaseStorage) {
+      await this.checkSupabaseAvailability(); // Check before getting storage
       this._supabaseStorage = await getSupabaseStorageClient();
     }
     return this._supabaseStorage;
@@ -94,6 +123,9 @@ class DocumentService {
   // Create document ingest job
   async createIngestJob(fileBuffer, metadata, options = {}) {
     try {
+      // Check Supabase availability before creating job
+      await this.checkSupabaseAvailability();
+
       const {
         doc_id,
         ocr_enabled = true,
@@ -192,6 +224,9 @@ class DocumentService {
   // Get job status
   async getJobStatus(jobId) {
     try {
+      // Check Supabase availability before getting job status
+      await this.checkSupabaseAvailability();
+      
       const status = await documentRepository.getJobStatus(jobId);
       return status;
     } catch (error) {
@@ -206,6 +241,9 @@ class DocumentService {
   // List recent jobs
   async listJobs(limit = 50, offset = 0) {
     try {
+      // Check Supabase availability before listing jobs
+      await this.checkSupabaseAvailability();
+      
       const jobs = await documentRepository.listJobs(limit, offset);
       return jobs;
     } catch (error) {
@@ -217,6 +255,9 @@ class DocumentService {
   // List documents
   async listDocuments(limit = 50, offset = 0) {
     try {
+      // Check Supabase availability before listing documents
+      await this.checkSupabaseAvailability();
+      
       const documents = await documentRepository.listDocuments(limit, offset);
       return documents;
     } catch (error) {
@@ -228,6 +269,9 @@ class DocumentService {
   // Get document details
   async getDocument(docId) {
     try {
+      // Check Supabase availability before getting document
+      await this.checkSupabaseAvailability();
+      
       const document = await documentRepository.getDocument(docId);
       const chunks = await documentRepository.getChunksByDocId(docId);
       
@@ -248,6 +292,10 @@ class DocumentService {
   // Process job (called by worker)
   async processJob(jobId) {
     try {
+      // Check both Supabase and sidecar availability before processing
+      await this.checkSupabaseAvailability();
+      this.checkSidecarAvailability();
+
       const job = await documentRepository.getJob(jobId);
       if (!job) {
         throw new Error('Job not found');
@@ -327,6 +375,9 @@ class DocumentService {
   // Call Python sidecar for document processing
   async callPythonSidecar(fileBuffer, job, document, fileName) {
     try {
+      // Check sidecar availability before calling
+      this.checkSidecarAvailability();
+
       const formData = new FormData();
       
       // Add file
@@ -388,6 +439,9 @@ class DocumentService {
 
   // Simulate processing for testing
   async simulateProcessing(jobId) {
+    // Check Supabase availability before simulating
+    await this.checkSupabaseAvailability();
+    
     const stages = ['parsing', 'embedding', 'upserting'];
     
     for (const stage of stages) {

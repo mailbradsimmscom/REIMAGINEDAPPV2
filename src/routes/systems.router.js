@@ -2,16 +2,21 @@ import express from 'express';
 import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
 import { validate } from '../middleware/validate.js';
 import { enforceResponse } from '../middleware/enforceResponse.js';
+import { requireSupabase } from '../middleware/serviceGuards.js';
 import { 
   systemsListQuerySchema, 
   systemsListResponseSchema,
   systemsSearchQuerySchema,
   systemsSearchResponseSchema,
   systemsGetPathSchema,
-  systemsGetResponseSchema
+  systemsGetResponseSchema,
+  UUIDParam
 } from '../schemas/systems.schema.js';
 
 const router = express.Router();
+
+// Apply service guards - systems routes require Supabase
+router.use(requireSupabase());
 
 // GET /systems/search - Search systems (MUST come before /:assetUid)
 router.get('/search', 
@@ -60,31 +65,21 @@ router.get('/',
 );
 
 // GET /systems/:assetUid - Get specific system
-router.get('/:assetUid', 
-  validate(systemsGetPathSchema, 'params'),
+router.get('/:assetUid',
+  validate(UUIDParam, 'params'),
   async (req, res, next) => {
     try {
-      const { assetUid } = req.params;
-      
-      const item = await getSystemSvc(assetUid);
-      if (!item) {
-        const error = new Error('System not found');
-        error.status = 404;
-        error.context = { assetUid };
-        throw error;
-      }
-      
+      const { assetUid } = req.validated?.params ?? req.params;
+      const result = await getSystemSvc(assetUid);
       const envelope = {
         success: true,
-        data: item
+        data: result
       };
-
       // Optional: Validate response schema if RESPONSE_VALIDATE=1
       // systemsGetResponseSchema.parse(envelope);
-
       return enforceResponse(res, envelope, 200);
-    } catch (error) {
-      next(error);
+    } catch (err) {
+      return next(err);
     }
   }
 );

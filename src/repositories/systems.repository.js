@@ -1,9 +1,28 @@
 import { getSupabaseClient } from './supabaseClient.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
 
 const TABLE = 'systems';
 
-export async function listSystems({ limit = 25, cursor } = {}) {
+// Helper function to check if Supabase is available
+async function checkSupabaseAvailability() {
+  if (!isSupabaseConfigured()) {
+    const error = new Error('Supabase not configured');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
   const supabase = await getSupabaseClient();
+  if (!supabase) {
+    const error = new Error('Supabase client not available');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  return supabase;
+}
+
+export async function listSystems({ limit = 25, cursor } = {}) {
+  const supabase = await checkSupabaseAvailability();
   let query = supabase.from(TABLE).select('*').order('asset_uid', { ascending: true }).limit(limit);
   if (cursor) {
     query = query.gt('asset_uid', cursor);
@@ -19,7 +38,7 @@ export async function listSystems({ limit = 25, cursor } = {}) {
 }
 
 export async function getSystemByAssetUid(assetUid) {
-  const supabase = await getSupabaseClient();
+  const supabase = await checkSupabaseAvailability();
   const { data, error } = await supabase
     .from(TABLE)
     .select('*')
@@ -36,7 +55,7 @@ export async function getSystemByAssetUid(assetUid) {
 }
 
 export async function searchSystems(query, { limit = 10 } = {}) {
-  const supabase = await getSupabaseClient();
+  const supabase = await checkSupabaseAvailability();
   
   try {
     const { data, error } = await supabase.rpc('search_systems', { q: query, top_n: limit });
@@ -82,8 +101,9 @@ export async function searchSystems(query, { limit = 10 } = {}) {
         throw err;
       }
       
-      if (!row.id || typeof row.id !== 'string') {
-        const err = new Error(`Missing or invalid id at index ${index}`);
+      // Expect full system object with rank
+      if (!row.asset_uid || typeof row.asset_uid !== 'string') {
+        const err = new Error(`Missing or invalid asset_uid at index ${index}`);
         err.context = { 
           operation: 'search_rpc', 
           query, 
@@ -106,7 +126,8 @@ export async function searchSystems(query, { limit = 10 } = {}) {
         throw err;
       }
       
-      return { id: row.id, rank: row.rank };
+      // Return the full system object with rank
+      return row;
     });
     
     return results;

@@ -1,12 +1,31 @@
 import { getSupabaseClient } from './supabaseClient.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
 
 const SESSIONS_TABLE = 'chat_sessions';
 const THREADS_TABLE = 'chat_threads';
 const MESSAGES_TABLE = 'chat_messages';
 
+// Helper function to check if Supabase is available
+async function checkSupabaseAvailability() {
+  if (!isSupabaseConfigured()) {
+    const error = new Error('Supabase not configured');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    const error = new Error('Supabase client not available');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  return supabase;
+}
+
 export async function createChatSession({ name, description, metadata = {} } = {}) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
@@ -38,7 +57,7 @@ export async function createChatSession({ name, description, metadata = {} } = {
 
 export async function getChatSession(sessionId) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
@@ -64,7 +83,7 @@ export async function getChatSession(sessionId) {
 
 export async function listChatSessions({ limit = 25, cursor } = {}) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     let query = supabase
       .from(SESSIONS_TABLE)
@@ -96,7 +115,7 @@ export async function listChatSessions({ limit = 25, cursor } = {}) {
 
 export async function createChatThread({ sessionId, name, metadata = {} } = {}) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(THREADS_TABLE)
@@ -128,7 +147,7 @@ export async function createChatThread({ sessionId, name, metadata = {} } = {}) 
 
 export async function getChatThread(threadId) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(THREADS_TABLE)
@@ -154,7 +173,7 @@ export async function getChatThread(threadId) {
 
 export async function listChatThreads(sessionId, { limit = 25, cursor } = {}) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     let query = supabase
       .from(THREADS_TABLE)
@@ -187,7 +206,7 @@ export async function listChatThreads(sessionId, { limit = 25, cursor } = {}) {
 
 export async function createChatMessage({ threadId, role, content, metadata = {} } = {}) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(MESSAGES_TABLE)
@@ -219,7 +238,7 @@ export async function createChatMessage({ threadId, role, content, metadata = {}
 
 export async function getChatMessages(threadId, { limit = 50, cursor } = {}) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     let query = supabase
       .from(MESSAGES_TABLE)
@@ -252,7 +271,7 @@ export async function getChatMessages(threadId, { limit = 50, cursor } = {}) {
 
 export async function updateChatSession(sessionId, updates) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
@@ -282,7 +301,7 @@ export async function updateChatSession(sessionId, updates) {
 
 export async function updateChatThread(threadId, updates) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { data, error } = await supabase
       .from(THREADS_TABLE)
@@ -312,7 +331,7 @@ export async function updateChatThread(threadId, updates) {
 
 export async function deleteChatMessages(threadId) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { error } = await supabase
       .from(MESSAGES_TABLE)
@@ -337,7 +356,7 @@ export async function deleteChatMessages(threadId) {
 
 export async function deleteChatThreads(sessionId) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { error } = await supabase
       .from(THREADS_TABLE)
@@ -362,7 +381,7 @@ export async function deleteChatThreads(sessionId) {
 
 export async function deleteChatSession(sessionId) {
   try {
-    const supabase = await getSupabaseClient();
+    const supabase = await checkSupabaseAvailability();
     
     const { error } = await supabase
       .from(SESSIONS_TABLE)

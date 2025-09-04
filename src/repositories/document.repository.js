@@ -1,14 +1,33 @@
 import { getSupabaseClient } from './supabaseClient.js';
 import { logger } from '../utils/logger.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
 
 class DocumentRepository {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
   }
 
+  // Helper method to check if Supabase is available
+  async checkSupabaseAvailability() {
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      const error = new Error('Supabase client not available');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
+    return supabase;
+  }
+
   // Job Management
   async createJob(jobData) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('jobs')
@@ -27,7 +46,7 @@ class DocumentRepository {
   }
 
   async getJob(jobId) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('jobs')
@@ -44,7 +63,7 @@ class DocumentRepository {
   }
 
   async updateJobStatus(jobId, status, updates = {}) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const updateData = {
         status,
@@ -78,7 +97,7 @@ class DocumentRepository {
   }
 
   async updateJobProgress(jobId, counters) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('jobs')
@@ -100,7 +119,7 @@ class DocumentRepository {
 
   // Document Management
   async createOrUpdateDocument(docData) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('documents')
@@ -122,7 +141,7 @@ class DocumentRepository {
   }
 
   async getDocument(docId) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('documents')
@@ -139,7 +158,7 @@ class DocumentRepository {
   }
 
   async updateDocumentStats(docId, stats) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('documents')
@@ -163,7 +182,7 @@ class DocumentRepository {
   }
 
   async updateDocumentStoragePath(docId, storagePath) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('documents')
@@ -187,7 +206,7 @@ class DocumentRepository {
 
   // Document Chunks Management
   async createChunks(chunks) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       if (chunks.length === 0) return [];
 
@@ -207,7 +226,7 @@ class DocumentRepository {
   }
 
   async getChunksByDocId(docId) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('document_chunks')
@@ -224,7 +243,7 @@ class DocumentRepository {
   }
 
   async getJobsByStatus(status, limit = 10) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('jobs')
@@ -242,7 +261,7 @@ class DocumentRepository {
   }
 
   async getChunks(docId) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('document_chunks')
@@ -259,7 +278,7 @@ class DocumentRepository {
   }
 
   async checkChunkExists(chunkId) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('document_chunks')
@@ -277,7 +296,7 @@ class DocumentRepository {
 
   // Utility Methods
   async getJobStatus(jobId) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .rpc('get_job_status', { job_uuid: jobId });
@@ -291,7 +310,7 @@ class DocumentRepository {
   }
 
   async listJobs(limit = 50, offset = 0) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('jobs')
@@ -308,7 +327,7 @@ class DocumentRepository {
   }
 
   async listDocuments(limit = 50, offset = 0) {
-    const supabase = await getSupabaseClient();
+    const supabase = await this.checkSupabaseAvailability();
     try {
       const { data, error } = await supabase
         .from('documents')

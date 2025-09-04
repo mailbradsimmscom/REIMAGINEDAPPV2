@@ -3,12 +3,16 @@ import * as enhancedChatService from '../../services/enhanced-chat.service.js';
 import { validate } from '../../middleware/validate.js';
 import { enforceResponse } from '../../middleware/enforceResponse.js';
 import { methodNotAllowed } from '../../middleware/methodNotAllowed.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { 
   chatProcessRequestSchema,
   chatProcessResponseSchema 
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
+
+// Apply service guards - chat processing requires Supabase, OpenAI, and Pinecone
+router.use(requireServices(['supabase', 'openai', 'pinecone']));
 
 // Add method not allowed for non-POST requests
 router.all('/', methodNotAllowed);

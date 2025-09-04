@@ -27,6 +27,31 @@ export function errorHandler(err, req, res, next) {
     });
   }
   
+  // Handle service guard errors (return 503 Service Unavailable)
+  if (err.code === ERR.SUPABASE_DISABLED || 
+      err.code === ERR.PINECONE_DISABLED || 
+      err.code === ERR.OPENAI_DISABLED || 
+      err.code === ERR.SIDECAR_DISABLED) {
+    
+    requestLogger.warn('Service unavailable', { 
+      service: err.code,
+      message: err.message,
+      url: req.url,
+      method: req.method
+    });
+    
+    return res.status(503).json({
+      success: false,
+      data: null,
+      error: { 
+        code: err.code, 
+        message: err.message || 'Service temporarily unavailable',
+        details: { service: err.code.replace('_DISABLED', '').toLowerCase() }
+      },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+  
   // Handle other errors
   const status = Number(err.status) || 500;
   const code = err.code || (status === 400 ? ERR.BAD_REQUEST : ERR.INTERNAL);

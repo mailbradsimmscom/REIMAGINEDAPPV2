@@ -18,8 +18,19 @@ export function validate(schema, target = 'body') {
       const result = schema.safeParse(data);
       
       if (!result.success) {
+        // Get the issues array safely
+        let issuesArray = [];
+        if (result.error.errors && Array.isArray(result.error.errors)) {
+          issuesArray = result.error.errors;
+        } else if (result.error.issues && Array.isArray(result.error.issues)) {
+          issuesArray = result.error.issues;
+        } else if (result.error && Array.isArray(result.error)) {
+          // Handle case where error itself is the issues array
+          issuesArray = result.error;
+        }
+        
         // Normalize Zod issues for the envelope
-        const issues = result.error.errors.map(e => ({
+        const issues = issuesArray.map(e => ({
           path: e.path.join('.'),
           code: e.code,
           message: e.message,

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CI Test Script for Guardrails
-# Tests: ESLint, Router imports, Route map
+# Tests: ESLint, Router imports, Route map, Sanity checks, Test matrix, Runtime monitoring
 
 set -e  # Exit on any error
 
@@ -31,6 +31,30 @@ node tests/smoke/route-map.test.js || {
   exit 1
 }
 echo "✅ Route map test passed"
+
+# 4. Sanity Checks
+echo "✅ Running sanity checks..."
+./scripts/sanity-checks.sh || {
+  echo "❌ Sanity checks failed"
+  exit 1
+}
+echo "✅ Sanity checks passed"
+
+# 5. Test Matrix Coverage Analysis
+echo "✅ Running test coverage analysis..."
+./scripts/test-coverage.sh || {
+  echo "❌ Test coverage analysis failed"
+  exit 1
+}
+echo "✅ Test coverage analysis passed"
+
+# 6. Runtime Monitoring
+echo "✅ Running runtime monitoring..."
+./scripts/runtime-monitoring.sh || {
+  echo "❌ Runtime monitoring failed"
+  exit 1
+}
+echo "✅ Runtime monitoring passed"
 
 echo ""
 echo "🎉 All CI guardrail tests passed!"
