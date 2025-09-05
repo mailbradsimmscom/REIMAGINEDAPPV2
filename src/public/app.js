@@ -461,12 +461,6 @@ async function processMessage(message) {
       // Add assistant response to chat with enhanced source display
       addEnhancedMessage(data.data.assistantMessage.content, data.data.sources || []);
       
-      // Show systems context if available
-      if (data.data.systemsContext && data.data.systemsContext.length > 0) {
-        const contextInfo = `Found ${data.data.systemsContext.length} relevant systems. Context preserved for follow-up questions.`;
-        addMessage(contextInfo, 'inbound');
-      }
-      
       // Reload chat sessions to show new session
       await loadChatSessions();
       

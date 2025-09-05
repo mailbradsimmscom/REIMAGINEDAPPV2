@@ -80,7 +80,13 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     }
     
-    // Step 3: Search Pinecone for relevant documentation
+    // Step 3: Get recent conversation context (needed for Pinecone search)
+    let recentMessages = [];
+    if (threadId) {
+      recentMessages = await chatRepository.getChatMessages(threadId, { limit: contextSize });
+    }
+    
+    // Step 4: Search Pinecone for relevant documentation
     let pineconeResults = [];
     let pineconeError = null;
     
@@ -88,7 +94,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       const searchContext = {
         manufacturer: systemsContext[0]?.asset_uid?.split('_')[0] || null,
         model: systemsContext[0]?.asset_uid || null,
-        previousMessages: [] // Will be populated if threadId exists
+        previousMessages: recentMessages
       };
       
       const pineconeResponse = await pineconeService.searchDocuments(enhancedQuery, searchContext);
@@ -114,7 +120,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       });
     }
     
-    // Step 4: Create or get chat session/thread if needed
+    // Step 5: Create or get chat session/thread if needed
     let session = null;
     let thread = null;
     
@@ -148,7 +154,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       requestLogger.info('Existing chat thread loaded', { threadId });
     }
     
-    // Step 5: Store user message
+    // Step 6: Store user message
     const userMessage = await chatRepository.createChatMessage({
       threadId,
       role: 'user',
@@ -160,9 +166,6 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
         pineconeResults: pineconeResults.length
       }
     });
-    
-    // Step 6: Get recent conversation context (last N messages)
-    const recentMessages = await chatRepository.getChatMessages(threadId, { limit: contextSize });
     
     // Step 7: Generate assistant response with Pinecone results
     const assistantResponse = await generateEnhancedAssistantResponse(
@@ -263,16 +266,12 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
 
 async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, systemsContext, pineconeResults, pineconeError, recentMessages) {
   try {
-    let response = `I understand you're asking about: **"${userQuery}"**\n\n`;
+    let response = '';
     let sources = [];
     
-    // Add systems context
+    // Add systems context (collect sources but don't display them)
     if (systemsContext.length > 0) {
-      response += `## Systems Found\n`;
-      response += `I found ${systemsContext.length} relevant systems in your database:\n`;
       systemsContext.forEach((system, index) => {
-        response += `${index + 1}. **${system.asset_uid}** (relevance: ${system.rank.toFixed(2)})\n`;
-        
         // Add systems as sources with type classification
         const systemSource = {
           id: system.asset_uid,
@@ -283,8 +282,8 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
         };
         sources.push(systemSource);
       });
-      response += `\n`;
     } else {
+      response += `I understand you're asking about: **"${userQuery}"**\n\n`;
       response += `I couldn't find specific systems matching your query in your database. `;
       response += `Could you provide more details or try a different search term?\n\n`;
     }
@@ -295,7 +294,6 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       let synthesizedAnswer = '';
       try {
         synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults);
-        response += `## Direct Answer\n`;
         response += `${synthesizedAnswer}\n\n`;
       } catch (synthesisError) {
         // Fallback to categorized content if synthesis fails
@@ -307,7 +305,6 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       
       pineconeResults.forEach((result, index) => {
         response += `### ${result.manufacturer} ${result.model}\n`;
-        response += `**Relevance Score:** ${result.bestScore.toFixed(3)}\n`;
         
         if (result.chunks && result.chunks.length > 0) {
           // Group content by type and create structured response
@@ -399,6 +396,15 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
         
         response += `\n`;
       });
+      
+      // Add relevance scores at the end
+      if (pineconeResults.length > 0) {
+        response += `\n**Relevance Scores:**\n`;
+        pineconeResults.forEach((result, index) => {
+          response += `• ${result.manufacturer} ${result.model}: ${result.bestScore.toFixed(3)}\n`;
+        });
+        response += `\n`;
+      }
       
       response += `Based on this documentation, I can provide detailed information about specifications, operation, safety, and installation. `;
       response += `Feel free to ask specific questions about any aspect of your equipment!\n\n`;

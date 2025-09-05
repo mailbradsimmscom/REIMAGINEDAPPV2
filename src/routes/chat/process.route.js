@@ -4,6 +4,7 @@ import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
 import { methodNotAllowed } from '../../utils/methodNotAllowed.js';
+import { getEnv } from '../../config/env.js';
 import { 
   ChatProcessEnvelope,
   chatProcessRequestSchema,
@@ -29,10 +30,13 @@ router.post(
     try {
       const { message, sessionId, threadId } = req.body;
 
+      const env = getEnv();
+      const contextSize = parseInt(env.CHAT_CONTEXT_SIZE) || 5;
+      
       const result = await enhancedChatService.processUserMessage(message, {
         sessionId,
         threadId,
-        contextSize: 5
+        contextSize
       });
 
       const envelope = {

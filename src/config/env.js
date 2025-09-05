@@ -22,6 +22,7 @@ const EnvSchema = z.object({
   PYTHON_SIDECAR_URL: z.string().optional(),
   APP_VERSION: z.string().optional(),
   RESPONSE_VALIDATE: z.string().optional(),
+  CHAT_CONTEXT_SIZE: z.string().optional().default('5'),
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
