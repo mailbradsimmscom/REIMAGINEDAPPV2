@@ -321,39 +321,441 @@ psql -h your_supabase_host -U your_username -d your_database -c "\dt"
 pg_dump -h your_supabase_host -U your_username your_database > backup.sql
 ```
 
-## 🌐 API Endpoints
+## 🌐 API Endpoints & Schemas
 
-### Health & Status
-- `GET /health` - Server health check
-- `GET /admin/health` - Detailed system health
+### Complete Route List
 
-### Document Management
+#### Health & Status
+- `GET /health` - Basic server health check
+- `GET /health/services` - Service status check (Supabase, Pinecone, OpenAI, Sidecar)
+- `GET /health/ready` - Readiness check
+- `GET /admin/health` - Detailed system health with memory stats
+
+#### Chat System (Enhanced)
+- `POST /chat/enhanced/process` - Process user message with AI response
+- `GET /chat/enhanced/history?threadId={id}&limit={n}` - Get chat history
+- `GET /chat/enhanced/list?limit={n}&cursor={cursor}` - List user chat sessions
+- `GET /chat/enhanced/context?threadId={id}` - Get chat context and metadata
+- `DELETE /chat/enhanced/delete` - Delete chat session (body-based)
+- `DELETE /chat/{sessionId}` - Delete chat session (path-based)
+
+#### Systems Management
+- `GET /systems?limit={n}&cursor={cursor}` - List all systems
+- `GET /systems/{assetUid}` - Get specific system by asset UID
+- `GET /systems/search?q={query}&limit={n}` - Search systems with relevance ranking
+
+#### Document Management
 - `POST /admin/docs/ingest` - Upload and process document
-- `GET /admin/docs/ingest/:jobId` - Get job status
-- `GET /admin/docs/jobs` - List all jobs
-- `GET /admin/docs/documents` - List all documents
+- `GET /admin/docs/ingest/{jobId}` - Get job status
+- `GET /admin/docs/jobs?limit={n}&offset={n}` - List all processing jobs
+- `GET /admin/docs/documents?limit={n}&offset={n}` - List all documents
+- `GET /admin/docs/{docId}` - Get specific document details
 
-### Chat System
-- `POST /chat/enhanced/process` - Process chat message
-- `GET /chat/enhanced/history/:threadId` - Get chat history
-- `GET /chat/enhanced/chats` - List user chats
-- `GET /chat/enhanced/context/:threadId` - Get chat context
+#### Pinecone Vector Search
+- `POST /pinecone/search` - Search documents with vector similarity
+- `GET /pinecone/stats` - Get index statistics and namespace info
+- `GET /pinecone/chunks/{docId}` - Get document chunks
+- `POST /pinecone/query` - Advanced query with context
 
-### Systems Search
-- `GET /systems` - List all systems
-- `GET /systems/:assetUid` - Get specific system
-- `GET /systems/search?q=query` - Search systems
-
-### Pinecone Vector Search
-- `GET /pinecone/search` - Search documents
-- `GET /pinecone/stats` - Get index statistics
-- `GET /pinecone/chunks/:docId` - Get document chunks
-
-### Admin Dashboard
+#### Admin Dashboard
 - `GET /admin` - Admin dashboard UI
-- `GET /admin/logs` - System logs
-- `GET /admin/systems` - System overview
-- `GET /admin/pinecone` - Pinecone status
+- `GET /admin/logs?level={level}&limit={n}&correlationId={id}` - System logs
+- `GET /admin/systems` - System overview and counts
+- `GET /admin/pinecone` - Pinecone status and sidecar health
+- `GET /admin/manufacturers` - Top manufacturers list
+- `GET /admin/models?manufacturer={name}` - Models for specific manufacturer
+
+### Zod Schema Documentation
+
+#### Common Schemas (`src/schemas/common.schema.js`)
+```typescript
+// Pagination for list endpoints
+paginationQuerySchema = {
+  limit: number (1-100, default: 10),
+  offset: number (min: 0, default: 0)
+}
+
+// Search query parameters
+searchQuerySchema = {
+  q: string (min: 2, max: 100)
+}
+```
+
+#### Health Schemas (`src/schemas/health.schema.js`)
+```typescript
+// Basic health response
+BasicHealthData = {
+  status: "healthy",
+  timestamp: string (ISO datetime),
+  uptime: number
+}
+
+// Service status response
+ServiceStatusData = {
+  status: "healthy" | "degraded",
+  services: {
+    supabase: boolean,
+    pinecone: boolean,
+    openai: boolean,
+    sidecar: boolean
+  },
+  timestamp: string (ISO datetime)
+}
+
+// Admin health response
+AdminHealthData = {
+  status: string,
+  timestamp: string,
+  uptime: number,
+  memory: {
+    rss: number,
+    heapTotal: number,
+    heapUsed: number,
+    external: number
+  },
+  environment: string,
+  version: string
+}
+```
+
+#### Chat Schemas (`src/schemas/chat.schema.js`)
+```typescript
+// Process message request
+chatProcessRequestSchema = {
+  message: string (min: 1),
+  sessionId?: string,
+  threadId?: string
+}
+
+// Process message response
+ChatProcessData = {
+  sessionId: string,
+  threadId: string,
+  userMessage: {
+    id: string,
+    content: string,
+    role: string,
+    createdAt: string
+  },
+  assistantMessage: {
+    id: string,
+    content: string,
+    role: string,
+    createdAt: string,
+    sources?: array
+  },
+  systemsContext?: array,
+  enhancedQuery?: string,
+  sources?: array
+}
+
+// Chat history query
+chatHistoryQuerySchema = {
+  threadId: string (min: 1),
+  limit: number (1-100, default: 50)
+}
+
+// Chat history response
+ChatHistoryData = {
+  threadId: string,
+  messages: array of {
+    id: string,
+    content: string,
+    role: "system" | "user" | "assistant",
+    createdAt: string,
+    metadata?: object
+  },
+  count: number
+}
+
+// Chat list query
+chatListQuerySchema = {
+  limit: number (1-100, default: 20),
+  cursor?: string
+}
+
+// Chat list response
+ChatListData = {
+  chats: array of {
+    id: string,
+    name: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    latestThread?: {
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+      metadata?: object
+    }
+  },
+  count: number,
+  nextCursor?: string | null
+}
+```
+
+#### Systems Schemas (`src/schemas/systems.schema.js`)
+```typescript
+// Systems list query
+systemsListQuerySchema = {
+  limit?: number (1-100, default: 25),
+  cursor?: string
+}
+
+// Systems search query
+systemsSearchQuerySchema = {
+  q: string (2-100 chars),
+  limit?: number (1-100)
+}
+
+// Systems list response
+SystemsListData = {
+  systems: array of {
+    asset_uid: string,
+    system_norm: string,
+    subsystem_norm: string,
+    manufacturer_norm: string,
+    model_norm: string,
+    canonical_model_id: string,
+    description: string | null,
+    manual_url: string | null,
+    oem_page: string | null,
+    spec_keywords: string | null,
+    synonyms_fts: string,
+    synonyms_human: string,
+    search: string
+  },
+  nextCursor: string | null
+}
+
+// Systems search response
+SystemsSearchData = {
+  systems: array of {
+    // Same as list + rank field
+    rank: number
+  },
+  meta: {
+    floor: number,
+    maxRows: number,
+    rawCount: number,
+    filteredCount: number,
+    query: string
+  }
+}
+```
+
+#### Document Schemas (`src/schemas/document.schema.js`)
+```typescript
+// Document ingest metadata
+documentIngestMetadataSchema = {
+  manufacturer?: string,
+  model?: string,
+  revisionDate?: string,
+  language?: string,
+  brandFamily?: string,
+  sourceUrl?: string
+}
+
+// Document jobs query
+documentJobsQuerySchema = {
+  limit: number (1-100, default: 50),
+  offset: number (min: 0, default: 0)
+}
+
+// Document jobs response
+DocumentJobsData = {
+  jobs: array of {
+    job_id: string,
+    status: string,
+    doc_id: string,
+    upload_id: string | null,
+    storage_path: string | null,
+    params: object,
+    counters: object,
+    error: object | null,
+    created_at: string,
+    started_at: string | null,
+    updated_at: string,
+    completed_at: string | null
+  },
+  count: number,
+  limit: number,
+  offset: number
+}
+
+// Document list response
+DocumentDocumentsData = {
+  documents: array of {
+    doc_id: string,
+    manufacturer: string | null,
+    model: string | null,
+    revision_date: string | null,
+    language: string | null,
+    brand_family: string | null,
+    source_url: string | null,
+    last_ingest_version: string | null,
+    last_job_id: string | null,
+    last_ingested_at: string | null,
+    chunk_count: number,
+    table_count: number,
+    pages_total: number,
+    created_at: string,
+    updated_at: string
+  },
+  count: number,
+  limit: number,
+  offset: number
+}
+```
+
+#### Pinecone Schemas (`src/schemas/pinecone.schema.js`)
+```typescript
+// Pinecone search request
+pineconeSearchRequestSchema = {
+  query: string (min: 1),
+  topK: number (1-100, default: 10),
+  namespace?: string,
+  filter?: object
+}
+
+// Pinecone search response
+PineconeSearchData = {
+  query: string,
+  enhancedQuery: string,
+  results: array of {
+    documentId: string,
+    manufacturer: string,
+    model: string,
+    filename: string,
+    revisionDate: string,
+    bestScore: number,
+    chunks: array of {
+      id: string,
+      score: number,
+      relevanceScore: number,
+      content: string,
+      page: number,
+      chunkIndex: number,
+      chunkType: string
+    }
+  },
+  metadata: {
+    totalResults: number,
+    searchTime: string
+  }
+}
+
+// Pinecone stats response
+PineconeStatsData = {
+  totalVectors: number,
+  dimension: number,
+  indexFullness: number,
+  namespaces: object of {
+    vector_count: number
+  },
+  lastUpdated: string
+}
+```
+
+#### Admin Schemas (`src/schemas/admin.schema.js`)
+```typescript
+// Admin logs query
+adminLogsQuerySchema = {
+  level: "all" | "error" | "warn" | "info" | "debug" (default: "all"),
+  limit: number (1-1000, default: 100),
+  correlationId?: string
+}
+
+// Admin logs response
+AdminLogsData = {
+  logs: array of {
+    timestamp: string,
+    level: string,
+    message: string,
+    correlationId?: string,
+    metadata?: object
+  },
+  count: number,
+  timestamp: string
+}
+
+// Admin manufacturers response
+AdminManufacturersData = {
+  total: number,
+  top: array of {
+    manufacturer_norm: string
+  },
+  lastUpdated: string
+}
+
+// Admin models query
+adminModelsQuerySchema = {
+  manufacturer: string (min: 1)
+}
+
+// Admin models response
+AdminModelsData = {
+  models: array of {
+    model_norm: string,
+    manufacturer_norm: string
+  },
+  count: number,
+  manufacturer: string,
+  lastUpdated: string
+}
+
+// Admin systems response
+AdminSystemsData = {
+  totalSystems: number,
+  lastUpdated: string,
+  databaseStatus: string,
+  documentsCount: number,
+  jobsCount: number
+}
+
+// Admin pinecone response
+AdminPineconeData = {
+  status: string,
+  index: string,
+  namespace: string,
+  vectors: string | number,
+  totalVectors: number,
+  dimension: string | number,
+  indexFullness: string,
+  lastChecked: string,
+  sidecarHealth: {
+    status: string,
+    version?: string,
+    tesseractAvailable?: boolean,
+    error?: string
+  }
+}
+```
+
+#### Envelope Schema (`src/schemas/envelope.schema.js`)
+```typescript
+// Standard response envelope
+EnvelopeSchema = {
+  success: true | false,
+  data?: any,           // Present when success: true
+  error?: {             // Present when success: false
+    code: string,
+    message: string,
+    details?: any
+  },
+  requestId?: string    // Optional correlation ID
+}
+```
+
+### Schema Validation Features
+
+- **Input Validation**: All request bodies and query parameters validated with Zod
+- **Response Validation**: All responses validated against envelope schemas
+- **Type Safety**: TypeScript-style type definitions for all data structures
+- **Error Handling**: Consistent error envelope format across all endpoints
+- **Pagination**: Standardized pagination with `limit`/`offset` or `cursor`-based
+- **Filtering**: Query parameter validation for search and filtering operations
 
 ## 🔍 Troubleshooting
 

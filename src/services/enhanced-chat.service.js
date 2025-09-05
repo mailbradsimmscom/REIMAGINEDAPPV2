@@ -5,6 +5,77 @@ import chatRepository, { deleteChatMessages, deleteChatThreads, deleteChatSessio
 import { logger } from '../utils/logger.js';
 import { personality } from '../config/personality.js';
 import { isSupabaseConfigured, isOpenAIConfigured, isPineconeConfigured } from '../services/guards/index.js';
+import { filterSpecLike } from '../utils/specFilter.js';
+import { rerankChunks } from './rerank.service.js';
+
+// Context Detection Functions
+function isFollowUpQuestion(query) {
+  const followUpPatterns = [
+    /^what (pressure|voltage|amperage|wattage|capacity|size|dimensions|weight|temperature|speed|flow|rate)/i,
+    /^how (much|many|long|fast|hot|cold|big|small|heavy|light)/i,
+    /^where (is|are|can|should|do)/i,
+    /^when (should|can|do|is|are)/i,
+    /^why (does|is|are|should|can)/i,
+    /^which (one|model|type|brand|size)/i,
+    /^can (you|it|i|we)/i,
+    /^does (it|this|that)/i,
+    /^is (it|this|that|there)/i,
+    /^are (you|they|there)/i,
+    /^will (it|this|that)/i,
+    /^should (i|we|you)/i,
+    /^could (you|it|i|we)/i,
+    /^would (you|it|i|we)/i,
+    /^tell me (more|about|how|what|when|where|why)/i,
+    /^show me (how|what|when|where|why)/i,
+    /^explain (how|what|when|where|why)/i,
+    /^describe (how|what|when|where|why)/i
+  ];
+  
+  return followUpPatterns.some(pattern => pattern.test(query.trim()));
+}
+
+function extractEquipmentTerms(query) {
+  // Remove common question prefixes and extract core equipment terms
+  const cleanedQuery = query.toLowerCase()
+    .replace(/tell me about (my |the |a |an )?/g, '')
+    .replace(/what is (my |the |a |an )?/g, '')
+    .replace(/how does (my |the |a |an )?/g, '')
+    .replace(/where is (my |the |a |an )?/g, '')
+    .replace(/show me (my |the |a |an )?/g, '')
+    .replace(/describe (my |the |a |an )?/g, '')
+    .replace(/explain (my |the |a |an )?/g, '')
+    .replace(/^about /g, '')
+    .replace(/^the /g, '')
+    .replace(/^a /g, '')
+    .replace(/^an /g, '')
+    .trim();
+  
+  return cleanedQuery;
+}
+
+function hasExistingSystemsContext(threadMetadata, recentMessages) {
+  // Check if we have existing systems context from thread metadata or recent messages
+  const threadSystemsContext = threadMetadata?.systemsContext || [];
+  const recentSystemsContext = recentMessages
+    .filter(msg => msg.metadata?.systemsContext && msg.metadata.systemsContext.length > 0)
+    .flatMap(msg => msg.metadata.systemsContext);
+  
+  return threadSystemsContext.length > 0 || recentSystemsContext.length > 0;
+}
+
+function getExistingSystemsContext(threadMetadata, recentMessages) {
+  // Get existing systems context from thread metadata or recent messages
+  const threadSystemsContext = threadMetadata?.systemsContext || [];
+  const recentSystemsContext = recentMessages
+    .filter(msg => msg.metadata?.systemsContext && msg.metadata.systemsContext.length > 0)
+    .flatMap(msg => msg.metadata.systemsContext);
+  
+  // Return the most recent systems context (from recent messages first, then thread metadata)
+  if (recentSystemsContext.length > 0) {
+    return recentSystemsContext;
+  }
+  return threadSystemsContext;
+}
 
 // Helper function to check if required services are available
 async function checkServiceAvailability() {
@@ -30,6 +101,90 @@ async function checkServiceAvailability() {
   }
 }
 
+// Spec-biased retrieval function
+export async function retrieveWithSpecBias({ query, namespace }) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    const { getEnv } = await import('../config/env.js');
+    const env = getEnv();
+    const topK = 40; // widen recall
+    const floor = Number(env.SEARCH_RANK_FLOOR ?? 0.50);
+
+    requestLogger.info('Starting spec-biased retrieval', { 
+      query: query.substring(0, 100),
+      topK,
+      floor,
+      namespace: namespace ?? env.PINECONE_NAMESPACE
+    });
+
+    // 1) Wide recall from Pinecone (keep original call signature)
+    const searchContext = {
+      manufacturer: null,
+      model: null,
+      previousMessages: []
+    };
+    
+    const pineconeResponse = await pineconeService.searchDocuments(query, searchContext);
+    const hits = pineconeResponse?.results || [];
+
+    const rawCount = hits.length;
+
+    // 2) Apply dense score floor
+    const passedFloor = hits.filter(h => (h.bestScore ?? 0) >= floor);
+
+    // 3) Regex post-filter for spec-like chunks
+    const specy = filterSpecLike(passedFloor);
+
+    // 4) Fallback if none survived spec filter
+    const pool = specy.length ? specy : passedFloor;
+
+    // 5) Tiny LLM rerank (small set only)
+    const reranked = await rerankChunks(query, pool);
+
+    // 6) Take top few for answer assembly
+    const finalists = reranked.slice(0, Math.min(5, pool.length));
+
+    // 7) Return with observability
+    const result = {
+      finalists,
+      meta: {
+        rawCount,
+        passedFloorCount: passedFloor.length,
+        filteredCount: specy.length,
+        usedFallback: specy.length === 0,
+        floor,
+        topK,
+      },
+    };
+
+    requestLogger.info('Spec-biased retrieval completed', result.meta);
+    return result;
+
+  } catch (error) {
+    requestLogger.error('Spec-biased retrieval failed', { 
+      error: error.message,
+      query: query.substring(0, 100)
+    });
+    
+    // Fallback to empty results
+    const { getEnv } = await import('../config/env.js');
+    const env = getEnv();
+    return {
+      finalists: [],
+      meta: {
+        rawCount: 0,
+        passedFloorCount: 0,
+        filteredCount: 0,
+        usedFallback: true,
+        floor: Number(env.SEARCH_RANK_FLOOR ?? 0.50),
+        topK: 40,
+        error: error.message
+      }
+    };
+  }
+}
+
 export async function processUserMessage(userQuery, { sessionId, threadId, contextSize = 5 } = {}) {
   const requestLogger = logger.createRequestLogger();
   
@@ -43,27 +198,82 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       threadId 
     });
     
-    // Step 1: Search systems table for relevant context
-    // Extract key terms from the user query for better systems search
-    const searchTerms = userQuery.toLowerCase()
-      .replace(/tell me about my /g, '')
-      .replace(/what is my /g, '')
-      .replace(/how does my /g, '')
-      .replace(/where is my /g, '')
-      .trim();
+    // Step 1: Determine if this is a follow-up question and get existing context
+    let systemsContext = [];
+    let isFollowUp = false;
+    let existingThreadMetadata = null;
     
-    const systemsResults = await searchSystems(searchTerms, { limit: 5 });
-    const systemsContext = systemsResults || [];
+    if (threadId) {
+      // Get existing thread metadata to check for systems context
+      try {
+        const existingThread = await chatRepository.getChatThread(threadId);
+        existingThreadMetadata = existingThread?.metadata || {};
+        
+        // Check if this is a follow-up question
+        isFollowUp = isFollowUpQuestion(userQuery);
+        
+        // If it's a follow-up question and we have existing systems context, use it
+        if (isFollowUp && hasExistingSystemsContext(existingThreadMetadata, [])) {
+          const existingContext = getExistingSystemsContext(existingThreadMetadata, []);
+          
+          // Convert stored asset_uid strings back to system objects for compatibility
+          // We need to fetch the full system data for each asset_uid
+          try {
+            const systemPromises = existingContext.map(async (assetUid) => {
+              // Search for the specific system by asset_uid
+              const results = await searchSystems(assetUid, { limit: 1 });
+              return results.find(s => s.asset_uid === assetUid) || { asset_uid: assetUid, rank: 0.1 };
+            });
+            
+            systemsContext = await Promise.all(systemPromises);
+            
+            requestLogger.info('Using existing systems context for follow-up question', { 
+              threadId,
+              systemsContextCount: systemsContext.length,
+              isFollowUp: true,
+              assetUids: existingContext
+            });
+          } catch (contextError) {
+            requestLogger.warn('Failed to load existing systems context, will search instead', { 
+              error: contextError.message,
+              threadId 
+            });
+            systemsContext = []; // Reset to empty so we'll search below
+          }
+        }
+      } catch (threadError) {
+        requestLogger.warn('Could not load existing thread metadata', { 
+          error: threadError.message,
+          threadId 
+        });
+      }
+    }
     
-    requestLogger.info('Systems search completed', { 
-      query: userQuery.substring(0, 100), 
-      searchTerms,
-      resultsCount: systemsContext.length,
-      systemsResults: systemsResults,
-      systemsContext: systemsContext
-    });
+    // Step 2: Search systems table for relevant context (only if not a follow-up with existing context)
+    if (systemsContext.length === 0) {
+      // Extract key terms from the user query for better systems search
+      const searchTerms = extractEquipmentTerms(userQuery);
+      
+      const systemsResults = await searchSystems(searchTerms, { limit: 5 });
+      systemsContext = systemsResults || [];
+      
+      requestLogger.info('Systems search completed', { 
+        query: userQuery.substring(0, 100), 
+        searchTerms,
+        resultsCount: systemsContext.length,
+        systemsResults: systemsResults,
+        systemsContext: systemsContext,
+        isFollowUp: false
+      });
+    } else {
+      requestLogger.info('Skipped systems search - using existing context', { 
+        query: userQuery.substring(0, 100),
+        systemsContextCount: systemsContext.length,
+        isFollowUp: true
+      });
+    }
     
-    // Step 2: Enhance the query using LLM and systems context
+    // Step 3: Enhance the query using LLM and systems context
     let enhancedQuery = userQuery;
     if (systemsContext.length > 0) {
       try {
@@ -80,47 +290,84 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     }
     
-    // Step 3: Get recent conversation context (needed for Pinecone search)
+    // Step 4: Get recent conversation context (needed for Pinecone search)
     let recentMessages = [];
     if (threadId) {
       recentMessages = await chatRepository.getChatMessages(threadId, { limit: contextSize });
     }
     
-    // Step 4: Search Pinecone for relevant documentation
+    // Step 5: Search Pinecone for relevant documentation using spec-biased retrieval
     let pineconeResults = [];
     let pineconeError = null;
+    let specBiasMeta = null;
     
     try {
-      const searchContext = {
-        manufacturer: systemsContext[0]?.asset_uid?.split('_')[0] || null,
-        model: systemsContext[0]?.asset_uid || null,
-        previousMessages: recentMessages
-      };
+      // Use spec-biased retrieval instead of regular Pinecone search
+      const specBiasResult = await retrieveWithSpecBias({ 
+        query: enhancedQuery,
+        namespace: null // Will use default from env
+      });
       
-      const pineconeResponse = await pineconeService.searchDocuments(enhancedQuery, searchContext);
+      specBiasMeta = specBiasResult.meta;
       
-      // Handle the Pinecone response structure
-      if (pineconeResponse && pineconeResponse.success && pineconeResponse.results) {
-        pineconeResults = pineconeResponse.results;
-        requestLogger.info('Pinecone search completed', { 
+      // Transform spec-biased results to match expected Pinecone schema format
+      if (specBiasResult.finalists && specBiasResult.finalists.length > 0) {
+        // Group finalists by document for schema compatibility
+        const documentGroups = {};
+        
+        specBiasResult.finalists.forEach((hit) => {
+          const docId = hit.documentId || 'unknown';
+          if (!documentGroups[docId]) {
+            documentGroups[docId] = {
+              documentId: docId,
+              manufacturer: hit.manufacturer || 'Unknown',
+              model: hit.model || 'Unknown',
+              filename: hit.filename || 'Unknown Document',
+              revisionDate: hit.revisionDate || new Date().toISOString(),
+              bestScore: hit.bestScore || hit.score || 0,
+              chunks: []
+            };
+          }
+          
+          // Add chunk in expected format
+          documentGroups[docId].chunks.push({
+            id: hit.id || `chunk_${Date.now()}`,
+            score: hit.score || hit.bestScore || 0,
+            relevanceScore: hit._rankScore || hit.score || 0,
+            content: hit.chunk?.content || hit.metadata?.content || hit.content || '',
+            page: hit.page || 0,
+            chunkIndex: hit.chunkIndex || 0,
+            chunkType: hit.chunkType || 'text'
+          });
+          
+          // Update best score if this chunk has a higher score
+          if ((hit.score || hit.bestScore || 0) > documentGroups[docId].bestScore) {
+            documentGroups[docId].bestScore = hit.score || hit.bestScore || 0;
+          }
+        });
+        
+        pineconeResults = Object.values(documentGroups);
+        
+        requestLogger.info('Spec-biased retrieval completed', { 
           query: enhancedQuery.substring(0, 100),
-          resultsCount: pineconeResults.length
+          resultsCount: pineconeResults.length,
+          specBiasMeta: specBiasMeta
         });
       } else {
-        requestLogger.warn('Pinecone search returned no results', { 
+        requestLogger.warn('Spec-biased retrieval returned no results', { 
           query: enhancedQuery.substring(0, 100),
-          response: pineconeResponse
+          specBiasMeta: specBiasMeta
         });
       }
     } catch (error) {
       pineconeError = error;
-      requestLogger.warn('Pinecone search failed', { 
+      requestLogger.warn('Spec-biased retrieval failed', { 
         error: error.message,
         query: enhancedQuery.substring(0, 100)
       });
     }
     
-    // Step 5: Create or get chat session/thread if needed
+    // Step 6: Create or get chat session/thread if needed
     let session = null;
     let thread = null;
     
@@ -144,7 +391,8 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
         name: 'New Thread',
         metadata: { 
           systemsContext: systemsContext.map(s => s.asset_uid),
-          pineconeResults: pineconeResults.length
+          pineconeResults: pineconeResults.length,
+          specBiasMeta: specBiasMeta
         }
       });
       threadId = thread.id;
@@ -152,9 +400,30 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     } else {
       thread = await chatRepository.getChatThread(threadId);
       requestLogger.info('Existing chat thread loaded', { threadId });
+      
+      // Update thread metadata with current systems context if it's new or different
+      if (systemsContext.length > 0) {
+        const currentSystemsContext = thread.metadata?.systemsContext || [];
+        const newSystemsContext = systemsContext.map(s => s.asset_uid);
+        
+        // Only update if the systems context has changed
+        if (JSON.stringify(currentSystemsContext) !== JSON.stringify(newSystemsContext)) {
+          await chatRepository.updateChatThread(threadId, {
+            metadata: {
+              ...thread.metadata,
+              systemsContext: newSystemsContext,
+              lastUpdatedAt: new Date().toISOString()
+            }
+          });
+          requestLogger.info('Updated thread metadata with new systems context', { 
+            threadId, 
+            systemsContextCount: newSystemsContext.length 
+          });
+        }
+      }
     }
     
-    // Step 6: Store user message
+    // Step 7: Store user message
     const userMessage = await chatRepository.createChatMessage({
       threadId,
       role: 'user',
@@ -163,11 +432,12 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
         originalQuery: userQuery,
         enhancedQuery,
         systemsContext: systemsContext.map(s => s.asset_uid),
-        pineconeResults: pineconeResults.length
+        pineconeResults: pineconeResults.length,
+        specBiasMeta: specBiasMeta
       }
     });
     
-    // Step 7: Generate assistant response with Pinecone results
+    // Step 8: Generate assistant response with Pinecone results
     const assistantResponse = await generateEnhancedAssistantResponse(
       userQuery,
       enhancedQuery,
@@ -177,7 +447,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       recentMessages
     );
     
-    // Step 8: Store assistant response
+    // Step 9: Store assistant response
     const assistantMessage = await chatRepository.createChatMessage({
       threadId,
       role: 'assistant',
@@ -187,16 +457,17 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
         enhancedQuery,
         pineconeResults: pineconeResults.length,
         sources: assistantResponse.sources,
-        hasPineconeError: !!pineconeError
+        hasPineconeError: !!pineconeError,
+        specBiasMeta: specBiasMeta
       }
     });
     
-    // Step 9: Update thread with latest activity
+    // Step 10: Update thread with latest activity
     await chatRepository.updateChatThread(threadId, {
       updated_at: new Date().toISOString()
     });
     
-    // Step 10: Check if we should summarize (every N messages)
+    // Step 11: Check if we should summarize (every N messages)
     const totalMessages = recentMessages.length + 2; // +2 for user and assistant messages we just added
     const { getEnv } = await import('../config/env.js');
     const { summaryFrequency = 5 } = getEnv();
@@ -219,7 +490,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     }
     
-    // Step 11: Generate or update thread name if it's new
+    // Step 12: Generate or update thread name if it's new
     if (!thread.name || thread.name === 'New Thread') {
       try {
         const threadName = await generateChatName(recentMessages, systemsContext);
@@ -250,7 +521,8 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       systemsContext,
       enhancedQuery,
       pineconeResults,
-      sources: assistantResponse.sources
+      sources: assistantResponse.sources,
+      specBiasMeta
     };
     
   } catch (error) {
@@ -269,36 +541,85 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
     let response = '';
     let sources = [];
     
-    // Add systems context (collect sources but don't display them)
-    if (systemsContext.length > 0) {
-      systemsContext.forEach((system, index) => {
-        // Add systems as sources with type classification
-        const systemSource = {
-          id: system.asset_uid,
-          type: 'system',
-          rank: system.rank,
-          manufacturer: system.manufacturer || system.asset_uid.split('_')[0],
-          model: system.model || system.asset_uid
-        };
-        sources.push(systemSource);
+    // Check if this is a pressure-related question and extract specific pressure data
+    const isPressureQuestion = userQuery.toLowerCase().includes('pressure');
+    let pressureSpecs = [];
+    
+    if (isPressureQuestion && pineconeResults.length > 0) {
+      pineconeResults.forEach((result) => {
+        if (result.chunks) {
+          result.chunks.forEach((chunk) => {
+            const content = chunk.content.toLowerCase();
+            // Look for pressure-related content with specific values
+            if (content.includes('pressure') && (
+              content.includes('bar') || 
+              content.includes('psi') || 
+              content.includes('working pressure') ||
+              content.includes('operating pressure') ||
+              content.includes('pressure range') ||
+              content.includes('pressure switch') ||
+              content.includes('manometer')
+            )) {
+              pressureSpecs.push({
+                content: chunk.content,
+                page: chunk.page,
+                score: chunk.score
+              });
+            }
+          });
+        }
       });
-    } else {
-      response += `I understand you're asking about: **"${userQuery}"**\n\n`;
-      response += `I couldn't find specific systems matching your query in your database. `;
-      response += `Could you provide more details or try a different search term?\n\n`;
     }
     
-    // Add Pinecone documentation results
-    if (pineconeResults.length > 0) {
-      // Stage 2: Generate synthesized answer using LLM
-      let synthesizedAnswer = '';
-      try {
-        synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults);
-        response += `${synthesizedAnswer}\n\n`;
-      } catch (synthesisError) {
-        // Fallback to categorized content if synthesis fails
-        console.warn('Synthesis failed, using categorized content:', synthesisError.message);
+    // Debug logging
+    console.log('Pressure question:', isPressureQuestion);
+    console.log('Pressure specs found:', pressureSpecs.length);
+    
+    // If we found specific pressure data, present it directly
+    if (isPressureQuestion && pressureSpecs.length > 0) {
+      response += `## Pressure Specifications\n\n`;
+      response += `Based on the technical documentation, here are the specific pressure specifications for your watermaker:\n\n`;
+      
+      pressureSpecs.forEach((spec, index) => {
+        const cleanContent = spec.content.replace(/\s+/g, ' ').trim();
+        response += `**${index + 1}.** ${cleanContent}\n\n`;
+      });
+      
+      response += `These specifications provide the exact operating pressures for your equipment. `;
+      response += `The manometer on your watermaker will show the current working pressure, which should be within the specified ranges.\n\n`;
+    } else {
+      // Add systems context (collect sources but don't display them)
+      if (systemsContext.length > 0) {
+        systemsContext.forEach((system, index) => {
+          // Add systems as sources with type classification
+          const systemSource = {
+            id: system.asset_uid,
+            type: 'system',
+            rank: system.rank,
+            manufacturer: system.manufacturer || system.asset_uid.split('_')[0],
+            model: system.model || system.asset_uid
+          };
+          sources.push(systemSource);
+        });
+      } else {
+        response += `I understand you're asking about: **"${userQuery}"**\n\n`;
+        response += `I couldn't find specific systems matching your query in your database. `;
+        response += `Could you provide more details or try a different search term?\n\n`;
       }
+      
+      // Add Pinecone documentation results
+      if (pineconeResults.length > 0) {
+        // Stage 2: Generate synthesized answer using LLM
+        let synthesizedAnswer = '';
+        try {
+          synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults);
+          response += `${synthesizedAnswer}\n\n`;
+        } catch (synthesisError) {
+          // Fallback to categorized content if synthesis fails
+          console.warn('Synthesis failed, using categorized content:', synthesisError.message);
+        }
+      }
+    }
       
       response += `## Detailed Documentation\n`;
       response += `I found relevant documentation for your question:\n\n`;
@@ -568,5 +889,6 @@ export default {
   getChatHistory,
   listUserChats,
   getChatContext,
-  deleteChatSession
+  deleteChatSession,
+  retrieveWithSpecBias
 };

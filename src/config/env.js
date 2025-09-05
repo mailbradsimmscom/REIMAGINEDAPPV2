@@ -12,6 +12,8 @@ const EnvSchema = z.object({
   PINECONE_NAMESPACE: z.string().optional(),
   DEFAULT_NAMESPACE: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
+  OPENAI_MODEL: z.string().optional(),
+  SEARCH_RANK_FLOOR: z.string().optional(),
   SUPABASE_URL: z.string().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_KEY: z.string().optional(),

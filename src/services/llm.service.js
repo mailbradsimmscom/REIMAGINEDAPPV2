@@ -291,7 +291,11 @@ function buildSynthesisPrompt(userQuery, categorizedResults) {
     }
   });
   
-  prompt += `\nBased on this categorized technical information, provide a clear, direct answer to the user's question. Focus on the most relevant information and provide specific details when available. Be professional, accurate, and helpful.`;
+  prompt += `\nBased on this categorized technical information, provide a clear, direct answer to the user's question. 
+
+IMPORTANT: When the user asks for specific technical specifications (like pressure, voltage, capacity, etc.), quote the exact values from the specifications section above. Do not give generic responses - use the specific technical data provided.
+
+Focus on the most relevant information and provide specific details when available. Be professional, accurate, and helpful.`;
   
   return prompt;
 }
