@@ -4,6 +4,8 @@ Node 20. ESM only. No console.log (use src/utils/logger.js).
 
 Read env only via src/config/env.js.
 
+never hard code items that should be in .env just ask and I will add it.
+
 Architecture
 
 Flow: routes → services → repositories.

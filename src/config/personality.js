@@ -72,4 +72,28 @@ When responding:
   }
 });
 
+// Style presets for different types of responses
+export const stylePresets = Object.freeze({
+  specBrief: {
+    rule: "≤2 sentences, lead with value + units, no fluff. Quote exact specifications from the data.",
+    openings: ["Based on the specifications:", "The technical data shows:"]
+  },
+  steps: {
+    rule: "numbered checklist, ≤6 steps, each ≤16 words. Be direct and actionable.",
+    openings: ["Here's the procedure:", "Follow these steps:"]
+  },
+  bullets3: {
+    rule: "3 bullets: cause, test, fix. Be diagnostic and solution-focused.",
+    openings: ["Let's troubleshoot this:", "Here's the diagnosis:"]
+  },
+  brief: {
+    rule: "≤2 sentences, professional but warm; optional one tip line.",
+    openings: ["Here's what I found:", "Based on the information:"]
+  },
+  technical: {
+    rule: "Direct technical specifications, units first, no personality fluff.",
+    openings: ["Technical specifications:", "Equipment details:"]
+  }
+});
+
 export default personality;

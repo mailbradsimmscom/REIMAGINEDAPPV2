@@ -1,36 +1,7 @@
-import { getEnv } from "../config/env.js";
+import { oaiJson } from '../clients/openai.client.js';
 import { logger } from "../utils/logger.js";
 
 const requestLogger = logger.createRequestLogger();
-
-// minimal, dependency-free call; swap to your OpenAI client if you have one
-async function openaiJson(system, user) {
-  const env = getEnv();
-  
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: env.OPENAI_MODEL ?? "gpt-4o-mini",
-      temperature: 0,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user }
-      ],
-    }),
-  });
-  if (!res.ok) {
-    const txt = await res.text().catch(() => "");
-    throw new Error(`OpenAI rerank error: ${res.status} ${txt}`);
-  }
-  const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content || "{}";
-  return JSON.parse(content);
-}
 
 export async function rerankChunks(question, chunks) {
   if (chunks.length <= 1) return chunks.map((c, i) => ({ ...c, _rankScore: 1 - i * 0.01 }));
@@ -52,7 +23,12 @@ export async function rerankChunks(question, chunks) {
 
     let best = 1;
     try {
-      const out = await openaiJson(system, user);
+      const out = await oaiJson({
+        system,
+        user,
+        maxOutputTokens: 100,
+        seed: 11
+      });
       if (Number.isInteger(out?.best) && out.best >= 1 && out.best <= chunks.length) {
         best = out.best;
         requestLogger.info('LLM reranking completed', { 

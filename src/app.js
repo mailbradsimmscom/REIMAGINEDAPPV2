@@ -31,25 +31,8 @@ app.use(express.urlencoded({
 }));
 
 // Request logging middleware
-app.use((req, res, next) => {
-  const requestLogger = logger.createRequestLogger();
-  const startTime = Date.now();
-  
-  // DEBUG: Add request tracing
-  console.log('🔍 [APP] REQUEST START:', req.method, req.originalUrl, '→', req.url);
-  
-  requestLogger.info('HTTP request received', { 
-    method: req.method, 
-    url: req.url,
-    userAgent: req.headers['user-agent']?.substring(0, 100)
-  });
-  
-  // Add logger to request for route handlers
-  req.requestLogger = requestLogger;
-  req.startTime = startTime;
-  
-  next();
-});
+import { requestLoggingMiddleware } from './middleware/requestLogging.js';
+app.use(requestLoggingMiddleware);
 
 // Static file serving
 app.get('/styles.css', async (req, res) => {

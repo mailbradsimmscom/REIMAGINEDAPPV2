@@ -27,6 +27,7 @@
         "docs:clean": "rm -f docs/*.svg docs/*.png"
     },
     "dependencies": {
+        "@pinecone-database/pinecone": "^6.1.2",
         "@supabase/supabase-js": "2.56.0",
         "busboy": "^1.6.0",
         "cors": "^2.8.5",
@@ -35,6 +36,8 @@
         "express-async-handler": "^1.2.0",
         "express-list-endpoints": "^7.1.1",
         "helmet": "^8.1.0",
+        "openai": "^5.19.1",
+        "uuid": "^11.1.0",
         "zod": "^4.1.5"
     },
     "devDependencies": {

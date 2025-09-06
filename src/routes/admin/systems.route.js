@@ -26,6 +26,37 @@ router.get('/',
   validate(adminSystemsQuerySchema, 'query'),
   async (req, res, next) => {
   try {
+    const { getSupabaseClient } = await import('../../repositories/supabaseClient.js');
+    const supabase = await getSupabaseClient();
+    
+    // Get document count
+    let documentsCount = 0;
+    try {
+      const { count: docCount, error: docError } = await supabase
+        .from('documents')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!docError) {
+        documentsCount = docCount || 0;
+      }
+    } catch (error) {
+      // Table might not exist, that's ok
+    }
+    
+    // Get job count
+    let jobsCount = 0;
+    try {
+      const { count: jobCount, error: jobError } = await supabase
+        .from('jobs')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!jobError) {
+        jobsCount = jobCount || 0;
+      }
+    } catch (error) {
+      // Table might not exist, that's ok
+    }
+    
     const data = await adminService.getSystems();
 
     const envelope = {
@@ -34,8 +65,8 @@ router.get('/',
         totalSystems: data.total,
         lastUpdated: data.lastUpdated,
         databaseStatus: 'connected',
-        documentsCount: 0,
-        jobsCount: 0
+        documentsCount: documentsCount,
+        jobsCount: jobsCount
       }
     };
 

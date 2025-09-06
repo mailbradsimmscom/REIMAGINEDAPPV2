@@ -10,8 +10,8 @@ RUN apk add --no-cache curl
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+    # Install dependencies
+    RUN npm ci --only=production --legacy-peer-deps
 
 # Copy application code
 COPY src/ ./src/

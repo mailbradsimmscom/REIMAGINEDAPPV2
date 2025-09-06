@@ -1,6 +1,7 @@
 import { searchSystems } from '../repositories/systems.repository.js';
 import pineconeService from './pinecone.service.js';
-import { enhanceQuery, summarizeConversation, generateChatName, synthesizeAnswer } from './llm.service.js';
+import { enhanceQuery, summarizeConversation, generateChatName, synthesizeAnswer, classifyQueryIntent, generateAssetSummary } from './llm.service.js';
+import { decideStyle } from '../utils/intent-style.js';
 import chatRepository, { deleteChatMessages, deleteChatThreads, deleteChatSession as deleteSessionFromRepo } from '../repositories/chat.repository.js';
 import { logger } from '../utils/logger.js';
 import { personality } from '../config/personality.js';
@@ -106,6 +107,10 @@ export async function retrieveWithSpecBias({ query, namespace }) {
   const requestLogger = logger.createRequestLogger();
   
   try {
+    // DEBUG: Log the query being searched
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Query:', query);
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Contains "pressure":', query.toLowerCase().includes('pressure'));
+    
     const { getEnv } = await import('../config/env.js');
     const env = getEnv();
     const topK = 40; // widen recall
@@ -126,15 +131,36 @@ export async function retrieveWithSpecBias({ query, namespace }) {
     };
     
     const pineconeResponse = await pineconeService.searchDocuments(query, searchContext);
-    const hits = pineconeResponse?.results || [];
+    const results = pineconeResponse?.results || [];
+    
+    // Extract chunks from grouped results
+    const hits = results.flatMap(result => result.chunks || []);
+
+    // DEBUG: Log Pinecone search results
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Pinecone results count:', results.length);
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Pinecone hits count:', hits.length);
+    console.log('🔍 [SPEC BIAS RETRIEVAL] First few hits:', hits.slice(0, 3).map(h => ({
+      score: h.score,
+      relevanceScore: h.relevanceScore,
+      content: h.content?.substring(0, 100) || 'No content'
+    })));
 
     const rawCount = hits.length;
 
     // 2) Apply dense score floor
-    const passedFloor = hits.filter(h => (h.bestScore ?? 0) >= floor);
+    const passedFloor = hits.filter(h => (h.score ?? 0) >= floor);
+    
+    // DEBUG: Log floor filtering
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Passed floor count:', passedFloor.length);
 
     // 3) Regex post-filter for spec-like chunks
     const specy = filterSpecLike(passedFloor);
+    
+    // DEBUG: Log spec filtering
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered count:', specy.length);
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered content:', specy.map(h => ({
+      content: h.content?.substring(0, 100) || 'No content'
+    })));
 
     // 4) Fallback if none survived spec filter
     const pool = specy.length ? specy : passedFloor;
@@ -144,6 +170,12 @@ export async function retrieveWithSpecBias({ query, namespace }) {
 
     // 6) Take top few for answer assembly
     const finalists = reranked.slice(0, Math.min(5, pool.length));
+    
+    // DEBUG: Log final results
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Finalists count:', finalists.length);
+    console.log('🔍 [SPEC BIAS RETRIEVAL] Finalists content:', finalists.map(h => ({
+      content: h.content?.substring(0, 100) || 'No content'
+    })));
 
     // 7) Return with observability
     const result = {
@@ -197,6 +229,138 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       sessionId, 
       threadId 
     });
+    
+    // Step 0: Intent classification - route to appropriate pipeline
+    const intent = await classifyQueryIntent(userQuery);
+    requestLogger.info('Query intent classified', { intent, userQuery: userQuery.substring(0, 50) });
+
+    // ---------- Summary branch (no hardcoding) ----------
+    if (intent === 'asset_summary') {
+      const searchContext = { previousMessages: [], systemInfo: '' };
+      const grouped = await pineconeService.searchDocuments(userQuery, searchContext);
+      const topGroup = Array.isArray(grouped?.results) && grouped.results.length ? grouped.results[0] : null;
+
+      // Pull a small number of blocks; we're relying on LLM to summarize
+      const blocks = topGroup?.chunks?.slice(0, 6).map(r => r.content).filter(Boolean) ?? [];
+      const assetHints = {
+        manufacturer: topGroup?.manufacturer,
+        model: topGroup?.model
+      };
+
+      requestLogger.info({ intent, blocks: blocks.length, manufacturer: assetHints.manufacturer, model: assetHints.model }, 'asset-summary-path');
+
+      let summary;
+      try {
+        summary = await generateAssetSummary({
+          userQuery,
+          assetHints,
+          contextBlocks: blocks
+        });
+      } catch (err) {
+        requestLogger.error({ err: String(err) }, 'Asset summary generation failed; returning non-persistent text');
+        // Still give the user something useful (first block) rather than erroring
+        const fallback = blocks?.[0] || 'I found relevant manual content but could not summarize right now.';
+        // Do not crash—return a safe message without persistence requirements
+        const fallbackSources = topGroup ? [{
+          type: 'pinecone',
+          manufacturer: topGroup.manufacturer,
+          model: topGroup.model,
+          filename: topGroup.filename,
+          documentId: topGroup.documentId,
+          pages: blocks.map(b => b.page).filter(Boolean),
+          score: topGroup.bestScore
+        }] : [];
+
+        return {
+          success: true,
+          sessionId,
+          threadId,
+          userMessage: { role: 'user', content: userQuery },
+          assistantMessage: { role: 'assistant', content: fallback, metadata: { mode: 'asset_summary_fallback' } },
+          systemsContext: [],
+          enhancedQuery: userQuery,
+          sources: fallbackSources,
+          telemetry: {
+            requestId: requestLogger.requestId,
+            retrievalMeta: {
+              specBiasMeta: null,
+              styleDetected: null,
+              temperature: 0.7,
+              model: 'gpt-4'
+            }
+          }
+        };
+      }
+
+      // Build sources array with document information
+      const sources = topGroup ? [{
+        type: 'pinecone',
+        manufacturer: topGroup.manufacturer,
+        model: topGroup.model,
+        filename: topGroup.filename,
+        documentId: topGroup.documentId,
+        pages: blocks.map(b => b.page).filter(Boolean),
+        score: topGroup.bestScore
+      }] : [];
+
+      // Persist only if we have a thread; otherwise return a transient reply
+      if (threadId) {
+        const userMessage = await chatRepository.createChatMessage({
+          threadId,
+          role: 'user',
+          content: userQuery,
+          metadata: { intent: 'asset_summary' }
+        });
+
+        const assistantMessage = await chatRepository.createChatMessage({
+          threadId,
+          role: 'assistant',
+          content: summary,
+          metadata: { mode: 'asset_summary', docId: topGroup?.documentId }
+        });
+
+        return {
+          success: true,
+          sessionId,
+          threadId,
+          userMessage,
+          assistantMessage,
+          systemsContext: [],
+          enhancedQuery: userQuery,
+          sources,
+          telemetry: {
+            requestId: requestLogger.requestId,
+            retrievalMeta: {
+              specBiasMeta: null,
+              styleDetected: null,
+              temperature: 0.7,
+              model: 'gpt-4'
+            }
+          }
+        };
+      }
+
+      // Return transient reply without persistence
+      return {
+        success: true,
+        sessionId,
+        threadId,
+        userMessage: { role: 'user', content: userQuery },
+        assistantMessage: { role: 'assistant', content: summary, metadata: { mode: 'asset_summary' } },
+        systemsContext: [],
+        enhancedQuery: userQuery,
+        sources,
+        telemetry: {
+          requestId: requestLogger.requestId,
+          retrievalMeta: {
+            specBiasMeta: null,
+            styleDetected: null,
+            temperature: 0.7,
+            model: 'gpt-4'
+          }
+        }
+      };
+    }
     
     // Step 1: Determine if this is a follow-up question and get existing context
     let systemsContext = [];
@@ -513,6 +677,13 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       personalityApplied: true
     });
     
+    // Generate request ID for telemetry
+    const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Get environment config for telemetry
+    const { getEnv: getEnvConfig } = await import('../config/env.js');
+    const env = getEnvConfig();
+    
     return {
       sessionId,
       threadId,
@@ -522,7 +693,16 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       enhancedQuery,
       pineconeResults,
       sources: assistantResponse.sources,
-      specBiasMeta
+      specBiasMeta,
+      telemetry: {
+        requestId,
+        retrievalMeta: {
+          specBiasMeta,
+          styleDetected: assistantResponse.styleDetected || null,
+          temperature: parseFloat(env.LLM_TEMPERATURE || '0.7'),
+          model: env.OPENAI_MODEL || 'gpt-4'
+        }
+      }
     };
     
   } catch (error) {
@@ -540,6 +720,20 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
   try {
     let response = '';
     let sources = [];
+    let styleDetected = null;
+    
+    // Build sources array from pinecone results
+    if (pineconeResults.length > 0) {
+      sources = pineconeResults.map(result => ({
+        type: 'pinecone',
+        manufacturer: result.manufacturer,
+        model: result.model,
+        filename: result.filename,
+        documentId: result.documentId,
+        pages: result.chunks?.map(chunk => chunk.page).filter(Boolean) || [],
+        score: result.bestScore
+      }));
+    }
     
     // Check if this is a pressure-related question and extract specific pressure data
     const isPressureQuestion = userQuery.toLowerCase().includes('pressure');
@@ -609,20 +803,21 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       
       // Add Pinecone documentation results
       if (pineconeResults.length > 0) {
-        // Stage 2: Generate synthesized answer using LLM
+        // Stage 2: Generate synthesized answer using LLM with style detection
         let synthesizedAnswer = '';
         try {
-          synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults);
+          const style = decideStyle(userQuery);
+          styleDetected = style; // Capture the detected style
+          console.log('Style detected:', style, 'for query:', userQuery);
+          synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults, style);
           response += `${synthesizedAnswer}\n\n`;
         } catch (synthesisError) {
           // Fallback to categorized content if synthesis fails
           console.warn('Synthesis failed, using categorized content:', synthesisError.message);
         }
-      }
-    }
-      
-      response += `## Detailed Documentation\n`;
-      response += `I found relevant documentation for your question:\n\n`;
+        
+        response += `## Detailed Documentation\n`;
+        response += `I found relevant documentation for your question:\n\n`;
       
       pineconeResults.forEach((result, index) => {
         response += `### ${result.manufacturer} ${result.model}\n`;
@@ -729,14 +924,16 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       
       response += `Based on this documentation, I can provide detailed information about specifications, operation, safety, and installation. `;
       response += `Feel free to ask specific questions about any aspect of your equipment!\n\n`;
-    } else if (pineconeError) {
-      response += `## Documentation Search\n`;
-      response += `I encountered an issue searching the documentation database. `;
-      response += `However, I can still help you with information about your systems.\n\n`;
-    } else {
-      response += `## Documentation Search\n`;
-      response += `I couldn't find specific documentation matching your query. `;
-      response += `This might mean the documentation hasn't been uploaded yet, or you might need to try different search terms.\n\n`;
+      }  
+    if (pineconeError) {
+        response += `## Documentation Search\n`;
+        response += `I encountered an issue searching the documentation database. `;
+        response += `However, I can still help you with information about your systems.\n\n`;
+      } else {
+        response += `## Documentation Search\n`;
+        response += `I couldn't find specific documentation matching your query. `;
+        response += `This might mean the documentation hasn't been uploaded yet, or you might need to try different search terms.\n\n`;
+      }
     }
     
     // Add conversation context if available
@@ -757,7 +954,7 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
       });
     }
     
-    return { content: response, sources };
+    return { content: response, sources, styleDetected };
     
   } catch (error) {
     const fallbackResponse = `I'm here to help! I found some relevant systems and can assist with your questions. What would you like to know more about?`;

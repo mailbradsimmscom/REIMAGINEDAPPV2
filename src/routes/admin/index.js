@@ -7,21 +7,23 @@ import logsRouter from './logs.route.js';
 import manufacturersRouter from './manufacturers.route.js';
 import modelsRouter from './models.route.js';
 import pineconeRouter from './pinecone.route.js';
+import metricsRouter from './metrics.route.js';
 
 const router = express.Router();
 
-// Apply admin gate to all routes in this router
-router.use(adminOnly);
-
-// Mount dashboard route (no auth required)
+// Mount dashboard route FIRST (no auth required for HTML page)
 router.use('/', dashboardRouter);
 
-// Mount all other routes
+// Apply admin gate to all API routes
+router.use(adminOnly);
+
+// Mount all other routes (these require admin auth)
 router.use('/health', healthRouter);
 router.use('/systems', systemsRouter);
 router.use('/logs', logsRouter);
 router.use('/manufacturers', manufacturersRouter);
 router.use('/models', modelsRouter);
 router.use('/pinecone', pineconeRouter);
+router.use('/metrics', metricsRouter);
 
 export default router;

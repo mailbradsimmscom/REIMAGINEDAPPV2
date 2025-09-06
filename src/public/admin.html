@@ -426,6 +426,7 @@
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('logging')" id="tab-logging">Logging</button>
+            <button class="tab-btn" onclick="switchTab('telemetry')" id="tab-telemetry">Telemetry</button>
             <button class="tab-btn" onclick="switchTab('doc-upload')" id="tab-doc-upload">Doc Upload</button>
         </div>
 
@@ -551,6 +552,118 @@
             </div>
         </div>
 
+        <div class="tab-content hidden" id="telemetry-tab">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Chat Health</h3>
+                    <div id="chat-health-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Requests/min</span>
+                            <span class="metric-value" id="requests-per-minute">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">P95 Latency</span>
+                            <span class="metric-value" id="p95-latency">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Error Rate</span>
+                            <span class="metric-value" id="error-rate">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Total Requests</span>
+                            <span class="metric-value" id="total-requests">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Retrieval Quality</h3>
+                    <div id="retrieval-quality-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Avg Raw Count</span>
+                            <span class="metric-value" id="avg-raw-count">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Avg Passed Floor</span>
+                            <span class="metric-value" id="avg-passed-floor">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Avg Filtered</span>
+                            <span class="metric-value" id="avg-filtered">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Spec Hit Rate</span>
+                            <span class="metric-value" id="spec-hit-rate">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>OpenAI Usage</h3>
+                    <div id="openai-usage-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Calls/min</span>
+                            <span class="metric-value" id="calls-per-minute">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Tokens/min</span>
+                            <span class="metric-value" id="tokens-per-minute">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Estimated Cost</span>
+                            <span class="metric-value" id="estimated-cost">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Retry Count</span>
+                            <span class="metric-value" id="retry-count">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Top Unit Matches</h3>
+                    <div id="unit-matches-metrics">
+                        <div class="metric">
+                            <span class="metric-label">PSI</span>
+                            <span class="metric-value" id="unit-psi">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Volts</span>
+                            <span class="metric-value" id="unit-volt">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Amps</span>
+                            <span class="metric-value" id="unit-amp">Loading...</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Hz</span>
+                            <span class="metric-value" id="unit-hz">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logs-section">
+                <div class="logs-header">
+                    <h3>Recent Errors</h3>
+                    <div class="logs-controls">
+                        <select id="telemetry-timeframe">
+                            <option value="5m">Last 5 minutes</option>
+                            <option value="15m" selected>Last 15 minutes</option>
+                            <option value="1h">Last hour</option>
+                            <option value="24h">Last 24 hours</option>
+                        </select>
+                        <button class="btn refresh-btn" onclick="refreshTelemetry()">Refresh</button>
+                    </div>
+                </div>
+                <div id="telemetry-errors-container">
+                    <div class="empty-state">
+                        <p>No errors in the selected timeframe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="tab-content hidden" id="doc-upload-tab">
             <div class="upload-section">
                 <div class="upload-header">
@@ -638,7 +751,7 @@
         let refreshInterval;
         
         // Admin token for API requests
-        const ADMIN_TOKEN = 'admin-secret-key';
+        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
         
         // Helper function to make authenticated requests
         async function adminFetch(url, options = {}) {
@@ -652,6 +765,78 @@
             return fetch(url, { ...defaultOptions, ...options });
         }
 
+        // Load telemetry data
+        async function loadTelemetryData() {
+            try {
+                const timeframe = document.getElementById('telemetry-timeframe')?.value || '15m';
+                const response = await adminFetch(`/admin/metrics?timeframe=${timeframe}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayTelemetryData(data.data);
+                }
+            } catch (error) {
+                console.error('Failed to load telemetry data:', error);
+            }
+        }
+
+        // Display telemetry data
+        function displayTelemetryData(metrics) {
+            // Chat Health
+            document.getElementById('requests-per-minute').textContent = metrics.chatHealth.requestsPerMinute.toFixed(1);
+            document.getElementById('p95-latency').textContent = `${metrics.chatHealth.p95Latency.toFixed(0)}ms`;
+            document.getElementById('error-rate').textContent = `${metrics.chatHealth.errorRate.toFixed(1)}%`;
+            document.getElementById('total-requests').textContent = metrics.chatHealth.totalRequests;
+
+            // Retrieval Quality
+            document.getElementById('avg-raw-count').textContent = metrics.retrievalQuality.avgRawCount.toFixed(1);
+            document.getElementById('avg-passed-floor').textContent = metrics.retrievalQuality.avgPassedFloorCount.toFixed(1);
+            document.getElementById('avg-filtered').textContent = metrics.retrievalQuality.avgFilteredCount.toFixed(1);
+            document.getElementById('spec-hit-rate').textContent = `${metrics.retrievalQuality.specHitRate.toFixed(1)}%`;
+
+            // OpenAI Usage
+            document.getElementById('calls-per-minute').textContent = metrics.openaiUsage.callsPerMinute.toFixed(1);
+            document.getElementById('tokens-per-minute').textContent = metrics.openaiUsage.tokensPerMinute.toFixed(0);
+            document.getElementById('estimated-cost').textContent = `$${metrics.openaiUsage.estimatedCost.toFixed(4)}`;
+            document.getElementById('retry-count').textContent = metrics.openaiUsage.retryCount;
+
+            // Unit Matches
+            document.getElementById('unit-psi').textContent = metrics.retrievalQuality.topUnitMatches.psi;
+            document.getElementById('unit-volt').textContent = metrics.retrievalQuality.topUnitMatches.volt;
+            document.getElementById('unit-amp').textContent = metrics.retrievalQuality.topUnitMatches.amp;
+            document.getElementById('unit-hz').textContent = metrics.retrievalQuality.topUnitMatches.hz;
+
+            // Display recent errors
+            displayTelemetryErrors(metrics.recentErrors);
+        }
+
+        // Display telemetry errors
+        function displayTelemetryErrors(errors) {
+            const container = document.getElementById('telemetry-errors-container');
+            
+            if (errors.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No errors in the selected timeframe.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = errors.map(error => `
+                <div class="log-entry error">
+                    <strong>${error.timestamp}</strong> [${error.level}] ${error.message}
+                    ${error.requestId ? `\nRequest ID: ${error.requestId}` : ''}
+                    ${error.route ? `\nRoute: ${error.route}` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Refresh telemetry data
+        async function refreshTelemetry() {
+            await loadTelemetryData();
+        }
+
         // Initialize dashboard
         async function initDashboard() {
             await loadHealthData();
@@ -659,6 +844,7 @@
             await loadPineconeData();
             await loadLogs();
             await loadManufacturers();
+            await loadTelemetryData();
             setDefaultRevisionDate();
             
             // Set up auto-refresh every 30 seconds
@@ -666,6 +852,7 @@
                 await loadHealthData();
                 await loadPineconeData();
                 await loadLogs();
+                await loadTelemetryData();
             }, 30000);
         }
 
@@ -887,6 +1074,11 @@
         // Log level filter change
         document.getElementById('log-level-filter').addEventListener('change', async () => {
             await loadLogs();
+        });
+
+        // Telemetry timeframe filter change
+        document.getElementById('telemetry-timeframe').addEventListener('change', async () => {
+            await loadTelemetryData();
         });
 
         // Tab switching functionality

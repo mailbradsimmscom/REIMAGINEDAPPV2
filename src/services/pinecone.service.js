@@ -251,7 +251,7 @@ class PineconeService {
       const chunks = searchResults.matches?.map(match => ({
         id: match.id,
         score: match.score,
-        content: match.metadata?.text || '',
+        content: (match.metadata?.content ?? match.metadata?.text ?? match.metadata?.raw ?? ''),
         page: match.metadata?.page || 0,
         chunkIndex: match.metadata?.chunk_index || 0,
         chunkType: match.metadata?.chunk_type || 'text'

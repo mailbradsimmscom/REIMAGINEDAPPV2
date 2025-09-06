@@ -59,7 +59,8 @@ router.post(
           },
           systemsContext: result.systemsContext,
           enhancedQuery: result.enhancedQuery,
-          sources: result.sources
+          sources: result.sources,
+          telemetry: result.telemetry
         }
       };
 

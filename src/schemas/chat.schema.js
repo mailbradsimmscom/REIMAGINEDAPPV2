@@ -90,7 +90,16 @@ const ChatProcessOkSchema = z.object({
     }),
     systemsContext: z.array(z.any()).optional(),
     enhancedQuery: z.string().optional(),
-    sources: z.array(z.any()).optional()
+    sources: z.array(z.any()).optional(),
+    telemetry: z.object({
+      requestId: z.string().optional(),
+      retrievalMeta: z.object({
+        specBiasMeta: z.any().optional(),
+        styleDetected: z.string().optional(),
+        temperature: z.number().optional(),
+        model: z.string().optional()
+      }).optional()
+    }).optional()
   }),
   timestamp: z.string()
 });

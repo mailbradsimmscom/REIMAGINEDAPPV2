@@ -274,3 +274,57 @@ export const AdminPineconeEnvelope = z.union([
   EnvelopeSuccessSchema.extend({ data: AdminPineconeData }),
   EnvelopeErrorSchema
 ]);
+
+// Admin metrics data schema
+const AdminMetricsData = z.object({
+  timeframe: z.string(),
+  windowStart: z.string(),
+  windowEnd: z.string(),
+  chatHealth: z.object({
+    totalRequests: z.number(),
+    requestsPerMinute: z.number(),
+    p95Latency: z.number(),
+    errorRate: z.number(),
+    errorCount: z.number(),
+    successCount: z.number()
+  }),
+  retrievalQuality: z.object({
+    avgRawCount: z.number(),
+    avgPassedFloorCount: z.number(),
+    avgFilteredCount: z.number(),
+    specHitRate: z.number(),
+    totalQueries: z.number(),
+    topUnitMatches: z.object({
+      psi: z.number(),
+      bar: z.number(),
+      volt: z.number(),
+      amp: z.number(),
+      hz: z.number(),
+      celsius: z.number(),
+      fahrenheit: z.number()
+    })
+  }),
+  openaiUsage: z.object({
+    totalCalls: z.number(),
+    callsPerMinute: z.number(),
+    totalInputTokens: z.number(),
+    totalOutputTokens: z.number(),
+    tokensPerMinute: z.number(),
+    estimatedCost: z.number(),
+    retryCount: z.number(),
+    rateLimitCount: z.number()
+  }),
+  systemHealth: z.object({
+    uptime: z.number(),
+    memoryUsage: z.any(),
+    environment: z.string()
+  }),
+  recentErrors: z.array(z.any()),
+  lastUpdated: z.string(),
+  dataSource: z.string()
+});
+
+export const AdminMetricsEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: AdminMetricsData }),
+  EnvelopeErrorSchema
+]);

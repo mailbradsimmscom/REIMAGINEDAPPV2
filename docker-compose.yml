@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - ADMIN_TOKEN=dev-admin-token
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
       - PYTHON_SIDECAR_URL=http://python-sidecar:8000
       - SIDECAR_HEALTH_CHECK_INTERVAL=30000
       - SIDECAR_STARTUP_TIMEOUT=30000
@@ -23,6 +23,7 @@ services:
       - OPENAI_MODEL=${OPENAI_MODEL}
       - SEARCH_RANK_FLOOR=${SEARCH_RANK_FLOOR}
       - PINECONE_NAMESPACE=${PINECONE_NAMESPACE}
+      - PINECONE_INDEX=${PINECONE_INDEX}
       - DEFAULT_NAMESPACE=${DEFAULT_NAMESPACE}
     depends_on:
       python-sidecar:
