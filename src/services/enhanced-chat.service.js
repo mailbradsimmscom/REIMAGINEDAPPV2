@@ -172,8 +172,8 @@ export async function retrieveWithSpecBias({ query, namespace }) {
     // DEBUG: Log floor filtering
     console.log('🔍 [SPEC BIAS RETRIEVAL] Passed floor count:', passedFloor.length);
 
-    // 3) Regex post-filter for spec-like chunks
-    const specy = filterSpecLike(passedFloor);
+    // 3) Regex post-filter for spec-like chunks (now includes maintenance content)
+    const specy = await filterSpecLike(passedFloor);
     
     // DEBUG: Log spec filtering
     console.log('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered count:', specy.length);

@@ -6,6 +6,7 @@ import { AdminMetricsEnvelope } from '../../schemas/admin.schema.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { getRequestMetrics } from '../../middleware/requestLogging.js';
 import { logger } from '../../utils/logger.js';
+import { metrics } from '../../utils/metrics.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -33,6 +34,9 @@ router.get('/',
     // Get real request metrics
     const requestMetrics = getRequestMetrics(timeframe);
     
+    // Get fuzzy matching and context rewrite metrics
+    const dashboardMetrics = metrics.getDashboardMetrics();
+    
     const metrics = {
       timeframe,
       windowStart: requestMetrics.windowStart,
@@ -46,6 +50,37 @@ router.get('/',
         errorRate: requestMetrics.errorRate,
         errorCount: requestMetrics.errorCount,
         successCount: requestMetrics.successCount
+      },
+      
+      // Fuzzy Matching & Context Rewrite Metrics (from our new metrics system)
+      fuzzyMatching: {
+        maintenanceDetection: {
+          totalOperations: dashboardMetrics.maintenance_detection.total_questions,
+          successRate: dashboardMetrics.maintenance_detection.success_rate,
+          avgDuration: dashboardMetrics.maintenance_detection.avg_duration,
+          performanceScore: dashboardMetrics.maintenance_detection.performance_score,
+          fuzzyMatches: dashboardMetrics.maintenance_detection.fuzzy_matches,
+          exactMatches: dashboardMetrics.maintenance_detection.exact_matches
+        },
+        unitsNormalization: {
+          totalOperations: dashboardMetrics.units_normalization.total_operations,
+          successRate: dashboardMetrics.units_normalization.success_rate,
+          avgDuration: dashboardMetrics.units_normalization.avg_duration,
+          performanceScore: dashboardMetrics.units_normalization.performance_score,
+          fuzzySuccessRate: dashboardMetrics.units_normalization.fuzzy_success_rate
+        },
+        contextRewrite: {
+          totalOperations: dashboardMetrics.context_rewrite.total_operations,
+          successRate: dashboardMetrics.context_rewrite.success_rate,
+          avgDuration: dashboardMetrics.context_rewrite.avg_duration,
+          performanceScore: dashboardMetrics.context_rewrite.performance_score || 0
+        },
+        overall: {
+          totalOperations: dashboardMetrics.fuzzy_matching.total_operations,
+          successRate: dashboardMetrics.fuzzy_matching.success_rate,
+          performanceScore: dashboardMetrics.fuzzy_matching.performance_score,
+          typoCorrections: dashboardMetrics.fuzzy_matching.typo_corrections
+        }
       },
       
       // Retrieval Quality Metrics (from existing specBiasMeta)
@@ -112,8 +147,69 @@ router.get('/',
   }
 });
 
+// GET /admin/metrics/fuzzy - Get detailed fuzzy matching metrics
+router.get('/fuzzy', async (req, res, next) => {
+  try {
+    const requestLogger = logger.createRequestLogger();
+    
+    // Get detailed fuzzy matching metrics
+    const dashboardMetrics = metrics.getDashboardMetrics();
+    const allMetrics = metrics.getMetrics();
+    
+    // Get performance metrics for each operation
+    const maintenancePerformance = metrics.getPerformanceMetrics('maintenance_detection');
+    const unitsPerformance = metrics.getPerformanceMetrics('units_normalization');
+    const contextRewritePerformance = metrics.getPerformanceMetrics('context_rewrite');
+    
+    const fuzzyMetrics = {
+      summary: {
+        maintenanceDetection: dashboardMetrics.maintenance_detection,
+        unitsNormalization: dashboardMetrics.units_normalization,
+        contextRewrite: dashboardMetrics.context_rewrite,
+        overall: dashboardMetrics.fuzzy_matching
+      },
+      performance: {
+        maintenanceDetection: maintenancePerformance,
+        unitsNormalization: unitsPerformance,
+        contextRewrite: contextRewritePerformance
+      },
+      raw: {
+        totalMetrics: Object.keys(allMetrics).length,
+        metricCategories: [...new Set(Object.keys(allMetrics).map(k => k.split('&')[0]))],
+        lastUpdated: new Date().toISOString()
+      }
+    };
+    
+    requestLogger.info('Fuzzy matching metrics retrieved', { 
+      totalMetrics: Object.keys(allMetrics).length,
+      maintenanceOps: dashboardMetrics.maintenance_detection.total_questions,
+      unitsOps: dashboardMetrics.units_normalization.total_operations
+    });
+
+    const envelope = {
+      success: true,
+      data: fuzzyMetrics
+    };
+
+    return res.json(envelope);
+    
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
+  return res.json({
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
+
+router.all('/fuzzy', (req, res) => {
   return res.json({
     success: false,
     error: {
