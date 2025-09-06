@@ -8,6 +8,9 @@ import manufacturersRouter from './manufacturers.route.js';
 import modelsRouter from './models.route.js';
 import pineconeRouter from './pinecone.route.js';
 import metricsRouter from './metrics.route.js';
+import suggestionsRouter from './suggestions.route.js';
+import dipRouter from './dip.route.js';
+import snapshotsRouter from './snapshots.route.js';
 
 const router = express.Router();
 
@@ -25,5 +28,8 @@ router.use('/manufacturers', manufacturersRouter);
 router.use('/models', modelsRouter);
 router.use('/pinecone', pineconeRouter);
 router.use('/metrics', metricsRouter);
+router.use('/dip', dipRouter);
+router.use('/snapshots', snapshotsRouter);
+router.use('/', suggestionsRouter);
 
 export default router;

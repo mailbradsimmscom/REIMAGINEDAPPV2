@@ -1,56 +1,79 @@
 {
   "length": [
-    { "canonical": "m", "aliases": ["m", "meter", "metre", "meters", "metres"] },
-    { "canonical": "ft", "aliases": ["ft", "feet", "foot", "′", "'"] },
-    { "canonical": "in", "aliases": ["in", "inch", "inches", "″", "\""] },
-    { "canonical": "cm", "aliases": ["cm", "centimeter", "centimetre", "centimeters", "centimetres"] },
-    { "canonical": "mm", "aliases": ["mm", "millimeter", "millimetre", "millimeters", "millimetres"] },
-    { "canonical": "km", "aliases": ["km", "kilometer", "kilometre", "kilometers", "kilometres"] }
+    {
+      "canonical": "m",
+      "aliases": [
+        "m",
+        "meter",
+        "metre"
+      ]
+    },
+    {
+      "canonical": "ft",
+      "aliases": [
+        "ft",
+        "feet",
+        "′",
+        "'"
+      ]
+    },
+    {
+      "canonical": "in",
+      "aliases": [
+        "in",
+        "inch",
+        "inches",
+        "″",
+        "\""
+      ]
+    }
   ],
   "pressure": [
-    { "canonical": "bar", "aliases": ["bar", "bars"] },
-    { "canonical": "kPa", "aliases": ["kpa", "kPa", "kilopascal", "kilopascals"] },
-    { "canonical": "psi", "aliases": ["psi", "pound per square inch", "pounds per square inch"] },
-    { "canonical": "MPa", "aliases": ["mpa", "MPa", "megapascal", "megapascals"] },
-    { "canonical": "Pa", "aliases": ["pa", "Pa", "pascal", "pascals"] }
+    {
+      "canonical": "bar",
+      "aliases": [
+        "bar"
+      ]
+    },
+    {
+      "canonical": "kPa",
+      "aliases": [
+        "kpa",
+        "kPa"
+      ]
+    },
+    {
+      "canonical": "psi",
+      "aliases": [
+        "psi"
+      ]
+    }
   ],
   "power": [
-    { "canonical": "kW", "aliases": ["kw", "kW", "kilowatt", "kilowatts"] },
-    { "canonical": "W", "aliases": ["w", "W", "watt", "watts"] },
-    { "canonical": "hp", "aliases": ["hp", "horsepower", "horse power"] },
-    { "canonical": "MW", "aliases": ["mw", "MW", "megawatt", "megawatts"] }
+    {
+      "canonical": "kW",
+      "aliases": [
+        "kw",
+        "kW"
+      ]
+    },
+    {
+      "canonical": "hp",
+      "aliases": [
+        "hp",
+        "horsepower"
+      ]
+    }
   ],
   "torque": [
-    { "canonical": "N·m", "aliases": ["n·m", "n-m", "nm", "Nm", "newton meter", "newton metre", "newton meters", "newton metres"], "disambiguateBy": ["torque", "tighten", "tightening", "bolt", "nut"] },
-    { "canonical": "lb·ft", "aliases": ["lb·ft", "lb-ft", "lbft", "pound foot", "pound feet", "ft·lb", "ft-lb"], "disambiguateBy": ["torque", "tighten", "tightening", "bolt", "nut"] }
-  ],
-  "temperature": [
-    { "canonical": "°C", "aliases": ["°c", "°C", "celsius", "centigrade", "deg c", "deg c"] },
-    { "canonical": "°F", "aliases": ["°f", "°F", "fahrenheit", "deg f", "deg f"] },
-    { "canonical": "K", "aliases": ["k", "K", "kelvin", "kelvins"] }
-  ],
-  "volume": [
-    { "canonical": "L", "aliases": ["l", "L", "liter", "litre", "liters", "litres"] },
-    { "canonical": "mL", "aliases": ["ml", "mL", "milliliter", "millilitre", "milliliters", "millilitres"] },
-    { "canonical": "gal", "aliases": ["gal", "gallon", "gallons"] },
-    { "canonical": "m³", "aliases": ["m3", "m³", "cubic meter", "cubic metre", "cubic meters", "cubic metres"] }
-  ],
-  "flow": [
-    { "canonical": "L/min", "aliases": ["l/min", "L/min", "liter per minute", "litre per minute", "liters per minute", "litres per minute"] },
-    { "canonical": "L/h", "aliases": ["l/h", "L/h", "liter per hour", "litre per hour", "liters per hour", "litres per hour"] },
-    { "canonical": "gpm", "aliases": ["gpm", "gallons per minute", "gallon per minute"] },
-    { "canonical": "gph", "aliases": ["gph", "gallons per hour", "gallon per hour"] }
-  ],
-  "electrical": [
-    { "canonical": "V", "aliases": ["v", "V", "volt", "volts", "voltage"] },
-    { "canonical": "A", "aliases": ["a", "A", "amp", "amps", "ampere", "amperes", "current"] },
-    { "canonical": "Hz", "aliases": ["hz", "Hz", "hertz", "frequency"] },
-    { "canonical": "Ω", "aliases": ["ohm", "ohms", "Ω", "omega"] }
-  ],
-  "weight": [
-    { "canonical": "kg", "aliases": ["kg", "kilogram", "kilograms", "kilo", "kilos"] },
-    { "canonical": "g", "aliases": ["g", "gram", "grams"] },
-    { "canonical": "lb", "aliases": ["lb", "lbs", "pound", "pounds"] },
-    { "canonical": "oz", "aliases": ["oz", "ounce", "ounces"] }
+    {
+      "canonical": "N·m",
+      "aliases": [
+        "n·m",
+        "n-m",
+        "nm",
+        "Nm"
+      ]
+    }
   ]
 }

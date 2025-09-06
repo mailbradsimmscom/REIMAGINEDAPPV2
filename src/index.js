@@ -22,6 +22,12 @@ import adminRouter from './routes/admin/index.js';
 import pineconeRepository from './repositories/pinecone.repository.js';
 import { attachConfigInspector } from './debug/config.js';
 import { attachRouteDebugger } from './debug/routes.js';
+import { ensureLexicons } from './startup/configGuard.service.js';
+
+// Ensure critical lexicon files exist at startup
+ensureLexicons().catch(err => {
+  logger.warn('Config guard failed (non-fatal)', { error: err.message });
+});
 
 // Safe mount function to identify failing routers
 function safeMount(base, router) {

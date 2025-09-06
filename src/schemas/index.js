@@ -62,3 +62,19 @@ export {
   errorResponseSchema,
   successResponseSchema
 } from './common.schema.js';
+
+// Ingestion schemas
+export {
+  DIPSchema,
+  SuggestionsSchema,
+  ApplyRequestSchema,
+  ApplyResponseSchema,
+  RollbackRequestSchema,
+  RollbackResponseSchema,
+  validateDIP,
+  validateSuggestions,
+  validateApplyRequest,
+  validateRollbackRequest,
+  createDefaultDIP,
+  createDefaultSuggestions
+} from './ingestion.schema.js';
