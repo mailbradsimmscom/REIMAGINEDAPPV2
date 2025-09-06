@@ -9,30 +9,22 @@ import { isSupabaseConfigured, isOpenAIConfigured, isPineconeConfigured } from '
 import { filterSpecLike } from '../utils/specFilter.js';
 import { rerankChunks } from './rerank.service.js';
 
-// Context Detection Functions
+// ---------- Context & Follow-up Detection ----------
 function isFollowUpQuestion(query) {
-  const followUpPatterns = [
-    /^what (pressure|voltage|amperage|wattage|capacity|size|dimensions|weight|temperature|speed|flow|rate)/i,
-    /^how (much|many|long|fast|hot|cold|big|small|heavy|light)/i,
-    /^where (is|are|can|should|do)/i,
-    /^when (should|can|do|is|are)/i,
-    /^why (does|is|are|should|can)/i,
-    /^which (one|model|type|brand|size)/i,
-    /^can (you|it|i|we)/i,
-    /^does (it|this|that)/i,
-    /^is (it|this|that|there)/i,
-    /^are (you|they|there)/i,
-    /^will (it|this|that)/i,
-    /^should (i|we|you)/i,
-    /^could (you|it|i|we)/i,
-    /^would (you|it|i|we)/i,
-    /^tell me (more|about|how|what|when|where|why)/i,
-    /^show me (how|what|when|where|why)/i,
-    /^explain (how|what|when|where|why)/i,
-    /^describe (how|what|when|where|why)/i
+  const q = query.trim().toLowerCase();
+  const patterns = [
+    /^(what|which)\s+(pressure|voltage|amperage|wattage|capacity|size|dimensions|weight|temperature|speed|flow|rate)\b/,
+    /^(how\s+(much|many|long|fast|hot|cold|big|small|heavy|light))\b/,
+    /^how\s+(do|to)\b/,
+    /^(can|could|would|should|will)\s+(i|we|you|it|this|that)\b/,
+    /^(does|do|is|are|was|were)\s+(it|this|that|there)\b/,
+    /^(how|what|does|do|is|are|can)\b.*\b(it|this|that)\b/
   ];
-  
-  return followUpPatterns.some(pattern => pattern.test(query.trim()));
+  return patterns.some(rx => rx.test(q));
+}
+
+function containsAmbiguousPronoun(query) {
+  return /\b(it|this|that|them)\b/i.test(query);
 }
 
 function extractEquipmentTerms(query) {
@@ -76,6 +68,33 @@ function getExistingSystemsContext(threadMetadata, recentMessages) {
     return recentSystemsContext;
   }
   return threadSystemsContext;
+}
+
+function contextRewrite(query, systemsContext) {
+  if (!systemsContext?.length) return query;
+  const sys = systemsContext[0];
+  const make = (sys.manufacturer_norm || sys.manufacturer || '').trim();
+  const model = (sys.model_norm || sys.model || '').trim();
+  const label = [make, model].filter(Boolean).join(' ').trim() || sys.system_norm || 'this system';
+  const q = query.trim();
+  if (label && new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(q)) {
+    return q;
+  }
+  const itRegex = /\b(it|this|that|them)\b/i;
+  if (itRegex.test(q)) {
+    return q.replace(itRegex, `the ${label}`);
+  }
+  if (/^how\s+does\b/i.test(q)) return q.replace(/^how\s+does\b/i, `how does the ${label}`);
+  if (/^how\s+to\b/i.test(q))   return q.replace(/^how\s+to\b/i,   `how to use the ${label}`);
+  return `${q} — ${label}`;
+}
+
+function withTimeout(promise, ms, onTimeoutMsg = 'Timed out') {
+  let t;
+  const timeout = new Promise((_, rej) => {
+    t = setTimeout(() => rej(new Error(onTimeoutMsg)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(t));
 }
 
 // Helper function to check if required services are available
@@ -368,48 +387,68 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     let existingThreadMetadata = null;
     
     if (threadId) {
-      // Get existing thread metadata to check for systems context
+      // Load thread + recent messages for context reuse
       try {
-        const existingThread = await chatRepository.getChatThread(threadId);
+        const { getEnv } = await import('../config/env.js');
+        const env = getEnv();
+        const contextTimeout = parseInt(env.CONTEXT_LOADING_TIMEOUT_MS || '1800');
+        const systemSearchTimeout = parseInt(env.SYSTEM_SEARCH_TIMEOUT_MS || '1200');
+        
+        const { thread: existingThread, messages: recentMessages } = await withTimeout(
+          (async () => {
+            const [thr, msgs] = await Promise.all([
+              chatRepository.getChatThread(threadId),
+              chatRepository.getChatMessages(threadId, { limit: 50 })
+            ]);
+            return { thread: thr, messages: msgs };
+          })(),
+          contextTimeout,
+          'context bootstrap timeout'
+        );
         existingThreadMetadata = existingThread?.metadata || {};
-        
-        // Check if this is a follow-up question
+
         isFollowUp = isFollowUpQuestion(userQuery);
-        
-        // If it's a follow-up question and we have existing systems context, use it
-        if (isFollowUp && hasExistingSystemsContext(existingThreadMetadata, [])) {
-          const existingContext = getExistingSystemsContext(existingThreadMetadata, []);
-          
-          // Convert stored asset_uid strings back to system objects for compatibility
-          // We need to fetch the full system data for each asset_uid
-          try {
-            const systemPromises = existingContext.map(async (assetUid) => {
-              // Search for the specific system by asset_uid
-              const results = await searchSystems(assetUid, { limit: 1 });
-              return results.find(s => s.asset_uid === assetUid) || { asset_uid: assetUid, rank: 0.1 };
-            });
-            
-            systemsContext = await Promise.all(systemPromises);
-            
-            requestLogger.info('Using existing systems context for follow-up question', { 
-              threadId,
-              systemsContextCount: systemsContext.length,
-              isFollowUp: true,
-              assetUids: existingContext
-            });
-          } catch (contextError) {
-            requestLogger.warn('Failed to load existing systems context, will search instead', { 
-              error: contextError.message,
-              threadId 
-            });
-            systemsContext = []; // Reset to empty so we'll search below
+        if (!isFollowUp && containsAmbiguousPronoun(userQuery)) {
+          if (hasExistingSystemsContext(existingThreadMetadata, recentMessages)) {
+            isFollowUp = true;
           }
         }
-      } catch (threadError) {
-        requestLogger.warn('Could not load existing thread metadata', { 
-          error: threadError.message,
-          threadId 
-        });
+
+        if (isFollowUp && hasExistingSystemsContext(existingThreadMetadata, recentMessages)) {
+          const existingContext = getExistingSystemsContext(existingThreadMetadata, recentMessages);
+          const systemPromises = existingContext.map(async (assetUid) => {
+            try {
+              const results = await withTimeout(
+                searchSystems(assetUid, { limit: 1 }),
+                systemSearchTimeout,
+                'searchSystems timeout'
+              );
+              const hit = Array.isArray(results)
+                ? results.find(s => s.asset_uid === assetUid)
+                : null;
+              return hit || { asset_uid: assetUid, manufacturer: '', model: '', rank: 0.1 };
+            } catch (err) {
+              requestLogger.warn('Context hydration failed', { assetUid, error: err.message });
+              return { asset_uid: assetUid, manufacturer: '', model: '', rank: 0.05 };
+            }
+          });
+          const settled = await Promise.allSettled(systemPromises);
+          systemsContext = settled
+            .filter(r => r.status === 'fulfilled' && r.value)
+            .map(r => r.value);
+          if (!systemsContext.length) {
+            requestLogger.warn('No systems hydrated; retaining raw UIDs', { count: existingContext.length });
+            systemsContext = existingContext.map(uid => ({ asset_uid: uid, manufacturer: '', model: '' }));
+          }
+          requestLogger.info('Using existing systems context for follow-up', {
+            threadId,
+            systemsContextCount: systemsContext.length,
+            isFollowUp: true,
+            assetUids: existingContext
+          });
+        }
+      } catch (e) {
+        requestLogger.warn('Failed context bootstrap', { error: e.message });
       }
     }
     
@@ -437,30 +476,46 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       });
     }
     
-    // Step 3: Enhance the query using LLM and systems context
-    let enhancedQuery = userQuery;
+    // Step 3: Build effective query with context rewriting
+    let effectiveQuery = userQuery;
+    if (containsAmbiguousPronoun(userQuery) && systemsContext?.length) {
+      const before = userQuery;
+      effectiveQuery = contextRewrite(userQuery, systemsContext);
+      if (effectiveQuery !== before) {
+        requestLogger.info('Context rewrite applied', {
+          before: before.slice(0, 120),
+          after: effectiveQuery.slice(0, 160),
+          systemsContextCount: systemsContext.length
+        });
+      }
+    }
+
+    // Step 4: Enhance the query using LLM and systems context
+    let enhancedQuery = effectiveQuery;
     if (systemsContext.length > 0) {
       try {
-        enhancedQuery = await enhanceQuery(userQuery, systemsContext);
+        enhancedQuery = await enhanceQuery(effectiveQuery, systemsContext);
         requestLogger.info('Query enhanced successfully', { 
           originalQuery: userQuery.substring(0, 100),
+          effectiveQuery: effectiveQuery.substring(0, 100),
           enhancedQuery: enhancedQuery.substring(0, 100)
         });
       } catch (llmError) {
-        requestLogger.warn('LLM enhancement failed, using original query', { 
+        requestLogger.warn('LLM enhancement failed, using effective query', { 
           error: llmError.message,
-          originalQuery: userQuery.substring(0, 100)
+          originalQuery: userQuery.substring(0, 100),
+          effectiveQuery: effectiveQuery.substring(0, 100)
         });
       }
     }
     
-    // Step 4: Get recent conversation context (needed for Pinecone search)
+    // Step 5: Get recent conversation context (needed for Pinecone search)
     let recentMessages = [];
     if (threadId) {
       recentMessages = await chatRepository.getChatMessages(threadId, { limit: contextSize });
     }
     
-    // Step 5: Search Pinecone for relevant documentation using spec-biased retrieval
+    // Step 6: Search Pinecone for relevant documentation using spec-biased retrieval
     let pineconeResults = [];
     let pineconeError = null;
     let specBiasMeta = null;
@@ -531,7 +586,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       });
     }
     
-    // Step 6: Create or get chat session/thread if needed
+    // Step 7: Create or get chat session/thread if needed
     let session = null;
     let thread = null;
     
@@ -587,7 +642,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     }
     
-    // Step 7: Store user message
+    // Step 8: Store user message
     const userMessage = await chatRepository.createChatMessage({
       threadId,
       role: 'user',
@@ -601,7 +656,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     });
     
-    // Step 8: Generate assistant response with Pinecone results
+    // Step 9: Generate assistant response with Pinecone results
     const assistantResponse = await generateEnhancedAssistantResponse(
       userQuery,
       enhancedQuery,
@@ -611,7 +666,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       recentMessages
     );
     
-    // Step 9: Store assistant response
+    // Step 10: Store assistant response
     const assistantMessage = await chatRepository.createChatMessage({
       threadId,
       role: 'assistant',
@@ -626,12 +681,12 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     });
     
-    // Step 10: Update thread with latest activity
+    // Step 11: Update thread with latest activity
     await chatRepository.updateChatThread(threadId, {
       updated_at: new Date().toISOString()
     });
     
-    // Step 11: Check if we should summarize (every N messages)
+    // Step 12: Check if we should summarize (every N messages)
     const totalMessages = recentMessages.length + 2; // +2 for user and assistant messages we just added
     const { getEnv } = await import('../config/env.js');
     const { summaryFrequency = 5 } = getEnv();
@@ -654,7 +709,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       }
     }
     
-    // Step 12: Generate or update thread name if it's new
+    // Step 13: Generate or update thread name if it's new
     if (!thread.name || thread.name === 'New Thread') {
       try {
         const threadName = await generateChatName(recentMessages, systemsContext);

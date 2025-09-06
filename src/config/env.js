@@ -25,6 +25,8 @@ const EnvSchema = z.object({
   APP_VERSION: z.string().optional(),
   RESPONSE_VALIDATE: z.string().optional(),
   CHAT_CONTEXT_SIZE: z.string().optional().default('5'),
+  CONTEXT_LOADING_TIMEOUT_MS: z.string().optional().default('1800'),
+  SYSTEM_SEARCH_TIMEOUT_MS: z.string().optional().default('1200'),
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
