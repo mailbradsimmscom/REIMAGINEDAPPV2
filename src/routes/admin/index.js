@@ -11,14 +11,24 @@ import metricsRouter from './metrics.route.js';
 import suggestionsRouter from './suggestions.route.js';
 import dipRouter from './dip.route.js';
 import snapshotsRouter from './snapshots.route.js';
+import textExtractionRouter from './text-extraction.route.js';
+import jobsRouter from './jobs.route.js';
+import chunksRouter from './chunks.route.js';
 
 const router = express.Router();
 
 // Mount dashboard route FIRST (no auth required for HTML page)
-router.use('/', dashboardRouter);
+router.use('/dashboard', dashboardRouter);
 
 // Apply admin gate to all API routes
 router.use(adminOnly);
+
+// Add trace middleware to track admin requests
+router.use((req, res, next) => {
+  // Lightweight trace for admin subtree
+  req._traceStart = Date.now();
+  next();
+});
 
 // Mount all other routes (these require admin auth)
 router.use('/health', healthRouter);
@@ -30,6 +40,19 @@ router.use('/pinecone', pineconeRouter);
 router.use('/metrics', metricsRouter);
 router.use('/dip', dipRouter);
 router.use('/snapshots', snapshotsRouter);
-router.use('/', suggestionsRouter);
+router.use('/suggestions', suggestionsRouter);
+router.use('/text-extraction', textExtractionRouter);
+router.use('/jobs', jobsRouter);
+router.use('/chunks', chunksRouter);
+
+// Place AFTER all routes mounted to see fall-throughs
+// If we reach this, nothing matched in /admin
+router.use((req, res, next) => {
+  const took = Date.now() - (req._traceStart ?? Date.now());
+  // Only log misses in /admin to avoid noise
+  // eslint-disable-next-line no-console
+  console.warn(`[ADMIN MISS] ${req.method} ${req.originalUrl} (${took}ms)`);
+  next();
+});
 
 export default router;

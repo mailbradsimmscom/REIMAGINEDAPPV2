@@ -27,6 +27,11 @@ const EnvSchema = z.object({
   CHAT_CONTEXT_SIZE: z.string().optional().default('5'),
   CONTEXT_LOADING_TIMEOUT_MS: z.string().optional().default('1800'),
   SYSTEM_SEARCH_TIMEOUT_MS: z.string().optional().default('1200'),
+  // Document text source (Postgres table) used by DIP extractor
+  DOC_CHUNKS_TABLE: z.string().optional().default('document_chunks'),
+  // Optional column names if your schema differs
+  DOC_CHUNKS_PAGE_COL: z.string().optional().default('page_start'),
+  DOC_CHUNKS_TEXT_COL: z.string().optional().default('content')
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

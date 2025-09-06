@@ -7,6 +7,8 @@
 import { getSupabaseStorageClient } from '../repositories/supabaseClient.js';
 import { createDefaultDIP, createDefaultSuggestions } from '../schemas/ingestion.schema.js';
 import { logger } from '../utils/logger.js';
+import documentRepository from '../repositories/document.repository.js';
+import { extractTextPreviewFromPdf } from '../ingestion/helpers/pdfPreview.js';
 
 const BUCKET = 'documents';
 
@@ -25,9 +27,20 @@ export async function generateDIPAndSuggestions(docId, options = {}) {
     }
     
     requestLogger.info('Starting DIP and Suggestions generation', { docId });
+    console.log('DIP service main function called with docId:', docId);
     
     // Get Supabase Storage client
-    const storage = getSupabaseStorageClient();
+    const storage = await getSupabaseStorageClient();
+    
+    requestLogger.info('Storage client debug', { 
+      storageExists: !!storage, 
+      storageType: typeof storage,
+      storageKeys: storage ? Object.keys(storage) : 'none',
+      hasStorageProperty: 'storage' in (storage || {}),
+      storagePropertyValue: storage?.storage,
+      storagePropertyType: typeof storage?.storage
+    });
+    
     if (!storage) {
       throw new Error('Storage service unavailable');
     }
@@ -61,6 +74,11 @@ export async function generateDIPAndSuggestions(docId, options = {}) {
     storageResults.forEach((storageResult, index) => {
       if (storageResult.status === 'rejected') {
         const type = index === 0 ? 'DIP' : 'Suggestions';
+        requestLogger.error('Storage error details', {
+          type,
+          error: storageResult.reason.message,
+          stack: storageResult.reason.stack
+        });
         result.errors.push(`${type} storage failed: ${storageResult.reason.message}`);
       }
     });
@@ -85,7 +103,7 @@ export async function generateDIPAndSuggestions(docId, options = {}) {
 }
 
 /**
- * Get document chunks from Pinecone (via sidecar)
+ * Get document chunks using the new text extraction service
  * @param {string} docId - Document ID
  * @returns {Promise<Array>} Document chunks
  */
@@ -93,35 +111,58 @@ async function getDocumentChunks(docId) {
   const requestLogger = logger.createRequestLogger();
   
   try {
-    // For now, we'll simulate getting chunks
-    // In a real implementation, this would query Pinecone or the sidecar
-    const mockChunks = [
-      {
-        id: `${docId}_page_1_0`,
-        content: 'Kenyon BBQ Grill System - Operating Instructions',
-        type: 'heading',
-        page: 1
-      },
-      {
-        id: `${docId}_page_1_1`,
-        content: 'The Kenyon BBQ grill system requires regular maintenance including filter replacement every 100-120 hours.',
-        type: 'text',
-        page: 1
-      },
-      {
-        id: `${docId}_page_2_0`,
-        content: 'Operating pressure: 15 psi. Power consumption: 2.5 kW.',
-        type: 'text',
-        page: 2
-      }
-    ];
+    requestLogger.info('dip.get_document_chunks.start', { docId });
     
-    requestLogger.info('Retrieved document chunks', { docId, chunkCount: mockChunks.length });
-    return mockChunks;
+    // Use the new text extraction service
+    const pages = await extractTextPreviewFromPdf(docId, { 
+      maxPages: 6
+    });
+    
+    if (!pages || pages.length === 0) {
+      requestLogger.warn('dip.get_document_chunks.no_text', { 
+        docId
+      });
+      return [];
+    }
+    
+    // Convert pages to chunk format expected by DIP generation
+    const chunks = [];
+    
+    for (const page of pages) {
+      const text = page.text.trim();
+      if (!text) continue;
+      
+      const words = text.split(/\s+/);
+      const chunkSize = 100; // words per chunk
+      
+      for (let i = 0; i < words.length; i += chunkSize) {
+        const chunkWords = words.slice(i, i + chunkSize);
+        const chunkText = chunkWords.join(' ');
+        const chunkNum = Math.floor(i / chunkSize) + 1;
+        
+        chunks.push({
+          id: `${docId}_page_${page.page}_chunk_${chunkNum}`,
+          content: chunkText,
+          type: 'text',
+          page: page.page
+        });
+      }
+    }
+    
+    requestLogger.info('dip.get_document_chunks.success', { 
+      docId, 
+      chunksGenerated: chunks.length,
+      pagesProcessed: pages.length
+    });
+    
+    return chunks;
     
   } catch (error) {
-    requestLogger.error('Failed to get document chunks', { docId, error: error.message });
-    throw error;
+    requestLogger.error('dip.get_document_chunks.error', { 
+      docId, 
+      error: error.message 
+    });
+    return [];
   }
 }
 
@@ -503,7 +544,7 @@ async function storeDIP(storage, docId, dip) {
   const { error } = await storage.storage
     .from(BUCKET)
     .upload(filePath, JSON.stringify(dip, null, 2), {
-      contentType: 'application/json',
+      contentType: 'text/plain',
       upsert: true
     });
   
@@ -526,7 +567,7 @@ async function storeSuggestions(storage, docId, suggestions) {
   const { error } = await storage.storage
     .from(BUCKET)
     .upload(filePath, JSON.stringify(suggestions, null, 2), {
-      contentType: 'application/json',
+      contentType: 'text/plain',
       upsert: true
     });
   

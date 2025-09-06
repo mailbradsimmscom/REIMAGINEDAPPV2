@@ -18,17 +18,18 @@ router.get('/',
   validate(adminModelsQuerySchema, 'query'),
   async (req, res, next) => {
     try {
-      const data = await adminService.getModels();
+      const manufacturer = req.query.manufacturer || 'all';
+      const data = await adminService.getModels(manufacturer);
 
       const envelope = {
         success: true,
         data: {
           models: data.top.map(m => ({ 
             model_norm: m.model_norm, 
-            manufacturer_norm: 'Unknown' 
+            manufacturer_norm: manufacturer !== 'all' ? manufacturer : 'Unknown' 
           })),
           count: data.total,
-          manufacturer: req.query.manufacturer || 'all',
+          manufacturer: manufacturer,
           lastUpdated: data.lastUpdated
         }
       };

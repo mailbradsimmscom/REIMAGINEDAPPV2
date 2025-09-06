@@ -4,10 +4,11 @@
  */
 
 import { Router, json as bodyParser } from 'express';
-import { getSupabaseStorageClient } from '../repositories/supabaseClient.js';
-import { validateDIP, validateSuggestions } from '../schemas/ingestion.schema.js';
-import { applySuggestions } from '../services/suggestions.apply.service.js';
-import { logger } from '../utils/logger.js';
+import { getSupabaseStorageClient } from '../../repositories/supabaseClient.js';
+import { validateDIP, validateSuggestions } from '../../schemas/ingestion.schema.js';
+import { applySuggestions } from '../../services/suggestions.apply.service.js';
+import { extractTextPreviewFromPdf } from '../../ingestion/helpers/pdfPreview.js';
+import { logger } from '../../utils/logger.js';
 
 const router = Router();
 
@@ -18,7 +19,7 @@ const BUCKET = 'documents';
  * GET /admin/suggestions/:docId
  * Fetch DIP and Suggestions for a document
  */
-router.get('/admin/suggestions/:docId', async (req, res) => {
+router.get('/:docId', async (req, res) => {
   const requestLogger = logger.createRequestLogger();
   
   try {
@@ -88,27 +89,45 @@ router.get('/admin/suggestions/:docId', async (req, res) => {
       });
     }
     
-    // Check if we have at least one valid result
-    if (!dip && !suggestions) {
-      return res.status(404).json({
-        success: false,
-        error: 'No valid DIP or Suggestions found for this document',
-        requestId: requestLogger.requestId
-      });
+    // Check text health - test text extraction capability
+    let textHealth = { status: 'unknown', source: 'none', pages: 0 };
+    try {
+      const textResult = await extractTextPreviewFromPdf(docId, 3); // Test first 3 pages
+      if (textResult && textResult.length > 0) {
+        textHealth = {
+          status: 'healthy',
+          source: 'database', // or 'storage' based on what worked
+          pages: textResult.length,
+          totalChars: textResult.reduce((sum, page) => sum + (page.text?.length || 0), 0)
+        };
+      } else {
+        textHealth = { status: 'unhealthy', source: 'none', pages: 0 };
+      }
+    } catch (error) {
+      textHealth = { 
+        status: 'error', 
+        source: 'none', 
+        pages: 0, 
+        error: error.message 
+      };
+      requestLogger.warn('Text health check failed', { docId, error: error.message });
     }
-    
+
     requestLogger.info('Suggestions fetched successfully', { 
       docId, 
       hasDIP: !!dip, 
-      hasSuggestions: !!suggestions 
+      hasSuggestions: !!suggestions,
+      textHealth: textHealth.status
     });
     
+    // Always return text health, even if DIP/Suggestions are missing
     res.json({
       success: true,
       data: {
         doc_id: docId,
         dip,
         suggestions,
+        text_health: textHealth,
         fetched_at: new Date().toISOString()
       },
       requestId: requestLogger.requestId
@@ -132,7 +151,7 @@ router.get('/admin/suggestions/:docId', async (req, res) => {
  * GET /admin/suggestions/:docId/view
  * Server-rendered HTML page for reviewing suggestions
  */
-router.get('/admin/suggestions/:docId/view', async (req, res) => {
+router.get('/:docId/view', async (req, res) => {
   const requestLogger = logger.createRequestLogger();
   
   try {
@@ -182,7 +201,7 @@ router.get('/admin/suggestions/:docId/view', async (req, res) => {
  * POST /admin/suggestions/:docId/apply
  * Apply accepted suggestions to configuration files
  */
-router.post('/admin/suggestions/:docId/apply', bodyParser({ limit: '1mb' }), async (req, res) => {
+router.post('/:docId/apply', bodyParser({ limit: '1mb' }), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
   
   try {

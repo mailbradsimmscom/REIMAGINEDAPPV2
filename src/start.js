@@ -3,6 +3,7 @@ import 'dotenv/config';
 import app from './index.js';
 import { getEnv } from './config/env.js';
 import { logger } from './utils/logger.js';
+import { printRoutes } from './debug/printRoutes.js';
 
 function getPort() {
   const { PORT } = getEnv({ loose: true });
@@ -11,8 +12,14 @@ function getPort() {
 }
 
 const port = getPort();
+
+// Print routes after all routers are mounted
+printRoutes(app, logger);
+
 const server = app.listen(port, () => {
   logger.info(`Server listening on http://localhost:${port}`);
+  // Also print routes after listen to confirm final state
+  printRoutes(app, logger);
 });
 
 // Never call process.exit() here.

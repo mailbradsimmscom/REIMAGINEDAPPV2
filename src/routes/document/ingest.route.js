@@ -23,9 +23,6 @@ router.use(requireServices(['supabase', 'sidecar']));
 // Apply response validation to all routes in this file
 router.use(validateResponse(DocumentIngestEnvelope));
 
-// Add method not allowed for non-POST requests
-router.all('/', methodNotAllowed);
-
 // Document ingest body schema (for multipart form data)
 const documentIngestBodySchema = z.object({
   // This will be validated after busboy processes the multipart data
@@ -127,12 +124,12 @@ router.post('/',
       }
       
       // Create ingest job
-      const job = await documentService.createIngestJob(fileBuffer, fileName, metadata);
+      const job = await documentService.createIngestJob(fileBuffer, { ...metadata, fileName });
       
       const envelope = {
         success: true,
         data: {
-          jobId: job.id,
+          jobId: job.job_id,
           status: job.status,
           fileName: job.fileName,
           createdAt: job.created_at
@@ -145,5 +142,8 @@ router.post('/',
     }
   }
 );
+
+// Add method not allowed for non-POST requests (must be after POST route)
+router.all('/', methodNotAllowed);
 
 export default router;

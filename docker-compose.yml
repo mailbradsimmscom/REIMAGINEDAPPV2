@@ -1,11 +1,12 @@
 version: '3.8'
 
 services:
-  # Node.js Application
+  # Node.js Web Application
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    command: ["node", "src/start.js"]
     ports:
       - "3000:3000"
     environment:
@@ -25,6 +26,40 @@ services:
       - PINECONE_NAMESPACE=${PINECONE_NAMESPACE}
       - PINECONE_INDEX=${PINECONE_INDEX}
       - DEFAULT_NAMESPACE=${DEFAULT_NAMESPACE}
+      - JOB_CONCURRENCY=${JOB_CONCURRENCY:-2}
+      - JOB_POLL_INTERVAL_MS=${JOB_POLL_INTERVAL_MS:-5000}
+    depends_on:
+      python-sidecar:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Node.js Job Worker
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "src/start-job-processor.js"]
+    environment:
+      - NODE_ENV=development
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - PYTHON_SIDECAR_URL=http://python-sidecar:8000
+      - SIDECAR_HEALTH_CHECK_INTERVAL=30000
+      - SIDECAR_STARTUP_TIMEOUT=30000
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_SERVICE_ROLE=${SUPABASE_SERVICE_ROLE}
+      - SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL}
+      - SEARCH_RANK_FLOOR=${SEARCH_RANK_FLOOR}
+      - PINECONE_NAMESPACE=${PINECONE_NAMESPACE}
+      - PINECONE_INDEX=${PINECONE_INDEX}
+      - DEFAULT_NAMESPACE=${DEFAULT_NAMESPACE}
+      - JOB_CONCURRENCY=${JOB_CONCURRENCY:-2}
+      - JOB_POLL_INTERVAL_MS=${JOB_POLL_INTERVAL_MS:-5000}
     depends_on:
       python-sidecar:
         condition: service_healthy

@@ -57,9 +57,9 @@ attachConfigInspector(app);
 safeMount('/health', healthRouter);
 safeMount('/systems', systemsRouter);
 safeMount('/chat', chatRouter);
-safeMount('/admin/docs', documentRouter);
 safeMount('/document', documentRouter);  // alias for backward compatibility
 safeMount('/pinecone', pineconeRouter);
+safeMount('/admin/docs', documentRouter);  // mount BEFORE /admin to avoid conflicts
 safeMount('/admin', adminRouter);
 
 // Mount route debugger (dev only) - AFTER routers are mounted

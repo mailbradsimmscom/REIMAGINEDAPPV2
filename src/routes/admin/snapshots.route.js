@@ -10,8 +10,8 @@ import {
   deleteSnapshot, 
   cleanupSnapshots,
   rollbackTo 
-} from '../utils/snapshots.service.js';
-import { logger } from '../utils/logger.js';
+} from '../../utils/snapshots.service.js';
+import { logger } from '../../utils/logger.js';
 
 const router = Router();
 

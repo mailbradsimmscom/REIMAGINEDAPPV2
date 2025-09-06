@@ -49,7 +49,7 @@ export const adminManufacturersResponseSchema = z.union([AdminManufacturersOkSch
 
 // Admin models query parameters
 export const adminModelsQuerySchema = z.object({
-  manufacturer: z.string().min(1, 'Manufacturer parameter is required')
+  manufacturer: z.string().min(1, 'Manufacturer parameter is required').optional()
 });
 
 // Admin models success response schema

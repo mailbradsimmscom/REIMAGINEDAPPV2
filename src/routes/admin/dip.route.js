@@ -4,30 +4,31 @@
  */
 
 import { Router } from 'express';
-import { generateDIPAndSuggestions } from '../services/dip.generation.service.js';
-import { logger } from '../utils/logger.js';
+import { generateDIPAndSuggestions } from '../../services/dip.generation.service.js';
+import { logger } from '../../utils/logger.js';
+import { z } from 'zod';
+import express from 'express';
 
 const router = Router();
+
+// Probe: always 200 to verify mount path
+router.get('/_probe', (req, res) => {
+  res.json({ ok: true, where: 'dip' });
+});
+
+// Zod schemas
+const DocIdParam = z.object({ docId: z.string().min(8) });
 
 /**
  * POST /admin/dip/generate/:docId
  * Generate DIP and Suggestions for a document
  */
-router.post('/admin/dip/generate/:docId', async (req, res) => {
-  const requestLogger = logger.createRequestLogger();
-  
+router.post('/generate/:docId', express.json({ limit: '1mb' }), async (req, res, next) => {
   try {
-    const { docId } = req.params;
+    const { docId } = DocIdParam.parse(req.params);
     const { options = {} } = req.body;
     
-    if (!docId || typeof docId !== 'string') {
-      return res.status(400).json({
-        success: false,
-        error: 'Valid document ID is required',
-        requestId: requestLogger.requestId
-      });
-    }
-    
+    const requestLogger = logger.createRequestLogger();
     requestLogger.info('Generating DIP and Suggestions', { docId });
     
     // Generate DIP and Suggestions
@@ -46,17 +47,7 @@ router.post('/admin/dip/generate/:docId', async (req, res) => {
     });
     
   } catch (error) {
-    requestLogger.error('Failed to generate DIP and Suggestions', {
-      docId: req.params.docId,
-      error: error.message
-    });
-    
-    res.status(500).json({
-      success: false,
-      error: 'Failed to generate DIP and Suggestions',
-      details: error.message,
-      requestId: requestLogger.requestId
-    });
+    next(error);
   }
 });
 
@@ -64,24 +55,15 @@ router.post('/admin/dip/generate/:docId', async (req, res) => {
  * GET /admin/dip/status/:docId
  * Check if DIP and Suggestions exist for a document
  */
-router.get('/admin/dip/status/:docId', async (req, res) => {
-  const requestLogger = logger.createRequestLogger();
-  
+router.get('/status/:docId', async (req, res, next) => {
   try {
-    const { docId } = req.params;
+    const { docId } = DocIdParam.parse(req.params);
     
-    if (!docId || typeof docId !== 'string') {
-      return res.status(400).json({
-        success: false,
-        error: 'Valid document ID is required',
-        requestId: requestLogger.requestId
-      });
-    }
-    
+    const requestLogger = logger.createRequestLogger();
     requestLogger.info('Checking DIP status', { docId });
     
     // Check if DIP and Suggestions files exist
-    const { getSupabaseStorageClient } = await import('../repositories/supabaseClient.js');
+    const { getSupabaseStorageClient } = await import('../../repositories/supabaseClient.js');
     const storage = getSupabaseStorageClient();
     
     if (!storage) {
@@ -117,17 +99,103 @@ router.get('/admin/dip/status/:docId', async (req, res) => {
     });
     
   } catch (error) {
-    requestLogger.error('Failed to check DIP status', {
-      docId: req.params.docId,
-      error: error.message
-    });
+    next(error);
+  }
+});
+
+/**
+ * GET /admin/dip/download/:docId
+ * Download DIP file for a document
+ */
+router.get('/download/:docId', async (req, res, next) => {
+  try {
+    const { docId } = DocIdParam.parse(req.params);
     
-    res.status(500).json({
-      success: false,
-      error: 'Failed to check DIP status',
-      details: error.message,
-      requestId: requestLogger.requestId
-    });
+    const requestLogger = logger.createRequestLogger();
+    requestLogger.info('Downloading DIP', { docId });
+    
+    // Get Supabase Storage client
+    const { getSupabaseStorageClient } = await import('../../repositories/supabaseClient.js');
+    const storage = getSupabaseStorageClient();
+    
+    if (!storage) {
+      return res.status(500).json({
+        success: false,
+        error: 'Storage service unavailable',
+        requestId: requestLogger.requestId
+      });
+    }
+    
+    const fileName = `doc_intelligence_packet_${docId}.json`;
+    const { data, error } = await storage.storage
+      .from('documents')
+      .download(fileName);
+    
+    if (error || !data) {
+      return res.status(404).json({
+        success: false,
+        error: 'DIP file not found',
+        requestId: requestLogger.requestId
+      });
+    }
+    
+    // Convert blob to buffer
+    const buffer = await data.arrayBuffer();
+    
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.send(Buffer.from(buffer));
+    
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * GET /admin/suggestions/download/:docId
+ * Download Suggestions file for a document
+ */
+router.get('/suggestions/download/:docId', async (req, res, next) => {
+  try {
+    const { docId } = DocIdParam.parse(req.params);
+    
+    const requestLogger = logger.createRequestLogger();
+    requestLogger.info('Downloading Suggestions', { docId });
+    
+    // Get Supabase Storage client
+    const { getSupabaseStorageClient } = await import('../../repositories/supabaseClient.js');
+    const storage = getSupabaseStorageClient();
+    
+    if (!storage) {
+      return res.status(500).json({
+        success: false,
+        error: 'Storage service unavailable',
+        requestId: requestLogger.requestId
+      });
+    }
+    
+    const fileName = `ingestion_suggestions_${docId}.json`;
+    const { data, error } = await storage.storage
+      .from('documents')
+      .download(fileName);
+    
+    if (error || !data) {
+      return res.status(404).json({
+        success: false,
+        error: 'Suggestions file not found',
+        requestId: requestLogger.requestId
+      });
+    }
+    
+    // Convert blob to buffer
+    const buffer = await data.arrayBuffer();
+    
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.send(Buffer.from(buffer));
+    
+  } catch (error) {
+    next(error);
   }
 });
 
