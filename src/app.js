@@ -75,6 +75,20 @@ app.get('/index.html', async (req, res) => {
   }
 });
 
+// Static file serving for /public path
+app.use('/public', express.static(join(process.cwd(), 'src/public')));
+
+// Admin dashboard route (no auth required for HTML page)
+app.get('/admin', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/admin.htm'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Admin dashboard not found' });
+  }
+});
+
 // Performance logging middleware
 app.use((req, res, next) => {
   const originalEnd = res.end;

@@ -18,6 +18,9 @@
         "test:unit": "node --test tests/unit/",
         "test:all": "node --test tests/",
         "test:watch": "node --test --watch tests/",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:headed": "playwright test --headed",
         "test:baseline": "./tests/run-baseline.sh",
         "test:no-sidecar": "node --test tests/integration/",
         "test:performance": "node scripts/performance-monitor.js",
@@ -46,6 +49,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.34.0",
+        "@playwright/test": "^1.55.0",
         "concurrently": "^9.0.0",
         "dependency-cruiser": "^17.0.1",
         "eslint": "^9.34.0",

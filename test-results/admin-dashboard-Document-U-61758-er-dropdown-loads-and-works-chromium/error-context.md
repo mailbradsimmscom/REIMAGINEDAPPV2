@@ -1,0 +1,61 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - heading "Admin Dashboard" [level=1] [ref=e5]
+    - generic [ref=e8]: System Online
+  - navigation [ref=e10]:
+    - button "Dashboard" [ref=e11] [cursor=pointer]
+    - button "Doc Upload" [active] [ref=e12] [cursor=pointer]
+    - button "DIP" [ref=e13] [cursor=pointer]
+    - button "Jobs" [ref=e14] [cursor=pointer]
+    - button "Chunks" [ref=e15] [cursor=pointer]
+    - button "Metrics" [ref=e16] [cursor=pointer]
+    - button "Health" [ref=e17] [cursor=pointer]
+    - button "Systems" [ref=e18] [cursor=pointer]
+    - button "Suggestions" [ref=e19] [cursor=pointer]
+  - main [ref=e20]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - heading "Document Upload" [level=3] [ref=e24]
+        - paragraph [ref=e25]: Upload documents to be processed and indexed for search
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: "Doc ID (optional):"
+            - textbox "Doc ID (optional):" [ref=e30]
+          - generic [ref=e31]:
+            - generic [ref=e32]: "Manufacturer:"
+            - combobox "Manufacturer:" [ref=e33]:
+              - option "Select Manufacturer" [selected]
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: "Model:"
+            - combobox "Model:" [ref=e37]:
+              - option "Select Model" [selected]
+          - generic [ref=e38]:
+            - generic [ref=e39]: "Revision Date:"
+            - textbox "Revision Date:" [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e43] [cursor=pointer]:
+            - checkbox "OCR Allowed (for pages without text)" [checked] [ref=e44]
+            - text: OCR Allowed (for pages without text)
+          - button "Reset Form" [ref=e46] [cursor=pointer]
+      - generic [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - generic:
+            - generic: 📄
+            - heading "Drop files here or click to browse" [level=4]
+            - paragraph: Supports PDF, DOC, DOCX, TXT files
+        - generic [ref=e49]:
+          - button "Choose Files" [ref=e50] [cursor=pointer]
+          - button "Clear Queue" [ref=e51] [cursor=pointer]
+      - generic [ref=e52]:
+        - heading "Recent Uploads" [level=4] [ref=e53]
+        - generic [ref=e55]:
+          - paragraph [ref=e56]: No uploads yet.
+          - paragraph [ref=e57]: Uploaded documents will appear here.
+  - contentinfo [ref=e59]:
+    - paragraph [ref=e60]: Admin Dashboard v2.0 | Built with Express.js & Node.js
+```

@@ -27,7 +27,7 @@ export async function generateDIPAndSuggestions(docId, options = {}) {
     }
     
     requestLogger.info('Starting DIP and Suggestions generation', { docId });
-    console.log('DIP service main function called with docId:', docId);
+    requestLogger.info('DIP service main function called with docId', { docId });
     
     // Get Supabase Storage client
     const storage = await getSupabaseStorageClient();

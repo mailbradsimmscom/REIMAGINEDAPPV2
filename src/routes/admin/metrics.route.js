@@ -6,7 +6,7 @@ import { AdminMetricsEnvelope } from '../../schemas/admin.schema.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { getRequestMetrics } from '../../middleware/requestLogging.js';
 import { logger } from '../../utils/logger.js';
-import { metrics } from '../../utils/metrics.js';
+import { metrics as metricsUtils } from '../../utils/metrics.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -35,9 +35,9 @@ router.get('/',
     const requestMetrics = getRequestMetrics(timeframe);
     
     // Get fuzzy matching and context rewrite metrics
-    const dashboardMetrics = metrics.getDashboardMetrics();
+    const dashboardMetrics = metricsUtils.getDashboardMetrics();
     
-    const metrics = {
+    const metricsData = {
       timeframe,
       windowStart: requestMetrics.windowStart,
       windowEnd: requestMetrics.windowEnd,
@@ -137,7 +137,7 @@ router.get('/',
 
     const envelope = {
       success: true,
-      data: metrics
+      data: metricsData
     };
 
     return res.json(envelope);
@@ -153,13 +153,13 @@ router.get('/fuzzy', async (req, res, next) => {
     const requestLogger = logger.createRequestLogger();
     
     // Get detailed fuzzy matching metrics
-    const dashboardMetrics = metrics.getDashboardMetrics();
-    const allMetrics = metrics.getMetrics();
+    const dashboardMetrics = metricsUtils.getDashboardMetrics();
+    const allMetrics = metricsUtils.getMetrics();
     
     // Get performance metrics for each operation
-    const maintenancePerformance = metrics.getPerformanceMetrics('maintenance_detection');
-    const unitsPerformance = metrics.getPerformanceMetrics('units_normalization');
-    const contextRewritePerformance = metrics.getPerformanceMetrics('context_rewrite');
+    const maintenancePerformance = metricsUtils.getPerformanceMetrics('maintenance_detection');
+    const unitsPerformance = metricsUtils.getPerformanceMetrics('units_normalization');
+    const contextRewritePerformance = metricsUtils.getPerformanceMetrics('context_rewrite');
     
     const fuzzyMetrics = {
       summary: {

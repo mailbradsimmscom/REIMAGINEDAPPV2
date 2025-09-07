@@ -15,7 +15,13 @@ const router = express.Router();
 
 // DEBUG: Add process route tracing
 router.use((req, res, next) => {
-  console.log('🔍 [PROCESS] ROUTE:', req.method, req.originalUrl, '→', req.url, 'path:', req.path);
+  const requestLogger = logger.createRequestLogger();
+  requestLogger.info('🔍 [PROCESS] ROUTE', { 
+    method: req.method, 
+    originalUrl: req.originalUrl, 
+    url: req.url, 
+    path: req.path 
+  });
   next();
 });
 

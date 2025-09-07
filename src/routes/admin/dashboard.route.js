@@ -8,8 +8,7 @@ import { z } from 'zod';
 
 const router = express.Router();
 
-// Apply response validation to all routes in this file
-router.use(validateResponse(EnvelopeSchema));
+// Note: No response validation for HTML routes
 
 // Admin dashboard query schema
 const adminDashboardQuerySchema = z.object({}).passthrough();
@@ -19,7 +18,7 @@ router.get('/',
   validate(adminDashboardQuerySchema, 'query'),
   async (req, res, next) => {
   try {
-    const adminHtmlPath = join(process.cwd(), 'src/public/admin.html');
+    const adminHtmlPath = join(process.cwd(), 'src/public/admin.htm');
     const content = await fs.readFile(adminHtmlPath);
     res.setHeader('content-type', 'text/html');
     res.end(content);

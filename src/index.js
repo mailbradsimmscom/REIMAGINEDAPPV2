@@ -60,7 +60,7 @@ safeMount('/chat', chatRouter);
 safeMount('/document', documentRouter);  // alias for backward compatibility
 safeMount('/pinecone', pineconeRouter);
 safeMount('/admin/docs', documentRouter);  // mount BEFORE /admin to avoid conflicts
-safeMount('/admin', adminRouter);
+safeMount('/admin/api', adminRouter);
 
 // Mount route debugger (dev only) - AFTER routers are mounted
 attachRouteDebugger(app);

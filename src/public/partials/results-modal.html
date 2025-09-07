@@ -1,0 +1,128 @@
+<div class="modal-overlay" id="results-modal" style="display: none;">
+    <div class="modal-content results-modal">
+        <div class="modal-header">
+            <h2>Document Processing Results</h2>
+            <button class="modal-close" onclick="closeResultsModal()">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="results-summary">
+                <div class="summary-card">
+                    <h3>Processing Summary</h3>
+                    <div class="summary-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Pages Processed:</span>
+                            <span class="metric-value" id="result-pages">0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Chunks Created:</span>
+                            <span class="metric-value" id="result-chunks">0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Vectors Uploaded:</span>
+                            <span class="metric-value" id="result-vectors">0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Processing Time:</span>
+                            <span class="metric-value" id="result-time">0s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-tabs">
+                <button class="tab-btn active" onclick="switchResultsTab('chunks')">Text Chunks</button>
+                <button class="tab-btn" onclick="switchResultsTab('dip')">DIP Generation</button>
+                <button class="tab-btn" onclick="switchResultsTab('export')">Export Options</button>
+            </div>
+
+            <div class="results-content">
+                <!-- Text Chunks Tab -->
+                <div class="tab-content active" id="chunks-tab">
+                    <div class="chunks-header">
+                        <h3>Extracted Text Chunks</h3>
+                        <div class="chunks-controls">
+                            <input type="text" id="chunk-search" placeholder="Search chunks..." onkeyup="filterChunks()">
+                            <select id="chunk-filter" onchange="filterChunks()">
+                                <option value="all">All Types</option>
+                                <option value="text">Text Only</option>
+                                <option value="table">Tables Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chunks-list" id="chunks-list">
+                        <div class="empty-state">
+                            <p>Loading chunks...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DIP Generation Tab -->
+                <div class="tab-content hidden" id="dip-tab">
+                    <div class="dip-section">
+                        <h3>Document Intelligence Packet (DIP)</h3>
+                        <p>Generate structured data extraction and suggestions for this document.</p>
+                        
+                        <div class="dip-status" id="dip-status">
+                            <div class="status-indicator">
+                                <span class="status-icon">⏳</span>
+                                <span class="status-text">Ready to generate DIP</span>
+                            </div>
+                        </div>
+
+                        <div class="dip-actions">
+                            <button class="btn primary" onclick="generateDIP()" id="generate-dip-btn">
+                                Generate DIP & Suggestions
+                            </button>
+                            <button class="btn secondary" onclick="downloadDIP()" id="download-dip-btn" style="display: none;">
+                                Download DIP
+                            </button>
+                            <button class="btn secondary" onclick="downloadSuggestions()" id="download-suggestions-btn" style="display: none;">
+                                Download Suggestions
+                            </button>
+                        </div>
+
+                        <div class="dip-preview" id="dip-preview" style="display: none;">
+                            <h4>DIP Preview</h4>
+                            <div class="preview-content" id="dip-preview-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Options Tab -->
+                <div class="tab-content hidden" id="export-tab">
+                    <div class="export-section">
+                        <h3>Export Options</h3>
+                        <p>Download processed data in various formats.</p>
+                        
+                        <div class="export-options">
+                            <div class="export-option">
+                                <h4>📄 Raw Chunks</h4>
+                                <p>Download all text chunks as JSON</p>
+                                <button class="btn secondary" onclick="exportChunks()">Export Chunks</button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <h4>🧠 DIP Data</h4>
+                                <p>Download Document Intelligence Packet</p>
+                                <button class="btn secondary" onclick="downloadDIP()" id="export-dip-btn" style="display: none;">Export DIP</button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <h4>💡 Suggestions</h4>
+                                <p>Download AI-generated suggestions</p>
+                                <button class="btn secondary" onclick="downloadSuggestions()" id="export-suggestions-btn" style="display: none;">Export Suggestions</button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <h4>📊 Processing Report</h4>
+                                <p>Download detailed processing statistics</p>
+                                <button class="btn secondary" onclick="exportReport()">Export Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

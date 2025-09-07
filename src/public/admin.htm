@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/public/css/admin.css" />
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div data-include="/public/partials/header.html"></div>
+
+        <!-- Navigation -->
+        <div data-include="/public/partials/nav.html"></div>
+
+        <!-- Main Content -->
+        <main id="admin-root">
+            <!-- Dashboard Section -->
+            <section id="section-dashboard" data-route="dashboard" data-include="/public/partials/sections/dashboard.html"></section>
+            
+            <!-- Doc Upload Section -->
+            <section id="section-doc-upload" data-route="doc-upload" data-include="/public/partials/sections/doc-upload.html"></section>
+            
+            <!-- DIP Section -->
+            <section id="section-dip" data-route="dip" data-include="/public/partials/sections/dip.html"></section>
+            
+            <!-- Jobs Section -->
+            <section id="section-jobs" data-route="jobs" data-include="/public/partials/sections/jobs.html"></section>
+            
+            <!-- Chunks Section -->
+            <section id="section-chunks" data-route="chunks" data-include="/public/partials/sections/chunks.html"></section>
+            
+            <!-- Metrics Section -->
+            <section id="section-metrics" data-route="metrics" data-include="/public/partials/sections/metrics.html"></section>
+            
+            <!-- Health Section -->
+            <section id="section-health" data-route="health" data-include="/public/partials/sections/health.html"></section>
+            
+            <!-- Systems Section -->
+            <section id="section-systems" data-route="systems" data-include="/public/partials/sections/systems.html"></section>
+            
+            <!-- Suggestions Section -->
+            <section id="section-suggestions" data-route="suggestions" data-include="/public/partials/sections/suggestions.html"></section>
+        </main>
+
+        <!-- Footer -->
+        <div data-include="/public/partials/footer.html"></div>
+    </div>
+
+    <!-- Results Modal -->
+    <div data-include="/public/partials/results-modal.html"></div>
+
+    <!-- Boot Script -->
+    <script type="module" src="/public/js/admin/boot.js"></script>
+</body>
+</html>

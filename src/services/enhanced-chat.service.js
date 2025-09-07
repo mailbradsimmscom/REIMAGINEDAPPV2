@@ -127,8 +127,8 @@ export async function retrieveWithSpecBias({ query, namespace }) {
   
   try {
     // DEBUG: Log the query being searched
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Query:', query);
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Contains "pressure":', query.toLowerCase().includes('pressure'));
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Query', { query });
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Contains "pressure"', { containsPressure: query.toLowerCase().includes('pressure') });
     
     const { getEnv } = await import('../config/env.js');
     const env = getEnv();
@@ -156,13 +156,15 @@ export async function retrieveWithSpecBias({ query, namespace }) {
     const hits = results.flatMap(result => result.chunks || []);
 
     // DEBUG: Log Pinecone search results
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Pinecone results count:', results.length);
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Pinecone hits count:', hits.length);
-    console.log('🔍 [SPEC BIAS RETRIEVAL] First few hits:', hits.slice(0, 3).map(h => ({
-      score: h.score,
-      relevanceScore: h.relevanceScore,
-      content: h.content?.substring(0, 100) || 'No content'
-    })));
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Pinecone results count', { resultsCount: results.length });
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Pinecone hits count', { hitsCount: hits.length });
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] First few hits', { 
+      firstHits: hits.slice(0, 3).map(h => ({
+        score: h.score,
+        relevanceScore: h.relevanceScore,
+        content: h.content?.substring(0, 100) || 'No content'
+      }))
+    });
 
     const rawCount = hits.length;
 
@@ -170,16 +172,18 @@ export async function retrieveWithSpecBias({ query, namespace }) {
     const passedFloor = hits.filter(h => (h.score ?? 0) >= floor);
     
     // DEBUG: Log floor filtering
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Passed floor count:', passedFloor.length);
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Passed floor count', { passedFloorCount: passedFloor.length });
 
     // 3) Regex post-filter for spec-like chunks (now includes maintenance content)
     const specy = await filterSpecLike(passedFloor);
     
     // DEBUG: Log spec filtering
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered count:', specy.length);
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered content:', specy.map(h => ({
-      content: h.content?.substring(0, 100) || 'No content'
-    })));
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered count', { specFilteredCount: specy.length });
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Spec-filtered content', { 
+      specFilteredContent: specy.map(h => ({
+        content: h.content?.substring(0, 100) || 'No content'
+      }))
+    });
 
     // 4) Fallback if none survived spec filter
     const pool = specy.length ? specy : passedFloor;
@@ -191,10 +195,12 @@ export async function retrieveWithSpecBias({ query, namespace }) {
     const finalists = reranked.slice(0, Math.min(5, pool.length));
     
     // DEBUG: Log final results
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Finalists count:', finalists.length);
-    console.log('🔍 [SPEC BIAS RETRIEVAL] Finalists content:', finalists.map(h => ({
-      content: h.content?.substring(0, 100) || 'No content'
-    })));
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Finalists count', { finalistsCount: finalists.length });
+    requestLogger.info('🔍 [SPEC BIAS RETRIEVAL] Finalists content', { 
+      finalistsContent: finalists.map(h => ({
+        content: h.content?.substring(0, 100) || 'No content'
+      }))
+    });
 
     // 7) Return with observability
     const result = {
@@ -821,8 +827,8 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
     }
     
     // Debug logging
-    console.log('Pressure question:', isPressureQuestion);
-    console.log('Pressure specs found:', pressureSpecs.length);
+    requestLogger.info('Pressure question', { isPressureQuestion });
+    requestLogger.info('Pressure specs found', { pressureSpecsCount: pressureSpecs.length });
     
     // If we found specific pressure data, present it directly
     if (isPressureQuestion && pressureSpecs.length > 0) {
@@ -863,7 +869,7 @@ async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, syste
         try {
           const style = decideStyle(userQuery);
           styleDetected = style; // Capture the detected style
-          console.log('Style detected:', style, 'for query:', userQuery);
+          requestLogger.info('Style detected', { style, userQuery });
           synthesizedAnswer = await synthesizeAnswer(userQuery, pineconeResults, style);
           response += `${synthesizedAnswer}\n\n`;
         } catch (synthesisError) {

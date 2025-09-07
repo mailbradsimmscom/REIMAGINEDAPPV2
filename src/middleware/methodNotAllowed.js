@@ -10,7 +10,12 @@ export function methodNotAllowed(req, res, next) {
   const requestLogger = req.requestLogger || logger.createRequestLogger();
   
   // DEBUG: Add methodNotAllowed tracing
-  console.log('🔍 [METHOD_NOT_ALLOWED]', req.method, req.originalUrl, '→', req.url, 'allowedMethods:', req.route?.methods || []);
+  requestLogger.info('🔍 [METHOD_NOT_ALLOWED]', { 
+    method: req.method, 
+    originalUrl: req.originalUrl, 
+    url: req.url, 
+    allowedMethods: req.route?.methods || [] 
+  });
   
   requestLogger.warn('Method not allowed', {
     method: req.method,

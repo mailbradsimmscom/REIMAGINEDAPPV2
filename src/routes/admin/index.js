@@ -17,9 +17,6 @@ import chunksRouter from './chunks.route.js';
 
 const router = express.Router();
 
-// Mount dashboard route FIRST (no auth required for HTML page)
-router.use('/dashboard', dashboardRouter);
-
 // Apply admin gate to all API routes
 router.use(adminOnly);
 

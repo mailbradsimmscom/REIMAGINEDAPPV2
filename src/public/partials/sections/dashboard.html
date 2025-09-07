@@ -1,0 +1,119 @@
+<div class="dashboard-grid">
+    <div class="card">
+        <h3>System Health</h3>
+        <div id="health-metrics">
+            <div class="metric">
+                <span class="metric-label">Uptime</span>
+                <span class="metric-value" id="uptime">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Memory Usage</span>
+                <span class="metric-value" id="memory">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Environment</span>
+                <span class="metric-value" id="environment">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Database Status</h3>
+        <div id="database-metrics">
+            <div class="metric">
+                <span class="metric-label">Supabase</span>
+                <span class="metric-value" id="supabase-status">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Documents</span>
+                <span class="metric-value" id="documents-count">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Jobs</span>
+                <span class="metric-value" id="jobs-count">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Total Systems</span>
+                <span class="metric-value" id="total-systems">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Vector Database</h3>
+        <div id="vector-metrics">
+            <div class="metric">
+                <span class="metric-label">Pinecone Status</span>
+                <span class="metric-value" id="pinecone-status">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Sidecar Status</span>
+                <span class="metric-value" id="sidecar-status">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Sidecar Version</span>
+                <span class="metric-value" id="sidecar-version">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Index Name</span>
+                <span class="metric-value" id="pinecone-index">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Namespace</span>
+                <span class="metric-value" id="pinecone-namespace">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Vector Count</span>
+                <span class="metric-value" id="pinecone-vectors">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Dimension</span>
+                <span class="metric-value" id="pinecone-dimension">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Index Fullness</span>
+                <span class="metric-value" id="pinecone-fullness">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Performance</h3>
+        <div id="performance-metrics">
+            <div class="metric">
+                <span class="metric-label">Active Sessions</span>
+                <span class="metric-value" id="active-sessions">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Avg Response Time</span>
+                <span class="metric-value" id="avg-response">Loading...</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Error Rate</span>
+                <span class="metric-value" id="error-rate">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="logs-section">
+    <div class="logs-header">
+        <h3>System Logs</h3>
+        <div class="logs-controls">
+            <select id="log-level-filter">
+                <option value="all">All Levels</option>
+                <option value="error">Errors Only</option>
+                <option value="warning">Warnings Only</option>
+                <option value="info">Info Only</option>
+            </select>
+            <button class="btn refresh-btn" onclick="refreshLogs()">Refresh</button>
+            <button class="btn secondary" onclick="clearLogs()">Clear</button>
+        </div>
+    </div>
+    <div id="logs-container">
+        <div class="empty-state">
+            <p>No logs available yet.</p>
+            <p>Logs will appear here when the system generates them.</p>
+        </div>
+    </div>
+</div>

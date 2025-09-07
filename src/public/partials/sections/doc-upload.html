@@ -1,0 +1,110 @@
+<div class="upload-section">
+    <div class="upload-header">
+        <h3>Document Upload</h3>
+        <p>Upload documents to be processed and indexed for search</p>
+    </div>
+    
+    <div class="upload-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="doc-id">Doc ID (optional):</label>
+                <input type="text" id="doc-id" placeholder="Auto-generated if blank">
+            </div>
+            <div class="form-group">
+                <label for="manufacturer">Manufacturer:</label>
+                <select id="manufacturer" onchange="loadModels()">
+                    <option value="">Select Manufacturer</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <select id="model">
+                    <option value="">Select Model</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="revision-date">Revision Date:</label>
+                <input type="date" id="revision-date">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group checkbox-group">
+                <label>
+                    <input type="checkbox" id="ocr-enabled" checked>
+                    OCR Allowed (for pages without text)
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn secondary" onclick="resetUploadForm()">Reset Form</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="upload-area">
+        <div class="file-drop-zone" id="file-drop-zone">
+            <div class="drop-zone-content">
+                <div class="upload-icon">📄</div>
+                <h4>Drop files here or click to browse</h4>
+                <p>Supports PDF, DOC, DOCX, TXT files</p>
+                <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.txt" style="display: none;">
+            </div>
+        </div>
+        
+        <div class="upload-controls">
+            <button class="btn primary" onclick="document.getElementById('file-input').click()">Choose Files</button>
+            <button class="btn secondary" onclick="clearUploadQueue()">Clear Queue</button>
+        </div>
+    </div>
+
+    <div class="upload-queue" id="upload-queue" style="display: none;">
+        <h4>Upload Queue</h4>
+        <div id="queue-items"></div>
+        <button class="btn primary" onclick="processUploadQueue()">Process All</button>
+    </div>
+
+    <div class="job-progress" id="job-progress" style="display: none;">
+        <h4>Processing Status</h4>
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="job-id" id="current-job-id"></span>
+                <span class="job-status" id="current-job-status"></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-details">
+                <div class="progress-metric">
+                    <span class="metric-label">Status:</span>
+                    <span class="metric-value" id="progress-status">Queued</span>
+                </div>
+                <div class="progress-metric">
+                    <span class="metric-label">Pages:</span>
+                    <span class="metric-value" id="progress-pages">0</span>
+                </div>
+                <div class="progress-metric">
+                    <span class="metric-label">Chunks:</span>
+                    <span class="metric-value" id="progress-chunks">0</span>
+                </div>
+                <div class="progress-metric">
+                    <span class="metric-label">Uploaded:</span>
+                    <span class="metric-value" id="progress-uploaded">0</span>
+                </div>
+            </div>
+            <div class="progress-message" id="progress-message"></div>
+        </div>
+    </div>
+
+    <div class="upload-history">
+        <h4>Recent Uploads</h4>
+        <div id="upload-history">
+            <div class="empty-state">
+                <p>No uploads yet.</p>
+                <p>Uploaded documents will appear here.</p>
+            </div>
+        </div>
+    </div>
+</div>

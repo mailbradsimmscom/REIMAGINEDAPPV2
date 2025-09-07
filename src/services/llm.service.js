@@ -4,15 +4,17 @@ import { oaiText, truncateContent } from '../clients/openai.client.js';
 import { logger } from '../utils/logger.js';
 
 export async function enhanceQuery(userQuery, systemsContext = []) {
+  const requestLogger = logger.createRequestLogger();
+  
   try {
     // DEBUG: Log input query
-    console.log('🔍 [QUERY ENHANCEMENT] Input query:', userQuery);
-    console.log('🔍 [QUERY ENHANCEMENT] Systems context length:', systemsContext.length);
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Input query', { userQuery });
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Systems context length', { systemsContextLength: systemsContext.length });
     
     const prompt = buildQueryEnhancementPrompt(userQuery, systemsContext);
     
     // DEBUG: Log the prompt sent to LLM
-    console.log('🔍 [QUERY ENHANCEMENT] Prompt sent to LLM:', prompt);
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Prompt sent to LLM', { prompt });
     
     const systemPrompt = `${personality.systemPrompt}
 
@@ -26,8 +28,8 @@ You are enhancing a user query by incorporating relevant context from systems da
     });
     
     // DEBUG: Log enhanced query output
-    console.log('🔍 [QUERY ENHANCEMENT] Enhanced query:', enhancedQuery);
-    console.log('🔍 [QUERY ENHANCEMENT] Contains "pressure":', enhancedQuery.toLowerCase().includes('pressure'));
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Enhanced query', { enhancedQuery });
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Contains "pressure"', { containsPressure: enhancedQuery.toLowerCase().includes('pressure') });
     
     return enhancedQuery;
   } catch (error) {
