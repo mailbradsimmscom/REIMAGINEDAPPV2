@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  sidecar:
+    build:
+      context: ./python-sidecar
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python-sidecar:/app
+    environment:
+      - UVICORN_RELOAD=true
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
