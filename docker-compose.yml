@@ -81,6 +81,8 @@ services:
       - PINECONE_CLOUD=${PINECONE_CLOUD:-}
       - PINECONE_NAMESPACE=${PINECONE_NAMESPACE:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - SUPABASE_URL=${SUPABASE_URL:-}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY:-}
     networks:
       - app-network
     restart: unless-stopped

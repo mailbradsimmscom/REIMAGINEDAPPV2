@@ -1892,11 +1892,11 @@
         function processUploadQueue() {
             if (uploadQueue.length === 0) return;
             
-            // Get form data
+            // Get form data - use normalized fields for system lookup
             const metadata = {
                 doc_id: document.getElementById('doc-id').value,
-                manufacturer: document.getElementById('manufacturer').value,
-                model: document.getElementById('model').value,
+                manufacturer_norm: document.getElementById('manufacturer').value,
+                model_norm: document.getElementById('model').value,
                 revision_date: document.getElementById('revision-date').value,
                 language: 'en', // Always English
                 ocr_enabled: document.getElementById('ocr-enabled').checked,
@@ -1917,7 +1917,7 @@
         async function uploadFile(file, metadata) {
             try {
                 // Validate required fields
-                if (!metadata.manufacturer || !metadata.model || !metadata.revision_date) {
+                if (!metadata.manufacturer_norm || !metadata.model_norm || !metadata.revision_date) {
                     alert('Please fill in all required fields: Manufacturer, Model, and Revision Date');
                     return;
                 }
@@ -1944,10 +1944,10 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert(`Upload successful! Job ID: ${result.data.jobId}`);
+                    alert(`Upload successful! Document ID: ${result.data.doc_id}`);
                     
                     // Start polling for job status
-                    pollJobStatus(result.data.jobId);
+                    pollJobStatus(result.data.job_id);
                     
                     // Clear the queue
                     uploadQueue = [];

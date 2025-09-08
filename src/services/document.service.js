@@ -3,9 +3,12 @@ import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/supabaseClient.js';
 import documentRepository from '../repositories/document.repository.js';
+import { lookupSystemByManufacturerAndModel } from '../repositories/systems.repository.js';
 import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
 import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
+import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
+import dipService from './dip.service.js';
 
 class DocumentService {
   constructor() {
@@ -132,6 +135,8 @@ class DocumentService {
         dry_run = false,
         manufacturer,
         model,
+        manufacturer_norm,
+        model_norm,
         brand_family,
         revision_date,
         language = 'en',
@@ -148,10 +153,64 @@ class DocumentService {
         finalDocId, 
         fileBufferLength: fileBuffer?.length 
       });
+
+      // System metadata lookup - prioritize normalized fields
+      let systemMetadata = null;
+      const manufacturerNorm = manufacturer_norm || manufacturer;
+      const modelNorm = model_norm || model;
+
+      if (manufacturerNorm && modelNorm) {
+        try {
+          this.requestLogger.info('Looking up system metadata', { 
+            manufacturerNorm, 
+            modelNorm 
+          });
+          
+          systemMetadata = await lookupSystemByManufacturerAndModel(manufacturerNorm, modelNorm);
+          
+          // Validate the system metadata response
+          const validationResult = systemMetadataSchema.safeParse(systemMetadata);
+          if (!validationResult.success) {
+            this.requestLogger.error('Invalid system metadata response', { 
+              systemMetadata, 
+              errors: validationResult.error.errors 
+            });
+            throw new Error('Invalid system metadata response from database');
+          }
+          
+          this.requestLogger.info('System metadata resolved', { 
+            asset_uid: systemMetadata.asset_uid,
+            system_norm: systemMetadata.system_norm,
+            subsystem_norm: systemMetadata.subsystem_norm
+          });
+          
+        } catch (error) {
+          this.requestLogger.error('System lookup failed', { 
+            error: error.message, 
+            manufacturerNorm, 
+            modelNorm,
+            code: error.code 
+          });
+          
+          // If system lookup fails, we should fail the upload
+          // This ensures all documents are properly linked to systems
+          const uploadError = new Error(`System lookup failed: ${error.message}`);
+          uploadError.code = error.code || 'SYSTEM_LOOKUP_FAILED';
+          uploadError.status = error.status || 400;
+          throw uploadError;
+        }
+      } else {
+        this.requestLogger.warn('No manufacturer/model provided for system lookup', { 
+          manufacturerNorm, 
+          modelNorm 
+        });
+        throw new Error('Manufacturer and model are required for document upload');
+      }
       
       // Create job record
       const jobData = {
         doc_id: finalDocId,
+        job_type: 'DIP', // Set job type to DIP for document processing
         status: 'queued',
         params: {
           ocr_enabled,
@@ -172,11 +231,17 @@ class DocumentService {
 
       const job = await documentRepository.createJob(jobData);
 
-      // Create or update document record
+      // Create or update document record with normalized system metadata
       const documentData = {
         doc_id: finalDocId,
-        manufacturer,
-        model,
+        manufacturer_norm: manufacturerNorm,
+        model_norm: modelNorm,
+        asset_uid: systemMetadata.asset_uid,
+        system_norm: systemMetadata.system_norm,
+        subsystem_norm: systemMetadata.subsystem_norm,
+        // Keep legacy fields for backward compatibility
+        manufacturer: manufacturer || manufacturerNorm,
+        model: model || modelNorm,
         revision_date: revision_date ? new Date(revision_date) : null,
         language,
         brand_family,
@@ -337,22 +402,85 @@ class DocumentService {
       // Call Python sidecar for processing
       const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
 
-      // Update job with results
-      await documentRepository.updateJobProgress(jobId, {
-        pages_total: processingResult.pages_total || 0,
-        pages_ocr: processingResult.pages_ocr || 0,
-        tables: processingResult.tables_found || 0,
-        chunks: processingResult.chunks_processed || 0,
-        upserted: processingResult.vectors_upserted || 0,
-        skipped_duplicates: 0
-      });
+      // Process DIP if this is a DIP job
+      let dipResult = null;
+      if (job.job_type === 'DIP') {
+        try {
+          this.requestLogger.info('Starting DIP processing', { jobId, docId: job.doc_id });
+          
+          // Generate DIP
+          dipResult = await dipService.generateDIP(fileBuffer, job.doc_id, fileName, {
+            job_id: job.job_id,
+            manufacturer: document.manufacturer,
+            model: document.model
+          });
+
+          // Update job with DIP results
+          await documentRepository.updateJobProgress(jobId, {
+            pages_total: processingResult.pages_total || 0,
+            pages_ocr: processingResult.pages_ocr || 0,
+            tables: processingResult.tables_found || 0,
+            chunks: processingResult.chunks_processed || 0,
+            upserted: processingResult.vectors_upserted || 0,
+            skipped_duplicates: 0,
+            // DIP-specific counters
+            entities_extracted: dipResult.entities_count || 0,
+            spec_hints_found: dipResult.hints_count || 0,
+            golden_tests_generated: dipResult.tests_count || 0
+          });
+
+          // Mark DIP processing as successful
+          await documentRepository.updateJobDIPSuccess(jobId, true);
+
+          this.requestLogger.info('DIP processing completed', { 
+            jobId, 
+            entitiesCount: dipResult.entities_count,
+            hintsCount: dipResult.hints_count,
+            testsCount: dipResult.tests_count
+          });
+        } catch (dipError) {
+          this.requestLogger.error('DIP processing failed', { 
+            error: dipError.message, 
+            jobId 
+          });
+          
+          // Continue with regular processing even if DIP fails
+          // Update job with error but don't fail the entire job
+          await documentRepository.updateJobProgress(jobId, {
+            pages_total: processingResult.pages_total || 0,
+            pages_ocr: processingResult.pages_ocr || 0,
+            tables: processingResult.tables_found || 0,
+            chunks: processingResult.chunks_processed || 0,
+            upserted: processingResult.vectors_upserted || 0,
+            skipped_duplicates: 0,
+            dip_error: dipError.message
+          });
+
+          // Mark DIP processing as failed
+          await documentRepository.updateJobDIPSuccess(jobId, false);
+        }
+      } else {
+        // Regular processing for non-DIP jobs
+        await documentRepository.updateJobProgress(jobId, {
+          pages_total: processingResult.pages_total || 0,
+          pages_ocr: processingResult.pages_ocr || 0,
+          tables: processingResult.tables_found || 0,
+          chunks: processingResult.chunks_processed || 0,
+          upserted: processingResult.vectors_upserted || 0,
+          skipped_duplicates: 0
+        });
+      }
 
       await documentRepository.updateJobStatus(jobId, 'completed');
 
       this.requestLogger.info('Job processing completed', { 
         jobId, 
         chunksProcessed: processingResult.chunks_processed,
-        vectorsUpserted: processingResult.vectors_upserted
+        vectorsUpserted: processingResult.vectors_upserted,
+        dipProcessed: job.job_type === 'DIP',
+        entitiesExtracted: dipResult?.entities_count || 0,
+        specHintsFound: dipResult?.hints_count || 0,
+        goldenTestsGenerated: dipResult?.tests_count || 0
       });
     } catch (error) {
       this.requestLogger.error('Failed to process job', { 

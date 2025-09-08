@@ -4,12 +4,10 @@ import json
 import logging
 from typing import Optional, Dict, Any
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Load environment variables - try multiple paths for compatibility
-import os
-from pathlib import Path
-
 # Try to load .env from multiple possible locations
 env_paths = [
     '.env',  # Current directory
@@ -25,9 +23,11 @@ for env_path in env_paths:
 from .parser import PDFParser
 from .models import (
     ParseRequest, ParseResponse, HealthResponse, VersionResponse,
-    EmbeddingRequest, EmbeddingResponse, PineconeUpsertRequest, PineconeUpsertResponse
+    EmbeddingRequest, EmbeddingResponse, PineconeUpsertRequest, PineconeUpsertResponse,
+    DIPRequest, DIPResponse, DIPPacketRequest, DIPPacketResponse
 )
 from .pinecone_client import pinecone_client
+from .dip_processor import DIPProcessor
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -40,8 +40,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Initialize parser
+# Initialize parser and DIP processor
 parser = PDFParser()
+dip_processor = DIPProcessor()
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
@@ -278,6 +279,105 @@ async def process_document_for_pinecone(
     except Exception as e:
         logger.error(f"Failed to process document for Pinecone: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/v1/dip", response_model=DIPResponse)
+async def generate_dip(
+    file: UploadFile = File(...),
+    doc_id: str = Form(...),
+    options: str = Form("{}")
+):
+    """Generate DIP (Document Intelligence Packet) from uploaded PDF"""
+    try:
+        logger.info(f"Generating DIP for document {doc_id}: {file.filename}")
+        
+        # Parse options
+        try:
+            dip_options = json.loads(options)
+        except json.JSONDecodeError:
+            dip_options = {}
+        
+        # Read file content
+        content = await file.read()
+        
+        # Parse the PDF first
+        parse_result = await parser.parse_pdf(
+            content,
+            extract_tables=True,
+            ocr_enabled=True
+        )
+        
+        if not parse_result.success:
+            raise HTTPException(status_code=500, detail="Failed to parse PDF for DIP generation")
+        
+        # Process document for DIP
+        dip_data = dip_processor.process_document(parse_result.elements, doc_id)
+        
+        logger.info(f"DIP generation completed for {doc_id}: "
+                   f"{dip_data['entities_count']} entities, "
+                   f"{dip_data['hints_count']} hints, "
+                   f"{dip_data['tests_count']} tests")
+        
+        return DIPResponse(**dip_data)
+        
+    except Exception as e:
+        logger.error(f"Failed to generate DIP: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/v1/runDocIntelligencePacket", response_model=DIPPacketResponse)
+async def run_dip_packet(request: DIPPacketRequest):
+    """Run complete DIP packet processing and save files"""
+    try:
+        logger.info(f"Running DIP packet processing for document {request.doc_id}")
+        
+        # Check if file exists
+        file_path = Path(request.file_path)
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail=f"File not found: {request.file_path}")
+        
+        # Read file content
+        with open(file_path, 'rb') as f:
+            content = f.read()
+        
+        # Parse the PDF
+        parse_result = await parser.parse_pdf(
+            content,
+            extract_tables=True,
+            ocr_enabled=True
+        )
+        
+        if not parse_result.success:
+            raise HTTPException(status_code=500, detail="Failed to parse PDF for DIP packet")
+        
+        # Process document for DIP
+        dip_data = dip_processor.process_document(parse_result.elements, request.doc_id)
+        
+        # Save DIP files
+        output_files = dip_processor.save_dip_files(dip_data, request.output_dir)
+        
+        logger.info(f"DIP packet processing completed for {request.doc_id}")
+        
+        return DIPPacketResponse(
+            success=True,
+            doc_id=request.doc_id,
+            output_files=output_files,
+            entities_file=output_files['entities_file'],
+            spec_hints_file=output_files['spec_hints_file'],
+            golden_tests_file=output_files['golden_tests_file'],
+            processing_time=dip_data['processing_time']
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to run DIP packet processing: {e}")
+        return DIPPacketResponse(
+            success=False,
+            doc_id=request.doc_id,
+            output_files={},
+            entities_file="",
+            spec_hints_file="",
+            golden_tests_file="",
+            processing_time=0.0,
+            error=str(e)
+        )
 
 if __name__ == "__main__":
     import uvicorn

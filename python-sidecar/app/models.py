@@ -101,3 +101,72 @@ class PineconeUpsertResponse(BaseModel):
     upserted_count: int
     namespace: str
     processing_time: float
+
+# DIP (Document Intelligence Packet) Models
+class DIPEntity(BaseModel):
+    """Individual entity extracted from document"""
+    entity_type: str  # 'manufacturer', 'model', 'specification', 'warning', 'procedure', etc.
+    value: str
+    confidence: float  # 0.0 to 1.0
+    page: int
+    context: str  # Surrounding text for context
+    bbox: Optional[BoundingBox] = None
+
+class DIPSpecHint(BaseModel):
+    """Specification hint extracted from document"""
+    hint_type: str  # 'pressure', 'temperature', 'voltage', 'flow_rate', etc.
+    value: str
+    unit: Optional[str] = None
+    page: int
+    context: str
+    confidence: float
+    bbox: Optional[BoundingBox] = None
+
+class DIPGoldenTest(BaseModel):
+    """Golden test case extracted from document"""
+    test_name: str
+    test_type: str  # 'procedure', 'checklist', 'measurement', 'validation'
+    description: str
+    steps: List[str]
+    expected_result: str
+    page: int
+    confidence: float
+    bbox: Optional[BoundingBox] = None
+
+class DIPRequest(BaseModel):
+    """Request for DIP generation"""
+    doc_id: str
+    file_path: str
+    options: Dict[str, Any] = Field(default_factory=dict)
+
+class DIPResponse(BaseModel):
+    """Response from DIP generation"""
+    success: bool
+    doc_id: str
+    entities: List[DIPEntity]
+    spec_hints: List[DIPSpecHint]
+    golden_tests: List[DIPGoldenTest]
+    processing_time: float
+    pages_processed: int
+    entities_count: int
+    hints_count: int
+    tests_count: int
+    error: Optional[str] = None
+
+class DIPPacketRequest(BaseModel):
+    """Request for running DIP packet processing"""
+    doc_id: str
+    file_path: str
+    output_dir: str
+    options: Dict[str, Any] = Field(default_factory=dict)
+
+class DIPPacketResponse(BaseModel):
+    """Response from DIP packet processing"""
+    success: bool
+    doc_id: str
+    output_files: Dict[str, str]  # filename -> filepath
+    entities_file: str
+    spec_hints_file: str
+    golden_tests_file: str
+    processing_time: float
+    error: Optional[str] = None

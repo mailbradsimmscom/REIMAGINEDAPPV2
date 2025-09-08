@@ -89,6 +89,17 @@ app.get('/admin', async (req, res) => {
   }
 });
 
+// DIP suggestions review route (no auth required for HTML page)
+app.get('/suggestions.html', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/suggestions.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Suggestions page not found' });
+  }
+});
+
 // Performance logging middleware
 app.use((req, res, next) => {
   const originalEnd = res.end;

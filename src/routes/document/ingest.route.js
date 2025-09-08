@@ -9,6 +9,7 @@ import { DocumentIngestEnvelope } from '../../schemas/document.schema.js';
 import { 
   documentIngestMetadataSchema 
 } from '../../schemas/document.schema.js';
+import { uploadDocumentSchema } from '../../schemas/uploadDocument.schema.js';
 import Busboy from 'busboy';
 import { z } from 'zod';
 
@@ -79,14 +80,16 @@ router.post('/',
             try {
               metadata = JSON.parse(value);
               
-              // Validate metadata using Zod schema
-              const validationResult = documentIngestMetadataSchema.safeParse(metadata);
+              // Validate metadata using the new upload document schema
+              // This ensures manufacturer_norm and model_norm are provided
+              const validationResult = uploadDocumentSchema.safeParse(metadata);
               if (!validationResult.success) {
                 hasError = true;
-                reject(new Error('Invalid metadata format'));
+                reject(new Error(`Invalid metadata format: ${validationResult.error.errors.map(e => e.message).join(', ')}`));
               }
             } catch (error) {
               hasError = true;
+              reject(new Error(`Failed to parse metadata JSON: ${error.message}`));
             }
           }
         });
@@ -123,16 +126,22 @@ router.post('/',
         throw error;
       }
       
-      // Create ingest job
+      // Validate that required normalized fields are present
+      if (!metadata.manufacturer_norm || !metadata.model_norm) {
+        const error = new Error('manufacturer_norm and model_norm are required');
+        error.status = 400;
+        throw error;
+      }
+      
+      // Create ingest job with normalized metadata
       const job = await documentService.createIngestJob(fileBuffer, { ...metadata, fileName });
       
       const envelope = {
         success: true,
         data: {
-          jobId: job.job_id,
-          status: job.status,
-          fileName: job.fileName,
-          createdAt: job.created_at
+          doc_id: job.doc_id,
+          job_id: job.job_id,
+          status: job.status
         }
       };
 

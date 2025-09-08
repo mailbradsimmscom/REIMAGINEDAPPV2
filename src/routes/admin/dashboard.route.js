@@ -8,7 +8,8 @@ import { z } from 'zod';
 
 const router = express.Router();
 
-// Note: No response validation for HTML routes
+// Note: No response validation for HTML routes - validateResponse imported but not used for HTML serving
+router.use(validateResponse(EnvelopeSchema)); // Disabled for HTML routes - serves HTML not JSON
 
 // Admin dashboard query schema
 const adminDashboardQuerySchema = z.object({}).passthrough();

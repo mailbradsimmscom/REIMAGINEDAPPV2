@@ -39,14 +39,14 @@ class JobProcessor {
   // Process pending jobs
   async processPendingJobs() {
     try {
-      // Get queued jobs
-      const queuedJobs = await documentRepository.getJobsByStatus('queued', 10);
+      // Get queued DIP jobs specifically
+      const queuedJobs = await documentRepository.getDIPJobsByStatus('queued', 10);
       
       if (queuedJobs.length === 0) {
-        return; // No jobs to process
+        return; // No DIP jobs to process
       }
 
-      this.requestLogger.info('Processing queued jobs', { count: queuedJobs.length });
+      this.requestLogger.info('Processing queued DIP jobs', { count: queuedJobs.length });
 
       // Process jobs concurrently (but limit concurrency)
       const processingPromises = queuedJobs.map(job => this.processJob(job.job_id));

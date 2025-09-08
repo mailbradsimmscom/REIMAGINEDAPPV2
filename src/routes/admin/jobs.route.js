@@ -7,9 +7,14 @@ import { Router } from 'express';
 import { logger } from '../../utils/logger.js';
 import jobProcessor from '../../services/job.processor.js';
 import documentRepository from '../../repositories/document.repository.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 
 const router = Router();
 const log = logger.createRequestLogger();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
 
 /**
  * POST /admin/jobs/process-next

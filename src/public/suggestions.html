@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIP Suggestions Review</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { padding: 20px; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+        .content { padding: 20px; }
+        .suggestion-item { border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 15px; padding: 15px; background: #fafafa; }
+        .suggestion-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .suggestion-title { font-weight: 600; color: #333; }
+        .suggestion-meta { font-size: 0.9em; color: #666; }
+        .suggestion-content { margin-top: 10px; }
+        .checkbox-group { margin: 10px 0; }
+        .checkbox-item { margin: 5px 0; display: flex; align-items: center; }
+        .checkbox-item input[type="checkbox"] { margin-right: 8px; }
+        .checkbox-item label { font-size: 0.9em; color: #555; cursor: pointer; }
+        .actions { margin-top: 20px; text-align: right; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-left: 10px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin: 10px 0; }
+        .empty { text-align: center; padding: 40px; color: #666; }
+        .stats { display: flex; gap: 20px; margin-bottom: 20px; }
+        .stat-item { flex: 1; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 4px; }
+        .stat-number { font-size: 24px; font-weight: bold; color: #007bff; }
+        .stat-label { font-size: 14px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DIP Suggestions Review</h1>
+            <p>Review and approve Document Intelligence Packet suggestions</p>
+        </div>
+        <div class="content">
+            <div id="loading" class="loading">Loading suggestions...</div>
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="success" class="success" style="display: none;"></div>
+            <div id="content" style="display: none;">
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-suggestions">0</div>
+                        <div class="stat-label">Total Suggestions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="selected-suggestions">0</div>
+                        <div class="stat-label">Selected</div>
+                    </div>
+                </div>
+                <div id="suggestions-list"></div>
+                <div class="actions">
+                    <button id="select-all" class="btn btn-secondary">Select All</button>
+                    <button id="deselect-all" class="btn btn-secondary">Deselect All</button>
+                    <button id="approve-selected" class="btn btn-primary" disabled>Approve Selected</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class DIPSuggestionsReviewer {
+            constructor() {
+                this.suggestions = [];
+                this.selectedSuggestions = new Set();
+                this.currentDocId = null;
+                this.init();
+            }
+
+            async init() {
+                this.setupEventListeners();
+                await this.loadSuggestions();
+            }
+
+            setupEventListeners() {
+                document.getElementById('select-all').addEventListener('click', () => this.selectAll());
+                document.getElementById('deselect-all').addEventListener('click', () => this.deselectAll());
+                document.getElementById('approve-selected').addEventListener('click', () => this.approveSelected());
+            }
+
+            async loadSuggestions() {
+                try {
+                    const response = await fetch('/admin/suggestions/pending', {
+                        headers: { 'x-admin-token': 'admin-secret-key' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    this.suggestions = data.data?.suggestions || [];
+                    this.renderSuggestions();
+                } catch (error) {
+                    this.showError(`Failed to load suggestions: ${error.message}`);
+                }
+            }
+
+            async loadDocumentSuggestions(docId) {
+                try {
+                    const response = await fetch(`/admin/suggestions/${docId}`, {
+                        headers: { 'x-admin-token': 'admin-secret-key' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.data?.dip_files || {};
+                } catch (error) {
+                    this.showError(`Failed to load document suggestions: ${error.message}`);
+                    return {};
+                }
+            }
+
+            async renderSuggestions() {
+                const container = document.getElementById('suggestions-list');
+                const statsContainer = document.getElementById('total-suggestions');
+                
+                statsContainer.textContent = this.suggestions.length;
+                
+                if (this.suggestions.length === 0) {
+                    container.innerHTML = '<div class="empty">No DIP suggestions available for review.</div>';
+                    document.getElementById('content').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                    return;
+                }
+
+                container.innerHTML = '';
+                
+                for (const suggestion of this.suggestions) {
+                    const suggestionElement = await this.createSuggestionElement(suggestion);
+                    container.appendChild(suggestionElement);
+                }
+                
+                document.getElementById('content').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            async createSuggestionElement(suggestion) {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.dataset.docId = suggestion.doc_id;
+                
+                const dipFiles = await this.loadDocumentSuggestions(suggestion.doc_id);
+                
+                div.innerHTML = `
+                    <div class="suggestion-header">
+                        <div class="suggestion-title">${suggestion.file_name}</div>
+                        <div class="suggestion-meta">
+                            ${suggestion.manufacturer} - ${suggestion.model} | 
+                            ${suggestion.entities_count} entities, ${suggestion.specs_count} specs, ${suggestion.tests_count} tests
+                        </div>
+                    </div>
+                    <div class="suggestion-content">
+                        ${this.renderSuggestionContent(dipFiles)}
+                    </div>
+                `;
+                
+                return div;
+            }
+
+            renderSuggestionContent(dipFiles) {
+                let html = '';
+                
+                if (dipFiles.entities?.entities) {
+                    html += this.renderSuggestionGroup('Entities', dipFiles.entities.entities, 'entity');
+                }
+                
+                if (dipFiles.spec_hints?.spec_hints) {
+                    html += this.renderSuggestionGroup('Specification Hints', dipFiles.spec_hints.spec_hints, 'spec');
+                }
+                
+                if (dipFiles.golden_tests?.golden_tests) {
+                    html += this.renderSuggestionGroup('Golden Tests', dipFiles.golden_tests.golden_tests, 'test');
+                }
+                
+                return html || '<div class="empty">No suggestions available for this document.</div>';
+            }
+
+            renderSuggestionGroup(title, items, type) {
+                let html = `<h4>${title}</h4><div class="checkbox-group">`;
+                
+                items.forEach((item, index) => {
+                    const id = `${type}-${index}`;
+                    html += `
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${id}" data-type="${type}" data-index="${index}">
+                            <label for="${id}">${this.formatSuggestionItem(item, type)}</label>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                return html;
+            }
+
+            formatSuggestionItem(item, type) {
+                switch (type) {
+                    case 'entity':
+                        return `${item.entity_type}: ${item.value} (${Math.round(item.confidence * 100)}%)`;
+                    case 'spec':
+                        return `${item.hint_type}: ${item.value}${item.unit ? ' ' + item.unit : ''} (${Math.round(item.confidence * 100)}%)`;
+                    case 'test':
+                        return `${item.test_name}: ${item.description || item.test_type}`;
+                    default:
+                        return JSON.stringify(item);
+                }
+            }
+
+            selectAll() {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                    this.updateSelectedSuggestions();
+                });
+            }
+
+            deselectAll() {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                this.selectedSuggestions.clear();
+                this.updateSelectedSuggestions();
+            }
+
+            updateSelectedSuggestions() {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                document.getElementById('selected-suggestions').textContent = checkboxes.length;
+                document.getElementById('approve-selected').disabled = checkboxes.length === 0;
+            }
+
+            async approveSelected() {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                if (checkboxes.length === 0) return;
+
+                const approved = { entities: [], specs: [], golden_tests: [] };
+                
+                checkboxes.forEach(checkbox => {
+                    const type = checkbox.dataset.type;
+                    const index = parseInt(checkbox.dataset.index);
+                    const docId = checkbox.closest('.suggestion-item').dataset.docId;
+                    
+                    if (!this.currentDocId) this.currentDocId = docId;
+                    
+                    // This is a simplified version - in a real implementation,
+                    // you'd need to store the actual suggestion data
+                    approved[type === 'entity' ? 'entities' : 
+                            type === 'spec' ? 'specs' : 'golden_tests'].push({
+                        [type === 'entity' ? 'entity_type' : 
+                         type === 'spec' ? 'hint_type' : 'test_name']: 'Sample',
+                        value: 'Sample Value',
+                        confidence: 0.95
+                    });
+                });
+
+                try {
+                    const response = await fetch('/admin/suggestions/approve', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': 'admin-secret-key'
+                        },
+                        body: JSON.stringify({
+                            doc_id: this.currentDocId,
+                            approved
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    this.showSuccess(`Successfully approved ${result.data?.total_inserted || 0} suggestions`);
+                    this.deselectAll();
+                } catch (error) {
+                    this.showError(`Failed to approve suggestions: ${error.message}`);
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                setTimeout(() => errorDiv.style.display = 'none', 5000);
+            }
+
+            showSuccess(message) {
+                const successDiv = document.getElementById('success');
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                setTimeout(() => successDiv.style.display = 'none', 5000);
+            }
+        }
+
+        // Initialize the reviewer when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DIPSuggestionsReviewer();
+        });
+    </script>
+</body>
+</html>

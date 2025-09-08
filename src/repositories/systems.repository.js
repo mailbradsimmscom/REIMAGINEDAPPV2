@@ -147,4 +147,87 @@ export async function searchSystems(query, { limit = 10 } = {}) {
   }
 }
 
-export default { listSystems, getSystemByAssetUid, searchSystems };
+/**
+ * Lookup system metadata by normalized manufacturer and model names
+ * Used during document upload to resolve asset_uid and system metadata
+ * 
+ * @param {string} manufacturerNorm - Normalized manufacturer name
+ * @param {string} modelNorm - Normalized model name
+ * @returns {Promise<Object>} System metadata with asset_uid, system_norm, subsystem_norm
+ * @throws {Error} If system not found or database error
+ */
+export async function lookupSystemByManufacturerAndModel(manufacturerNorm, modelNorm) {
+  const supabase = await checkSupabaseAvailability();
+  
+  try {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('asset_uid, system_norm, subsystem_norm')
+      .eq('manufacturer_norm', manufacturerNorm)
+      .eq('model_norm', modelNorm)
+      .limit(1)
+      .single();
+
+    if (error) {
+      // Handle "not found" case specifically
+      if (error.code === 'PGRST116') {
+        const err = new Error(`No system found for manufacturer "${manufacturerNorm}" and model "${modelNorm}"`);
+        err.code = 'SYSTEM_NOT_FOUND';
+        err.status = 400;
+        err.context = { 
+          operation: 'lookup_by_manufacturer_model', 
+          manufacturerNorm, 
+          modelNorm, 
+          table: TABLE 
+        };
+        throw err;
+      }
+      
+      // Handle other database errors
+      const err = new Error(`Failed to lookup system: ${error.message}`);
+      err.cause = error;
+      err.context = { 
+        operation: 'lookup_by_manufacturer_model', 
+        manufacturerNorm, 
+        modelNorm, 
+        table: TABLE 
+      };
+      throw err;
+    }
+
+    // Validate required fields are present
+    if (!data || !data.asset_uid || !data.system_norm || !data.subsystem_norm) {
+      const err = new Error(`Incomplete system data for manufacturer "${manufacturerNorm}" and model "${modelNorm}"`);
+      err.code = 'INCOMPLETE_SYSTEM_DATA';
+      err.status = 500;
+      err.context = { 
+        operation: 'lookup_by_manufacturer_model', 
+        manufacturerNorm, 
+        modelNorm, 
+        data,
+        table: TABLE 
+      };
+      throw err;
+    }
+
+    return {
+      asset_uid: data.asset_uid,
+      system_norm: data.system_norm,
+      subsystem_norm: data.subsystem_norm
+    };
+    
+  } catch (error) {
+    // Re-throw with additional context if it's not already enhanced
+    if (!error.context) {
+      error.context = { 
+        operation: 'lookup_by_manufacturer_model', 
+        manufacturerNorm, 
+        modelNorm, 
+        table: TABLE 
+      };
+    }
+    throw error;
+  }
+}
+
+export default { listSystems, getSystemByAssetUid, searchSystems, lookupSystemByManufacturerAndModel };

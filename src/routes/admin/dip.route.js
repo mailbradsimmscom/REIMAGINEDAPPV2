@@ -8,8 +8,13 @@ import { generateDIPAndSuggestions } from '../../services/dip.generation.service
 import { logger } from '../../utils/logger.js';
 import { z } from 'zod';
 import express from 'express';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 
 const router = Router();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
 
 // Probe: always 200 to verify mount path
 router.get('/_probe', (req, res) => {

@@ -117,6 +117,29 @@ class DocumentRepository {
     }
   }
 
+  async updateJobDIPSuccess(jobId, dipSuccess) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .update({ 
+          dip_success: dipSuccess,
+          updated_at: new Date().toISOString()
+        })
+        .eq('job_id', jobId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      this.requestLogger.info('Job DIP success updated', { jobId, dipSuccess });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update job DIP success', { error: error.message, jobId, dipSuccess });
+      throw error;
+    }
+  }
+
   // Document Management
   async createOrUpdateDocument(docData) {
     const supabase = await this.checkSupabaseAvailability();
@@ -256,6 +279,25 @@ class DocumentRepository {
       return data || [];
     } catch (error) {
       this.requestLogger.error('Failed to get jobs by status', { error: error.message, status });
+      throw error;
+    }
+  }
+
+  async getDIPJobsByStatus(status, limit = 10) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('status', status)
+        .eq('job_type', 'DIP')
+        .order('created_at', { ascending: true })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      this.requestLogger.error('Failed to get DIP jobs by status', { error: error.message, status });
       throw error;
     }
   }

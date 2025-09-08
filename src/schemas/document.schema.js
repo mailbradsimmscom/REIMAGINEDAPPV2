@@ -34,6 +34,7 @@ const DocumentJobsOkSchema = z.object({
   data: z.object({
     jobs: z.array(z.object({
       job_id: z.string(),
+      job_type: z.string().optional().default('GENERIC'),
       status: z.string(),
       doc_id: z.string(),
       upload_id: z.string().nullable(),

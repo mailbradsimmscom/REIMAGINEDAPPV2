@@ -10,8 +10,13 @@ import {
   getCacheStats, 
   clearTextCache 
 } from '../../services/document-text.service.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 
 const router = Router();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
 
 /**
  * GET /admin/text-extraction/metrics
