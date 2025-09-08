@@ -159,7 +159,16 @@ function buildSynthesisPrompt(userQuery, categorizedResults, style = 'brief') {
   
   categorizedResults.forEach((result, index) => {
     prompt += `Equipment: ${result.manufacturer} ${result.model}\n`;
-    prompt += `Relevance Score: ${result.bestScore.toFixed(3)}\n\n`;
+    
+    // Log missing bestScore for debugging
+    if (result.bestScore == null) {
+      logger.warn(`Missing bestScore for categorized result: ${JSON.stringify(result, null, 2)}`);
+    }
+    
+    const scoreStr = typeof result.bestScore === 'number'
+      ? result.bestScore.toFixed(3)
+      : 'N/A';
+    prompt += `Relevance Score: ${scoreStr}\n\n`;
     
     if (result.chunks && result.chunks.length > 0) {
       // Group content by type

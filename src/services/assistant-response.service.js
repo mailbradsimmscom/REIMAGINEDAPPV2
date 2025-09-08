@@ -193,7 +193,15 @@ async function generateStandardResponse(userQuery, systemsContext, pineconeResul
     // Add relevance scores
     response += `\n**Relevance Scores:**\n`;
     pineconeResults.forEach((result, index) => {
-      response += `• ${result.manufacturer} ${result.model}: ${(result.bestScore * 100).toFixed(1)}%\n`;
+      // Log missing bestScore for debugging
+      if (result.bestScore == null) {
+        logger.warn(`Missing bestScore for result: ${JSON.stringify(result, null, 2)}`);
+      }
+      
+      const scoreStr = typeof result.bestScore === 'number'
+        ? (result.bestScore * 100).toFixed(1) + '%'
+        : 'N/A';
+      response += `• ${result.manufacturer} ${result.model}: ${scoreStr}\n`;
     });
   }
   

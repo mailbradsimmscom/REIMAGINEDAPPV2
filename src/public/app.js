@@ -345,7 +345,7 @@ function showSourceDetails(source, sourceNumber) {
   
   if (sourceType === 'pinecone') {
     content = `<h3>Source ${sourceNumber}: ${source.manufacturer} ${source.model}</h3>`;
-    content += `<p><strong>Relevance Score:</strong> ${source.score.toFixed(3)}</p>`;
+    content += `<p><strong>Relevance Score:</strong> ${typeof source.score === 'number' ? source.score.toFixed(3) : 'N/A'}</p>`;
     if (source.pages && source.pages.length > 0) {
       content += `<p><strong>Pages:</strong> ${source.pages.join(', ')}</p>`;
     }
@@ -357,7 +357,7 @@ function showSourceDetails(source, sourceNumber) {
     content += `<div class="source-chunk">`;
     content += `<p><strong>Document Information:</strong></p>`;
     content += `<p>This source contains ${source.pages.length} pages from the ${source.manufacturer} ${source.model} documentation.</p>`;
-    content += `<p>Relevance score: ${source.score.toFixed(3)}</p>`;
+    content += `<p>Relevance score: ${typeof source.score === 'number' ? source.score.toFixed(3) : 'N/A'}</p>`;
     content += `</div>`;
     content += `</div>`;
   } else if (sourceType === 'system') {
@@ -365,7 +365,7 @@ function showSourceDetails(source, sourceNumber) {
     content += `<p><strong>System ID:</strong> ${source.id}</p>`;
     content += `<p><strong>Manufacturer:</strong> ${source.manufacturer}</p>`;
     content += `<p><strong>Model:</strong> ${source.model}</p>`;
-    content += `<p><strong>Relevance Rank:</strong> ${source.rank.toFixed(2)}</p>`;
+    content += `<p><strong>Relevance Rank:</strong> ${typeof source.rank === 'number' ? source.rank.toFixed(2) : 'N/A'}</p>`;
   } else {
     content = `<h3>Source ${sourceNumber}: Unknown Source</h3>`;
     content += `<p>Source type: ${sourceType}</p>`;
