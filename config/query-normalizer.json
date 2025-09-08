@@ -1,0 +1,9 @@
+[
+  "^(tell me (about|abouy)\\s+)",
+  "^(tell me about\\s+)",
+  "^(what is\\s+)",
+  "^(how do i\\s+)",
+  "^(show me\\s+)",
+  "^(please\\s+)",
+  "^(can you\\s+)"
+]

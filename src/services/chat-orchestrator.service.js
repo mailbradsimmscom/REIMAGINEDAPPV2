@@ -59,9 +59,10 @@ async function checkServiceAvailability() {
  * @param {string} options.sessionId - Session ID
  * @param {string} options.threadId - Thread ID
  * @param {number} options.contextSize - Context size
+ * @param {string} options.normalizedMessage - Normalized version of user query
  * @returns {Promise<Object>} - Complete chat response
  */
-export async function processUserMessage(userQuery, { sessionId, threadId, contextSize = 5 } = {}) {
+export async function processUserMessage(userQuery, { sessionId, threadId, contextSize = 5, normalizedMessage } = {}) {
   const requestLogger = logger.createRequestLogger();
   
   try {
@@ -74,11 +75,16 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       threadId 
     });
     
+    // Use normalized message for processing if available, fallback to original
+    const effectiveQuery = normalizedMessage?.length ? normalizedMessage : userQuery;
+    
     // Step 0: Intent classification and routing
-    const routingResult = await routeQuery(userQuery);
+    const routingResult = await routeQuery(effectiveQuery);
     requestLogger.info('🎯 [CHAT ORCHESTRATOR] Intent routed', { 
       intent: routingResult.intent,
-      processingPipeline: routingResult.processingPipeline
+      processingPipeline: routingResult.processingPipeline,
+      originalQuery: userQuery,
+      effectiveQuery
     });
     
     // Handle special intents
@@ -87,7 +93,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     }
     
     // Step 1: Bootstrap context (systems, messages, thread)
-    const context = await bootstrapContext(userQuery, { sessionId, threadId, contextSize });
+    const context = await bootstrapContext(userQuery, { sessionId, threadId, contextSize, effectiveQuery });
     
     // Step 2: Fact-first retrieval
     let factResponse = null;
@@ -99,7 +105,7 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
     }
     
     // Step 3: Pinecone fallback retrieval
-    const pineconeResults = await performPineconeRetrieval(userQuery, context);
+    const pineconeResults = await performPineconeRetrieval(effectiveQuery, context);
     
     // Step 4: Generate assistant response
     const assistantResponse = await generateEnhancedAssistantResponse(
@@ -159,6 +165,7 @@ async function handleSpecialIntent(userQuery, routingResult, options) {
  * Bootstrap context for processing
  * @param {string} userQuery - User query
  * @param {Object} options - Options
+ * @param {string} options.effectiveQuery - Effective query to use for searches
  * @returns {Promise<Object>} - Bootstraped context
  */
 async function bootstrapContext(userQuery, options) {
@@ -175,30 +182,30 @@ async function bootstrapContext(userQuery, options) {
   
   // Determine systems context
   let systemsContext = [];
-  let effectiveQuery = userQuery;
+  let searchQuery = options.effectiveQuery || userQuery;
   
   if (isFollowUpQuestion(userQuery) || containsAmbiguousPronoun(userQuery)) {
     if (hasExistingSystemsContext(thread.metadata, recentMessages)) {
       systemsContext = getExistingSystemsContext(thread.metadata, recentMessages);
-      effectiveQuery = contextRewrite(userQuery, systemsContext);
+      searchQuery = contextRewrite(searchQuery, systemsContext);
     } else {
       // Extract equipment terms and search for systems
-      const equipmentTerms = extractEquipmentTerms(userQuery);
+      const equipmentTerms = extractEquipmentTerms(searchQuery);
       systemsContext = await searchSystems(equipmentTerms);
-      effectiveQuery = contextRewrite(userQuery, systemsContext);
+      searchQuery = contextRewrite(searchQuery, systemsContext);
     }
   } else {
-    // Direct search for systems
-    systemsContext = await searchSystems(userQuery);
+    // Direct search for systems using normalized query
+    systemsContext = await searchSystems(searchQuery);
   }
   
   // Enhance query with systems context
-  let enhancedQuery = effectiveQuery;
+  let enhancedQuery = searchQuery;
   if (systemsContext.length > 0) {
     try {
-      enhancedQuery = await enhanceQuery(effectiveQuery, systemsContext);
+      enhancedQuery = await enhanceQuery(searchQuery, systemsContext);
     } catch (error) {
-      requestLogger.warn('Query enhancement failed, using effective query', { error: error.message });
+      requestLogger.warn('Query enhancement failed, using search query', { error: error.message });
     }
   }
   
@@ -208,7 +215,7 @@ async function bootstrapContext(userQuery, options) {
     thread,
     recentMessages,
     systemsContext,
-    effectiveQuery,
+    effectiveQuery: searchQuery,
     enhancedQuery,
     userQuery
   };
@@ -229,6 +236,21 @@ async function getOrCreateSessionAndThread(options) {
       description: 'A new chat session'
     });
     sessionId = session.id;
+  } else {
+    // Check if session exists, create if it doesn't
+    try {
+      await chatRepository.getChatSession(sessionId);
+    } catch (error) {
+      if (error.message.includes('No chat session found')) {
+        const session = await chatRepository.createChatSession({
+          name: 'New Chat',
+          description: 'A new chat session'
+        });
+        sessionId = session.id;
+      } else {
+        throw error;
+      }
+    }
   }
   
   // Get or create thread
@@ -239,6 +261,22 @@ async function getOrCreateSessionAndThread(options) {
       metadata: {}
     });
     threadId = thread.id;
+  } else {
+    // Check if thread exists, create if it doesn't
+    try {
+      await chatRepository.getChatThread(threadId);
+    } catch (error) {
+      if (error.message.includes('No chat thread found')) {
+        const thread = await chatRepository.createChatThread({
+          sessionId,
+          name: 'New Thread',
+          metadata: {}
+        });
+        threadId = thread.id;
+      } else {
+        throw error;
+      }
+    }
   }
   
   return { sessionId, threadId };

@@ -63,13 +63,17 @@ export async function getChatSession(sessionId) {
       .from(SESSIONS_TABLE)
       .select('*')
       .eq('id', sessionId)
-      .single();
+      .maybeSingle();
     
     if (error) {
       const err = new Error(`Failed to get chat session: ${error.message}`);
       err.cause = error;
       err.context = { operation: 'get_session', sessionId, table: SESSIONS_TABLE };
       throw err;
+    }
+    
+    if (!data) {
+      throw new Error(`No chat session found for session_id: ${sessionId}`);
     }
     
     return data;
@@ -153,13 +157,17 @@ export async function getChatThread(threadId) {
       .from(THREADS_TABLE)
       .select('*')
       .eq('id', threadId)
-      .single();
+      .maybeSingle();
     
     if (error) {
       const err = new Error(`Failed to get chat thread: ${error.message}`);
       err.cause = error;
       err.context = { operation: 'get_thread', threadId, table: THREADS_TABLE };
       throw err;
+    }
+    
+    if (!data) {
+      throw new Error(`No chat thread found for thread_id: ${threadId}`);
     }
     
     return data;

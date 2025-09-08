@@ -1,5 +1,6 @@
 import express from 'express';
 import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { normalizeQuery } from '../../services/query-normalizer.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
@@ -36,6 +37,9 @@ router.post(
   async (req, res, next) => {
     try {
       const { message, sessionId, threadId } = req.body;
+      
+      // Normalize the user input at the route edge
+      const normalizedMessage = normalizeQuery(message);
 
       const env = getEnv();
       const contextSize = parseInt(env.CHAT_CONTEXT_SIZE) || 5;
@@ -43,7 +47,8 @@ router.post(
       const result = await enhancedChatService.processUserMessage(message, {
         sessionId,
         threadId,
-        contextSize
+        contextSize,
+        normalizedMessage
       });
 
       const envelope = {
