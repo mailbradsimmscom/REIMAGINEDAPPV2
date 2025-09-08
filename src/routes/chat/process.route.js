@@ -5,6 +5,7 @@ import { validateResponse } from '../../middleware/validateResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
 import { methodNotAllowed } from '../../utils/methodNotAllowed.js';
 import { getEnv } from '../../config/env.js';
+import { logger } from '../../utils/logger.js';
 import { 
   ChatProcessEnvelope,
   chatProcessRequestSchema,

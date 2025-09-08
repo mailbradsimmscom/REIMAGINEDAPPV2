@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intent Router - Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .intent-router-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .intent-router-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .intent-router-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .add-route-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .add-route-btn:hover {
+            background: #0056b3;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .filters-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .filters-row {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .filter-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            height: fit-content;
+        }
+        
+        .filter-btn:hover {
+            background: #218838;
+        }
+        
+        .routes-table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .routes-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .routes-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .routes-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        
+        .routes-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .pattern-cell {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .intent-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .intent-maintenance { background: #ffc107; color: #000; }
+        .intent-pressure { background: #17a2b8; color: #fff; }
+        .intent-flush { background: #28a745; color: #fff; }
+        .intent-general { background: #6c757d; color: #fff; }
+        
+        .route-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .route-link:hover {
+            text-decoration: underline;
+        }
+        
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .edit-btn {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-btn:hover {
+            color: #000;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-height: 80px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="intent-router-container">
+        <div class="intent-router-header">
+            <h1 class="intent-router-title">Intent Router</h1>
+            <button class="add-route-btn" onclick="openAddRouteModal()">
+                + Add Route
+            </button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRoutes">-</div>
+                <div class="stat-label">Total Routes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="intentTypes">-</div>
+                <div class="stat-label">Intent Types</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="systemRoutes">-</div>
+                <div class="stat-label">System Routes</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Search Pattern</label>
+                    <input type="text" class="filter-input" id="patternFilter" placeholder="e.g., 'filter', 'pressure'">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Intent Type</label>
+                    <select class="filter-input" id="intentFilter">
+                        <option value="">All Intents</option>
+                        <option value="maintenance.interval">Maintenance</option>
+                        <option value="pressure.verification">Pressure</option>
+                        <option value="maintenance.flush">Flush</option>
+                    </select>
+                </div>
+                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- Routes Table -->
+        <div class="routes-table-container">
+            <table class="routes-table">
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Intent</th>
+                        <th>Route To</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="routesTableBody">
+                    <tr>
+                        <td colspan="6" class="loading">Loading routes...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Route Modal -->
+    <div id="routeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Intent Route</h2>
+                <button class="close-btn" onclick="closeRouteModal()">&times;</button>
+            </div>
+            
+            <div id="modalMessages"></div>
+            
+            <form id="routeForm">
+                <div class="form-group">
+                    <label class="form-label" for="patternInput">Pattern *</label>
+                    <input type="text" class="form-input" id="patternInput" required 
+                           placeholder="e.g., 'change filter', 'check pressure'">
+                    <small style="color: #666; font-size: 0.9rem;">
+                        Keywords that will trigger this route (case-insensitive)
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="intentInput">Intent *</label>
+                    <select class="form-input" id="intentInput" required>
+                        <option value="">Select Intent Type</option>
+                        <option value="maintenance.interval">Maintenance Interval</option>
+                        <option value="pressure.verification">Pressure Verification</option>
+                        <option value="maintenance.flush">Maintenance Flush</option>
+                        <option value="general.inquiry">General Inquiry</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="routeToInput">Route To *</label>
+                    <input type="text" class="form-input" id="routeToInput" required 
+                           placeholder="e.g., '/playbook/filter', '/dashboard/pressure'">
+                    <small style="color: #666; font-size: 0.9rem;">
+                        Application route to redirect to when pattern matches
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="intentHintIdInput">Intent Hint ID (Optional)</label>
+                    <input type="text" class="form-input" id="intentHintIdInput" 
+                           placeholder="UUID of related intent hint">
+                    <small style="color: #666; font-size: 0.9rem;">
+                        Link to an approved intent hint that inspired this route
+                    </small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeRouteModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="submitBtn">Add Route</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/intent-router.js"></script>
+</body>
+</html>

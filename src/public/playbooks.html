@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playbooks - Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .playbooks-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .playbooks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .playbooks-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .generate-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .generate-btn:hover {
+            background: #218838;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .filters-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .filters-row {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .filter-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            height: fit-content;
+        }
+        
+        .filter-btn:hover {
+            background: #0056b3;
+        }
+        
+        .playbooks-table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .playbooks-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .playbooks-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .playbooks-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        
+        .playbooks-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .system-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .subsystem-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .steps-count {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .view-btn {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .view-btn:hover {
+            background: #138496;
+        }
+        
+        .edit-btn {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-btn:hover {
+            color: #000;
+        }
+        
+        .playbook-details {
+            margin-bottom: 20px;
+        }
+        
+        .playbook-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .playbook-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .playbook-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .steps-section {
+            margin-top: 20px;
+        }
+        
+        .steps-section h4 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        .step-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .step-number {
+            background: #007bff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-instruction {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .step-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .generation-controls {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #b3d9ff;
+        }
+        
+        .generation-controls h3 {
+            margin: 0 0 15px 0;
+            color: #0066cc;
+        }
+        
+        .generation-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .option-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .option-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .generate-options-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            height: fit-content;
+        }
+        
+        .generate-options-btn:hover {
+            background: #218838;
+        }
+        
+        .dry-run-btn {
+            background: #ffc107;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            height: fit-content;
+        }
+        
+        .dry-run-btn:hover {
+            background: #e0a800;
+        }
+    </style>
+</head>
+<body>
+    <div class="playbooks-container">
+        <div class="playbooks-header">
+            <h1 class="playbooks-title">Playbooks</h1>
+            <button class="generate-btn" onclick="openGenerationModal()">
+                🔄 Generate Playbooks
+            </button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPlaybooks">-</div>
+                <div class="stat-label">Total Playbooks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalSteps">-</div>
+                <div class="stat-label">Total Steps</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="systemCount">-</div>
+                <div class="stat-label">Systems</div>
+            </div>
+        </div>
+
+        <!-- Generation Controls -->
+        <div class="generation-controls">
+            <h3>🔄 Playbook Generation</h3>
+            <div class="generation-options">
+                <div class="option-group">
+                    <label class="option-label">System Filter</label>
+                    <input type="text" class="option-input" id="systemFilter" placeholder="e.g., water-treatment">
+                </div>
+                <div class="option-group">
+                    <label class="option-label">Subsystem Filter</label>
+                    <input type="text" class="option-input" id="subsystemFilter" placeholder="e.g., filtration">
+                </div>
+                <div class="option-group">
+                    <label class="option-label">Document ID</label>
+                    <input type="text" class="option-input" id="docIdFilter" placeholder="UUID">
+                </div>
+                <button class="generate-options-btn" onclick="generatePlaybooksWithOptions()">
+                    Generate
+                </button>
+                <button class="dry-run-btn" onclick="dryRunGeneration()">
+                    Dry Run
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Search Title</label>
+                    <input type="text" class="filter-input" id="titleFilter" placeholder="e.g., 'water', 'filter'">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">System</label>
+                    <select class="filter-input" id="systemFilterSelect">
+                        <option value="">All Systems</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Subsystem</label>
+                    <select class="filter-input" id="subsystemFilterSelect">
+                        <option value="">All Subsystems</option>
+                    </select>
+                </div>
+                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- Playbooks Table -->
+        <div class="playbooks-table-container">
+            <table class="playbooks-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>System</th>
+                        <th>Subsystem</th>
+                        <th>Steps</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="playbooksTableBody">
+                    <tr>
+                        <td colspan="7" class="loading">Loading playbooks...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Playbook Details Modal -->
+    <div id="playbookModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Playbook Details</h2>
+                <button class="close-btn" onclick="closePlaybookModal()">&times;</button>
+            </div>
+            
+            <div id="modalMessages"></div>
+            
+            <div id="playbookDetails">
+                <!-- Playbook details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Generation Modal -->
+    <div id="generationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Generate Playbooks</h2>
+                <button class="close-btn" onclick="closeGenerationModal()">&times;</button>
+            </div>
+            
+            <div id="generationMessages"></div>
+            
+            <div class="generation-controls">
+                <h3>Generation Options</h3>
+                <div class="generation-options">
+                    <div class="option-group">
+                        <label class="option-label">System Filter</label>
+                        <input type="text" class="option-input" id="modalSystemFilter" placeholder="e.g., water-treatment">
+                    </div>
+                    <div class="option-group">
+                        <label class="option-label">Subsystem Filter</label>
+                        <input type="text" class="option-input" id="modalSubsystemFilter" placeholder="e.g., filtration">
+                    </div>
+                    <div class="option-group">
+                        <label class="option-label">Document ID</label>
+                        <input type="text" class="option-input" id="modalDocIdFilter" placeholder="UUID">
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="forceOverwrite">
+                        <span>Force overwrite existing playbooks</span>
+                    </label>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="generate-options-btn" onclick="executeGeneration()">
+                        Generate Playbooks
+                    </button>
+                    <button class="dry-run-btn" onclick="executeDryRun()">
+                        Dry Run
+                    </button>
+                    <button class="btn-secondary" onclick="closeGenerationModal()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/playbooks.js"></script>
+</body>
+</html>

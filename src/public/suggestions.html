@@ -54,6 +54,26 @@
                         <div class="stat-label">Selected</div>
                     </div>
                 </div>
+                
+                <!-- View Refresh Status -->
+                <div class="view-refresh-section" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e0e0e0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="margin: 0; color: #333;">Knowledge Facts View</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="refresh-view-btn" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
+                                🔄 Refresh View
+                            </button>
+                            <button id="check-health-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
+                                🔍 Check Health
+                            </button>
+                        </div>
+                    </div>
+                    <div id="view-status" style="font-size: 14px; color: #666;">
+                        <div id="view-health-status">Status: Unknown</div>
+                        <div id="view-stats" style="margin-top: 5px;"></div>
+                        <div id="last-refresh" style="margin-top: 5px; font-size: 12px; color: #999;"></div>
+                    </div>
+                </div>
                 <div id="suggestions-list"></div>
                 <div class="actions">
                     <button id="select-all" class="btn btn-secondary">Select All</button>
@@ -280,8 +300,29 @@
                     }
 
                     const result = await response.json();
-                    this.showSuccess(`Successfully approved ${result.data?.total_inserted || 0} suggestions`);
+                    const totalInserted = result.data?.total_inserted || 0;
+                    const viewRefresh = result.data?.view_refresh;
+                    
+                    let message = `Successfully approved ${totalInserted} suggestions`;
+                    if (viewRefresh) {
+                        if (viewRefresh.success) {
+                            message += ` (View refreshed via ${viewRefresh.method})`;
+                        } else {
+                            message += ` (View refresh failed: ${viewRefresh.error})`;
+                        }
+                    }
+                    
+                    this.showSuccess(message);
                     this.deselectAll();
+                    
+                    // Update view status if refresh was attempted
+                    if (viewRefresh) {
+                        if (viewRefresh.success) {
+                            this.updateViewStatus('✅ Healthy', `Refreshed via ${viewRefresh.method}`);
+                        } else {
+                            this.updateViewStatus('❌ Error', viewRefresh.error);
+                        }
+                    }
                 } catch (error) {
                     this.showError(`Failed to approve suggestions: ${error.message}`);
                 }
@@ -300,11 +341,103 @@
                 successDiv.style.display = 'block';
                 setTimeout(() => successDiv.style.display = 'none', 5000);
             }
+
+            // View refresh functionality
+            async refreshView() {
+                const btn = document.getElementById('refresh-view-btn');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = '🔄 Refreshing...';
+
+                try {
+                    const response = await fetch('/admin/suggestions/refresh-view', {
+                        method: 'POST',
+                        headers: {
+                            'x-admin-token': 'admin-secret-key'
+                        }
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showSuccess('View refreshed successfully!');
+                        this.updateViewStatus('✅ Healthy', result.data.refresh_result.method);
+                    } else {
+                        this.showError(`View refresh failed: ${result.error}`);
+                        this.updateViewStatus('❌ Error', result.error);
+                    }
+                } catch (error) {
+                    this.showError(`View refresh failed: ${error.message}`);
+                    this.updateViewStatus('❌ Error', error.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            }
+
+            async checkViewHealth() {
+                const btn = document.getElementById('check-health-btn');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = '🔍 Checking...';
+
+                try {
+                    const response = await fetch('/admin/suggestions/view-health', {
+                        headers: {
+                            'x-admin-token': 'admin-secret-key'
+                        }
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const health = result.data.health;
+                        const stats = result.data.stats;
+                        
+                        if (health.healthy) {
+                            this.updateViewStatus('✅ Healthy', `Total facts: ${stats.totalFacts}`);
+                        } else {
+                            this.updateViewStatus('❌ Unhealthy', health.error);
+                        }
+                        
+                        this.updateViewStats(stats);
+                    } else {
+                        this.showError(`Health check failed: ${result.error}`);
+                        this.updateViewStatus('❌ Error', result.error);
+                    }
+                } catch (error) {
+                    this.showError(`Health check failed: ${error.message}`);
+                    this.updateViewStatus('❌ Error', error.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            }
+
+            updateViewStatus(status, details) {
+                document.getElementById('view-health-status').textContent = `Status: ${status}`;
+                if (details) {
+                    document.getElementById('view-stats').textContent = details;
+                }
+                document.getElementById('last-refresh').textContent = `Last checked: ${new Date().toLocaleTimeString()}`;
+            }
+
+            updateViewStats(stats) {
+                const statsText = `Total facts: ${stats.totalFacts} | Types: ${Object.keys(stats.factTypes).join(', ')}`;
+                document.getElementById('view-stats').textContent = statsText;
+            }
         }
 
         // Initialize the reviewer when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            new DIPSuggestionsReviewer();
+            const reviewer = new DIPSuggestionsReviewer();
+            
+            // Add event listeners for view refresh buttons
+            document.getElementById('refresh-view-btn').addEventListener('click', () => reviewer.refreshView());
+            document.getElementById('check-health-btn').addEventListener('click', () => reviewer.checkViewHealth());
+            
+            // Check view health on page load
+            reviewer.checkViewHealth();
         });
     </script>
 </body>

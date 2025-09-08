@@ -8,6 +8,8 @@ import { personality } from '../config/personality.js';
 import { isSupabaseConfigured, isOpenAIConfigured, isPineconeConfigured } from '../services/guards/index.js';
 import { filterSpecLike } from '../utils/specFilter.js';
 import { rerankChunks } from './rerank.service.js';
+import knowledgeRepository from '../repositories/knowledge.repository.js';
+import { formatFactAnswer } from '../utils/formatter.js';
 
 // ---------- Context & Follow-up Detection ----------
 function isFollowUpQuestion(query) {
@@ -521,6 +523,74 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       recentMessages = await chatRepository.getChatMessages(threadId, { limit: contextSize });
     }
     
+    // Step 5.5: FACT-FIRST RETRIEVAL - Check knowledge_facts before Pinecone
+    let factMatch = null;
+    let factAnswer = null;
+    
+    try {
+      requestLogger.info('🔍 [FACT-FIRST] Checking knowledge_facts for query', { 
+        query: enhancedQuery.substring(0, 100) 
+      });
+      
+      factMatch = await knowledgeRepository.findFactMatchByQuery(enhancedQuery);
+      
+      if (factMatch) {
+        factAnswer = formatFactAnswer(factMatch);
+        requestLogger.info('✅ [FACT-FIRST] Found matching fact', { 
+          factType: factMatch.fact_type,
+          key: factMatch.key,
+          intent: factMatch.intent,
+          query: factMatch.query
+        });
+        
+        // Return fact answer immediately - no need for Pinecone search
+        const factResponse = {
+          sessionId: sessionId || 'fact-session',
+          threadId: threadId || 'fact-thread',
+          userMessage: {
+            id: `user-${Date.now()}`,
+            content: userQuery,
+            timestamp: new Date().toISOString()
+          },
+          assistantMessage: {
+            id: `assistant-${Date.now()}`,
+            content: factAnswer,
+            timestamp: new Date().toISOString(),
+            metadata: {
+              source: 'knowledge_facts',
+              factType: factMatch.fact_type,
+              confidence: factMatch.confidence || 1.0,
+              retrievalMethod: 'fact-first'
+            }
+          },
+          systemsContext: systemsContext,
+          retrievalMeta: {
+            factMatch: true,
+            factType: factMatch.fact_type,
+            skippedPinecone: true,
+            retrievalMethod: 'fact-first'
+          }
+        };
+        
+        requestLogger.info('🎯 [FACT-FIRST] Returning fact answer', { 
+          factType: factMatch.fact_type,
+          answerLength: factAnswer.length
+        });
+        
+        return factResponse;
+      } else {
+        requestLogger.info('❌ [FACT-FIRST] No matching fact found, proceeding to Pinecone', { 
+          query: enhancedQuery.substring(0, 100) 
+        });
+      }
+    } catch (factError) {
+      requestLogger.warn('⚠️ [FACT-FIRST] Error checking knowledge_facts, proceeding to Pinecone', { 
+        error: factError.message,
+        query: enhancedQuery.substring(0, 100)
+      });
+      // Continue to Pinecone search as fallback
+    }
+    
     // Step 6: Search Pinecone for relevant documentation using spec-biased retrieval
     let pineconeResults = [];
     let pineconeError = null;
@@ -657,6 +727,9 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
         originalQuery: userQuery,
         enhancedQuery,
         systemsContext: systemsContext.map(s => s.asset_uid),
+        factMatch: false,
+        factType: null,
+        retrievalMethod: 'pinecone-fallback',
         pineconeResults: pineconeResults.length,
         specBiasMeta: specBiasMeta
       }
@@ -680,6 +753,9 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       metadata: {
         systemsContext: systemsContext.map(s => s.asset_uid),
         enhancedQuery,
+        factMatch: false,
+        factType: null,
+        retrievalMethod: 'pinecone-fallback',
         pineconeResults: pineconeResults.length,
         sources: assistantResponse.sources,
         hasPineconeError: !!pineconeError,
@@ -758,6 +834,10 @@ export async function processUserMessage(userQuery, { sessionId, threadId, conte
       telemetry: {
         requestId,
         retrievalMeta: {
+          factMatch: false,
+          factType: null,
+          skippedPinecone: false,
+          retrievalMethod: 'pinecone-fallback',
           specBiasMeta,
           styleDetected: assistantResponse.styleDetected || null,
           temperature: parseFloat(env.LLM_TEMPERATURE || '0.7'),

@@ -5,10 +5,12 @@
 
 import { Router } from 'express';
 import { z } from 'zod';
-import { logger } from '../utils/logger.js';
-import { getSupabaseClient } from '../repositories/supabaseClient.js';
-import { isAdmin } from '../middleware/admin.js';
-import { validateRequest } from '../middleware/validate.js';
+import { logger } from '../../utils/logger.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
+import { adminOnly } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import suggestionsRepository from '../../repositories/suggestions.repository.js';
+import viewRefreshService from '../../services/viewRefresh.service.js';
 
 const router = Router();
 const requestLogger = logger.createRequestLogger();
@@ -24,7 +26,7 @@ const approveSuggestionsSchema = z.object({
       context: z.string().optional(),
       confidence: z.number().min(0).max(1).optional()
     })).optional().default([]),
-    specs: z.array(z.object({
+    spec_suggestions: z.array(z.object({
       hint_type: z.string(),
       value: z.string(),
       unit: z.string().optional(),
@@ -40,13 +42,74 @@ const approveSuggestionsSchema = z.object({
       expected_result: z.string().optional(),
       page: z.number().optional(),
       confidence: z.number().min(0).max(1).optional()
+    })).optional().default([]),
+    playbook_hints: z.array(z.object({
+      text: z.string(),
+      trigger: z.string().optional(),
+      page: z.number().optional(),
+      context: z.string().optional(),
+      confidence: z.number().min(0).max(1).optional()
     })).optional().default([])
   })
 });
 
+// GET /admin/suggestions/view-health - Check knowledge_facts view health
+router.get('/view-health', adminOnly, async (req, res) => {
+  try {
+    const health = await viewRefreshService.checkViewHealth();
+    const stats = await viewRefreshService.getViewRefreshStats();
+    
+    res.json({
+      success: true,
+      data: {
+        health,
+        stats: stats.data,
+        timestamp: new Date().toISOString()
+      },
+      requestId: req.id
+    });
+  } catch (error) {
+    requestLogger.error('View health check failed', { error: error.message });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to check view health',
+      requestId: req.id
+    });
+  }
+});
+
+// POST /admin/suggestions/refresh-view - Manually refresh knowledge_facts view
+router.post('/refresh-view', adminOnly, async (req, res) => {
+  try {
+    const result = await viewRefreshService.refreshKnowledgeFactsViewSafe();
+    
+    requestLogger.info('Manual view refresh requested', { 
+      success: result.success,
+      method: result.method,
+      error: result.error
+    });
+    
+    res.json({
+      success: result.success,
+      data: {
+        refresh_result: result,
+        timestamp: new Date().toISOString()
+      },
+      error: result.success ? null : result.error
+    });
+  } catch (error) {
+    requestLogger.error('Manual view refresh failed', { error: error.message });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to refresh view',
+      requestId: req.id
+    });
+  }
+});
+
 // GET /admin/suggestions/pending
 // Returns list of completed DIP jobs with suggestions
-router.get('/pending', isAdmin, async (req, res) => {
+router.get('/pending', adminOnly, async (req, res) => {
   try {
     const supabase = await getSupabaseClient();
     if (!supabase) {
@@ -121,11 +184,9 @@ router.get('/pending', isAdmin, async (req, res) => {
 
 // GET /admin/suggestions/:docId
 // Returns DIP suggestions for a specific document
-router.get('/:docId', isAdmin, validateRequest({
-  params: z.object({
-    docId: z.string().uuid('Document ID must be a valid UUID')
-  })
-}), async (req, res) => {
+router.get('/:docId', adminOnly, validate(z.object({
+  docId: z.string().uuid('Document ID must be a valid UUID')
+}), 'params'), async (req, res) => {
   try {
     const { docId } = req.params;
     const supabase = await getSupabaseClient();
@@ -184,122 +245,103 @@ router.get('/:docId', isAdmin, validateRequest({
 
 // POST /admin/suggestions/approve
 // Approves selected DIP suggestions
-router.post('/approve', isAdmin, validateRequest({
-  body: approveSuggestionsSchema
-}), async (req, res) => {
+router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), async (req, res) => {
   try {
     const { doc_id, approved } = req.body;
-    const supabase = await getSupabaseClient();
+    const approved_by = req.user?.id || 'admin';
     
-    if (!supabase) {
-      return res.status(503).json({
-        success: false,
-        error: 'Database service unavailable'
-      });
-    }
-
     const results = {
       entities: { inserted: 0, errors: [] },
-      specs: { inserted: 0, errors: [] },
-      tests: { inserted: 0, errors: [] }
+      spec_suggestions: { inserted: 0, errors: [] },
+      golden_tests: { inserted: 0, errors: [] },
+      playbook_hints: { inserted: 0, errors: [] }
     };
 
     // Insert approved entities
     if (approved.entities && approved.entities.length > 0) {
-      try {
-        const entityData = approved.entities.map(entity => ({
-          doc_id,
-          entity_type: entity.entity_type,
-          value: entity.value,
-          page: entity.page,
-          context: entity.context,
-          confidence: entity.confidence,
-          approved_by: req.user?.id || 'admin'
-        }));
-
-        const { data, error } = await supabase
-          .from('entity_candidates')
-          .insert(entityData)
-          .select();
-
-        if (error) {
+      for (const entity of approved.entities) {
+        try {
+          await suggestionsRepository.insertEntityCandidate(doc_id, entity, approved_by);
+          results.entities.inserted++;
+        } catch (error) {
           results.entities.errors.push(error.message);
-        } else {
-          results.entities.inserted = data.length;
         }
-      } catch (error) {
-        results.entities.errors.push(error.message);
       }
     }
 
-    // Insert approved spec hints
-    if (approved.specs && approved.specs.length > 0) {
-      try {
-        const specData = approved.specs.map(spec => ({
-          doc_id,
-          hint_type: spec.hint_type,
-          value: spec.value,
-          unit: spec.unit,
-          page: spec.page,
-          context: spec.context,
-          confidence: spec.confidence,
-          approved_by: req.user?.id || 'admin'
-        }));
-
-        const { data, error } = await supabase
-          .from('spec_suggestions')
-          .insert(specData)
-          .select();
-
-        if (error) {
-          results.specs.errors.push(error.message);
-        } else {
-          results.specs.inserted = data.length;
+    // Insert approved spec suggestions
+    if (approved.spec_suggestions && approved.spec_suggestions.length > 0) {
+      for (const spec of approved.spec_suggestions) {
+        try {
+          await suggestionsRepository.insertSpecSuggestion(doc_id, spec, approved_by);
+          results.spec_suggestions.inserted++;
+        } catch (error) {
+          results.spec_suggestions.errors.push(error.message);
         }
-      } catch (error) {
-        results.specs.errors.push(error.message);
       }
     }
 
     // Insert approved golden tests
     if (approved.golden_tests && approved.golden_tests.length > 0) {
-      try {
-        const testData = approved.golden_tests.map(test => ({
-          doc_id,
-          test_name: test.test_name,
-          test_type: test.test_type,
-          description: test.description,
-          steps: test.steps,
-          expected_result: test.expected_result,
-          page: test.page,
-          confidence: test.confidence,
-          approved_by: req.user?.id || 'admin'
-        }));
-
-        const { data, error } = await supabase
-          .from('playbook_hints')
-          .insert(testData)
-          .select();
-
-        if (error) {
-          results.tests.errors.push(error.message);
-        } else {
-          results.tests.inserted = data.length;
+      for (const test of approved.golden_tests) {
+        try {
+          await suggestionsRepository.insertGoldenTest(doc_id, test, approved_by);
+          results.golden_tests.inserted++;
+        } catch (error) {
+          results.golden_tests.errors.push(error.message);
         }
-      } catch (error) {
-        results.tests.errors.push(error.message);
       }
     }
 
-    const totalInserted = results.entities.inserted + results.specs.inserted + results.tests.inserted;
+    // Insert approved playbook hints
+    if (approved.playbook_hints && approved.playbook_hints.length > 0) {
+      for (const hint of approved.playbook_hints) {
+        try {
+          await suggestionsRepository.insertPlaybookHint(doc_id, hint, approved_by);
+          results.playbook_hints.inserted++;
+        } catch (error) {
+          results.playbook_hints.errors.push(error.message);
+        }
+      }
+    }
+
+    const totalInserted = results.entities.inserted + 
+                         results.spec_suggestions.inserted + 
+                         results.golden_tests.inserted + 
+                         results.playbook_hints.inserted;
+    
     const hasErrors = results.entities.errors.length > 0 || 
-                     results.specs.errors.length > 0 || 
-                     results.tests.errors.length > 0;
+                     results.spec_suggestions.errors.length > 0 || 
+                     results.golden_tests.errors.length > 0 ||
+                     results.playbook_hints.errors.length > 0;
+
+    // Refresh knowledge_facts view if any suggestions were approved
+    let viewRefreshResult = null;
+    if (totalInserted > 0) {
+      try {
+        viewRefreshResult = await viewRefreshService.refreshKnowledgeFactsViewSafe();
+        requestLogger.info('View refresh attempted after approval', { 
+          success: viewRefreshResult.success,
+          method: viewRefreshResult.method,
+          error: viewRefreshResult.error
+        });
+      } catch (error) {
+        requestLogger.error('View refresh failed after approval', { error: error.message });
+        viewRefreshResult = { success: false, error: error.message };
+      }
+    }
 
     requestLogger.info('DIP suggestions approved', { 
       doc_id, 
       totalInserted,
-      hasErrors 
+      hasErrors,
+      viewRefresh: viewRefreshResult,
+      breakdown: {
+        entities: results.entities.inserted,
+        spec_suggestions: results.spec_suggestions.inserted,
+        golden_tests: results.golden_tests.inserted,
+        playbook_hints: results.playbook_hints.inserted
+      }
     });
 
     return res.json({
@@ -307,7 +349,8 @@ router.post('/approve', isAdmin, validateRequest({
       data: {
         doc_id,
         results,
-        total_inserted: totalInserted
+        total_inserted: totalInserted,
+        view_refresh: viewRefreshResult
       },
       error: hasErrors ? 'Some suggestions failed to save' : null
     });
