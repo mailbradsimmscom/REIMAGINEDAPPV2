@@ -1,0 +1,24 @@
+import { z } from 'zod';
+import { SystemUid, HashOrUuid } from './id.schema.js';
+
+/**
+ * Schema for spec keyword suggestions
+ */
+export const SpecKeywordSchema = z.object({
+  key: z.string().min(1),
+  value: z.string().min(1),
+  unit: z.string().optional(),
+  source_doc_id: HashOrUuid,     // your docs can be hash or uuid
+  chunk_id: z.string().min(1),
+  confidence: z.number().min(0).max(1).optional()
+});
+
+/**
+ * Schema for accepting spec suggestions
+ */
+export const AcceptSpecPayload = z.object({
+  suggestionId: z.string().uuid(),
+  systemUid: SystemUid,
+  spec: SpecKeywordSchema,
+  idempotencyKey: z.string().min(10)
+});

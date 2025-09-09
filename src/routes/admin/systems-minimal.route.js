@@ -1,0 +1,26 @@
+import { Router } from 'express';
+import { listMinimal } from '../../repositories/systems.repository.js';
+import { adminOnly } from '../../middleware/admin.js';
+
+const router = Router();
+
+/**
+ * GET /admin/api/systems/minimal
+ * Get minimal system data for admin dropdowns
+ */
+router.get('/minimal', adminOnly, async (_req, res, next) => {
+  try {
+    const rows = await listMinimal();
+    res.json({
+      success: true,
+      data: {
+        systems: rows,
+        count: rows.length
+      }
+    });
+  } catch (e) { 
+    next(e); 
+  }
+});
+
+export default router;

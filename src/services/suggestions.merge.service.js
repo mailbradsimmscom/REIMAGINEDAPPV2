@@ -284,6 +284,74 @@ class SuggestionsMergeService {
   }
 
   /**
+   * Accept a spec suggestion and merge it into production
+   * @param {Object} params - Acceptance parameters
+   * @returns {Promise<Object>} Acceptance result
+   */
+  async acceptSpecSuggestion({ suggestionId, actor, systemUid, spec }) {
+    try {
+      const supabase = await getSupabaseClient();
+      
+      // Read current system
+      const system = await getSystemByUid(systemUid);
+      const before = system.spec_keywords_jsonb ?? {};
+      
+      // Upsert spec into the system
+      const after = this.upsertSpec(before, { ...spec, approved_by: actor });
+
+      // Write system specs
+      await updateSpecKeywords(systemUid, after);
+
+      // Optional: tag the source chunk metadata for retrieval boost
+      try { 
+        await addSpecTag(spec.chunk_id, { key: spec.key, value: spec.value, unit: spec.unit }); 
+      } catch (e) { 
+        logger.warn({ err: e }, "addSpecTag failed (non-fatal)"); 
+      }
+
+      // Mark suggestion accepted & write audit
+      const { error: sugErr } = await supabase.from("spec_suggestions")
+        .update({ status: "accepted", accepted_at: new Date().toISOString(), accepted_by: actor })
+        .eq("id", suggestionId);
+      if (sugErr) throw sugErr;
+
+      const { error: auditErr } = await supabase.from("merge_audit").insert({
+        actor, 
+        action: "SPEC_ACCEPT", 
+        system_uid: systemUid, 
+        suggestion_id: suggestionId,
+        before_data: before, 
+        after_data: after
+      });
+      if (auditErr) throw auditErr;
+
+      return { updatedCount: Object.keys(after).length };
+    } catch (error) {
+      this.requestLogger.error('Failed to accept spec suggestion', {
+        error: error.message,
+        suggestionId,
+        systemUid
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Helper function to upsert spec into array
+   */
+  upsertSpec(array, spec) {
+    const arr = Array.isArray(array) ? array.slice() : {};
+    const key = spec.key;
+    const stamp = {
+      ...spec,
+      approved_at: new Date().toISOString(),
+      active: true
+    };
+    arr[key] = stamp;
+    return arr;
+  }
+
+  /**
    * Merge all approved suggestions into production tables
    * @param {string} docId - Document ID
    * @param {Object} approvedSuggestions - All approved suggestions

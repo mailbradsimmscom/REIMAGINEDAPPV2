@@ -34,7 +34,7 @@ CORS allow-list only. Security headers on.
 
 Files
 
-Max 250 lines per file (soft for tests/migrations).
+Max 250 lines per file (soft for tests/migrations) (including front end code).
 
 No *.routes.js (legacy). Use *.router.js (barrels) and *.route.js (leaf endpoints).
 

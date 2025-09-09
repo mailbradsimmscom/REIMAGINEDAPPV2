@@ -230,4 +230,55 @@ export async function lookupSystemByManufacturerAndModel(manufacturerNorm, model
   }
 }
 
-export default { listSystems, getSystemByAssetUid, searchSystems, lookupSystemByManufacturerAndModel };
+/**
+ * Get system by UUID with spec_keywords
+ */
+async function getSystemByUid(systemUid) {
+  const supabase = await checkSupabaseAvailability();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select('asset_uid, spec_keywords_jsonb')
+    .eq('asset_uid', systemUid)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Update spec keywords for a system
+ */
+async function updateSpecKeywords(systemUid, next) {
+  const supabase = await checkSupabaseAvailability();
+  const { error } = await supabase
+    .from(TABLE)
+    .update({ spec_keywords_jsonb: next })
+    .eq('asset_uid', systemUid);
+  if (error) throw error;
+}
+
+/**
+ * List minimal system data for admin dropdowns
+ */
+async function listMinimal() {
+  const supabase = await checkSupabaseAvailability();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select('asset_uid, manufacturer_norm, model_norm, system_norm')
+    .order('manufacturer_norm')
+    .limit(5000);
+  if (error) throw error;
+  return data ?? [];
+}
+
+export {
+  getSystemByUid,
+  updateSpecKeywords,
+  listMinimal
+};
+
+export default { 
+  listSystems, 
+  getSystemByAssetUid, 
+  searchSystems, 
+  lookupSystemByManufacturerAndModel
+};

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { HashOrUuid } from './id.schema.js';
 
 /**
  * Schema for validating normalized document upload metadata
@@ -25,7 +26,7 @@ export const documentUploadRequestSchema = uploadDocumentSchema.extend({
  * Used to ensure system lookup returns required fields
  */
 export const systemMetadataSchema = z.object({
-  asset_uid: z.string().uuid('Asset UID must be a valid UUID'),
+  asset_uid: HashOrUuid,
   system_norm: z.string().min(1, 'System normalized name is required'),
   subsystem_norm: z.string().min(1, 'Subsystem normalized name is required'),
 });
