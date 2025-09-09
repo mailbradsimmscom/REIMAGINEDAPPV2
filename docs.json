@@ -1,0 +1,8 @@
+{
+    "name": "REIMAGINEDAPPV2",
+    "colors": { "primary": "#2563eb" },
+    "navigation": [
+      { "group": "Overview", "pages": ["index"] }
+    ]
+  }
+  
