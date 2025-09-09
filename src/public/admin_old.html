@@ -1463,7 +1463,7 @@
         async function loadTelemetryData() {
             try {
                 const timeframe = document.getElementById('telemetry-timeframe')?.value || '15m';
-                const response = await adminFetch(`/admin/metrics?timeframe=${timeframe}`);
+                const response = await adminFetch(`/admin/api/metrics?timeframe=${timeframe}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1553,7 +1553,7 @@
         // Load manufacturers for dropdown
         async function loadManufacturers() {
             try {
-                const response = await adminFetch('/admin/manufacturers');
+                const response = await adminFetch('/admin/api/manufacturers');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1583,7 +1583,7 @@
             }
             
             try {
-                const response = await adminFetch(`/admin/models?manufacturer=${encodeURIComponent(manufacturer)}`);
+                const response = await adminFetch(`/admin/api/models?manufacturer=${encodeURIComponent(manufacturer)}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1610,7 +1610,7 @@
         // Load system health data
         async function loadHealthData() {
             try {
-                const response = await adminFetch('/admin/health');
+                const response = await adminFetch('/admin/api/health');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1636,7 +1636,7 @@
         // Load Pinecone data
         async function loadPineconeData() {
             try {
-                const response = await adminFetch('/admin/pinecone');
+                const response = await adminFetch('/admin/api/pinecone');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1695,7 +1695,7 @@
         // Load systems data
         async function loadSystemsData() {
             try {
-                const response = await adminFetch('/admin/systems');
+                const response = await adminFetch('/admin/api/systems');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1714,7 +1714,7 @@
         // Load logs
         async function loadLogs() {
             try {
-                const response = await adminFetch('/admin/logs');
+                const response = await adminFetch('/admin/api/logs');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1988,7 +1988,7 @@
 
         async function pollJobStatus(jobId) {
             try {
-                const response = await adminFetch(`/admin/docs/jobs?limit=1`);
+                const response = await adminFetch(`/admin/api/docs/jobs?limit=1`);
                 const result = await response.json();
                 
                 if (result.success && result.data.jobs.length > 0) {
@@ -2119,7 +2119,7 @@
 
         async function loadDocumentChunks(docId) {
             try {
-                const response = await adminFetch(`/admin/docs/chunks/${docId}`);
+                const response = await adminFetch(`/admin/api/docs/chunks/${docId}`);
                 const result = await response.json();
                 
                 if (result.success) {
@@ -2196,7 +2196,7 @@
 
         async function checkDIPStatus(docId) {
             try {
-                const response = await adminFetch(`/admin/dip/status/${docId}`);
+                const response = await adminFetch(`/admin/api/dip/status/${docId}`);
                 const result = await response.json();
                 
                 if (result.success) {
@@ -2241,7 +2241,7 @@
                 generateBtn.textContent = 'Generating...';
                 generateBtn.disabled = true;
                 
-                const response = await adminFetch(`/admin/dip/generate/${currentJob.doc_id}`, {
+                const response = await adminFetch(`/admin/api/dip/generate/${currentJob.doc_id}`, {
                     method: 'POST'
                 });
                 
@@ -2277,7 +2277,7 @@
             if (!currentJob) return;
             
             try {
-                const response = await adminFetch(`/admin/dip/download/${currentJob.doc_id}`);
+                const response = await adminFetch(`/admin/api/dip/download/${currentJob.doc_id}`);
                 const blob = await response.blob();
                 
                 const url = window.URL.createObjectURL(blob);
@@ -2298,7 +2298,7 @@
             if (!currentJob) return;
             
             try {
-                const response = await adminFetch(`/admin/suggestions/download/${currentJob.doc_id}`);
+                const response = await adminFetch(`/admin/api/suggestions/download/${currentJob.doc_id}`);
                 const blob = await response.blob();
                 
                 const url = window.URL.createObjectURL(blob);
@@ -2414,7 +2414,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             initDashboard();
             setupFileUpload();
-            loadManufacturers();
         });
 
         // Cleanup on page unload

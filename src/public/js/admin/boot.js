@@ -8,6 +8,7 @@ import "/public/js/admin/shared-utils.js";
 
 // Section controllers (optional)
 import * as dashboard from "/public/js/admin/sections/dashboard.js";
+import * as docUpload from "/public/js/admin/sections/doc-upload.js";
 import * as dip from "/public/js/admin/sections/dip.js";
 import * as jobs from "/public/js/admin/sections/jobs.js";
 import * as chunks from "/public/js/admin/sections/chunks.js";
@@ -17,7 +18,8 @@ import * as systems from "/public/js/admin/sections/systems.js";
 import * as suggestions from "/public/js/admin/sections/suggestions.js";
 
 const controllers = { 
-    dashboard, 
+    dashboard,
+    docUpload,
     dip, 
     jobs, 
     chunks, 
