@@ -1,0 +1,1 @@
+This is a test document for DIP processing. It contains some specifications and maintenance procedures.

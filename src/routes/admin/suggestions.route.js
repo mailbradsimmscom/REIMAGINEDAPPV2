@@ -11,6 +11,7 @@ import { adminOnly } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import suggestionsRepository from '../../repositories/suggestions.repository.js';
 import viewRefreshService from '../../services/viewRefresh.service.js';
+import suggestionsMergeService from '../../services/suggestions.merge.service.js';
 
 const router = Router();
 const requestLogger = logger.createRequestLogger();
@@ -126,19 +127,17 @@ router.get('/pending', adminOnly, async (req, res) => {
         job_id,
         doc_id,
         status,
-        dip_success,
-        counters,
         created_at,
         documents!inner(
           doc_id,
           manufacturer,
           model,
-          file_name
+          manufacturer_norm,
+          model_norm
         )
       `)
       .eq('job_type', 'DIP')
       .eq('status', 'completed')
-      .eq('dip_success', true)
       .order('created_at', { ascending: false })
       .limit(50);
 
@@ -150,17 +149,32 @@ router.get('/pending', adminOnly, async (req, res) => {
       });
     }
 
+    // Handle empty case gracefully
+    if (!jobs || jobs.length === 0) {
+      requestLogger.info('No pending DIP suggestions found');
+      return res.json({
+        success: true,
+        data: {
+          suggestions: [],
+          count: 0,
+          message: 'No DIP suggestions available. Upload documents to generate suggestions.'
+        }
+      });
+    }
+
     // Format response
     const suggestions = jobs.map(job => ({
       job_id: job.job_id,
       doc_id: job.doc_id,
-      file_name: job.documents?.file_name || 'Unknown',
+      file_name: `${job.documents?.manufacturer || 'Unknown'} ${job.documents?.model || 'Unknown'}`,
       manufacturer: job.documents?.manufacturer || 'Unknown',
       model: job.documents?.model || 'Unknown',
       created_at: job.created_at,
-      entities_count: job.counters?.entities_extracted || 0,
-      specs_count: job.counters?.spec_hints_found || 0,
-      tests_count: job.counters?.golden_tests_generated || 0
+      type: 'dip_completed',
+      value: `DIP processing completed for ${job.documents?.manufacturer || 'Unknown'} ${job.documents?.model || 'Unknown'}`,
+      confidence: 1.0,
+      page: null,
+      context: `Document: ${job.documents?.manufacturer_norm || job.documents?.manufacturer || 'Unknown'} ${job.documents?.model_norm || job.documents?.model || 'Unknown'}`
     }));
 
     requestLogger.info('Fetched pending DIP suggestions', { count: suggestions.length });
@@ -257,9 +271,33 @@ router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), a
       playbook_hints: { inserted: 0, errors: [] }
     };
 
-    // Insert approved entities
-    if (approved.entities && approved.entities.length > 0) {
-      for (const entity of approved.entities) {
+    // Add approval metadata to suggestions
+    const approvedWithMetadata = {
+      entities: approved.entities?.map(entity => ({
+        ...entity,
+        approved_at: new Date().toISOString(),
+        approved_by
+      })) || [],
+      spec_suggestions: approved.spec_suggestions?.map(spec => ({
+        ...spec,
+        approved_at: new Date().toISOString(),
+        approved_by
+      })) || [],
+      golden_tests: approved.golden_tests?.map(test => ({
+        ...test,
+        approved_at: new Date().toISOString(),
+        approved_by
+      })) || [],
+      playbook_hints: approved.playbook_hints?.map(hint => ({
+        ...hint,
+        approved_at: new Date().toISOString(),
+        approved_by
+      })) || []
+    };
+
+    // Step 1: Store approved suggestions in suggestion tables (for audit trail)
+    if (approvedWithMetadata.entities.length > 0) {
+      for (const entity of approvedWithMetadata.entities) {
         try {
           await suggestionsRepository.insertEntityCandidate(doc_id, entity, approved_by);
           results.entities.inserted++;
@@ -269,9 +307,8 @@ router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), a
       }
     }
 
-    // Insert approved spec suggestions
-    if (approved.spec_suggestions && approved.spec_suggestions.length > 0) {
-      for (const spec of approved.spec_suggestions) {
+    if (approvedWithMetadata.spec_suggestions.length > 0) {
+      for (const spec of approvedWithMetadata.spec_suggestions) {
         try {
           await suggestionsRepository.insertSpecSuggestion(doc_id, spec, approved_by);
           results.spec_suggestions.inserted++;
@@ -281,9 +318,8 @@ router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), a
       }
     }
 
-    // Insert approved golden tests
-    if (approved.golden_tests && approved.golden_tests.length > 0) {
-      for (const test of approved.golden_tests) {
+    if (approvedWithMetadata.golden_tests.length > 0) {
+      for (const test of approvedWithMetadata.golden_tests) {
         try {
           await suggestionsRepository.insertGoldenTest(doc_id, test, approved_by);
           results.golden_tests.inserted++;
@@ -293,9 +329,8 @@ router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), a
       }
     }
 
-    // Insert approved playbook hints
-    if (approved.playbook_hints && approved.playbook_hints.length > 0) {
-      for (const hint of approved.playbook_hints) {
+    if (approvedWithMetadata.playbook_hints.length > 0) {
+      for (const hint of approvedWithMetadata.playbook_hints) {
         try {
           await suggestionsRepository.insertPlaybookHint(doc_id, hint, approved_by);
           results.playbook_hints.inserted++;
@@ -303,6 +338,23 @@ router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), a
           results.playbook_hints.errors.push(error.message);
         }
       }
+    }
+
+    // Step 2: Merge approved suggestions into production tables
+    let mergeResult = null;
+    try {
+      mergeResult = await suggestionsMergeService.mergeAllSuggestions(doc_id, approvedWithMetadata);
+      requestLogger.info('Suggestions merged to production tables', {
+        doc_id,
+        mergeResult
+      });
+    } catch (error) {
+      requestLogger.error('Failed to merge suggestions to production', {
+        error: error.message,
+        doc_id
+      });
+      // Don't fail the entire operation, but log the error
+      mergeResult = { error: error.message };
     }
 
     const totalInserted = results.entities.inserted + 
@@ -350,7 +402,8 @@ router.post('/approve', adminOnly, validate(approveSuggestionsSchema, 'body'), a
         doc_id,
         results,
         total_inserted: totalInserted,
-        view_refresh: viewRefreshResult
+        view_refresh: viewRefreshResult,
+        merge_to_production: mergeResult
       },
       error: hasErrors ? 'Some suggestions failed to save' : null
     });
