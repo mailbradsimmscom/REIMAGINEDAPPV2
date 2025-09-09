@@ -1,0 +1,54 @@
+# `suggestions.route.js`
+
+- **Path**: `src/routes/admin/suggestions.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `zod`
+  - `../../utils/logger.js`
+  - `../../repositories/supabaseClient.js`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../repositories/suggestions.repository.js`
+  - `../../services/viewRefresh.service.js`
+  - `../../services/suggestions.merge.service.js`
+
+## Express Routes
+- GET /view-health
+- POST /refresh-view
+- GET /pending
+- GET /:docId
+- POST /approve
+
+## Raw Content
+
+```js
+/**
+ * Admin Suggestions Route
+ * Handles DIP suggestion review and approval
+ */
+
+import { Router } from 'express';
+import { z } from 'zod';
+import { logger } from '../../utils/logger.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
+import { adminOnly } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import suggestionsRepository from '../../repositories/suggestions.repository.js';
+import viewRefreshService from '../../services/viewRefresh.service.js';
+import suggestionsMergeService from '../../services/suggestions.merge.service.js';
+
+const router = Router();
+const requestLogger = logger.createRequestLogger();
+
+// Schema for DIP suggestion approval
+const approveSuggestionsSchema = z.object({
+  doc_id: z.string().uuid('Document ID must be a valid UUID'),
+  approved: z.object({
+    entities: z.array(z.object({
+      entity_type: z.string(),
+      value: z.string(),
+      page: z.number().optional(),
+      context: z.
+...
+```

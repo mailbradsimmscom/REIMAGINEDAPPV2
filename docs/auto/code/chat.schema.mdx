@@ -1,0 +1,55 @@
+# `chat.schema.js`
+
+- **Path**: `src/schemas/chat.schema.js`
+- **Exports**: chatHistoryQuerySchema, chatHistoryResponseSchema, chatDeleteRequestSchema, chatDeleteResponseSchema, chatListQuerySchema, chatProcessRequestSchema, chatProcessResponseSchema, chatListResponseSchema, chatContextQuerySchema, chatContextResponseSchema, chatDeletePathSchema, ChatDeleteEnvelope, ChatHistoryEnvelope, ChatContextEnvelope, ChatProcessEnvelope, ChatListEnvelope
+- **Imports**:
+  - `zod`
+  - `./common.schema.js`
+  - `./envelope.schema.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+import { paginationQuerySchema } from './common.schema.js';
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
+
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
+// Chat history query parameters
+export const chatHistoryQuerySchema = z.object({
+  threadId: z.string().min(1, 'threadId is required'),
+  limit: z.coerce.number().int().min(1).max(100).default(50)
+});
+
+// Chat history success response schema
+const ChatHistoryOkSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    threadId: z.string(),
+    messages: z.array(z.object({
+      id: z.string(),
+      content: z.string(),
+      role: z.string(),
+      createdAt: z.string(),
+      metadata: z.record(z.string(), z.any()).optional()
+    })),
+    count: z.number()
+  }),
+  timestamp: z.string()
+});
+
+// Discri
+...
+```

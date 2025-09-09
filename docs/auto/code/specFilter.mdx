@@ -1,0 +1,43 @@
+# `specFilter.js`
+
+- **Path**: `src/utils/specFilter.js`
+- **Exports**: SPEC_RX
+- **Imports**:
+  - `node:fs/promises`
+  - `./fuzzyMatcher.js`
+  - `./logger.js`
+  - `./metrics.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import fs from 'node:fs/promises';
+import { fuzzyMatcher } from './fuzzyMatcher.js';
+import { logger } from './logger.js';
+import { metrics } from './metrics.js';
+
+// Spec-looking tokens: numbers + units
+// expand if needed (kPa, gph, L/h, rpm, Ah, Wh, kWh, MPa, etc.)
+export const SPEC_RX = /\b(\d+(\.\d+)?)\s?(psi|bar|v|a|kw|w|hz|°c|°f|nm|mm|cm|l\/min)\b/i;
+
+// Maintenance lexicon cache
+let MAINTENANCE_LEXICON = null;
+
+/**
+ * Load maintenance lexicon from config file
+ * @returns {Object} Maintenance lexicon with tokens and regexes
+ */
+async function loadMaintenanceLexicon() {
+  if (MAINTENANCE_LEXICON) return MAINTENANCE_LEXICON;
+  
+  try {
+    const url = new URL('../config/lexicons/maintenance.json', import.meta.url);
+    MAINTENANCE_LEXICON = JSON.parse(await fs.readFile(url, 'utf-8'));
+    logger.info('Maintenance lexicon loaded successfully', { 
+      tokenCount: MAINTENANCE_LEXICON.maintenance_tokens?.length || 0,
+      regexCount: MAINTENANCE_LEXICON.interval_regexes?.length || 
+...
+```

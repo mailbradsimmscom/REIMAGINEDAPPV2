@@ -1,0 +1,48 @@
+# `systems.repository.js`
+
+- **Path**: `src/repositories/systems.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `./supabaseClient.js`
+  - `../services/guards/index.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { getSupabaseClient } from './supabaseClient.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
+
+const TABLE = 'systems';
+
+// Helper function to check if Supabase is available
+async function checkSupabaseAvailability() {
+  if (!isSupabaseConfigured()) {
+    const error = new Error('Supabase not configured');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    const error = new Error('Supabase client not available');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  return supabase;
+}
+
+export async function listSystems({ limit = 25, cursor } = {}) {
+  const supabase = await checkSupabaseAvailability();
+  let query = supabase.from(TABLE).select('*').order('asset_uid', { ascending: true }).limit(limit);
+  if (cursor) {
+    query = query.gt('asset_uid', cursor);
+  }
+  const { data, error } = await query;
+  if (error) {
+    const err = new Error(`Failed to list systems: 
+...
+```

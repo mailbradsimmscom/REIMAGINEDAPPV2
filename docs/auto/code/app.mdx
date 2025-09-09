@@ -1,0 +1,41 @@
+# `app.js`
+
+- **Path**: `src/public/app.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+const input = document.getElementById('messageInput');
+const send = document.getElementById('sendBtn');
+const chat = document.querySelector('.chat');
+const newChatBtn = document.getElementById('newChatBtn');
+const chatList = document.getElementById('chatList');
+const currentChatName = document.getElementById('currentChatName');
+const currentChatDescription = document.getElementById('currentChatDescription');
+
+let currentSessionId = null;
+let currentThreadId = null;
+
+// Initialize chat
+async function initializeChat() {
+  try {
+    // Load existing chat sessions
+    await loadChatSessions();
+    
+    // Try to get the most recent chat session
+    const response = await fetch('/chat/enhanced/list?limit=1');
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data.chats.length > 0) {
+        const latestChat = data.data.chats[0];
+        currentSessionId = latestChat.id;
+        if (latestChat.latestThread) {
+          currentThreadId = latestChat.latestThread.i
+...
+```

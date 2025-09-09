@@ -1,0 +1,54 @@
+# `ingest.route.js`
+
+- **Path**: `src/routes/document/ingest.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../services/document.service.js`
+  - `../../middleware/methodNotAllowed.js`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/serviceGuards.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/document.schema.js`
+  - `../../schemas/document.schema.js`
+  - `../../schemas/uploadDocument.schema.js`
+  - `busboy`
+  - `zod`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- USE undefined
+- POST /
+
+## Raw Content
+
+```js
+import express from 'express';
+import documentService from '../../services/document.service.js';
+import { methodNotAllowed } from '../../middleware/methodNotAllowed.js';
+import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { DocumentIngestEnvelope } from '../../schemas/document.schema.js';
+import { 
+  documentIngestMetadataSchema 
+} from '../../schemas/document.schema.js';
+import { uploadDocumentSchema } from '../../schemas/uploadDocument.schema.js';
+import Busboy from 'busboy';
+import { z } from 'zod';
+
+const router = express.Router();
+
+// Apply admin gate middleware
+router.use(adminGate);
+
+// Apply service guards - document ingest requires Supabase and Sidecar
+router.use(requireServices(['supabase', 'sidecar']));
+
+// Apply response validation to all routes in this file
+router.use
+...
+```

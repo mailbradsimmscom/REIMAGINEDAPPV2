@@ -1,0 +1,51 @@
+# `jobs.js`
+
+- **Path**: `src/public/js/admin/sections/jobs.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// /js/admin/sections/jobs.js
+// Loads job data into the jobs.html table
+// Independent module - initializes itself when DOM is ready
+
+export function init() {
+  // This function is called by the boot system
+  initializeJobsSection();
+}
+
+function initializeJobsSection() {
+  const jobsTableBody = document.getElementById('jobs-table-body');
+
+  if (!jobsTableBody) {
+    console.warn('jobs.js: #jobs-table-body not found - section may not be loaded yet');
+    return;
+  }
+
+  loadJobs();
+}
+
+async function loadJobs() {
+  const jobsTableBody = document.getElementById('jobs-table-body');
+  if (!jobsTableBody) return;
+
+  try {
+    const res = await window.adminFetch('/admin/api/jobs');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!data.success || !Array.isArray(data.data.jobs)) {
+      throw new Error('Invalid jobs response');
+    }
+
+    jobsTableBody.innerHTML = data.data.jobs.map(job => {
+      const jobId = escapeHtml(job.job_id || '');
+  
+...
+```

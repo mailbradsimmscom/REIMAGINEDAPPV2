@@ -1,0 +1,56 @@
+# `health.schema.js`
+
+- **Path**: `src/schemas/health.schema.js`
+- **Exports**: BasicHealthEnvelope, ServiceStatusEnvelope, ReadinessEnvelope, healthResponseSchema, healthQuerySchema, EmptyQuery, adminHealthResponseSchema, adminHealthErrorSchema
+- **Imports**:
+  - `zod`
+  - `./envelope.schema.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
+
+// Basic health check response data
+const BasicHealthData = z.object({
+  status: z.literal('healthy'),
+  timestamp: z.string().datetime(),
+  uptime: z.number()
+});
+
+// Service status response data
+const ServiceStatusData = z.object({
+  status: z.enum(['healthy', 'degraded']),
+  services: z.object({
+    supabase: z.boolean(),
+    pinecone: z.boolean(),
+    openai: z.boolean(),
+    sidecar: z.boolean()
+  }),
+  timestamp: z.string().datetime()
+});
+
+// Readiness check response data
+const ReadinessData = z.object({
+  status: z.literal('ready'),
+  timestamp: z.string().datetime()
+});
+
+// Health route envelope schemas
+export const BasicHealthEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: BasicHealthData }),
+  EnvelopeErrorSchema
+]);
+
+export const ServiceStatusEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ServiceStatusData }),
+  EnvelopeErrorSchema
+]);
+
+export
+...
+```

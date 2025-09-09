@@ -1,0 +1,55 @@
+# `pinecone.router.js`
+
+- **Path**: `src/routes/pinecone.router.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../middleware/validate.js`
+  - `../middleware/validateResponse.js`
+  - `../constants/errorCodes.js`
+  - `../schemas/pinecone.schema.js`
+  - `../services/pinecone.guard.js`
+
+## Express Routes
+- POST /search
+- GET /stats
+- GET /documents/:docId/chunks
+- POST /query
+
+## Raw Content
+
+```js
+import express from 'express';
+import { validate } from '../middleware/validate.js';
+import { validateResponse } from '../middleware/validateResponse.js';
+import { ERR } from '../constants/errorCodes.js';
+import { 
+  pineconeSearchRequestSchema,
+  pineconeStatsQuerySchema,
+  pineconeDocumentChunksPathSchema,
+  pineconeQueryRequestSchema,
+  pineconeSearchResponseSchema,
+  pineconeStatsResponseSchema,
+  pineconeDocumentChunksResponseSchema,
+  pineconeQueryResponseSchema
+} from '../schemas/pinecone.schema.js';
+
+const router = express.Router();
+
+// Lazy import to avoid failing at router import time
+async function getPineService() {
+  return import('../services/pinecone.service.js');
+}
+
+// Helper function to check if Pinecone is configured
+import { isPineconeConfigured } from '../services/pinecone.guard.js';
+
+// Method not allowed handler
+function methodNotAllowed(req, res) {
+  return res.json({
+    success: false,
+    error: {
+      code: ERR.METHOD_NOT_ALLOWED,
+      message: `${req.metho
+...
+```

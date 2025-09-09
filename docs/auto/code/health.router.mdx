@@ -1,0 +1,62 @@
+# `health.router.js`
+
+- **Path**: `src/routes/health.router.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../services/guards/index.js`
+  - `../middleware/validate.js`
+  - `../middleware/validateResponse.js`
+  - `../schemas/health.schema.js`
+  - `child_process`
+  - `../utils/logger.js`
+
+## Express Routes
+- GET /
+- GET /services
+- GET /ready
+- GET /live
+- GET /monitoring
+
+## Raw Content
+
+```js
+// src/routes/health.router.js
+import express from 'express';
+import { getExternalServiceStatus } from '../services/guards/index.js';
+import { validate } from '../middleware/validate.js';
+import { validateResponse } from '../middleware/validateResponse.js';
+import { 
+  BasicHealthEnvelope, 
+  ServiceStatusEnvelope, 
+  ReadinessEnvelope,
+  EmptyQuery
+} from '../schemas/health.schema.js';
+import { execSync } from 'child_process';
+import { logger } from '../utils/logger.js';
+
+const router = express.Router();
+
+// GET /health - Basic health check
+router.get('/', 
+  validate(EmptyQuery, 'query'),
+  validateResponse(BasicHealthEnvelope),
+  (req, res) => {
+  const envelope = {
+    success: true,
+    data: {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime()
+    }
+  };
+
+  return res.json(envelope);
+});
+
+// GET /health/services - Check external service status
+router.get('/services', 
+  validate(EmptyQuery, 'query'),
+  validateResponse(ServiceStatus
+...
+```

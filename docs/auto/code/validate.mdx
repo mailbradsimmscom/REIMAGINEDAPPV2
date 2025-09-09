@@ -1,0 +1,27 @@
+# `validate.js`
+
+- **Path**: `src/middleware/validate.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/middleware/validate.js
+export function validate({ body }) {
+  return (req, res, next) => {
+    if (body) {
+      const result = body.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error });
+      }
+      req.body = result.data;
+    }
+    next();
+  };
+}
+```

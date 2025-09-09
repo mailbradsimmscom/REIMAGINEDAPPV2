@@ -1,0 +1,57 @@
+# `process.route.js`
+
+- **Path**: `src/routes/chat/process.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../services/enhanced-chat.service.js`
+  - `../../services/query-normalizer.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../middleware/serviceGuards.js`
+  - `../../utils/methodNotAllowed.js`
+  - `../../config/env.js`
+  - `../../utils/logger.js`
+  - `../../schemas/chat.schema.js`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- USE undefined
+- POST /
+
+## Raw Content
+
+```js
+import express from 'express';
+import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { normalizeQuery } from '../../services/query-normalizer.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
+import { methodNotAllowed } from '../../utils/methodNotAllowed.js';
+import { getEnv } from '../../config/env.js';
+import { logger } from '../../utils/logger.js';
+import { 
+  ChatProcessEnvelope,
+  chatProcessRequestSchema,
+  chatProcessResponseSchema 
+} from '../../schemas/chat.schema.js';
+
+const router = express.Router();
+
+// DEBUG: Add process route tracing
+router.use((req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  requestLogger.info('🔍 [PROCESS] ROUTE', { 
+    method: req.method, 
+    originalUrl: req.originalUrl, 
+    url: req.url, 
+    path: req.path 
+  });
+  next();
+});
+
+router
+...
+```

@@ -1,0 +1,48 @@
+# `admin.service.js`
+
+- **Path**: `src/services/admin.service.js`
+- **Exports**: adminService
+- **Imports**:
+  - `../repositories/supabaseClient.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { getSupabaseClient } from '../repositories/supabaseClient.js';
+import { logger } from '../utils/logger.js';
+
+export class AdminService {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  async getManufacturers() {
+    const supabase = await getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('systems')
+        .select('manufacturer_norm')
+        .not('manufacturer_norm', 'is', null)
+        .order('manufacturer_norm');
+
+      if (error) {
+        this.requestLogger.warn('Manufacturers query failed', { error: error.message });
+        return {
+          total: 0,
+          manufacturers: [],
+          lastUpdated: new Date().toISOString()
+        };
+      }
+
+      // Get unique manufacturers
+      const uniqueManufacturers = [...new Set(data?.map(s => s.manufacturer_norm).filter(Boolean))];
+      
+      // If no manufacturers found, provide defaults for testing
+      if (uniqueManufacturers.length === 0) {
+...
+```

@@ -1,0 +1,52 @@
+# `error.js`
+
+- **Path**: `src/middleware/error.js`
+- **Exports**: default
+- **Imports**:
+  - `zod`
+  - `../utils/logger.js`
+  - `../constants/errorCodes.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+import { logger } from '../utils/logger.js';
+import { ERR } from '../constants/errorCodes.js';
+
+export function errorHandler(err, req, res, next) {
+  if (res.headersSent) return next(err);
+  
+  const requestLogger = req.requestLogger || logger.createRequestLogger();
+  
+  // Handle Zod validation errors
+  if (err instanceof z.ZodError) {
+    requestLogger.warn('Validation error', { 
+      url: req.url, 
+      method: req.method,
+      issues: err.issues 
+    });
+    
+    return res.status(400).json({
+      success: false,
+      data: null,
+      error: { 
+        code: ERR.BAD_REQUEST, 
+        message: 'Validation failed',
+        details: err.issues 
+      },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+  
+  // Handle service guard errors (return 503 Service Unavailable)
+  if (err.code === ERR.SUPABASE_DISABLED || 
+      err.code === ERR.PINECONE_DISABLED || 
+      err.code === ERR.OPENAI_DISABLED || 
+      err.code === ERR.SIDECAR_DISABLED) {
+ 
+...
+```

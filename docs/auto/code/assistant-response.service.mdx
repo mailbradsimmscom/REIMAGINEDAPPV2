@@ -1,0 +1,39 @@
+# `assistant-response.service.js`
+
+- **Path**: `src/services/assistant-response.service.js`
+- **Exports**: None
+- **Imports**:
+  - `./llm.service.js`
+  - `../utils/intent-style.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/assistant-response.service.js
+// Assistant response generation service extracted from enhanced-chat.service.js
+
+import { synthesizeAnswer } from './llm.service.js';
+import { decideStyle } from '../utils/intent-style.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * Generate enhanced assistant response from Pinecone results
+ * @param {string} userQuery - Original user query
+ * @param {string} enhancedQuery - Enhanced query with context
+ * @param {Array} systemsContext - Systems context array
+ * @param {Array} pineconeResults - Pinecone search results
+ * @param {Error|null} pineconeError - Any Pinecone error
+ * @param {Array} recentMessages - Recent conversation messages
+ * @returns {Promise<Object>} - Generated response with content and sources
+ */
+export async function generateEnhancedAssistantResponse(userQuery, enhancedQuery, systemsContext, pineconeResults, pineconeError, recentMessages) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    l
+...
+```

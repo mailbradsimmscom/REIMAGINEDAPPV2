@@ -1,0 +1,47 @@
+# `suggestions.merge.service.js`
+
+- **Path**: `src/services/suggestions.merge.service.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `../repositories/supabaseClient.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+import { getSupabaseClient } from '../repositories/supabaseClient.js';
+
+/**
+ * Service to merge approved suggestions into production tables
+ * This is the missing piece that connects suggestion approval to actual system behavior
+ */
+class SuggestionsMergeService {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  /**
+   * Merge approved spec suggestions into systems.spec_keywords
+   * @param {string} docId - Document ID
+   * @param {Array} specSuggestions - Approved spec suggestions
+   * @returns {Promise<Object>} Merge result
+   */
+  async mergeSpecSuggestions(docId, specSuggestions) {
+    try {
+      const supabase = await getSupabaseClient();
+      
+      if (!specSuggestions || specSuggestions.length === 0) {
+        return { merged: 0, errors: [] };
+      }
+
+      const results = { merged: 0, errors: [] };
+
+      for (const suggestion of specSuggestions) {
+        try {
+          // Get the system for this 
+...
+```

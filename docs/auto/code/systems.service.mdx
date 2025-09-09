@@ -1,0 +1,45 @@
+# `systems.service.js`
+
+- **Path**: `src/services/systems.service.js`
+- **Exports**: systemsService
+- **Imports**:
+  - `../repositories/systems.repository.js`
+  - `../services/guards/index.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { listSystems, getSystemByAssetUid, searchSystems } from '../repositories/systems.repository.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
+
+function validateLimit(limit) {
+  const n = Number(limit);
+  if (!Number.isFinite(n) || n <= 0) return 25;
+  return Math.min(n, 100);
+}
+
+// Helper function to check if Supabase is available
+async function checkSupabaseAvailability() {
+  if (!isSupabaseConfigured()) {
+    const error = new Error('Supabase not configured');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+}
+
+export async function listSystemsSvc({ limit, cursor } = {}) {
+  try {
+    // Check Supabase availability before listing systems
+    await checkSupabaseAvailability();
+    
+    const safeLimit = validateLimit(limit);
+    const rows = await listSystems({ limit: safeLimit, cursor });
+    const nextCursor = rows.length > 0 ? rows[rows.length - 1].asset_uid : null;
+    return { systems: rows, nextCursor };
+  } catch (error) {
+    // Enhance
+...
+```

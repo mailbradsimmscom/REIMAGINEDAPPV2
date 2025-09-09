@@ -1,0 +1,38 @@
+# `intent-style.js`
+
+- **Path**: `src/utils/intent-style.js`
+- **Exports**: default
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// Intent detection utility for determining response style
+// Maps user questions to appropriate style presets
+
+/**
+ * Determines the appropriate style preset based on the user's question
+ * @param {string} question - The user's question
+ * @returns {'specBrief'|'steps'|'bullets3'|'brief'|'technical'} - The style preset to use
+ */
+export function decideStyle(question) {
+  if (!question || typeof question !== 'string') {
+    return 'brief';
+  }
+
+  const lowerQuestion = question.toLowerCase().trim();
+
+  // Spec brief: Questions asking for specific technical specifications
+  const specKeywords = /\b(psi|bar|v|volt|a|amp|hz|°c|°f|kw|w|rpm|kpa|l\/h|l\/min|gph|gpm|nm|pressure|voltage|amperage|wattage|capacity|size|dimensions|weight|temperature|speed|flow|rate|specifications?|specs?)\b/;
+  if (specKeywords.test(lowerQuestion)) {
+    return 'specBrief';
+  }
+
+  // Steps: How-to questions and procedural requests
+  const stepsKeywords = /^(how (do|to)\b|steps?|procedure|reset|flush|prime|bleed|re
+...
+```

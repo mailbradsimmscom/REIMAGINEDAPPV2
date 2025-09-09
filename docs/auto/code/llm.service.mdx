@@ -1,0 +1,39 @@
+# `llm.service.js`
+
+- **Path**: `src/services/llm.service.js`
+- **Exports**: default
+- **Imports**:
+  - `../config/personality.js`
+  - `../utils/intent-style.js`
+  - `../clients/openai.client.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { personality, stylePresets } from '../config/personality.js';
+import { getStyleOpening } from '../utils/intent-style.js';
+import { oaiText, truncateContent } from '../clients/openai.client.js';
+import { logger } from '../utils/logger.js';
+
+export async function enhanceQuery(userQuery, systemsContext = []) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    // DEBUG: Log input query
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Input query', { userQuery });
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Systems context length', { systemsContextLength: systemsContext.length });
+    
+    const prompt = buildQueryEnhancementPrompt(userQuery, systemsContext);
+    
+    // DEBUG: Log the prompt sent to LLM
+    requestLogger.info('🔍 [QUERY ENHANCEMENT] Prompt sent to LLM', { prompt });
+    
+    const systemPrompt = `${personality.systemPrompt}
+
+You are enhancing a user query by incorporating relevant context from systems data. Return only the enhanced query, nothin
+...
+```

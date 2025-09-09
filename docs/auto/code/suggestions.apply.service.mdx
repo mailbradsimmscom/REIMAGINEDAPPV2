@@ -1,0 +1,44 @@
+# `suggestions.apply.service.js`
+
+- **Path**: `src/services/suggestions.apply.service.js`
+- **Exports**: None
+- **Imports**:
+  - `node:fs/promises`
+  - `node:path`
+  - `../utils/snapshots.service.js`
+  - `../schemas/ingestion.schema.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Suggestions apply service - merges accepted suggestions into JSON config files
+ * Provides safe application of admin-approved changes with snapshot safety
+ */
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { createSnapshot } from '../utils/snapshots.service.js';
+import { SuggestionsSchema } from '../schemas/ingestion.schema.js';
+import { logger } from '../utils/logger.js';
+
+// Configuration file paths
+const ENTITIES_FILE = 'src/config/lexicons/entities.json';
+const INTENTS_FILE = 'src/config/intents.json';
+const MAINTENANCE_FILE = 'src/config/lexicons/maintenance.json';
+const UNITS_FILE = 'src/config/lexicons/units.json';
+const GOLDENS_DIR = 'tests/goldens';
+
+/**
+ * Apply accepted suggestions to configuration files
+ * @param {Object} params - Apply parameters
+ * @param {string} params.docId - Document ID
+ * @param {Object} params.accepted - Accepted suggestions (subset of SuggestionsSchema)
+ * @param {Object} params.options - Apply options
+ * @returns {
+...
+```

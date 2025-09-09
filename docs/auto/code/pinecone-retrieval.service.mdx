@@ -1,0 +1,44 @@
+# `pinecone-retrieval.service.js`
+
+- **Path**: `src/services/pinecone-retrieval.service.js`
+- **Exports**: None
+- **Imports**:
+  - `./pinecone.service.js`
+  - `../utils/specFilter.js`
+  - `./rerank.service.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/pinecone-retrieval.service.js
+// Pinecone vector search service with spec-biased retrieval
+
+import pineconeService from './pinecone.service.js';
+import { filterSpecLike } from '../utils/specFilter.js';
+import { rerankChunks } from './rerank.service.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * Perform spec-biased retrieval from Pinecone
+ * @param {Object} params - Retrieval parameters
+ * @param {string} params.query - The search query
+ * @param {string} params.namespace - Pinecone namespace
+ * @param {Object} params.context - Additional context
+ * @returns {Promise<Object>} - Retrieval results with metadata
+ */
+export async function retrieveWithSpecBias({ query, namespace, context = {} }) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    requestLogger.info('🔍 [PINECONE RETRIEVAL] Starting spec-biased retrieval', { 
+      query: query.substring(0, 100),
+      namespace: namespace || 'default'
+    });
+    
+    const { getEnv } = await imp
+...
+```

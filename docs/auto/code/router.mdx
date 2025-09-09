@@ -1,0 +1,48 @@
+# `router.js`
+
+- **Path**: `src/public/js/admin/router.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Simple hash-based router
+ * Shows/hides sections based on URL hash
+ */
+const ROUTE_SEL = "[data-route]";
+
+export function initRouter() {
+  const all = () => [...document.querySelectorAll(ROUTE_SEL)];
+  
+  const show = (route) => {
+    for (const sec of all()) {
+      const isMatch = sec.getAttribute("data-route") === route;
+      sec.style.display = isMatch ? "" : "none";
+    }
+  };
+
+  const getRoute = () => {
+    const hash = window.location.hash || "#/dashboard";
+    const route = hash.replace(/^#\//, "");
+    return route || "dashboard";
+  };
+
+  const onChange = () => show(getRoute());
+  
+  window.addEventListener("hashchange", onChange);
+  onChange(); // Initial route
+
+  // Expose minimal API for sections
+  return { 
+    navigate: (r) => (window.location.hash = `#/${r}`),
+    getCurrentRoute: getRoute
+  };
+}
+
+```

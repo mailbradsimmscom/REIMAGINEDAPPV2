@@ -1,0 +1,46 @@
+# `viewRefresh.service.js`
+
+- **Path**: `src/services/viewRefresh.service.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `../repositories/supabaseClient.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+import { getSupabaseClient } from '../repositories/supabaseClient.js';
+
+class ViewRefreshService {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  async checkSupabaseAvailability() {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Database service unavailable');
+    }
+    return supabase;
+  }
+
+  /**
+   * Refresh the knowledge_facts materialized view
+   * This should be called after approving suggestions to update the fact-first retrieval
+   */
+  async refreshKnowledgeFactsView() {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      // Try the RPC function first (preferred method)
+      const { data, error } = await supabase.rpc('refresh_knowledge_facts');
+      
+      if (error) {
+        // Fallback to raw SQL if RPC fails
+        this.requestLogger.warn('RPC refresh failed, trying raw SQL', { error: error.message });
+        const { error: 
+...
+```

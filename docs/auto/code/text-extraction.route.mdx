@@ -1,0 +1,59 @@
+# `text-extraction.route.js`
+
+- **Path**: `src/routes/admin/text-extraction.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../utils/logger.js`
+  - `../../services/document-text.service.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/envelope.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /metrics
+- GET /cache
+- DELETE /cache
+- GET /health
+
+## Raw Content
+
+```js
+/**
+ * Admin Text Extraction Metrics Route
+ * Provides endpoints to monitor text extraction performance and cache status
+ */
+
+import { Router } from 'express';
+import { logger } from '../../utils/logger.js';
+import { 
+  getTextExtractionMetrics, 
+  getCacheStats, 
+  clearTextCache 
+} from '../../services/document-text.service.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
+
+const router = Router();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
+
+/**
+ * GET /admin/text-extraction/metrics
+ * Get text extraction performance metrics
+ */
+router.get('/metrics', async (req, res, next) => {
+  try {
+    const requestLogger = logger.createRequestLogger();
+    requestLogger.info('text_extraction.metrics_requested');
+    
+    const metrics = getTextExtractionMetrics();
+    
+    res.json({
+      success: true,
+      data: {
+        ...metrics,
+        timestamp: new Da
+...
+```

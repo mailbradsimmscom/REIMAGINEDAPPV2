@@ -1,0 +1,54 @@
+# `intent.repository.js`
+
+- **Path**: `src/repositories/intent.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `./supabaseClient.js`
+
+## Express Routes
+- DELETE undefined
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+import { getSupabaseClient } from './supabaseClient.js';
+
+class IntentRepository {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  async checkSupabaseAvailability() {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Database service unavailable');
+    }
+    return supabase;
+  }
+
+  /**
+   * Get all intent routes with optional filtering
+   */
+  async getAllIntentRoutes(filters = {}) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      let query = supabase
+        .from('intent_router')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (filters.intent) {
+        query = query.eq('intent', filters.intent);
+      }
+      if (filters.pattern) {
+        query = query.ilike('pattern', `%${filters.pattern}%`);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      this.requestLogger.in
+...
+```

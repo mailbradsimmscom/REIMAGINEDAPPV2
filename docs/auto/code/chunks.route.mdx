@@ -1,0 +1,54 @@
+# `chunks.route.js`
+
+- **Path**: `src/routes/admin/chunks.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../utils/logger.js`
+  - `../../repositories/document.repository.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/envelope.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /:docId
+
+## Raw Content
+
+```js
+import { Router } from 'express';
+import { logger } from '../../utils/logger.js';
+import documentRepository from '../../repositories/document.repository.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
+
+const router = Router();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
+
+/**
+ * GET /admin/docs/chunks/:docId
+ * Get document chunks for a specific document
+ */
+router.get('/:docId', async (req, res, next) => {
+  try {
+    const { docId } = req.params;
+    
+    const requestLogger = logger.createRequestLogger();
+    requestLogger.info('Fetching chunks for document', { docId });
+    
+    // Get chunks from repository
+    const chunks = await documentRepository.getChunksByDocId(docId);
+    
+    requestLogger.info('Chunks fetched successfully', { 
+      docId, 
+      chunkCount: chunks.length 
+    });
+    
+    res.json({
+      success: true,
+      data: {
+     
+...
+```

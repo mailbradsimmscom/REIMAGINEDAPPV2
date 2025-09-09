@@ -1,0 +1,51 @@
+# `models.route.js`
+
+- **Path**: `src/routes/admin/models.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/admin.schema.js`
+  - `../../services/admin.service.js`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- GET /
+
+## Raw Content
+
+```js
+import express from 'express';
+import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminModelsEnvelope, adminModelsQuerySchema } from '../../schemas/admin.schema.js';
+import { adminService } from '../../services/admin.service.js';
+
+const router = express.Router();
+
+// Apply admin gate middleware
+router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminModelsEnvelope));
+
+// GET /admin/models - List models
+router.get('/', 
+  validate(adminModelsQuerySchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const manufacturer = req.query.manufacturer || 'all';
+      const data = await adminService.getModels(manufacturer);
+
+      const envelope = {
+        success: true,
+        data: {
+          models: data.top.map(m => ({ 
+            model_norm: m.model_norm, 
+            manufacturer_
+...
+```

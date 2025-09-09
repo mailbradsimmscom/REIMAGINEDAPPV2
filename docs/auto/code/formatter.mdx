@@ -1,0 +1,62 @@
+# `formatter.js`
+
+- **Path**: `src/utils/formatter.js`
+- **Exports**: None
+- **Imports**:
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Answer Formatter Utility
+ * Formats fact matches into user-friendly responses
+ */
+
+import { logger } from '../utils/logger.js';
+
+const requestLogger = logger.createRequestLogger();
+
+/**
+ * Format a fact match into a user-friendly answer
+ */
+export function formatFactAnswer(fact) {
+  try {
+    if (!fact) {
+      return 'No fact match found';
+    }
+
+    switch (fact.fact_type) {
+      case 'spec':
+        return formatSpecAnswer(fact);
+      
+      case 'intent_hint':
+        return formatIntentAnswer(fact);
+      
+      case 'golden_test':
+        return formatGoldenTestAnswer(fact);
+      
+      default:
+        return 'Approved fact match found';
+    }
+  } catch (error) {
+    requestLogger.error('Error formatting fact answer', { 
+      error: error.message, 
+      fact 
+    });
+    return 'Error formatting answer';
+  }
+}
+
+/**
+ * Format spec suggestion into answer
+ */
+function formatSpecAnswer(fact) {
+  const { key, value, unit, context, page } = fact;
+  
+  let answer = `${key}:
+...
+```

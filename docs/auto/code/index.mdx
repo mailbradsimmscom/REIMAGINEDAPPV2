@@ -1,0 +1,38 @@
+# `index.js`
+
+- **Path**: `src/services/guards/index.js`
+- **Exports**: None
+- **Imports**:
+  - `../../config/env.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/guards/index.js
+// Centralized external service guards
+import { ENV } from '../../config/env.js';
+
+export { isPineconeConfigured } from './pinecone.guard.js';
+export { isSupabaseConfigured } from './supabase.guard.js';
+export { isOpenAIConfigured } from './openai.guard.js';
+export { isSidecarConfigured } from './sidecar.guard.js';
+
+// Convenience function to check all external services
+export async function getExternalServiceStatus() {
+  // For testing, check process.env directly if getEnv is memoized
+  if (ENV.NODE_ENV === 'test') {
+    return {
+      supabase: !!(ENV.SUPABASE_URL && (ENV.SUPABASE_SERVICE_KEY || ENV.SUPABASE_SERVICE_ROLE_KEY || ENV.SUPABASE_SERVICE_ROLE || ENV.SERVICE_ROLE_KEY)),
+      pinecone: !!ENV.PYTHON_SIDECAR_URL,
+      openai: !!ENV.OPENAI_API_KEY,
+      sidecar: !!ENV.PYTHON_SIDECAR_URL
+    };
+  }
+  
+  return {
+    supabase: !!(ENV.SUPABASE_URL && (ENV.SUPABASE_SERVICE_KEY || ENV.SUPABASE_SERVICE_ROLE_KEY || ENV.SUPABASE_SERVICE_ROLE || ENV.SE
+...
+```

@@ -1,0 +1,47 @@
+# `doc-upload.js`
+
+- **Path**: `src/public/js/admin/sections/doc-upload.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// /js/admin/sections/doc-upload.js
+// Handles document upload form with manufacturer/model dropdowns
+// Independent module - initializes itself when DOM is ready
+
+export function init() {
+  // This function is called by the boot system
+  initializeDocUploadSection();
+}
+
+function initializeDocUploadSection() {
+  const manufacturerSelect = document.getElementById('manufacturer');
+  const modelSelect = document.getElementById('model');
+
+  if (!manufacturerSelect || !modelSelect) {
+    console.warn('doc-upload.js: Required dropdowns not found - section may not be loaded yet');
+    return;
+  }
+
+  loadManufacturers();
+  setupEventListeners();
+}
+
+async function loadManufacturers() {
+  const manufacturerSelect = document.getElementById('manufacturer');
+  if (!manufacturerSelect) return;
+
+  try {
+    const res = await window.adminFetch('/admin/api/manufacturers');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!data.success || !Array.isArray
+...
+```

@@ -1,0 +1,44 @@
+# `fact-first.service.js`
+
+- **Path**: `src/services/fact-first.service.js`
+- **Exports**: None
+- **Imports**:
+  - `../repositories/knowledge.repository.js`
+  - `../utils/formatter.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/fact-first.service.js
+// Fact-first retrieval service using knowledge_facts materialized view
+
+import knowledgeRepository from '../repositories/knowledge.repository.js';
+import { formatFactAnswer } from '../utils/formatter.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * Check if query matches any facts in the knowledge_facts materialized view
+ * @param {string} query - The user query
+ * @returns {Promise<Object|null>} - Fact match result or null
+ */
+export async function findFactMatch(query) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    requestLogger.info('🔍 [FACT-FIRST] Checking knowledge_facts for query', { 
+      query: query.substring(0, 100) 
+    });
+    
+    const factMatch = await knowledgeRepository.findFactMatchByQuery(query);
+    
+    if (factMatch) {
+      requestLogger.info('🎯 [FACT-FIRST] Found matching fact', { 
+        factType: factMatch.fact_type,
+        confidence: factMatch.confidence || 1.0,
+        docId: factMa
+...
+```

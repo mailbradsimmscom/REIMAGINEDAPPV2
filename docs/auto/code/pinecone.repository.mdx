@@ -1,0 +1,50 @@
+# `pinecone.repository.js`
+
+- **Path**: `src/repositories/pinecone.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `../utils/url.js`
+  - `../config/env.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+import { joinUrl } from '../utils/url.js';
+import { ENV } from '../config/env.js';
+
+class PineconeRepository {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  // Get sidecar URL at runtime
+  async getSidecarUrl() {
+    const { getEnv } = await import('../config/env.js');
+    const env = getEnv();
+    return env.PYTHON_SIDECAR_URL;
+  }
+
+  // Get namespace at runtime
+  async getNamespace() {
+    const { getEnv } = await import('../config/env.js');
+    const env = getEnv();
+    return env.PINECONE_NAMESPACE || env.DEFAULT_NAMESPACE || null;
+  }
+
+  // Resolve namespace with precedence: PINECONE_NAMESPACE > DEFAULT_NAMESPACE > null
+  async resolveNamespace() {
+    const { getEnv } = await import('../config/env.js');
+    const env = getEnv({ loose: true });
+    return env.PINECONE_NAMESPACE || env.DEFAULT_NAMESPACE || null;
+  }
+
+  // Log namespace choice once on boot in dev
+  async logNamespaceChoiceOnce() {
+    if 
+...
+```

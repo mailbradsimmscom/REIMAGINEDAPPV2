@@ -1,0 +1,49 @@
+# `context.route.js`
+
+- **Path**: `src/routes/chat/context.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../services/enhanced-chat.service.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/chat.schema.js`
+  - `../../schemas/chat.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /
+
+## Raw Content
+
+```js
+import express from 'express';
+import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { ChatContextEnvelope } from '../../schemas/chat.schema.js';
+import { 
+  chatContextQuerySchema
+} from '../../schemas/chat.schema.js';
+
+const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(ChatContextEnvelope));
+
+// GET /chat/enhanced/context - Get chat context
+router.get('/', 
+  validate(chatContextQuerySchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const { threadId } = req.query;
+      
+      const context = await enhancedChatService.getChatContext(threadId);
+      
+      // Transform the data to match the schema
+      const transformedSession = {
+        id: context.session.id,
+        name: context.session.name,
+        description: context.session.descripti
+...
+```

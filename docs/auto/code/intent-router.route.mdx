@@ -1,0 +1,52 @@
+# `intent-router.route.js`
+
+- **Path**: `src/routes/admin/intent-router.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `zod`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../repositories/intent.repository.js`
+  - `../../utils/logger.js`
+
+## Express Routes
+- GET /
+- GET /stats
+- GET /:id
+- POST /
+- PUT /:id
+- DELETE /:id
+- POST /match
+
+## Raw Content
+
+```js
+import express from 'express';
+import { z } from 'zod';
+import { adminOnly } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import intentRepository from '../../repositories/intent.repository.js';
+import { logger } from '../../utils/logger.js';
+
+const router = express.Router();
+const requestLogger = logger.createRequestLogger();
+
+// Validation schemas
+const createIntentRouteSchema = z.object({
+  pattern: z.string().min(1, 'Pattern is required').max(200, 'Pattern too long'),
+  intent: z.string().min(1, 'Intent is required').max(100, 'Intent too long'),
+  route_to: z.string().min(1, 'Route destination is required').max(200, 'Route too long'),
+  intent_hint_id: z.string().uuid().optional().nullable()
+});
+
+const updateIntentRouteSchema = createIntentRouteSchema.partial();
+
+const intentRouteParamsSchema = z.object({
+  id: z.string().uuid('Invalid route ID')
+});
+
+// GET /admin/intent-router - Get all intent routes
+router.get('/', adminOnly, async (r
+...
+```

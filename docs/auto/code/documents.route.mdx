@@ -1,0 +1,54 @@
+# `documents.route.js`
+
+- **Path**: `src/routes/document/documents.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../services/document.service.js`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/document.schema.js`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- GET /
+
+## Raw Content
+
+```js
+import express from 'express';
+import documentService from '../../services/document.service.js';
+import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { 
+  documentDocumentsQuerySchema, 
+  documentDocumentsResponseSchema 
+} from '../../schemas/document.schema.js';
+
+const router = express.Router();
+
+// Apply admin gate middleware
+router.use(adminGate);
+
+// Apply response validation
+router.use(validateResponse(documentDocumentsResponseSchema));
+
+// GET /admin/docs/documents - List documents
+router.get('/', 
+  validate(documentDocumentsQuerySchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const { limit, offset, status } = req.query;
+      
+      const documents = await documentService.listDocuments(Number(limit), Number(offset), status);
+      
+      const envelope = {
+        success: true,
+        data: {
+          documents,
+          
+...
+```

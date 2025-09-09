@@ -1,0 +1,50 @@
+# `dip.service.js`
+
+- **Path**: `src/services/dip.service.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `../config/env.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * DIP Service
+ * Handles Document Intelligence Packet processing via Python sidecar
+ */
+
+import { logger } from '../utils/logger.js';
+import { getEnv } from '../config/env.js';
+
+class DIPService {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  /**
+   * Generate DIP from document file
+   * @param {Buffer} fileBuffer - The PDF file buffer
+   * @param {string} docId - Document ID
+   * @param {string} fileName - File name
+   * @param {Object} options - Processing options
+   * @returns {Object} DIP generation result
+   */
+  async generateDIP(fileBuffer, docId, fileName, options = {}) {
+    try {
+      this.requestLogger.info('Starting DIP generation', { docId, fileName });
+
+      const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
+      if (!sidecarUrl) {
+        throw new Error('Python sidecar URL not configured');
+      }
+
+      const formData = new FormData();
+      
+      // Add file
+      const blob = new Blob([fileBuffer], { type: 'application/pdf' })
+...
+```

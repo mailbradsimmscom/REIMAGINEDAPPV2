@@ -1,0 +1,56 @@
+# `playbook.repository.js`
+
+- **Path**: `src/repositories/playbook.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `./supabaseClient.js`
+
+## Express Routes
+- DELETE undefined
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+import { getSupabaseClient } from './supabaseClient.js';
+
+class PlaybookRepository {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  async checkSupabaseAvailability() {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Database service unavailable');
+    }
+    return supabase;
+  }
+
+  /**
+   * Get all playbooks with optional filtering
+   */
+  async getAllPlaybooks(filters = {}) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      let query = supabase
+        .from('playbooks')
+        .select(`
+          *,
+          playbook_steps (
+            step_id,
+            step_number,
+            instruction,
+            source_hint_id,
+            doc_id
+          )
+        `)
+        .order('created_at', { ascending: false });
+
+      if (filters.system_norm) {
+        query = query.eq('system_norm', filters.system_norm);
+      }
+      if (filters.s
+...
+```

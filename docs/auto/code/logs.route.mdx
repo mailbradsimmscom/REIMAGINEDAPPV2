@@ -1,0 +1,50 @@
+# `logs.route.js`
+
+- **Path**: `src/routes/admin/logs.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/admin.schema.js`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- GET /
+
+## Raw Content
+
+```js
+import express from 'express';
+import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminLogsEnvelope, adminLogsQuerySchema } from '../../schemas/admin.schema.js';
+
+const router = express.Router();
+
+// Apply admin gate middleware
+router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminLogsEnvelope));
+
+// GET /admin/logs - Get log files
+router.get('/', 
+  validate(adminLogsQuerySchema, 'query'),
+  async (req, res, next) => {
+  try {
+    const { level, limit, correlationId } = req.query;
+    
+    // Build query parameters object
+    const queryParams = {};
+    if (level !== undefined) queryParams.level = level;
+    if (limit !== undefined) queryParams.limit = limit;
+    if (correlationId !== undefined) queryParams.correlationId = correlationId;
+
+    // Validate query parameters
+    const valid
+...
+```

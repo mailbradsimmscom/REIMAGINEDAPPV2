@@ -1,0 +1,61 @@
+# `snapshots.route.js`
+
+- **Path**: `src/routes/admin/snapshots.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../utils/snapshots.service.js`
+  - `../../utils/logger.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/envelope.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /admin/snapshots
+- GET /admin/snapshots/:snapshotId
+- POST /admin/snapshots/rollback
+- DELETE /admin/snapshots/:snapshotId
+- POST /admin/snapshots/cleanup
+
+## Raw Content
+
+```js
+/**
+ * Admin snapshots route - Rollback functionality and snapshot management
+ * Provides endpoints for managing snapshots and rolling back changes
+ */
+
+import { Router } from 'express';
+import { 
+  listSnapshots, 
+  getSnapshotInfo, 
+  deleteSnapshot, 
+  cleanupSnapshots,
+  rollbackTo 
+} from '../../utils/snapshots.service.js';
+import { logger } from '../../utils/logger.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
+
+const router = Router();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
+
+/**
+ * GET /admin/snapshots
+ * List all available snapshots
+ */
+router.get('/admin/snapshots', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    const { limit = 50, offset = 0 } = req.query;
+    
+    requestLogger.info('Listing snapshots', { limit, offset });
+    
+    const snapshots = await listSnapshots();
+    
+    // Apply pag
+...
+```

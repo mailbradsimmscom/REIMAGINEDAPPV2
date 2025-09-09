@@ -1,0 +1,49 @@
+# `serviceGuards.js`
+
+- **Path**: `src/middleware/serviceGuards.js`
+- **Exports**: None
+- **Imports**:
+  - `../services/guards/index.js`
+  - `../constants/errorCodes.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/middleware/serviceGuards.js
+import { isSupabaseConfigured, isOpenAIConfigured, isPineconeConfigured, isSidecarConfigured } from '../services/guards/index.js';
+import { ERR } from '../constants/errorCodes.js';
+
+// Guard middleware for Supabase-dependent routes
+export function requireSupabase() {
+  return (req, res, next) => {
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = ERR.SUPABASE_DISABLED;
+      return next(error);
+    }
+    next();
+  };
+}
+
+// Guard middleware for OpenAI-dependent routes
+export function requireOpenAI() {
+  return (req, res, next) => {
+    if (!isOpenAIConfigured()) {
+      const error = new Error('OpenAI not configured');
+      error.code = ERR.OPENAI_DISABLED;
+      return next(error);
+    }
+    next();
+  };
+}
+
+// Guard middleware for Pinecone-dependent routes
+export function requirePinecone() {
+  return (req, res, next) => {
+    if (!isPineconeConfigured()) {
+      const error = new Error('Pi
+...
+```

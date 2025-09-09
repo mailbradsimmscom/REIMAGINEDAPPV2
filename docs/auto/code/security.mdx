@@ -1,0 +1,45 @@
+# `security.js`
+
+- **Path**: `src/middleware/security.js`
+- **Exports**: None
+- **Imports**:
+  - `../utils/logger.js`
+
+## Express Routes
+- GET undefined
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+
+/**
+ * Security middleware - adds essential security headers
+ * Equivalent to Helmet.js but lightweight and customized
+ */
+export function securityHeaders(req, res, next) {
+  const requestLogger = req.requestLogger || logger.createRequestLogger();
+  
+  // Content Security Policy - restrict resource loading
+  res.setHeader('Content-Security-Policy', 
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self'; " +
+    "connect-src 'self'; " +
+    "frame-ancestors 'none';"
+  );
+  
+  // X-Frame-Options - prevent clickjacking
+  res.setHeader('X-Frame-Options', 'DENY');
+  
+  // X-Content-Type-Options - prevent MIME type sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  
+  // X-XSS-Protection - enable XSS protection
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  
+  // Referrer Policy - control referrer informa
+...
+```

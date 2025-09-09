@@ -1,0 +1,53 @@
+# `metrics.route.js`
+
+- **Path**: `src/routes/admin/metrics.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/admin.schema.js`
+  - `../../repositories/supabaseClient.js`
+  - `../../middleware/requestLogging.js`
+  - `../../utils/logger.js`
+  - `../../utils/metrics.js`
+  - `zod`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- GET /
+- GET /fuzzy
+
+## Raw Content
+
+```js
+import express from 'express';
+import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminMetricsEnvelope } from '../../schemas/admin.schema.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
+import { getRequestMetrics } from '../../middleware/requestLogging.js';
+import { logger } from '../../utils/logger.js';
+import { metrics as metricsUtils } from '../../utils/metrics.js';
+import { z } from 'zod';
+
+const router = express.Router();
+
+// Apply admin gate middleware
+router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminMetricsEnvelope));
+
+// Admin metrics query schema
+const adminMetricsQuerySchema = z.object({
+  timeframe: z.enum(['5m', '15m', '1h', '24h']).default('15m'),
+  limit: z.coerce.number().int().min(1).max(1000).default(100)
+}).passthrough();
+
+// GET /adm
+...
+```

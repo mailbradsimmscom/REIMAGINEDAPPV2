@@ -1,0 +1,59 @@
+# `dip.route.js`
+
+- **Path**: `src/routes/admin/dip.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../services/dip.generation.service.js`
+  - `../../utils/logger.js`
+  - `zod`
+  - `express`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/envelope.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /_probe
+- POST /generate/:docId
+- GET /status/:docId
+- GET /download/:docId
+- GET /suggestions/download/:docId
+
+## Raw Content
+
+```js
+/**
+ * Admin DIP generation route
+ * Provides endpoint to generate DIP and Suggestions for processed documents
+ */
+
+import { Router } from 'express';
+import { generateDIPAndSuggestions } from '../../services/dip.generation.service.js';
+import { logger } from '../../utils/logger.js';
+import { z } from 'zod';
+import express from 'express';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
+
+const router = Router();
+
+// Add validateResponse middleware
+router.use(validateResponse(EnvelopeSchema));
+
+// Probe: always 200 to verify mount path
+router.get('/_probe', (req, res) => {
+  res.json({ ok: true, where: 'dip' });
+});
+
+// Zod schemas
+const DocIdParam = z.object({ docId: z.string().min(8) });
+
+/**
+ * POST /admin/dip/generate/:docId
+ * Generate DIP and Suggestions for a document
+ */
+router.post('/generate/:docId', express.json({ limit: '1mb' }), async (req, res, next) => {
+  try {
+    const { docId } =
+...
+```

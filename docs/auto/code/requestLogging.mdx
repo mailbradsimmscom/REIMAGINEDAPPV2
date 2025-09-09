@@ -1,0 +1,53 @@
+# `requestLogging.js`
+
+- **Path**: `src/middleware/requestLogging.js`
+- **Exports**: None
+- **Imports**:
+  - `../utils/logger.js`
+  - `uuid`
+
+## Express Routes
+- DELETE undefined
+- GET User-Agent
+- GET User-Agent
+
+## Raw Content
+
+```js
+import { logger } from '../utils/logger.js';
+import { v4 as uuidv4 } from 'uuid';
+
+const requestLogger = logger.createRequestLogger();
+
+// In-memory store for request metrics (in production, this would be Redis or a database)
+const requestMetrics = {
+  requests: new Map(),
+  errors: [],
+  lastCleanup: Date.now()
+};
+
+// Cleanup old data every 5 minutes
+const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const DATA_RETENTION = 24 * 60 * 60 * 1000; // 24 hours
+
+function cleanupOldData() {
+  const now = Date.now();
+  if (now - requestMetrics.lastCleanup < CLEANUP_INTERVAL) return;
+  
+  requestMetrics.lastCleanup = now;
+  
+  // Remove old requests
+  for (const [requestId, data] of requestMetrics.requests) {
+    if (now - data.timestamp > DATA_RETENTION) {
+      requestMetrics.requests.delete(requestId);
+    }
+  }
+  
+  // Remove old errors
+  requestMetrics.errors = requestMetrics.errors.filter(
+    error => now - error.timestamp < DATA_RETENTION
+  );
+  
+  requestLogger.info('Cleaned up old 
+...
+```

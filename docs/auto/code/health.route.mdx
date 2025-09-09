@@ -1,0 +1,52 @@
+# `health.route.js`
+
+- **Path**: `src/routes/admin/health.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/admin.schema.js`
+  - `../../schemas/health.schema.js`
+  - `../../config/env.js`
+  - `../../repositories/supabaseClient.js`
+  - `../../utils/logger.js`
+
+## Express Routes
+- USE undefined
+- GET /
+- GET /connectivity
+
+## Raw Content
+
+```js
+import express from 'express';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminHealthEnvelope } from '../../schemas/admin.schema.js';
+import { EmptyQuery } from '../../schemas/health.schema.js';
+import { ENV } from '../../config/env.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
+import { logger } from '../../utils/logger.js';
+
+const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminHealthEnvelope));
+
+// GET /admin/health - Get system health status
+router.get('/', 
+  validate(EmptyQuery, 'query'),
+  (req, res, next) => {
+  try {
+    const envelope = { 
+      success: true, 
+      data: { 
+        status: 'ok', 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        environment: ENV.NODE_ENV || 'development',
+        version: 
+...
+```

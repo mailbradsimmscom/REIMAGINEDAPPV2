@@ -1,0 +1,52 @@
+# `chat.repository.js`
+
+- **Path**: `src/repositories/chat.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `./supabaseClient.js`
+  - `../services/guards/index.js`
+
+## Express Routes
+- DELETE undefined
+- DELETE undefined
+- DELETE undefined
+
+## Raw Content
+
+```js
+import { getSupabaseClient } from './supabaseClient.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
+
+const SESSIONS_TABLE = 'chat_sessions';
+const THREADS_TABLE = 'chat_threads';
+const MESSAGES_TABLE = 'chat_messages';
+
+// Helper function to check if Supabase is available
+async function checkSupabaseAvailability() {
+  if (!isSupabaseConfigured()) {
+    const error = new Error('Supabase not configured');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    const error = new Error('Supabase client not available');
+    error.code = 'SUPABASE_DISABLED';
+    throw error;
+  }
+  
+  return supabase;
+}
+
+export async function createChatSession({ name, description, metadata = {} } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    const { data, error } = await supabase
+      .from(SESSIONS_TABLE)
+      .insert({
+        name: name || 'New Chat',
+        description:
+...
+```

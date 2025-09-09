@@ -1,0 +1,45 @@
+# `printRoutes.js`
+
+- **Path**: `src/debug/printRoutes.js`
+- **Exports**: None
+- **Imports**:
+  - `node:path`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// Node 20, ESM
+import path from 'node:path';
+
+function collectRoutes(stack, base = '') {
+  const out = [];
+  for (const layer of stack) {
+    if (layer?.route?.path) {
+      const methods = Object.keys(layer.route.methods)
+        .filter(Boolean)
+        .map(m => m.toUpperCase())
+        .sort();
+      out.push({
+        path: path.posix.join(base || '/', layer.route.path),
+        methods,
+      });
+    } else if (layer?.name === 'router' && layer?.handle?.stack) {
+      // Express 5 stores the prefix in layer.regexp; easiest is to rely on layer.path if present
+      const prefix = layer.path ?? '';
+      out.push(...collectRoutes(layer.handle.stack, path.posix.join(base || '/', prefix || '')));
+    }
+  }
+  return out;
+}
+
+export function printRoutes(appOrRouter, logger = console) {
+  try {
+    const stack = appOrRouter?._router?.stack ?? appOrRouter?.stack ?? [];
+    const routes = collectRoutes(stack);
+    logger.info?.('--- ROUTE SNAPSHOT START ---');
+    for (const r of routes) 
+...
+```

@@ -1,0 +1,49 @@
+# `history.route.js`
+
+- **Path**: `src/routes/chat/history.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../services/enhanced-chat.service.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/chat.schema.js`
+  - `../../schemas/chat.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /
+
+## Raw Content
+
+```js
+import express from 'express';
+import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { ChatHistoryEnvelope } from '../../schemas/chat.schema.js';
+import { 
+  chatHistoryQuerySchema
+} from '../../schemas/chat.schema.js';
+
+const router = express.Router();
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(ChatHistoryEnvelope));
+
+// GET /chat/enhanced/history - Get chat history
+router.get('/', 
+  validate(chatHistoryQuerySchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const { threadId, limit } = req.query;
+      
+      const messages = await enhancedChatService.getChatHistory(threadId, { limit });
+      
+      // Transform the data to match the schema
+      const transformedMessages = messages.map(message => ({
+        id: message.id,
+        content: message.content,
+        rol
+...
+```

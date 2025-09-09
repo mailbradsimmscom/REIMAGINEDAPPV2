@@ -1,0 +1,47 @@
+# `loadChatThread.js`
+
+- **Path**: `src/public/chat/loadChatThread.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/public/chat/loadChatThread.js
+// Loads chat history for a session and renders it using the existing UI functions
+
+/**
+ * Load chat thread history for a session
+ * @param {string} sessionId - The session ID to load
+ */
+export async function loadChatThread(sessionId) {
+  try {
+    console.log('Loading chat thread for session:', sessionId);
+    
+    const response = await fetch(`/chat/enhanced/thread/${sessionId}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to load chat thread: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data.success) {
+      throw new Error(data.error?.message || 'Failed to load chat thread');
+    }
+    
+    // Clear existing messages
+    const messagesContainer = document.getElementById('messages');
+    if (messagesContainer) {
+      messagesContainer.innerHTML = '';
+    }
+    
+    // Load all threads and their messages
+    if (data.data.threads && data.data.threads.length > 0) {
+      for (const thread 
+...
+```

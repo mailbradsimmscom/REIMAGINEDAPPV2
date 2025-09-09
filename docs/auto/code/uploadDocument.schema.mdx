@@ -1,0 +1,45 @@
+# `uploadDocument.schema.js`
+
+- **Path**: `src/schemas/uploadDocument.schema.js`
+- **Exports**: uploadDocumentSchema, documentUploadRequestSchema, systemMetadataSchema, documentCreationSchema
+- **Imports**:
+  - `zod`
+  - `./id.schema.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+import { HashOrUuid } from './id.schema.js';
+
+/**
+ * Schema for validating normalized document upload metadata
+ * Ensures manufacturer_norm and model_norm are provided and non-empty
+ */
+export const uploadDocumentSchema = z.object({
+  manufacturer_norm: z.string().min(1, 'Manufacturer normalized name is required'),
+  model_norm: z.string().min(1, 'Model normalized name is required'),
+});
+
+/**
+ * Schema for validating the complete document upload request
+ * Extends the base schema with optional fields for backward compatibility
+ */
+export const documentUploadRequestSchema = uploadDocumentSchema.extend({
+  revisionDate: z.string().optional(),
+  language: z.string().optional().default('en'),
+  brandFamily: z.string().optional(),
+  sourceUrl: z.string().optional(),
+}).passthrough();
+
+/**
+ * Schema for validating system metadata lookup response
+ * Used to ensure system lookup returns required fields
+ */
+export const systemMetadataSchema = z.object({
+  asset_uid: Has
+...
+```

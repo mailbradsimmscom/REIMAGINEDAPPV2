@@ -1,0 +1,50 @@
+# `systems.js`
+
+- **Path**: `src/public/js/admin/sections/systems.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// /js/admin/sections/systems.js
+// Loads system data into the systems.html table
+// Independent module - initializes itself when DOM is ready
+
+export function init() {
+  // This function is called by the boot system
+  initializeSystemsSection();
+}
+
+function initializeSystemsSection() {
+  const tableBody = document.getElementById('systems-table-body');
+
+  if (!tableBody) {
+    console.warn('systems.js: #systems-table-body not found - section may not be loaded yet');
+    return;
+  }
+
+  loadSystems();
+}
+
+async function loadSystems() {
+  const tableBody = document.getElementById('systems-table-body');
+  if (!tableBody) return;
+
+  try {
+    const res = await window.adminFetch('/admin/api/systems');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!data.success || !Array.isArray(data.data)) {
+      throw new Error('Invalid systems response');
+    }
+
+    tableBody.innerHTML = data.data.map(system => {
+      const uid = escapeHtml(system.uid 
+...
+```

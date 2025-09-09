@@ -1,0 +1,45 @@
+# `summarization.service.js`
+
+- **Path**: `src/services/summarization.service.js`
+- **Exports**: None
+- **Imports**:
+  - `./llm.service.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/summarization.service.js
+// Thread summarization service extracted from enhanced-chat.service.js
+
+import { summarizeConversation, generateChatName, generateAssetSummary } from './llm.service.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * Summarize a conversation thread
+ * @param {Array} messages - Conversation messages
+ * @param {Array} systemsContext - Systems context
+ * @returns {Promise<string>} - Generated summary
+ */
+export async function summarizeThread(messages, systemsContext = []) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    requestLogger.info('📝 [SUMMARIZATION] Starting thread summarization', { 
+      messagesCount: messages.length,
+      systemsContextCount: systemsContext.length
+    });
+    
+    const summary = await summarizeConversation(messages, systemsContext);
+    
+    requestLogger.info('✅ [SUMMARIZATION] Thread summarized', { 
+      summaryLength: summary.length
+    });
+    
+    return summary;
+  } catch (error) {
+...
+```

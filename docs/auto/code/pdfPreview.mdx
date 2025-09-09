@@ -1,0 +1,45 @@
+# `pdfPreview.js`
+
+- **Path**: `src/ingestion/helpers/pdfPreview.js`
+- **Exports**: None
+- **Imports**:
+  - `../../repositories/supabaseClient.js`
+  - `../../config/env.js`
+  - `../../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
+import { getEnv } from '../../config/env.js';
+import { logger } from '../../utils/logger.js';
+
+const env = getEnv();
+
+/**
+ * Extract text preview from multiple sources in priority order:
+ * 1. Supabase Storage: documents/manuals/<docId>/text/preview.txt or text/page-*.txt
+ * 2. Postgres table: document_chunks (fallback)
+ * 3. Log warning if neither available
+ */
+export async function extractTextPreviewFromPdf(docId, options = {}) {
+  const { maxPages = 6 } = options;
+  const log = logger.createRequestLogger();
+  
+  try {
+    log.info('pdfPreview.extract.start', { docId, maxPages });
+    
+    // Try Supabase Storage first (preferred)
+    const storageText = await tryStorageExtraction(docId, maxPages, log);
+    if (storageText) {
+      log.info('pdfPreview.extract.storage_success', { docId, pages: storageText.length });
+      return storageText;
+    }
+    
+    // Fallback to Postgres table
+    const dbText = await 
+...
+```

@@ -1,0 +1,54 @@
+# `boot.js`
+
+- **Path**: `src/public/js/admin/boot.js`
+- **Exports**: None
+- **Imports**:
+  - `/public/js/include-loader.js`
+  - `/public/js/admin/router.js`
+  - `/public/js/admin/shared-utils.js`
+  - `/public/js/admin/sections/dashboard.js`
+  - `/public/js/admin/sections/doc-upload.js`
+  - `/public/js/admin/sections/dip.js`
+  - `/public/js/admin/sections/jobs.js`
+  - `/public/js/admin/sections/chunks.js`
+  - `/public/js/admin/sections/metrics.js`
+  - `/public/js/admin/sections/health.js`
+  - `/public/js/admin/sections/systems.js`
+  - `/public/js/admin/sections/suggestions.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Admin boot script
+ * Initializes the admin interface with includes and routing
+ */
+import { hydrateIncludes } from "/public/js/include-loader.js";
+import { initRouter } from "/public/js/admin/router.js";
+import "/public/js/admin/shared-utils.js";
+
+// Section controllers (optional)
+import * as dashboard from "/public/js/admin/sections/dashboard.js";
+import * as docUpload from "/public/js/admin/sections/doc-upload.js";
+import * as dip from "/public/js/admin/sections/dip.js";
+import * as jobs from "/public/js/admin/sections/jobs.js";
+import * as chunks from "/public/js/admin/sections/chunks.js";
+import * as metrics from "/public/js/admin/sections/metrics.js";
+import * as health from "/public/js/admin/sections/health.js";
+import * as systems from "/public/js/admin/sections/systems.js";
+import * as suggestions from "/public/js/admin/sections/suggestions.js";
+
+const controllers = { 
+    dashboard,
+    docUpload,
+    dip, 
+    jobs, 
+    chunks, 
+    metrics, 
+    health, 
+    systems,
+...
+```

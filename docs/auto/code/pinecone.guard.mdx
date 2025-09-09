@@ -1,0 +1,26 @@
+# `pinecone.guard.js`
+
+- **Path**: `src/services/guards/pinecone.guard.js`
+- **Exports**: None
+- **Imports**:
+  - `../../config/env.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/guards/pinecone.guard.js
+import { ENV } from '../../config/env.js';
+
+export function isPineconeConfigured() {
+  // For testing, check process.env directly if getEnv is memoized
+  if (ENV.NODE_ENV === 'test') {
+    return !!ENV.PYTHON_SIDECAR_URL;
+  }
+  
+  return !!ENV.PYTHON_SIDECAR_URL;
+}
+
+```

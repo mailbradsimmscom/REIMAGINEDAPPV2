@@ -1,0 +1,46 @@
+# `shared-utils.js`
+
+- **Path**: `src/public/js/admin/shared-utils.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Shared utilities and global functions for the admin interface
+ * These functions are referenced in HTML and need to be available globally
+ */
+
+// Results Modal Functions
+window.closeResultsModal = function() {
+    const modal = document.getElementById('results-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
+
+window.switchResultsTab = function(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.results-content .tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.results-tabs .tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const targetTab = document.getElementById(`${tabName}-tab`);
+    const targetBtn = document.querySelector(`[onclick="switchResultsTab('${tabName}')"]`);
+    
+    if (targetTab) {
+        targetTab.classList.remove('hid
+...
+```

@@ -1,0 +1,46 @@
+# `pinecone.service.js`
+
+- **Path**: `src/services/pinecone.service.js`
+- **Exports**: default
+- **Imports**:
+  - `../repositories/pinecone.repository.js`
+  - `../utils/logger.js`
+
+## Express Routes
+- GET undefined
+
+## Raw Content
+
+```js
+import pineconeRepository from '../repositories/pinecone.repository.js';
+import { logger } from '../utils/logger.js';
+
+class PineconeService {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  // Search documents with intelligent query processing
+  async searchDocuments(userQuery, context = {}) {
+    try {
+      this.requestLogger.info('Starting document search', { 
+        query: userQuery.substring(0, 100),
+        context: Object.keys(context)
+      });
+
+      // Build enhanced query with context
+      const enhancedQuery = await this.buildEnhancedQuery(userQuery, context);
+      
+      // Search vectors
+      const searchResults = await pineconeRepository.searchVectors(enhancedQuery, {
+        topK: 20,
+        includeMetadata: true,
+        includeValues: false
+      });
+
+      // Process and rank results
+      const processedResults = await this.processSearchResults(searchResults, userQuery, context);
+
+      this.requestLogger.info('Document search c
+...
+```

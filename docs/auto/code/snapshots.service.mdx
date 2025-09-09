@@ -1,0 +1,47 @@
+# `snapshots.service.js`
+
+- **Path**: `src/utils/snapshots.service.js`
+- **Exports**: None
+- **Imports**:
+  - `node:fs/promises`
+  - `node:path`
+  - `./logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Snapshot service for safe configuration file management
+ * Provides version control and rollback capabilities for JSON config files
+ */
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { logger } from './logger.js';
+
+// Snapshot storage directory
+const SNAP_DIR = path.resolve(process.cwd(), '.data-snapshots');
+
+/**
+ * Create a snapshot of specified files
+ * @param {string[]} files - Array of file paths to snapshot (relative to project root)
+ * @returns {Promise<Object>} Snapshot result with ID and directory
+ */
+export async function createSnapshot(files) {
+  const requestLogger = logger.createRequestLogger();
+  
+  if (!Array.isArray(files) || files.length === 0) {
+    throw new Error('Files array is required and cannot be empty');
+  }
+  
+  try {
+    // Create timestamp-based snapshot ID
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const snapshotId = `snap-${timestamp}`;
+    const snapshotDir = path.join(SNAP_DIR, snapshotId);
+
+...
+```

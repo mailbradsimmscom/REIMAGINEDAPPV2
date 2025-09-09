@@ -1,0 +1,43 @@
+# `playbooks.js`
+
+- **Path**: `src/public/js/playbooks.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// Playbooks Admin UI JavaScript
+// Handles CRUD operations for playbooks and generation
+
+let currentPlaybooks = [];
+let currentPlaybook = null;
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadPlaybooks();
+    setupEventHandlers();
+});
+
+// Load statistics
+async function loadStats() {
+    try {
+        const response = await fetch('/admin/api/playbooks/stats');
+        if (!response.ok) throw new Error('Failed to load stats');
+        
+        const result = await response.json();
+        if (result.success) {
+            const stats = result.data;
+            document.getElementById('totalPlaybooks').textContent = stats.totalPlaybooks;
+            document.getElementById('totalSteps').textContent = stats.totalSteps;
+            document.getElementById('systemCount').textContent = Object.keys(stats.bySystem).length;
+            
+            // Populate system filter dropdown
+            const systemSelect = document.getElementB
+...
+```

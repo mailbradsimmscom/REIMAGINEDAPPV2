@@ -1,0 +1,47 @@
+# `chat-orchestrator.service.js`
+
+- **Path**: `src/services/chat-orchestrator.service.js`
+- **Exports**: None
+- **Imports**:
+  - `../repositories/systems.repository.js`
+  - `./llm.service.js`
+  - `../repositories/chat.repository.js`
+  - `../utils/logger.js`
+  - `./guards/index.js`
+  - `./intent-router.service.js`
+  - `./fact-first.service.js`
+  - `./pinecone-retrieval.service.js`
+  - `./assistant-response.service.js`
+  - `./summarization.service.js`
+  - `../utils/context-utils.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/chat-orchestrator.service.js
+// Main chat orchestrator service that coordinates all chat operations
+
+import { searchSystems } from '../repositories/systems.repository.js';
+import { enhanceQuery } from './llm.service.js';
+import chatRepository from '../repositories/chat.repository.js';
+import { logger } from '../utils/logger.js';
+import { isSupabaseConfigured, isOpenAIConfigured, isPineconeConfigured } from './guards/index.js';
+
+// Import our new services
+import { routeQuery } from './intent-router.service.js';
+import { getFactFirstResponse, shouldAttemptFactFirst } from './fact-first.service.js';
+import { retrieveWithSpecBias } from './pinecone-retrieval.service.js';
+import { generateEnhancedAssistantResponse } from './assistant-response.service.js';
+import { summarizeThread, generateThreadName, shouldSummarizeThread } from './summarization.service.js';
+
+// Import utilities
+import { 
+  isFollowUpQuestion, 
+  containsAmbiguousPronoun, 
+  extractEquipmentTerms,
+  hasExist
+...
+```

@@ -1,0 +1,47 @@
+# `dashboard.js`
+
+- **Path**: `src/public/js/admin/sections/dashboard.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Dashboard section controller
+ * Handles system health, database status, and logs
+ */
+export function init({ router, adminState }) {
+    // Dashboard controller initialized - using logger would require server-side context
+    // console.log('Dashboard controller initialized');
+    
+    // Load initial data
+    loadHealthMetrics();
+    loadDatabaseMetrics();
+    loadVectorMetrics();
+    loadPerformanceMetrics();
+    refreshLogs();
+    
+    // Set up auto-refresh
+    adminState.refreshInterval = setInterval(() => {
+        loadHealthMetrics();
+        loadDatabaseMetrics();
+        loadVectorMetrics();
+        loadPerformanceMetrics();
+    }, 30000); // Refresh every 30 seconds
+}
+
+async function loadHealthMetrics() {
+    try {
+        const response = await window.adminFetch('/admin/api/health');
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('uptime').textContent = data.data.uptime || 'Unknown';
+            docu
+...
+```

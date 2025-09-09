@@ -1,0 +1,48 @@
+# `intent-router.js`
+
+- **Path**: `src/public/js/intent-router.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// Intent Router Admin UI JavaScript
+// Handles CRUD operations for intent routes
+
+let currentRoutes = [];
+let editingRouteId = null;
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadRoutes();
+    setupFormHandlers();
+});
+
+// Load statistics
+async function loadStats() {
+    try {
+        const response = await fetch('/admin/intent-router/stats');
+        if (!response.ok) throw new Error('Failed to load stats');
+        
+        const result = await response.json();
+        if (result.success) {
+            const stats = result.data;
+            document.getElementById('totalRoutes').textContent = stats.total;
+            document.getElementById('intentTypes').textContent = Object.keys(stats.byIntent).length;
+            document.getElementById('systemRoutes').textContent = stats.byCreator.system || 0;
+        }
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
+
+// Load all routes
+async functio
+...
+```

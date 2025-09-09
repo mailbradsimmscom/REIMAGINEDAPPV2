@@ -1,0 +1,42 @@
+# `context-utils.js`
+
+- **Path**: `src/utils/context-utils.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/utils/context-utils.js
+// Context and follow-up detection utilities extracted from enhanced-chat.service.js
+
+/**
+ * Check if a query is a follow-up question that needs context
+ * @param {string} query - The user query
+ * @returns {boolean} - True if it's a follow-up question
+ */
+export function isFollowUpQuestion(query) {
+  const q = query.trim().toLowerCase();
+  const patterns = [
+    /^(what|which)\s+(pressure|voltage|amperage|wattage|capacity|size|dimensions|weight|temperature|speed|flow|rate)\b/,
+    /^(how\s+(much|many|long|fast|hot|cold|big|small|heavy|light))\b/,
+    /^how\s+(do|to)\b/,
+    /^(can|could|would|should|will)\s+(i|we|you|it|this|that)\b/,
+    /^(does|do|is|are|was|were)\s+(it|this|that|there)\b/,
+    /^(how|what|does|do|is|are|can)\b.*\b(it|this|that)\b/
+  ];
+  return patterns.some(rx => rx.test(q));
+}
+
+/**
+ * Check if query contains ambiguous pronouns
+ * @param {string} query - The user query
+ * @returns {boolean} - True if contains ambiguous pronouns
+ */
+ex
+...
+```

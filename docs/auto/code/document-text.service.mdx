@@ -1,0 +1,52 @@
+# `document-text.service.js`
+
+- **Path**: `src/services/document-text.service.js`
+- **Exports**: None
+- **Imports**:
+  - `../utils/logger.js`
+  - `../repositories/document.repository.js`
+  - `../repositories/supabaseClient.js`
+
+## Express Routes
+- GET undefined
+- DELETE undefined
+- DELETE undefined
+
+## Raw Content
+
+```js
+/**
+ * Document Text Extraction Service
+ * Multi-source text extractor: DB chunks → Storage text → graceful fallback
+ * Includes caching and performance monitoring
+ */
+
+import { logger } from '../utils/logger.js';
+import documentRepository from '../repositories/document.repository.js';
+import { getSupabaseStorageClient } from '../repositories/supabaseClient.js';
+
+// Simple in-memory cache with TTL
+const textCache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const MAX_CACHE_SIZE = 100; // Max 100 documents in cache
+
+// Performance metrics
+const metrics = {
+  totalRequests: 0,
+  cacheHits: 0,
+  dbHits: 0,
+  storageHits: 0,
+  failures: 0,
+  avgResponseTime: 0
+};
+
+/**
+ * Extract text preview from document using multiple sources
+ * Priority: Cache → DB chunks → Storage → Empty fallback
+ * 
+ * @param {string} docId - Document ID
+ * @param {Object} options - Extraction options
+ * @param {number} options.maxPages - Maximum pages to extract (default: 6)
+ * @param {boolean} options
+...
+```

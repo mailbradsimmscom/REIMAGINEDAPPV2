@@ -1,0 +1,47 @@
+# `document.service.js`
+
+- **Path**: `src/services/document.service.js`
+- **Exports**: default
+- **Imports**:
+  - `node:crypto`
+  - `node:fs`
+  - `node:path`
+  - `../repositories/supabaseClient.js`
+  - `../repositories/document.repository.js`
+  - `../repositories/systems.repository.js`
+  - `../utils/logger.js`
+  - `../config/env.js`
+  - `../services/guards/index.js`
+  - `../schemas/uploadDocument.schema.js`
+  - `./dip.service.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { createHash } from 'node:crypto';
+import { promises as fs } from 'node:fs';
+import { join } from 'node:path';
+import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/supabaseClient.js';
+import documentRepository from '../repositories/document.repository.js';
+import { lookupSystemByManufacturerAndModel } from '../repositories/systems.repository.js';
+import { logger } from '../utils/logger.js';
+import { getEnv } from '../config/env.js';
+import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
+import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
+import dipService from './dip.service.js';
+
+class DocumentService {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  // Helper method to check if Supabase is available
+  async checkSupabaseAvailability() {
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED
+...
+```

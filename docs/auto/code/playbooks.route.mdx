@@ -1,0 +1,52 @@
+# `playbooks.route.js`
+
+- **Path**: `src/routes/admin/playbooks.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `zod`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../repositories/playbook.repository.js`
+  - `../../utils/logger.js`
+
+## Express Routes
+- GET /
+- GET /stats
+- GET /:playbookId
+- POST /
+- PUT /:playbookId
+- DELETE /:playbookId
+- POST /generate
+
+## Raw Content
+
+```js
+import express from 'express';
+import { z } from 'zod';
+import { adminOnly } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import playbookRepository from '../../repositories/playbook.repository.js';
+import { logger } from '../../utils/logger.js';
+
+const router = express.Router();
+const requestLogger = logger.createRequestLogger();
+
+// Validation schemas
+const createPlaybookSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
+  system_norm: z.string().max(100, 'System name too long').optional(),
+  subsystem_norm: z.string().max(100, 'Subsystem name too long').optional(),
+  doc_id: z.string().uuid().optional(),
+  steps: z.array(z.object({
+    instruction: z.string().min(1, 'Instruction is required'),
+    source_hint_id: z.string().uuid().optional()
+  })).optional().default([])
+});
+
+const updatePlaybookSchema = createPlaybookSchema.partial();
+
+const playbookParamsSchema = z.object({
+  playbookId: z.str
+...
+```

@@ -1,0 +1,51 @@
+# `knowledge.repository.js`
+
+- **Path**: `src/repositories/knowledge.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `@supabase/supabase-js`
+  - `../config/env.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Knowledge Repository
+ * Handles fact-first retrieval from approved DIP suggestions
+ */
+
+import { logger } from '../utils/logger.js';
+import { createClient } from '@supabase/supabase-js';
+import { getEnv } from '../config/env.js';
+
+class KnowledgeRepository {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+    this.supabase = null;
+    this.initSupabase();
+  }
+
+  initSupabase() {
+    try {
+      const env = getEnv();
+      const supabaseUrl = env.SUPABASE_URL;
+      const supabaseKey = env.SUPABASE_ANON_KEY;
+      
+      if (supabaseUrl && supabaseKey) {
+        this.supabase = createClient(supabaseUrl, supabaseKey);
+        this.requestLogger.info('Supabase client initialized for knowledge repository');
+      } else {
+        this.requestLogger.warn('Supabase credentials not available for knowledge repository');
+      }
+    } catch (error) {
+      this.requestLogger.error('Failed to initialize Supabase client', { error: error.message });
+    }
+  }
+
+  asy
+...
+```

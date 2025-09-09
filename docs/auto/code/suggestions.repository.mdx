@@ -1,0 +1,52 @@
+# `suggestions.repository.js`
+
+- **Path**: `src/repositories/suggestions.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+  - `./supabaseClient.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Suggestions Repository
+ * Handles database operations for DIP suggestion approval
+ */
+
+import { logger } from '../utils/logger.js';
+import { getSupabaseClient } from './supabaseClient.js';
+
+class SuggestionsRepository {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  async checkSupabaseAvailability() {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Database service unavailable');
+    }
+    return supabase;
+  }
+
+  /**
+   * Insert approved spec suggestion
+   */
+  async insertSpecSuggestion(doc_id, suggestion, approved_by = 'admin') {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('spec_suggestions')
+        .insert({
+          doc_id,
+          hint_type: suggestion.hint_type || suggestion.key,
+          value: suggestion.value,
+          unit: suggestion.unit,
+          page: suggestion.page,
+          context: suggestion.
+...
+```

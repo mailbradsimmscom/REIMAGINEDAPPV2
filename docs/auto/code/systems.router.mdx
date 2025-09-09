@@ -1,0 +1,53 @@
+# `systems.router.js`
+
+- **Path**: `src/routes/systems.router.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../services/systems.service.js`
+  - `../middleware/validate.js`
+  - `../middleware/validateResponse.js`
+  - `../middleware/serviceGuards.js`
+  - `../schemas/systems.schema.js`
+
+## Express Routes
+- USE undefined
+- GET /search
+- GET /
+- GET /:assetUid
+
+## Raw Content
+
+```js
+import express from 'express';
+import { listSystemsSvc, getSystemSvc, searchSystemsSvc } from '../services/systems.service.js';
+import { validate } from '../middleware/validate.js';
+import { validateResponse } from '../middleware/validateResponse.js';
+import { requireSupabase } from '../middleware/serviceGuards.js';
+import { 
+  SystemsListEnvelope,
+  SystemsSearchEnvelope,
+  SystemsGetEnvelope,
+  systemsListQuerySchema, 
+  systemsListResponseSchema,
+  systemsSearchQuerySchema,
+  systemsSearchResponseSchema,
+  systemsGetPathSchema,
+  systemsGetResponseSchema,
+  UUIDParam
+} from '../schemas/systems.schema.js';
+
+const router = express.Router();
+
+// Apply service guards - systems routes require Supabase
+router.use(requireSupabase());
+
+// GET /systems/search - Search systems (MUST come before /:assetUid)
+router.get('/search', 
+  validate(systemsSearchQuerySchema, 'query'),
+  validateResponse(SystemsSearchEnvelope),
+  async (req, res, next) => {
+    try {
+      const { q, limit } = req.query
+...
+```

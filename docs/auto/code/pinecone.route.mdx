@@ -1,0 +1,50 @@
+# `pinecone.route.js`
+
+- **Path**: `src/routes/admin/pinecone.route.js`
+- **Exports**: default
+- **Imports**:
+  - `express`
+  - `../../utils/logger.js`
+  - `../../middleware/admin.js`
+  - `../../middleware/validate.js`
+  - `../../middleware/validateResponse.js`
+  - `../../schemas/admin.schema.js`
+  - `zod`
+
+## Express Routes
+- USE undefined
+- USE undefined
+- GET /
+
+## Raw Content
+
+```js
+import express from 'express';
+import { logger } from '../../utils/logger.js';
+import { adminGate } from '../../middleware/admin.js';
+import { validate } from '../../middleware/validate.js';
+import { validateResponse } from '../../middleware/validateResponse.js';
+import { AdminPineconeEnvelope } from '../../schemas/admin.schema.js';
+import { z } from 'zod';
+
+const router = express.Router();
+
+// Apply admin gate middleware
+router.use(adminGate);
+
+// Apply response validation to all routes in this file
+router.use(validateResponse(AdminPineconeEnvelope));
+
+// Admin pinecone query schema
+const adminPineconeQuerySchema = z.object({}).passthrough();
+
+// GET /admin/pinecone - Get Pinecone status
+router.get('/', 
+  validate(adminPineconeQuerySchema, 'query'),
+  async (req, res, next) => {
+  try {
+    const requestLogger = logger.createRequestLogger();
+    const { getEnv } = await import('../../config/env.js');
+    const { PYTHON_SIDECAR_URL = 'http://localhost:8000', PINECONE_INDEX, PINECONE_N
+...
+```

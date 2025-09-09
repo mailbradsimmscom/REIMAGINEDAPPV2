@@ -1,0 +1,51 @@
+# `suggestions.js`
+
+- **Path**: `src/public/js/admin/sections/suggestions.js`
+- **Exports**: None
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Suggestions section controller
+ * Handles AI-generated suggestions management and approval workflow
+ */
+
+export function init({ router, adminState }) {
+    initializeSuggestionsSection();
+}
+
+function initializeSuggestionsSection() {
+    const suggestionsContainer = document.getElementById('suggestions-container');
+    
+    if (!suggestionsContainer) {
+        console.warn('suggestions.js: #suggestions-container not found - section may not be loaded yet');
+        return;
+    }
+
+    loadSuggestions();
+    setupEventListeners();
+}
+
+async function loadSuggestions() {
+    try {
+        const response = await window.adminFetch('/admin/api/suggestions/pending');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        const suggestions = data.data?.suggestions || [];
+        
+        renderSuggestions(suggestions);
+        
+    } catch (error) {
+        co
+...
+```

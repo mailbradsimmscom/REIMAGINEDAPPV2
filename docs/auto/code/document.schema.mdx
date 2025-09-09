@@ -1,0 +1,50 @@
+# `document.schema.js`
+
+- **Path**: `src/schemas/document.schema.js`
+- **Exports**: documentIngestMetadataSchema, documentJobsQuerySchema, documentJobsResponseSchema, documentDocumentsQuerySchema, documentDocumentsResponseSchema, documentGetQuerySchema, documentGetResponseSchema, documentJobStatusPathSchema, documentJobStatusResponseSchema, JobStatusEnvelope, DocumentGetOneEnvelope, DocumentIngestEnvelope, DocumentJobsEnvelope, DocumentDocumentsEnvelope
+- **Imports**:
+  - `zod`
+  - `./envelope.schema.js`
+  - `./common.schema.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
+import { paginationQuerySchema } from './common.schema.js';
+
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
+// Document ingest metadata schema
+export const documentIngestMetadataSchema = z.object({
+  manufacturer: z.string().optional(),
+  model: z.string().optional(),
+  revisionDate: z.string().optional(),
+  language: z.string().optional(),
+  brandFamily: z.string().optional(),
+  sourceUrl: z.string().optional()
+}).passthrough();
+
+// Document jobs query parameters
+export const documentJobsQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+  offset: z.coerce.number().int().min(0).default(0)
+});
+
+// Document jobs success response schema
+const DocumentJobsOkSchema = z.object({
+  success: 
+...
+```

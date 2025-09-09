@@ -1,0 +1,47 @@
+# `intent-router.service.js`
+
+- **Path**: `src/services/intent-router.service.js`
+- **Exports**: None
+- **Imports**:
+  - `./llm.service.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// src/services/intent-router.service.js
+// Intent classification and routing service extracted from enhanced-chat.service.js
+
+import { classifyQueryIntent } from './llm.service.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * Classify user query intent and determine processing pipeline
+ * @param {string} userQuery - The user's query
+ * @returns {Promise<Object>} - Intent classification result
+ */
+export async function classifyUserIntent(userQuery) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    requestLogger.info('🔍 [INTENT ROUTER] Classifying query intent', { 
+      query: userQuery.substring(0, 100) 
+    });
+    
+    const intent = await classifyQueryIntent(userQuery);
+    
+    requestLogger.info('🎯 [INTENT ROUTER] Intent classified', { 
+      intent: intent.intent,
+      confidence: intent.confidence,
+      reasoning: intent.reasoning
+    });
+    
+    return {
+      intent: intent.intent,
+      confidence: intent.confidence,
+      reasoning: intent
+...
+```

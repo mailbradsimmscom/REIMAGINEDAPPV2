@@ -1,0 +1,45 @@
+# `fuzzyMatcher.js`
+
+- **Path**: `src/utils/fuzzyMatcher.js`
+- **Exports**: fuzzyMatcher
+- **Imports**:
+  - None
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Fuzzy matching utility for handling typos in maintenance tokens and units
+ * Uses Levenshtein distance algorithm for approximate string matching
+ */
+
+export class FuzzyMatcher {
+  constructor(options = {}) {
+    this.maxDistance = options.maxDistance || 2;
+    this.minLength = options.minLength || 3;
+    this.minConfidence = options.minConfidence || 0.6;
+  }
+
+  /**
+   * Calculate Levenshtein distance between two strings
+   * @param {string} a - First string
+   * @param {string} b - Second string
+   * @returns {number} Edit distance
+   */
+  levenshteinDistance(a, b) {
+    if (!a || !b) return Math.max(a?.length || 0, b?.length || 0);
+    
+    const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+    
+    // Initialize first row and column
+    for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+    
+    // Fill the matrix
+    for (let j = 1; j <= b.length; j++) {
+      for (let i = 1; i 
+...
+```

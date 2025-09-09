@@ -1,0 +1,49 @@
+# `configGuard.service.js`
+
+- **Path**: `src/startup/configGuard.service.js`
+- **Exports**: None
+- **Imports**:
+  - `node:fs/promises`
+  - `node:path`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Config guard service - ensure critical lexicon files exist
+ * Seeds defaults if missing to make startup resilient
+ */
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
+const MAINT_PATH = 'src/config/lexicons/maintenance.json';
+const UNITS_PATH = 'src/config/lexicons/units.json';
+
+/**
+ * Ensure critical lexicon files exist with sensible defaults
+ * @returns {Promise<void>}
+ */
+export async function ensureLexicons() {
+  await ensureFile(MAINT_PATH, defaultMaintenance());
+  await ensureFile(UNITS_PATH, defaultUnits());
+}
+
+/**
+ * Ensure a file exists, create with default content if missing
+ * @param {string} relPath - Relative file path
+ * @param {Object} seedObj - Default object to write if file doesn't exist
+ * @returns {Promise<void>}
+ */
+async function ensureFile(relPath, seedObj) {
+  const abs = path.resolve(process.cwd(), relPath);
+  
+  try {
+    await fs.access(abs);
+    // File exists - validate it's valid JSON
+    const txt = await fs.readFile(abs, 'utf-8')
+...
+```

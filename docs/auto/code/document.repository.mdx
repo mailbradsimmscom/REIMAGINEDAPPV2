@@ -1,0 +1,53 @@
+# `document.repository.js`
+
+- **Path**: `src/repositories/document.repository.js`
+- **Exports**: default
+- **Imports**:
+  - `./supabaseClient.js`
+  - `../utils/logger.js`
+  - `../services/guards/index.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { getSupabaseClient } from './supabaseClient.js';
+import { logger } from '../utils/logger.js';
+import { isSupabaseConfigured } from '../services/guards/index.js';
+
+class DocumentRepository {
+  constructor() {
+    this.requestLogger = logger.createRequestLogger();
+  }
+
+  // Helper method to check if Supabase is available
+  async checkSupabaseAvailability() {
+    if (!isSupabaseConfigured()) {
+      const error = new Error('Supabase not configured');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      const error = new Error('Supabase client not available');
+      error.code = 'SUPABASE_DISABLED';
+      throw error;
+    }
+    
+    return supabase;
+  }
+
+  // Job Management
+  async createJob(jobData) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .insert([jobData])
+        .select()
+        .
+...
+```

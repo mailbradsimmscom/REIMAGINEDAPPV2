@@ -1,0 +1,40 @@
+# `openai.client.js`
+
+- **Path**: `src/clients/openai.client.js`
+- **Exports**: default
+- **Imports**:
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+// Centralized OpenAI client for consistent API calls
+// Handles timeouts, retries, and configuration management
+
+import { logger } from '../utils/logger.js';
+
+const requestLogger = logger.createRequestLogger();
+
+/**
+ * Makes a structured JSON API call to OpenAI
+ * @param {Object} params - Configuration object
+ * @param {string} params.system - System prompt
+ * @param {string} params.user - User prompt
+ * @param {Object} params.schema - JSON schema for structured output
+ * @param {string} params.model - OpenAI model to use
+ * @param {number} params.maxOutputTokens - Maximum tokens to generate
+ * @param {number} params.seed - Seed for deterministic output
+ * @returns {Promise<Object>} - Parsed JSON response
+ */
+export async function oaiJson({ system, user, schema, model, maxOutputTokens, seed }) {
+  const { getEnv } = await import('../config/env.js');
+  const env = getEnv();
+  
+  const openaiApiKey = env.OPENAI_API_KEY;
+  const openaiModel = model || env.OPENAI_MODEL || 'gpt-4';
+  const
+...
+```

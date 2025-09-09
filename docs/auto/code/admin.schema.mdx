@@ -1,0 +1,56 @@
+# `admin.schema.js`
+
+- **Path**: `src/schemas/admin.schema.js`
+- **Exports**: adminHealthResponseSchema, adminManufacturersResponseSchema, adminModelsQuerySchema, adminModelsResponseSchema, adminLogsQuerySchema, adminLogsResponseSchema, adminSystemsResponseSchema, adminPineconeResponseSchema, adminJobsResponseSchema, adminDocumentsResponseSchema, AdminHealthEnvelope, AdminManufacturersEnvelope, AdminModelsEnvelope, AdminLogsEnvelope, AdminSystemsEnvelope, AdminPineconeEnvelope, AdminMetricsEnvelope
+- **Imports**:
+  - `zod`
+  - `./common.schema.js`
+  - `./envelope.schema.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+import { paginationQuerySchema } from './common.schema.js';
+
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
+// Admin health success response schema
+const AdminHealthOkSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    status: z.string(),
+    timestamp: z.string(),
+    uptime: z.number(),
+    memory: z.object({
+      rss: z.number(),
+      heapTotal: z.number(),
+      heapUsed: z.number(),
+      external: z.number()
+    }),
+    environment: z.string(),
+    version: z.string()
+  })
+});
+
+// Discriminated union for admin health endpoint
+export const adminHealthResponseSchema = z.union([AdminHealthOkSchema, ErrorEnvelopeSchema]);
+
+// Admin manufacturers success response schema
+const AdminManufacturersOkSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    total: z.number
+...
+```

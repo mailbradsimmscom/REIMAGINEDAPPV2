@@ -1,0 +1,51 @@
+# `pinecone.schema.js`
+
+- **Path**: `src/schemas/pinecone.schema.js`
+- **Exports**: pineconeStatsQuerySchema, pineconeStatsResponseSchema, pineconeSearchRequestSchema, pineconeSearchResponseSchema, pineconeDocumentChunksPathSchema, pineconeDocumentChunksResponseSchema, pineconeQueryRequestSchema, pineconeQueryResponseSchema
+- **Imports**:
+  - `zod`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { z } from 'zod';
+
+// Shared error envelope schema
+const ErrorEnvelopeSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.any().optional()
+  })
+});
+
+// Pinecone stats query parameters (currently none, but ready for future)
+export const pineconeStatsQuerySchema = z.object({});
+
+// Pinecone stats success response schema
+const PineconeStatsOkSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    totalVectors: z.number(),
+    dimension: z.number(),
+    indexFullness: z.number(),
+    namespaces: z.record(z.string(), z.object({
+      vector_count: z.number()
+    })),
+    lastUpdated: z.string()
+  })
+});
+
+// Discriminated union for pinecone stats endpoint
+export const pineconeStatsResponseSchema = z.union([PineconeStatsOkSchema, ErrorEnvelopeSchema]);
+
+// Pinecone search request schema
+export const pineconeSearchRequestSchema = z.object({
+  query: z.string().min(1, 'Query cannot be empty'),
+ 
+...
+```

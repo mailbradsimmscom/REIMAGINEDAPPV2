@@ -1,0 +1,38 @@
+# `rerank.service.js`
+
+- **Path**: `src/services/rerank.service.js`
+- **Exports**: None
+- **Imports**:
+  - `../clients/openai.client.js`
+  - `../utils/logger.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+import { oaiJson } from '../clients/openai.client.js';
+import { logger } from "../utils/logger.js";
+
+const requestLogger = logger.createRequestLogger();
+
+export async function rerankChunks(question, chunks) {
+  if (chunks.length <= 1) return chunks.map((c, i) => ({ ...c, _rankScore: 1 - i * 0.01 }));
+
+  try {
+    requestLogger.info('Starting chunk reranking', { 
+      question: question.substring(0, 100),
+      chunksCount: chunks.length 
+    });
+
+    // Build compact candidates payload: index + snippet
+    const items = chunks.map((h, i) => {
+      const text = (h?.chunk?.content ?? h?.metadata?.content ?? h?.content ?? "").slice(0, 800);
+      return `#${i+1}: ${text}`;
+    }).join("\n\n");
+
+    const system = "You are a precise selector. Pick the SINGLE best chunk that most directly answers the question. If multiple are good, pick the most specific spec line. Return JSON with {\"best\": <index starting at 1>, \"reasons\": \"...\"}.";
+    const user = `Question:\n${question}\n\nCandi
+...
+```

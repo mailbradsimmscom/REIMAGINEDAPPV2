@@ -1,0 +1,45 @@
+# `dip.generation.service.js`
+
+- **Path**: `src/services/dip.generation.service.js`
+- **Exports**: None
+- **Imports**:
+  - `../repositories/supabaseClient.js`
+  - `../schemas/ingestion.schema.js`
+  - `../utils/logger.js`
+  - `../repositories/document.repository.js`
+  - `../ingestion/helpers/pdfPreview.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * DIP (Document Intelligence Packet) generation service
+ * Generates DIP and Suggestions files after document processing
+ * This service can be called after document ingestion is complete
+ */
+
+import { getSupabaseStorageClient } from '../repositories/supabaseClient.js';
+import { createDefaultDIP, createDefaultSuggestions } from '../schemas/ingestion.schema.js';
+import { logger } from '../utils/logger.js';
+import documentRepository from '../repositories/document.repository.js';
+import { extractTextPreviewFromPdf } from '../ingestion/helpers/pdfPreview.js';
+
+const BUCKET = 'documents';
+
+/**
+ * Generate DIP and Suggestions for a processed document
+ * @param {string} docId - Document ID
+ * @param {Object} options - Generation options
+ * @returns {Promise<Object>} Generation result
+ */
+export async function generateDIPAndSuggestions(docId, options = {}) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    if (!docId || typeof docId !== 'string') {
+      throw new Erro
+...
+```

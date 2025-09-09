@@ -1,0 +1,53 @@
+# `units.normalizer.js`
+
+- **Path**: `src/utils/units.normalizer.js`
+- **Exports**: None
+- **Imports**:
+  - `node:fs/promises`
+  - `./fuzzyMatcher.js`
+  - `./logger.js`
+  - `./metrics.js`
+
+## Express Routes
+- GET undefined
+- GET undefined
+- GET undefined
+- GET undefined
+
+## Raw Content
+
+```js
+/**
+ * Units normalization utility with fuzzy matching support
+ * Handles unit typos and provides canonical unit forms
+ */
+
+import fs from 'node:fs/promises';
+import { fuzzyMatcher } from './fuzzyMatcher.js';
+import { logger } from './logger.js';
+import { metrics } from './metrics.js';
+
+// Units lexicon cache
+let UNITS_LEXICON = null;
+
+/**
+ * Load units lexicon from config file
+ * @returns {Object} Units lexicon with canonical forms and aliases
+ */
+async function loadUnitsLexicon() {
+  if (UNITS_LEXICON) return UNITS_LEXICON;
+  
+  try {
+    const url = new URL('../config/lexicons/units.json', import.meta.url);
+    UNITS_LEXICON = JSON.parse(await fs.readFile(url, 'utf-8'));
+    
+    // Build alias → canonical map for fast lookup
+    const aliasMap = new Map();
+    const disambiguationMap = new Map();
+    
+    for (const [category, units] of Object.entries(UNITS_LEXICON)) {
+      for (const unit of units) {
+        for (const alias of unit.aliases) {
+          aliasMap.set(alias.toLower
+...
+```

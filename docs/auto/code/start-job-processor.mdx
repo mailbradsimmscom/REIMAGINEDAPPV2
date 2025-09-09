@@ -1,0 +1,53 @@
+# `start-job-processor.js`
+
+- **Path**: `src/start-job-processor.js`
+- **Exports**: None
+- **Imports**:
+  - `dotenv/config`
+  - `./utils/logger.js`
+  - `./config/env.js`
+  - `./services/job.processor.js`
+
+## Express Routes
+_None detected_
+
+## Raw Content
+
+```js
+/**
+ * Standalone Job Processor Worker
+ * Runs the job processor as a dedicated Node process
+ * Use when deploying as a separate container or process manager
+ */
+
+import 'dotenv/config';
+import { logger } from './utils/logger.js';
+import { getEnv } from './config/env.js';
+import jobProcessor from './services/job.processor.js';
+
+const log = logger.createRequestLogger();
+
+/**
+ * This file runs the job processor as a dedicated Node process.
+ * Use when deploying as a separate container or process manager.
+ */
+
+let processor;
+
+async function main() {
+  log.info('Starting job worker…');
+
+  // Concurrency & polling cadence come from env with safe defaults
+  const concurrency = Number(getEnv({ loose: true }).JOB_CONCURRENCY ?? 2);
+  const pollIntervalMs = Number(getEnv({ loose: true }).JOB_POLL_INTERVAL_MS ?? 5000);
+
+  // Check if job processor is already running
+  if (processor && processor.isRunning) {
+    log.warn('Job processor already running');
+    return;
+  }
+
+  // Start the run loop
+ 
+...
+```
