@@ -10,7 +10,7 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
 
-from .models import DIPEntity, DIPSpecHint, DIPGoldenTest, PageElement, Table
+from .models import DIPEntity, DIPSpecHint, DIPGoldenTest, PageElement, Table, BoundingBox
 from .supabase_storage import supabase_storage
 
 logger = logging.getLogger(__name__)
@@ -321,6 +321,58 @@ class DIPProcessor:
             'golden_tests': golden_tests,
             'processing_time': processing_time,
             'pages_processed': len(set(e.page for e in elements)),
+            'entities_count': len(entities),
+            'hints_count': len(spec_hints),
+            'tests_count': len(golden_tests)
+        }
+
+    async def process_chunks(self, doc_id: str, chunks: List[Dict]) -> Dict[str, Any]:
+        """Process document chunks and extract all DIP components"""
+        start_time = time.time()
+        
+        logger.info(f"Processing DIP from chunks for document {doc_id}")
+        
+        # Convert chunks to PageElement format for existing methods
+        elements = []
+        for chunk in chunks:
+            element = PageElement(
+                content=chunk['content'],
+                element_type='text',
+                page=chunk.get('page', 1),
+                bbox=BoundingBox(x0=0, y0=0, x1=0, y1=0),
+                has_text_layer=True,
+                ocr_used=False,
+                confidence=1.0
+            )
+            elements.append(element)
+        
+        # Extract all components using existing methods
+        entities = self.extract_entities(elements)
+        spec_hints = self.extract_spec_hints(elements)
+        golden_tests = self.extract_golden_tests(elements)
+        
+        processing_time = time.time() - start_time
+        
+        logger.info(f"DIP processing from chunks completed for {doc_id}: "
+                   f"{len(entities)} entities, {len(spec_hints)} hints, {len(golden_tests)} tests")
+        
+        return {
+            'success': True,
+            'doc_id': doc_id,
+            'dip': {
+                'entities': entities,
+                'spec_hints': spec_hints,
+                'golden_tests': golden_tests
+            },
+            'suggestions': {
+                'entities': {'add_aliases': {}},
+                'intents': {'hints': []},
+                'playbooks': {},
+                'units': {'suggest_add': []},
+                'tests': {'seed_goldens': []}
+            },
+            'processing_time': processing_time,
+            'pages_processed': len(set(chunk.get('page', 1) for chunk in chunks)),
             'entities_count': len(entities),
             'hints_count': len(spec_hints),
             'tests_count': len(golden_tests)

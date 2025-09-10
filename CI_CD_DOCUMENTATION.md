@@ -73,7 +73,44 @@ env:
   
   # Admin
   ADMIN_TOKEN: admin-secret-key
+  
+  # Python Sidecar
+  PYTHON_SIDECAR_URL: http://localhost:8000
 ```
+
+## Python Sidecar Integration
+
+### Docker Services
+The CI pipeline includes Python sidecar testing:
+
+```yaml
+services:
+  python-sidecar:
+    image: python:3.11-slim
+    ports:
+      - "8000:8000"
+    environment:
+      - SUPABASE_URL=https://test.supabase.co
+      - SUPABASE_SERVICE_KEY=test-service-key
+      - PINECONE_API_KEY=test-pinecone-key
+      - OPENAI_API_KEY=test-openai-key
+```
+
+### Python Dependencies
+The sidecar requires these Python packages:
+- `fastapi==0.104.1`
+- `uvicorn==0.24.0`
+- `supabase==2.8.0`
+- `pinecone-client==2.2.4`
+- `openai==1.3.0`
+- `requests==2.31.0`
+
+### Sidecar Health Checks
+The CI pipeline verifies:
+- Python sidecar starts successfully
+- Health endpoint responds correctly
+- DIP generation endpoint is accessible
+- Document processing pipeline works end-to-end
 
 ## Test Coverage
 

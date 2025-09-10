@@ -53,7 +53,7 @@ export function basicRateLimit(req, res, next) {
   const clientIP = req.ip || req.connection.remoteAddress;
   const now = Date.now();
   const windowMs = 15 * 60 * 1000; // 15 minutes
-  const maxRequests = 100; // 100 requests per window
+  const maxRequests = 500; // 500 requests per window
   
   // Initialize rate limit tracking if not exists
   if (!req.app.locals.rateLimit) {

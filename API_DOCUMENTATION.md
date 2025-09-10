@@ -683,3 +683,92 @@ Get document chunks.
 - Security headers enabled (Helmet equivalent)
 - Request size limits: 2MB for JSON/URL-encoded
 - File upload limits: Configured per endpoint
+
+## Python Sidecar API
+
+The Python sidecar runs on `http://localhost:8000` and provides document processing capabilities.
+
+### Base URL
+```
+http://localhost:8000
+```
+
+### Document Processing
+
+#### POST /v1/process-document
+Processes a PDF document for Pinecone embedding and chunk persistence.
+
+**Request:**
+- Content-Type: `multipart/form-data`
+- Fields:
+  - `file`: PDF file (required)
+  - `doc_metadata`: JSON string with document metadata (required)
+  - `extract_tables`: boolean (default: true)
+  - `ocr_enabled`: boolean (default: true)
+
+**Response:**
+```json
+{
+  "success": true,
+  "doc_id": "document_id",
+  "chunks_processed": 22,
+  "vectors_upserted": 22,
+  "chunks_written_db": 22,
+  "chunks_written_storage": 22,
+  "namespace": "REIMAGINEDDOCS"
+}
+```
+
+#### POST /v1/dip
+Generates Document Intelligence Packet from existing document chunks.
+
+**Request:**
+- Content-Type: `application/json`
+- Body:
+```json
+{
+  "doc_id": "document_id"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "doc_id": "document_id",
+  "pages": 22,
+  "entities_count": 113,
+  "hints_count": 54,
+  "tests_count": 12,
+  "artifacts": {
+    "dip": "documents/manuals/doc_id/dip.json",
+    "suggestions": "documents/manuals/doc_id/suggestions.json"
+  }
+}
+```
+
+### Health Check
+
+#### GET /health
+Returns sidecar health status.
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-01-10T00:00:00Z"
+}
+```
+
+### Pinecone Statistics
+
+#### GET /v1/pinecone/stats
+Returns Pinecone index statistics.
+
+**Response:**
+```json
+{
+  "total_vectors": 75,
+  "namespace": "REIMAGINEDDOCS"
+}
+```

@@ -204,11 +204,14 @@ class PineconeClient:
             vectors = []
             
             for i, chunk in enumerate(chunks):
+                # Clean metadata - remove null values for Pinecone compatibility
+                clean_doc_metadata = {k: v for k, v in doc_metadata.items() if v is not None}
+                
                 # Generate embedding for chunk text
                 embedding_result = self.generate_embedding(
                     text=chunk["content"],
                     metadata={
-                        **doc_metadata,
+                        **clean_doc_metadata,
                         "chunk_index": i,
                         "chunk_type": chunk.get("type", "text"),
                         "page": chunk.get("page", 0),

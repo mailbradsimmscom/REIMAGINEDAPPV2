@@ -6,6 +6,9 @@ from typing import Optional, Dict, Any
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import hashlib
+import requests
+from supabase import create_client, Client
 
 # Load environment variables - try multiple paths for compatibility
 # Try to load .env from multiple possible locations
@@ -24,7 +27,7 @@ from .parser import PDFParser
 from .models import (
     ParseRequest, ParseResponse, HealthResponse, VersionResponse,
     EmbeddingRequest, EmbeddingResponse, PineconeUpsertRequest, PineconeUpsertResponse,
-    DIPRequest, DIPResponse, DIPPacketRequest, DIPPacketResponse
+    DIPRequest, DIPResponse, DIPPacketRequest, DIPPacketResponse, DIPGenerateRequest
 )
 from .pinecone_client import pinecone_client
 from .dip_processor import DIPProcessor
@@ -43,6 +46,21 @@ app = FastAPI(
 # Initialize parser and DIP processor
 parser = PDFParser()
 dip_processor = DIPProcessor()
+
+# Initialize Supabase client
+supabase_url = os.getenv('SUPABASE_URL')
+supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+supabase: Optional[Client] = None
+
+if supabase_url and supabase_key:
+    try:
+        supabase = create_client(supabase_url, supabase_key)
+        logger.info("Supabase client initialized successfully")
+    except Exception as e:
+        logger.warning(f"Failed to initialize Supabase client: {e}")
+        supabase = None
+else:
+    logger.warning("Supabase credentials not found in environment variables")
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
@@ -266,11 +284,102 @@ async def process_document_for_pinecone(
         # Process chunks and store in Pinecone
         pinecone_result = pinecone_client.process_document_chunks(chunks, metadata)
         
+        # Extract doc_id from metadata for chunk persistence
+        doc_id = metadata.get('doc_id', file.filename.replace('.pdf', ''))
+        
+        # Persist chunks to Supabase DB and Storage
+        chunks_written_db = 0
+        chunks_written_storage = 0
+        
+        if supabase_url and supabase_key and pinecone_result["success"]:
+            try:
+                # Clean URL and setup headers
+                url = supabase_url.rstrip("/")
+                headers = {
+                    "apikey": supabase_key,
+                    "Authorization": f"Bearer {supabase_key}"
+                }
+                
+                # Prepare chunks for database insertion
+                db_chunks = []
+                for i, chunk in enumerate(chunks):
+                    chunk_id = f"{doc_id}-chunk-{chunk['page']}"
+                    chunk_text = chunk['content']
+                    checksum = hashlib.sha256(chunk_text.encode('utf-8')).hexdigest()
+                    
+                    db_chunk = {
+                        "chunk_id": chunk_id,
+                        "doc_id": doc_id,
+                        "content_type": "text",
+                        "page_start": chunk['page'],
+                        "page_end": chunk['page'],
+                        "chunk_index": i,
+                        "text": chunk_text,
+                        "checksum": checksum,
+                        "metadata": {}
+                    }
+                    db_chunks.append(db_chunk)
+                
+                # Insert chunks into database using requests
+                if db_chunks:
+                    upsert_headers = {
+                        **headers,
+                        "Content-Type": "application/json",
+                        "Prefer": "resolution=merge-duplicates"
+                    }
+                    
+                    response = requests.post(
+                        f"{url}/rest/v1/document_chunks",
+                        headers=upsert_headers,
+                        json=db_chunks
+                    )
+                    
+                    if response.status_code in [200, 201]:
+                        chunks_written_db = len(db_chunks)
+                        logger.info(f"Inserted {chunks_written_db} chunks into database")
+                    else:
+                        logger.warning(f"Failed to insert chunks: {response.status_code} {response.text}")
+                
+                # Upload chunk text files to storage using requests
+                for chunk in chunks:
+                    try:
+                        storage_path = f"documents/manuals/{doc_id}/text/page-{chunk['page']}.txt"
+                        content = chunk['content'].encode('utf-8')
+                        
+                        storage_headers = {
+                            **headers,
+                            "Content-Type": "text/plain",
+                            "x-upsert": "true"
+                        }
+                        
+                        storage_response = requests.post(
+                            f"{url}/storage/v1/object/{storage_path}",
+                            headers=storage_headers,
+                            data=content
+                        )
+                        
+                        if storage_response.status_code in [200, 201]:
+                            chunks_written_storage += 1
+                        else:
+                            logger.warning(f"Failed to upload chunk to storage: {storage_response.status_code}")
+                            
+                    except Exception as e:
+                        logger.warning(f"Failed to upload chunk to storage: {e}")
+                        continue
+                
+                logger.info(f"Uploaded {chunks_written_storage} chunk files to storage")
+                
+            except Exception as e:
+                logger.error(f"Failed to persist chunks to Supabase: {e}")
+                # Continue execution - don't fail the entire process
+        
         return {
             "success": pinecone_result["success"],
             "filename": file.filename,
             "chunks_processed": pinecone_result["chunks_processed"],
             "vectors_upserted": pinecone_result["vectors_upserted"],
+            "chunks_written_db": chunks_written_db,
+            "chunks_written_storage": chunks_written_storage,
             "namespace": pinecone_result["namespace"],
             "processing_time": pinecone_result["processing_time"],
             "error": pinecone_result.get("error")
@@ -280,48 +389,196 @@ async def process_document_for_pinecone(
         logger.error(f"Failed to process document for Pinecone: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/v1/dip", response_model=DIPResponse)
-async def generate_dip(
-    file: UploadFile = File(...),
-    doc_id: str = Form(...),
-    options: str = Form("{}")
-):
-    """Generate DIP (Document Intelligence Packet) from uploaded PDF"""
+
+@app.post("/v1/dip")
+async def generate_dip(request: DIPGenerateRequest):
+    """
+    Generate Document Intelligence Packet from existing document chunks
+    """
     try:
-        logger.info(f"Generating DIP for document {doc_id}: {file.filename}")
+        doc_id = request.doc_id
+        if not doc_id:
+            raise HTTPException(status_code=400, detail="doc_id is required")
         
-        # Parse options
-        try:
-            dip_options = json.loads(options)
-        except json.JSONDecodeError:
-            dip_options = {}
+        logger.info(f"Generating DIP for doc_id: {doc_id}")
         
-        # Read file content
-        content = await file.read()
+        # Get Supabase credentials
+        supabase_url = os.getenv('SUPABASE_URL')
+        supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
         
-        # Parse the PDF first
-        parse_result = await parser.parse_pdf(
-            content,
-            extract_tables=True,
-            ocr_enabled=True
+        if not supabase_url or not supabase_key:
+            raise HTTPException(status_code=500, detail="Supabase configuration missing")
+        
+        # Read chunks from document_chunks table
+        url = supabase_url.rstrip("/")
+        headers = {
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}"
+        }
+        
+        # Query document_chunks table
+        response = requests.get(
+            f"{url}/rest/v1/document_chunks",
+            headers=headers,
+            params={
+                "doc_id": f"eq.{doc_id}",
+                "content_type": "eq.text",
+                "text": "not.is.null",
+                "select": "chunk_id,doc_id,text,page_start,page_end,chunk_index,metadata",
+                "order": "page_start,chunk_index"
+            }
         )
         
-        if not parse_result.success:
-            raise HTTPException(status_code=500, detail="Failed to parse PDF for DIP generation")
+        if response.status_code != 200:
+            logger.error(f"Failed to fetch chunks: {response.status_code} {response.text}")
+            raise HTTPException(status_code=500, detail="Failed to fetch document chunks")
         
-        # Process document for DIP
-        dip_data = dip_processor.process_document(parse_result.elements, doc_id)
+        chunks_data = response.json()
         
-        logger.info(f"DIP generation completed for {doc_id}: "
-                   f"{dip_data['entities_count']} entities, "
-                   f"{dip_data['hints_count']} hints, "
-                   f"{dip_data['tests_count']} tests")
+        if not chunks_data:
+            # Try fallback: read from storage
+            logger.info(f"No chunks found in database, trying storage fallback for doc_id: {doc_id}")
+            chunks_data = await _read_chunks_from_storage(url, headers, doc_id)
         
-        return DIPResponse(**dip_data)
+        if not chunks_data:
+            raise HTTPException(status_code=404, detail="No document chunks found")
+        
+        # Convert to format expected by DIP processor
+        chunks = []
+        for chunk_data in chunks_data:
+            chunks.append({
+                "id": chunk_data["chunk_id"],
+                "content": chunk_data["text"],
+                "page": chunk_data.get("page_start", 1),
+                "metadata": chunk_data.get("metadata", {})
+            })
+        
+        # Generate DIP using existing processor
+        dip_result = await dip_processor.process_chunks(doc_id, chunks)
+        
+        # Write DIP and suggestions to storage
+        artifacts = await _write_dip_artifacts(url, headers, doc_id, dip_result)
+        
+        return {
+            "success": True,
+            "doc_id": doc_id,
+            "pages": len(set(chunk["page"] for chunk in chunks)),
+            "entities_count": dip_result.get("entities_count", 0),
+            "hints_count": dip_result.get("hints_count", 0),
+            "tests_count": dip_result.get("tests_count", 0),
+            "artifacts": artifacts
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"DIP generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+async def _read_chunks_from_storage(url, headers, doc_id):
+    """Fallback: read chunks from storage files"""
+    try:
+        # List files in storage path
+        storage_path = f"documents/manuals/{doc_id}/text/"
+        response = requests.get(
+            f"{url}/storage/v1/object/list/documents",
+            headers=headers,
+            params={"prefix": storage_path}
+        )
+        
+        if response.status_code != 200:
+            return []
+        
+        files = response.json()
+        chunks = []
+        
+        for file_info in files:
+            if file_info["name"].endswith(".txt"):
+                # Read file content
+                file_response = requests.get(
+                    f"{url}/storage/v1/object/documents/{file_info['name']}",
+                    headers=headers
+                )
+                
+                if file_response.status_code == 200:
+                    # Extract page number from filename
+                    import re
+                    filename = file_info["name"].split("/")[-1]
+                    page_match = re.match(r"page-(\d+)\.txt", filename)
+                    page_num = int(page_match.group(1)) if page_match else 1
+                    
+                    chunks.append({
+                        "chunk_id": f"{doc_id}-chunk-{page_num}",
+                        "doc_id": doc_id,
+                        "text": file_response.text,
+                        "page_start": page_num,
+                        "page_end": page_num,
+                        "chunk_index": page_num - 1,
+                        "metadata": {}
+                    })
+        
+        return chunks
         
     except Exception as e:
-        logger.error(f"Failed to generate DIP: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Failed to read chunks from storage: {e}")
+        return []
+
+async def _write_dip_artifacts(url, headers, doc_id, dip_result):
+    """Write DIP and suggestions files to storage"""
+    try:
+        artifacts = {}
+        
+        # Write DIP file
+        dip_path = f"documents/manuals/{doc_id}/dip.json"
+        dip_data = dip_result.get("dip", {})
+        # Convert Pydantic models to dicts for JSON serialization
+        if "entities" in dip_data:
+            dip_data["entities"] = [entity.model_dump() if hasattr(entity, 'model_dump') else entity for entity in dip_data["entities"]]
+        if "spec_hints" in dip_data:
+            dip_data["spec_hints"] = [hint.model_dump() if hasattr(hint, 'model_dump') else hint for hint in dip_data["spec_hints"]]
+        if "golden_tests" in dip_data:
+            dip_data["golden_tests"] = [test.model_dump() if hasattr(test, 'model_dump') else test for test in dip_data["golden_tests"]]
+        
+        dip_response = requests.post(
+            f"{url}/storage/v1/object/{dip_path}",
+            headers={
+                **headers,
+                "Content-Type": "text/plain",
+                "x-upsert": "true"
+            },
+            data=json.dumps(dip_data, indent=2)
+        )
+        
+        logger.info(f"DIP storage response: {dip_response.status_code} - {dip_response.text}")
+        if dip_response.status_code in [200, 201]:
+            artifacts["dip"] = dip_path
+        else:
+            logger.error(f"Failed to store DIP: {dip_response.status_code} {dip_response.text}")
+        
+        # Write suggestions file
+        suggestions_path = f"documents/manuals/{doc_id}/suggestions.json"
+        suggestions_data = dip_result.get("suggestions", {})
+        suggestions_response = requests.post(
+            f"{url}/storage/v1/object/{suggestions_path}",
+            headers={
+                **headers,
+                "Content-Type": "text/plain",
+                "x-upsert": "true"
+            },
+            data=json.dumps(suggestions_data, indent=2)
+        )
+        
+        logger.info(f"Suggestions storage response: {suggestions_response.status_code} - {suggestions_response.text}")
+        if suggestions_response.status_code in [200, 201]:
+            artifacts["suggestions"] = suggestions_path
+        else:
+            logger.error(f"Failed to store suggestions: {suggestions_response.status_code} {suggestions_response.text}")
+        
+        return artifacts
+        
+    except Exception as e:
+        logger.error(f"Failed to write DIP artifacts: {e}")
+        return {}
 
 @app.post("/v1/runDocIntelligencePacket", response_model=DIPPacketResponse)
 async def run_dip_packet(request: DIPPacketRequest):

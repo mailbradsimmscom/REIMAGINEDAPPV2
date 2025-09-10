@@ -139,6 +139,10 @@ class DIPRequest(BaseModel):
     file_path: str
     options: Dict[str, Any] = Field(default_factory=dict)
 
+class DIPGenerateRequest(BaseModel):
+    """Request for DIP generation from existing chunks"""
+    doc_id: str
+
 class DIPResponse(BaseModel):
     """Response from DIP generation"""
     success: bool

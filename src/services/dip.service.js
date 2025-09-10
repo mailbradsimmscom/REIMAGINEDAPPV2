@@ -46,7 +46,10 @@ class DIPService {
       // Call DIP endpoint
       const response = await fetch(`${sidecarUrl}/v1/dip`, {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ doc_id })
       });
 
       if (!response.ok) {

@@ -39,15 +39,18 @@ window.AdminState = {
 
 // Helper function for authenticated requests
 window.adminFetch = async function(url, options = {}) {
-    const defaultOptions = {
-        headers: {
-            'x-admin-token': window.AdminState.ADMIN_TOKEN,
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
+    const defaultHeaders = {
+        'x-admin-token': window.AdminState.ADMIN_TOKEN,
+        // NOTE: we'll only add Content-Type for non-FormData bodies
     };
-    
-    return fetch(url, { ...defaultOptions, ...options });
+
+    const isFormData = options && options.body && (options.body instanceof FormData);
+    const headers = isFormData
+        ? { ...defaultHeaders, ...(options.headers || {}) }            // DO NOT set Content-Type
+        : { ...defaultHeaders, 'Content-Type': 'application/json', ...(options.headers || {}) };
+
+    const finalOptions = { ...options, headers };
+    return fetch(url, finalOptions);
 };
 
 (async function main() {

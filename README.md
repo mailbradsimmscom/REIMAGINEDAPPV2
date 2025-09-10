@@ -164,6 +164,14 @@ The CI pipeline is configured in `.github/workflows/test.yml` and runs automatic
 - **Documents**: `/admin/docs/*` - Document processing and management
 - **Pinecone**: `/pinecone/*` - Vector search and AI operations
 
+### Document Processing Pipeline
+- **Upload**: PDF documents via admin interface
+- **Processing**: Python sidecar extracts text and creates chunks
+- **Persistence**: Chunks stored in Supabase database and storage
+- **Embedding**: Text chunks embedded and stored in Pinecone
+- **DIP Generation**: Document Intelligence Packets created from chunks
+- **Storage**: DIP files and suggestions stored in Supabase storage
+
 ### Security Features
 - **Admin Gate**: Header-based authentication for admin routes
 - **Body Size Limits**: 2MB limit on request bodies

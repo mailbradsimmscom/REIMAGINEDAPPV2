@@ -9,7 +9,7 @@ import { DocumentIngestEnvelope } from '../../schemas/document.schema.js';
 import { 
   documentIngestMetadataSchema 
 } from '../../schemas/document.schema.js';
-import { uploadDocumentSchema } from '../../schemas/uploadDocument.schema.js';
+import { uploadDocumentSchema, flexibleUploadDocumentSchema } from '../../schemas/uploadDocument.schema.js';
 import Busboy from 'busboy';
 import { z } from 'zod';
 
@@ -78,14 +78,25 @@ router.post('/',
         busboy.on('field', (fieldname, value) => {
           if (fieldname === 'metadata') {
             try {
-              metadata = JSON.parse(value);
+              const rawMetadata = JSON.parse(value);
               
-              // Validate metadata using the new upload document schema
-              // This ensures manufacturer_norm and model_norm are provided
-              const validationResult = uploadDocumentSchema.safeParse(metadata);
+              // Validate metadata using the flexible schema that accepts both formats
+              const validationResult = flexibleUploadDocumentSchema.safeParse(rawMetadata);
               if (!validationResult.success) {
                 hasError = true;
-                reject(new Error(`Invalid metadata format: ${validationResult.error.errors.map(e => e.message).join(', ')}`));
+                // Safe error message formatting - handle both errors and issues
+                const errorMessages = validationResult.error?.issues?.map(e => e.message).join(', ') || 
+                                    validationResult.error?.message || 
+                                    'Invalid metadata format';
+                reject(new Error(`Invalid metadata format: ${errorMessages}`));
+              } else {
+                // Normalize the metadata to ensure downstream code has expected fields
+                const validatedMetadata = validationResult.data;
+                metadata = {
+                  ...validatedMetadata,
+                  manufacturer_norm: validatedMetadata.manufacturer_norm || validatedMetadata.manufacturer,
+                  model_norm: validatedMetadata.model_norm || validatedMetadata.model,
+                };
               }
             } catch (error) {
               hasError = true;
@@ -126,12 +137,7 @@ router.post('/',
         throw error;
       }
       
-      // Validate that required normalized fields are present
-      if (!metadata.manufacturer_norm || !metadata.model_norm) {
-        const error = new Error('manufacturer_norm and model_norm are required');
-        error.status = 400;
-        throw error;
-      }
+      // Metadata is already validated and normalized by the flexible schema above
       
       // Create ingest job with normalized metadata
       const job = await documentService.createIngestJob(fileBuffer, { ...metadata, fileName });

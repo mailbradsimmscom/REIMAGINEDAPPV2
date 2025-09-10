@@ -11,6 +11,46 @@ export const uploadDocumentSchema = z.object({
 });
 
 /**
+ * Enhanced schema that accepts both raw and normalized field names
+ * Provides backward compatibility while ensuring required data is present
+ */
+export const flexibleUploadDocumentSchema = z.object({
+  // Normalized fields (preferred)
+  manufacturer_norm: z.string().trim().min(1).optional(),
+  model_norm: z.string().trim().min(1).optional(),
+  
+  // Raw fields (for backward compatibility)
+  manufacturer: z.string().trim().optional(),
+  model: z.string().trim().optional(),
+  
+  // Other optional fields
+  language: z.string().default('en'),
+  doc_id: z.string().optional(),
+  revision_date: z.string().optional(),
+  ocr: z.boolean().optional(),
+}).superRefine((val, ctx) => {
+  // Ensure at least one manufacturer field is provided
+  const manufacturer = val.manufacturer_norm || val.manufacturer;
+  if (!manufacturer || manufacturer.trim() === '') {
+    ctx.addIssue({ 
+      code: z.ZodIssueCode.custom, 
+      path: ['manufacturer_norm'], 
+      message: 'Manufacturer is required' 
+    });
+  }
+  
+  // Ensure at least one model field is provided
+  const model = val.model_norm || val.model;
+  if (!model || model.trim() === '') {
+    ctx.addIssue({ 
+      code: z.ZodIssueCode.custom, 
+      path: ['model_norm'], 
+      message: 'Model is required' 
+    });
+  }
+});
+
+/**
  * Schema for validating the complete document upload request
  * Extends the base schema with optional fields for backward compatibility
  */
