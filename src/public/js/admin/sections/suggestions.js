@@ -72,23 +72,29 @@ function createSuggestionElement(suggestion, index) {
     const div = document.createElement('div');
     div.className = 'suggestion-item';
     div.dataset.docId = suggestion.doc_id;
+    div.dataset.suggestionId = suggestion.id;
     
     const suggestionType = suggestion.type || 'unknown';
+    const entityType = suggestion.entity_type || 'general';
     const confidence = suggestion.confidence || 0;
     const page = suggestion.page || 'N/A';
+    const fileInfo = suggestion.file_name || 'Unknown Document';
     
     div.innerHTML = `
         <div class="suggestion-header">
             <input type="checkbox" 
                    data-type="${suggestionType}" 
+                   data-entity-type="${entityType}"
                    data-index="${index}"
+                   data-suggestion-id="${suggestion.id}"
                    class="suggestion-checkbox">
-            <span class="suggestion-type">${escapeHtml(suggestionType)}</span>
+            <span class="suggestion-type">${escapeHtml(entityType)}</span>
             <span class="suggestion-confidence">${(confidence * 100).toFixed(1)}%</span>
             <span class="suggestion-page">Page ${page}</span>
         </div>
         <div class="suggestion-content">
-            <div class="suggestion-value">${escapeHtml(suggestion.value || suggestion.text || 'No content')}</div>
+            <div class="suggestion-value">${escapeHtml(suggestion.value || 'No content')}</div>
+            <div class="suggestion-document">From: ${escapeHtml(fileInfo)}</div>
             ${suggestion.context ? `<div class="suggestion-context">${escapeHtml(suggestion.context)}</div>` : ''}
         </div>
     `;

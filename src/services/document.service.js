@@ -124,6 +124,86 @@ class DocumentService {
     }
   }
 
+  // Verify file exists in storage with retry logic
+  async verifyFileInStorage(storagePath, jobId) {
+    const maxRetries = 20; // 20 retries * 3 seconds = 1 minute
+    const retryDelay = 3000; // 3 seconds between retries
+    
+    this.requestLogger.info('Starting storage verification', { storagePath, jobId });
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const supabaseStorage = await this.getSupabaseStorage();
+        const { data: fileData, error: fileError } = await supabaseStorage.storage
+          .from('documents')
+          .download(storagePath);
+
+        if (!fileError && fileData && typeof fileData.arrayBuffer === 'function') {
+          this.requestLogger.info('Storage verification successful', { 
+            storagePath, 
+            jobId, 
+            attempt 
+          });
+          
+          // Wait 5 seconds as safety buffer
+          await this.sleep(5000);
+          
+          // Update job status to upload_complete
+          await documentRepository.updateJobStatus(jobId, 'upload_complete', { 
+            storage_path: storagePath
+          });
+          
+          this.requestLogger.info('Job status updated to upload_complete', { jobId });
+          return;
+        }
+        
+        this.requestLogger.warn('Storage verification attempt failed', { 
+          storagePath, 
+          jobId, 
+          attempt, 
+          error: fileError?.message 
+        });
+        
+      } catch (error) {
+        this.requestLogger.warn('Storage verification error', { 
+          storagePath, 
+          jobId, 
+          attempt, 
+          error: error.message 
+        });
+      }
+      
+      // Wait before next attempt (except on last attempt)
+      if (attempt < maxRetries) {
+        await this.sleep(retryDelay);
+      }
+    }
+    
+    // All retries failed
+    const errorMessage = 'Unable to validate storage path, job ended';
+    this.requestLogger.error('Storage verification failed after all retries', { 
+      storagePath, 
+      jobId, 
+      maxRetries 
+    });
+    
+    // Update job status to failed
+    await documentRepository.updateJobStatus(jobId, 'failed', {
+      error: {
+        stage: 'storage_verification',
+        message: errorMessage,
+        timestamp: new Date().toISOString()
+      }
+    });
+    
+    throw new Error(errorMessage);
+  }
+
+  // Utility method for sleep
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   // Create document ingest job
   async createIngestJob(fileBuffer, metadata, options = {}) {
     try {
@@ -257,17 +337,20 @@ class DocumentService {
       // Upload file to storage synchronously
       try {
         const storagePath = await this.uploadFile(fileBuffer, metadata.fileName || 'document.pdf', finalDocId);
-                  this.requestLogger.info('Upload successful, storagePath', { storagePath });
+        this.requestLogger.info('Upload successful, storagePath', { storagePath });
         
-        // Update job with storage path
-        await documentRepository.updateJobStatus(job.job_id, 'queued', { storage_path: storagePath });
+        // Update job with storage path and set to upload_success
+        await documentRepository.updateJobStatus(job.job_id, 'upload_success', { storage_path: storagePath });
+        
+        // Verify file exists in storage with retry logic
+        await this.verifyFileInStorage(storagePath, job.job_id);
         
         // Update document with storage path
         await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
-              } catch (uploadError) {
-          this.requestLogger.error('Upload failed', { error: uploadError.message });
-          throw uploadError;
-        }
+      } catch (uploadError) {
+        this.requestLogger.error('Upload failed', { error: uploadError.message });
+        throw uploadError;
+      }
 
       this.requestLogger.info('Ingest job created', { 
         jobId: job.job_id, 

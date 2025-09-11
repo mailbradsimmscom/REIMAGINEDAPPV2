@@ -9,9 +9,9 @@
   },
   "scripts": {
     
-      "dev": "node --watch ./src/start.js",
-      "dev:web": "node --watch ./src/start.js",
-      "dev:worker": "node --watch ./src/start-job-processor.js",
+    "dev": "node ./src/start.js",
+    "dev:web": "node ./src/start.js", 
+    "dev:worker": "node ./src/start-job-processor.js",
       "dev:all": "concurrently -n web,worker -c auto \"npm:dev:web\" \"npm:dev:worker\"",
     
       "start": "node ./src/start.js",

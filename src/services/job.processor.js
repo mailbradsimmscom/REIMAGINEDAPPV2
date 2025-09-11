@@ -40,7 +40,7 @@ class JobProcessor {
   async processPendingJobs() {
     try {
       // Get queued DIP jobs specifically
-      const queuedJobs = await documentRepository.getDIPJobsByStatus('queued', 10);
+      const queuedJobs = await documentRepository.getDIPJobsByStatus('upload_complete', 10);
       
       if (queuedJobs.length === 0) {
         return; // No DIP jobs to process
