@@ -493,8 +493,8 @@ class DocumentService {
         try {
           this.requestLogger.info('Starting DIP processing', { jobId, docId: job.doc_id });
           
-          // Generate DIP
-          dipResult = await dipService.generateDIP(fileBuffer, job.doc_id, fileName, {
+          // Generate DIP using new 4-file endpoint
+          dipResult = await dipService.runDIPPacket(job.doc_id, job.storage_path, '/tmp', {
             job_id: job.job_id,
             manufacturer: document.manufacturer,
             model: document.model

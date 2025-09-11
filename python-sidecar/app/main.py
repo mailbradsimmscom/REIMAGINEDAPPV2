@@ -390,90 +390,91 @@ async def process_document_for_pinecone(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/v1/dip")
-async def generate_dip(request: DIPGenerateRequest):
-    """
-    Generate Document Intelligence Packet from existing document chunks
-    """
-    try:
-        doc_id = request.doc_id
-        if not doc_id:
-            raise HTTPException(status_code=400, detail="doc_id is required")
-        
-        logger.info(f"Generating DIP for doc_id: {doc_id}")
-        
-        # Get Supabase credentials
-        supabase_url = os.getenv('SUPABASE_URL')
-        supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
-        
-        if not supabase_url or not supabase_key:
-            raise HTTPException(status_code=500, detail="Supabase configuration missing")
-        
-        # Read chunks from document_chunks table
-        url = supabase_url.rstrip("/")
-        headers = {
-            "apikey": supabase_key,
-            "Authorization": f"Bearer {supabase_key}"
-        }
-        
-        # Query document_chunks table
-        response = requests.get(
-            f"{url}/rest/v1/document_chunks",
-            headers=headers,
-            params={
-                "doc_id": f"eq.{doc_id}",
-                "content_type": "eq.text",
-                "text": "not.is.null",
-                "select": "chunk_id,doc_id,text,page_start,page_end,chunk_index,metadata",
-                "order": "page_start,chunk_index"
-            }
-        )
-        
-        if response.status_code != 200:
-            logger.error(f"Failed to fetch chunks: {response.status_code} {response.text}")
-            raise HTTPException(status_code=500, detail="Failed to fetch document chunks")
-        
-        chunks_data = response.json()
-        
-        if not chunks_data:
-            # Try fallback: read from storage
-            logger.info(f"No chunks found in database, trying storage fallback for doc_id: {doc_id}")
-            chunks_data = await _read_chunks_from_storage(url, headers, doc_id)
-        
-        if not chunks_data:
-            raise HTTPException(status_code=404, detail="No document chunks found")
-        
-        # Convert to format expected by DIP processor
-        chunks = []
-        for chunk_data in chunks_data:
-            chunks.append({
-                "id": chunk_data["chunk_id"],
-                "content": chunk_data["text"],
-                "page": chunk_data.get("page_start", 1),
-                "metadata": chunk_data.get("metadata", {})
-            })
-        
-        # Generate DIP using existing processor
-        dip_result = await dip_processor.process_chunks(doc_id, chunks)
-        
-        # Write DIP and suggestions to storage
-        artifacts = await _write_dip_artifacts(url, headers, doc_id, dip_result)
-        
-        return {
-            "success": True,
-            "doc_id": doc_id,
-            "pages": len(set(chunk["page"] for chunk in chunks)),
-            "entities_count": dip_result.get("entities_count", 0),
-            "hints_count": dip_result.get("hints_count", 0),
-            "tests_count": dip_result.get("tests_count", 0),
-            "artifacts": artifacts
-        }
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"DIP generation failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# COMMENTED OUT - OLD 2-FILE DIP ENDPOINT
+# @app.post("/v1/dip")
+# async def generate_dip(request: DIPGenerateRequest):
+#     """
+#     Generate Document Intelligence Packet from existing document chunks
+#     """
+#     try:
+#         doc_id = request.doc_id
+#         if not doc_id:
+#             raise HTTPException(status_code=400, detail="doc_id is required")
+#         
+#         logger.info(f"Generating DIP for doc_id: {doc_id}")
+#         
+#         # Get Supabase credentials
+#         supabase_url = os.getenv('SUPABASE_URL')
+#         supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+#         
+#         if not supabase_url or not supabase_key:
+#             raise HTTPException(status_code=500, detail="Supabase configuration missing")
+#         
+#         # Read chunks from document_chunks table
+#         url = supabase_url.rstrip("/")
+#         headers = {
+#             "apikey": supabase_key,
+#             "Authorization": f"Bearer {supabase_key}"
+#         }
+#         
+#         # Query document_chunks table
+#         response = requests.get(
+#             f"{url}/rest/v1/document_chunks",
+#             headers=headers,
+#             params={
+#                 "doc_id": f"eq.{doc_id}",
+#                 "content_type": "eq.text",
+#                 "text": "not.is.null",
+#                 "select": "chunk_id,doc_id,text,page_start,page_end,chunk_index,metadata",
+#                 "order": "page_start,chunk_index"
+#             }
+#         )
+#         
+#         if response.status_code != 200:
+#             logger.error(f"Failed to fetch chunks: {response.status_code} {response.text}")
+#             raise HTTPException(status_code=500, detail="Failed to fetch document chunks")
+#         
+#         chunks_data = response.json()
+#         
+#         if not chunks_data:
+#             # Try fallback: read from storage
+#             logger.info(f"No chunks found in database, trying storage fallback for doc_id: {doc_id}")
+#             chunks_data = await _read_chunks_from_storage(url, headers, doc_id)
+#         
+#         if not chunks_data:
+#             raise HTTPException(status_code=404, detail="No document chunks found")
+#         
+#         # Convert to format expected by DIP processor
+#         chunks = []
+#         for chunk_data in chunks_data:
+#             chunks.append({
+#                 "id": chunk_data["chunk_id"],
+#                 "content": chunk_data["text"],
+#                 "page": chunk_data.get("page_start", 1),
+#                 "metadata": chunk_data.get("metadata", {})
+#             })
+#         
+#         # Generate DIP using existing processor
+#         dip_result = await dip_processor.process_chunks(doc_id, chunks)
+#         
+#         # Write DIP and suggestions to storage
+#         artifacts = await _write_dip_artifacts(url, headers, doc_id, dip_result)
+#         
+#         return {
+#             "success": True,
+#             "doc_id": doc_id,
+#             "pages": len(set(chunk["page"] for chunk in chunks)),
+#             "entities_count": dip_result.get("entities_count", 0),
+#             "hints_count": dip_result.get("hints_count", 0),
+#             "tests_count": dip_result.get("tests_count", 0),
+#             "artifacts": artifacts
+#         }
+#         
+#     except HTTPException:
+#         raise
+#     except Exception as e:
+#         logger.error(f"DIP generation failed: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
 
 async def _read_chunks_from_storage(url, headers, doc_id):
     """Fallback: read chunks from storage files"""
@@ -584,57 +585,87 @@ async def _write_dip_artifacts(url, headers, doc_id, dip_result):
 async def run_dip_packet(request: DIPPacketRequest):
     """Run complete DIP packet processing and save files"""
     try:
-        logger.info(f"Running DIP packet processing for document {request.doc_id}")
+        doc_id = request.doc_id
+        if not doc_id:
+            raise HTTPException(status_code=400, detail="doc_id is required")
         
-        # Check if file exists
-        file_path = Path(request.file_path)
-        if not file_path.exists():
-            raise HTTPException(status_code=404, detail=f"File not found: {request.file_path}")
+        logger.info(f"Running DIP packet processing for document {doc_id}")
         
-        # Read file content
-        with open(file_path, 'rb') as f:
-            content = f.read()
+        # Get Supabase credentials
+        supabase_url = os.getenv('SUPABASE_URL')
+        supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
         
-        # Parse the PDF
-        parse_result = await parser.parse_pdf(
-            content,
-            extract_tables=True,
-            ocr_enabled=True
+        if not supabase_url or not supabase_key:
+            raise HTTPException(status_code=500, detail="Supabase configuration missing")
+        
+        # Read chunks from document_chunks table
+        url = supabase_url.rstrip("/")
+        headers = {
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}"
+        }
+        
+        # Query document_chunks table
+        response = requests.get(
+            f"{url}/rest/v1/document_chunks",
+            headers=headers,
+            params={
+                "doc_id": f"eq.{doc_id}",
+                "content_type": "eq.text",
+                "text": "not.is.null",
+                "select": "chunk_id,doc_id,text,page_start,page_end,chunk_index,metadata",
+                "order": "page_start,chunk_index"
+            }
         )
         
-        if not parse_result.success:
-            raise HTTPException(status_code=500, detail="Failed to parse PDF for DIP packet")
+        if response.status_code != 200:
+            logger.error(f"Failed to fetch chunks: {response.status_code} {response.text}")
+            raise HTTPException(status_code=500, detail="Failed to fetch document chunks")
         
-        # Process document for DIP
-        dip_data = dip_processor.process_document(parse_result.elements, request.doc_id)
+        chunks_data = response.json()
         
-        # Save DIP files
-        output_files = dip_processor.save_dip_files(dip_data, request.output_dir)
+        if not chunks_data:
+            # Try fallback: read from storage
+            logger.info(f"No chunks found in database, trying storage fallback for doc_id: {doc_id}")
+            chunks_data = await _read_chunks_from_storage(url, headers, doc_id)
         
-        logger.info(f"DIP packet processing completed for {request.doc_id}")
+        if not chunks_data:
+            raise HTTPException(status_code=404, detail="No document chunks found")
+        
+        logger.info(f"Found {len(chunks_data)} chunks for document {doc_id}")
+        
+        # Convert to format expected by DIP processor
+        chunks = []
+        for chunk_data in chunks_data:
+            chunks.append({
+                "id": chunk_data["chunk_id"],
+                "content": chunk_data["text"],
+                "page": chunk_data.get("page_start", 1),
+                "metadata": chunk_data.get("metadata", {})
+            })
+        
+        # Generate DIP using existing processor
+        dip_result = await dip_processor.process_chunks(doc_id, chunks)
+        
+        # Write DIP files using new 4-file storage method
+        artifacts = dip_processor.save_dip_files(dip_result, '/tmp')
         
         return DIPPacketResponse(
             success=True,
-            doc_id=request.doc_id,
-            output_files=output_files,
-            entities_file=output_files['entities_file'],
-            spec_hints_file=output_files['spec_hints_file'],
-            golden_tests_file=output_files['golden_tests_file'],
-            processing_time=dip_data['processing_time']
+            doc_id=doc_id,
+            output_files=artifacts,
+            spec_suggestions_file=artifacts.get('spec_suggestions', ''),
+            playbook_hints_file=artifacts.get('playbook_hints', ''),
+            intent_router_file=artifacts.get('intent_router', ''),
+            golden_tests_file=artifacts.get('golden_tests', ''),
+            processing_time=dip_result.get('processing_time', 0.0)
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Failed to run DIP packet processing: {e}")
-        return DIPPacketResponse(
-            success=False,
-            doc_id=request.doc_id,
-            output_files={},
-            entities_file="",
-            spec_hints_file="",
-            golden_tests_file="",
-            processing_time=0.0,
-            error=str(e)
-        )
+        logger.error(f"DIP generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

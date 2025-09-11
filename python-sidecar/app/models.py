@@ -169,8 +169,9 @@ class DIPPacketResponse(BaseModel):
     success: bool
     doc_id: str
     output_files: Dict[str, str]  # filename -> filepath
-    entities_file: str
-    spec_hints_file: str
+    spec_suggestions_file: str
+    playbook_hints_file: str
+    intent_router_file: str
     golden_tests_file: str
     processing_time: float
     error: Optional[str] = None

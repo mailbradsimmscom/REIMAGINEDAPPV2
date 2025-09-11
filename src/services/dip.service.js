@@ -19,53 +19,54 @@ class DIPService {
    * @param {Object} options - Processing options
    * @returns {Object} DIP generation result
    */
-  async generateDIP(fileBuffer, docId, fileName, options = {}) {
-    try {
-      this.requestLogger.info('Starting DIP generation', { docId, fileName });
+  // COMMENTED OUT - OLD 2-FILE DIP METHOD
+  // async generateDIP(fileBuffer, docId, fileName, options = {}) {
+  //   try {
+  //     this.requestLogger.info('Starting DIP generation', { docId, fileName });
 
-      const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
-      if (!sidecarUrl) {
-        throw new Error('Python sidecar URL not configured');
-      }
+  //     const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
+  //     if (!sidecarUrl) {
+  //       throw new Error('Python sidecar URL not configured');
+  //     }
 
-      // Call DIP endpoint
-      const response = await fetch(`${sidecarUrl}/v1/dip`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ doc_id: docId })
-      });
+  //     // Call DIP endpoint
+  //     const response = await fetch(`${sidecarUrl}/v1/dip`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({ doc_id: docId })
+  //     });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`DIP generation failed: ${response.status} ${errorText}`);
-      }
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       throw new Error(`DIP generation failed: ${response.status} ${errorText}`);
+  //     }
 
-      const result = await response.json();
+  //     const result = await response.json();
       
-      if (!result.success) {
-        throw new Error(`DIP generation failed: ${result.error || 'Unknown error'}`);
-      }
+  //     if (!result.success) {
+  //       throw new Error(`DIP generation failed: ${result.error || 'Unknown error'}`);
+  //     }
 
-      this.requestLogger.info('DIP generation completed', {
-        docId,
-        entitiesCount: result.entities_count,
-        hintsCount: result.hints_count,
-        testsCount: result.tests_count,
-        processingTime: result.processing_time
-      });
+  //     this.requestLogger.info('DIP generation completed', {
+  //       docId,
+  //       entitiesCount: result.entities_count,
+  //       hintsCount: result.hints_count,
+  //       testsCount: result.tests_count,
+  //       processingTime: result.processing_time
+  //     });
 
-      return result;
-    } catch (error) {
-      this.requestLogger.error('DIP generation failed', {
-        error: error.message,
-        docId,
-        fileName
-      });
-      throw error;
-    }
-  }
+  //     return result;
+  //   } catch (error) {
+  //     this.requestLogger.error('DIP generation failed', {
+  //       error: error.message,
+  //       docId,
+  //       fileName
+  //     });
+  //     throw error;
+  //   }
+  // }
 
   /**
    * Run complete DIP packet processing and save files

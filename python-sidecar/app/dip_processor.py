@@ -6,6 +6,8 @@ Extracts entities, spec hints, and golden tests from document content
 import json
 import re
 import time
+import os
+import requests
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
@@ -379,123 +381,173 @@ class DIPProcessor:
         }
 
     def save_dip_files(self, dip_data: Dict[str, Any], output_dir: str) -> Dict[str, str]:
-        """Save DIP data to JSON files with enhanced structure"""
-        output_path = Path(output_dir)
-        output_path.mkdir(parents=True, exist_ok=True)
-        
+        """Save DIP data to 4 separate JSON files and upload to Supabase Storage"""
         doc_id = dip_data['doc_id']
-        timestamp = time.strftime('%Y-%m-%DIP-%H:%M:%S')
         
-        # Create enhanced entities file
-        entities_data = {
-            'document_id': doc_id,
-            'extraction_timestamp': timestamp,
-            'extraction_version': '1.0.0',
-            'total_entities': len(dip_data['entities']),
-            'entity_types': self._get_entity_type_counts(dip_data['entities']),
-            'entities': [self._enhance_entity_data(entity) for entity in dip_data['entities']]
+        # Get Supabase credentials (same as working chunk uploads)
+        supabase_url = os.getenv('SUPABASE_URL')
+        supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        
+        if not supabase_url or not supabase_key:
+            logger.warning("Supabase credentials not found, DIP files saved locally only")
+            return {
+                'spec_suggestions': '',
+                'playbook_hints': '',
+                'intent_router': '',
+                'golden_tests': ''
+            }
+        
+        url = supabase_url.rstrip("/")
+        headers = {
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}"
         }
         
-        entities_file = output_path / f"{doc_id}_entities.json"
-        with open(entities_file, 'w') as f:
-            json.dump(entities_data, f, indent=2, ensure_ascii=False)
+        storage_results = {}
         
-        # Create enhanced spec hints file
-        spec_hints_data = {
-            'document_id': doc_id,
-            'extraction_timestamp': timestamp,
-            'extraction_version': '1.0.0',
-            'total_hints': len(dip_data['spec_hints']),
-            'hint_types': self._get_hint_type_counts(dip_data['spec_hints']),
-            'spec_hints': [self._enhance_spec_hint_data(hint) for hint in dip_data['spec_hints']]
-        }
+        # 1. Create spec_suggestions.json
+        spec_suggestions = []
+        for hint in dip_data['dip']['spec_hints']:
+            spec_suggestions.append({
+                'spec_name': hint.hint_type,
+                'spec_value': hint.value,
+                'spec_unit': hint.unit,
+                'page': hint.page,
+                'confidence': hint.confidence
+            })
         
-        spec_hints_file = output_path / f"{doc_id}_spec_hints.json"
-        with open(spec_hints_file, 'w') as f:
-            json.dump(spec_hints_data, f, indent=2, ensure_ascii=False)
+        # Upload spec_suggestions.json
+        spec_suggestions_content = json.dumps(spec_suggestions, indent=2, ensure_ascii=False)
+        spec_suggestions_path = f"documents/manuals/{doc_id}/DIP/{doc_id}_spec_suggestions.json"
         
-        # Create enhanced golden tests file
-        golden_tests_data = {
-            'document_id': doc_id,
-            'extraction_timestamp': timestamp,
-            'extraction_version': '1.0.0',
-            'total_tests': len(dip_data['golden_tests']),
-            'test_types': self._get_test_type_counts(dip_data['golden_tests']),
-            'golden_tests': [self._enhance_golden_test_data(test) for test in dip_data['golden_tests']]
-        }
-        
-        golden_tests_file = output_path / f"{doc_id}_golden_tests.json"
-        with open(golden_tests_file, 'w') as f:
-            json.dump(golden_tests_data, f, indent=2, ensure_ascii=False)
-        
-        # Create summary file
-        summary_data = {
-            'document_id': doc_id,
-            'extraction_timestamp': timestamp,
-            'extraction_version': '1.0.0',
-            'processing_time': dip_data['processing_time'],
-            'pages_processed': dip_data['pages_processed'],
-            'summary': {
-                'entities': {
-                    'total': len(dip_data['entities']),
-                    'by_type': self._get_entity_type_counts(dip_data['entities'])
+        try:
+            response = requests.post(
+                f"{url}/storage/v1/object/{spec_suggestions_path}",
+                headers={
+                    **headers,
+                    "Content-Type": "text/plain",
+                    "x-upsert": "true"
                 },
-                'spec_hints': {
-                    'total': len(dip_data['spec_hints']),
-                    'by_type': self._get_hint_type_counts(dip_data['spec_hints'])
+                data=spec_suggestions_content.encode('utf-8')
+            )
+            
+            if response.status_code in [200, 201]:
+                storage_results['spec_suggestions'] = spec_suggestions_path
+                logger.info(f"Successfully uploaded spec_suggestions.json to Supabase Storage")
+            else:
+                storage_results['spec_suggestions'] = ''
+                logger.warning(f"Failed to upload spec_suggestions.json: {response.status_code} {response.text}")
+        except Exception as e:
+            storage_results['spec_suggestions'] = ''
+            logger.error(f"Error uploading spec_suggestions.json: {e}")
+        
+        # 2. Create playbook_hints.json
+        playbook_hints = []
+        for hint in dip_data['dip']['spec_hints']:
+            if hint.hint_type in ['procedure', 'maintenance', 'troubleshooting']:
+                playbook_hints.append({
+                    'value': hint.value,
+                    'hint_type': hint.hint_type,
+                    'page': hint.page,
+                    'confidence': hint.confidence
+                })
+        
+        # Upload playbook_hints.json
+        playbook_hints_content = json.dumps(playbook_hints, indent=2, ensure_ascii=False)
+        playbook_hints_path = f"documents/manuals/{doc_id}/DIP/{doc_id}_playbook_hints.json"
+        
+        try:
+            response = requests.post(
+                f"{url}/storage/v1/object/{playbook_hints_path}",
+                headers={
+                    **headers,
+                    "Content-Type": "text/plain",
+                    "x-upsert": "true"
                 },
-                'golden_tests': {
-                    'total': len(dip_data['golden_tests']),
-                    'by_type': self._get_test_type_counts(dip_data['golden_tests'])
-                }
-            },
-            'files': {
-                'entities': str(entities_file),
-                'spec_hints': str(spec_hints_file),
-                'golden_tests': str(golden_tests_file)
-            }
-        }
+                data=playbook_hints_content.encode('utf-8')
+            )
+            
+            if response.status_code in [200, 201]:
+                storage_results['playbook_hints'] = playbook_hints_path
+                logger.info(f"Successfully uploaded playbook_hints.json to Supabase Storage")
+            else:
+                storage_results['playbook_hints'] = ''
+                logger.warning(f"Failed to upload playbook_hints.json: {response.status_code} {response.text}")
+        except Exception as e:
+            storage_results['playbook_hints'] = ''
+            logger.error(f"Error uploading playbook_hints.json: {e}")
         
-        summary_file = output_path / f"{doc_id}_dip_summary.json"
-        with open(summary_file, 'w') as f:
-            json.dump(summary_data, f, indent=2, ensure_ascii=False)
+        # 3. Create intent_router.json
+        intent_router = []
+        for test in dip_data['dip']['golden_tests']:
+            intent_router.append({
+                'intent': test.description,
+                'route_to': test.expected_result,
+                'confidence': test.confidence,
+                'page': test.page
+            })
         
-        # Upload files to Supabase Storage
-        upload_results = {}
-        if supabase_storage.is_available():
-            logger.info(f"Uploading DIP files to Supabase Storage for document {doc_id}")
+        # Upload intent_router.json
+        intent_router_content = json.dumps(intent_router, indent=2, ensure_ascii=False)
+        intent_router_path = f"documents/manuals/{doc_id}/DIP/{doc_id}_intent_router.json"
+        
+        try:
+            response = requests.post(
+                f"{url}/storage/v1/object/{intent_router_path}",
+                headers={
+                    **headers,
+                    "Content-Type": "text/plain",
+                    "x-upsert": "true"
+                },
+                data=intent_router_content.encode('utf-8')
+            )
             
-            dip_files = {
-                'entities': str(entities_file),
-                'spec_hints': str(spec_hints_file),
-                'golden_tests': str(golden_tests_file),
-                'summary': str(summary_file)
-            }
+            if response.status_code in [200, 201]:
+                storage_results['intent_router'] = intent_router_path
+                logger.info(f"Successfully uploaded intent_router.json to Supabase Storage")
+            else:
+                storage_results['intent_router'] = ''
+                logger.warning(f"Failed to upload intent_router.json: {response.status_code} {response.text}")
+        except Exception as e:
+            storage_results['intent_router'] = ''
+            logger.error(f"Error uploading intent_router.json: {e}")
+        
+        # 4. Create golden_tests.json
+        golden_tests = []
+        for test in dip_data['dip']['golden_tests']:
+            golden_tests.append({
+                'query': test.description,
+                'expected': test.expected_result,
+                'page': test.page,
+                'confidence': test.confidence
+            })
+        
+        # Upload golden_tests.json
+        golden_tests_content = json.dumps(golden_tests, indent=2, ensure_ascii=False)
+        golden_tests_path = f"documents/manuals/{doc_id}/DIP/{doc_id}_golden_tests.json"
+        
+        try:
+            response = requests.post(
+                f"{url}/storage/v1/object/{golden_tests_path}",
+                headers={
+                    **headers,
+                    "Content-Type": "text/plain",
+                    "x-upsert": "true"
+                },
+                data=golden_tests_content.encode('utf-8')
+            )
             
-            upload_results = supabase_storage.upload_dip_files(doc_id, dip_files)
-            
-            # Log upload results
-            for file_type, success in upload_results.items():
-                if success:
-                    logger.info(f"Successfully uploaded {file_type} file to Supabase Storage")
-                else:
-                    logger.warning(f"Failed to upload {file_type} file to Supabase Storage")
-        else:
-            logger.warning("Supabase Storage not available, DIP files saved locally only")
-            upload_results = {
-                'entities': False,
-                'spec_hints': False,
-                'golden_tests': False,
-                'summary': False
-            }
-
-        return {
-            'entities_file': str(entities_file),
-            'spec_hints_file': str(spec_hints_file),
-            'golden_tests_file': str(golden_tests_file),
-            'summary_file': str(summary_file),
-            'upload_results': upload_results
-        }
+            if response.status_code in [200, 201]:
+                storage_results['golden_tests'] = golden_tests_path
+                logger.info(f"Successfully uploaded golden_tests.json to Supabase Storage")
+            else:
+                storage_results['golden_tests'] = ''
+                logger.warning(f"Failed to upload golden_tests.json: {response.status_code} {response.text}")
+        except Exception as e:
+            storage_results['golden_tests'] = ''
+            logger.error(f"Error uploading golden_tests.json: {e}")
+        
+        return storage_results
 
     def _get_entity_type_counts(self, entities: List[DIPEntity]) -> Dict[str, int]:
         """Get count of entities by type"""
