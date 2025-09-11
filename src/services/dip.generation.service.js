@@ -51,29 +51,39 @@ export async function generateDIPAndSuggestions(docId, options = {}) {
     // Generate DIP from chunks
     const dip = await generateDIP(docId, chunks, options);
     
-    // Generate Suggestions from DIP
-    const suggestions = await generateSuggestions(docId, dip, options);
+    // Generate 4 separate structured outputs
+    const specSuggestions = await generateSpecSuggestions(docId, dip, options);
+    const playbookHints = await generatePlaybookHints(docId, dip, options);
+    const intentRouter = await generateIntentRouter(docId, dip, options);
+    const goldenTests = await generateGoldenTests(docId, dip, options);
     
-    // Store DIP and Suggestions in Supabase Storage
+    // Store 4 separate JSON files in Supabase Storage
     const storageResults = await Promise.allSettled([
-      storeDIP(storage, docId, dip),
-      storeSuggestions(storage, docId, suggestions)
+      storeSpecSuggestions(storage, docId, specSuggestions),
+      storePlaybookHints(storage, docId, playbookHints),
+      storeIntentRouter(storage, docId, intentRouter),
+      storeGoldenTests(storage, docId, goldenTests)
     ]);
     
     const result = {
       doc_id: docId,
-      dip_generated: storageResults[0].status === 'fulfilled',
-      suggestions_generated: storageResults[1].status === 'fulfilled',
-      dip_path: `doc_intelligence_packet_${docId}.json`,
-      suggestions_path: `ingestion_suggestions_${docId}.json`,
+      spec_suggestions_generated: storageResults[0].status === 'fulfilled',
+      playbook_hints_generated: storageResults[1].status === 'fulfilled',
+      intent_router_generated: storageResults[2].status === 'fulfilled',
+      golden_tests_generated: storageResults[3].status === 'fulfilled',
+      spec_suggestions_path: 'spec_suggestions.json',
+      playbook_hints_path: 'playbook_hints.json',
+      intent_router_path: 'intent_router.json',
+      golden_tests_path: 'golden_tests.json',
       generated_at: new Date().toISOString(),
       errors: []
     };
     
     // Collect any storage errors
+    const fileTypes = ['Spec Suggestions', 'Playbook Hints', 'Intent Router', 'Golden Tests'];
     storageResults.forEach((storageResult, index) => {
       if (storageResult.status === 'rejected') {
-        const type = index === 0 ? 'DIP' : 'Suggestions';
+        const type = fileTypes[index];
         requestLogger.error('Storage error details', {
           type,
           error: storageResult.reason.message,
@@ -85,8 +95,10 @@ export async function generateDIPAndSuggestions(docId, options = {}) {
     
     requestLogger.info('DIP and Suggestions generation completed', {
       docId,
-      dipGenerated: result.dip_generated,
-      suggestionsGenerated: result.suggestions_generated,
+      specSuggestionsGenerated: result.spec_suggestions_generated,
+      playbookHintsGenerated: result.playbook_hints_generated,
+      intentRouterGenerated: result.intent_router_generated,
+      goldenTestsGenerated: result.golden_tests_generated,
       action: 'generate_dip_suggestions',
       timestamp: result.generated_at
     });
@@ -241,9 +253,6 @@ async function generateSuggestions(docId, dip, options = {}) {
     // Generate unit suggestions
     suggestions.units.suggest_add = generateUnitSuggestions(dip.specifications);
     
-    // Generate golden test suggestions
-    suggestions.tests.seed_goldens = generateGoldenTests(dip.maintenance);
-    
     // Calculate suggestion quality
     suggestions.suggestion_quality = {
       confidence_score: 0.80,
@@ -264,6 +273,161 @@ async function generateSuggestions(docId, dip, options = {}) {
     
   } catch (error) {
     requestLogger.error('Failed to generate Suggestions', { docId, error: error.message });
+    throw error;
+  }
+}
+
+/**
+ * Generate Spec Suggestions from DIP
+ * @param {string} docId - Document ID
+ * @param {Object} dip - Generated DIP
+ * @param {Object} options - Generation options
+ * @returns {Promise<Array>} Array of spec suggestions
+ */
+async function generateSpecSuggestions(docId, dip, options = {}) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    const specSuggestions = [];
+    
+    // Extract spec suggestions from DIP specifications
+    if (dip.specifications) {
+      Object.entries(dip.specifications).forEach(([specName, values]) => {
+        values.forEach((value, index) => {
+          specSuggestions.push({
+            spec_name: specName,
+            spec_value: value,
+            spec_unit: null, // TODO: Extract units from specifications
+            page: null, // TODO: Extract page numbers from chunks
+            confidence: 0.8 // Default confidence
+          });
+        });
+      });
+    }
+    
+    requestLogger.info('Spec suggestions generated', {
+      docId,
+      count: specSuggestions.length
+    });
+    
+    return specSuggestions;
+    
+  } catch (error) {
+    requestLogger.error('Failed to generate spec suggestions', { docId, error: error.message });
+    throw error;
+  }
+}
+
+/**
+ * Generate Playbook Hints from DIP
+ * @param {string} docId - Document ID
+ * @param {Object} dip - Generated DIP
+ * @param {Object} options - Generation options
+ * @returns {Promise<Array>} Array of playbook hints
+ */
+async function generatePlaybookHints(docId, dip, options = {}) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    const playbookHints = [];
+    
+    // Extract playbook hints from DIP maintenance
+    if (dip.maintenance && dip.maintenance.procedures) {
+      dip.maintenance.procedures.forEach((procedure, index) => {
+        playbookHints.push({
+          value: procedure,
+          hint_type: 'maintenance_procedure',
+          page: null, // TODO: Extract page numbers
+          confidence: 0.8 // Default confidence
+        });
+      });
+    }
+    
+    requestLogger.info('Playbook hints generated', {
+      docId,
+      count: playbookHints.length
+    });
+    
+    return playbookHints;
+    
+  } catch (error) {
+    requestLogger.error('Failed to generate playbook hints', { docId, error: error.message });
+    throw error;
+  }
+}
+
+/**
+ * Generate Intent Router from DIP
+ * @param {string} docId - Document ID
+ * @param {Object} dip - Generated DIP
+ * @param {Object} options - Generation options
+ * @returns {Promise<Array>} Array of intent router entries
+ */
+async function generateIntentRouter(docId, dip, options = {}) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    const intentRouter = [];
+    
+    // Extract intent router from DIP maintenance
+    if (dip.maintenance && dip.maintenance.intervals) {
+      dip.maintenance.intervals.forEach((interval, index) => {
+        intentRouter.push({
+          intent: 'maintenance_schedule',
+          route_to: 'maintenance_system',
+          confidence: 0.8,
+          page: null // TODO: Extract page numbers
+        });
+      });
+    }
+    
+    requestLogger.info('Intent router generated', {
+      docId,
+      count: intentRouter.length
+    });
+    
+    return intentRouter;
+    
+  } catch (error) {
+    requestLogger.error('Failed to generate intent router', { docId, error: error.message });
+    throw error;
+  }
+}
+
+/**
+ * Generate Golden Tests from DIP
+ * @param {string} docId - Document ID
+ * @param {Object} dip - Generated DIP
+ * @param {Object} options - Generation options
+ * @returns {Promise<Array>} Array of golden tests
+ */
+async function generateGoldenTests(docId, dip, options = {}) {
+  const requestLogger = logger.createRequestLogger();
+  
+  try {
+    const goldenTests = [];
+    
+    // Extract golden tests from DIP maintenance
+    if (dip.maintenance && dip.maintenance.procedures) {
+      dip.maintenance.procedures.forEach((procedure, index) => {
+        goldenTests.push({
+          query: `How do I ${procedure.toLowerCase()}?`,
+          expected: procedure,
+          page: null, // TODO: Extract page numbers
+          confidence: 0.8 // Default confidence
+        });
+      });
+    }
+    
+    requestLogger.info('Golden tests generated', {
+      docId,
+      count: goldenTests.length
+    });
+    
+    return goldenTests;
+    
+  } catch (error) {
+    requestLogger.error('Failed to generate golden tests', { docId, error: error.message });
     throw error;
   }
 }
@@ -477,26 +641,6 @@ function generateUnitSuggestions(specifications) {
 }
 
 /**
- * Generate golden test suggestions
- * @param {Object} maintenance - Maintenance information
- * @returns {Array} Golden test suggestions
- */
-function generateGoldenTests(maintenance) {
-  const tests = [];
-  
-  if (maintenance.intervals.length > 0) {
-    tests.push('How often should I change the filter?');
-    tests.push('What is the maintenance schedule?');
-  }
-  
-  if (maintenance.procedures.length > 0) {
-    tests.push('How do I clean the system?');
-  }
-  
-  return tests;
-}
-
-/**
  * Calculate confidence score
  * @param {Array} chunks - Document chunks
  * @returns {number} Confidence score
@@ -531,47 +675,93 @@ function calculateCompletenessScore(chunks) {
 }
 
 /**
- * Store DIP in Supabase Storage
+ * Store Spec Suggestions in Supabase Storage
  * @param {Object} storage - Supabase Storage client
  * @param {string} docId - Document ID
- * @param {Object} dip - DIP data
+ * @param {Array} specSuggestions - Spec suggestions data
  * @returns {Promise<void>}
  */
-async function storeDIP(storage, docId, dip) {
-  const fileName = `doc_intelligence_packet_${docId}.json`;
-  const filePath = fileName;
+async function storeSpecSuggestions(storage, docId, specSuggestions) {
+  const fileName = 'spec_suggestions.json';
+  const filePath = `manuals/${docId}/${fileName}`;
   
   const { error } = await storage.storage
     .from(BUCKET)
-    .upload(filePath, JSON.stringify(dip, null, 2), {
-      contentType: 'text/plain',
+    .upload(filePath, JSON.stringify(specSuggestions, null, 2), {
+      contentType: 'application/json',
       upsert: true
     });
   
   if (error) {
-    throw new Error(`Failed to store DIP: ${error.message}`);
+    throw new Error(`Failed to store spec suggestions: ${error.message}`);
   }
 }
 
 /**
- * Store Suggestions in Supabase Storage
+ * Store Playbook Hints in Supabase Storage
  * @param {Object} storage - Supabase Storage client
  * @param {string} docId - Document ID
- * @param {Object} suggestions - Suggestions data
+ * @param {Array} playbookHints - Playbook hints data
  * @returns {Promise<void>}
  */
-async function storeSuggestions(storage, docId, suggestions) {
-  const fileName = `ingestion_suggestions_${docId}.json`;
-  const filePath = fileName;
+async function storePlaybookHints(storage, docId, playbookHints) {
+  const fileName = 'playbook_hints.json';
+  const filePath = `manuals/${docId}/${fileName}`;
   
   const { error } = await storage.storage
     .from(BUCKET)
-    .upload(filePath, JSON.stringify(suggestions, null, 2), {
-      contentType: 'text/plain',
+    .upload(filePath, JSON.stringify(playbookHints, null, 2), {
+      contentType: 'application/json',
       upsert: true
     });
   
   if (error) {
-    throw new Error(`Failed to store Suggestions: ${error.message}`);
+    throw new Error(`Failed to store playbook hints: ${error.message}`);
+  }
+}
+
+/**
+ * Store Intent Router in Supabase Storage
+ * @param {Object} storage - Supabase Storage client
+ * @param {string} docId - Document ID
+ * @param {Array} intentRouter - Intent router data
+ * @returns {Promise<void>}
+ */
+async function storeIntentRouter(storage, docId, intentRouter) {
+  const fileName = 'intent_router.json';
+  const filePath = `manuals/${docId}/${fileName}`;
+  
+  const { error } = await storage.storage
+    .from(BUCKET)
+    .upload(filePath, JSON.stringify(intentRouter, null, 2), {
+      contentType: 'application/json',
+      upsert: true
+    });
+  
+  if (error) {
+    throw new Error(`Failed to store intent router: ${error.message}`);
+  }
+}
+
+/**
+ * Store Golden Tests in Supabase Storage
+ * @param {Object} storage - Supabase Storage client
+ * @param {string} docId - Document ID
+ * @param {Array} goldenTests - Golden tests data
+ * @returns {Promise<void>}
+ */
+async function storeGoldenTests(storage, docId, goldenTests) {
+  const fileName = 'golden_tests.json';
+  const filePath = `manuals/${docId}/${fileName}`;
+  
+  const { error } = await storage.storage
+    .from(BUCKET)
+    .upload(filePath, JSON.stringify(goldenTests, null, 2), {
+      contentType: 'application/json',
+      upsert: true
+    });
+  
+  if (error) {
+    throw new Error(`Failed to store golden tests: ${error.message}`);
   }
 }
