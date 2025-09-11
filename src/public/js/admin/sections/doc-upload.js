@@ -79,11 +79,18 @@ window.loadModels = loadModels;
 window.resetUploadForm = resetUploadForm;
 window.clearUploadQueue = clearUploadQueue;
 window.processUploadQueue = processUploadQueue;
+window.addSystemData = addSystemData;
 
 function setupEventListeners() {
   const manufacturerSelect = document.getElementById('manufacturer');
+  const modelSelect = document.getElementById('model');
+  
   if (manufacturerSelect) {
     manufacturerSelect.addEventListener('change', loadModels);
+  }
+  
+  if (modelSelect) {
+    modelSelect.addEventListener('change', updateAddDataButton);
   }
   
   // Set default revision date to today
@@ -163,12 +170,26 @@ function resetUploadForm() {
   const ocrEl = document.getElementById('ocr-enabled');
   const fileInput = document.getElementById('file-input');
   
+  // Reset system data fields
+  const systemDataRow = document.getElementById('system-data-row');
+  const assetUidInput = document.getElementById('asset-uid');
+  const systemNormInput = document.getElementById('system-norm');
+  const subsystemNormInput = document.getElementById('subsystem-norm');
+  const addDataBtn = document.getElementById('add-data-btn');
+  
   if (docIdEl) docIdEl.value = '';
   if (manufacturerEl) manufacturerEl.value = '';
   if (modelEl) modelEl.value = '';
   if (revEl) revEl.value = new Date().toISOString().split('T')[0];
   if (ocrEl) ocrEl.checked = true;
   if (fileInput) fileInput.value = '';
+  
+  // Reset system data fields
+  if (assetUidInput) assetUidInput.value = '';
+  if (systemNormInput) systemNormInput.value = '';
+  if (subsystemNormInput) subsystemNormInput.value = '';
+  if (systemDataRow) systemDataRow.style.display = 'none';
+  if (addDataBtn) addDataBtn.disabled = true;
   
   // Reset upload queue
   clearUploadQueue();
@@ -187,6 +208,65 @@ function processUploadQueue() {
   const uploadBtn = document.getElementById('upload-btn');
   if (uploadBtn) {
     uploadBtn.click();
+  }
+}
+
+function updateAddDataButton() {
+  const manufacturerSelect = document.getElementById('manufacturer');
+  const modelSelect = document.getElementById('model');
+  const addDataBtn = document.getElementById('add-data-btn');
+  
+  if (!manufacturerSelect || !modelSelect || !addDataBtn) return;
+  
+  const hasManufacturer = manufacturerSelect.value && manufacturerSelect.value.trim() !== '';
+  const hasModel = modelSelect.value && modelSelect.value.trim() !== '';
+  
+  addDataBtn.disabled = !(hasManufacturer && hasModel);
+}
+
+async function addSystemData() {
+  const manufacturerSelect = document.getElementById('manufacturer');
+  const modelSelect = document.getElementById('model');
+  const systemDataRow = document.getElementById('system-data-row');
+  const assetUidInput = document.getElementById('asset-uid');
+  const systemNormInput = document.getElementById('system-norm');
+  const subsystemNormInput = document.getElementById('subsystem-norm');
+  
+  if (!manufacturerSelect || !modelSelect || !systemDataRow) return;
+  
+  const manufacturer = manufacturerSelect.value.trim();
+  const model = modelSelect.value.trim();
+  
+  if (!manufacturer || !model) {
+    alert('Please select both manufacturer and model first.');
+    return;
+  }
+  
+  try {
+    // Call the system lookup API
+    const res = await window.adminFetch(`/admin/api/systems/lookup?manufacturer=${encodeURIComponent(manufacturer)}&model=${encodeURIComponent(model)}`);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    if (!data.success || !data.data) {
+      throw new Error('System lookup failed');
+    }
+    
+    // Populate the fields
+    if (assetUidInput) assetUidInput.value = data.data.asset_uid || '';
+    if (systemNormInput) systemNormInput.value = data.data.system_norm || '';
+    if (subsystemNormInput) subsystemNormInput.value = data.data.subsystem_norm || '';
+    
+    // Show the system data row
+    systemDataRow.style.display = 'flex';
+    
+  } catch (err) {
+    console.error('Failed to load system data:', err);
+    alert(`Failed to load system data: ${err.message}`);
   }
 }
 

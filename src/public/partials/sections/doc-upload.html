@@ -44,6 +44,27 @@
         </div>
         
         <div class="form-row">
+            <div class="form-group">
+                <button type="button" id="add-data-btn" class="btn primary" onclick="addSystemData()" disabled>Add Data</button>
+            </div>
+        </div>
+        
+        <div class="form-row" id="system-data-row" style="display: none;">
+            <div class="form-group">
+                <label for="asset-uid">Asset UID:</label>
+                <input type="text" id="asset-uid" readonly>
+            </div>
+            <div class="form-group">
+                <label for="system-norm">System:</label>
+                <input type="text" id="system-norm" readonly>
+            </div>
+            <div class="form-group">
+                <label for="subsystem-norm">Subsystem:</label>
+                <input type="text" id="subsystem-norm" readonly>
+            </div>
+        </div>
+        
+        <div class="form-row">
             <button id="upload-btn" class="btn primary" type="button">Upload</button>
         </div>
     </div>

@@ -4,6 +4,7 @@ import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminSystemsEnvelope } from '../../schemas/admin.schema.js';
 import { adminService } from '../../services/admin.service.js';
+import { lookupSystemByManufacturerAndModel } from '../../repositories/systems.repository.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -76,6 +77,44 @@ router.get('/',
     next(error);
   }
 });
+
+// System lookup query schema
+const systemLookupQuerySchema = z.object({
+  manufacturer: z.string().min(1, 'Manufacturer is required'),
+  model: z.string().min(1, 'Model is required')
+});
+
+// GET /admin/systems/lookup - Lookup system by manufacturer and model
+router.get('/lookup',
+  validate(systemLookupQuerySchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const { manufacturer, model } = req.query;
+      
+      const systemData = await lookupSystemByManufacturerAndModel(manufacturer, model);
+      
+      const envelope = {
+        success: true,
+        data: systemData
+      };
+      
+      return res.json(envelope);
+      
+    } catch (error) {
+      if (error.code === 'SYSTEM_NOT_FOUND') {
+        return res.json({
+          success: false,
+          error: {
+            code: 'SYSTEM_NOT_FOUND',
+            message: error.message
+          }
+        }, 404);
+      }
+      
+      next(error);
+    }
+  }
+);
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {

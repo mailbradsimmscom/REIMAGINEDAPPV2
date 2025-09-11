@@ -131,7 +131,7 @@ export class AdminService {
       const { data, error } = await supabase
         .from('systems')
         .select('*')
-        .order('name');
+        .order('system_norm');
 
       if (error) {
         this.requestLogger.warn('Systems table query failed', { error: error.message });
@@ -147,7 +147,7 @@ export class AdminService {
 
       return {
         total: data?.length || 0,
-        top: data?.slice(0, 10).map(s => ({ system_norm: s.name })) || [],
+        top: data?.slice(0, 10).map(s => ({ system_norm: s.system_norm })) || [],
         lastUpdated: new Date().toISOString()
       };
     } catch (error) {

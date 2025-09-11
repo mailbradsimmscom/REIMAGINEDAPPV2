@@ -155,7 +155,8 @@ class SuggestionsRepository {
           context: entity.context,
           confidence: entity.confidence,
           approved_by,
-          approved_at: new Date().toISOString()
+          approved_at: new Date().toISOString(),
+          status: 'pending'
         })
         .select()
         .single();

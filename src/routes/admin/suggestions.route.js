@@ -128,7 +128,7 @@ router.get('/pending', adminOnly, async (req, res) => {
         doc_id,
         status,
         created_at,
-        documents!inner(
+        documents(
           doc_id,
           manufacturer,
           model,
@@ -214,28 +214,73 @@ router.get('/:docId', adminOnly, validate(z.object({
 
     // Get DIP files from Supabase Storage
     const dipFiles = {};
-    const fileTypes = ['entities', 'spec_hints', 'golden_tests', 'summary'];
     
-    for (const fileType of fileTypes) {
-      try {
-        const fileName = `${docId}_${fileType}.json`;
-        const storagePath = `manuals/${docId}/DIP/${fileName}`;
+    try {
+      // Try new Python sidecar format first
+      const dipPath = `manuals/${docId}/dip.json`;
+      const suggestionsPath = `manuals/${docId}/suggestions.json`;
+      
+      const [dipResponse, suggestionsResponse] = await Promise.allSettled([
+        supabase.storage.from('documents').download(dipPath),
+        supabase.storage.from('documents').download(suggestionsPath)
+      ]);
+      
+      if (dipResponse.status === 'fulfilled' && dipResponse.value.data) {
+        const dipContent = await dipResponse.value.data.text();
+        const dipData = JSON.parse(dipContent);
         
-        const { data: fileData, error: fileError } = await supabase.storage
-          .from('documents')
-          .download(storagePath);
-
-        if (fileError) {
-          requestLogger.warn(`DIP file not found: ${fileName}`, { error: fileError.message });
-          dipFiles[fileType] = null;
-        } else {
-          const content = await fileData.text();
-          dipFiles[fileType] = JSON.parse(content);
-        }
-      } catch (error) {
-        requestLogger.error(`Error loading DIP file ${fileType}`, { error: error.message });
-        dipFiles[fileType] = null;
+        // Map Python sidecar format to expected format
+        dipFiles.entities = dipData.entities ? { entities: dipData.entities } : null;
+        dipFiles.spec_hints = dipData.spec_hints ? { spec_hints: dipData.spec_hints } : null;
+        dipFiles.golden_tests = dipData.golden_tests ? { golden_tests: dipData.golden_tests } : null;
+        dipFiles.summary = dipData.summary || null;
       }
+      
+      if (suggestionsResponse.status === 'fulfilled' && suggestionsResponse.value.data) {
+        const suggestionsContent = await suggestionsResponse.value.data.text();
+        const suggestionsData = JSON.parse(suggestionsContent);
+        
+        // Merge suggestions data if available
+        if (suggestionsData.entities) dipFiles.entities = { entities: suggestionsData.entities };
+        if (suggestionsData.spec_hints) dipFiles.spec_hints = { spec_hints: suggestionsData.spec_hints };
+        if (suggestionsData.golden_tests) dipFiles.golden_tests = { golden_tests: suggestionsData.golden_tests };
+        if (suggestionsData.summary) dipFiles.summary = suggestionsData.summary;
+      }
+      
+      // Fallback to old format if new format not found
+      if (!dipFiles.entities && !dipFiles.spec_hints && !dipFiles.golden_tests) {
+        const fileTypes = ['entities', 'spec_hints', 'golden_tests', 'summary'];
+        
+        for (const fileType of fileTypes) {
+          try {
+            const fileName = `${docId}_${fileType}.json`;
+            const storagePath = `manuals/${docId}/DIP/${fileName}`;
+            
+            const { data: fileData, error: fileError } = await supabase.storage
+              .from('documents')
+              .download(storagePath);
+
+            if (fileError) {
+              requestLogger.warn(`DIP file not found: ${fileName}`, { error: fileError.message });
+              dipFiles[fileType] = null;
+            } else {
+              const content = await fileData.text();
+              dipFiles[fileType] = JSON.parse(content);
+            }
+          } catch (error) {
+            requestLogger.error(`Error loading DIP file ${fileType}`, { error: error.message });
+            dipFiles[fileType] = null;
+          }
+        }
+      }
+      
+    } catch (error) {
+      requestLogger.error('Error loading DIP files', { error: error.message });
+      // Return empty structure
+      dipFiles.entities = null;
+      dipFiles.spec_hints = null;
+      dipFiles.golden_tests = null;
+      dipFiles.summary = null;
     }
 
     requestLogger.info('Loaded DIP suggestions', { docId, filesLoaded: Object.keys(dipFiles).length });

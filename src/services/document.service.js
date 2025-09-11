@@ -9,6 +9,7 @@ import { getEnv } from '../config/env.js';
 import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
 import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
 import dipService from './dip.service.js';
+import suggestionsRepository from '../repositories/suggestions.repository.js';
 
 class DocumentService {
   constructor() {
@@ -173,7 +174,8 @@ class DocumentService {
           if (!validationResult.success) {
             this.requestLogger.error('Invalid system metadata response', { 
               systemMetadata, 
-              errors: validationResult.error.errors 
+              errors: validationResult.error.errors,
+              errorDetails: JSON.stringify(validationResult.error.errors, null, 2)
             });
             throw new Error('Invalid system metadata response from database');
           }
@@ -471,6 +473,25 @@ class DocumentService {
         });
       }
 
+      // Parse DIP entities and insert into entity_candidates table for DIP jobs
+      if (job.job_type === 'DIP' && dipResult) {
+        try {
+          const parseResult = await this.parseDIPToEntityCandidates(job.doc_id);
+          this.requestLogger.info('DIP entities parsed successfully', {
+            docId: job.doc_id,
+            entitiesInserted: parseResult.entitiesInserted,
+            totalEntities: parseResult.totalEntities
+          });
+        } catch (parseError) {
+          this.requestLogger.error('Failed to parse DIP entities', {
+            error: parseError.message,
+            docId: job.doc_id,
+            jobId
+          });
+          // Don't fail the job for entity parsing errors, just log them
+        }
+      }
+
       await documentRepository.updateJobStatus(jobId, 'completed');
 
       this.requestLogger.info('Job processing completed', { 
@@ -496,6 +517,72 @@ class DocumentService {
         }
       });
       
+      throw error;
+    }
+  }
+
+  // Parse DIP files and insert entities into entity_candidates table
+  async parseDIPToEntityCandidates(docId) {
+    try {
+      // Read DIP file from storage
+      const storage = await this.getSupabaseStorage();
+      if (!storage) {
+        throw new Error('Storage service unavailable');
+      }
+
+      const dipPath = `manuals/${docId}/dip.json`;
+      const { data: dipData, error: dipError } = await storage.storage
+        .from('documents')
+        .download(dipPath);
+
+      if (dipError || !dipData) {
+        throw new Error(`Failed to read DIP file: ${dipError?.message || 'No data'}`);
+      }
+
+      const dipContent = await dipData.text();
+      const dip = JSON.parse(dipContent);
+
+      let entitiesInserted = 0;
+
+      // Insert each entity as a candidate
+      if (dip.entities && Array.isArray(dip.entities)) {
+        for (const entity of dip.entities) {
+          try {
+                await suggestionsRepository.insertEntityCandidate(docId, entity, 'system');
+            entitiesInserted++;
+            this.requestLogger.info('Entity candidate inserted', { 
+              docId, 
+              entityType: entity.entity_type,
+              entityValue: entity.value?.substring(0, 50) + '...' // Truncate for logging
+            });
+          } catch (entityInsertError) {
+            this.requestLogger.warn('Failed to insert individual entity', {
+              docId,
+              entityType: entity.entity_type,
+              error: entityInsertError.message
+            });
+            // Continue with other entities even if one fails
+          }
+        }
+      }
+
+      this.requestLogger.info('DIP entities parsed and inserted', {
+        docId,
+        entitiesInserted,
+        totalEntities: dip.entities?.length || 0
+      });
+
+      return {
+        success: true,
+        entitiesInserted,
+        totalEntities: dip.entities?.length || 0
+      };
+
+    } catch (error) {
+      this.requestLogger.error('Failed to parse DIP to entity candidates', {
+        docId,
+        error: error.message
+      });
       throw error;
     }
   }

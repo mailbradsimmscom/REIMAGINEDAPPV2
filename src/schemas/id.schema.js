@@ -11,7 +11,7 @@ export const SystemUid = z.string().uuid();
  * Used for documents.doc_id which can be either format
  */
 export const HashOrUuid = z.string().refine(v => {
-  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const hex = /^[0-9a-f]{32,64}$/i; // loosen if needed
   return uuid.test(v) || hex.test(v);
 }, "Expected UUID or known hash id");

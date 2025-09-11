@@ -28,28 +28,13 @@ class DIPService {
         throw new Error('Python sidecar URL not configured');
       }
 
-      const formData = new FormData();
-      
-      // Add file
-      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-      formData.append('file', blob, fileName);
-      
-      // Add document ID
-      formData.append('doc_id', docId);
-      
-      // Add processing options
-      formData.append('options', JSON.stringify({
-        enhanced: true,
-        ...options
-      }));
-
       // Call DIP endpoint
       const response = await fetch(`${sidecarUrl}/v1/dip`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ doc_id })
+        body: JSON.stringify({ doc_id: docId })
       });
 
       if (!response.ok) {
