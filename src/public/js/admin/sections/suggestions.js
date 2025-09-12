@@ -1,7 +1,11 @@
 /**
  * Suggestions section controller
  * Handles AI-generated suggestions management and approval workflow
+ * Now supports all four DIP table types: spec_suggestions, playbook_hints, intent_router, golden_tests
  */
+
+let allSuggestions = [];
+let currentFilter = 'all';
 
 export function init({ router, adminState }) {
     initializeSuggestionsSection();
@@ -28,9 +32,11 @@ async function loadSuggestions() {
         }
         
         const data = await response.json();
-        const suggestions = data.data?.suggestions || [];
+        allSuggestions = data.data?.suggestions || [];
+        const counts = data.data?.counts || {};
         
-        renderSuggestions(suggestions);
+        updateStatistics(counts);
+        renderSuggestions();
         
     } catch (error) {
         console.error('Failed to load suggestions:', error);
@@ -38,13 +44,29 @@ async function loadSuggestions() {
     }
 }
 
-function renderSuggestions(suggestions) {
+function updateStatistics(counts) {
+    const elements = {
+        'total-suggestions': counts.total || 0,
+        'spec-count': counts.spec_suggestions || 0,
+        'playbook-count': counts.playbook_hints || 0,
+        'intent-count': counts.intent_router || 0,
+        'test-count': counts.golden_tests || 0
+    };
+    
+    Object.entries(elements).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
+    });
+}
+
+function renderSuggestions() {
     const container = document.getElementById('suggestions-list');
-    const statsContainer = document.getElementById('total-suggestions');
     const loadingDiv = document.getElementById('loading');
     const contentDiv = document.getElementById('content');
     
-    if (!container || !statsContainer || !loadingDiv || !contentDiv) {
+    if (!container || !loadingDiv || !contentDiv) {
         console.warn('suggestions.js: Required DOM elements not found');
         return;
     }
@@ -53,16 +75,19 @@ function renderSuggestions(suggestions) {
     loadingDiv.style.display = 'none';
     contentDiv.style.display = 'block';
     
-    statsContainer.textContent = suggestions.length;
+    // Filter suggestions based on current filter
+    const filteredSuggestions = currentFilter === 'all' 
+        ? allSuggestions 
+        : allSuggestions.filter(s => s.type === currentFilter);
     
-    if (suggestions.length === 0) {
-        container.innerHTML = '<div class="empty">No DIP suggestions available for review.</div>';
+    if (filteredSuggestions.length === 0) {
+        container.innerHTML = '<div class="empty">No suggestions available for the selected filter.</div>';
         return;
     }
 
     container.innerHTML = '';
     
-    suggestions.forEach((suggestion, index) => {
+    filteredSuggestions.forEach((suggestion, index) => {
         const suggestionElement = createSuggestionElement(suggestion, index);
         container.appendChild(suggestionElement);
     });
@@ -73,28 +98,25 @@ function createSuggestionElement(suggestion, index) {
     div.className = 'suggestion-item';
     div.dataset.docId = suggestion.doc_id;
     div.dataset.suggestionId = suggestion.id;
+    div.dataset.type = suggestion.type;
     
-    const suggestionType = suggestion.type || 'unknown';
-    const entityType = suggestion.entity_type || 'general';
+    const typeLabel = getTypeLabel(suggestion.type);
     const confidence = suggestion.confidence || 0;
     const page = suggestion.page || 'N/A';
-    const fileInfo = suggestion.file_name || 'Unknown Document';
     
     div.innerHTML = `
         <div class="suggestion-header">
             <input type="checkbox" 
-                   data-type="${suggestionType}" 
-                   data-entity-type="${entityType}"
+                   data-type="${suggestion.type}" 
                    data-index="${index}"
                    data-suggestion-id="${suggestion.id}"
                    class="suggestion-checkbox">
-            <span class="suggestion-type">${escapeHtml(entityType)}</span>
+            <span class="suggestion-type">${escapeHtml(typeLabel)}</span>
             <span class="suggestion-confidence">${(confidence * 100).toFixed(1)}%</span>
             <span class="suggestion-page">Page ${page}</span>
         </div>
         <div class="suggestion-content">
-            <div class="suggestion-value">${escapeHtml(suggestion.value || 'No content')}</div>
-            <div class="suggestion-document">From: ${escapeHtml(fileInfo)}</div>
+            <div class="suggestion-value">${escapeHtml(suggestion.display_value || 'No content')}</div>
             ${suggestion.context ? `<div class="suggestion-context">${escapeHtml(suggestion.context)}</div>` : ''}
         </div>
     `;
@@ -102,7 +124,31 @@ function createSuggestionElement(suggestion, index) {
     return div;
 }
 
+function getTypeLabel(type) {
+    const labels = {
+        'spec': 'Spec Suggestion',
+        'playbook': 'Playbook Hint',
+        'intent': 'Intent Router',
+        'test': 'Golden Test'
+    };
+    return labels[type] || 'Unknown';
+}
+
 function setupEventListeners() {
+    // Filter tabs
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Update active tab
+            tabButtons.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Update filter and re-render
+            currentFilter = e.target.dataset.filter;
+            renderSuggestions();
+        });
+    });
+    
     // Select all button
     const selectAllBtn = document.getElementById('select-all');
     if (selectAllBtn) {
@@ -160,17 +206,16 @@ async function approveSelected() {
     if (checkboxes.length === 0) return;
 
     const approvedSuggestions = {
-        entities: [],
         spec_suggestions: [],
-        golden_tests: [],
-        playbook_hints: []
+        playbook_hints: [],
+        intent_router: [],
+        golden_tests: []
     };
     
     let currentDocId = null;
     
     checkboxes.forEach(checkbox => {
         const type = checkbox.dataset.type;
-        const index = parseInt(checkbox.dataset.index);
         const docId = checkbox.closest('.suggestion-item').dataset.docId;
         
         if (!currentDocId) currentDocId = docId;
@@ -180,33 +225,42 @@ async function approveSelected() {
         const value = suggestionElement.querySelector('.suggestion-value').textContent;
         const confidence = parseFloat(suggestionElement.querySelector('.suggestion-confidence').textContent) / 100;
         const page = suggestionElement.querySelector('.suggestion-page').textContent.replace('Page ', '');
+        const context = suggestionElement.querySelector('.suggestion-context')?.textContent || '';
         
         const suggestion = {
             value: value,
             confidence: confidence,
             page: page === 'N/A' ? null : parseInt(page),
-            context: suggestionElement.querySelector('.suggestion-context')?.textContent || null
+            context: context
         };
         
         // Add type-specific fields
         switch (type) {
-            case 'entity':
-                suggestion.entity_type = 'general';
-                approvedSuggestions.entities.push(suggestion);
-                break;
             case 'spec':
-                suggestion.hint_type = 'general';
+                suggestion.spec_name = value.split(':')[0] || value;
+                suggestion.spec_value = value.split(':')[1]?.trim() || null;
                 approvedSuggestions.spec_suggestions.push(suggestion);
+                break;
+            case 'playbook':
+                suggestion.test_name = 'Playbook Hint';
+                suggestion.test_type = 'procedure';
+                suggestion.description = value;
+                suggestion.steps = [];
+                suggestion.expected_result = 'See documentation';
+                approvedSuggestions.playbook_hints.push(suggestion);
+                break;
+            case 'intent':
+                suggestion.intent = value.split(' → ')[0] || value;
+                suggestion.route_to = value.split(' → ')[1] || 'general';
+                approvedSuggestions.intent_router.push(suggestion);
                 break;
             case 'test':
                 suggestion.test_name = value;
                 suggestion.test_type = 'maintenance';
+                suggestion.description = value;
+                suggestion.steps = [];
+                suggestion.expected_result = 'See documentation';
                 approvedSuggestions.golden_tests.push(suggestion);
-                break;
-            case 'playbook':
-                suggestion.test_name = value;
-                suggestion.test_type = 'maintenance';
-                approvedSuggestions.playbook_hints.push(suggestion);
                 break;
         }
     });
@@ -229,19 +283,8 @@ async function approveSelected() {
 
         const result = await response.json();
         const totalInserted = result.data?.total_inserted || 0;
-        const mergeResult = result.data?.merge_to_production;
         
-        let message = `Successfully approved ${totalInserted} suggestions`;
-        if (mergeResult) {
-            if (mergeResult.total_merged > 0) {
-                message += ` (${mergeResult.total_merged} merged to production tables)`;
-            }
-            if (mergeResult.total_errors > 0) {
-                message += ` (${mergeResult.total_errors} merge errors)`;
-            }
-        }
-        
-        showSuccess(message);
+        showSuccess(`Successfully approved ${totalInserted} suggestions`);
         deselectAll();
         
         // Reload suggestions to show updated state

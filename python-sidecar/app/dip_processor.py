@@ -261,6 +261,30 @@ class DIPProcessor:
         
         return golden_tests
 
+    def extract_playbook_hints(self, chunks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Extract procedural / imperative instructions as playbook hints"""
+        playbook_hints = []
+        imperative_patterns = [
+            r'^(?:always|never|do not|disconnect|remove|insert|replace|check|clean|use|fill|preheat|turn|press|close)\b.*',
+            r'.*prior to.*',
+            r'.*when not in use.*',
+        ]
+
+        for chunk in chunks:
+            text = chunk.get("content", "")
+            page = chunk.get("page", None)
+            for line in text.split("\n"):
+                stripped = line.strip()
+                for pat in imperative_patterns:
+                    if re.match(pat, stripped, flags=re.IGNORECASE):
+                        playbook_hints.append({
+                            "hint": stripped,
+                            "page": page,
+                            "confidence": 0.8
+                        })
+                        break
+        return playbook_hints
+
     def _calculate_confidence(self, match, content: str) -> float:
         """Calculate confidence score for a match"""
         base_confidence = 0.7
@@ -352,11 +376,12 @@ class DIPProcessor:
         entities = self.extract_entities(elements)
         spec_hints = self.extract_spec_hints(elements)
         golden_tests = self.extract_golden_tests(elements)
+        playbook_hints = self.extract_playbook_hints(chunks)  # NEW
         
         processing_time = time.time() - start_time
         
         logger.info(f"DIP processing from chunks completed for {doc_id}: "
-                   f"{len(entities)} entities, {len(spec_hints)} hints, {len(golden_tests)} tests")
+                   f"{len(entities)} entities, {len(spec_hints)} hints, {len(golden_tests)} tests, {len(playbook_hints)} playbook hints")
         
         return {
             'success': True,
@@ -364,12 +389,13 @@ class DIPProcessor:
             'dip': {
                 'entities': entities,
                 'spec_hints': spec_hints,
-                'golden_tests': golden_tests
+                'golden_tests': golden_tests,
+                'playbook_hints': playbook_hints  # NEW
             },
             'suggestions': {
                 'entities': {'add_aliases': {}},
                 'intents': {'hints': []},
-                'playbooks': {},
+                'playbooks': {'hints': playbook_hints},  # NEW
                 'units': {'suggest_add': []},
                 'tests': {'seed_goldens': []}
             },
@@ -377,7 +403,8 @@ class DIPProcessor:
             'pages_processed': len(set(chunk.get('page', 1) for chunk in chunks)),
             'entities_count': len(entities),
             'hints_count': len(spec_hints),
-            'tests_count': len(golden_tests)
+            'tests_count': len(golden_tests),
+            'playbook_count': len(playbook_hints)  # NEW
         }
 
     def save_dip_files(self, dip_data: Dict[str, Any], output_dir: str) -> Dict[str, str]:
@@ -442,17 +469,7 @@ class DIPProcessor:
             logger.error(f"Error uploading spec_suggestions.json: {e}")
         
         # 2. Create playbook_hints.json
-        playbook_hints = []
-        for hint in dip_data['dip']['spec_hints']:
-            if hint.hint_type in ['procedure', 'maintenance', 'troubleshooting']:
-                playbook_hints.append({
-                    'value': hint.value,
-                    'hint_type': hint.hint_type,
-                    'page': hint.page,
-                    'confidence': hint.confidence
-                })
-        
-        # Upload playbook_hints.json
+        playbook_hints = dip_data['dip'].get('playbook_hints', [])
         playbook_hints_content = json.dumps(playbook_hints, indent=2, ensure_ascii=False)
         playbook_hints_path = f"documents/manuals/{doc_id}/DIP/{doc_id}_playbook_hints.json"
         

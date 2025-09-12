@@ -1,6 +1,6 @@
 <div class="card">
-    <h3>Suggestions Management</h3>
-    <p>View and manage AI-generated suggestions from DIP processing.</p>
+    <h3>DIP Suggestions Management</h3>
+    <p>View and manage AI-generated suggestions from Document Intelligence Packet processing.</p>
     
     <!-- Error/Success Messages -->
     <div id="error" class="alert alert-error" style="display: none;"></div>
@@ -20,9 +20,34 @@
                 <span id="total-suggestions" class="stat-value">0</span>
             </div>
             <div class="stat">
+                <span class="stat-label">Spec Suggestions:</span>
+                <span id="spec-count" class="stat-value">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Playbook Hints:</span>
+                <span id="playbook-count" class="stat-value">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Intent Router:</span>
+                <span id="intent-count" class="stat-value">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Golden Tests:</span>
+                <span id="test-count" class="stat-value">0</span>
+            </div>
+            <div class="stat">
                 <span class="stat-label">Selected:</span>
                 <span id="selected-suggestions" class="stat-value">0</span>
             </div>
+        </div>
+        
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="tab-btn active" data-filter="all">All Types</button>
+            <button class="tab-btn" data-filter="spec">Spec Suggestions</button>
+            <button class="tab-btn" data-filter="playbook">Playbook Hints</button>
+            <button class="tab-btn" data-filter="intent">Intent Router</button>
+            <button class="tab-btn" data-filter="test">Golden Tests</button>
         </div>
         
         <!-- Actions -->
@@ -47,12 +72,14 @@
     padding: 1rem;
     background: #f8f9fa;
     border-radius: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .stat {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 120px;
 }
 
 .stat-label {
@@ -65,6 +92,41 @@
     font-size: 1.25rem;
     font-weight: 600;
     color: #212529;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tab-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    color: #495057;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.tab-btn:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.tab-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.tab-btn.active:hover {
+    background: #0056b3;
+    border-color: #0056b3;
 }
 
 .actions {
