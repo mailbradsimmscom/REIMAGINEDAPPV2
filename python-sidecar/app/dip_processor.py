@@ -199,7 +199,12 @@ class DIPProcessor:
                             for match in matches:
                                 if match.groups():
                                     value = match.group(1).strip()
+                                    # Try to extract unit from the match groups first
                                     unit = match.group(2).strip() if len(match.groups()) > 1 and match.group(2) else None
+                                    
+                                    # If no unit found in groups, try to extract from surrounding text
+                                    if not unit:
+                                        unit = self._extract_unit_from_text(content, match.start(), match.end())
                                     
                                     if len(value) > 0:
                                         confidence = self._calculate_confidence(match, content)
@@ -220,6 +225,37 @@ class DIPProcessor:
                             continue
         
         return spec_hints
+
+    def _extract_unit_from_text(self, text: str, match_start: int, match_end: int) -> str:
+        """Extract unit from text around the matched spec value"""
+        # Look for unit patterns after the number
+        unit_patterns = [
+            r'(?P<value>\d+(?:\.\d+)?)\s*(?P<unit>[A-Za-z%°]+(?:/[A-Za-z%°]+)?)',
+            r'(?P<value>\d+(?:\.\d+)?)\s*(?P<unit>V(?:DC|AC)?|W|A|bar|psi|°[CF]|gpm|lpm)',
+        ]
+        
+        for pattern in unit_patterns:
+            matches = re.finditer(pattern, text, re.IGNORECASE)
+            for match in matches:
+                if match.start() >= match_start and match.end() <= match_end + 10:
+                    unit = match.group('unit')
+                    if unit:
+                        return self._normalize_unit_text(unit)
+        return None
+
+    def _normalize_unit_text(self, unit_text: str) -> str:
+        """Normalize unit text by joining adjacent unit-like tokens"""
+        if not unit_text:
+            return None
+        
+        # Clean and normalize
+        normalized = unit_text.strip().upper()
+        
+        # Handle common OCR artifacts and join adjacent tokens
+        # "V DC" -> "VDC", "kg m²" -> "kg/m²"
+        normalized = re.sub(r'\s+', '', normalized)  # Remove spaces
+        
+        return normalized if normalized else None
 
     def extract_golden_tests(self, elements: List[PageElement]) -> List[DIPGoldenTest]:
         """Extract golden test cases from document elements"""

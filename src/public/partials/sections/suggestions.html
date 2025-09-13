@@ -263,4 +263,91 @@
 .btn-secondary:hover:not(:disabled) {
     background: #545b62;
 }
+
+/* Table-specific styles */
+.suggestion-table-container {
+    margin-bottom: 2rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-header h4 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.suggestion-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.suggestion-table th {
+    background: #e9ecef;
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.suggestion-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f1f3f4;
+    vertical-align: top;
+}
+
+.suggestion-table tr:hover {
+    background: #f8f9fa;
+}
+
+.suggestion-table tr:last-child td {
+    border-bottom: none;
+}
+
+.context-cell {
+    max-width: 300px;
+    word-wrap: break-word;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.suggestion-table input[type="checkbox"] {
+    margin: 0;
+    transform: scale(1.1);
+}
+
+/* Confidence cell styling */
+.confidence-cell {
+    font-weight: 600;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+.confidence-high {
+    color: #28a745;
+    background: #d4edda;
+}
+
+.confidence-medium {
+    color: #856404;
+    background: #fff3cd;
+}
+
+.confidence-low {
+    color: #721c24;
+    background: #f8d7da;
+}
 </style>

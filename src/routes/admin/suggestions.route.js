@@ -16,30 +16,62 @@ router.get('/pending', adminOnly, async (req, res) => {
       conditions.doc_id = docId;
     }
 
-    // Fetch from all four tables in parallel
+    // Fetch from all four tables in parallel with document model info
     const supabaseClient = await getSupabaseClient();
     const [specSuggestions, playbookHints, intentRouter, goldenTests] = await Promise.all([
       supabaseClient
         .from('spec_suggestions')
-        .select('*')
+        .select(`
+          *,
+          documents!inner(
+            model_norm,
+            manufacturer_norm,
+            model,
+            manufacturer
+          )
+        `)
         .match(conditions)
         .order('created_at', { ascending: false }),
       
       supabaseClient
         .from('playbook_hints')
-        .select('*')
+        .select(`
+          *,
+          documents!inner(
+            model_norm,
+            manufacturer_norm,
+            model,
+            manufacturer
+          )
+        `)
         .match(conditions)
         .order('created_at', { ascending: false }),
       
       supabaseClient
         .from('intent_router')
-        .select('*')
+        .select(`
+          *,
+          documents!inner(
+            model_norm,
+            manufacturer_norm,
+            model,
+            manufacturer
+          )
+        `)
         .match(conditions)
         .order('created_at', { ascending: false }),
       
       supabaseClient
         .from('golden_tests')
-        .select('*')
+        .select(`
+          *,
+          documents!inner(
+            model_norm,
+            manufacturer_norm,
+            model,
+            manufacturer
+          )
+        `)
         .match(conditions)
         .order('created_at', { ascending: false })
     ]);
@@ -56,7 +88,7 @@ router.get('/pending', adminOnly, async (req, res) => {
       });
     }
 
-    // Normalize the data and add type information
+    // Normalize the data and add type information with model info
     const suggestions = [
       ...specSuggestions.data.map(item => ({
         ...item,
@@ -65,7 +97,9 @@ router.get('/pending', adminOnly, async (req, res) => {
         display_value: `${item.spec_name}: ${item.spec_value || 'N/A'}${item.spec_unit ? ` ${item.spec_unit}` : ''}`,
         context: item.context || '',
         confidence: parseFloat(item.confidence) || 0,
-        page: parseInt(item.page) || null
+        page: parseInt(item.page) || null,
+        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
       })),
       
       ...playbookHints.data.map(item => ({
@@ -75,7 +109,9 @@ router.get('/pending', adminOnly, async (req, res) => {
         display_value: item.description || 'No description',
         context: '',
         confidence: parseFloat(item.confidence) || 0,
-        page: parseInt(item.page) || null
+        page: parseInt(item.page) || null,
+        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
       })),
       
       ...intentRouter.data.map(item => ({
@@ -85,7 +121,9 @@ router.get('/pending', adminOnly, async (req, res) => {
         display_value: `${item.intent} → ${item.route_to}`,
         context: '',
         confidence: parseFloat(item.confidence) || 0,
-        page: parseInt(item.page) || null
+        page: parseInt(item.page) || null,
+        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
       })),
       
       ...goldenTests.data.map(item => ({
@@ -95,7 +133,9 @@ router.get('/pending', adminOnly, async (req, res) => {
         display_value: item.query || 'Unnamed Test',
         context: item.expected || '',
         confidence: parseFloat(item.confidence) || 0,
-        page: parseInt(item.page) || null
+        page: parseInt(item.page) || null,
+        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
       }))
     ];
 

@@ -10,7 +10,7 @@ export const dipCleanerRouter = Router();
  * POST /admin/api/dip/clean
  * Body: { doc_id: string, job_id?: string }
  */
-dipCleanerRouter.post("/api/dip/clean", async (req, res) => {
+dipCleanerRouter.post("/dip/clean", async (req, res) => {
   try {
     const { doc_id: docId, job_id: jobId } = req.body ?? {};
     if (!docId) {

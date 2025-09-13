@@ -297,7 +297,7 @@ async function generateSpecSuggestions(docId, dip, options = {}) {
           specSuggestions.push({
             spec_name: specName,
             spec_value: value,
-            spec_unit: null, // TODO: Extract units from specifications
+            spec_unit: null,
             page: null, // TODO: Extract page numbers from chunks
             confidence: 0.8 // Default confidence
           });
@@ -410,9 +410,10 @@ async function generateGoldenTests(docId, dip, options = {}) {
     // Extract golden tests from DIP maintenance
     if (dip.maintenance && dip.maintenance.procedures) {
       dip.maintenance.procedures.forEach((procedure, index) => {
+        const procedureText = typeof procedure === 'string' ? procedure : String(procedure);
         goldenTests.push({
-          query: `How do I ${procedure.toLowerCase()}?`,
-          expected: procedure,
+          query: `How do I ${procedureText.toLowerCase()}?`,
+          expected: procedureText,
           page: null, // TODO: Extract page numbers
           confidence: 0.8 // Default confidence
         });

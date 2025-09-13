@@ -53,7 +53,8 @@ export async function normalizeAndCleanSpecs(stagingSpecs) {
   const normalized = stagingSpecs.map((row) => {
     let nameKey = (row.spec_name ?? "").toLowerCase().trim();
     let canonical = null;
-    let unit = row.spec_unit;
+    let unitExtracted = row.spec_unit;
+    let expectedUnit = null;
 
     for (const lex of lexicon) {
       if (
@@ -62,7 +63,8 @@ export async function normalizeAndCleanSpecs(stagingSpecs) {
         )
       ) {
         canonical = lex.canonical;
-        if (!unit && lex.unit) unit = lex.unit;
+        expectedUnit = lex.unit;
+        if (!unitExtracted && lex.unit) unitExtracted = lex.unit;
         break;
       }
     }
@@ -75,13 +77,30 @@ export async function normalizeAndCleanSpecs(stagingSpecs) {
       ...row,
       spec_name: canonical,
       spec_value: valueNum ?? row.spec_value ?? null,
-      spec_unit: unit ?? null,
+      spec_unit: expectedUnit ?? null,
+      unit_extracted: unitExtracted ?? null,
       confidence: row.confidence ?? 0.7,
       context: row.context ?? "",
     };
   });
 
   const filtered = normalized.filter(basicValidate);
+  
+  // Log unit mismatches for review
+  const unitMismatches = filtered.filter(r => 
+    r.unit_extracted && r.spec_unit && r.unit_extracted !== r.spec_unit
+  );
+  if (unitMismatches.length > 0) {
+    logger.warn(`Unit mismatches detected`, {
+      count: unitMismatches.length,
+      mismatches: unitMismatches.map(r => ({
+        spec_name: r.spec_name,
+        extracted: r.unit_extracted,
+        expected: r.spec_unit
+      }))
+    });
+  }
+  
   let deduped = dedupeAndMergePages(filtered);
 
   try {
@@ -101,6 +120,7 @@ export async function normalizeAndCleanSpecs(stagingSpecs) {
     spec_name: r.spec_name,
     spec_value: r.spec_value,
     spec_unit: r.spec_unit,
+    unit_extracted: r.unit_extracted ?? null,
     status: "pending",
   }));
 }

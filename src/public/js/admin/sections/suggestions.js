@@ -87,10 +87,146 @@ function renderSuggestions() {
 
     container.innerHTML = '';
     
-    filteredSuggestions.forEach((suggestion, index) => {
-        const suggestionElement = createSuggestionElement(suggestion, index);
-        container.appendChild(suggestionElement);
+    // Group suggestions by type for better organization
+    const groupedSuggestions = groupSuggestionsByType(filteredSuggestions);
+    
+    // Render each type's table
+    Object.entries(groupedSuggestions).forEach(([type, suggestions]) => {
+        const tableElement = createTypeSpecificTable(type, suggestions);
+        container.appendChild(tableElement);
     });
+}
+
+function groupSuggestionsByType(suggestions) {
+    const grouped = {};
+    suggestions.forEach(suggestion => {
+        if (!grouped[suggestion.type]) {
+            grouped[suggestion.type] = [];
+        }
+        grouped[suggestion.type].push(suggestion);
+    });
+    return grouped;
+}
+
+function createTypeSpecificTable(type, suggestions) {
+    const tableContainer = document.createElement('div');
+    tableContainer.className = 'suggestion-table-container';
+    
+    const typeLabel = getTypeLabel(type);
+    const tableId = `table-${type}`;
+    
+    tableContainer.innerHTML = `
+        <div class="table-header">
+            <h4>${typeLabel} (${suggestions.length})</h4>
+        </div>
+        <div class="table-wrapper">
+            <table id="${tableId}" class="suggestion-table">
+                ${createTableHeader(type)}
+                <tbody>
+                    ${suggestions.map((suggestion, index) => createTableRow(type, suggestion, index)).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    return tableContainer;
+}
+
+function createTableHeader(type) {
+    const headers = {
+        'spec': `
+            <tr>
+                <th width="40">✅</th>
+                <th width="200">Model</th>
+                <th width="150">Spec Name</th>
+                <th width="100">Value</th>
+                <th width="80">Unit</th>
+                <th width="60">Page</th>
+                <th width="100">Confidence</th>
+            </tr>
+        `,
+        'playbook': `
+            <tr>
+                <th width="40">✅</th>
+                <th width="200">Model</th>
+                <th width="120">Type</th>
+                <th>Description</th>
+                <th width="150">Expected Result</th>
+                <th width="60">Page</th>
+                <th width="100">Confidence</th>
+            </tr>
+        `,
+        'intent': `
+            <tr>
+                <th width="40">✅</th>
+                <th width="200">Model</th>
+                <th>Pattern</th>
+                <th width="150">Intent</th>
+                <th width="120">Route To</th>
+            </tr>
+        `,
+        'test': `
+            <tr>
+                <th width="40">✅</th>
+                <th width="200">Model</th>
+                <th>Query</th>
+                <th>Expected Answer</th>
+                <th width="60">Page</th>
+            </tr>
+        `
+    };
+    
+    return `<thead>${headers[type] || headers['spec']}</thead>`;
+}
+
+function createTableRow(type, suggestion, index) {
+    const checkboxId = `checkbox-${type}-${index}`;
+    const baseCheckbox = `<input type="checkbox" id="${checkboxId}" class="suggestion-checkbox" data-type="${suggestion.type}" data-index="${index}" data-suggestion-id="${suggestion.id}">`;
+    
+    const rows = {
+        'spec': `
+            <tr>
+                <td>${baseCheckbox}</td>
+                <td><strong>${escapeHtml(suggestion.model)}</strong></td>
+                <td>${escapeHtml(suggestion.spec_name || 'N/A')}</td>
+                <td>${escapeHtml(suggestion.spec_value || 'N/A')}</td>
+                <td>${escapeHtml(suggestion.spec_unit || 'N/A')}</td>
+                <td>${suggestion.page || 'N/A'}</td>
+                <td class="confidence-cell ${getConfidenceClass(suggestion.confidence)}">${(suggestion.confidence * 100).toFixed(1)}%</td>
+            </tr>
+        `,
+        'playbook': `
+            <tr>
+                <td>${baseCheckbox}</td>
+                <td><strong>${escapeHtml(suggestion.model)}</strong></td>
+                <td>${escapeHtml(suggestion.test_type || 'procedure')}</td>
+                <td>${escapeHtml(suggestion.description || 'No description')}</td>
+                <td>${escapeHtml(suggestion.expected_result || 'See documentation')}</td>
+                <td>${suggestion.page || 'N/A'}</td>
+                <td class="confidence-cell ${getConfidenceClass(suggestion.confidence)}">${(suggestion.confidence * 100).toFixed(1)}%</td>
+            </tr>
+        `,
+        'intent': `
+            <tr>
+                <td>${baseCheckbox}</td>
+                <td><strong>${escapeHtml(suggestion.model)}</strong></td>
+                <td>${escapeHtml(suggestion.intent || 'N/A')}</td>
+                <td>${escapeHtml(suggestion.intent || 'N/A')}</td>
+                <td>${escapeHtml(suggestion.route_to || 'general')}</td>
+            </tr>
+        `,
+        'test': `
+            <tr>
+                <td>${baseCheckbox}</td>
+                <td><strong>${escapeHtml(suggestion.model)}</strong></td>
+                <td>${escapeHtml(suggestion.query || 'Unnamed Test')}</td>
+                <td>${escapeHtml(suggestion.expected || 'No expected result')}</td>
+                <td>${suggestion.page || 'N/A'}</td>
+            </tr>
+        `
+    };
+    
+    return rows[type] || rows['spec'];
 }
 
 function createSuggestionElement(suggestion, index) {
@@ -312,6 +448,13 @@ function showSuccess(message) {
         successDiv.style.display = 'block';
         setTimeout(() => successDiv.style.display = 'none', 5000);
     }
+}
+
+function getConfidenceClass(confidence) {
+    const conf = parseFloat(confidence) || 0;
+    if (conf >= 0.8) return 'confidence-high';
+    if (conf >= 0.6) return 'confidence-medium';
+    return 'confidence-low';
 }
 
 function escapeHtml(str) {
