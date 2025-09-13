@@ -17,6 +17,7 @@ import jobsRouter from './jobs.route.js';
 import chunksRouter from './chunks.route.js';
 import intentRouter from './intent-router.route.js';
 import playbooksRouter from './playbooks.route.js';
+import goldenTestsRouter from './golden-tests.route.js';
 import { dipCleanerRouter } from './dip-cleaner.route.js';
 
 const router = express.Router();
@@ -48,6 +49,7 @@ router.use('/jobs', jobsRouter);
 router.use('/chunks', chunksRouter);
 router.use('/intent-router', intentRouter);
 router.use('/playbooks', playbooksRouter);
+router.use('/golden-tests', goldenTestsRouter);
 router.use('/', dipCleanerRouter);
 
 // Place AFTER all routes mounted to see fall-throughs

@@ -35,14 +35,22 @@ export async function normalizeAndCleanGoldens(stagingGoldens) {
 
   try {
     rows = await tryLLM("goldens", rows);
+    logger.info("[GOLDENS CLEANER] LLM rewrite completed", { 
+      count: rows.length,
+      doc_id: stagingGoldens[0]?.doc_id 
+    });
   } catch (e) {
     logger.warn("LLM goldens upscale skipped:", e?.message ?? e);
+    logger.info("[GOLDENS CLEANER] Using raw data (LLM failed)", { 
+      count: rows.length,
+      doc_id: stagingGoldens[0]?.doc_id 
+    });
   }
 
   return rows.map((r) => ({
     query: r.query,
     expected: r.expected ?? "See documentation",
-    approved_by: "system",
+    approved_by: null, // Changed from "system" to null for pending approval
     approved_at: null,
     status: "pending",
     confidence: r.confidence ?? 0.7,

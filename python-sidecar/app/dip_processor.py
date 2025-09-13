@@ -285,12 +285,13 @@ class DIPProcessor:
                                             test_type=test_type,
                                             description=description,
                                             steps=steps,
-                                            expected_result="See procedure documentation",
+                                            expected_result=context,  # Use actual context instead of placeholder
                                             page=element.page,
                                             confidence=confidence,
                                             bbox=element.bbox
                                         )
                                         golden_tests.append(golden_test)
+                                        logger.debug(f"[GOLDEN TEST] Added: desc='{description}', expected='{context[:80]}...'")
                         except Exception as e:
                             logger.warning(f"Error processing golden test pattern {pattern}: {e}")
                             continue
