@@ -57,7 +57,7 @@ export async function normalizeAndCleanPlaybooks(stagingPlaybooks) {
     expected_result: r.expected_result ?? "See documentation",
     page: r.page,
     confidence: r.confidence ?? 0.8,
-    approved_by: "system",
+    approved_by: null,
     approved_at: null,
     status: "pending",
   }));

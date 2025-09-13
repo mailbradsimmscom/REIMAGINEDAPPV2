@@ -421,6 +421,9 @@ class DocumentService {
       const { cleanDipForDoc } = await import('../services/dip-cleaner/dip-cleaner.service.js');
       await cleanDipForDoc(job.doc_id, jobId);
 
+      // Mark job as completed
+      await documentRepository.updateJobStatus(jobId, 'completed');
+
       this.requestLogger.info('Job processing completed successfully', { 
         jobId,
         docId: job.doc_id,

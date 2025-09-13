@@ -25,7 +25,7 @@ router.post('/process-next', async (req, res, next) => {
     log.info('Manual job processing triggered');
     
     // Get the next queued job
-    const queuedJobs = await documentRepository.getJobsByStatus('queued', 1);
+    const queuedJobs = await documentRepository.getJobsByStatus('upload_complete', 1);
     
     if (queuedJobs.length === 0) {
       return res.json({
@@ -69,7 +69,7 @@ router.get('/queue', async (req, res, next) => {
   try {
     const { limit = 10 } = req.query;
     
-    const queuedJobs = await documentRepository.getJobsByStatus('queued', Number(limit));
+    const queuedJobs = await documentRepository.getJobsByStatus('upload_complete', Number(limit));
     
     res.json({
       success: true,
