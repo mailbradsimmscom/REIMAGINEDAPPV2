@@ -1,0 +1,61 @@
+==============================
+📂 PROJECT SANITY CHECK REPORT
+==============================
+
+🔹 Git
+Branch: main
+Last Commit: f338885 Merge branch 'main' of https://github.com/mailbradsimmscom/REIMAGINEDAPPV2
+Tracked jobs routes:
+src/routes/admin/jobs.route.js
+src/routes/document/jobs.route.js
+Uncommitted changes:
+ M logs/combined.log
+ M logs/info.log
+?? sanity-laptop.txt
+
+🔹 Node / npm
+Node: v20.19.4
+NPM: 10.8.2
+Yarn: not installed
+pnpm: not installed
+Lockfiles present:
+package-lock.json
+No lockfiles
+Installed dependencies:
+reimaginedappv2@0.1.0 /Users/brad/code/REIMAGINEDAPPV2
+├── @eslint/js@9.34.0
+├── @pinecone-database/pinecone@6.1.2
+├── @playwright/test@1.55.0
+├── @supabase/supabase-js@2.56.0
+├── acorn-walk@8.3.4
+├── acorn@8.15.0
+├── busboy@1.6.0
+├── concurrently@9.2.1
+├── cors@2.8.5
+├── dependency-cruiser@17.0.1
+├── dotenv@16.6.1
+├── eslint@9.34.0
+├── express-async-handler@1.2.0
+├── express-list-endpoints@7.1.1
+├── express@5.1.0
+├── fast-glob@3.3.3
+├── globals@16.3.0
+├── helmet@8.1.0
+├── madge@8.0.0
+├── openai@5.19.1
+├── supertest@7.1.4
+├── uuid@11.1.0
+└── zod@4.1.5
+
+
+🔹 Database
+Supabase/DATABASE envs:
+No DB envs found
+
+🔹 System
+User: brad
+Host: Brads-MacBook-Air.local
+OS: Darwin Brads-MacBook-Air.local 24.6.0 Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:34 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T8103 arm64
+PWD: /Users/brad/code/REIMAGINEDAPPV2
+
+✅ Report complete.
