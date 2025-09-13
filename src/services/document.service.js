@@ -150,6 +150,10 @@ class DocumentService {
       // Mark job as DIP cleaning
       await documentRepository.updateJobStatus(jobId, 'DIP cleaning');
 
+      // Clean and move staging data to production
+      const { cleanDipForDoc } = await import('../services/dip-cleaner/dip-cleaner.service.js');
+      await cleanDipForDoc(docId, jobId);
+
       this.requestLogger.info('Job processing completed successfully', { 
         jobId,
         docId: job.doc_id,

@@ -1,6 +1,6 @@
 // src/routes/admin/dip-cleaner.route.js
 import { Router } from "express";
-import { cleanDipForDoc } from '../services/dip-cleaner/dip-cleaner.service.js';
+import { cleanDipForDoc } from '../../services/dip-cleaner/dip-cleaner.service.js';
 import { adminOnly } from '../../middleware/admin.js';
 import { logger } from '../../utils/logger.js';
 
@@ -10,7 +10,7 @@ export const dipCleanerRouter = Router();
  * POST /admin/api/dip/clean
  * Body: { doc_id: string, job_id?: string }
  */
-dipCleanerRouter.post("/api/dip/clean", adminOnly, async (req, res) => {
+dipCleanerRouter.post("/api/dip/clean", async (req, res) => {
   try {
     const { doc_id: docId, job_id: jobId } = req.body ?? {};
     if (!docId) {

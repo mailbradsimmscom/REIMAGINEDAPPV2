@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
+import adminRouter from './routes/admin/index.js';
 
 // Create Express app
 const app = express();
@@ -77,6 +78,9 @@ app.get('/index.html', async (req, res) => {
 
 // Static file serving for /public path
 app.use('/public', express.static(join(process.cwd(), 'src/public')));
+
+// Admin API routes
+app.use('/admin/api', adminRouter);
 
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {
