@@ -1,10 +1,8 @@
 // src/services/dip-cleaner/util.llm.js
 import { logger } from '../../utils/logger.js';
-import openai from '../../clients/openai.client.js';
+import { oaiJson } from '../../clients/openai.client.js';
 
 async function llmCall(kind, payload) {
-  if (!openai) throw new Error("OpenAI client not available");
-
   const system = {
     specs: "Normalize specifications into consistent canonical keys, numeric values, and units.",
     playbooks: "Rewrite procedural hints into clear, standalone imperative instructions. Fix grammar, remove fragments, ensure each hint is a complete actionable step. Deduplicate semantically identical hints. Keep the imperative style (e.g., 'Disconnect power before servicing', 'Never operate without proper ventilation').",
@@ -14,20 +12,21 @@ async function llmCall(kind, payload) {
 
   const user = JSON.stringify({ items: payload }).slice(0, 8000);
 
-  const res = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    temperature: 0.2,
-    messages: [
-      { role: "system", content: system },
-      { role: "user", content: "Return ONLY JSON { items: [...] } matching length/order." },
-      { role: "user", content: user },
-    ],
-    response_format: { type: "json_object" },
-  });
+  try {
+    const res = await oaiJson({
+      system,
+      user,
+      model: "gpt-4o-mini",
+      maxOutputTokens: 400,
+    });
 
-  const text = res?.choices?.[0]?.message?.content ?? "";
-  const parsed = JSON.parse(text);
-  return Array.isArray(parsed?.items) ? parsed.items : payload;
+    const text = res?.choices?.[0]?.message?.content ?? "";
+    const parsed = JSON.parse(text);
+    return Array.isArray(parsed?.items) ? parsed.items : payload;
+  } catch (err) {
+    logger.warn(`[LLM] ${kind} skipped: ${err.message}`);
+    return payload;
+  }
 }
 
 export async function tryLLM(kind, items) {
