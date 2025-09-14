@@ -3,6 +3,7 @@ import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/supabaseClient.js';
 import documentRepository from '../repositories/document.repository.js';
+import jobsRepository from '../repositories/jobs.repository.js';
 import { lookupSystemByManufacturerAndModel } from '../repositories/systems.repository.js';
 import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
@@ -480,7 +481,7 @@ class DocumentService {
    */
   async getJobStatus(jobId) {
     try {
-      return await documentRepository.getJobById(jobId);
+      return await jobsRepository.getJobById(jobId);
     } catch (error) {
       this.requestLogger.error('Failed to get job status', { 
         jobId, 

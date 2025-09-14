@@ -17,6 +17,39 @@ const log = logger.createRequestLogger();
 router.use(validateResponse(EnvelopeSchema));
 
 /**
+ * GET /admin/jobs
+ * List all jobs
+ */
+router.get('/', async (req, res, next) => {
+  try {
+    const { limit = 50, offset = 0, status } = req.query;
+    
+    const jobs = await documentRepository.getJobsByStatus(status, Number(limit), Number(offset));
+    
+    res.json({
+      success: true,
+      data: {
+        jobs: jobs.map(job => ({
+          job_id: job.job_id,
+          doc_id: job.doc_id,
+          status: job.status,
+          created_at: job.created_at,
+          updated_at: job.updated_at,
+          storage_path: job.storage_path
+        })),
+        count: jobs.length,
+        limit: Number(limit),
+        offset: Number(offset)
+      }
+    });
+    
+  } catch (error) {
+    log.error('Failed to list jobs', { error: error.message });
+    next(error);
+  }
+});
+
+/**
  * POST /admin/jobs/process-next
  * Manually trigger processing of the next queued job
  */

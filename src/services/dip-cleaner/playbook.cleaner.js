@@ -44,7 +44,16 @@ export async function normalizeAndCleanPlaybooks(stagingPlaybooks) {
   let deduped = dedupe(base);
 
   try {
-    deduped = await tryLLM("playbooks", deduped);
+    const batchSize = 10;
+    const cleaned = [];
+    for (let i = 0; i < deduped.length; i += batchSize) {
+      const batch = deduped.slice(i, i + batchSize);
+      const out = await tryLLM("playbooks", batch);
+      cleaned.push(...out);
+    }
+    deduped = cleaned;
+    // Filter out null or malformed rows
+    deduped = deduped.filter(r => r && r.description);
   } catch (e) {
     logger.warn("LLM playbooks upscale skipped:", e?.message ?? e);
   }

@@ -33,10 +33,16 @@ export async function normalizeAndCleanGoldens(stagingGoldens) {
     return true;
   });
 
+  let cleaned = [];
+  const batchSize = 3;
   try {
-    rows = await tryLLM("goldens", rows);
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      const out = await tryLLM("goldens", batch);
+      if (Array.isArray(out)) cleaned.push(...out);
+    }
     logger.info("[GOLDENS CLEANER] LLM rewrite completed", { 
-      count: rows.length,
+      count: cleaned.length,
       doc_id: stagingGoldens[0]?.doc_id 
     });
   } catch (e) {
@@ -45,15 +51,20 @@ export async function normalizeAndCleanGoldens(stagingGoldens) {
       count: rows.length,
       doc_id: stagingGoldens[0]?.doc_id 
     });
+    cleaned = rows;
   }
 
-  return rows.map((r) => ({
-    query: r.query,
-    expected: r.expected ?? "See documentation",
-    approved_by: null, // Changed from "system" to null for pending approval
-    approved_at: null,
-    status: "pending",
-    confidence: r.confidence ?? 0.7,
-    page: r.page ?? null,
-  }));
+  rows = cleaned;
+
+  return rows
+    .filter((r) => r && r.query) // remove nulls
+    .map((r) => ({
+      query: r.query,
+      expected: r.expected ?? "See documentation",
+      approved_by: null, // Changed from "system" to null for pending approval
+      approved_at: null,
+      status: "pending",
+      confidence: r.confidence ?? 0.7,
+      page: r.page ?? null,
+    }));
 }
