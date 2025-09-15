@@ -35,7 +35,6 @@ export async function normalizeAndCleanPlaybooks(stagingPlaybooks) {
       description: normalizeLine(
         r.description ?? r.hint ?? r.test_name ?? ""
       ),
-      expected_result: r.expected_result ?? "See documentation",
       system_norm: r.system_norm ?? null,
       subsystem_norm: r.subsystem_norm ?? null,
     }))
@@ -44,7 +43,7 @@ export async function normalizeAndCleanPlaybooks(stagingPlaybooks) {
   let deduped = dedupe(base);
 
   try {
-    const batchSize = 10;
+    const batchSize = 5;
     const cleaned = [];
     for (let i = 0; i < deduped.length; i += batchSize) {
       const batch = deduped.slice(i, i + batchSize);
@@ -58,16 +57,21 @@ export async function normalizeAndCleanPlaybooks(stagingPlaybooks) {
     logger.warn("LLM playbooks upscale skipped:", e?.message ?? e);
   }
 
-  return deduped.map((r) => ({
+  logger.warn("[LLM DEBUG][playbooks] parsed:", deduped);
+
+  const finalRows = deduped.map((r) => ({
     test_name: "Playbook Hint",
     test_type: "procedure",
     description: r.description,
     steps: Array.isArray(r.steps) ? r.steps : [],
-    expected_result: r.expected_result ?? "See documentation",
     page: r.page,
     confidence: r.confidence ?? 0.8,
     approved_by: null,
     approved_at: null,
     status: "pending",
   }));
+
+  logger.warn("[LLM DEBUG][playbooks] mapped:", finalRows);
+
+  return finalRows;
 }

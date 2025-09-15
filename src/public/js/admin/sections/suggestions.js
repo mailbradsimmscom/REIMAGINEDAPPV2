@@ -149,9 +149,7 @@ function createTableHeader(type) {
             <tr>
                 <th width="40">✅</th>
                 <th width="200">Model</th>
-                <th width="120">Type</th>
                 <th>Description</th>
-                <th width="150">Expected Result</th>
                 <th width="60">Page</th>
                 <th width="100">Confidence</th>
             </tr>
@@ -160,9 +158,9 @@ function createTableHeader(type) {
             <tr>
                 <th width="40">✅</th>
                 <th width="200">Model</th>
-                <th>Pattern</th>
+                <th width="150">Pattern</th>
                 <th width="150">Intent</th>
-                <th width="120">Route To</th>
+                <th>Route To</th>
             </tr>
         `,
         'test': `
@@ -199,9 +197,7 @@ function createTableRow(type, suggestion, index) {
             <tr>
                 <td>${baseCheckbox}</td>
                 <td><strong>${escapeHtml(suggestion.model)}</strong></td>
-                <td>${escapeHtml(suggestion.test_type || 'procedure')}</td>
                 <td>${escapeHtml(suggestion.description || 'No description')}</td>
-                <td>${escapeHtml(suggestion.expected_result || 'See documentation')}</td>
                 <td>${suggestion.page || 'N/A'}</td>
                 <td class="confidence-cell ${getConfidenceClass(suggestion.confidence)}">${(suggestion.confidence * 100).toFixed(1)}%</td>
             </tr>
@@ -382,7 +378,6 @@ async function approveSelected() {
                 suggestion.test_type = 'procedure';
                 suggestion.description = value;
                 suggestion.steps = [];
-                suggestion.expected_result = 'See documentation';
                 approvedSuggestions.playbook_hints.push(suggestion);
                 break;
             case 'intent':

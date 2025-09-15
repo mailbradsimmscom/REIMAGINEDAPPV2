@@ -33,38 +33,45 @@ export async function normalizeAndCleanGoldens(stagingGoldens) {
     return true;
   });
 
-  let cleaned = [];
   const batchSize = 3;
+  const outRows = [];
   try {
     for (let i = 0; i < rows.length; i += batchSize) {
       const batch = rows.slice(i, i + batchSize);
-      const out = await tryLLM("goldens", batch);
-      if (Array.isArray(out)) cleaned.push(...out);
+      const llm = await tryLLM("goldens", batch);
+      if (Array.isArray(llm)) outRows.push(...llm);
     }
-    logger.info("[GOLDENS CLEANER] LLM rewrite completed", { 
-      count: cleaned.length,
-      doc_id: stagingGoldens[0]?.doc_id 
-    });
   } catch (e) {
-    logger.warn("LLM goldens upscale skipped:", e?.message ?? e);
-    logger.info("[GOLDENS CLEANER] Using raw data (LLM failed)", { 
-      count: rows.length,
-      doc_id: stagingGoldens[0]?.doc_id 
-    });
-    cleaned = rows;
+    logger.warn("LLM goldens skipped:", e?.message ?? e);
+    // Fall back to original rows (they'll still be inserted so we don't lose data)
+    outRows.push(...rows);
   }
 
-  rows = cleaned;
+  logger.warn("[LLM DEBUG][goldens] parsed:", outRows);
 
-  return rows
-    .filter((r) => r && r.query) // remove nulls
-    .map((r) => ({
-      query: r.query,
-      expected: r.expected ?? "See documentation",
-      approved_by: null, // Changed from "system" to null for pending approval
-      approved_at: null,
-      status: "pending",
-      confidence: r.confidence ?? 0.7,
-      page: r.page ?? null,
-    }));
+  const finalRows = outRows
+    .filter(r => r && (r.query || r.description))
+    .map(r => {
+      const query = r.query ?? r.description ?? "";
+      let expected = r.expected ?? "See documentation";
+      // enforce short answers
+      if (expected && expected.length > 50) {
+        expected = "See documentation";
+      }
+      return {
+        query,
+        expected,
+        approved_by: null,
+        approved_at: null,
+        status: "pending",
+        confidence: r.confidence ?? 0.7,
+        page: r.page ?? null,
+      };
+    })
+    // final guard: drop rows with useless expected answers
+    .filter(r => r.query && r.expected !== "See documentation");
+
+  logger.warn("[LLM DEBUG][goldens] mapped:", finalRows);
+
+  return finalRows;
 }

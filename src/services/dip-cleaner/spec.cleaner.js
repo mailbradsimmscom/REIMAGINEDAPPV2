@@ -109,7 +109,9 @@ export async function normalizeAndCleanSpecs(stagingSpecs) {
     logger.warn("LLM specs upscale skipped:", e?.message ?? e);
   }
 
-  return deduped.map((r) => ({
+  logger.warn("[LLM DEBUG][specs] parsed:", deduped);
+
+  const finalRows = deduped.map((r) => ({
     doc_id: r.doc_id,
     page: r.page ?? null,
     context: r.context ?? "",
@@ -123,4 +125,8 @@ export async function normalizeAndCleanSpecs(stagingSpecs) {
     unit_extracted: r.unit_extracted ?? null,
     status: "pending",
   }));
+
+  logger.warn("[LLM DEBUG][specs] mapped:", finalRows);
+
+  return finalRows;
 }
