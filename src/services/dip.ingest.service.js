@@ -205,26 +205,34 @@ async function processIntentRouter(supabase, docId, storagePath, results) {
       return;
     }
 
-    // Clean up existing rows for this doc_id (using pattern prefix)
-    const patternPrefix = `[doc:${docId}] `;
+    // Clean up existing rows for this doc_id
     const { error: deleteError } = await supabase
       .from('staging_intent_router')
       .delete()
-      .like('pattern', `${patternPrefix}%`);
+      .eq('doc_id', docId);
 
     if (deleteError) {
       logger.warning('Failed to cleanup existing intent_router', { docId, error: deleteError.message });
     }
 
     // Normalize and prepare insert data
-    const insertData = jsonData.map(item => ({
-      doc_id: docId, // Add doc_id column
-      pattern: `[doc:${docId}] ${item.intent || ''}`, // Prefix with doc tag as specified
-      intent: item.intent || null,
-      route_to: item.route_to || null,
-      intent_hint_id: null, // As specified
-      created_by: 'system' // Fixed literal as specified
-    }));
+    // Use whatever "pattern-like" field the sidecar provided if present.
+    // Fall back to item.intent (but do NOT prefix or duplicate noise).
+    const insertData = jsonData
+      .map(item => {
+        const raw = (item.pattern ?? item.intent ?? item.hint ?? item.description ?? '').toString().trim();
+        if (!raw) return null; // skip empties
+
+        return {
+          doc_id: docId,
+          pattern: raw,          // ← clean, no "[doc:…]" prefix
+          intent: null,          // let the cleaner/LLM fill this later
+          route_to: null,        // let the cleaner/LLM/system mapping fill
+          intent_hint_id: null,
+          created_by: 'system'
+        };
+      })
+      .filter(Boolean);
 
     // Batch insert
     const { data, error } = await supabase

@@ -11,6 +11,7 @@ import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/in
 import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
 import dipService from './dip.service.js';
 import { ingestDipOutputsToDb } from './dip.ingest.service.js';
+import { buildIntentSuggestions } from './suggestions/intent.suggestions.js';
 
 class DocumentService {
   constructor() {
