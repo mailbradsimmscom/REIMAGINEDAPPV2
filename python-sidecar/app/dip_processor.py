@@ -11,7 +11,7 @@ import requests
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
-from openai import OpenAI
+import anthropic
 
 from .models import DIPEntity, DIPSpecHint, DIPGoldenTest, PageElement, Table, BoundingBox
 from .supabase_storage import supabase_storage
@@ -151,13 +151,29 @@ class DIPProcessor:
             ]
         }
         
-        # Initialize OpenAI client
-        self.openai_client = None
-        openai_api_key = os.getenv('OPENAI_API_KEY')
-        if openai_api_key:
-            self.openai_client = OpenAI(api_key=openai_api_key)
+        # Initialize Anthropic client with environment-driven configuration
+        self.anthropic_client = None
+        anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
+        if anthropic_api_key:
+            self.anthropic_client = anthropic.Anthropic(api_key=anthropic_api_key)
+            
+            # Load model configuration from environment
+            self.anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20241022')
+            self.anthropic_max_tokens = int(os.getenv('ANTHROPIC_MAX_TOKENS', '4000'))
+            self.anthropic_temperature = float(os.getenv('ANTHROPIC_TEMPERATURE', '0'))
+            
+            logger.info(f"Anthropic client initialized with model: {self.anthropic_model}")
         else:
-            logger.warning("OPENAI_API_KEY not found - playbook extraction will be disabled")
+            logger.warning("ANTHROPIC_API_KEY not found - playbook extraction will be disabled")
+        
+        # ROLLBACK: To revert to OpenAI, replace the above with:
+        # from openai import OpenAI
+        # self.openai_client = None
+        # openai_api_key = os.getenv('OPENAI_API_KEY')
+        # if openai_api_key:
+        #     self.openai_client = OpenAI(api_key=openai_api_key)
+        # else:
+        #     logger.warning("OPENAI_API_KEY not found - playbook extraction will be disabled")
 
     def extract_entities(self, elements: List[PageElement]) -> List[DIPEntity]:
         """Extract entities from document elements"""
@@ -331,14 +347,14 @@ class DIPProcessor:
                         break
         return playbook_hints
 
-    async def extract_playbook_hints_openai(self, doc_id: str, chunks: List[Dict]) -> List[Dict[str, Any]]:
-        """Extract playbook procedures using OpenAI with PDF content"""
-        if not self.openai_client:
-            logger.warning("OpenAI client not available - skipping playbook extraction")
+    async def extract_playbook_hints_anthropic(self, doc_id: str, chunks: List[Dict]) -> List[Dict[str, Any]]:
+        """Extract playbook procedures using Anthropic with PDF content"""
+        if not self.anthropic_client:
+            logger.warning("Anthropic client not available - skipping playbook extraction")
             return []
         
         try:
-            logger.info(f"Starting OpenAI playbook extraction for document {doc_id}")
+            logger.info(f"Starting Anthropic playbook extraction for document {doc_id}")
             
             # Combine all chunk content into a single document
             document_text = ""
@@ -387,31 +403,79 @@ Format as JSON with this structure:
 
 {document_text}"""
             
-            # Call OpenAI API
-            response = self.openai_client.chat.completions.create(
-                model="gpt-4o-mini", # Using a smaller model for cost-effectiveness and speed
+            # Call Anthropic API
+            response = self.anthropic_client.messages.create(
+                model=self.anthropic_model,
+                max_tokens=self.anthropic_max_tokens,
+                temperature=self.anthropic_temperature,
+                system=system_prompt,
                 messages=[
-                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
-                ],
-                max_tokens=4000,
-                temperature=0
+                ]
             )
             
-            # Parse the response
-            response_content = response.choices[0].message.content
-            logger.info(f"OpenAI response received for document {doc_id}")
+            # ROLLBACK: To revert to OpenAI, replace the above with:
+            # response = self.openai_client.chat.completions.create(
+            #     model="gpt-4o-mini",
+            #     messages=[
+            #         {"role": "system", "content": system_prompt},
+            #         {"role": "user", "content": user_prompt}
+            #     ],
+            #     max_tokens=4000,
+            #     temperature=0
+            # )
             
-            # Strip markdown code blocks if present
-            if response_content.startswith('```json'):
-                response_content = response_content[7:]  # Remove ```json
-            if response_content.endswith('```'):
-                response_content = response_content[:-3]  # Remove ```
-            response_content = response_content.strip()
+            # Parse the response with robust error handling
+            if response.content and len(response.content) > 0:
+                response_content = response.content[0].text
+            else:
+                logger.error("Empty response from Anthropic API")
+                return []
             
+            logger.info(f"Anthropic response received for document {doc_id}")
+            logger.info(f"Raw response content: {response_content[:500]}...")  # Debug: show first 500 chars
+            
+            # ROLLBACK: To revert to OpenAI, replace the above with:
+            # response_content = response.choices[0].message.content
+            # logger.info(f"OpenAI response received for document {doc_id}")
+            
+            # Extract JSON from response (handles explanatory text + markdown)
+            json_content = response_content.strip()
+
+            # Remove markdown code blocks if present
+            if '```json' in json_content:
+                json_start = json_content.find('```json') + 7
+                json_end = json_content.find('```', json_start)
+                if json_end != -1:
+                    json_content = json_content[json_start:json_end].strip()
+                else:
+                    json_content = json_content[json_start:].strip()
+
+            # Find JSON object start if there's explanatory text
+            json_start_pos = json_content.find('{')
+            if json_start_pos > 0:
+                json_content = json_content[json_start_pos:].strip()
+
+            # Find JSON object end (handle potential trailing text)
+            brace_count = 0
+            json_end_pos = -1
+            for i, char in enumerate(json_content):
+                if char == '{':
+                    brace_count += 1
+                elif char == '}':
+                    brace_count -= 1
+                    if brace_count == 0:
+                        json_end_pos = i + 1
+                        break
+
+            if json_end_pos > 0:
+                json_content = json_content[:json_end_pos].strip()
+
+            logger.info(f"Cleaned JSON content: {json_content[:200]}...")
+
             # Parse JSON response
             try:
-                parsed_response = json.loads(response_content)
+                parsed_response = json.loads(json_content)
                 procedures = parsed_response.get('procedures', [])
                 
                 # Convert to the format expected by the staging table
@@ -438,11 +502,11 @@ Format as JSON with this structure:
                 return playbook_hints
                 
             except json.JSONDecodeError as e:
-                logger.error(f"Failed to parse OpenAI JSON response for document {doc_id}: {e}")
+                logger.error(f"Failed to parse Anthropic JSON response for document {doc_id}: {e}")
                 return []
                 
         except Exception as e:
-            logger.error(f"OpenAI playbook extraction failed for document {doc_id}: {e}")
+            logger.error(f"Anthropic playbook extraction failed for document {doc_id}: {e}")
             return []
     
     def _categorize_procedure(self, title: str) -> str:
@@ -554,7 +618,7 @@ Format as JSON with this structure:
         spec_hints = self.extract_spec_hints(elements)
         golden_tests = self.extract_golden_tests(elements)
         # playbook_hints = self.extract_playbook_hints(chunks)  # DISABLED - using OpenAI extraction instead
-        playbook_hints = await self.extract_playbook_hints_openai(doc_id, chunks)  # NEW OpenAI extraction
+        playbook_hints = await self.extract_playbook_hints_anthropic(doc_id, chunks)  # NEW Anthropic extraction
         
         processing_time = time.time() - start_time
         
