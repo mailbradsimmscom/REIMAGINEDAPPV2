@@ -1,0 +1,423 @@
+{
+  "procedures": [
+    {
+      "title": "Quick Start Tips",
+      "preconditions": ["Grill is unpacked and cleaned"],
+      "steps": [
+        "Remove grate(s) and drip tray(s), clean both.",
+        "Insert the drip tray(s) into the bottom of grill.",
+        "Fill the drip tray(s) with 2 cups of liquid.",
+        "Adjust control setting for type of food.",
+        "Preheat grill with the lid closed for 5 - 7 minutes.",
+        "Once cool, place grate/griddle in the dishwasher.",
+        "Clean out the drip tray contents."
+      ],
+      "expected_outcome": "Grill is ready for use with optimal performance.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Before Using the Grill",
+      "preconditions": ["Grill is unpacked and cleaned"],
+      "steps": [
+        "Remove the cooking grate and drip tray from the grill.",
+        "Wash the grill with warm soapy water using a non-abrasive cloth.",
+        "Insert the drip tray all the way into the bottom of grill.",
+        "Cover the bottom of the drip tray with a liquid.",
+        "Clean the grilling surface after each use.",
+        "Place your cooking grate or optional griddle onto the element with drip tray installed.",
+        "Preheat grill with the lid closed for 5 - 7 minutes.",
+        "Close the lid and cook.",
+        "Clean up after the grill has cooled to the touch.",
+        "Remove the grate and place in your dishwasher.",
+        "Lift up the electric elements and remove the drip tray.",
+        "Wash the lid in the dishwasher if needed.",
+        "Clean the grill after it has cooled enough to handle."
+      ],
+      "expected_outcome": "Grill is prepared for cooking with reduced smoke and optimal performance.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Operation - Turning On",
+      "preconditions": ["Grill is connected to power supply"],
+      "steps": [
+        "Touch the controls firmly with the flat part of your fingertips.",
+        "With the unit unlocked, touch the POWER button in the main control frame.",
+        "Activate the element by holding the element power button in the control frame for 2 seconds and choosing a cooking option."
+      ],
+      "expected_outcome": "Grill is powered on and ready for cooking.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Operation - Cooking Mode Options",
+      "preconditions": ["Grill is powered on"],
+      "steps": [
+        "Select the desired cooking mode: Heat Level or Temperature Cooking Mode.",
+        "For Heat Level Cooking Mode, swipe your finger along the temperature control arc and release at the desired setting.",
+        "For Temperature Cooking Mode, select the desired cooking temperature by touching the thermometer/gradient graphic."
+      ],
+      "expected_outcome": "Grill is set to the desired cooking mode and temperature.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Operation - Timer Options",
+      "preconditions": ["Grill is powered on"],
+      "steps": [
+        "Activate the main power and touch the timer clock graphic within the element control frame.",
+        "Set the desired time duration by touching the + and – buttons.",
+        "Touch the timer button to start."
+      ],
+      "expected_outcome": "Timer is set and will alert when cooking time is complete.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Installation - Unpacking the Grill",
+      "preconditions": ["Grill is delivered"],
+      "steps": [
+        "Carefully unpack the grill from its shipping container.",
+        "Verify and identify the package contents.",
+        "Check the Electrical Supply Requirements."
+      ],
+      "expected_outcome": "Grill is unpacked and ready for installation.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Installation - Countertop Preparation",
+      "preconditions": ["Grill is unpacked"],
+      "steps": [
+        "Plan installation keeping dimensions in mind.",
+        "Ensure proper ventilation of the space below the countertop.",
+        "Seal the edge of the countertop beneath the trim flange with a NON-ADHESIVE such as Plumber's Putty."
+      ],
+      "expected_outcome": "Countertop is prepared for grill installation.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Installation - Drain Connection",
+      "preconditions": ["Grill is unpacked"],
+      "steps": [
+        "Attach the 5/8\" ID flexible hose to the 1/2\" NPT brass pipe fitting and 90º brass elbow.",
+        "Ensure the portable version has the brass pipe plug installed if not using the drain."
+      ],
+      "expected_outcome": "Drain is connected for built-in models or sealed for portable models.",
+      "models": ["All models"],
+      "error_codes": []
+    },
+    {
+      "title": "Error Code Readout",
+      "preconditions": ["Grill is powered on and experiencing issues"],
+      "steps": [
+        "Identify the error code displayed on the control readout.",
+        "Refer to the Troubleshooting Index for the error code.",
+        "Take action as noted in the Troubleshooting Index.",
+        "De-power and re-start the unit to clear the display.",
+        "Lock out the main power supply to the unit by closing the breaker before performing any wiring operations.",
+        "Contact Kenyon Customer Care if the problem persists."
+      ],
+      "expected_outcome": "Error is identified and resolved or escalated to customer care.",
+      "models": ["All models"],
+      "error_codes": ["E04", "E06", "E07", "E08", "E09", "E10"]
+    }
+  ],
+  "gpt5_results": {
+    "model": "gpt-5",
+    "extraction_count": 9,
+    "procedures": [
+      {
+        "title": "Quick Start Tips",
+        "preconditions": ["Grill must be unpacked and installed"],
+        "steps": [
+          "Remove grate(s) and drip tray(s), clean both.",
+          "Insert the drip tray(s) into the bottom of grill.",
+          "Fill the drip tray(s) with 2 cups of liquid.",
+          "Adjust control setting for type of food.",
+          "Preheat grill with the lid closed for 5 - 7 minutes.",
+          "Once cool, place grate/griddle in the dishwasher.",
+          "Clean out the drip tray contents."
+        ],
+        "expected_outcome": "Grill is ready for use and clean for next use.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Before Using the Grill",
+        "preconditions": ["Grill must be unpacked and installed"],
+        "steps": [
+          "Remove the cooking grate and drip tray from the grill.",
+          "Wash the grill with warm soapy water using a non-abrasive cloth.",
+          "Insert the drip tray all the way into the bottom of grill.",
+          "Cover the bottom of the drip tray with a liquid.",
+          "Clean the grilling surface after each use.",
+          "Place your cooking grate or optional griddle onto the element with drip tray installed.",
+          "Preheat grill with the lid closed for 5 - 7 minutes on desired heat setting.",
+          "Close the lid and cook.",
+          "Clean up after the grill has cooled to the touch.",
+          "Remove the grate and place in your dishwasher.",
+          "Lift up the electric elements and remove the drip tray.",
+          "Wash the lid in the dishwasher if needed.",
+          "Clean the grill after it has cooled.",
+          "Wipe the stainless steel surfaces with a damp cloth.",
+          "Use stainless steel cleaner once a month.",
+          "Clean the touch control area with a glass cleaner."
+        ],
+        "expected_outcome": "Grill is clean and ready for use.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Turning On",
+        "preconditions": ["Grill must be installed and connected to power"],
+        "steps": [
+          "Touch the controls firmly with the flat part of your fingertips.",
+          "With the unit unlocked, touch the POWER button in the main control frame.",
+          "Activate the element by holding the element power button in the control frame for 2 seconds and choosing a cooking option."
+        ],
+        "expected_outcome": "Grill is turned on and ready for cooking.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Cooking Mode Options",
+        "preconditions": ["Grill must be turned on"],
+        "steps": [
+          "Select the desired cooking mode: Heat Level or Temperature Cooking Mode.",
+          "For Heat Level Cooking Mode, swipe your finger along the temperature control arc and release at the desired setting.",
+          "For Temperature Cooking Mode, select the desired cooking temperature by touching the thermometer/gradient graphic."
+        ],
+        "expected_outcome": "Grill is set to the desired cooking mode and temperature.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Timer Options",
+        "preconditions": ["Grill must be turned on"],
+        "steps": [
+          "Activate the main power and touch the timer clock graphic within the element control frame.",
+          "Set the desired time duration by touching the + and – buttons.",
+          "Touch the timer button to start."
+        ],
+        "expected_outcome": "Timer is set and will alert when time elapses.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Installation - Unpacking the Grill",
+        "preconditions": ["Grill must be delivered"],
+        "steps": [
+          "Carefully unpack the grill from its shipping container.",
+          "Verify and identify the package contents.",
+          "Check the Electrical Supply Requirements."
+        ],
+        "expected_outcome": "Grill is unpacked and ready for installation.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Installation - Countertop Preparation",
+        "preconditions": ["Grill must be unpacked"],
+        "steps": [
+          "Plan installation keeping dimensions in mind.",
+          "Ensure proper ventilation of the space below the countertop.",
+          "Make countertop cutout with appropriate radius.",
+          "Seal the edge of the countertop beneath the trim flange with Plumber's Putty."
+        ],
+        "expected_outcome": "Countertop is prepared for grill installation.",
+        "models": ["Built-in models"],
+        "error_codes": []
+      },
+      {
+        "title": "Installation - Drain Connection",
+        "preconditions": ["Grill must be unpacked"],
+        "steps": [
+          "Attach the 5/8\" ID flexible hose to the 1/2\" NPT brass pipe fitting and 90º brass elbow.",
+          "Ensure the portable version has the brass pipe plug installed if not using the drain."
+        ],
+        "expected_outcome": "Drain is connected for built-in models or sealed for portable models.",
+        "models": ["All models"],
+        "error_codes": []
+      },
+      {
+        "title": "Error Code Readout",
+        "preconditions": ["Grill must be turned on and experiencing an issue"],
+        "steps": [
+          "Identify the error code displayed on the control readout.",
+          "Refer to the Troubleshooting Index for the error code.",
+          "Take action as noted in the Troubleshooting Index.",
+          "De-power and re-start the unit to clear the display.",
+          "Lock out the main power supply to the unit by closing the breaker before performing any wiring operations.",
+          "Contact Kenyon Customer Care if the problem persists."
+        ],
+        "expected_outcome": "Error is identified and resolved or escalated to customer care.",
+        "models": ["All models"],
+        "error_codes": ["E04", "E06", "E07", "E08", "E09", "E10"]
+      }
+    ],
+    "analysis": {
+      "total_procedures": 9,
+      "expected_procedures": 13,
+      "missing_procedures": 4,
+      "issue": "Model is grouping related procedures into high-level categories instead of splitting them into individual step-by-step processes",
+      "solution": "Prompt needs to be more explicit about splitting compound procedures into individual steps"
+    }
+  },
+  "enhanced_prompt_results": {
+    "model": "gpt-4o",
+    "extraction_count": 10,
+    "prompt_version": "enhanced_with_splitting_rules",
+    "procedures": [
+      {
+        "title": "Safety Instructions",
+        "preconditions": [],
+        "steps": [
+          "Read all instructions prior to using the grill.",
+          "Do not touch hot surfaces. Use handles or knobs.",
+          "To protect against electrical shock, do not immerse cord or plugs in water or other liquid.",
+          "Close supervision is necessary when any appliances are used near children.",
+          "Disconnect from power source when not in use and before cleaning. Allow to cool before putting on or taking off parts.",
+          "If the surface is cracked, switch off the appliance to avoid the possibility of electric shock.",
+          "Do not operate appliance with damaged wires. If the appliance malfunctions, discontinue use.",
+          "Ensure grill is installed per instructions and properly grounded by a qualified electrician.",
+          "Do not use water to extinguish a grease fire, use dry chemical fire extinguisher.",
+          "The appliance is suitable for outdoor use.",
+          "The power wires should be regularly examined for signs of damage, and if the cord is damaged, the appliance must not be used.",
+          "The appliance is to be connected to a DC power supply that is protected by a 30-amp circuit breaker.",
+          "The appliance must be supplied through a residual current device (RCD) having a rated residual operating current not exceeding 30A."
+        ],
+        "expected_outcome": "Safe operation of the grill.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Unpacking and Setup",
+        "preconditions": [],
+        "steps": [
+          "Carefully unpack the grill from its shipping container.",
+          "Verify and identify the package contents.",
+          "Remove the protective plastic film from the lid, trim flange, and glass panel.",
+          "Clean the grill before first use with a stainless steel or glass cleaner.",
+          "Wash the nonstick coated grates in warm soapy water before using the grill."
+        ],
+        "expected_outcome": "Grill is unpacked and ready for installation.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Countertop Preparation and Installation",
+        "preconditions": [],
+        "steps": [
+          "Ensure the countertop is prepared with the correct cutout dimensions.",
+          "Seal the edge of the countertop beneath the trim flange with a non-adhesive such as Plumber's Putty.",
+          "Allow a 2 inch minimum clearance between the bottom of the grill and combustible surfaces.",
+          "Ensure adequate ventilation of the space below the countertop.",
+          "Install the grill according to the provided instructions."
+        ],
+        "expected_outcome": "Grill is securely installed in the countertop.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Drain Connection",
+        "preconditions": [],
+        "steps": [
+          "Attach the 5/8\" ID flexible hose to the 1/2\" NPT brass pipe fitting and 90º brass elbow on the grill.",
+          "Ensure the hose is properly connected for drainage."
+        ],
+        "expected_outcome": "Proper drainage setup for the grill.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Turning On",
+        "preconditions": [],
+        "steps": [
+          "Touch the controls firmly with the flat part of your fingertips.",
+          "With the unit unlocked, touch the POWER button in the main control frame.",
+          "Activate the element by holding the element power button in the control frame for 2 seconds and choosing a cooking option.",
+          "If the element is not activated within 15 seconds, the grill will de-power by itself."
+        ],
+        "expected_outcome": "Grill is powered on and ready for cooking.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Cooking Mode Options",
+        "preconditions": [],
+        "steps": [
+          "Select either a heating level ranging from low to high or a specific cooking temperature.",
+          "For heat level cooking mode, swipe your finger along the temperature control arc and release at the desired setting.",
+          "For temperature cooking mode, select the desired cooking temperature by touching the thermometer/gradient graphic."
+        ],
+        "expected_outcome": "Grill is set to the desired cooking mode and temperature.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Safety Lock Feature",
+        "preconditions": [],
+        "steps": [
+          "Activate the lock feature as a safety measure at any time whether the grill is ON or OFF.",
+          "Locking the grill when it is ON will deactivate the power settings from adjusting up or down.",
+          "Locking the grill when it is OFF will deactivate all functions of the control panel until it is unlocked."
+        ],
+        "expected_outcome": "Grill controls are locked for safety.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Operation - Timer Options",
+        "preconditions": [],
+        "steps": [
+          "Activate the main power and touch the timer clock graphic within the element control frame.",
+          "Set the desired time duration by touching the + and – buttons.",
+          "Touch the timer button to start the timer.",
+          "The cooking timer can be activated to shut the heating element off at the end of the set time."
+        ],
+        "expected_outcome": "Timer is set and will alert or shut off the grill as programmed.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Cleaning and Maintenance",
+        "preconditions": [],
+        "steps": [
+          "Allow the grill to cool before cleaning.",
+          "Remove the cooking grate and drip tray from the grill.",
+          "Wash the grill with warm soapy water using a non-abrasive cloth.",
+          "Clean the drip tray after each use to prevent possible fire.",
+          "Wipe the stainless steel surfaces with a damp cloth to remove any residue.",
+          "Use a stainless steel cleaner once a month to keep the grill looking like new."
+        ],
+        "expected_outcome": "Grill is clean and maintained for optimal performance.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": []
+      },
+      {
+        "title": "Error Code Resolution",
+        "preconditions": [],
+        "steps": [
+          "In the event of an error code, identify the code in the Troubleshooting Index.",
+          "E04: Allow unit to cool. Ensure correct cooking utensil type is used. Lower the cooking level or temperature setting.",
+          "E06, E07, E08, E09: Refer to Kenyon Customer Care.",
+          "E10: Re-power unit and command one control input at a time."
+        ],
+        "expected_outcome": "Error codes are resolved and grill is functioning correctly.",
+        "models": ["All Kenyon Grills"],
+        "error_codes": ["E04", "E06", "E07", "E08", "E09", "E10"]
+      }
+    ],
+    "analysis": {
+      "total_procedures": 10,
+      "expected_procedures": 11,
+      "missing_procedures": 1,
+      "improvement": "Enhanced prompt successfully separated safety, maintenance, and error handling into individual procedures",
+      "remaining_issue": "Operation - Cooking Mode Options still groups Heat Level and Temperature modes together",
+      "solution": "Need even more explicit instruction to split modes: 'CRITICAL: If a procedure mentions multiple modes, create separate procedures for EACH mode'"
+    }
+  }
+}
