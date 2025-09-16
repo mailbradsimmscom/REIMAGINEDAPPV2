@@ -142,50 +142,13 @@ async function processSpecSuggestions(supabase, docId, storagePath, results) {
 
 /**
  * Process playbook_hints.json and insert into playbook_hints table
+ * DISABLED - OpenAI extraction now writes directly to playbook_hints table
  */
 async function processPlaybookHints(supabase, docId, storagePath, results) {
   try {
-    // Fetch JSON from Supabase Storage
-    const jsonData = await fetchJsonFromStorage(supabase, storagePath);
-    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
-      logger.info('No playbook_hints data to process', { docId });
-      return;
-    }
-
-    // Clean up existing rows for this doc_id
-    const { error: deleteError } = await supabase
-      .from('staging_playbook_hints')
-      .delete()
-      .eq('doc_id', docId);
-
-    if (deleteError) {
-      logger.warning('Failed to cleanup existing playbook_hints', { docId, error: deleteError.message });
-    }
-
-    // Normalize and prepare insert data
-    const insertData = jsonData.map(item => ({
-      doc_id: docId,
-      test_name: 'Playbook Hint', // Fixed literal as specified
-      test_type: 'procedure', // Set to procedure for playbook hints
-      description: item.hint || null,
-      steps: [], // Empty JSON array as specified
-      expected_result: 'See documentation', // Fixed literal as specified
-      page: item.page || null,
-      confidence: item.confidence || null
-    }));
-
-    // Batch insert
-    const { data, error } = await supabase
-      .from('staging_playbook_hints')
-      .insert(insertData);
-
-    if (error) {
-      logger.error('Failed to insert playbook_hints', { docId, error: error.message });
-      throw error;
-    }
-
-    results.inserted.playbook_hints = insertData.length;
-    logger.info('Playbook hints processed', { docId, count: insertData.length });
+    logger.info('Playbook hints processing DISABLED - using OpenAI extraction instead', { docId });
+    results.inserted.playbook_hints = 0;
+    return;
 
   } catch (error) {
     logger.error('Failed to process playbook_hints', { docId, error: error.message });

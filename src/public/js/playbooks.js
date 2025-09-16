@@ -6,6 +6,7 @@ let currentPlaybook = null;
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Playbooks page loaded, starting initialization...');
     loadStats();
     loadPlaybooks();
     setupEventHandlers();
@@ -14,7 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Load statistics
 async function loadStats() {
     try {
-        const response = await fetch('/admin/api/playbooks/stats');
+        const response = await fetch('/admin/api/playbooks/stats', {
+            headers: {
+                'x-admin-token': getAdminToken()
+            }
+        });
         if (!response.ok) throw new Error('Failed to load stats');
         
         const result = await response.json();
@@ -52,7 +57,17 @@ async function loadStats() {
 // Load all playbooks
 async function loadPlaybooks() {
     try {
-        const response = await fetch('/admin/api/playbooks');
+        console.log('📡 Loading playbooks from API...');
+        const token = getAdminToken();
+        console.log('🔑 Admin token:', token ? 'Present' : 'Missing');
+        
+        const response = await fetch('/admin/api/playbooks', {
+            headers: {
+                'x-admin-token': token
+            }
+        });
+        
+        console.log('📊 API Response status:', response.status);
         if (!response.ok) throw new Error('Failed to load playbooks');
         
         const result = await response.json();
@@ -75,7 +90,7 @@ function renderPlaybooksTable(playbooks = currentPlaybooks) {
     if (!playbooks || playbooks.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="empty-state">
+                <td colspan="11" class="empty-state">
                     <div class="empty-state-icon">📋</div>
                     <div>No playbooks found</div>
                     <div style="margin-top: 10px; font-size: 0.9rem; color: #999;">
@@ -90,28 +105,36 @@ function renderPlaybooksTable(playbooks = currentPlaybooks) {
     tbody.innerHTML = playbooks.map(playbook => `
         <tr>
             <td>
-                <strong>${escapeHtml(playbook.title)}</strong>
+                <code>${escapeHtml(playbook.id || 'N/A')}</code>
             </td>
             <td>
-                <span class="system-badge">${escapeHtml(playbook.system_norm || 'unknown')}</span>
+                <code>${escapeHtml(playbook.doc_id || 'N/A')}</code>
             </td>
             <td>
-                <span class="subsystem-badge">${escapeHtml(playbook.subsystem_norm || 'general')}</span>
+                <strong>${escapeHtml(playbook.test_name || 'N/A')}</strong>
             </td>
             <td>
-                <span class="steps-count">${playbook.playbook_steps?.length || 0} steps</span>
+                <span class="type-badge">${escapeHtml(playbook.test_type || 'N/A')}</span>
             </td>
-            <td>${escapeHtml(playbook.created_by)}</td>
+            <td>
+                <div class="description">${escapeHtml(playbook.description || 'N/A')}</div>
+            </td>
+            <td>
+                <span class="steps-count">${Array.isArray(playbook.steps) ? playbook.steps.length : 0} steps</span>
+            </td>
+            <td>
+                <div class="expected-result">${escapeHtml(playbook.expected_result || 'N/A')}</div>
+            </td>
+            <td>
+                <span class="page-number">${playbook.page || 'N/A'}</span>
+            </td>
+            <td>
+                <span class="confidence-score">${playbook.confidence ? (playbook.confidence * 100).toFixed(1) + '%' : 'N/A'}</span>
+            </td>
             <td>${formatDate(playbook.created_at)}</td>
             <td class="actions-cell">
-                <button class="action-btn view-btn" onclick="viewPlaybook('${playbook.playbook_id}')">
+                <button class="action-btn view-btn" onclick="viewPlaybook('${playbook.id}')">
                     View
-                </button>
-                <button class="action-btn edit-btn" onclick="editPlaybook('${playbook.playbook_id}')">
-                    Edit
-                </button>
-                <button class="action-btn delete-btn" onclick="deletePlaybook('${playbook.playbook_id}')">
-                    Delete
                 </button>
             </td>
         </tr>
@@ -277,83 +300,9 @@ async function dryRunGeneration() {
     await executeDryRun(system, subsystem, docId);
 }
 
-// Execute generation
-async function executeGeneration(system = '', subsystem = '', docId = '') {
-    const force = document.getElementById('forceOverwrite')?.checked || false;
-    
-    try {
-        const params = new URLSearchParams();
-        if (system) params.append('system', system);
-        if (subsystem) params.append('subsystem', subsystem);
-        if (docId) params.append('docId', docId);
-        if (force) params.append('force', 'true');
-        
-        const response = await fetch(`/admin/api/playbooks/generate?${params}`, {
-            method: 'POST',
-            headers: {
-                'x-admin-token': getAdminToken()
-            }
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            showSuccess(`Generated ${result.data.generated} playbooks successfully!`);
-            setTimeout(() => {
-                closeGenerationModal();
-                loadPlaybooks();
-                loadStats();
-            }, 2000);
-        } else {
-            showModalError('generationMessages', 'Failed to generate playbooks: ' + (result.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Error generating playbooks:', error);
-        showModalError('generationMessages', 'Error generating playbooks: ' + error.message);
-    }
-}
+// Generation functions removed - playbook_hints is now final destination
 
-// Execute dry run
-async function executeDryRun(system = '', subsystem = '', docId = '') {
-    try {
-        const params = new URLSearchParams();
-        if (system) params.append('system', system);
-        if (subsystem) params.append('subsystem', subsystem);
-        if (docId) params.append('docId', docId);
-        params.append('dryRun', 'true');
-        
-        const response = await fetch(`/admin/api/playbooks/generate?${params}`, {
-            method: 'POST',
-            headers: {
-                'x-admin-token': getAdminToken()
-            }
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            const data = result.data;
-            let message = `Dry run completed:\n`;
-            message += `• Would generate: ${data.generated} playbooks\n`;
-            message += `• Would skip: ${data.skipped} existing playbooks\n`;
-            message += `• Errors: ${data.errors}\n\n`;
-            
-            if (data.playbooks && data.playbooks.length > 0) {
-                message += `Playbooks that would be generated:\n`;
-                data.playbooks.forEach(playbook => {
-                    message += `• ${playbook.title} (${playbook.stepsCount || 0} steps)\n`;
-                });
-            }
-            
-            showModalSuccess('generationMessages', message);
-        } else {
-            showModalError('generationMessages', 'Failed to run dry run: ' + (result.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Error running dry run:', error);
-        showModalError('generationMessages', 'Error running dry run: ' + error.message);
-    }
-}
+// Dry run function removed - playbook generation disabled
 
 // Setup event handlers
 function setupEventHandlers() {

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Playbooks Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            padding: 20px;
+            background: #ffe6e6;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .type-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .confidence-badge {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        .page-badge {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        .steps-count {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .description {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .expected-result {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .steps-content {
+            max-width: 400px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+        }
+        .id-cell {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Playbook Hints Viewer</h1>
+        <div id="loading" class="loading">Loading playbook data...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="data" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Doc ID</th>
+                        <th>Test Name</th>
+                        <th>Test Type</th>
+                        <th>Description</th>
+                        <th>Steps</th>
+                        <th>Expected Result</th>
+                        <th>Page</th>
+                        <th>Confidence</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Simple function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        // Format steps content
+        function formatSteps(steps) {
+            if (!steps) return 'N/A';
+            
+            if (Array.isArray(steps)) {
+                if (steps.length === 0) return 'No steps';
+                
+                return steps.map((step, index) => {
+                    if (typeof step === 'string') {
+                        return `${index + 1}. ${step}`;
+                    } else if (step && step.action) {
+                        return `${index + 1}. ${step.action}`;
+                    } else {
+                        return `${index + 1}. ${JSON.stringify(step)}`;
+                    }
+                }).join('\n');
+            }
+            
+            return String(steps);
+        }
+
+        // Load playbook data
+        async function loadPlaybooks() {
+            try {
+                console.log('Loading playbooks...');
+                
+                const response = await fetch('/admin/api/playbooks', {
+                    headers: {
+                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                    }
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('API result:', result);
+
+                if (result.success) {
+                    displayPlaybooks(result.data);
+                } else {
+                    throw new Error(result.error || 'API returned error');
+                }
+
+            } catch (error) {
+                console.error('Error loading playbooks:', error);
+                showError('Failed to load playbooks: ' + error.message);
+            }
+        }
+
+        // Display playbooks in table
+        function displayPlaybooks(playbooks) {
+            const loading = document.getElementById('loading');
+            const data = document.getElementById('data');
+            const tableBody = document.getElementById('tableBody');
+
+            loading.style.display = 'none';
+            data.style.display = 'block';
+
+            if (!playbooks || playbooks.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;">No playbooks found</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = playbooks.map(playbook => `
+                <tr>
+                    <td class="id-cell">${escapeHtml(playbook.id || 'N/A')}</td>
+                    <td class="id-cell">${escapeHtml(playbook.doc_id || 'N/A')}</td>
+                    <td><strong>${escapeHtml(playbook.test_name || 'N/A')}</strong></td>
+                    <td><span class="badge type-badge">${escapeHtml(playbook.test_type || 'N/A')}</span></td>
+                    <td><div class="description">${escapeHtml(playbook.description || 'N/A')}</div></td>
+                    <td><div class="steps-content">${formatSteps(playbook.steps)}</div></td>
+                    <td><div class="expected-result">${escapeHtml(playbook.expected_result || 'N/A')}</div></td>
+                    <td><span class="badge page-badge">${playbook.page || 'N/A'}</span></td>
+                    <td><span class="badge confidence-badge">${playbook.confidence ? (playbook.confidence * 100).toFixed(1) + '%' : 'N/A'}</span></td>
+                    <td>${formatDate(playbook.created_at)}</td>
+                </tr>
+            `).join('');
+
+            console.log(`Displayed ${playbooks.length} playbooks`);
+        }
+
+        // Show error message
+        function showError(message) {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            error.textContent = message;
+        }
+
+        // Start loading when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, starting to fetch data...');
+            loadPlaybooks();
+        });
+    </script>
+</body>
+</html>

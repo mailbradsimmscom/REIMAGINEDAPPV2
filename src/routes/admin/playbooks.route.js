@@ -1,32 +1,14 @@
 import express from 'express';
-import { z } from 'zod';
 import { adminOnly } from '../../middleware/admin.js';
-import { validate } from '../../middleware/validate.js';
-import playbookRepository from '../../repositories/playbook.repository.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
 const requestLogger = logger.createRequestLogger();
 
-// Validation schemas
-const createPlaybookSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
-  system_norm: z.string().max(100, 'System name too long').optional(),
-  subsystem_norm: z.string().max(100, 'Subsystem name too long').optional(),
-  doc_id: z.string().uuid().optional(),
-  steps: z.array(z.object({
-    instruction: z.string().min(1, 'Instruction is required'),
-    source_hint_id: z.string().uuid().optional()
-  })).optional().default([])
-});
+// Validation schemas removed - only used in commented-out routes
 
-const updatePlaybookSchema = createPlaybookSchema.partial();
-
-const playbookParamsSchema = z.object({
-  playbookId: z.string().uuid('Invalid playbook ID')
-});
-
-// GET /admin/api/playbooks - Get all playbooks
+// GET /admin/api/playbooks - Get all playbook hints (staging data)
 router.get('/', adminOnly, async (req, res) => {
   try {
     const filters = {
@@ -35,73 +17,116 @@ router.get('/', adminOnly, async (req, res) => {
       doc_id: req.query.doc_id
     };
 
-    const result = await playbookRepository.getAllPlaybooks(filters);
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
+    
+    let query = supabase.from('playbook_hints').select('*');
+    
+    if (filters.system_norm) {
+      query = query.eq('system_norm', filters.system_norm);
+    }
+    if (filters.subsystem_norm) {
+      query = query.eq('subsystem_norm', filters.subsystem_norm);
+    }
+    if (filters.doc_id) {
+      query = query.eq('doc_id', filters.doc_id);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+    
+    if (error) throw error;
     
     res.json({
       success: true,
-      data: result.data,
+      data: data,
       requestId: req.id
     });
   } catch (error) {
-    requestLogger.error('Failed to get playbooks', { error: error.message, query: req.query });
+    requestLogger.error('Failed to get playbook hints', { error: error.message, query: req.query });
     res.status(500).json({
       success: false,
-      error: 'Failed to retrieve playbooks',
+      error: 'Failed to retrieve playbook hints',
       requestId: req.id
     });
   }
 });
 
-// GET /admin/api/playbooks/stats - Get playbook statistics
+// GET /admin/api/playbooks/stats - Get playbook hints statistics
 router.get('/stats', adminOnly, async (req, res) => {
   try {
-    const result = await playbookRepository.getPlaybookStats();
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
+    
+    const { data, error } = await supabase.from('playbook_hints').select('id, system_norm, subsystem_norm');
+    
+    if (error) throw error;
+    
+    const stats = {
+      totalPlaybooks: data.length,
+      totalSteps: data.length, // Each hint is essentially a step
+      systemCount: new Set(data.map(h => h.system_norm).filter(Boolean)).size
+    };
     
     res.json({
       success: true,
-      data: result.data,
+      data: stats,
       requestId: req.id
     });
   } catch (error) {
-    requestLogger.error('Failed to get playbook stats', { error: error.message });
+    requestLogger.error('Failed to get playbook hints stats', { error: error.message });
     res.status(500).json({
       success: false,
-      error: 'Failed to retrieve playbook statistics',
+      error: 'Failed to retrieve playbook hints statistics',
       requestId: req.id
     });
   }
 });
 
-// GET /admin/api/playbooks/:playbookId - Get specific playbook
-router.get('/:playbookId', adminOnly, validate(playbookParamsSchema, 'params'), async (req, res) => {
+// GET /admin/api/playbooks/:playbookId - Get specific playbook hint
+router.get('/:playbookId', adminOnly, async (req, res) => {
   try {
     const { playbookId } = req.params;
-    const result = await playbookRepository.getPlaybookById(playbookId);
+
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     
-    if (!result.data) {
+    const { data, error } = await supabase
+      .from('playbook_hints')
+      .select('*')
+      .eq('id', playbookId)
+      .single();
+    
+    if (error || !data) {
       return res.status(404).json({
         success: false,
-        error: 'Playbook not found',
+        error: 'Playbook hint not found',
         requestId: req.id
       });
     }
     
     res.json({
       success: true,
-      data: result.data,
+      data: data,
       requestId: req.id
     });
   } catch (error) {
-    requestLogger.error('Failed to get playbook by ID', { error: error.message, playbookId: req.params.playbookId });
+    requestLogger.error('Failed to get playbook hint', { error: error.message, playbookId: req.params.playbookId });
     res.status(500).json({
       success: false,
-      error: 'Failed to retrieve playbook',
+      error: 'Failed to retrieve playbook hint',
       requestId: req.id
     });
   }
 });
 
-// POST /admin/api/playbooks - Create new playbook
+// POST /admin/api/playbooks - Create new playbook (DISABLED - staging data only)
+/*
 router.post('/', adminOnly, validate(createPlaybookSchema, 'body'), async (req, res) => {
   try {
     const playbookData = req.body;
@@ -130,8 +155,10 @@ router.post('/', adminOnly, validate(createPlaybookSchema, 'body'), async (req, 
     });
   }
 });
+*/
 
-// PUT /admin/api/playbooks/:playbookId - Update playbook
+// PUT /admin/api/playbooks/:playbookId - Update playbook (DISABLED - staging data only)
+/*
 router.put('/:playbookId', adminOnly, validate(updatePlaybookSchema, 'body'), validate(playbookParamsSchema, 'params'), async (req, res) => {
   try {
     const { playbookId } = req.params;
@@ -170,8 +197,10 @@ router.put('/:playbookId', adminOnly, validate(updatePlaybookSchema, 'body'), va
     });
   }
 });
+*/
 
 // DELETE /admin/api/playbooks/:playbookId - Delete playbook
+/*
 router.delete('/:playbookId', adminOnly, validate(playbookParamsSchema, 'params'), async (req, res) => {
   try {
     const { playbookId } = req.params;
@@ -203,8 +232,11 @@ router.delete('/:playbookId', adminOnly, validate(playbookParamsSchema, 'params'
     });
   }
 });
+*/
 
 // POST /admin/api/playbooks/generate - Generate playbooks from hints
+// DISABLED: Playbook generation removed - playbook_hints is now final destination
+/*
 router.post('/generate', adminOnly, async (req, res) => {
   try {
     const { system, subsystem, docId, force, dryRun } = req.query;
@@ -321,5 +353,6 @@ router.post('/generate', adminOnly, async (req, res) => {
     });
   }
 });
+*/
 
 export default router;

@@ -1,6 +1,10 @@
 
 
 import { z } from 'zod';
+import { config } from 'dotenv';
+
+// Load .env file
+config();
 
 let MEMO;
 const EnvSchema = z.object({

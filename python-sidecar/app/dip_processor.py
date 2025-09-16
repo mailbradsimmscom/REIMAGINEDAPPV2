@@ -11,6 +11,7 @@ import requests
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
+from openai import OpenAI
 
 from .models import DIPEntity, DIPSpecHint, DIPGoldenTest, PageElement, Table, BoundingBox
 from .supabase_storage import supabase_storage
@@ -149,6 +150,14 @@ class DIPProcessor:
                 r'(?:quality|functionality)\s+(?:test|check|verify):\s*([A-Za-z0-9\s\-\.]+)',
             ]
         }
+        
+        # Initialize OpenAI client
+        self.openai_client = None
+        openai_api_key = os.getenv('OPENAI_API_KEY')
+        if openai_api_key:
+            self.openai_client = OpenAI(api_key=openai_api_key)
+        else:
+            logger.warning("OPENAI_API_KEY not found - playbook extraction will be disabled")
 
     def extract_entities(self, elements: List[PageElement]) -> List[DIPEntity]:
         """Extract entities from document elements"""
@@ -322,6 +331,137 @@ class DIPProcessor:
                         break
         return playbook_hints
 
+    async def extract_playbook_hints_openai(self, doc_id: str, chunks: List[Dict]) -> List[Dict[str, Any]]:
+        """Extract playbook procedures using OpenAI with PDF content"""
+        if not self.openai_client:
+            logger.warning("OpenAI client not available - skipping playbook extraction")
+            return []
+        
+        try:
+            logger.info(f"Starting OpenAI playbook extraction for document {doc_id}")
+            
+            # Combine all chunk content into a single document
+            document_text = ""
+            for chunk in chunks:
+                document_text += f"Page {chunk.get('page', 1)}: {chunk.get('content', '')}\n\n"
+            
+            # Limit document size to avoid token limits (roughly 100k characters)
+            if len(document_text) > 100000:
+                document_text = document_text[:100000]
+                logger.info(f"Document truncated to 100k characters for OpenAI processing")
+            
+            # Your exact prompt
+            system_prompt = """You are extracting actionable procedures from a technical manual. Extract step-by-step operational and troubleshooting procedures that can be executed as checklists.
+
+For each procedure, provide:
+- **Title**: Clear procedure name
+- **Preconditions**: What must be true before starting
+- **Steps**: Numbered, actionable steps with specific details
+- **Expected Outcome**: What should happen when completed successfully
+- **Related Model/Part Numbers**: Specific equipment this applies to
+
+Focus on:
+- Installation procedures
+- Startup/shutdown sequences
+- Usage procedures
+- Troubleshooting workflows
+- Maintenance routines
+- Error code resolution steps
+- Safety procedures
+
+Format as JSON with this structure:
+{
+  "procedures": [
+    {
+      "title": "Power-On Sequence",
+      "preconditions": ["Unit unlocked", "Drip tray installed with 2 cups liquid"],
+      "steps": ["Touch POWER button", "Hold element power button for 2 seconds", "..."],
+      "expected_outcome": "Element activates and LED array illuminates",
+      "models": ["B70750", "B70760"],
+      "error_codes": ["E10"]
+    }
+  ]
+}"""
+
+            user_prompt = f"""Extract all actionable procedures from this technical manual:
+
+{document_text}"""
+            
+            # Call OpenAI API
+            response = self.openai_client.chat.completions.create(
+                model="gpt-4o-mini", # Using a smaller model for cost-effectiveness and speed
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                max_tokens=4000,
+                temperature=0
+            )
+            
+            # Parse the response
+            response_content = response.choices[0].message.content
+            logger.info(f"OpenAI response received for document {doc_id}")
+            
+            # Strip markdown code blocks if present
+            if response_content.startswith('```json'):
+                response_content = response_content[7:]  # Remove ```json
+            if response_content.endswith('```'):
+                response_content = response_content[:-3]  # Remove ```
+            response_content = response_content.strip()
+            
+            # Parse JSON response
+            try:
+                parsed_response = json.loads(response_content)
+                procedures = parsed_response.get('procedures', [])
+                
+                # Convert to the format expected by the staging table
+                playbook_hints = []
+                for procedure in procedures:
+                    playbook_hint = {
+                        'id': f"{doc_id}_{len(playbook_hints) + 1}",
+                        'title': procedure.get('title', ''),
+                        'procedures': [procedure],  # Store the full procedure in the procedures JSONB field
+                        'preconditions': procedure.get('preconditions', []),
+                        'error_codes': procedure.get('error_codes', []),
+                        'related_procedures': [],  # Could be populated from cross-references
+                        'page_references': [],  # Could be populated from chunk page numbers
+                        'category': self._categorize_procedure(procedure.get('title', '')),
+                        'system_norm': '',  # Will be populated based on models
+                        'subsystem_norm': '',  # Will be populated based on models
+                        'doc_id': doc_id,
+                        'created_at': time.time(),
+                        'confidence': 0.9  # High confidence for AI extraction
+                    }
+                    playbook_hints.append(playbook_hint)
+                
+                logger.info(f"Successfully extracted {len(playbook_hints)} playbook procedures for document {doc_id}")
+                return playbook_hints
+                
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse OpenAI JSON response for document {doc_id}: {e}")
+                return []
+                
+        except Exception as e:
+            logger.error(f"OpenAI playbook extraction failed for document {doc_id}: {e}")
+            return []
+    
+    def _categorize_procedure(self, title: str) -> str:
+        """Categorize procedure based on title content"""
+        title_lower = title.lower()
+        
+        if any(word in title_lower for word in ['install', 'setup', 'mount', 'connect']):
+            return 'installation'
+        elif any(word in title_lower for word in ['start', 'stop', 'power', 'on', 'off', 'shutdown']):
+            return 'operation'
+        elif any(word in title_lower for word in ['troubleshoot', 'diagnose', 'fix', 'repair', 'error']):
+            return 'troubleshooting'
+        elif any(word in title_lower for word in ['maintain', 'clean', 'service', 'inspect', 'check']):
+            return 'maintenance'
+        elif any(word in title_lower for word in ['safety', 'warning', 'caution', 'danger']):
+            return 'safety'
+        else:
+            return 'operation'  # Default category
+
     def _calculate_confidence(self, match, content: str) -> float:
         """Calculate confidence score for a match"""
         base_confidence = 0.7
@@ -413,7 +553,8 @@ class DIPProcessor:
         entities = self.extract_entities(elements)
         spec_hints = self.extract_spec_hints(elements)
         golden_tests = self.extract_golden_tests(elements)
-        playbook_hints = self.extract_playbook_hints(chunks)  # NEW
+        # playbook_hints = self.extract_playbook_hints(chunks)  # DISABLED - using OpenAI extraction instead
+        playbook_hints = await self.extract_playbook_hints_openai(doc_id, chunks)  # NEW OpenAI extraction
         
         processing_time = time.time() - start_time
         
@@ -505,31 +646,51 @@ class DIPProcessor:
             storage_results['spec_suggestions'] = ''
             logger.error(f"Error uploading spec_suggestions.json: {e}")
         
-        # 2. Create playbook_hints.json
+        # 2. Insert playbook_hints directly into staging table
         playbook_hints = dip_data['dip'].get('playbook_hints', [])
-        playbook_hints_content = json.dumps(playbook_hints, indent=2, ensure_ascii=False)
-        playbook_hints_path = f"documents/manuals/{doc_id}/DIP/{doc_id}_playbook_hints.json"
         
         try:
-            response = requests.post(
-                f"{url}/storage/v1/object/{playbook_hints_path}",
-                headers={
-                    **headers,
-                    "Content-Type": "text/plain",
-                    "x-upsert": "true"
-                },
-                data=playbook_hints_content.encode('utf-8')
-            )
-            
-            if response.status_code in [200, 201]:
-                storage_results['playbook_hints'] = playbook_hints_path
-                logger.info(f"Successfully uploaded playbook_hints.json to Supabase Storage")
+            if playbook_hints:
+                # Insert each playbook hint into the staging table
+                for hint in playbook_hints:
+                    # Prepare the data for the playbook_hints table (using original schema)
+                    insert_data = {
+                        'doc_id': doc_id,
+                        'test_name': hint.get('title', ''),
+                        'test_type': hint.get('category', 'operation'),
+                        'description': hint.get('expected_outcome', ''),
+                        'steps': hint.get('procedures', []),
+                        'expected_result': hint.get('expected_outcome', ''),
+                        'page': 1,  # Default page since we don't have specific page info
+                        'confidence': hint.get('confidence', 0.9),
+                        'bbox': None  # No bounding box for AI-generated content
+                    }
+                    
+                    # Insert into playbook_hints table
+                    response = requests.post(
+                        f"{url}/rest/v1/playbook_hints",
+                        headers={
+                            **headers,
+                            "Content-Type": "application/json",
+                            "Prefer": "resolution=merge-duplicates"
+                        },
+                        json=insert_data
+                    )
+                    
+                    if response.status_code in [200, 201]:
+                        logger.info(f"Successfully inserted playbook hint '{hint.get('title', '')}' into staging table")
+                    else:
+                        logger.warning(f"Failed to insert playbook hint: {response.status_code} {response.text}")
+                
+                storage_results['playbook_hints'] = f"inserted_{len(playbook_hints)}_records_to_staging_table"
+                logger.info(f"Successfully inserted {len(playbook_hints)} playbook hints into staging table")
             else:
-                storage_results['playbook_hints'] = ''
-                logger.warning(f"Failed to upload playbook_hints.json: {response.status_code} {response.text}")
+                storage_results['playbook_hints'] = 'no_playbook_hints_extracted'
+                logger.info("No playbook hints extracted for this document")
+                
         except Exception as e:
             storage_results['playbook_hints'] = ''
-            logger.error(f"Error uploading playbook_hints.json: {e}")
+            logger.error(f"Error inserting playbook hints into staging table: {e}")
         
         # 3. Create intent_router.json
         intent_router = []

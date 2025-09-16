@@ -148,8 +148,11 @@ function createTableHeader(type) {
         'playbook': `
             <tr>
                 <th width="40">✅</th>
-                <th width="200">Model</th>
-                <th>Description</th>
+                <th width="150">Test Name</th>
+                <th width="100">Test Type</th>
+                <th width="200">Description</th>
+                <th width="150">Steps</th>
+                <th width="200">Expected Result</th>
                 <th width="60">Page</th>
                 <th width="100">Confidence</th>
             </tr>
@@ -196,8 +199,11 @@ function createTableRow(type, suggestion, index) {
         'playbook': `
             <tr>
                 <td>${baseCheckbox}</td>
-                <td><strong>${escapeHtml(suggestion.model)}</strong></td>
+                <td><strong>${escapeHtml(suggestion.test_name || 'No title')}</strong></td>
+                <td><span class="badge">${escapeHtml(suggestion.test_type || 'N/A')}</span></td>
                 <td>${escapeHtml(suggestion.description || 'No description')}</td>
+                <td>${formatSteps(suggestion.steps)}</td>
+                <td>${escapeHtml(suggestion.expected_result || 'N/A')}</td>
                 <td>${suggestion.page || 'N/A'}</td>
                 <td class="confidence-cell ${getConfidenceClass(suggestion.confidence)}">${(suggestion.confidence * 100).toFixed(1)}%</td>
             </tr>
@@ -459,4 +465,24 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+function formatSteps(steps) {
+    if (!steps) return 'N/A';
+    
+    if (Array.isArray(steps)) {
+        if (steps.length === 0) return 'No steps';
+        
+        return steps.map((step, index) => {
+            if (typeof step === 'string') {
+                return `${index + 1}. ${step}`;
+            } else if (step && step.action) {
+                return `${index + 1}. ${step.action}`;
+            } else {
+                return `${index + 1}. ${JSON.stringify(step)}`;
+            }
+        }).join('<br>');
+    }
+    
+    return String(steps);
 }

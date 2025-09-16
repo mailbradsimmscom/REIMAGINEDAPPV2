@@ -147,6 +147,47 @@
             background: #f8f9fa;
         }
         
+        .type-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .confidence-score {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .page-number {
+            background: #fff3e0;
+            color: #f57c00;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .description {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .expected-result {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
         .system-badge {
             display: inline-block;
             padding: 4px 8px;
@@ -451,9 +492,7 @@
     <div class="playbooks-container">
         <div class="playbooks-header">
             <h1 class="playbooks-title">Playbooks</h1>
-            <button class="generate-btn" onclick="openGenerationModal()">
-                🔄 Generate Playbooks
-            </button>
+            <!-- Generation removed - playbook_hints is now final destination -->
         </div>
 
         <!-- Statistics -->
@@ -472,30 +511,8 @@
             </div>
         </div>
 
-        <!-- Generation Controls -->
-        <div class="generation-controls">
-            <h3>🔄 Playbook Generation</h3>
-            <div class="generation-options">
-                <div class="option-group">
-                    <label class="option-label">System Filter</label>
-                    <input type="text" class="option-input" id="systemFilter" placeholder="e.g., water-treatment">
-                </div>
-                <div class="option-group">
-                    <label class="option-label">Subsystem Filter</label>
-                    <input type="text" class="option-input" id="subsystemFilter" placeholder="e.g., filtration">
-                </div>
-                <div class="option-group">
-                    <label class="option-label">Document ID</label>
-                    <input type="text" class="option-input" id="docIdFilter" placeholder="UUID">
-                </div>
-                <button class="generate-options-btn" onclick="generatePlaybooksWithOptions()">
-                    Generate
-                </button>
-                <button class="dry-run-btn" onclick="dryRunGeneration()">
-                    Dry Run
-                </button>
-            </div>
-        </div>
+        <!-- Generation Controls Removed -->
+        <!-- Playbook generation removed - playbook_hints is now final destination -->
 
         <!-- Filters -->
         <div class="filters-section">
@@ -525,18 +542,22 @@
             <table class="playbooks-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>System</th>
-                        <th>Subsystem</th>
+                        <th>ID</th>
+                        <th>Doc ID</th>
+                        <th>Test Name</th>
+                        <th>Test Type</th>
+                        <th>Description</th>
                         <th>Steps</th>
-                        <th>Created By</th>
+                        <th>Expected Result</th>
+                        <th>Page</th>
+                        <th>Confidence</th>
                         <th>Created At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="playbooksTableBody">
                     <tr>
-                        <td colspan="7" class="loading">Loading playbooks...</td>
+                        <td colspan="11" class="loading">Loading playbooks...</td>
                     </tr>
                 </tbody>
             </table>
@@ -569,45 +590,14 @@
             
             <div id="generationMessages"></div>
             
-            <div class="generation-controls">
-                <h3>Generation Options</h3>
-                <div class="generation-options">
-                    <div class="option-group">
-                        <label class="option-label">System Filter</label>
-                        <input type="text" class="option-input" id="modalSystemFilter" placeholder="e.g., water-treatment">
-                    </div>
-                    <div class="option-group">
-                        <label class="option-label">Subsystem Filter</label>
-                        <input type="text" class="option-input" id="modalSubsystemFilter" placeholder="e.g., filtration">
-                    </div>
-                    <div class="option-group">
-                        <label class="option-label">Document ID</label>
-                        <input type="text" class="option-input" id="modalDocIdFilter" placeholder="UUID">
-                    </div>
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="forceOverwrite">
-                        <span>Force overwrite existing playbooks</span>
-                    </label>
-                </div>
-                
-                <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button class="generate-options-btn" onclick="executeGeneration()">
-                        Generate Playbooks
-                    </button>
-                    <button class="dry-run-btn" onclick="executeDryRun()">
-                        Dry Run
-                    </button>
-                    <button class="btn-secondary" onclick="closeGenerationModal()">
-                        Cancel
-                    </button>
-                </div>
-            </div>
+            <!-- Generation controls removed - playbook_hints is now final destination -->
         </div>
     </div>
 
     <script src="/js/playbooks.js"></script>
+    <script>
+        console.log('🔥 HTML loaded, testing JavaScript...');
+        alert('Page loaded - JavaScript should work now');
+    </script>
 </body>
 </html>
