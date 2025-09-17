@@ -196,9 +196,15 @@ class DIPProcessor:
             # Load model configuration from environment
             self.openai_model = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
             self.openai_max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '8000'))
-            self.openai_temperature = float(os.getenv('OPENAI_TEMPERATURE', '0') or '0')
+            # Prefer LLM_TEMPERATURE if set, otherwise fallback to OPENAI_TEMPERATURE
+            temp_value = os.getenv('LLM_TEMPERATURE') or os.getenv('OPENAI_TEMPERATURE', '0')
+            self.openai_temperature = float(temp_value) if temp_value else 0.0
             
-            logger.info(f"OpenAI client initialized with model: {self.openai_model}")
+            logger.info(
+                f"OpenAI client initialized with model={self.openai_model}, "
+                f"temp={self.openai_temperature}, "
+                f"max_tokens={self.openai_max_tokens}"
+            )
         else:
             logger.warning("OPENAI_API_KEY not found - OpenAI playbook extraction will be disabled")
 
@@ -437,7 +443,7 @@ RULES:
             # Call Anthropic API
             response = self.anthropic_client.messages.create(
                 model=self.anthropic_model,
-                max_tokens=8000,  # Within claude-3-5-sonnet-20241022 limit of 8192
+                max_tokens=self.anthropic_max_tokens,  # Use environment variable
                 temperature=self.anthropic_temperature,
                 system=system_prompt,
                 messages=[
@@ -634,32 +640,21 @@ RULES:
                 document_text += f"Page {chunk.get('page', 1)}: {chunk.get('content', '')}\n\n"
             
             # Advanced system prompt (same as Anthropic)
-            system_prompt = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
-            FORMAT REQUIREMENT: Output must start with { and end with }. Nothing else.
-            If you add ANY text outside the JSON brackets, the system will fail.
+            system_prompt = """You are an information extractor. Output only valid JSON.
 
-            TASK: Extract ALL procedures, error codes, and maintenance steps from technical manuals.
-            INCLUDE EVERYTHING: installation, setup, operation, troubleshooting, maintenance, cleaning, error resolution, safety procedures.
-            OUTPUT FORMAT (copy exactly):
-            {"procedures":[{"title":"string","preconditions":["string"],"steps":["string"],"expected_outcome":"string","models":["string"],"error_codes":["string"]}]}
+TASK: Extract all procedures, error codes, and maintenance steps from this manual.
 
-            RULES:
-            - Extract ALL procedures found in the manual
-            - Include installation, operation, maintenance, troubleshooting, cleaning procedures
-            - Include all error codes and their resolution steps
-            - Extract every procedure or sub-procedure as its own entry
-            - If a section has multiple modes or features ( If a procedure mentions multiple modes, features, or options, create a separate procedure for EACH mode/feature/option. Never combine them into one procedure), create separate procedures for each. Do not merge them
-            - Safety and lock features must always be their own procedure
-            - Cleaning and maintenance routines must always be their own procedure
-            - Error codes and their resolutions must be included as their own procedure
-            - For installation content: merge and cap at 2 procedures total (Unpacking/Setup and Countertop/Connections)
-            - Exclude recipes or non-technical content
-            - Start response with { character
-            - End response with } character
-            - No explanatory text before JSON
-            - No explanatory text after JSON
-            - No markdown code blocks
-            - No 'Here is the JSON:' or similar phrases"""
+RULES:
+- Every procedure or sub-procedure must be a separate entry.
+- If a section has multiple modes or features, output one procedure per mode/feature (never merge them).
+- Safety/lock features must always be their own procedure.
+- Cleaning and maintenance routines must always be their own procedure.
+- Error codes and resolutions must always be their own procedure.
+- Installation content must be capped at 2 consolidated procedures (Unpacking/Setup and Countertop/Connections).
+- Exclude recipes or non-technical content.
+- The output must be a JSON object with one key: "procedures".
+- Each procedure object must include: title, preconditions, steps, expected_outcome, models, error_codes.
+"""
 
             # Limit document size to avoid token limits (roughly 300k characters)
             if len(document_text) > 300000:
@@ -672,11 +667,12 @@ RULES:
             
             response = self.openai_client.chat.completions.create(
                 model=self.openai_model,
+                response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                max_tokens=self.openai_max_tokens,
+                max_completion_tokens=self.openai_max_tokens,
                 temperature=self.openai_temperature
             )
             
@@ -697,49 +693,9 @@ RULES:
             logger.info("END OF COMPLETE OPENAI RESPONSE")
             logger.info("=" * 80)
             
-            # Extract JSON from response (handles explanatory text + markdown)
-            json_content = response_content.strip()
-
-            # Remove markdown code blocks if present
-            if '```json' in json_content:
-                json_start = json_content.find('```json') + 7
-                json_end = json_content.find('```', json_start)
-                if json_end != -1:
-                    json_content = json_content[json_start:json_end].strip()
-                else:
-                    json_content = json_content[json_start:].strip()
-
-            # Find JSON object start if there's explanatory text
-            json_start_pos = json_content.find('{')
-            if json_start_pos > 0:
-                json_content = json_content[json_start_pos:].strip()
-
-            # Find JSON object end (handle potential trailing text)
-            brace_count = 0
-            json_end_pos = -1
-            for i, char in enumerate(json_content):
-                if char == '{':
-                    brace_count += 1
-                elif char == '}':
-                    brace_count -= 1
-                    if brace_count == 0:
-                        json_end_pos = i + 1
-                        break
-
-            if json_end_pos > 0:
-                json_content = json_content[:json_end_pos].strip()
-
-            logger.info("=" * 80)
-            logger.info("CLEANED JSON CONTENT - NO LIMITS:")
-            logger.info("=" * 80)
-            logger.info(json_content)
-            logger.info("=" * 80)
-            logger.info("END OF CLEANED JSON CONTENT")
-            logger.info("=" * 80)
-
-            # Parse JSON response
+            # Parse JSON response (OpenAI guarantees valid JSON with response_format=json_object)
             try:
-                parsed_response = json.loads(json_content)
+                parsed_response = json.loads(response.choices[0].message.content)
                 procedures = parsed_response.get('procedures', [])
                 
                 # Convert to the format expected by the staging table
