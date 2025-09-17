@@ -1,0 +1,187 @@
+{
+  "procedures": [
+    {
+      "title": "Unpacking and Initial Setup",
+      "preconditions": [
+        "Unit delivered in original packaging",
+        "Accessible suitable workspace"
+      ],
+      "steps": [
+        "Inspect shipping carton for damage.",
+        "Open carton and remove all packaging materials.",
+        "Check included parts against packing list.",
+        "Place unit on a flat and stable surface.",
+        "Allow unit to acclimate to room temperature if recently transported."
+      ],
+      "expected_outcome": "Unit is safely unpacked and ready for installation.",
+      "models": ["All"],
+      "error_codes": []
+    },
+    {
+      "title": "Countertop Placement and Power Connection",
+      "preconditions": [
+        "Unit has been unpacked and inspected",
+        "Proper countertop space available",
+        "Power outlet meets unit requirements"
+      ],
+      "steps": [
+        "Position the unit away from wall for adequate ventilation.",
+        "Ensure clearance around unit as per manual recommendations.",
+        "Connect power cord to a grounded electrical outlet of the specified voltage.",
+        "Verify unit is resting level."
+      ],
+      "expected_outcome": "Unit is installed in a suitable location with proper electrical connection.",
+      "models": ["All"],
+      "error_codes": ["E01", "E02"]
+    },
+    {
+      "title": "Standard Operation Mode",
+      "preconditions": [
+        "Unit powered on",
+        "All parts installed correctly"
+      ],
+      "steps": [
+        "Press the Power button.",
+        "Use the control panel to select 'Standard Operation' mode.",
+        "Adjust timer and temperature as needed.",
+        "Press Start."
+      ],
+      "expected_outcome": "Unit operates in Standard mode as configured.",
+      "models": ["Model X", "Model Y"],
+      "error_codes": ["E03", "E04"]
+    },
+    {
+      "title": "Safety Lock Activation",
+      "preconditions": [
+        "Unit powered on"
+      ],
+      "steps": [
+        "Press and hold the Safety Lock button for 3 seconds.",
+        "Confirm lock symbol appears on display."
+      ],
+      "expected_outcome": "Unit controls are locked and protected from unintended operation.",
+      "models": ["Model X", "Model Y"],
+      "error_codes": []
+    },
+    {
+      "title": "Safety Lock Deactivation",
+      "preconditions": [
+        "Safety lock feature enabled"
+      ],
+      "steps": [
+        "Press and hold the Safety Lock button for 3 seconds.",
+        "Confirm lock symbol disappears from display."
+      ],
+      "expected_outcome": "Unit controls are unlocked and ready for use.",
+      "models": ["Model X", "Model Y"],
+      "error_codes": []
+    },
+    {
+      "title": "Cleaning Exterior Surfaces",
+      "preconditions": [
+        "Unit powered off",
+        "Unit unplugged",
+        "Surfaces cool to the touch"
+      ],
+      "steps": [
+        "Wipe exterior with damp, soft cloth.",
+        "If necessary, use mild detergent on stubborn stains.",
+        "Dry with clean, soft cloth."
+      ],
+      "expected_outcome": "Exterior is clean and free of residues or buildup.",
+      "models": ["All"],
+      "error_codes": []
+    },
+    {
+      "title": "Cleaning Removable Components",
+      "preconditions": [
+        "Unit powered off and unplugged",
+        "Removable components cool enough to handle"
+      ],
+      "steps": [
+        "Remove tray and accessories as specified.",
+        "Wash components in warm, soapy water.",
+        "Rinse thoroughly and dry completely.",
+        "Reinstall components once dry."
+      ],
+      "expected_outcome": "Removable components are clean and reinstalled correctly.",
+      "models": ["Model X", "Model Y"],
+      "error_codes": []
+    },
+    {
+      "title": "E01 Error Code - Power Failure",
+      "preconditions": [
+        "E01 displayed on unit"
+      ],
+      "steps": [
+        "Disconnect unit from power supply.",
+        "Check outlet for power.",
+        "Reconnect unit and power on.",
+        "If error persists, contact service."
+      ],
+      "expected_outcome": "Unit resumes normal operation or a service request is initiated.",
+      "models": ["All"],
+      "error_codes": ["E01"]
+    },
+    {
+      "title": "E02 Error Code - Voltage Out of Range",
+      "preconditions": [
+        "E02 displayed on unit"
+      ],
+      "steps": [
+        "Unplug unit immediately.",
+        "Verify supply voltage matches specifications.",
+        "Reconnect only if voltage is within range.",
+        "If error persists, contact qualified electrician."
+      ],
+      "expected_outcome": "Unit receives proper voltage and error is cleared.",
+      "models": ["All"],
+      "error_codes": ["E02"]
+    },
+    {
+      "title": "E03 Error Code - Sensor Fault",
+      "preconditions": [
+        "E03 displayed on unit"
+      ],
+      "steps": [
+        "Power off and unplug the unit.",
+        "Wait 5 minutes, then reconnect power.",
+        "Restart unit and check for error.",
+        "If error remains, schedule service inspection."
+      ],
+      "expected_outcome": "Sensor issue is reset or referred for professional maintenance.",
+      "models": ["Model X", "Model Y"],
+      "error_codes": ["E03"]
+    },
+    {
+      "title": "E04 Error Code - Overheating Detected",
+      "preconditions": [
+        "E04 displayed on unit"
+      ],
+      "steps": [
+        "Shut down and unplug the unit.",
+        "Allow unit to cool for at least 30 minutes.",
+        "Ensure vents are not blocked.",
+        "Reconnect power and resume operation.",
+        "If error recurs, arrange professional servicing."
+      ],
+      "expected_outcome": "Unit operating temperature is restored and error cleared.",
+      "models": ["Model X", "Model Y"],
+      "error_codes": ["E04"]
+    },
+    {
+      "title": "Routine Maintenance - Ventilation Checks",
+      "preconditions": [
+        "Unit powered off and unplugged"
+      ],
+      "steps": [
+        "Inspect intake and exhaust vents for dust or obstructions.",
+        "Clean surfaces as required.",
+        "Confirm that airflow is unobstructed."
+      ],
+      "expected_outcome": "Vents are clear, allowing for proper cooling and operation.",
+      "models": ["All"],
+      "error_codes": []
+    }
+  ]
+}
