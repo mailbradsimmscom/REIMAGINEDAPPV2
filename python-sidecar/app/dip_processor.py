@@ -675,9 +675,33 @@ RULES:
                 "Authorization": f"Bearer {supabase_key}"
             }
             
-            # Get the PDF file from storage
+            # First, get the storage path from documents table
+            doc_response = requests.get(
+                f"{url}/rest/v1/documents",
+                headers=headers,
+                params={"doc_id": f"eq.{doc_id}", "select": "storage_path"}
+            )
+            
+            storage_path = None
+            if doc_response.status_code == 200:
+                doc_data = doc_response.json()
+                if doc_data and len(doc_data) > 0:
+                    storage_path = doc_data[0].get('storage_path')
+                    logger.info(f"Retrieved storage path for doc {doc_id}: {storage_path}")
+                else:
+                    logger.warning(f"No document found for doc_id {doc_id}")
+            else:
+                logger.warning(f"Failed to retrieve document data: {doc_response.status_code}")
+            
+            if not storage_path:
+                logger.error(f"No storage path found for document {doc_id}")
+                return []
+            
+            # Get the PDF file from storage using the actual storage path
+            # The storage_path from the database doesn't include the bucket name, so we need to add it
+            full_storage_path = f"documents/{storage_path}"
             pdf_response = requests.get(
-                f"{url}/storage/v1/object/documents/manuals/{doc_id}/145775-48VDC-SINGLE-ZONE-INTELLIKEN-GRILL-1-1.pdf",
+                f"{url}/storage/v1/object/{full_storage_path}",
                 headers=headers
             )
             
@@ -742,20 +766,23 @@ RULES:
                 parsed_response = json.loads(response_content)
                 procedures = parsed_response.get('procedures', [])
                 
-                # Convert to the format expected by the staging table
+                # Convert to the format expected by the new table structure
                 playbook_hints = []
                 for procedure in procedures:
                     playbook_hint = {
                         'id': f"{doc_id}_{len(playbook_hints) + 1}",
                         'title': procedure.get('title', ''),
-                        'procedures': [procedure],  # Store the full procedure in the procedures JSONB field
+                        'description': ", ".join(procedure.get('models', [])),  # Convert models array to comma-separated string
+                        'steps': procedure.get('steps', []),  # Direct mapping to steps array
+                        'expected_outcome': procedure.get('expected_outcome', ''),
                         'preconditions': procedure.get('preconditions', []),
                         'error_codes': procedure.get('error_codes', []),
-                        'related_procedures': [],  # Could be populated from cross-references
-                        'page_references': [],  # Could be populated from chunk page numbers
                         'category': self._categorize_procedure(procedure.get('title', '')),
                         'system_norm': '',  # Will be populated based on models
                         'subsystem_norm': '',  # Will be populated based on models
+                        'manufacturer_norm': '',  # Will be populated based on models
+                        'model_norm': '',  # Will be populated based on models
+                        'asset_uid': '',  # Will be populated based on models
                         'doc_id': doc_id,
                         'created_at': time.time(),
                         'confidence': 0.9  # High confidence for AI extraction
@@ -979,19 +1006,55 @@ RULES:
         
         try:
             if playbook_hints:
+                # First, get system metadata and storage path from documents table
+                doc_response = requests.get(
+                    f"{url}/rest/v1/documents",
+                    headers=headers,
+                    params={"doc_id": f"eq.{doc_id}", "select": "asset_uid,manufacturer_norm,model_norm,system_norm,subsystem_norm,storage_path"}
+                )
+                
+                system_data = {}
+                storage_path = None
+                if doc_response.status_code == 200:
+                    doc_data = doc_response.json()
+                    if doc_data and len(doc_data) > 0:
+                        doc_info = doc_data[0]
+                        system_data = {
+                            'asset_uid': doc_info.get('asset_uid'),
+                            'manufacturer_norm': doc_info.get('manufacturer_norm'),
+                            'model_norm': doc_info.get('model_norm'),
+                            'system_norm': doc_info.get('system_norm'),
+                            'subsystem_norm': doc_info.get('subsystem_norm')
+                        }
+                        storage_path = doc_info.get('storage_path')
+                        logger.info(f"Retrieved system data for doc {doc_id}: {system_data}")
+                        logger.info(f"Storage path for doc {doc_id}: {storage_path}")
+                    else:
+                        logger.warning(f"No document found for doc_id {doc_id}")
+                else:
+                    logger.warning(f"Failed to retrieve document data: {doc_response.status_code}")
+                
                 # Insert each playbook hint into the staging table
                 for hint in playbook_hints:
-                    # Prepare the data for the playbook_hints table (using original schema)
+                    # Prepare the data for the playbook_hints table (using new schema)
                     insert_data = {
                         'doc_id': doc_id,
-                        'test_name': hint.get('title', ''),
-                        'test_type': hint.get('category', 'operation'),
-                        'description': hint.get('expected_outcome', ''),
-                        'steps': hint.get('procedures', []),
-                        'expected_result': hint.get('expected_outcome', ''),
+                        'title': hint.get('title', ''),
+                        'description': hint.get('description', ''),  # Models as comma-separated string
+                        'steps': hint.get('steps', []),  # Steps array
+                        'expected_outcome': hint.get('expected_outcome', ''),
+                        'preconditions': hint.get('preconditions', []),
+                        'error_codes': hint.get('error_codes', []),
+                        'category': hint.get('category', 'operation'),
                         'page': 1,  # Default page since we don't have specific page info
                         'confidence': hint.get('confidence', 0.9),
-                        'bbox': None  # No bounding box for AI-generated content
+                        'bbox': None,  # No bounding box for AI-generated content
+                        'system_norm': system_data.get('system_norm', ''),
+                        'subsystem_norm': system_data.get('subsystem_norm', ''),
+                        'manufacturer_norm': system_data.get('manufacturer_norm', ''),
+                        'model_norm': system_data.get('model_norm', ''),
+                        'asset_uid': system_data.get('asset_uid', ''),
+                        'status': 'pending'
                     }
                     
                     # Insert into playbook_hints table

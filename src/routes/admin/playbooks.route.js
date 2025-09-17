@@ -22,7 +22,7 @@ router.get('/', adminOnly, async (req, res) => {
       throw new Error('Supabase client not available');
     }
     
-    let query = supabase.from('playbook_hints').select('*');
+    let query = supabase.from('playbook_hints').select('id, doc_id, title, preconditions, steps, expected_outcome, error_codes, description, category, page, confidence, system_norm, subsystem_norm, manufacturer_norm, model_norm, asset_uid, status, created_at, updated_at');
     
     if (filters.system_norm) {
       query = query.eq('system_norm', filters.system_norm);

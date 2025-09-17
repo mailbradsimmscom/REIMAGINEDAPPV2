@@ -148,12 +148,12 @@ function createTableHeader(type) {
         'playbook': `
             <tr>
                 <th width="40">✅</th>
-                <th width="150">Test Name</th>
-                <th width="100">Test Type</th>
+                <th width="150">Title</th>
+                <th width="200">Preconditions</th>
+                <th width="200">Steps</th>
+                <th width="200">Expected Outcome</th>
+                <th width="150">Error Codes</th>
                 <th width="200">Description</th>
-                <th width="150">Steps</th>
-                <th width="200">Expected Result</th>
-                <th width="60">Page</th>
                 <th width="100">Confidence</th>
             </tr>
         `,
@@ -199,12 +199,12 @@ function createTableRow(type, suggestion, index) {
         'playbook': `
             <tr>
                 <td>${baseCheckbox}</td>
-                <td><strong>${escapeHtml(suggestion.test_name || 'No title')}</strong></td>
-                <td><span class="badge">${escapeHtml(suggestion.test_type || 'N/A')}</span></td>
-                <td>${escapeHtml(suggestion.description || 'No description')}</td>
+                <td><strong>${escapeHtml(suggestion.title || 'No title')}</strong></td>
+                <td>${formatPreconditions(suggestion.preconditions)}</td>
                 <td>${formatSteps(suggestion.steps)}</td>
-                <td>${escapeHtml(suggestion.expected_result || 'N/A')}</td>
-                <td>${suggestion.page || 'N/A'}</td>
+                <td>${escapeHtml(suggestion.expected_outcome || 'N/A')}</td>
+                <td>${formatErrorCodes(suggestion.error_codes)}</td>
+                <td>${escapeHtml(suggestion.description || 'No description')}</td>
                 <td class="confidence-cell ${getConfidenceClass(suggestion.confidence)}">${(suggestion.confidence * 100).toFixed(1)}%</td>
             </tr>
         `,
@@ -485,4 +485,32 @@ function formatSteps(steps) {
     }
     
     return String(steps);
+}
+
+function formatPreconditions(preconditions) {
+    if (!preconditions) return 'N/A';
+    
+    if (Array.isArray(preconditions)) {
+        if (preconditions.length === 0) return 'No preconditions';
+        
+        return preconditions.map((precondition, index) => {
+            return `${index + 1}. ${escapeHtml(precondition)}`;
+        }).join('<br>');
+    }
+    
+    return escapeHtml(String(preconditions));
+}
+
+function formatErrorCodes(errorCodes) {
+    if (!errorCodes) return 'N/A';
+    
+    if (Array.isArray(errorCodes)) {
+        if (errorCodes.length === 0) return 'No error codes';
+        
+        return errorCodes.map(code => {
+            return `<span class="error-code-badge">${escapeHtml(code)}</span>`;
+        }).join('<br>');
+    }
+    
+    return escapeHtml(String(errorCodes));
 }
