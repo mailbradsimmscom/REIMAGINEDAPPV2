@@ -1,0 +1,82 @@
+API CALL COMPARISON
+==================
+
+TEST SCRIPT API CALL (working - pure JSON):
+===========================================
+
+response = client.responses.create(
+    model=openai_model,
+    instructions=system_prompt,   # replaces system role
+    input=[
+        {"type": "message", "role": "user", "content": user_prompt}
+    ],
+    max_output_tokens=openai_max_tokens,
+    temperature=0,
+    metadata={"doc_id": "test-123", "file_id": uploaded_file.id}  # optional tracking
+)
+
+RESULT: Pure JSON response
+{
+  "procedures": [
+    {
+      "title": "Unpacking and Initial Setup",
+      ...
+    }
+  ]
+}
+
+
+MAIN SYSTEM API CALL (failing - markdown-wrapped JSON):
+=======================================================
+
+response = self.openai_client.responses.create(
+    model=self.openai_model,
+    instructions=system_prompt,   # replaces system role
+    input=[
+        {"type": "message", "role": "user", "content": user_prompt}
+    ],
+    max_output_tokens=self.openai_max_tokens,
+    temperature=self.openai_temperature,
+    metadata={"doc_id": doc_id}  # document reference in metadata
+)
+
+RESULT: Markdown-wrapped JSON response
+```json
+{
+  "procedures": [
+    {
+      "title": "Unpacking and Initial Setup",
+      ...
+    }
+  ]
+}
+```
+
+
+KEY DIFFERENCES:
+===============
+
+1. **Temperature parameter:**
+   - Test script: `temperature=0` (hardcoded)
+   - Main system: `temperature=self.openai_temperature` (from env, showing as 0.0)
+
+2. **Metadata content:**
+   - Test script: `{"doc_id": "test-123", "file_id": uploaded_file.id}`
+   - Main system: `{"doc_id": doc_id}` (no file_id)
+
+3. **Client object:**
+   - Test script: `client.responses.create()`
+   - Main system: `self.openai_client.responses.create()`
+
+4. **Response format:**
+   - Test script: Pure JSON
+   - Main system: Markdown-wrapped JSON
+
+POSSIBLE CAUSES:
+===============
+
+1. **Temperature difference** - Test script uses hardcoded 0, main system uses env variable
+2. **Metadata difference** - Test script includes file_id, main system doesn't
+3. **Client initialization** - Different client objects might have different configurations
+4. **Environment variables** - Different env vars might affect response format
+5. **Model version** - Different model versions might behave differently

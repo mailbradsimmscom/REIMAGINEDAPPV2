@@ -8,6 +8,7 @@ import re
 import time
 import os
 import requests
+import io
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
@@ -656,29 +657,72 @@ RULES:
 - Each procedure object must include: title, preconditions, steps, expected_outcome, models, error_codes.
 """
 
-            # Limit document size to avoid token limits (roughly 300k characters)
-            if len(document_text) > 300000:
-                document_text = document_text[:300000]
-                logger.info(f"Document truncated to 300k characters for OpenAI processing")
-
-            user_prompt = f"""Extract all actionable procedures from this technical manual:
-
-            {document_text}"""
+            # Download PDF from Supabase storage and upload to OpenAI
+            logger.info(f"Downloading PDF from Supabase storage for document {doc_id}")
             
-            response = self.openai_client.chat.completions.create(
+            # Get Supabase credentials
+            supabase_url = os.getenv('SUPABASE_URL')
+            supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+            
+            if not supabase_url or not supabase_key:
+                logger.error("Supabase configuration missing")
+                return []
+            
+            # Download PDF from Supabase storage
+            url = supabase_url.rstrip("/")
+            headers = {
+                "apikey": supabase_key,
+                "Authorization": f"Bearer {supabase_key}"
+            }
+            
+            # Get the PDF file from storage
+            pdf_response = requests.get(
+                f"{url}/storage/v1/object/documents/manuals/{doc_id}/145775-48VDC-SINGLE-ZONE-INTELLIKEN-GRILL-1-1.pdf",
+                headers=headers
+            )
+            
+            if pdf_response.status_code != 200:
+                logger.error(f"Failed to download PDF from storage: {pdf_response.status_code}")
+                return []
+            
+            # Upload PDF to OpenAI - wrap bytes in file-like object
+            logger.info(f"Uploading PDF file to OpenAI for document {doc_id}")
+            pdf_file = io.BytesIO(pdf_response.content)
+            pdf_file.name = f"{doc_id}.pdf"  # OpenAI needs a filename
+            
+            uploaded_file = self.openai_client.files.create(
+                file=pdf_file,  # ✅ Now it's a file-like object
+                purpose="assistants"
+            )
+            logger.info(f"File uploaded with ID: {uploaded_file.id}")
+
+            user_prompt = "Extract all actionable procedures from this technical manual."
+            
+            response = self.openai_client.responses.create(
                 model=self.openai_model,
-                response_format={"type": "json_object"},
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                instructions=system_prompt,   # replaces system role
+                input=[
+                    {"type": "message", "role": "user", "content": user_prompt}
                 ],
-                max_completion_tokens=self.openai_max_tokens,
-                temperature=self.openai_temperature
+                max_output_tokens=self.openai_max_tokens,
+                temperature=self.openai_temperature,
+                metadata={"doc_id": doc_id, "file_id": uploaded_file.id}  # document and file reference in metadata
             )
             
             # Parse the response with robust error handling
-            if response.choices and len(response.choices) > 0:
-                response_content = response.choices[0].message.content
+            if response.output and len(response.output) > 0:
+                # Look for the message output (not reasoning)
+                message_output = None
+                for output_item in response.output:
+                    if hasattr(output_item, 'type') and output_item.type == 'message':
+                        message_output = output_item
+                        break
+                
+                if message_output and hasattr(message_output, 'content') and message_output.content:
+                    response_content = message_output.content[0].text
+                else:
+                    logger.error("No message output found in OpenAI response")
+                    return []
             else:
                 logger.error("Empty response from OpenAI API")
                 return []
@@ -693,9 +737,9 @@ RULES:
             logger.info("END OF COMPLETE OPENAI RESPONSE")
             logger.info("=" * 80)
             
-            # Parse JSON response (OpenAI guarantees valid JSON with response_format=json_object)
+            # Parse JSON response
             try:
-                parsed_response = json.loads(response.choices[0].message.content)
+                parsed_response = json.loads(response_content)
                 procedures = parsed_response.get('procedures', [])
                 
                 # Convert to the format expected by the staging table

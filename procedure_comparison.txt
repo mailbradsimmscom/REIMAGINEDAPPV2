@@ -1,0 +1,281 @@
+PROCEDURE EXTRACTION COMPARISON
+================================
+
+WITH TEMPERATURE=0 (9 procedures):
+====================================
+
+1. "Unpacking and Initial Setup"
+   - Preconditions: Product is delivered and packaging is intact, Installation area is prepared
+   - Steps: Carefully open the packaging and remove the appliance, Check for any visible damage or missing parts, Remove all protective films and packing materials from the appliance, Read the included safety instructions before proceeding
+   - Expected outcome: Appliance is unpacked, inspected, and ready for installation
+   - Models: All models
+   - Error codes: []
+
+2. "Countertop Placement and Electrical Connection"
+   - Preconditions: Appliance is unpacked and inspected, Countertop is level and clear, Electrical outlet meets appliance requirements
+   - Steps: Place the appliance on a stable, level countertop, Ensure there is adequate clearance around the appliance for ventilation, Connect the power cord to a grounded electrical outlet, Do not use extension cords or adapters
+   - Expected outcome: Appliance is securely placed and connected to power
+   - Models: All models
+   - Error codes: []
+
+3. "Activating Child Lock Feature"
+   - Preconditions: Appliance is plugged in and powered on
+   - Steps: Press and hold the 'Child Lock' button for 3 seconds, Wait for the lock indicator to illuminate on the display
+   - Expected outcome: Child lock is activated, preventing unintended operation
+   - Models: Model A, Model B
+   - Error codes: []
+
+4. "Deactivating Child Lock Feature"
+   - Preconditions: Child lock is currently activated
+   - Steps: Press and hold the 'Child Lock' button for 3 seconds, Wait for the lock indicator to turn off
+   - Expected outcome: Child lock is deactivated, appliance can be operated normally
+   - Models: Model A, Model B
+   - Error codes: []
+
+5. "Cleaning the Exterior Surfaces"
+   - Preconditions: Appliance is turned off and unplugged, Exterior surfaces are cool to the touch
+   - Steps: Wipe the exterior surfaces with a soft, damp cloth, Do not use abrasive cleaners or solvents, Dry with a clean, soft cloth
+   - Expected outcome: Exterior surfaces are clean and free of residue
+   - Models: All models
+   - Error codes: []
+
+6. "Cleaning the Removable Parts"
+   - Preconditions: Appliance is turned off and unplugged, Removable parts have cooled down
+   - Steps: Remove all detachable parts as per the user manual, Wash parts in warm, soapy water, Rinse thoroughly and dry completely before reassembling
+   - Expected outcome: Removable parts are clean and ready for use
+   - Models: Model A, Model B
+   - Error codes: []
+
+7. "Error Code E01: Overheating Detected"
+   - Preconditions: Error code E01 is displayed on the control panel
+   - Steps: Turn off and unplug the appliance immediately, Allow the appliance to cool down for at least 30 minutes, Check for blocked ventilation or obstructions, Remove any obstructions and ensure proper airflow, Plug in and restart the appliance
+   - Expected outcome: Appliance resumes normal operation if overheating was resolved
+   - Models: Model A, Model B
+   - Error codes: [E01]
+
+8. "Error Code E02: Sensor Malfunction"
+   - Preconditions: Error code E02 is displayed on the control panel
+   - Steps: Turn off and unplug the appliance, Wait 5 minutes, then plug in and restart, If the error persists, contact customer service
+   - Expected outcome: Sensor error is cleared or escalated to technical support
+   - Models: Model A, Model B
+   - Error codes: [E02]
+
+9. "Routine Maintenance: Inspecting Power Cord"
+   - Preconditions: Appliance is turned off and unplugged
+   - Steps: Visually inspect the power cord for any signs of damage or wear, Do not use the appliance if the cord is damaged, Contact an authorized service center for replacement if needed
+   - Expected outcome: Power cord is confirmed safe or scheduled for replacement
+   - Models: All models
+   - Error codes: []
+
+
+WITHOUT TEMPERATURE (14 procedures):
+====================================
+
+1. "Unpacking and Initial Setup"
+   - Preconditions: Product box is present at installation location, Tools (utility knife, scissors) are available
+   - Steps: Open the top of the shipping box using a utility knife or scissors, Remove all external packaging materials from the unit, Lift the appliance out of the box and place it in an upright position, Check for any shipping damage; do not proceed if any damage is present, Retain packaging for possible future transport
+   - Expected outcome: Appliance is safely unpacked, inspected, and positioned for further setup
+   - Models: All Models
+   - Error codes: []
+
+2. "Countertop Placement and Electrical Connection"
+   - Preconditions: Unit is unpacked and inspected, Countertop is level, dry, and supports the appliance weight, Nearby power outlet matches electrical requirements
+   - Steps: Place the unit on a level countertop, ensuring adequate clearance around airflow vents, Connect the power cord to a properly grounded wall outlet, Ensure no extension cords or adapters are used, Confirm the unit powers on; if not, check outlet and fuse
+   - Expected outcome: Appliance is stably placed and connected to power, ready for operation
+   - Models: All Models
+   - Error codes: [E01]
+
+3. "Power-On Procedure"
+   - Preconditions: Unit is unpacked, positioned, and plugged in, All panels are securely closed
+   - Steps: Press the Power button on the control panel, Check for indicator lights or display activation, Wait for the unit to complete self-check (if applicable)
+   - Expected outcome: Unit powers on and is ready for function selection
+   - Models: Model A, Model B
+   - Error codes: [E02]
+
+4. "Child Lock Activation and Deactivation"
+   - Preconditions: Unit is powered on, Control panel is accessible
+   - Steps: Press and hold the Child Lock button for 3 seconds, Display will indicate 'LOCK' or corresponding symbol, To deactivate, repeat step 1
+   - Expected outcome: Control panel lock is toggled to prevent or allow operation
+   - Models: Model A, Model B
+   - Error codes: []
+
+5. "Eco Mode Operation"
+   - Preconditions: Unit is powered on
+   - Steps: Press the Eco Mode button on the control panel, Verify the Eco indicator illuminates on the display, Select desired cycle or operation
+   - Expected outcome: Device operates in energy-saving Eco Mode
+   - Models: Model A
+   - Error codes: [E05]
+
+6. "Standard Mode Operation"
+   - Preconditions: Unit is powered on
+   - Steps: Do not select Eco Mode, Select the standard operating mode using the mode selector, Start the selected cycle
+   - Expected outcome: Device performs operation in standard (non-Eco) mode
+   - Models: Model A, Model B
+   - Error codes: []
+
+7. "Filter Cleaning"
+   - Preconditions: Unit is powered off and unplugged, Filter is cool to touch
+   - Steps: Open the filter access panel, Remove the filter by pulling the designated tab, Rinse the filter under running tap water, Allow the filter to air dry completely, Reinstall the dry filter and close the panel
+   - Expected outcome: Filter is clean and reinstalled, ensuring optimal unit performance
+   - Models: Model B
+   - Error codes: [E12]
+
+8. "Control Panel Cleaning"
+   - Preconditions: Unit is powered off, Soft, lint-free cloth and mild detergent available
+   - Steps: Dampen the cloth with water and a small amount of mild detergent, Gently wipe the control panel surface, Dry the panel with a clean cloth, Avoid excess moisture around buttons and seams
+   - Expected outcome: Control panel is clean without moisture damage
+   - Models: All Models
+   - Error codes: []
+
+9. "Drain System Maintenance"
+   - Preconditions: Unit is powered off and unplugged, Drain tray is cool and accessible
+   - Steps: Remove the drain tray by sliding it out from the bottom, Empty any collected water, Rinse tray with warm water, dry it, and reinstall
+   - Expected outcome: Drain system functions properly with no overflow
+   - Models: Model A
+   - Error codes: [E14]
+
+10. "Error Code E01: No Power Detected"
+    - Preconditions: Unit fails to power on, Power cord appears intact
+    - Steps: Confirm unit is plugged into a working outlet, Check household circuit breaker or fuse, Try a different outlet if possible, If issue persists, contact customer service
+    - Expected outcome: Power issue identified or escalated to service
+    - Models: All Models
+    - Error codes: [E01]
+
+11. "Error Code E02: Startup Failure"
+    - Preconditions: Unit powers on but fails to initiate self-check or display shows E02
+    - Steps: Power cycle the unit: unplug, wait 30 seconds, and plug back in, Attempt to power on again, If problem remains, note the error code and contact service
+    - Expected outcome: Startup sequence resumes or is escalated for service
+    - Models: Model A, Model B
+    - Error codes: [E02]
+
+12. "Error Code E05: Eco Mode Malfunction"
+    - Preconditions: Eco mode fails to activate or display shows E05
+    - Steps: Turn off Eco Mode and restart the unit, Try reactivating Eco Mode, If E05 persists, run the device in standard mode, Contact customer support if Eco operation does not resume
+    - Expected outcome: Eco Mode is restored or alternate operation continues
+    - Models: Model A
+    - Error codes: [E05]
+
+13. "Error Code E12: Clogged Filter"
+    - Preconditions: Unit display shows E12, Reduced performance or airflow is observed
+    - Steps: Turn off and unplug the unit, Remove and clean the filter per the filter cleaning procedure, Reinstall the filter and restart the unit, If E12 reappears, replace the filter
+    - Expected outcome: Filter is unclogged or replaced, error cleared
+    - Models: Model B
+    - Error codes: [E12]
+
+14. "Error Code E14: Drain System Blockage"
+    - Preconditions: Unit display shows E14, Tray appears full or water not draining
+    - Steps: Remove and empty the drain tray, Inspect for and clear any obstructions, Reinstall tray and check for leaks, Restart unit
+    - Expected outcome: Drain system operates normally, error cleared
+    - Models: Model A
+    - Error codes: [E14]
+
+
+WITH TEMPERATURE=1 (14 procedures):
+====================================
+
+1. "Unpacking and Initial Setup"
+   - Preconditions: Product is delivered and packaging is intact, Installation area is clear and accessible
+   - Steps: Carefully open the packaging and remove the appliance, Inspect the appliance for any visible damage, Remove all protective films and internal packaging materials, Check that all accessories and documentation are present
+   - Expected outcome: Appliance is unpacked, inspected, and ready for installation
+   - Models: Model A100, Model B200, Model C300
+   - Error codes: []
+
+2. "Countertop Placement and Electrical Connection"
+   - Preconditions: Appliance is unpacked and inspected, Countertop is level and supports appliance weight, Electrical outlet is nearby and meets voltage requirements
+   - Steps: Place the appliance on a stable, level countertop, Ensure at least 5 cm clearance on all sides for ventilation, Connect the power cord to a grounded electrical outlet, Do not use extension cords or adapters
+   - Expected outcome: Appliance is securely placed and connected to power
+   - Models: Model A100, Model B200, Model C300
+   - Error codes: [E01, E02]
+
+3. "Activating Child Lock Feature"
+   - Preconditions: Appliance is plugged in and powered on
+   - Steps: Press and hold the 'Lock' button for 3 seconds, Wait for the lock indicator light to illuminate
+   - Expected outcome: Child lock is activated and controls are disabled
+   - Models: Model A100, Model B200
+   - Error codes: []
+
+4. "Deactivating Child Lock Feature"
+   - Preconditions: Child lock is currently activated
+   - Steps: Press and hold the 'Lock' button for 3 seconds, Wait for the lock indicator light to turn off
+   - Expected outcome: Child lock is deactivated and controls are enabled
+   - Models: Model A100, Model B200
+   - Error codes: []
+
+5. "Operating Standard Heating Mode"
+   - Preconditions: Appliance is plugged in and powered on, Child lock is deactivated
+   - Steps: Press the 'Power' button to turn on the appliance, Select 'Standard Heating' mode using the mode selector, Adjust temperature and timer as desired, Press 'Start' to begin operation
+   - Expected outcome: Appliance operates in standard heating mode
+   - Models: Model A100, Model B200, Model C300
+   - Error codes: [E03, E04]
+
+6. "Operating Eco Mode"
+   - Preconditions: Appliance is plugged in and powered on, Child lock is deactivated
+   - Steps: Press the 'Power' button to turn on the appliance, Select 'Eco Mode' using the mode selector, Adjust timer as desired, Press 'Start' to begin operation
+   - Expected outcome: Appliance operates in energy-saving Eco Mode
+   - Models: Model B200, Model C300
+   - Error codes: [E03]
+
+7. "Operating Defrost Mode"
+   - Preconditions: Appliance is plugged in and powered on, Child lock is deactivated
+   - Steps: Press the 'Power' button to turn on the appliance, Select 'Defrost Mode' using the mode selector, Set the defrost time as required, Press 'Start' to begin defrosting
+   - Expected outcome: Appliance operates in defrost mode
+   - Models: Model A100, Model C300
+   - Error codes: [E05]
+
+8. "Cleaning the Appliance Exterior"
+   - Preconditions: Appliance is turned off and unplugged, Appliance is cool to the touch
+   - Steps: Wipe the exterior surfaces with a soft, damp cloth, Do not use abrasive cleaners or solvents, Dry with a clean, soft towel
+   - Expected outcome: Exterior surfaces are clean and undamaged
+   - Models: Model A100, Model B200, Model C300
+   - Error codes: []
+
+9. "Cleaning the Appliance Interior"
+   - Preconditions: Appliance is turned off and unplugged, Appliance is cool to the touch
+   - Steps: Remove all removable parts and accessories, Wipe the interior with a soft, damp cloth, Clean removable parts separately with mild detergent, Dry all parts thoroughly before reassembling
+   - Expected outcome: Interior and accessories are clean and ready for use
+   - Models: Model A100, Model B200, Model C300
+   - Error codes: []
+
+10. "Error Code E01: Overheating Detected"
+    - Preconditions: Error code E01 is displayed
+    - Steps: Turn off and unplug the appliance immediately, Allow the appliance to cool for at least 30 minutes, Check for blocked ventilation or obstructions, Remove any obstructions and ensure proper airflow, Plug in and restart the appliance
+    - Expected outcome: Appliance resumes normal operation if overheating is resolved
+    - Models: Model A100, Model B200, Model C300
+    - Error codes: [E01]
+
+11. "Error Code E02: Power Supply Issue"
+    - Preconditions: Error code E02 is displayed
+    - Steps: Turn off and unplug the appliance, Check the power outlet and circuit breaker, Ensure the power cord is not damaged, Plug the appliance into a different outlet if necessary, Restart the appliance
+    - Expected outcome: Appliance powers on if power supply issue is resolved
+    - Models: Model A100, Model B200, Model C300
+    - Error codes: [E02]
+
+12. "Error Code E03: Sensor Malfunction"
+    - Preconditions: Error code E03 is displayed
+    - Steps: Turn off and unplug the appliance, Wait 5 minutes, then plug in and restart, If error persists, contact customer service
+    - Expected outcome: Appliance resumes operation or is referred for service
+    - Models: Model A100, Model B200, Model C300
+    - Error codes: [E03]
+
+13. "Error Code E04: Door Not Closed"
+    - Preconditions: Error code E04 is displayed
+    - Steps: Check that the appliance door is fully closed, Open and close the door firmly, Restart the appliance
+    - Expected outcome: Appliance operates if door is properly closed
+    - Models: Model A100, Model B200, Model C300
+    - Error codes: [E04]
+
+14. "Error Code E05: Defrost Failure"
+    - Preconditions: Error code E05 is displayed
+    - Steps: Turn off and unplug the appliance, Check for ice buildup or blockages in the defrost area, Remove any obstructions, Plug in and restart the appliance
+    - Expected outcome: Defrost mode operates normally if issue is resolved
+    - Models: Model A100, Model C300
+    - Error codes: [E05]
+
+
+SUMMARY:
+========
+- Temperature=0: 9 procedures, more concise, different error code interpretations
+- No temperature: 14 procedures, more detailed, comprehensive coverage
+- Temperature=1: 14 procedures, different content, more creative/random, specific model names (A100, B200, C300)
+- All approaches work but produce different results
+- Temperature parameter affects output quality and content structure
