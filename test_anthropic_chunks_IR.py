@@ -158,6 +158,59 @@ def process_chunks_parallel(client, chunks_data, anthropic_model, anthropic_max_
     
     return all_intent_routes, chunk_results
 
+def store_to_supabase_storage(doc_id, intent_routes):
+    """Store intent routes to Supabase Storage"""
+    try:
+        from supabase import create_client
+        from dotenv import load_dotenv
+        
+        # Load environment variables
+        load_dotenv()
+        
+        # Prepare data for storage
+        data = {
+            "intent_routes": intent_routes
+        }
+        
+        # Convert to JSON string
+        json_content = json.dumps(data, indent=2)
+        
+        # Supabase configuration
+        url = os.getenv('SUPABASE_URL')
+        key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        
+        if not url or not key:
+            print("❌ Supabase credentials not found")
+            return False
+        
+        # Initialize Supabase client
+        supabase = create_client(url, key)
+        
+        # Storage path
+        file_path = f"manuals/{doc_id}/DIP/{doc_id}_intent_router_an.json"
+        
+        # Upload to Supabase Storage using Python client
+        result = supabase.storage.from_('documents').upload(
+            file_path,
+            json_content.encode('utf-8'),
+            file_options={
+                "content-type": "text/plain",
+                "cache-control": "3600"
+            }
+        )
+        
+        # Check for errors in the response
+        if hasattr(result, 'error') and result.error:
+            print(f"❌ Failed to upload to storage: {result.error}")
+            return False
+        else:
+            print(f"✅ Successfully stored intent routes to Supabase Storage: {file_path}")
+            return True
+            
+    except Exception as e:
+        print(f"❌ Error storing to Supabase Storage: {e}")
+        return False
+
 def test_anthropic_intent_router_extraction():
     """Test Anthropic intent router Q&A extraction with parallel processing"""
     
@@ -307,6 +360,20 @@ RULES:
         with open(output_file, 'w') as f:
             json.dump(final_result, f, indent=2)
         print(f"\n💾 Results saved to: {output_file}")
+        
+        # Step 4: Store results to Supabase Storage
+        print("\n" + "="*80)
+        print("STEP 4: STORING RESULTS TO SUPABASE STORAGE")
+        print("="*80)
+        
+        try:
+            storage_success = store_to_supabase_storage(doc_id, unique_intent_routes)
+            if storage_success:
+                print("✅ Successfully stored intent routes to Supabase Storage")
+            else:
+                print("❌ Failed to store intent routes to Supabase Storage")
+        except Exception as e:
+            print(f"❌ Error storing to Supabase Storage: {e}")
         
         return final_result
         

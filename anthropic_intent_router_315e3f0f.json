@@ -1,0 +1,848 @@
+{
+  "total_chunks_processed": 6,
+  "successful_chunks": 6,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 25,
+  "unique_intent_routes": 24,
+  "question_type_breakdown": {
+    "What": 6,
+    "Where": 3,
+    "How": 15
+  },
+  "intent_routes": [
+    {
+      "question": "What languages is the Nemesis manual available in?",
+      "question_variations": [
+        "Which languages can I get the Nemesis manual in?",
+        "Is the Nemesis manual available in Spanish?",
+        "What language versions exist for the Nemesis guide?"
+      ],
+      "answer": "The Nemesis manual is available in 11 languages: English, Deutsch (German), Espa\u00f1ol (Spanish), Suomi (Finnish), Fran\u00e7ais (French), Italiano (Italian), Nederlands (Dutch), Norsk (Norwegian), Portugu\u00eas (Portuguese), Svenska (Swedish), and \u4e2d\u6587 (Chinese)",
+      "question_type": "What",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guides Cover Page"
+      ]
+    },
+    {
+      "question": "Where can I find the Nemesis manual online?",
+      "question_variations": [
+        "How do I download the Nemesis manual?",
+        "What is the website for the Nemesis guide?",
+        "Can I access the Nemesis manual on the web?"
+      ],
+      "answer": "The Nemesis manual can be found online at www.bandg.com",
+      "question_type": "Where",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guides Cover Page"
+      ]
+    },
+    {
+      "question": "What page is the English manual on?",
+      "question_variations": [
+        "Which page number has the English instructions?",
+        "Where is the English section located?",
+        "What page do the English instructions start on?"
+      ],
+      "answer": "The English manual starts on page 3",
+      "question_type": "What",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guides Contents"
+      ]
+    },
+    {
+      "question": "How do I access the Home screen?",
+      "question_variations": [
+        "Where is the Home screen?",
+        "How do I get to the Home screen?",
+        "How can I return to Home?"
+      ],
+      "answer": "The Home screen is accessed by selecting the Home button",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 4"
+      ]
+    },
+    {
+      "question": "What does the Settings button do?",
+      "question_variations": [
+        "Where are the system settings?",
+        "How do I access settings?",
+        "What is the Settings button for?"
+      ],
+      "answer": "The Settings button gives access to the system settings",
+      "question_type": "What",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 4"
+      ]
+    },
+    {
+      "question": "What is the Browser button used for?",
+      "question_variations": [
+        "How do I access the web browser?",
+        "Can I browse the internet?",
+        "What does the Browser button do?"
+      ],
+      "answer": "The Browser button can be used to access the B&G CPU web server or for browsing the internet",
+      "question_type": "What",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 4"
+      ]
+    },
+    {
+      "question": "How do I create a new dashboard?",
+      "question_variations": [
+        "Where is the new dashboard option?",
+        "Can I make a custom dashboard?",
+        "How to add a dashboard?"
+      ],
+      "answer": "Select the new dashboard option in the Dashboards section to create a custom dashboard",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 4"
+      ]
+    },
+    {
+      "question": "What is the dashboard bar?",
+      "question_variations": [
+        "Where can I find my pinned dashboards?",
+        "What shows in the dashboard bar?",
+        "How do I see recent dashboards?"
+      ],
+      "answer": "The dashboard bar shows pinned dashboards (user favorites) and recently used dashboards",
+      "question_type": "What",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 4"
+      ]
+    },
+    {
+      "question": "How do I turn on the Nemesis system?",
+      "question_variations": [
+        "How to power up Nemesis?",
+        "What's the startup procedure for Nemesis?",
+        "Can you tell me how to start the Nemesis unit?"
+      ],
+      "answer": "The Nemesis unit automatically turns ON when power is applied to the system.",
+      "question_type": "How",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guide, Page 3, Power Section"
+      ]
+    },
+    {
+      "question": "What happens on first startup of Nemesis?",
+      "question_variations": [
+        "What do I see when starting Nemesis for the first time?",
+        "Is there a setup wizard on first use?",
+        "How does initial setup work?"
+      ],
+      "answer": "On first startup or after factory reset, the unit displays a setup wizard that guides you through configuring screen orientation, language, and other settings.",
+      "question_type": "What",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guide, Page 3, First Time Startup Section"
+      ]
+    },
+    {
+      "question": "How do I lock the Nemesis screen?",
+      "question_variations": [
+        "What's the process to lock the display?",
+        "Can I manually lock the screen?",
+        "Where is the lock button?"
+      ],
+      "answer": "When the dashboard bar is shown, press the lock button to lock the screen. The screen also locks automatically after a period of inactivity by default.",
+      "question_type": "How",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guide, Page 3, Lock/Unlock Screen Section"
+      ]
+    },
+    {
+      "question": "How do I unlock the Nemesis screen?",
+      "question_variations": [
+        "What's the process to unlock the display?",
+        "How can I unlock my Nemesis unit?",
+        "Which way do I swipe to unlock?"
+      ],
+      "answer": "To unlock, swipe from the right edge if in landscape orientation, or swipe from the bottom if in portrait orientation.",
+      "question_type": "How",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guide, Page 3, Lock/Unlock Screen Section"
+      ]
+    },
+    {
+      "question": "Can I change the screen lock settings?",
+      "question_variations": [
+        "How do I modify screen lock timing?",
+        "Where are the lock screen settings?",
+        "Is the screen lock configurable?"
+      ],
+      "answer": "Yes, the screen lock feature and its settings can be modified through the system settings menu.",
+      "question_type": "How",
+      "models": [
+        "Nemesis"
+      ],
+      "references": [
+        "Quick Guide, Page 3, Lock/Unlock Screen Section"
+      ]
+    },
+    {
+      "question": "How do I pin a dashboard?",
+      "question_variations": [
+        "How can I add a dashboard to the dashboard bar?",
+        "What's the process to pin dashboards?",
+        "How do you pin dashboards to the bar?"
+      ],
+      "answer": "On the home screen, press and hold on the dashboard you want to pin to the dashboard bar. You can pin it to a new position or overwrite an existing position.",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 5"
+      ]
+    },
+    {
+      "question": "How do I unpin a dashboard?",
+      "question_variations": [
+        "Can I remove a dashboard from the bar?",
+        "What's the way to unpin dashboards?",
+        "How do you delete pinned dashboards?"
+      ],
+      "answer": "From the dashboard bar, press and hold to display the unpin option.",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 5"
+      ]
+    },
+    {
+      "question": "How do I switch between dashboards?",
+      "question_variations": [
+        "How can I change dashboards?",
+        "What's the way to move between pinned dashboards?",
+        "How do you navigate different dashboards?"
+      ],
+      "answer": "Swipe left or right to change between pinned dashboards.",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 5"
+      ]
+    },
+    {
+      "question": "How do I edit a dashboard?",
+      "question_variations": [
+        "How can I modify my dashboard?",
+        "What's the process to change a dashboard?",
+        "How to customize dashboard settings?"
+      ],
+      "answer": "On the home screen, press and hold on the dashboard you want to edit",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 6"
+      ]
+    },
+    {
+      "question": "How do I delete a dashboard?",
+      "question_variations": [
+        "Can I remove a dashboard?",
+        "What's the way to delete dashboards?",
+        "How to get rid of a dashboard?"
+      ],
+      "answer": "On the home screen, press and hold on the dashboard you want to delete",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 6"
+      ]
+    },
+    {
+      "question": "How do I customize gauge settings?",
+      "question_variations": [
+        "Can I modify gauge displays?",
+        "How to change gauge parameters?",
+        "What's the process to adjust gauges?"
+      ],
+      "answer": "Press and hold on the gauge to display the edit options",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide - EN, Page 6"
+      ]
+    },
+    {
+      "question": "How do I change gauge settings?",
+      "question_variations": [
+        "How can I modify gauge data?",
+        "Where do I customize gauge display?",
+        "How to edit gauge information?"
+      ],
+      "answer": "Select the gauge settings option (A) to change which data is shown on the gauge display",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide p.7"
+      ]
+    },
+    {
+      "question": "How do I resize a gauge?",
+      "question_variations": [
+        "Can I make gauges bigger or smaller?",
+        "How to change gauge size?",
+        "How do I adjust gauge dimensions?"
+      ],
+      "answer": "Select option B to resize the gauge to desired dimensions",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide p.7"
+      ]
+    },
+    {
+      "question": "Where are the system settings located?",
+      "question_variations": [
+        "How do I access system settings?",
+        "Where do I find system settings?",
+        "How to get to system settings menu?"
+      ],
+      "answer": "System settings can be accessed from the home screen",
+      "question_type": "Where",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide p.7"
+      ]
+    },
+    {
+      "question": "How do I access the Quick access menu?",
+      "question_variations": [
+        "Where is the Quick access menu?",
+        "How to open Quick access menu?",
+        "How do I find Quick access options?"
+      ],
+      "answer": "Swipe from the top edge of the display to access the Quick access menu",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide p.7"
+      ]
+    },
+    {
+      "question": "Where can I find product documentation?",
+      "question_variations": [
+        "How do I get product manuals?",
+        "Where are the latest product documents?",
+        "How to access updated documentation?"
+      ],
+      "answer": "The latest product documentation can be found at www.bandg.com",
+      "question_type": "Where",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide p.7"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What languages is the Nemesis manual available in?",
+            "question_variations": [
+              "Which languages can I get the Nemesis manual in?",
+              "Is the Nemesis manual available in Spanish?",
+              "What language versions exist for the Nemesis guide?"
+            ],
+            "answer": "The Nemesis manual is available in 11 languages: English, Deutsch (German), Espa\u00f1ol (Spanish), Suomi (Finnish), Fran\u00e7ais (French), Italiano (Italian), Nederlands (Dutch), Norsk (Norwegian), Portugu\u00eas (Portuguese), Svenska (Swedish), and \u4e2d\u6587 (Chinese)",
+            "question_type": "What",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guides Cover Page"
+            ]
+          },
+          {
+            "question": "Where can I find the Nemesis manual online?",
+            "question_variations": [
+              "How do I download the Nemesis manual?",
+              "What is the website for the Nemesis guide?",
+              "Can I access the Nemesis manual on the web?"
+            ],
+            "answer": "The Nemesis manual can be found online at www.bandg.com",
+            "question_type": "Where",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guides Cover Page"
+            ]
+          },
+          {
+            "question": "What page is the English manual on?",
+            "question_variations": [
+              "Which page number has the English instructions?",
+              "Where is the English section located?",
+              "What page do the English instructions start on?"
+            ],
+            "answer": "The English manual starts on page 3",
+            "question_type": "What",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guides Contents"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I access the Home screen?",
+            "question_variations": [
+              "Where is the Home screen?",
+              "How do I get to the Home screen?",
+              "How can I return to Home?"
+            ],
+            "answer": "The Home screen is accessed by selecting the Home button",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 4"
+            ]
+          },
+          {
+            "question": "What does the Settings button do?",
+            "question_variations": [
+              "Where are the system settings?",
+              "How do I access settings?",
+              "What is the Settings button for?"
+            ],
+            "answer": "The Settings button gives access to the system settings",
+            "question_type": "What",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 4"
+            ]
+          },
+          {
+            "question": "What is the Browser button used for?",
+            "question_variations": [
+              "How do I access the web browser?",
+              "Can I browse the internet?",
+              "What does the Browser button do?"
+            ],
+            "answer": "The Browser button can be used to access the B&G CPU web server or for browsing the internet",
+            "question_type": "What",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 4"
+            ]
+          },
+          {
+            "question": "How do I create a new dashboard?",
+            "question_variations": [
+              "Where is the new dashboard option?",
+              "Can I make a custom dashboard?",
+              "How to add a dashboard?"
+            ],
+            "answer": "Select the new dashboard option in the Dashboards section to create a custom dashboard",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 4"
+            ]
+          },
+          {
+            "question": "What is the dashboard bar?",
+            "question_variations": [
+              "Where can I find my pinned dashboards?",
+              "What shows in the dashboard bar?",
+              "How do I see recent dashboards?"
+            ],
+            "answer": "The dashboard bar shows pinned dashboards (user favorites) and recently used dashboards",
+            "question_type": "What",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "3-3",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I turn on the Nemesis system?",
+            "question_variations": [
+              "How to power up Nemesis?",
+              "What's the startup procedure for Nemesis?",
+              "Can you tell me how to start the Nemesis unit?"
+            ],
+            "answer": "The Nemesis unit automatically turns ON when power is applied to the system.",
+            "question_type": "How",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guide, Page 3, Power Section"
+            ]
+          },
+          {
+            "question": "What happens on first startup of Nemesis?",
+            "question_variations": [
+              "What do I see when starting Nemesis for the first time?",
+              "Is there a setup wizard on first use?",
+              "How does initial setup work?"
+            ],
+            "answer": "On first startup or after factory reset, the unit displays a setup wizard that guides you through configuring screen orientation, language, and other settings.",
+            "question_type": "What",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guide, Page 3, First Time Startup Section"
+            ]
+          },
+          {
+            "question": "How do I lock the Nemesis screen?",
+            "question_variations": [
+              "What's the process to lock the display?",
+              "Can I manually lock the screen?",
+              "Where is the lock button?"
+            ],
+            "answer": "When the dashboard bar is shown, press the lock button to lock the screen. The screen also locks automatically after a period of inactivity by default.",
+            "question_type": "How",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guide, Page 3, Lock/Unlock Screen Section"
+            ]
+          },
+          {
+            "question": "How do I unlock the Nemesis screen?",
+            "question_variations": [
+              "What's the process to unlock the display?",
+              "How can I unlock my Nemesis unit?",
+              "Which way do I swipe to unlock?"
+            ],
+            "answer": "To unlock, swipe from the right edge if in landscape orientation, or swipe from the bottom if in portrait orientation.",
+            "question_type": "How",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guide, Page 3, Lock/Unlock Screen Section"
+            ]
+          },
+          {
+            "question": "Can I change the screen lock settings?",
+            "question_variations": [
+              "How do I modify screen lock timing?",
+              "Where are the lock screen settings?",
+              "Is the screen lock configurable?"
+            ],
+            "answer": "Yes, the screen lock feature and its settings can be modified through the system settings menu.",
+            "question_type": "How",
+            "models": [
+              "Nemesis"
+            ],
+            "references": [
+              "Quick Guide, Page 3, Lock/Unlock Screen Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "5-5",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I pin a dashboard?",
+            "question_variations": [
+              "How can I add a dashboard to the dashboard bar?",
+              "What's the process to pin dashboards?",
+              "How do you pin dashboards to the bar?"
+            ],
+            "answer": "On the home screen, press and hold on the dashboard you want to pin to the dashboard bar. You can pin it to a new position or overwrite an existing position.",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 5"
+            ]
+          },
+          {
+            "question": "How do I unpin a dashboard?",
+            "question_variations": [
+              "Can I remove a dashboard from the bar?",
+              "What's the way to unpin dashboards?",
+              "How do you delete pinned dashboards?"
+            ],
+            "answer": "From the dashboard bar, press and hold to display the unpin option.",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 5"
+            ]
+          },
+          {
+            "question": "How do I switch between dashboards?",
+            "question_variations": [
+              "How can I change dashboards?",
+              "What's the way to move between pinned dashboards?",
+              "How do you navigate different dashboards?"
+            ],
+            "answer": "Swipe left or right to change between pinned dashboards.",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "6-6",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I edit a dashboard?",
+            "question_variations": [
+              "How can I modify my dashboard?",
+              "What's the process to change a dashboard?",
+              "How to customize dashboard settings?"
+            ],
+            "answer": "On the home screen, press and hold on the dashboard you want to edit",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 6"
+            ]
+          },
+          {
+            "question": "How do I delete a dashboard?",
+            "question_variations": [
+              "Can I remove a dashboard?",
+              "What's the way to delete dashboards?",
+              "How to get rid of a dashboard?"
+            ],
+            "answer": "On the home screen, press and hold on the dashboard you want to delete",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 6"
+            ]
+          },
+          {
+            "question": "How do I customize gauge settings?",
+            "question_variations": [
+              "Can I modify gauge displays?",
+              "How to change gauge parameters?",
+              "What's the process to adjust gauges?"
+            ],
+            "answer": "Press and hold on the gauge to display the edit options",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 6"
+            ]
+          },
+          {
+            "question": "How do I create a new dashboard?",
+            "question_variations": [
+              "What are my options for making a new dashboard?",
+              "Can I create a dashboard from scratch?",
+              "How to set up a new dashboard?"
+            ],
+            "answer": "You can create a new dashboard by starting from a blank dashboard, using a template, or from a previously saved dashboard",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide - EN, Page 6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "7-7",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I change gauge settings?",
+            "question_variations": [
+              "How can I modify gauge data?",
+              "Where do I customize gauge display?",
+              "How to edit gauge information?"
+            ],
+            "answer": "Select the gauge settings option (A) to change which data is shown on the gauge display",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide p.7"
+            ]
+          },
+          {
+            "question": "How do I resize a gauge?",
+            "question_variations": [
+              "Can I make gauges bigger or smaller?",
+              "How to change gauge size?",
+              "How do I adjust gauge dimensions?"
+            ],
+            "answer": "Select option B to resize the gauge to desired dimensions",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide p.7"
+            ]
+          },
+          {
+            "question": "Where are the system settings located?",
+            "question_variations": [
+              "How do I access system settings?",
+              "Where do I find system settings?",
+              "How to get to system settings menu?"
+            ],
+            "answer": "System settings can be accessed from the home screen",
+            "question_type": "Where",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide p.7"
+            ]
+          },
+          {
+            "question": "How do I access the Quick access menu?",
+            "question_variations": [
+              "Where is the Quick access menu?",
+              "How to open Quick access menu?",
+              "How do I find Quick access options?"
+            ],
+            "answer": "Swipe from the top edge of the display to access the Quick access menu",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide p.7"
+            ]
+          },
+          {
+            "question": "Where can I find product documentation?",
+            "question_variations": [
+              "How do I get product manuals?",
+              "Where are the latest product documents?",
+              "How to access updated documentation?"
+            ],
+            "answer": "The latest product documentation can be found at www.bandg.com",
+            "question_type": "Where",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide p.7"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

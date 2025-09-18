@@ -1,134 +1,26 @@
 {
   "total_chunks_processed": 22,
-  "successful_chunks": 22,
-  "failed_chunks": 0,
-  "total_specifications_extracted": 125,
+  "successful_chunks": 20,
+  "failed_chunks": 2,
+  "total_specifications_extracted": 111,
   "unique_specifications": 30,
   "category_breakdown": {
-    "Installation": 7,
     "Electrical": 8,
-    "Performance": 9,
-    "Safety": 1,
+    "Installation": 7,
+    "Performance": 7,
+    "Safety": 2,
+    "Operation": 1,
     "Environmental": 1,
     "Dimensions": 4
   },
   "specifications": [
-    {
-      "parameter": "Name Plate Location",
-      "normalized_parameter": "identification_plate_location",
-      "parameter_aliases": [
-        "serial plate",
-        "model plate",
-        "identification label"
-      ],
-      "value": "Bottom plate",
-      "range": null,
-      "units": null,
-      "normalized_units": null,
-      "converted_value": null,
-      "models": [
-        "All Kenyon grills"
-      ],
-      "category": "Installation",
-      "search_terms": [
-        "where is name plate",
-        "serial number location",
-        "model number location",
-        "identification plate"
-      ],
-      "concept_group": "product_identification",
-      "references": [
-        "manual cover page"
-      ]
-    },
-    {
-      "parameter": "Electrical Supply Requirements",
-      "normalized_parameter": "electrical_requirements",
-      "parameter_aliases": [
-        "power requirements",
-        "electrical specs"
-      ],
-      "value": "Check required",
-      "range": null,
-      "units": null,
-      "normalized_units": null,
-      "converted_value": null,
-      "models": [
-        "All Kenyon grills"
-      ],
-      "category": "Electrical",
-      "search_terms": [
-        "power needs",
-        "electrical requirements",
-        "voltage requirements",
-        "electrical specifications"
-      ],
-      "concept_group": "installation_requirements",
-      "references": [
-        "page 18"
-      ]
-    },
-    {
-      "parameter": "Temperature Units",
-      "normalized_parameter": "temperature_scale",
-      "parameter_aliases": [
-        "temp units",
-        "temperature display"
-      ],
-      "value": "Configurable",
-      "range": null,
-      "units": "\u00b0F/\u00b0C",
-      "normalized_units": "\u00b0F/\u00b0C",
-      "converted_value": null,
-      "models": [
-        "All Kenyon grills"
-      ],
-      "category": "Performance",
-      "search_terms": [
-        "how to change temperature units",
-        "fahrenheit celsius",
-        "temperature display units"
-      ],
-      "concept_group": "operation_settings",
-      "references": [
-        "page 12"
-      ]
-    },
-    {
-      "parameter": "Automatic Shut-Off Time",
-      "normalized_parameter": "auto_shutoff_timer",
-      "parameter_aliases": [
-        "safety shutoff",
-        "auto-off",
-        "timeout"
-      ],
-      "value": "Present",
-      "range": null,
-      "units": "minutes",
-      "normalized_units": "minutes",
-      "converted_value": null,
-      "models": [
-        "All Kenyon grills"
-      ],
-      "category": "Safety",
-      "search_terms": [
-        "auto shutoff",
-        "automatic turn off",
-        "safety timer",
-        "timeout setting"
-      ],
-      "concept_group": "safety_features",
-      "references": [
-        "page 14"
-      ]
-    },
     {
       "parameter": "Input Voltage",
       "normalized_parameter": "input_voltage",
       "parameter_aliases": [
         "supply voltage",
         "power input",
-        "voltage requirement"
+        "electrical requirement"
       ],
       "value": "48",
       "range": "45-51",
@@ -142,9 +34,9 @@
       "search_terms": [
         "voltage",
         "power supply",
-        "electrical requirements",
         "DC voltage",
-        "input power"
+        "electrical specs",
+        "power requirements"
       ],
       "concept_group": "power_specifications",
       "references": [
@@ -170,10 +62,10 @@
       "category": "Installation",
       "search_terms": [
         "model",
-        "part number",
-        "product identifier",
-        "serial number",
-        "SKU"
+        "part no",
+        "product number",
+        "reference number",
+        "ordering code"
       ],
       "concept_group": "product_identification",
       "references": [
@@ -184,7 +76,8 @@
       "parameter": "Control System",
       "normalized_parameter": "control_system",
       "parameter_aliases": [
-        "control interface",
+        "interface",
+        "control panel",
         "user interface"
       ],
       "value": "Intelliken Touch",
@@ -198,42 +91,123 @@
       "category": "Performance",
       "search_terms": [
         "touch control",
-        "interface",
+        "interface type",
         "control panel",
         "touch screen",
-        "intelliken"
+        "user controls"
       ],
-      "concept_group": "control_specifications",
+      "concept_group": "control_interface",
       "references": [
         "p.1"
       ]
     },
     {
-      "parameter": "Cooking Zones",
-      "normalized_parameter": "cooking_zones",
+      "parameter": "Name Plate Location",
+      "normalized_parameter": "identification_plate_location",
       "parameter_aliases": [
-        "heating zones",
-        "grill zones"
+        "serial plate",
+        "model plate",
+        "identification label"
       ],
-      "value": "1",
+      "value": "Bottom of appliance",
       "range": null,
-      "units": "zones",
-      "normalized_units": "zones",
-      "converted_value": "1",
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
       "models": [
-        "145775"
+        "All Kenyon grills"
       ],
-      "category": "Performance",
+      "category": "Installation",
       "search_terms": [
-        "zones",
-        "cooking areas",
-        "heating sections",
-        "single zone",
-        "burners"
+        "where is name plate",
+        "serial number location",
+        "model number location",
+        "identification plate position"
       ],
-      "concept_group": "cooking_specifications",
+      "concept_group": "product_identification",
       "references": [
-        "p.1"
+        "Name plate location section"
+      ]
+    },
+    {
+      "parameter": "Electrical Supply Requirements",
+      "normalized_parameter": "electrical_requirements",
+      "parameter_aliases": [
+        "power requirements",
+        "electrical specs"
+      ],
+      "value": "Check manual",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power needs",
+        "electrical requirements",
+        "voltage requirements",
+        "electrical specifications"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Check Electrical Supply Requirements section, p.18"
+      ]
+    },
+    {
+      "parameter": "Automatic Shut-Off Time",
+      "normalized_parameter": "auto_shutoff_timer",
+      "parameter_aliases": [
+        "safety shutoff",
+        "automatic turnoff"
+      ],
+      "value": "Present",
+      "range": null,
+      "units": "minutes",
+      "normalized_units": "minutes",
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Safety",
+      "search_terms": [
+        "auto shutoff",
+        "automatic shutdown",
+        "safety timer",
+        "timeout feature"
+      ],
+      "concept_group": "safety_features",
+      "references": [
+        "Automatic Shut-Off Time section, p.14"
+      ]
+    },
+    {
+      "parameter": "Temperature Units",
+      "normalized_parameter": "temperature_display_units",
+      "parameter_aliases": [
+        "temp units",
+        "temperature scale"
+      ],
+      "value": "Changeable",
+      "range": null,
+      "units": "F/C",
+      "normalized_units": "F/C",
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Operation",
+      "search_terms": [
+        "change temperature units",
+        "fahrenheit celsius",
+        "temperature display",
+        "temperature scale"
+      ],
+      "concept_group": "user_interface",
+      "references": [
+        "Changing Temperature Units section, p.12"
       ]
     },
     {
@@ -283,11 +257,11 @@
       ],
       "category": "Performance",
       "search_terms": [
-        "surface type",
-        "cooktop material",
+        "surface material",
+        "cooktop surface",
         "glass ceramic",
         "hob material",
-        "grill surface"
+        "grill surface type"
       ],
       "concept_group": "construction_specifications",
       "references": [
@@ -296,11 +270,10 @@
     },
     {
       "parameter": "Power Connection",
-      "normalized_parameter": "electrical_connection",
+      "normalized_parameter": "power_connection",
       "parameter_aliases": [
-        "power source",
-        "electrical supply",
-        "power requirement"
+        "electrical connection",
+        "power supply"
       ],
       "value": "electric",
       "range": "N/A",
@@ -317,20 +290,19 @@
         "power source",
         "electric grill"
       ],
-      "concept_group": "power_specifications",
+      "concept_group": "electrical_specifications",
       "references": [
         "page 3"
       ]
     },
     {
       "parameter": "Storage Environment",
-      "normalized_parameter": "storage_conditions",
+      "normalized_parameter": "storage_environment",
       "parameter_aliases": [
-        "storage requirements",
-        "storage location",
-        "storage specs"
+        "storage conditions",
+        "storage requirements"
       ],
-      "value": "indoors",
+      "value": "indoor storage when portable",
       "range": "N/A",
       "units": "N/A",
       "normalized_units": "N/A",
@@ -342,13 +314,225 @@
       "search_terms": [
         "storage requirements",
         "indoor storage",
-        "storage location",
-        "where to store",
+        "portable grill storage",
         "storage conditions"
       ],
       "concept_group": "storage_specifications",
       "references": [
         "page 3"
+      ]
+    },
+    {
+      "parameter": "Circuit Breaker Rating",
+      "normalized_parameter": "circuit_breaker_rating",
+      "parameter_aliases": [
+        "breaker size",
+        "electrical protection",
+        "overcurrent protection"
+      ],
+      "value": "30",
+      "range": null,
+      "units": "amp",
+      "normalized_units": "A",
+      "converted_value": "30",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "circuit breaker",
+        "breaker rating",
+        "electrical requirements",
+        "amp rating",
+        "protection rating"
+      ],
+      "concept_group": "electrical_protection",
+      "references": [
+        "Safety Instructions"
+      ]
+    },
+    {
+      "parameter": "RCD Operating Current",
+      "normalized_parameter": "rcd_operating_current",
+      "parameter_aliases": [
+        "residual current",
+        "ground fault protection",
+        "earth leakage"
+      ],
+      "value": "30",
+      "range": "0-30",
+      "units": "amp",
+      "normalized_units": "A",
+      "converted_value": "30",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "RCD rating",
+        "residual current",
+        "ground fault",
+        "electrical safety"
+      ],
+      "concept_group": "electrical_protection",
+      "references": [
+        "Safety Instructions"
+      ]
+    },
+    {
+      "parameter": "Drip Tray Liquid Capacity",
+      "normalized_parameter": "drip_tray_capacity",
+      "parameter_aliases": [
+        "liquid volume",
+        "drip pan capacity"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "cups",
+      "normalized_units": "ml",
+      "converted_value": "473",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "drip tray volume",
+        "liquid capacity",
+        "drip pan size"
+      ],
+      "concept_group": "maintenance",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Vegetable Cooking Temperature",
+      "normalized_parameter": "vegetable_cooking_temp",
+      "parameter_aliases": [
+        "veggie temperature",
+        "vegetable heat setting"
+      ],
+      "value": "350",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "177",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "vegetable temperature",
+        "cooking temp",
+        "heat setting"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Poultry/Pork/Fish Temperature",
+      "normalized_parameter": "meat_cooking_temp",
+      "parameter_aliases": [
+        "meat temperature",
+        "protein cooking temperature"
+      ],
+      "value": "400",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "204",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "meat temperature",
+        "cooking temp",
+        "protein temperature"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Hamburger Cooking Temperature",
+      "normalized_parameter": "hamburger_cooking_temp",
+      "parameter_aliases": [
+        "burger temperature",
+        "ground beef temperature"
+      ],
+      "value": "500",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "260",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "hamburger temperature",
+        "burger temp",
+        "ground beef cooking"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Steak Cooking Temperature",
+      "normalized_parameter": "steak_cooking_temp",
+      "parameter_aliases": [
+        "beef temperature",
+        "red meat temperature"
+      ],
+      "value": "550",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "288",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "steak temperature",
+        "beef temp",
+        "red meat cooking"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Preheat Time",
+      "normalized_parameter": "preheat_duration",
+      "parameter_aliases": [
+        "warm up time",
+        "heating time"
+      ],
+      "value": "5-7",
+      "range": "5-7",
+      "units": "minutes",
+      "normalized_units": "min",
+      "converted_value": "5-7",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "preheat time",
+        "warm up duration",
+        "heating period"
+      ],
+      "concept_group": "operation",
+      "references": [
+        "Quick Start Tips"
       ]
     },
     {
@@ -374,7 +558,7 @@
         "power requirements",
         "electrical specs",
         "DC voltage",
-        "power supply voltage"
+        "power input"
       ],
       "concept_group": "power_specifications",
       "references": [
@@ -536,8 +720,8 @@
       "category": "Installation",
       "search_terms": [
         "cutout width",
-        "installation size",
-        "mounting dimensions"
+        "mounting dimensions",
+        "installation size"
       ],
       "concept_group": "installation_dimensions",
       "references": [
@@ -562,8 +746,8 @@
       "category": "Installation",
       "search_terms": [
         "cutout depth",
-        "installation size",
-        "mounting dimensions"
+        "mounting dimensions",
+        "installation size"
       ],
       "concept_group": "installation_dimensions",
       "references": [
@@ -588,226 +772,12 @@
       "category": "Installation",
       "search_terms": [
         "corner radius",
-        "rounded corners",
-        "cutout radius"
+        "cutout radius",
+        "installation radius"
       ],
       "concept_group": "installation_dimensions",
       "references": [
         "Cutout Dimensions"
-      ]
-    },
-    {
-      "parameter": "Circuit Breaker Rating",
-      "normalized_parameter": "circuit_breaker_rating",
-      "parameter_aliases": [
-        "breaker size",
-        "electrical protection",
-        "overcurrent protection"
-      ],
-      "value": "30",
-      "range": null,
-      "units": "amp",
-      "normalized_units": "A",
-      "converted_value": "30",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Electrical",
-      "search_terms": [
-        "circuit breaker",
-        "breaker rating",
-        "electrical requirements",
-        "amp rating",
-        "protection rating"
-      ],
-      "concept_group": "electrical_protection",
-      "references": [
-        "Safety Instructions"
-      ]
-    },
-    {
-      "parameter": "RCD Operating Current",
-      "normalized_parameter": "rcd_operating_current",
-      "parameter_aliases": [
-        "residual current",
-        "ground fault protection",
-        "earth leakage"
-      ],
-      "value": "30",
-      "range": "0-30",
-      "units": "amp",
-      "normalized_units": "A",
-      "converted_value": "30",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Electrical",
-      "search_terms": [
-        "RCD rating",
-        "residual current",
-        "ground fault",
-        "electrical safety"
-      ],
-      "concept_group": "electrical_protection",
-      "references": [
-        "Safety Instructions"
-      ]
-    },
-    {
-      "parameter": "Drip Tray Liquid Capacity",
-      "normalized_parameter": "drip_tray_capacity",
-      "parameter_aliases": [
-        "liquid volume",
-        "drip pan capacity"
-      ],
-      "value": "2",
-      "range": null,
-      "units": "cups",
-      "normalized_units": "ml",
-      "converted_value": "473",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Installation",
-      "search_terms": [
-        "drip tray volume",
-        "liquid capacity",
-        "drip pan size"
-      ],
-      "concept_group": "maintenance",
-      "references": [
-        "Quick Start Tips"
-      ]
-    },
-    {
-      "parameter": "Vegetable Cooking Temperature",
-      "normalized_parameter": "vegetable_cooking_temp",
-      "parameter_aliases": [
-        "veggie temperature",
-        "vegetable heat setting"
-      ],
-      "value": "350",
-      "range": null,
-      "units": "\u00b0F",
-      "normalized_units": "\u00b0C",
-      "converted_value": "177",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Performance",
-      "search_terms": [
-        "vegetable temperature",
-        "cooking temp",
-        "heat setting"
-      ],
-      "concept_group": "temperature_settings",
-      "references": [
-        "Quick Start Tips"
-      ]
-    },
-    {
-      "parameter": "Chicken/Pork/Fish Cooking Temperature",
-      "normalized_parameter": "poultry_meat_fish_temp",
-      "parameter_aliases": [
-        "meat temperature",
-        "protein cooking temp"
-      ],
-      "value": "400",
-      "range": null,
-      "units": "\u00b0F",
-      "normalized_units": "\u00b0C",
-      "converted_value": "204",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Performance",
-      "search_terms": [
-        "meat temperature",
-        "chicken temp",
-        "pork temp",
-        "fish temp"
-      ],
-      "concept_group": "temperature_settings",
-      "references": [
-        "Quick Start Tips"
-      ]
-    },
-    {
-      "parameter": "Hamburger Cooking Temperature",
-      "normalized_parameter": "hamburger_cooking_temp",
-      "parameter_aliases": [
-        "burger temperature",
-        "ground beef temp"
-      ],
-      "value": "500",
-      "range": null,
-      "units": "\u00b0F",
-      "normalized_units": "\u00b0C",
-      "converted_value": "260",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Performance",
-      "search_terms": [
-        "hamburger temperature",
-        "burger temp",
-        "ground beef temperature"
-      ],
-      "concept_group": "temperature_settings",
-      "references": [
-        "Quick Start Tips"
-      ]
-    },
-    {
-      "parameter": "Steak Cooking Temperature",
-      "normalized_parameter": "steak_cooking_temp",
-      "parameter_aliases": [
-        "beef temperature",
-        "red meat temp"
-      ],
-      "value": "550",
-      "range": null,
-      "units": "\u00b0F",
-      "normalized_units": "\u00b0C",
-      "converted_value": "288",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Performance",
-      "search_terms": [
-        "steak temperature",
-        "beef temp",
-        "maximum temperature"
-      ],
-      "concept_group": "temperature_settings",
-      "references": [
-        "Quick Start Tips"
-      ]
-    },
-    {
-      "parameter": "Preheat Time",
-      "normalized_parameter": "preheat_duration",
-      "parameter_aliases": [
-        "warm up time",
-        "heating time"
-      ],
-      "value": "5-7",
-      "range": "5-7",
-      "units": "minutes",
-      "normalized_units": "min",
-      "converted_value": "5-7",
-      "models": [
-        "Kenyon IntelliKEN Touch"
-      ],
-      "category": "Performance",
-      "search_terms": [
-        "preheat time",
-        "warm up period",
-        "heating duration"
-      ],
-      "concept_group": "operation",
-      "references": [
-        "Quick Start Tips"
       ]
     },
     {
@@ -834,126 +804,38 @@
       "references": [
         "Product Dimensions"
       ]
+    },
+    {
+      "parameter": "Control Panel Lock",
+      "normalized_parameter": "control_lock",
+      "parameter_aliases": [
+        "safety lock",
+        "panel lock",
+        "lockout"
+      ],
+      "value": "Available when ON or OFF",
+      "range": "N/A",
+      "units": "binary",
+      "normalized_units": "boolean",
+      "converted_value": "true/false",
+      "models": [
+        "all"
+      ],
+      "category": "Safety",
+      "search_terms": [
+        "lock",
+        "safety lock",
+        "control lock",
+        "disable controls",
+        "child lock"
+      ],
+      "concept_group": "safety_features",
+      "references": [
+        "Operation section"
+      ]
     }
   ],
   "chunk_results": [
-    {
-      "chunk_num": 2,
-      "pages": "2-2",
-      "result": {
-        "specifications": [
-          {
-            "parameter": "Name Plate Location",
-            "normalized_parameter": "identification_plate_location",
-            "parameter_aliases": [
-              "serial plate",
-              "model plate",
-              "identification label"
-            ],
-            "value": "Bottom plate",
-            "range": null,
-            "units": null,
-            "normalized_units": null,
-            "converted_value": null,
-            "models": [
-              "All Kenyon grills"
-            ],
-            "category": "Installation",
-            "search_terms": [
-              "where is name plate",
-              "serial number location",
-              "model number location",
-              "identification plate"
-            ],
-            "concept_group": "product_identification",
-            "references": [
-              "manual cover page"
-            ]
-          },
-          {
-            "parameter": "Electrical Supply Requirements",
-            "normalized_parameter": "electrical_requirements",
-            "parameter_aliases": [
-              "power requirements",
-              "electrical specs"
-            ],
-            "value": "Check required",
-            "range": null,
-            "units": null,
-            "normalized_units": null,
-            "converted_value": null,
-            "models": [
-              "All Kenyon grills"
-            ],
-            "category": "Electrical",
-            "search_terms": [
-              "power needs",
-              "electrical requirements",
-              "voltage requirements",
-              "electrical specifications"
-            ],
-            "concept_group": "installation_requirements",
-            "references": [
-              "page 18"
-            ]
-          },
-          {
-            "parameter": "Temperature Units",
-            "normalized_parameter": "temperature_scale",
-            "parameter_aliases": [
-              "temp units",
-              "temperature display"
-            ],
-            "value": "Configurable",
-            "range": null,
-            "units": "\u00b0F/\u00b0C",
-            "normalized_units": "\u00b0F/\u00b0C",
-            "converted_value": null,
-            "models": [
-              "All Kenyon grills"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "how to change temperature units",
-              "fahrenheit celsius",
-              "temperature display units"
-            ],
-            "concept_group": "operation_settings",
-            "references": [
-              "page 12"
-            ]
-          },
-          {
-            "parameter": "Automatic Shut-Off Time",
-            "normalized_parameter": "auto_shutoff_timer",
-            "parameter_aliases": [
-              "safety shutoff",
-              "auto-off",
-              "timeout"
-            ],
-            "value": "Present",
-            "range": null,
-            "units": "minutes",
-            "normalized_units": "minutes",
-            "converted_value": null,
-            "models": [
-              "All Kenyon grills"
-            ],
-            "category": "Safety",
-            "search_terms": [
-              "auto shutoff",
-              "automatic turn off",
-              "safety timer",
-              "timeout setting"
-            ],
-            "concept_group": "safety_features",
-            "references": [
-              "page 14"
-            ]
-          }
-        ]
-      }
-    },
     {
       "chunk_num": 1,
       "pages": "1-1",
@@ -965,7 +847,7 @@
             "parameter_aliases": [
               "supply voltage",
               "power input",
-              "voltage requirement"
+              "electrical requirement"
             ],
             "value": "48",
             "range": "45-51",
@@ -979,9 +861,9 @@
             "search_terms": [
               "voltage",
               "power supply",
-              "electrical requirements",
               "DC voltage",
-              "input power"
+              "electrical specs",
+              "power requirements"
             ],
             "concept_group": "power_specifications",
             "references": [
@@ -1007,10 +889,10 @@
             "category": "Installation",
             "search_terms": [
               "model",
-              "part number",
-              "product identifier",
-              "serial number",
-              "SKU"
+              "part no",
+              "product number",
+              "reference number",
+              "ordering code"
             ],
             "concept_group": "product_identification",
             "references": [
@@ -1021,7 +903,8 @@
             "parameter": "Control System",
             "normalized_parameter": "control_system",
             "parameter_aliases": [
-              "control interface",
+              "interface",
+              "control panel",
               "user interface"
             ],
             "value": "Intelliken Touch",
@@ -1035,42 +918,131 @@
             "category": "Performance",
             "search_terms": [
               "touch control",
-              "interface",
+              "interface type",
               "control panel",
               "touch screen",
-              "intelliken"
+              "user controls"
             ],
-            "concept_group": "control_specifications",
+            "concept_group": "control_interface",
             "references": [
               "p.1"
             ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Name Plate Location",
+            "normalized_parameter": "identification_plate_location",
+            "parameter_aliases": [
+              "serial plate",
+              "model plate",
+              "identification label"
+            ],
+            "value": "Bottom of appliance",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "where is name plate",
+              "serial number location",
+              "model number location",
+              "identification plate position"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "Name plate location section"
+            ]
           },
           {
-            "parameter": "Cooking Zones",
-            "normalized_parameter": "cooking_zones",
+            "parameter": "Electrical Supply Requirements",
+            "normalized_parameter": "electrical_requirements",
             "parameter_aliases": [
-              "heating zones",
-              "grill zones"
+              "power requirements",
+              "electrical specs"
             ],
-            "value": "1",
+            "value": "Check manual",
             "range": null,
-            "units": "zones",
-            "normalized_units": "zones",
-            "converted_value": "1",
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
             "models": [
-              "145775"
+              "All Kenyon grills"
             ],
-            "category": "Performance",
+            "category": "Electrical",
             "search_terms": [
-              "zones",
-              "cooking areas",
-              "heating sections",
-              "single zone",
-              "burners"
+              "power needs",
+              "electrical requirements",
+              "voltage requirements",
+              "electrical specifications"
             ],
-            "concept_group": "cooking_specifications",
+            "concept_group": "power_specifications",
             "references": [
-              "p.1"
+              "Check Electrical Supply Requirements section, p.18"
+            ]
+          },
+          {
+            "parameter": "Automatic Shut-Off Time",
+            "normalized_parameter": "auto_shutoff_timer",
+            "parameter_aliases": [
+              "safety shutoff",
+              "automatic turnoff"
+            ],
+            "value": "Present",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "minutes",
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "auto shutoff",
+              "automatic shutdown",
+              "safety timer",
+              "timeout feature"
+            ],
+            "concept_group": "safety_features",
+            "references": [
+              "Automatic Shut-Off Time section, p.14"
+            ]
+          },
+          {
+            "parameter": "Temperature Units",
+            "normalized_parameter": "temperature_display_units",
+            "parameter_aliases": [
+              "temp units",
+              "temperature scale"
+            ],
+            "value": "Changeable",
+            "range": null,
+            "units": "F/C",
+            "normalized_units": "F/C",
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "change temperature units",
+              "fahrenheit celsius",
+              "temperature display",
+              "temperature scale"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Changing Temperature Units section, p.12"
             ]
           }
         ]
@@ -1128,11 +1100,11 @@
             ],
             "category": "Performance",
             "search_terms": [
-              "surface type",
-              "cooktop material",
+              "surface material",
+              "cooktop surface",
               "glass ceramic",
               "hob material",
-              "grill surface"
+              "grill surface type"
             ],
             "concept_group": "construction_specifications",
             "references": [
@@ -1141,11 +1113,10 @@
           },
           {
             "parameter": "Power Connection",
-            "normalized_parameter": "electrical_connection",
+            "normalized_parameter": "power_connection",
             "parameter_aliases": [
-              "power source",
-              "electrical supply",
-              "power requirement"
+              "electrical connection",
+              "power supply"
             ],
             "value": "electric",
             "range": "N/A",
@@ -1162,20 +1133,19 @@
               "power source",
               "electric grill"
             ],
-            "concept_group": "power_specifications",
+            "concept_group": "electrical_specifications",
             "references": [
               "page 3"
             ]
           },
           {
             "parameter": "Storage Environment",
-            "normalized_parameter": "storage_conditions",
+            "normalized_parameter": "storage_environment",
             "parameter_aliases": [
-              "storage requirements",
-              "storage location",
-              "storage specs"
+              "storage conditions",
+              "storage requirements"
             ],
-            "value": "indoors",
+            "value": "indoor storage when portable",
             "range": "N/A",
             "units": "N/A",
             "normalized_units": "N/A",
@@ -1187,13 +1157,233 @@
             "search_terms": [
               "storage requirements",
               "indoor storage",
-              "storage location",
-              "where to store",
+              "portable grill storage",
               "storage conditions"
             ],
             "concept_group": "storage_specifications",
             "references": [
               "page 3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Circuit Breaker Rating",
+            "normalized_parameter": "circuit_breaker_rating",
+            "parameter_aliases": [
+              "breaker size",
+              "electrical protection",
+              "overcurrent protection"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "amp",
+            "normalized_units": "A",
+            "converted_value": "30",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "circuit breaker",
+              "breaker rating",
+              "electrical requirements",
+              "amp rating",
+              "protection rating"
+            ],
+            "concept_group": "electrical_protection",
+            "references": [
+              "Safety Instructions"
+            ]
+          },
+          {
+            "parameter": "RCD Operating Current",
+            "normalized_parameter": "rcd_operating_current",
+            "parameter_aliases": [
+              "residual current",
+              "ground fault protection",
+              "earth leakage"
+            ],
+            "value": "30",
+            "range": "0-30",
+            "units": "amp",
+            "normalized_units": "A",
+            "converted_value": "30",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "RCD rating",
+              "residual current",
+              "ground fault",
+              "electrical safety"
+            ],
+            "concept_group": "electrical_protection",
+            "references": [
+              "Safety Instructions"
+            ]
+          },
+          {
+            "parameter": "Drip Tray Liquid Capacity",
+            "normalized_parameter": "drip_tray_capacity",
+            "parameter_aliases": [
+              "liquid volume",
+              "drip pan capacity"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "cups",
+            "normalized_units": "ml",
+            "converted_value": "473",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drip tray volume",
+              "liquid capacity",
+              "drip pan size"
+            ],
+            "concept_group": "maintenance",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Vegetable Cooking Temperature",
+            "normalized_parameter": "vegetable_cooking_temp",
+            "parameter_aliases": [
+              "veggie temperature",
+              "vegetable heat setting"
+            ],
+            "value": "350",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "177",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "vegetable temperature",
+              "cooking temp",
+              "heat setting"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Poultry/Pork/Fish Temperature",
+            "normalized_parameter": "meat_cooking_temp",
+            "parameter_aliases": [
+              "meat temperature",
+              "protein cooking temperature"
+            ],
+            "value": "400",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "204",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "meat temperature",
+              "cooking temp",
+              "protein temperature"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Hamburger Cooking Temperature",
+            "normalized_parameter": "hamburger_cooking_temp",
+            "parameter_aliases": [
+              "burger temperature",
+              "ground beef temperature"
+            ],
+            "value": "500",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "260",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "hamburger temperature",
+              "burger temp",
+              "ground beef cooking"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Steak Cooking Temperature",
+            "normalized_parameter": "steak_cooking_temp",
+            "parameter_aliases": [
+              "beef temperature",
+              "red meat temperature"
+            ],
+            "value": "550",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "288",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "steak temperature",
+              "beef temp",
+              "red meat cooking"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Preheat Time",
+            "normalized_parameter": "preheat_duration",
+            "parameter_aliases": [
+              "warm up time",
+              "heating time"
+            ],
+            "value": "5-7",
+            "range": "5-7",
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "5-7",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "preheat time",
+              "warm up duration",
+              "heating period"
+            ],
+            "concept_group": "operation",
+            "references": [
+              "Quick Start Tips"
             ]
           }
         ]
@@ -1227,7 +1417,7 @@
               "power requirements",
               "electrical specs",
               "DC voltage",
-              "power supply voltage"
+              "power input"
             ],
             "concept_group": "power_specifications",
             "references": [
@@ -1389,8 +1579,8 @@
             "category": "Installation",
             "search_terms": [
               "cutout width",
-              "installation size",
-              "mounting dimensions"
+              "mounting dimensions",
+              "installation size"
             ],
             "concept_group": "installation_dimensions",
             "references": [
@@ -1415,8 +1605,8 @@
             "category": "Installation",
             "search_terms": [
               "cutout depth",
-              "installation size",
-              "mounting dimensions"
+              "mounting dimensions",
+              "installation size"
             ],
             "concept_group": "installation_dimensions",
             "references": [
@@ -1441,234 +1631,12 @@
             "category": "Installation",
             "search_terms": [
               "corner radius",
-              "rounded corners",
-              "cutout radius"
+              "cutout radius",
+              "installation radius"
             ],
             "concept_group": "installation_dimensions",
             "references": [
               "Cutout Dimensions"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 4,
-      "pages": "4-4",
-      "result": {
-        "specifications": [
-          {
-            "parameter": "Circuit Breaker Rating",
-            "normalized_parameter": "circuit_breaker_rating",
-            "parameter_aliases": [
-              "breaker size",
-              "electrical protection",
-              "overcurrent protection"
-            ],
-            "value": "30",
-            "range": null,
-            "units": "amp",
-            "normalized_units": "A",
-            "converted_value": "30",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Electrical",
-            "search_terms": [
-              "circuit breaker",
-              "breaker rating",
-              "electrical requirements",
-              "amp rating",
-              "protection rating"
-            ],
-            "concept_group": "electrical_protection",
-            "references": [
-              "Safety Instructions"
-            ]
-          },
-          {
-            "parameter": "RCD Operating Current",
-            "normalized_parameter": "rcd_operating_current",
-            "parameter_aliases": [
-              "residual current",
-              "ground fault protection",
-              "earth leakage"
-            ],
-            "value": "30",
-            "range": "0-30",
-            "units": "amp",
-            "normalized_units": "A",
-            "converted_value": "30",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Electrical",
-            "search_terms": [
-              "RCD rating",
-              "residual current",
-              "ground fault",
-              "electrical safety"
-            ],
-            "concept_group": "electrical_protection",
-            "references": [
-              "Safety Instructions"
-            ]
-          },
-          {
-            "parameter": "Drip Tray Liquid Capacity",
-            "normalized_parameter": "drip_tray_capacity",
-            "parameter_aliases": [
-              "liquid volume",
-              "drip pan capacity"
-            ],
-            "value": "2",
-            "range": null,
-            "units": "cups",
-            "normalized_units": "ml",
-            "converted_value": "473",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Installation",
-            "search_terms": [
-              "drip tray volume",
-              "liquid capacity",
-              "drip pan size"
-            ],
-            "concept_group": "maintenance",
-            "references": [
-              "Quick Start Tips"
-            ]
-          },
-          {
-            "parameter": "Vegetable Cooking Temperature",
-            "normalized_parameter": "vegetable_cooking_temp",
-            "parameter_aliases": [
-              "veggie temperature",
-              "vegetable heat setting"
-            ],
-            "value": "350",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "\u00b0C",
-            "converted_value": "177",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "vegetable temperature",
-              "cooking temp",
-              "heat setting"
-            ],
-            "concept_group": "temperature_settings",
-            "references": [
-              "Quick Start Tips"
-            ]
-          },
-          {
-            "parameter": "Chicken/Pork/Fish Cooking Temperature",
-            "normalized_parameter": "poultry_meat_fish_temp",
-            "parameter_aliases": [
-              "meat temperature",
-              "protein cooking temp"
-            ],
-            "value": "400",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "\u00b0C",
-            "converted_value": "204",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "meat temperature",
-              "chicken temp",
-              "pork temp",
-              "fish temp"
-            ],
-            "concept_group": "temperature_settings",
-            "references": [
-              "Quick Start Tips"
-            ]
-          },
-          {
-            "parameter": "Hamburger Cooking Temperature",
-            "normalized_parameter": "hamburger_cooking_temp",
-            "parameter_aliases": [
-              "burger temperature",
-              "ground beef temp"
-            ],
-            "value": "500",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "\u00b0C",
-            "converted_value": "260",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "hamburger temperature",
-              "burger temp",
-              "ground beef temperature"
-            ],
-            "concept_group": "temperature_settings",
-            "references": [
-              "Quick Start Tips"
-            ]
-          },
-          {
-            "parameter": "Steak Cooking Temperature",
-            "normalized_parameter": "steak_cooking_temp",
-            "parameter_aliases": [
-              "beef temperature",
-              "red meat temp"
-            ],
-            "value": "550",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "\u00b0C",
-            "converted_value": "288",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "steak temperature",
-              "beef temp",
-              "maximum temperature"
-            ],
-            "concept_group": "temperature_settings",
-            "references": [
-              "Quick Start Tips"
-            ]
-          },
-          {
-            "parameter": "Preheat Time",
-            "normalized_parameter": "preheat_duration",
-            "parameter_aliases": [
-              "warm up time",
-              "heating time"
-            ],
-            "value": "5-7",
-            "range": "5-7",
-            "units": "minutes",
-            "normalized_units": "min",
-            "converted_value": "5-7",
-            "models": [
-              "Kenyon IntelliKEN Touch"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "preheat time",
-              "warm up period",
-              "heating duration"
-            ],
-            "concept_group": "operation",
-            "references": [
-              "Quick Start Tips"
             ]
           }
         ]
@@ -1944,150 +1912,6 @@
             "references": [
               "Product Dimensions"
             ]
-          },
-          {
-            "parameter": "Portable Height",
-            "normalized_parameter": "height",
-            "parameter_aliases": [
-              "height dimension"
-            ],
-            "value": "9 5/8",
-            "range": null,
-            "units": "inches",
-            "normalized_units": "millimeters",
-            "converted_value": "244",
-            "models": [
-              "B70772"
-            ],
-            "category": "Dimensions",
-            "search_terms": [
-              "height",
-              "size",
-              "dimensions"
-            ],
-            "concept_group": "physical_dimensions",
-            "references": [
-              "Product Dimensions"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 9,
-      "pages": "9-9",
-      "result": {
-        "specifications": [
-          {
-            "parameter": "Control Panel Material",
-            "normalized_parameter": "control_panel_material",
-            "parameter_aliases": [
-              "touch control surface",
-              "control interface material"
-            ],
-            "value": "ceramic glass",
-            "range": null,
-            "units": null,
-            "normalized_units": null,
-            "converted_value": null,
-            "models": [
-              "Kenyon Grill"
-            ],
-            "category": "Physical",
-            "search_terms": [
-              "control panel",
-              "touch control",
-              "ceramic glass panel",
-              "control surface material",
-              "interface material"
-            ],
-            "concept_group": "construction_materials",
-            "references": [
-              "Page 9"
-            ]
-          },
-          {
-            "parameter": "Preheat Time",
-            "normalized_parameter": "preheat_duration",
-            "parameter_aliases": [
-              "warm up time",
-              "heating time"
-            ],
-            "value": "5-7",
-            "range": "5-7",
-            "units": "minutes",
-            "normalized_units": "minutes",
-            "converted_value": null,
-            "models": [
-              "Kenyon Grill"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "preheat",
-              "warm up",
-              "heating time",
-              "preparation time",
-              "ready time"
-            ],
-            "concept_group": "operation_parameters",
-            "references": [
-              "Page 9"
-            ]
-          },
-          {
-            "parameter": "Drip Tray Water Capacity",
-            "normalized_parameter": "drip_tray_capacity",
-            "parameter_aliases": [
-              "water reservoir volume",
-              "drip pan capacity"
-            ],
-            "value": "1",
-            "range": null,
-            "units": "cup",
-            "normalized_units": "ml",
-            "converted_value": "236.6",
-            "models": [
-              "Kenyon Grill"
-            ],
-            "category": "Physical",
-            "search_terms": [
-              "drip tray",
-              "water capacity",
-              "reservoir",
-              "drip pan",
-              "water volume"
-            ],
-            "concept_group": "specifications",
-            "references": [
-              "Page 9"
-            ]
-          },
-          {
-            "parameter": "Maintenance Interval",
-            "normalized_parameter": "cleaning_interval",
-            "parameter_aliases": [
-              "cleaning frequency",
-              "maintenance frequency"
-            ],
-            "value": "1",
-            "range": null,
-            "units": "month",
-            "normalized_units": "months",
-            "converted_value": null,
-            "models": [
-              "Kenyon Grill"
-            ],
-            "category": "Maintenance",
-            "search_terms": [
-              "cleaning schedule",
-              "maintenance schedule",
-              "cleaning frequency",
-              "upkeep interval"
-            ],
-            "concept_group": "maintenance_requirements",
-            "references": [
-              "Page 9"
-            ]
           }
         ]
       }
@@ -2344,213 +2168,160 @@
       "chunk_num": 8,
       "pages": "8-8",
       "result": {
+        "specifications": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTEvj1rDZmwQZpWh5Bi1A'}"
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
         "specifications": [
           {
-            "parameter": "Steak Temperature Setting",
-            "normalized_parameter": "cooking_temp_steak",
+            "parameter": "Control Panel Lock",
+            "normalized_parameter": "control_lock",
             "parameter_aliases": [
-              "steak temp",
-              "steak temperature",
-              "steak heat"
+              "safety lock",
+              "panel lock",
+              "lockout"
             ],
-            "value": "550",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "celsius",
-            "converted_value": "288",
+            "value": "Available when ON or OFF",
+            "range": "N/A",
+            "units": "binary",
+            "normalized_units": "boolean",
+            "converted_value": "true/false",
             "models": [
               "all"
             ],
-            "category": "Performance",
+            "category": "Safety",
             "search_terms": [
-              "steak temperature",
-              "how hot for steak",
-              "steak cooking temp",
-              "steak heat setting"
+              "lock",
+              "safety lock",
+              "control lock",
+              "disable controls",
+              "child lock"
             ],
-            "concept_group": "cooking_temperatures",
+            "concept_group": "safety_features",
             "references": [
-              "Section 6"
+              "Operation section"
             ]
           },
           {
-            "parameter": "Steak Power Setting",
-            "normalized_parameter": "power_level_steak",
+            "parameter": "Auto Shutdown Timer",
+            "normalized_parameter": "auto_shutdown_delay",
             "parameter_aliases": [
-              "steak power",
-              "steak setting"
+              "auto off",
+              "timeout",
+              "safety shutdown"
             ],
-            "value": "16",
-            "range": null,
-            "units": "level",
-            "normalized_units": "level",
-            "converted_value": "16",
+            "value": "15",
+            "range": "N/A",
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "15",
             "models": [
               "all"
             ],
-            "category": "Performance",
+            "category": "Safety",
             "search_terms": [
-              "steak power",
-              "power for steak",
-              "steak setting level"
+              "auto off",
+              "timeout",
+              "automatic shutdown",
+              "safety timer"
             ],
-            "concept_group": "power_settings",
+            "concept_group": "safety_features",
             "references": [
-              "Section 6"
+              "Operation section"
             ]
           },
           {
-            "parameter": "Burger Temperature Setting",
-            "normalized_parameter": "cooking_temp_burger",
+            "parameter": "Element Power Control Range",
+            "normalized_parameter": "power_control_range",
             "parameter_aliases": [
-              "burger temp",
-              "hamburger temperature"
+              "heating level",
+              "power settings",
+              "temperature control"
             ],
-            "value": "500",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "celsius",
-            "converted_value": "260",
+            "value": "Low to High",
+            "range": "Low-High",
+            "units": "power levels",
+            "normalized_units": "power_levels",
+            "converted_value": "N/A",
             "models": [
               "all"
             ],
             "category": "Performance",
             "search_terms": [
-              "burger temperature",
-              "hamburger temp",
-              "burger heat setting"
+              "power levels",
+              "heat settings",
+              "temperature control",
+              "power adjustment"
             ],
-            "concept_group": "cooking_temperatures",
+            "concept_group": "cooking_controls",
             "references": [
-              "Section 6"
+              "Operation section"
             ]
           },
           {
-            "parameter": "Burger Power Setting",
-            "normalized_parameter": "power_level_burger",
+            "parameter": "Element Activation Time",
+            "normalized_parameter": "activation_hold_time",
             "parameter_aliases": [
-              "burger power",
-              "hamburger setting"
+              "power on time",
+              "start delay"
             ],
-            "value": "9",
-            "range": null,
-            "units": "level",
-            "normalized_units": "level",
-            "converted_value": "9",
+            "value": "2",
+            "range": "N/A",
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "2",
             "models": [
               "all"
             ],
-            "category": "Performance",
+            "category": "Operation",
             "search_terms": [
-              "burger power",
-              "power for burgers",
-              "hamburger power level"
+              "power on",
+              "start up",
+              "activation time",
+              "hold time"
             ],
-            "concept_group": "power_settings",
+            "concept_group": "operation_parameters",
             "references": [
-              "Section 6"
+              "Operation section"
             ]
-          },
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "specifications": [
           {
-            "parameter": "Pork/Fish Temperature Setting",
-            "normalized_parameter": "cooking_temp_pork_fish",
+            "parameter": "Control Panel Material",
+            "normalized_parameter": "control_panel_material",
             "parameter_aliases": [
-              "pork temp",
-              "fish temp"
+              "touch control surface",
+              "control interface material"
             ],
-            "value": "400",
+            "value": "ceramic glass",
             "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "celsius",
-            "converted_value": "204",
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
             "models": [
-              "all"
+              "Kenyon Grill"
             ],
-            "category": "Performance",
+            "category": "Physical",
             "search_terms": [
-              "pork temperature",
-              "fish temperature",
-              "seafood temp"
+              "touch control material",
+              "control panel glass",
+              "interface material",
+              "ceramic glass panel"
             ],
-            "concept_group": "cooking_temperatures",
+            "concept_group": "construction_materials",
             "references": [
-              "Section 6"
-            ]
-          },
-          {
-            "parameter": "Pork/Fish Power Setting",
-            "normalized_parameter": "power_level_pork_fish",
-            "parameter_aliases": [
-              "pork power",
-              "fish power"
-            ],
-            "value": "5",
-            "range": null,
-            "units": "level",
-            "normalized_units": "level",
-            "converted_value": "5",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "pork power setting",
-              "fish power level"
-            ],
-            "concept_group": "power_settings",
-            "references": [
-              "Section 6"
-            ]
-          },
-          {
-            "parameter": "Vegetable Temperature Setting",
-            "normalized_parameter": "cooking_temp_vegetable",
-            "parameter_aliases": [
-              "veggie temp",
-              "vegetable temperature"
-            ],
-            "value": "350",
-            "range": null,
-            "units": "\u00b0F",
-            "normalized_units": "celsius",
-            "converted_value": "177",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "vegetable temperature",
-              "veggie temp",
-              "vegetable heat"
-            ],
-            "concept_group": "cooking_temperatures",
-            "references": [
-              "Section 6"
-            ]
-          },
-          {
-            "parameter": "Vegetable Power Setting",
-            "normalized_parameter": "power_level_vegetable",
-            "parameter_aliases": [
-              "veggie power",
-              "vegetable setting"
-            ],
-            "value": "4",
-            "range": null,
-            "units": "level",
-            "normalized_units": "level",
-            "converted_value": "4",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "vegetable power",
-              "veggie power level"
-            ],
-            "concept_group": "power_settings",
-            "references": [
-              "Section 6"
+              "Page 9"
             ]
           },
           {
@@ -2560,23 +2331,78 @@
               "warm up time",
               "heating time"
             ],
-            "value": null,
+            "value": "5-7",
             "range": "5-7",
             "units": "minutes",
             "normalized_units": "minutes",
             "converted_value": null,
             "models": [
-              "all"
+              "Kenyon Grill"
             ],
             "category": "Performance",
             "search_terms": [
               "preheat time",
               "warm up duration",
-              "how long to preheat"
+              "heating time",
+              "time to heat"
             ],
-            "concept_group": "operation_times",
+            "concept_group": "operation_parameters",
             "references": [
-              "Section 6"
+              "Page 9"
+            ]
+          },
+          {
+            "parameter": "Drip Tray Capacity",
+            "normalized_parameter": "drip_tray_volume",
+            "parameter_aliases": [
+              "water tray capacity",
+              "drip pan volume"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "cup",
+            "normalized_units": "ml",
+            "converted_value": "236.6",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "drip tray size",
+              "water capacity",
+              "drip pan volume",
+              "liquid capacity"
+            ],
+            "concept_group": "maintenance_specifications",
+            "references": [
+              "Page 9"
+            ]
+          },
+          {
+            "parameter": "Maintenance Interval",
+            "normalized_parameter": "cleaning_frequency",
+            "parameter_aliases": [
+              "cleaning interval",
+              "maintenance schedule"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "month",
+            "normalized_units": "months",
+            "converted_value": null,
+            "models": [
+              "Kenyon Grill"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "cleaning frequency",
+              "maintenance schedule",
+              "cleaning interval",
+              "care schedule"
+            ],
+            "concept_group": "maintenance_specifications",
+            "references": [
+              "Page 9"
             ]
           }
         ]
@@ -2619,7 +2445,7 @@
             "parameter": "Drip Tray Water Capacity",
             "normalized_parameter": "drip_tray_water_volume",
             "parameter_aliases": [
-              "water amount",
+              "water volume",
               "drip pan capacity"
             ],
             "value": "2",
@@ -2635,7 +2461,7 @@
               "drip tray water",
               "smoke prevention",
               "water amount",
-              "drip pan"
+              "drip pan water"
             ],
             "concept_group": "operation_specifications",
             "references": [
@@ -2644,16 +2470,16 @@
           },
           {
             "parameter": "Remote Control Capability",
-            "normalized_parameter": "remote_control_compatible",
+            "normalized_parameter": "remote_control_support",
             "parameter_aliases": [
               "remote operation",
               "external timer control"
             ],
-            "value": "Not compatible",
+            "value": "Not Supported",
             "range": "N/A",
-            "units": "binary",
-            "normalized_units": "boolean",
-            "converted_value": "false",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
             "models": [
               "All Kenyon Grills"
             ],
@@ -2671,16 +2497,16 @@
           },
           {
             "parameter": "Installation Types",
-            "normalized_parameter": "installation_classification",
+            "normalized_parameter": "installation_environment",
             "parameter_aliases": [
               "usage environment",
               "application type"
             ],
-            "value": "Household and similar applications",
+            "value": "Household, Staff Kitchen, Farm House, Hotels, Motels, B&B",
             "range": "N/A",
-            "units": "classification",
-            "normalized_units": "classification",
-            "converted_value": "residential",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
             "models": [
               "All Kenyon Grills"
             ],
@@ -2695,124 +2521,32 @@
             "references": [
               "Operation Section"
             ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 11,
-      "pages": "11-11",
-      "result": {
-        "specifications": [
+          },
           {
-            "parameter": "Control Panel Lock",
-            "normalized_parameter": "control_lock",
+            "parameter": "Storage Requirements",
+            "normalized_parameter": "storage_conditions",
             "parameter_aliases": [
-              "safety lock",
-              "panel lock",
-              "lockout"
+              "storage environment",
+              "storage type"
             ],
-            "value": "Available in ON and OFF states",
+            "value": "Indoor storage for portable, Sheltered for built-in",
             "range": "N/A",
-            "units": "binary",
-            "normalized_units": "boolean",
+            "units": "N/A",
+            "normalized_units": "N/A",
             "converted_value": "N/A",
             "models": [
-              "all"
+              "All Kenyon Grills"
             ],
-            "category": "Safety",
+            "category": "Environmental",
             "search_terms": [
-              "lock",
-              "safety lock",
-              "control lock",
-              "panel lockout",
-              "disable controls"
+              "storage",
+              "storage requirements",
+              "where to store",
+              "storage conditions"
             ],
-            "concept_group": "safety_features",
+            "concept_group": "environmental_specifications",
             "references": [
-              "Operation section"
-            ]
-          },
-          {
-            "parameter": "Power Level Range",
-            "normalized_parameter": "power_level",
-            "parameter_aliases": [
-              "heating level",
-              "temperature setting",
-              "heat setting"
-            ],
-            "value": "Low to High",
-            "range": "Low-High",
-            "units": "levels",
-            "normalized_units": "levels",
-            "converted_value": "N/A",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "power level",
-              "heat setting",
-              "temperature control",
-              "heating level"
-            ],
-            "concept_group": "cooking_controls",
-            "references": [
-              "Cooking Mode Options"
-            ]
-          },
-          {
-            "parameter": "Auto Shutdown Timer",
-            "normalized_parameter": "auto_shutdown_delay",
-            "parameter_aliases": [
-              "timeout",
-              "auto power off"
-            ],
-            "value": "15",
-            "range": "N/A",
-            "units": "seconds",
-            "normalized_units": "seconds",
-            "converted_value": "15",
-            "models": [
-              "all"
-            ],
-            "category": "Safety",
-            "search_terms": [
-              "auto shutdown",
-              "timeout",
-              "automatic power off",
-              "safety timer"
-            ],
-            "concept_group": "safety_features",
-            "references": [
-              "Turning On section"
-            ]
-          },
-          {
-            "parameter": "Element Activation Time",
-            "normalized_parameter": "activation_hold_time",
-            "parameter_aliases": [
-              "power on hold",
-              "start delay"
-            ],
-            "value": "2",
-            "range": "N/A",
-            "units": "seconds",
-            "normalized_units": "seconds",
-            "converted_value": "2",
-            "models": [
-              "all"
-            ],
-            "category": "Operation",
-            "search_terms": [
-              "activation time",
-              "power on time",
-              "start delay",
-              "hold time"
-            ],
-            "concept_group": "operation_parameters",
-            "references": [
-              "Turning On section"
+              "Operation Section"
             ]
           }
         ]
@@ -2966,6 +2700,206 @@
       }
     },
     {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Timer Range (1-10 min)",
+            "normalized_parameter": "timer_increment_low_range",
+            "parameter_aliases": [
+              "timer step",
+              "timing increment",
+              "minute steps"
+            ],
+            "value": "1",
+            "range": "1-10",
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "1",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timer increment",
+              "minute steps",
+              "timing interval",
+              "timer resolution"
+            ],
+            "concept_group": "timing_control",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Timer Range (>10 min)",
+            "normalized_parameter": "timer_increment_high_range",
+            "parameter_aliases": [
+              "timer step",
+              "timing increment",
+              "minute steps"
+            ],
+            "value": "5",
+            "range": ">10",
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timer increment",
+              "minute steps",
+              "timing interval",
+              "timer resolution"
+            ],
+            "concept_group": "timing_control",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Timer Inactivity Timeout",
+            "normalized_parameter": "timer_inactivity_timeout",
+            "parameter_aliases": [
+              "auto shutoff",
+              "timeout period",
+              "inactive timer"
+            ],
+            "value": "20",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "20",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timer timeout",
+              "auto shutoff",
+              "timer deactivation",
+              "inactivity period"
+            ],
+            "concept_group": "timing_control",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Kitchen Timer Alarm Interval",
+            "normalized_parameter": "kitchen_timer_alarm_interval",
+            "parameter_aliases": [
+              "beep interval",
+              "alarm frequency"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "10",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "alarm interval",
+              "beep frequency",
+              "timer alert",
+              "reminder interval"
+            ],
+            "concept_group": "alerts",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Cooking Timer Alarm Interval",
+            "normalized_parameter": "cooking_timer_alarm_interval",
+            "parameter_aliases": [
+              "beep interval",
+              "alarm frequency"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "alarm interval",
+              "beep frequency",
+              "timer alert",
+              "reminder interval"
+            ],
+            "concept_group": "alerts",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Kitchen Timer Auto Shutoff",
+            "normalized_parameter": "kitchen_timer_auto_shutoff",
+            "parameter_aliases": [
+              "alarm timeout",
+              "alert duration"
+            ],
+            "value": "180",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "180",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "auto shutoff",
+              "alarm timeout",
+              "alert duration",
+              "timer shutdown"
+            ],
+            "concept_group": "timing_control",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Cooking Timer Auto Shutoff",
+            "normalized_parameter": "cooking_timer_auto_shutoff",
+            "parameter_aliases": [
+              "alarm timeout",
+              "alert duration"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "30",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "auto shutoff",
+              "alarm timeout",
+              "alert duration",
+              "timer shutdown"
+            ],
+            "concept_group": "timing_control",
+            "references": [
+              "p.13"
+            ]
+          }
+        ]
+      }
+    },
+    {
       "chunk_num": 14,
       "pages": "14-14",
       "result": {
@@ -3086,219 +3020,17 @@
       }
     },
     {
-      "chunk_num": 13,
-      "pages": "13-13",
-      "result": {
-        "specifications": [
-          {
-            "parameter": "Timer Increment (1-10 min)",
-            "normalized_parameter": "timer_increment_low_range",
-            "parameter_aliases": [
-              "time increment",
-              "timer step",
-              "minute increment"
-            ],
-            "value": "1",
-            "range": "1-10",
-            "units": "minutes",
-            "normalized_units": "min",
-            "converted_value": "1",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "timer step",
-              "time increment",
-              "minute increment",
-              "timer resolution",
-              "timer precision"
-            ],
-            "concept_group": "timer_settings",
-            "references": [
-              "p.13"
-            ]
-          },
-          {
-            "parameter": "Timer Increment (>10 min)",
-            "normalized_parameter": "timer_increment_high_range",
-            "parameter_aliases": [
-              "time increment",
-              "timer step",
-              "minute increment"
-            ],
-            "value": "5",
-            "range": ">10",
-            "units": "minutes",
-            "normalized_units": "min",
-            "converted_value": "5",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "timer step",
-              "time increment",
-              "minute increment",
-              "timer resolution",
-              "timer precision"
-            ],
-            "concept_group": "timer_settings",
-            "references": [
-              "p.13"
-            ]
-          },
-          {
-            "parameter": "Timer Inactivity Timeout",
-            "normalized_parameter": "timer_inactivity_timeout",
-            "parameter_aliases": [
-              "auto shutoff",
-              "timeout period",
-              "inactivity period"
-            ],
-            "value": "20",
-            "range": null,
-            "units": "seconds",
-            "normalized_units": "s",
-            "converted_value": "20",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "timer timeout",
-              "auto shutoff",
-              "inactivity timeout",
-              "timer deactivation"
-            ],
-            "concept_group": "timer_settings",
-            "references": [
-              "p.13"
-            ]
-          },
-          {
-            "parameter": "Kitchen Timer Alarm Interval",
-            "normalized_parameter": "kitchen_timer_alarm_interval",
-            "parameter_aliases": [
-              "beep interval",
-              "alarm frequency"
-            ],
-            "value": "10",
-            "range": null,
-            "units": "seconds",
-            "normalized_units": "s",
-            "converted_value": "10",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "alarm interval",
-              "beep frequency",
-              "timer alarm",
-              "alert interval"
-            ],
-            "concept_group": "timer_alerts",
-            "references": [
-              "p.13"
-            ]
-          },
-          {
-            "parameter": "Cooking Timer Alarm Interval",
-            "normalized_parameter": "cooking_timer_alarm_interval",
-            "parameter_aliases": [
-              "beep interval",
-              "alarm frequency"
-            ],
-            "value": "5",
-            "range": null,
-            "units": "seconds",
-            "normalized_units": "s",
-            "converted_value": "5",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "alarm interval",
-              "beep frequency",
-              "timer alarm",
-              "alert interval"
-            ],
-            "concept_group": "timer_alerts",
-            "references": [
-              "p.13"
-            ]
-          },
-          {
-            "parameter": "Kitchen Timer Alarm Duration",
-            "normalized_parameter": "kitchen_timer_alarm_duration",
-            "parameter_aliases": [
-              "alarm timeout",
-              "alert duration"
-            ],
-            "value": "180",
-            "range": null,
-            "units": "seconds",
-            "normalized_units": "s",
-            "converted_value": "180",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "alarm duration",
-              "alert timeout",
-              "beeping duration",
-              "alarm period"
-            ],
-            "concept_group": "timer_alerts",
-            "references": [
-              "p.13"
-            ]
-          },
-          {
-            "parameter": "Cooking Timer Post-Completion Timeout",
-            "normalized_parameter": "cooking_timer_completion_timeout",
-            "parameter_aliases": [
-              "post-cooking timeout",
-              "completion shutdown time"
-            ],
-            "value": "30",
-            "range": null,
-            "units": "seconds",
-            "normalized_units": "s",
-            "converted_value": "30",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "completion timeout",
-              "final shutdown",
-              "post-cooking shutdown",
-              "timer shutdown"
-            ],
-            "concept_group": "timer_settings",
-            "references": [
-              "p.13"
-            ]
-          }
-        ]
-      }
-    },
-    {
       "chunk_num": 15,
       "pages": "15-15",
       "result": {
         "specifications": [
           {
             "parameter": "Customer Service Hours",
-            "normalized_parameter": "service_hours",
+            "normalized_parameter": "support_hours",
             "parameter_aliases": [
-              "support hours",
+              "service hours",
               "operating hours",
-              "business hours"
+              "support availability"
             ],
             "value": "8AM - 5PM EST",
             "range": "8:00-17:00",
@@ -3308,28 +3040,28 @@
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
             ],
-            "category": "Installation",
+            "category": "Support",
             "search_terms": [
-              "service hours",
-              "when to call",
-              "support availability",
-              "customer care hours",
-              "contact hours"
+              "customer service hours",
+              "when can I call",
+              "support timing",
+              "service availability",
+              "business hours"
             ],
-            "concept_group": "support_contact",
+            "concept_group": "customer_support",
             "references": [
-              "Page 15"
+              "page 15"
             ]
           },
           {
-            "parameter": "Customer Service Phone",
-            "normalized_parameter": "support_phone",
+            "parameter": "Error Code E04 Trigger",
+            "normalized_parameter": "high_temperature_error",
             "parameter_aliases": [
-              "contact number",
-              "service number",
-              "phone number"
+              "overtemp error",
+              "temperature fault",
+              "heat warning"
             ],
-            "value": "860-664-4906",
+            "value": "High temperature operation",
             "range": null,
             "units": null,
             "normalized_units": null,
@@ -3337,31 +3069,30 @@
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
             ],
-            "category": "Installation",
+            "category": "Performance",
             "search_terms": [
-              "phone number",
-              "contact",
-              "support line",
-              "service number",
-              "help line"
+              "overheating",
+              "temperature error",
+              "E04",
+              "high temp warning",
+              "temperature fault"
             ],
-            "concept_group": "support_contact",
+            "concept_group": "error_codes",
             "references": [
-              "Page 15"
+              "page 15"
             ]
           },
           {
-            "parameter": "Control Input Limit",
-            "normalized_parameter": "simultaneous_control_inputs",
+            "parameter": "Control Input Timeout",
+            "normalized_parameter": "control_input_limit",
             "parameter_aliases": [
-              "control functions",
-              "input limit",
-              "simultaneous controls"
+              "input timeout",
+              "control activation limit"
             ],
             "value": "2",
-            "range": "\u2264 2",
-            "units": "functions",
-            "normalized_units": "functions",
+            "range": "maximum 2",
+            "units": "simultaneous inputs",
+            "normalized_units": "inputs",
             "converted_value": "2",
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
@@ -3369,24 +3100,25 @@
             "category": "Performance",
             "search_terms": [
               "control inputs",
-              "simultaneous functions",
+              "simultaneous controls",
+              "E10",
               "control limit",
-              "operation limit"
+              "input restriction"
             ],
             "concept_group": "operation_limits",
             "references": [
-              "Page 15"
+              "page 15"
             ]
           },
           {
-            "parameter": "Control Input Time Limit",
-            "normalized_parameter": "control_input_timeout",
+            "parameter": "Control Input Duration Limit",
+            "normalized_parameter": "input_duration_threshold",
             "parameter_aliases": [
-              "input timeout",
-              "control timeout"
+              "input time limit",
+              "control activation duration"
             ],
             "value": "3",
-            "range": "< 3",
+            "range": "maximum 3",
             "units": "seconds",
             "normalized_units": "s",
             "converted_value": "3",
@@ -3395,14 +3127,15 @@
             ],
             "category": "Performance",
             "search_terms": [
-              "timeout",
-              "control time",
+              "control timeout",
               "input duration",
-              "operation timeout"
+              "activation time",
+              "control limit",
+              "input threshold"
             ],
             "concept_group": "operation_limits",
             "references": [
-              "Page 15"
+              "page 15"
             ]
           }
         ]
@@ -3412,117 +3145,8 @@
       "chunk_num": 16,
       "pages": "16-16",
       "result": {
-        "specifications": [
-          {
-            "parameter": "Drip Tray Water Requirement",
-            "normalized_parameter": "drip_tray_water_volume",
-            "parameter_aliases": [
-              "water amount",
-              "drip pan water",
-              "water requirement"
-            ],
-            "value": "2",
-            "range": "2 cups or more",
-            "units": "cups",
-            "normalized_units": "ml",
-            "converted_value": "473",
-            "models": [
-              "all"
-            ],
-            "category": "Operation",
-            "search_terms": [
-              "how much water in drip tray",
-              "drip tray water amount",
-              "water needed for drip tray",
-              "minimum water requirement"
-            ],
-            "concept_group": "maintenance_requirements",
-            "references": [
-              "page 16"
-            ]
-          },
-          {
-            "parameter": "Heating Element Movement",
-            "normalized_parameter": "heating_element_pivot",
-            "parameter_aliases": [
-              "element position",
-              "heating element adjustment"
-            ],
-            "value": "pivoting up/down",
-            "range": "0-90 degrees",
-            "units": "degrees",
-            "normalized_units": "degrees",
-            "converted_value": "90",
-            "models": [
-              "all"
-            ],
-            "category": "Installation",
-            "search_terms": [
-              "how to move heating element",
-              "heating element position",
-              "adjust heating element",
-              "lift heating element"
-            ],
-            "concept_group": "component_adjustment",
-            "references": [
-              "page 16"
-            ]
-          },
-          {
-            "parameter": "Grate Cleaning Frequency",
-            "normalized_parameter": "grate_cleaning_interval",
-            "parameter_aliases": [
-              "cleaning schedule",
-              "maintenance interval"
-            ],
-            "value": "after every use",
-            "range": "every use",
-            "units": "uses",
-            "normalized_units": "uses",
-            "converted_value": "1",
-            "models": [
-              "all"
-            ],
-            "category": "Maintenance",
-            "search_terms": [
-              "when to clean grate",
-              "grate cleaning schedule",
-              "how often clean grill grate",
-              "grate maintenance"
-            ],
-            "concept_group": "cleaning_requirements",
-            "references": [
-              "page 16"
-            ]
-          },
-          {
-            "parameter": "Grate Surface Treatment",
-            "normalized_parameter": "grate_coating",
-            "parameter_aliases": [
-              "grate finish",
-              "cooking surface coating"
-            ],
-            "value": "nonstick",
-            "range": "n/a",
-            "units": "coating type",
-            "normalized_units": "coating type",
-            "converted_value": "nonstick",
-            "models": [
-              "all"
-            ],
-            "category": "Performance",
-            "search_terms": [
-              "grate coating",
-              "nonstick surface",
-              "grate material",
-              "cooking surface type"
-            ],
-            "concept_group": "materials_specifications",
-            "references": [
-              "page 16"
-            ]
-          }
-        ]
+        "specifications": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTEvnTSBrASywk6La58dy'}"
       }
     },
     {
@@ -3607,9 +3231,9 @@
             "category": "Installation",
             "search_terms": [
               "how many handles",
-              "handle positions",
               "lid handles",
-              "grip locations"
+              "grip locations",
+              "handle placement"
             ],
             "concept_group": "lid_specifications",
             "references": [
@@ -3635,9 +3259,9 @@
             "category": "Environmental",
             "search_terms": [
               "what is lid made of",
-              "lid material type",
+              "lid material",
               "silicone lid",
-              "cover material"
+              "cover material type"
             ],
             "concept_group": "materials",
             "references": [
@@ -3851,11 +3475,11 @@
       "result": {
         "specifications": [
           {
-            "parameter": "Overhead Cabinet Clearance",
-            "normalized_parameter": "overhead_cabinet_depth",
+            "parameter": "Overhead Cabinet Depth Maximum",
+            "normalized_parameter": "overhead_cabinet_depth_max",
             "parameter_aliases": [
               "cabinet depth",
-              "upper cabinet depth"
+              "upper cabinet clearance"
             ],
             "value": "13",
             "range": "0-13",
@@ -3867,11 +3491,10 @@
             ],
             "category": "Installation",
             "search_terms": [
-              "cabinet clearance",
-              "overhead cabinet",
-              "upper cabinet depth",
-              "cabinet installation height",
-              "maximum cabinet depth"
+              "cabinet depth",
+              "overhead clearance",
+              "upper cabinet space",
+              "cabinet requirements"
             ],
             "concept_group": "clearances",
             "references": [
@@ -3879,11 +3502,11 @@
             ]
           },
           {
-            "parameter": "Countertop Height",
-            "normalized_parameter": "counter_height",
+            "parameter": "Minimum Countertop Height",
+            "normalized_parameter": "countertop_height_min",
             "parameter_aliases": [
-              "installation height",
-              "counter installation height"
+              "counter height",
+              "installation height"
             ],
             "value": "36",
             "range": "36+",
@@ -3896,8 +3519,8 @@
             "category": "Installation",
             "search_terms": [
               "counter height",
-              "minimum counter height",
               "installation height",
+              "minimum height",
               "height from floor"
             ],
             "concept_group": "dimensions",
@@ -3923,9 +3546,8 @@
             "category": "Installation",
             "search_terms": [
               "cabinet clearance",
-              "cooking surface clearance",
-              "unprotected cabinet space",
-              "minimum clearance"
+              "overhead space",
+              "unprotected clearance"
             ],
             "concept_group": "clearances",
             "references": [
@@ -3936,8 +3558,8 @@
             "parameter": "Protected Cabinet Clearance",
             "normalized_parameter": "protected_cabinet_clearance",
             "parameter_aliases": [
-              "protected cooking clearance",
-              "flame retardant clearance"
+              "protected spacing",
+              "minimum cabinet height"
             ],
             "value": "24",
             "range": "24+",
@@ -3950,8 +3572,8 @@
             "category": "Installation",
             "search_terms": [
               "protected clearance",
-              "flame retardant clearance",
-              "minimum protected space"
+              "minimum cabinet space",
+              "protected cabinet height"
             ],
             "concept_group": "clearances",
             "references": [
@@ -3959,64 +3581,36 @@
             ]
           },
           {
-            "parameter": "Backsplash Minimum Clearance",
-            "normalized_parameter": "backsplash_clearance",
+            "parameter": "Flame Retardant Millboard Thickness",
+            "normalized_parameter": "flame_retardant_thickness",
             "parameter_aliases": [
-              "back clearance",
-              "rear spacing"
+              "protective board thickness"
             ],
-            "value": "6",
-            "range": "6+",
+            "value": "0.25",
+            "range": "0.25+",
             "units": "inches",
             "normalized_units": "inches",
-            "converted_value": "6",
+            "converted_value": "0.25",
             "models": [
               "IntelliKEN Touch Grill"
             ],
             "category": "Installation",
             "search_terms": [
-              "backsplash clearance",
-              "rear clearance",
-              "back spacing",
-              "minimum back distance"
+              "millboard thickness",
+              "flame retardant",
+              "protection thickness"
             ],
-            "concept_group": "clearances",
+            "concept_group": "materials",
             "references": [
               "page 19"
             ]
           },
           {
-            "parameter": "Front Counter Minimum Clearance",
-            "normalized_parameter": "front_counter_clearance",
+            "parameter": "Minimum Bottom Clearance",
+            "normalized_parameter": "bottom_clearance_min",
             "parameter_aliases": [
-              "front spacing",
-              "front edge clearance"
-            ],
-            "value": "1.5",
-            "range": "1.5+",
-            "units": "inches",
-            "normalized_units": "inches",
-            "converted_value": "1.5",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "category": "Installation",
-            "search_terms": [
-              "front clearance",
-              "front edge space",
-              "minimum front distance"
-            ],
-            "concept_group": "clearances",
-            "references": [
-              "page 19"
-            ]
-          },
-          {
-            "parameter": "Bottom Combustible Surface Clearance",
-            "normalized_parameter": "bottom_clearance",
-            "parameter_aliases": [
-              "drawer clearance",
-              "bottom spacing"
+              "combustible surface clearance",
+              "drawer clearance"
             ],
             "value": "2",
             "range": "2+",
@@ -4029,9 +3623,8 @@
             "category": "Installation",
             "search_terms": [
               "bottom clearance",
-              "drawer space",
-              "minimum bottom distance",
-              "combustible clearance"
+              "minimum space below",
+              "drawer spacing"
             ],
             "concept_group": "clearances",
             "references": [
@@ -4039,26 +3632,49 @@
             ]
           },
           {
-            "parameter": "Canadian Installation Adjacent Surface Clearance",
-            "normalized_parameter": "canadian_adjacent_clearance",
+            "parameter": "Backsplash Minimum Clearance",
+            "normalized_parameter": "backsplash_clearance_min",
             "parameter_aliases": [
-              "canadian spacing",
-              "adjacent surface spacing"
+              "back edge clearance"
             ],
-            "value": "0.5",
-            "range": "0.5+",
+            "value": "6",
+            "range": "6+",
             "units": "inches",
             "normalized_units": "inches",
-            "converted_value": "0.5",
+            "converted_value": "6",
             "models": [
               "IntelliKEN Touch Grill"
             ],
             "category": "Installation",
             "search_terms": [
-              "canadian clearance",
-              "adjacent surface",
-              "minimum adjacent distance",
-              "canadian requirements"
+              "backsplash clearance",
+              "back spacing",
+              "rear clearance"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Canadian Installation Clearance",
+            "normalized_parameter": "canadian_installation_clearance",
+            "parameter_aliases": [
+              "adjacent surface clearance"
+            ],
+            "value": "0.5",
+            "range": "0.5+",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "12",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "Canadian requirements",
+              "adjacent clearance",
+              "minimum spacing"
             ],
             "concept_group": "clearances",
             "references": [
@@ -4103,6 +3719,35 @@
             ]
           },
           {
+            "parameter": "Page Number",
+            "normalized_parameter": "page_number",
+            "parameter_aliases": [
+              "page",
+              "manual page",
+              "documentation page"
+            ],
+            "value": "5, 21",
+            "range": null,
+            "units": "pages",
+            "normalized_units": "pages",
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "what page",
+              "manual page",
+              "page number",
+              "documentation page"
+            ],
+            "concept_group": "documentation",
+            "references": [
+              "page 5",
+              "page 21"
+            ]
+          },
+          {
             "parameter": "Cleaning Components",
             "normalized_parameter": "cleaning_components",
             "parameter_aliases": [
@@ -4123,35 +3768,7 @@
               "cleaning requirements",
               "initial cleaning",
               "pre-use cleaning",
-              "preparation steps"
-            ],
-            "concept_group": "preparation",
-            "references": [
-              "page 5"
-            ]
-          },
-          {
-            "parameter": "Cleaning Method",
-            "normalized_parameter": "cleaning_method",
-            "parameter_aliases": [
-              "cleaning procedure",
-              "cleaning instructions"
-            ],
-            "value": "stainless steel or glass cleaner for surfaces, warm soapy water for grates",
-            "range": null,
-            "units": null,
-            "normalized_units": null,
-            "converted_value": null,
-            "models": [
-              "all"
-            ],
-            "category": "Installation",
-            "search_terms": [
-              "how to clean",
-              "cleaning products",
-              "cleaning solution",
-              "cleaning instructions",
-              "first time cleaning"
+              "parts to clean before first use"
             ],
             "concept_group": "preparation",
             "references": [
@@ -4213,9 +3830,9 @@
             "category": "Installation",
             "search_terms": [
               "ventilation",
-              "air flow",
+              "air openings",
               "cooling requirements",
-              "air intake"
+              "airflow"
             ],
             "concept_group": "ventilation_requirements",
             "references": [

@@ -1,0 +1,714 @@
+{
+  "total_chunks_processed": 6,
+  "successful_chunks": 6,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 26,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "Is manual available in required language?",
+      "expected_value": "Manual present in 11 supported languages",
+      "test_method": "Check manual contains sections for English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587",
+      "failure_indication": "Language support incomplete or missing required translations",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Documentation verification",
+        "Localization compliance"
+      ]
+    },
+    {
+      "query": "Are page numbers correct for each language section?",
+      "expected_value": "English p.3, Deutsch p.8, Espa\u00f1ol p.13, Suomi p.18, Fran\u00e7ais p.23, Italiano p.28, Nederlands p.33, Norsk p.38, Portugu\u00eas p.43, Svenska p.48, \u4e2d\u6587 p.53",
+      "test_method": "Verify page numbers match table of contents",
+      "failure_indication": "Pagination error or missing sections",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Documentation quality control",
+        "Manual assembly verification"
+      ]
+    },
+    {
+      "query": "Is product website accessible?",
+      "expected_value": "www.bandg.com loads and is operational",
+      "test_method": "Attempt to access website URL provided in manual",
+      "failure_indication": "Website unavailable or incorrect URL listed",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Online resource verification",
+        "Technical support access"
+      ]
+    },
+    {
+      "query": "Does unit power on when power is applied?",
+      "expected_value": "Unit turns on automatically",
+      "test_method": "Apply power to unit and observe startup",
+      "failure_indication": "Unit remains off when powered - possible power supply issue",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Power system check",
+        "Initial setup"
+      ]
+    },
+    {
+      "query": "Does setup wizard appear on first startup?",
+      "expected_value": "Setup wizard launches automatically",
+      "test_method": "Power on unit after factory reset",
+      "failure_indication": "Missing initial configuration options",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Factory reset",
+        "Initial configuration"
+      ]
+    },
+    {
+      "query": "Does screen auto-lock activate when idle?",
+      "expected_value": "Screen locks after period of inactivity",
+      "test_method": "Leave unit idle and observe lock activation",
+      "failure_indication": "Security feature not functioning",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Screen lock settings",
+        "Security configuration"
+      ]
+    },
+    {
+      "query": "Does landscape orientation unlock work?",
+      "expected_value": "Screen unlocks with right edge swipe",
+      "test_method": "Swipe from right edge when locked",
+      "failure_indication": "Incorrect gesture recognition",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Screen orientation setup",
+        "Lock mechanism test"
+      ]
+    },
+    {
+      "query": "Does portrait orientation unlock work?",
+      "expected_value": "Screen unlocks with bottom swipe",
+      "test_method": "Swipe from bottom when locked",
+      "failure_indication": "Incorrect gesture recognition",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Screen orientation setup",
+        "Lock mechanism test"
+      ]
+    },
+    {
+      "query": "Is Home screen accessible?",
+      "expected_value": "Home screen appears when Home button is selected",
+      "test_method": "Click Home button and verify screen display",
+      "failure_indication": "Home screen does not appear or is unresponsive",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Basic Navigation",
+        "Screen Access"
+      ]
+    },
+    {
+      "query": "Is Settings button functional?",
+      "expected_value": "System settings menu appears when clicked",
+      "test_method": "Click Settings button and verify settings access",
+      "failure_indication": "Settings menu does not appear or is inaccessible",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "System Configuration",
+        "Settings Access"
+      ]
+    },
+    {
+      "query": "Does Browser button work?",
+      "expected_value": "B&G CPU web server or internet browser opens",
+      "test_method": "Click Browser button and verify web access",
+      "failure_indication": "Browser does not launch or web access fails",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Web Access",
+        "Network Configuration"
+      ]
+    },
+    {
+      "query": "Is active dashboard highlighted?",
+      "expected_value": "Currently active dashboard is highlighted in dashboard bar",
+      "test_method": "Switch between dashboards and verify highlighting",
+      "failure_indication": "Active dashboard not visually indicated",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Navigation",
+        "Display Settings"
+      ]
+    },
+    {
+      "query": "Do pinned dashboards appear?",
+      "expected_value": "User favorite dashboards visible in dashboard bar",
+      "test_method": "Pin dashboard and verify it appears in dashboard bar",
+      "failure_indication": "Pinned dashboards not showing or pin function fails",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Customization",
+        "User Preferences"
+      ]
+    },
+    {
+      "query": "Can user edit dashboard from home screen?",
+      "expected_value": "Yes, via press and hold gesture",
+      "test_method": "Press and hold on dashboard tile on home screen",
+      "failure_indication": "Edit menu does not appear after long press",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Management"
+      ]
+    },
+    {
+      "query": "Can all dashboards be edited?",
+      "expected_value": "No, some dashboards have restricted editing",
+      "test_method": "Attempt to edit different dashboard types",
+      "failure_indication": "Edit options appear for restricted dashboards",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Permissions"
+      ]
+    },
+    {
+      "query": "Are gauge settings customizable?",
+      "expected_value": "Yes, via press and hold on gauge",
+      "test_method": "Press and hold on gauge to verify edit options appear",
+      "failure_indication": "No edit options menu appears for gauges",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Gauge Customization"
+      ]
+    },
+    {
+      "query": "What are the available dashboard creation methods?",
+      "expected_value": "Blank dashboard, template, or saved dashboard",
+      "test_method": "Verify all three options present in new dashboard menu",
+      "failure_indication": "Missing one or more creation options",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Creation"
+      ]
+    },
+    {
+      "query": "Can user pin dashboard to bar via long press?",
+      "expected_value": "Dashboard moves to selected position on bar",
+      "test_method": "Press and hold dashboard on home screen for 3 seconds",
+      "failure_indication": "Dashboard does not respond to long press or cannot be moved to bar",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Management",
+        "Home Screen Navigation"
+      ]
+    },
+    {
+      "query": "Can user unpin dashboard from bar?",
+      "expected_value": "Unpin option appears and dashboard can be removed",
+      "test_method": "Press and hold pinned dashboard on dashboard bar",
+      "failure_indication": "Unpin option does not appear or dashboard cannot be removed",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Management",
+        "Dashboard Bar Configuration"
+      ]
+    },
+    {
+      "query": "Do pinned dashboards respond to horizontal swipe?",
+      "expected_value": "Dashboard view changes when swiping left or right",
+      "test_method": "Swipe horizontally across pinned dashboards",
+      "failure_indication": "No response to swipe or jerky transition between dashboards",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Navigation",
+        "Touch Gesture Controls"
+      ]
+    },
+    {
+      "query": "Can dashboard be pinned to occupied position?",
+      "expected_value": "New dashboard overwrites existing pinned dashboard",
+      "test_method": "Attempt to pin dashboard to position that already contains pinned dashboard",
+      "failure_indication": "Cannot overwrite existing pinned dashboard position",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard Management",
+        "Dashboard Position Configuration"
+      ]
+    },
+    {
+      "query": "Can Quick access menu be accessed?",
+      "expected_value": "Menu appears when swiping from top edge of display",
+      "test_method": "Swipe finger from top edge of screen downward",
+      "failure_indication": "Quick access menu does not appear, touch functionality may be impaired",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Screen navigation",
+        "Display settings"
+      ]
+    },
+    {
+      "query": "Are gauge settings configurable?",
+      "expected_value": "User can modify gauge data display options",
+      "test_method": "Access gauge settings menu and attempt to change displayed data",
+      "failure_indication": "Unable to customize gauge display",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Gauge configuration",
+        "Dashboard customization"
+      ]
+    },
+    {
+      "query": "Is gauge resizing functional?",
+      "expected_value": "Gauge size can be adjusted",
+      "test_method": "Select gauge resize option and attempt to change dimensions",
+      "failure_indication": "Gauge size cannot be modified",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard layout",
+        "Display customization"
+      ]
+    },
+    {
+      "query": "Can dashboard attributes be modified?",
+      "expected_value": "Dashboard settings can be changed",
+      "test_method": "Access dashboard settings and attempt modifications",
+      "failure_indication": "Dashboard attributes locked or unresponsive",
+      "models": [
+        "NEMESIS"
+      ],
+      "related_procedures": [
+        "Dashboard setup",
+        "System configuration"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is manual available in required language?",
+            "expected_value": "Manual present in 11 supported languages",
+            "test_method": "Check manual contains sections for English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587",
+            "failure_indication": "Language support incomplete or missing required translations",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Documentation verification",
+              "Localization compliance"
+            ]
+          },
+          {
+            "query": "Are page numbers correct for each language section?",
+            "expected_value": "English p.3, Deutsch p.8, Espa\u00f1ol p.13, Suomi p.18, Fran\u00e7ais p.23, Italiano p.28, Nederlands p.33, Norsk p.38, Portugu\u00eas p.43, Svenska p.48, \u4e2d\u6587 p.53",
+            "test_method": "Verify page numbers match table of contents",
+            "failure_indication": "Pagination error or missing sections",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Documentation quality control",
+              "Manual assembly verification"
+            ]
+          },
+          {
+            "query": "Is product website accessible?",
+            "expected_value": "www.bandg.com loads and is operational",
+            "test_method": "Attempt to access website URL provided in manual",
+            "failure_indication": "Website unavailable or incorrect URL listed",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Online resource verification",
+              "Technical support access"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "3-3",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Does unit power on when power is applied?",
+            "expected_value": "Unit turns on automatically",
+            "test_method": "Apply power to unit and observe startup",
+            "failure_indication": "Unit remains off when powered - possible power supply issue",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Power system check",
+              "Initial setup"
+            ]
+          },
+          {
+            "query": "Does setup wizard appear on first startup?",
+            "expected_value": "Setup wizard launches automatically",
+            "test_method": "Power on unit after factory reset",
+            "failure_indication": "Missing initial configuration options",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Factory reset",
+              "Initial configuration"
+            ]
+          },
+          {
+            "query": "Does screen auto-lock activate when idle?",
+            "expected_value": "Screen locks after period of inactivity",
+            "test_method": "Leave unit idle and observe lock activation",
+            "failure_indication": "Security feature not functioning",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Screen lock settings",
+              "Security configuration"
+            ]
+          },
+          {
+            "query": "Does landscape orientation unlock work?",
+            "expected_value": "Screen unlocks with right edge swipe",
+            "test_method": "Swipe from right edge when locked",
+            "failure_indication": "Incorrect gesture recognition",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Screen orientation setup",
+              "Lock mechanism test"
+            ]
+          },
+          {
+            "query": "Does portrait orientation unlock work?",
+            "expected_value": "Screen unlocks with bottom swipe",
+            "test_method": "Swipe from bottom when locked",
+            "failure_indication": "Incorrect gesture recognition",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Screen orientation setup",
+              "Lock mechanism test"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "4-4",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is Home screen accessible?",
+            "expected_value": "Home screen appears when Home button is selected",
+            "test_method": "Click Home button and verify screen display",
+            "failure_indication": "Home screen does not appear or is unresponsive",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Basic Navigation",
+              "Screen Access"
+            ]
+          },
+          {
+            "query": "Is Settings button functional?",
+            "expected_value": "System settings menu appears when clicked",
+            "test_method": "Click Settings button and verify settings access",
+            "failure_indication": "Settings menu does not appear or is inaccessible",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "System Configuration",
+              "Settings Access"
+            ]
+          },
+          {
+            "query": "Does Browser button work?",
+            "expected_value": "B&G CPU web server or internet browser opens",
+            "test_method": "Click Browser button and verify web access",
+            "failure_indication": "Browser does not launch or web access fails",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Web Access",
+              "Network Configuration"
+            ]
+          },
+          {
+            "query": "Is active dashboard highlighted?",
+            "expected_value": "Currently active dashboard is highlighted in dashboard bar",
+            "test_method": "Switch between dashboards and verify highlighting",
+            "failure_indication": "Active dashboard not visually indicated",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Navigation",
+              "Display Settings"
+            ]
+          },
+          {
+            "query": "Do pinned dashboards appear?",
+            "expected_value": "User favorite dashboards visible in dashboard bar",
+            "test_method": "Pin dashboard and verify it appears in dashboard bar",
+            "failure_indication": "Pinned dashboards not showing or pin function fails",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Customization",
+              "User Preferences"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "6-6",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Can user edit dashboard from home screen?",
+            "expected_value": "Yes, via press and hold gesture",
+            "test_method": "Press and hold on dashboard tile on home screen",
+            "failure_indication": "Edit menu does not appear after long press",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Management"
+            ]
+          },
+          {
+            "query": "Can all dashboards be edited?",
+            "expected_value": "No, some dashboards have restricted editing",
+            "test_method": "Attempt to edit different dashboard types",
+            "failure_indication": "Edit options appear for restricted dashboards",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Permissions"
+            ]
+          },
+          {
+            "query": "Are gauge settings customizable?",
+            "expected_value": "Yes, via press and hold on gauge",
+            "test_method": "Press and hold on gauge to verify edit options appear",
+            "failure_indication": "No edit options menu appears for gauges",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Gauge Customization"
+            ]
+          },
+          {
+            "query": "What are the available dashboard creation methods?",
+            "expected_value": "Blank dashboard, template, or saved dashboard",
+            "test_method": "Verify all three options present in new dashboard menu",
+            "failure_indication": "Missing one or more creation options",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Creation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "5-5",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Can user pin dashboard to bar via long press?",
+            "expected_value": "Dashboard moves to selected position on bar",
+            "test_method": "Press and hold dashboard on home screen for 3 seconds",
+            "failure_indication": "Dashboard does not respond to long press or cannot be moved to bar",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Management",
+              "Home Screen Navigation"
+            ]
+          },
+          {
+            "query": "Can user unpin dashboard from bar?",
+            "expected_value": "Unpin option appears and dashboard can be removed",
+            "test_method": "Press and hold pinned dashboard on dashboard bar",
+            "failure_indication": "Unpin option does not appear or dashboard cannot be removed",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Management",
+              "Dashboard Bar Configuration"
+            ]
+          },
+          {
+            "query": "Do pinned dashboards respond to horizontal swipe?",
+            "expected_value": "Dashboard view changes when swiping left or right",
+            "test_method": "Swipe horizontally across pinned dashboards",
+            "failure_indication": "No response to swipe or jerky transition between dashboards",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Navigation",
+              "Touch Gesture Controls"
+            ]
+          },
+          {
+            "query": "Can dashboard be pinned to occupied position?",
+            "expected_value": "New dashboard overwrites existing pinned dashboard",
+            "test_method": "Attempt to pin dashboard to position that already contains pinned dashboard",
+            "failure_indication": "Cannot overwrite existing pinned dashboard position",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard Management",
+              "Dashboard Position Configuration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "7-7",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Can Quick access menu be accessed?",
+            "expected_value": "Menu appears when swiping from top edge of display",
+            "test_method": "Swipe finger from top edge of screen downward",
+            "failure_indication": "Quick access menu does not appear, touch functionality may be impaired",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Screen navigation",
+              "Display settings"
+            ]
+          },
+          {
+            "query": "Are gauge settings configurable?",
+            "expected_value": "User can modify gauge data display options",
+            "test_method": "Access gauge settings menu and attempt to change displayed data",
+            "failure_indication": "Unable to customize gauge display",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Gauge configuration",
+              "Dashboard customization"
+            ]
+          },
+          {
+            "query": "Is gauge resizing functional?",
+            "expected_value": "Gauge size can be adjusted",
+            "test_method": "Select gauge resize option and attempt to change dimensions",
+            "failure_indication": "Gauge size cannot be modified",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard layout",
+              "Display customization"
+            ]
+          },
+          {
+            "query": "Can dashboard attributes be modified?",
+            "expected_value": "Dashboard settings can be changed",
+            "test_method": "Access dashboard settings and attempt modifications",
+            "failure_indication": "Dashboard attributes locked or unresponsive",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Dashboard setup",
+              "System configuration"
+            ]
+          },
+          {
+            "query": "Is night/day mode switching functional?",
+            "expected_value": "Display switches between night and day modes",
+            "test_method": "Access Quick menu and toggle night/day mode",
+            "failure_indication": "Display brightness mode does not change",
+            "models": [
+              "NEMESIS"
+            ],
+            "related_procedures": [
+              "Display settings",
+              "Visibility adjustments"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

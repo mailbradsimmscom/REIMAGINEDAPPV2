@@ -1,0 +1,1060 @@
+{
+  "total_chunks_processed": 6,
+  "successful_chunks": 6,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 17,
+  "unique_specifications": 17,
+  "category_breakdown": {
+    "Software": 1,
+    "Support": 1,
+    "Performance": 13,
+    "Installation": 1,
+    "Power": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Language Support",
+      "normalized_parameter": "supported_languages",
+      "parameter_aliases": [
+        "languages",
+        "localization",
+        "translations"
+      ],
+      "value": "11 languages",
+      "range": null,
+      "units": "count",
+      "normalized_units": "count",
+      "converted_value": "11",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Software",
+      "search_terms": [
+        "languages",
+        "language options",
+        "localization",
+        "translations",
+        "supported languages",
+        "interface language"
+      ],
+      "concept_group": "localization",
+      "references": [
+        "Quick Guides section"
+      ]
+    },
+    {
+      "parameter": "Website",
+      "normalized_parameter": "manufacturer_website",
+      "parameter_aliases": [
+        "url",
+        "web address",
+        "site"
+      ],
+      "value": "www.bandg.com",
+      "range": null,
+      "units": "url",
+      "normalized_units": "url",
+      "converted_value": "www.bandg.com",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Support",
+      "search_terms": [
+        "website",
+        "support site",
+        "manufacturer site",
+        "bandg.com",
+        "web address",
+        "url"
+      ],
+      "concept_group": "support_resources",
+      "references": [
+        "Quick Guides footer"
+      ]
+    },
+    {
+      "parameter": "Screen Navigation Elements",
+      "normalized_parameter": "ui_navigation_elements",
+      "parameter_aliases": [
+        "interface controls",
+        "navigation buttons",
+        "screen controls"
+      ],
+      "value": "5 primary elements",
+      "range": null,
+      "units": "elements",
+      "normalized_units": "count",
+      "converted_value": "5",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "home screen",
+        "dashboard",
+        "navigation",
+        "buttons",
+        "controls",
+        "interface",
+        "menu"
+      ],
+      "concept_group": "user_interface",
+      "references": [
+        "Page 4"
+      ]
+    },
+    {
+      "parameter": "Dashboard Bar Components",
+      "normalized_parameter": "dashboard_bar_elements",
+      "parameter_aliases": [
+        "dashboard controls",
+        "quick access bar"
+      ],
+      "value": "4 components",
+      "range": null,
+      "units": "components",
+      "normalized_units": "count",
+      "converted_value": "4",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "dashboard bar",
+        "lock button",
+        "pinned dashboards",
+        "recent dashboards",
+        "home button"
+      ],
+      "concept_group": "user_interface",
+      "references": [
+        "Page 4"
+      ]
+    },
+    {
+      "parameter": "Web Browser Compatibility",
+      "normalized_parameter": "browser_compatibility",
+      "parameter_aliases": [
+        "internet access",
+        "web access"
+      ],
+      "value": "B&G CPU web server and internet browsing",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "browser",
+        "internet",
+        "web server",
+        "B&G CPU",
+        "web access",
+        "connectivity"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "Page 4"
+      ]
+    },
+    {
+      "parameter": "Screen Orientation",
+      "normalized_parameter": "display_orientation",
+      "parameter_aliases": [
+        "screen rotation",
+        "display mode",
+        "screen layout"
+      ],
+      "value": "Landscape or Portrait",
+      "range": "2 positions",
+      "units": "orientation",
+      "normalized_units": "degrees",
+      "converted_value": "0/90",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "screen orientation",
+        "display rotation",
+        "portrait mode",
+        "landscape mode",
+        "screen position",
+        "display layout"
+      ],
+      "concept_group": "display_settings",
+      "references": [
+        "Quick Guide p.3"
+      ]
+    },
+    {
+      "parameter": "Screen Lock Timeout",
+      "normalized_parameter": "screen_lock_timeout",
+      "parameter_aliases": [
+        "auto lock",
+        "display timeout",
+        "screen timeout"
+      ],
+      "value": "Configurable",
+      "range": "User defined",
+      "units": "time",
+      "normalized_units": "seconds",
+      "converted_value": "variable",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "screen lock",
+        "auto lock",
+        "display timeout",
+        "screen timeout",
+        "lock settings",
+        "idle timeout"
+      ],
+      "concept_group": "security_settings",
+      "references": [
+        "Quick Guide p.3"
+      ]
+    },
+    {
+      "parameter": "Power State",
+      "normalized_parameter": "power_state",
+      "parameter_aliases": [
+        "power status",
+        "system state",
+        "on/off status"
+      ],
+      "value": "Auto-on with power",
+      "range": "On/Off",
+      "units": "state",
+      "normalized_units": "binary",
+      "converted_value": "1/0",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power on",
+        "startup",
+        "system power",
+        "boot up",
+        "power state",
+        "turn on"
+      ],
+      "concept_group": "power_management",
+      "references": [
+        "Quick Guide p.3"
+      ]
+    },
+    {
+      "parameter": "Dashboard Navigation",
+      "normalized_parameter": "dashboard_navigation",
+      "parameter_aliases": [
+        "dashboard switching",
+        "dashboard control",
+        "dashboard movement"
+      ],
+      "value": "swipe left/right",
+      "range": "bidirectional",
+      "units": "gesture",
+      "normalized_units": "gesture",
+      "converted_value": "swipe",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how to change dashboards",
+        "dashboard navigation",
+        "switch between dashboards",
+        "swipe dashboards",
+        "move between dashboards"
+      ],
+      "concept_group": "user_interface",
+      "references": [
+        "Quick Guide - EN, p.5"
+      ]
+    },
+    {
+      "parameter": "Dashboard Pin Action",
+      "normalized_parameter": "dashboard_pin_action",
+      "parameter_aliases": [
+        "pin dashboard",
+        "dashboard pinning",
+        "dashboard attachment"
+      ],
+      "value": "press and hold",
+      "range": "single gesture",
+      "units": "gesture",
+      "normalized_units": "gesture",
+      "converted_value": "long press",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how to pin dashboard",
+        "pin to dashboard bar",
+        "dashboard customization",
+        "dashboard position",
+        "pin dashboard location"
+      ],
+      "concept_group": "user_interface",
+      "references": [
+        "Quick Guide - EN, p.5"
+      ]
+    },
+    {
+      "parameter": "Dashboard Unpin Action",
+      "normalized_parameter": "dashboard_unpin_action",
+      "parameter_aliases": [
+        "unpin dashboard",
+        "dashboard removal",
+        "dashboard detachment"
+      ],
+      "value": "press and hold",
+      "range": "single gesture",
+      "units": "gesture",
+      "normalized_units": "gesture",
+      "converted_value": "long press",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how to unpin dashboard",
+        "remove from dashboard bar",
+        "delete dashboard",
+        "unpin from favorites",
+        "dashboard removal"
+      ],
+      "concept_group": "user_interface",
+      "references": [
+        "Quick Guide - EN, p.5"
+      ]
+    },
+    {
+      "parameter": "Maximum Dashboards",
+      "normalized_parameter": "max_dashboards",
+      "parameter_aliases": [
+        "dashboard_limit",
+        "dashboard_count",
+        "max_layouts"
+      ],
+      "value": "Not specified",
+      "range": null,
+      "units": "count",
+      "normalized_units": "count",
+      "converted_value": null,
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how many dashboards",
+        "dashboard limit",
+        "maximum number of dashboards",
+        "dashboard capacity"
+      ],
+      "concept_group": "display_configuration",
+      "references": [
+        "p.6"
+      ]
+    },
+    {
+      "parameter": "Dashboard Types",
+      "normalized_parameter": "dashboard_types",
+      "parameter_aliases": [
+        "dashboard_templates",
+        "layout_options"
+      ],
+      "value": "blank, template, saved",
+      "range": null,
+      "units": "types",
+      "normalized_units": "types",
+      "converted_value": null,
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "dashboard types",
+        "dashboard templates",
+        "dashboard options",
+        "layout types",
+        "dashboard creation options"
+      ],
+      "concept_group": "display_configuration",
+      "references": [
+        "p.6"
+      ]
+    },
+    {
+      "parameter": "Customizable Elements",
+      "normalized_parameter": "customizable_elements",
+      "parameter_aliases": [
+        "gauge_settings",
+        "configurable_components"
+      ],
+      "value": "gauges",
+      "range": null,
+      "units": "element_types",
+      "normalized_units": "element_types",
+      "converted_value": null,
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "what can be customized",
+        "gauge customization",
+        "customizable elements",
+        "dashboard components"
+      ],
+      "concept_group": "display_configuration",
+      "references": [
+        "p.6"
+      ]
+    },
+    {
+      "parameter": "Screen Brightness Control",
+      "normalized_parameter": "display_brightness",
+      "parameter_aliases": [
+        "brightness",
+        "screen brightness",
+        "display intensity"
+      ],
+      "value": "Variable",
+      "range": "0-100%",
+      "units": "percent",
+      "normalized_units": "percent",
+      "converted_value": "N/A",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "brightness",
+        "screen brightness",
+        "display brightness",
+        "dim screen",
+        "brighten screen",
+        "adjust brightness"
+      ],
+      "concept_group": "display_settings",
+      "references": [
+        "Quick access menu section"
+      ]
+    },
+    {
+      "parameter": "Display Mode Options",
+      "normalized_parameter": "display_mode",
+      "parameter_aliases": [
+        "screen mode",
+        "day/night mode",
+        "display theme"
+      ],
+      "value": "Day/Night",
+      "range": "N/A",
+      "units": "mode",
+      "normalized_units": "mode",
+      "converted_value": "N/A",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "night mode",
+        "day mode",
+        "display mode",
+        "screen mode",
+        "dark mode",
+        "light mode"
+      ],
+      "concept_group": "display_settings",
+      "references": [
+        "Quick access menu section"
+      ]
+    },
+    {
+      "parameter": "Display Resize Function",
+      "normalized_parameter": "display_resize",
+      "parameter_aliases": [
+        "gauge size",
+        "resize gauge",
+        "display size"
+      ],
+      "value": "Variable",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "resize",
+        "gauge size",
+        "change size",
+        "display size",
+        "resize gauge"
+      ],
+      "concept_group": "display_settings",
+      "references": [
+        "Section B"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Language Support",
+            "normalized_parameter": "supported_languages",
+            "parameter_aliases": [
+              "languages",
+              "localization",
+              "translations"
+            ],
+            "value": "11 languages",
+            "range": null,
+            "units": "count",
+            "normalized_units": "count",
+            "converted_value": "11",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Software",
+            "search_terms": [
+              "languages",
+              "language options",
+              "localization",
+              "translations",
+              "supported languages",
+              "interface language"
+            ],
+            "concept_group": "localization",
+            "references": [
+              "Quick Guides section"
+            ]
+          },
+          {
+            "parameter": "Website",
+            "normalized_parameter": "manufacturer_website",
+            "parameter_aliases": [
+              "url",
+              "web address",
+              "site"
+            ],
+            "value": "www.bandg.com",
+            "range": null,
+            "units": "url",
+            "normalized_units": "url",
+            "converted_value": "www.bandg.com",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Support",
+            "search_terms": [
+              "website",
+              "support site",
+              "manufacturer site",
+              "bandg.com",
+              "web address",
+              "url"
+            ],
+            "concept_group": "support_resources",
+            "references": [
+              "Quick Guides footer"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Screen Navigation Elements",
+            "normalized_parameter": "ui_navigation_elements",
+            "parameter_aliases": [
+              "interface controls",
+              "navigation buttons",
+              "screen controls"
+            ],
+            "value": "5 primary elements",
+            "range": null,
+            "units": "elements",
+            "normalized_units": "count",
+            "converted_value": "5",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "home screen",
+              "dashboard",
+              "navigation",
+              "buttons",
+              "controls",
+              "interface",
+              "menu"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Page 4"
+            ]
+          },
+          {
+            "parameter": "Dashboard Bar Components",
+            "normalized_parameter": "dashboard_bar_elements",
+            "parameter_aliases": [
+              "dashboard controls",
+              "quick access bar"
+            ],
+            "value": "4 components",
+            "range": null,
+            "units": "components",
+            "normalized_units": "count",
+            "converted_value": "4",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "dashboard bar",
+              "lock button",
+              "pinned dashboards",
+              "recent dashboards",
+              "home button"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Page 4"
+            ]
+          },
+          {
+            "parameter": "Web Browser Compatibility",
+            "normalized_parameter": "browser_compatibility",
+            "parameter_aliases": [
+              "internet access",
+              "web access"
+            ],
+            "value": "B&G CPU web server and internet browsing",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "browser",
+              "internet",
+              "web server",
+              "B&G CPU",
+              "web access",
+              "connectivity"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Page 4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "3-3",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Screen Orientation",
+            "normalized_parameter": "display_orientation",
+            "parameter_aliases": [
+              "screen rotation",
+              "display mode",
+              "screen layout"
+            ],
+            "value": "Landscape or Portrait",
+            "range": "2 positions",
+            "units": "orientation",
+            "normalized_units": "degrees",
+            "converted_value": "0/90",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "screen orientation",
+              "display rotation",
+              "portrait mode",
+              "landscape mode",
+              "screen position",
+              "display layout"
+            ],
+            "concept_group": "display_settings",
+            "references": [
+              "Quick Guide p.3"
+            ]
+          },
+          {
+            "parameter": "Screen Lock Timeout",
+            "normalized_parameter": "screen_lock_timeout",
+            "parameter_aliases": [
+              "auto lock",
+              "display timeout",
+              "screen timeout"
+            ],
+            "value": "Configurable",
+            "range": "User defined",
+            "units": "time",
+            "normalized_units": "seconds",
+            "converted_value": "variable",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "screen lock",
+              "auto lock",
+              "display timeout",
+              "screen timeout",
+              "lock settings",
+              "idle timeout"
+            ],
+            "concept_group": "security_settings",
+            "references": [
+              "Quick Guide p.3"
+            ]
+          },
+          {
+            "parameter": "Power State",
+            "normalized_parameter": "power_state",
+            "parameter_aliases": [
+              "power status",
+              "system state",
+              "on/off status"
+            ],
+            "value": "Auto-on with power",
+            "range": "On/Off",
+            "units": "state",
+            "normalized_units": "binary",
+            "converted_value": "1/0",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power on",
+              "startup",
+              "system power",
+              "boot up",
+              "power state",
+              "turn on"
+            ],
+            "concept_group": "power_management",
+            "references": [
+              "Quick Guide p.3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "5-5",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Dashboard Navigation",
+            "normalized_parameter": "dashboard_navigation",
+            "parameter_aliases": [
+              "dashboard switching",
+              "dashboard control",
+              "dashboard movement"
+            ],
+            "value": "swipe left/right",
+            "range": "bidirectional",
+            "units": "gesture",
+            "normalized_units": "gesture",
+            "converted_value": "swipe",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how to change dashboards",
+              "dashboard navigation",
+              "switch between dashboards",
+              "swipe dashboards",
+              "move between dashboards"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Quick Guide - EN, p.5"
+            ]
+          },
+          {
+            "parameter": "Dashboard Pin Action",
+            "normalized_parameter": "dashboard_pin_action",
+            "parameter_aliases": [
+              "pin dashboard",
+              "dashboard pinning",
+              "dashboard attachment"
+            ],
+            "value": "press and hold",
+            "range": "single gesture",
+            "units": "gesture",
+            "normalized_units": "gesture",
+            "converted_value": "long press",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how to pin dashboard",
+              "pin to dashboard bar",
+              "dashboard customization",
+              "dashboard position",
+              "pin dashboard location"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Quick Guide - EN, p.5"
+            ]
+          },
+          {
+            "parameter": "Dashboard Unpin Action",
+            "normalized_parameter": "dashboard_unpin_action",
+            "parameter_aliases": [
+              "unpin dashboard",
+              "dashboard removal",
+              "dashboard detachment"
+            ],
+            "value": "press and hold",
+            "range": "single gesture",
+            "units": "gesture",
+            "normalized_units": "gesture",
+            "converted_value": "long press",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how to unpin dashboard",
+              "remove from dashboard bar",
+              "delete dashboard",
+              "unpin from favorites",
+              "dashboard removal"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Quick Guide - EN, p.5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "6-6",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Dashboards",
+            "normalized_parameter": "max_dashboards",
+            "parameter_aliases": [
+              "dashboard_limit",
+              "dashboard_count",
+              "max_layouts"
+            ],
+            "value": "Not specified",
+            "range": null,
+            "units": "count",
+            "normalized_units": "count",
+            "converted_value": null,
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how many dashboards",
+              "dashboard limit",
+              "maximum number of dashboards",
+              "dashboard capacity"
+            ],
+            "concept_group": "display_configuration",
+            "references": [
+              "p.6"
+            ]
+          },
+          {
+            "parameter": "Dashboard Types",
+            "normalized_parameter": "dashboard_types",
+            "parameter_aliases": [
+              "dashboard_templates",
+              "layout_options"
+            ],
+            "value": "blank, template, saved",
+            "range": null,
+            "units": "types",
+            "normalized_units": "types",
+            "converted_value": null,
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "dashboard types",
+              "dashboard templates",
+              "dashboard options",
+              "layout types",
+              "dashboard creation options"
+            ],
+            "concept_group": "display_configuration",
+            "references": [
+              "p.6"
+            ]
+          },
+          {
+            "parameter": "Customizable Elements",
+            "normalized_parameter": "customizable_elements",
+            "parameter_aliases": [
+              "gauge_settings",
+              "configurable_components"
+            ],
+            "value": "gauges",
+            "range": null,
+            "units": "element_types",
+            "normalized_units": "element_types",
+            "converted_value": null,
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "what can be customized",
+              "gauge customization",
+              "customizable elements",
+              "dashboard components"
+            ],
+            "concept_group": "display_configuration",
+            "references": [
+              "p.6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "7-7",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Screen Brightness Control",
+            "normalized_parameter": "display_brightness",
+            "parameter_aliases": [
+              "brightness",
+              "screen brightness",
+              "display intensity"
+            ],
+            "value": "Variable",
+            "range": "0-100%",
+            "units": "percent",
+            "normalized_units": "percent",
+            "converted_value": "N/A",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "brightness",
+              "screen brightness",
+              "display brightness",
+              "dim screen",
+              "brighten screen",
+              "adjust brightness"
+            ],
+            "concept_group": "display_settings",
+            "references": [
+              "Quick access menu section"
+            ]
+          },
+          {
+            "parameter": "Display Mode Options",
+            "normalized_parameter": "display_mode",
+            "parameter_aliases": [
+              "screen mode",
+              "day/night mode",
+              "display theme"
+            ],
+            "value": "Day/Night",
+            "range": "N/A",
+            "units": "mode",
+            "normalized_units": "mode",
+            "converted_value": "N/A",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "night mode",
+              "day mode",
+              "display mode",
+              "screen mode",
+              "dark mode",
+              "light mode"
+            ],
+            "concept_group": "display_settings",
+            "references": [
+              "Quick access menu section"
+            ]
+          },
+          {
+            "parameter": "Display Resize Function",
+            "normalized_parameter": "display_resize",
+            "parameter_aliases": [
+              "gauge size",
+              "resize gauge",
+              "display size"
+            ],
+            "value": "Variable",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "resize",
+              "gauge size",
+              "change size",
+              "display size",
+              "resize gauge"
+            ],
+            "concept_group": "display_settings",
+            "references": [
+              "Section B"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

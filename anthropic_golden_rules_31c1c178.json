@@ -2,9 +2,61 @@
   "total_chunks_processed": 22,
   "successful_chunks": 22,
   "failed_chunks": 0,
-  "total_golden_rules_extracted": 137,
+  "total_golden_rules_extracted": 134,
   "unique_golden_rules": 25,
   "golden_rules": [
+    {
+      "query": "Is grill properly connected to power source?",
+      "expected_value": "48VDC power supply connected and LED indicator lit",
+      "test_method": "Visual inspection of power connection and LED status",
+      "failure_indication": "No power to unit, LED unlit, grill non-functional",
+      "models": [
+        "48VDC Single Zone Grill"
+      ],
+      "related_procedures": [
+        "Initial Installation",
+        "Power Supply Check"
+      ]
+    },
+    {
+      "query": "Does touch control panel respond to input?",
+      "expected_value": "Panel illuminates and responds to touch within 1 second",
+      "test_method": "Press power button and observe response",
+      "failure_indication": "Control panel unresponsive or delayed response indicates system fault",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKEN Touch"
+      ],
+      "related_procedures": [
+        "Control Panel Test",
+        "User Interface Verification"
+      ]
+    },
+    {
+      "query": "Is temperature display accurate?",
+      "expected_value": "Display shows actual temperature within +/- 5\u00b0F",
+      "test_method": "Compare display reading with calibrated temperature probe",
+      "failure_indication": "Inaccurate temperature reading indicates sensor failure",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKEN Touch"
+      ],
+      "related_procedures": [
+        "Temperature Calibration",
+        "Sensor Testing"
+      ]
+    },
+    {
+      "query": "Does auto-shutoff function work?",
+      "expected_value": "Unit powers down after 90 minutes of continuous operation",
+      "test_method": "Run unit for 90 minutes and verify shutdown",
+      "failure_indication": "Failure to auto-shutoff indicates safety system malfunction",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKEN Touch"
+      ],
+      "related_procedures": [
+        "Safety System Check",
+        "Timer Verification"
+      ]
+    },
     {
       "query": "Is electrical supply adequate for installation?",
       "expected_value": "Matches nameplate voltage and amperage requirements",
@@ -34,7 +86,7 @@
     {
       "query": "Does automatic shut-off activate?",
       "expected_value": "Unit powers down after preset time limit",
-      "test_method": "Run unit until auto shut-off time",
+      "test_method": "Run unit until auto shut-off time is reached",
       "failure_indication": "Safety feature failure if unit continues running",
       "models": [
         "All Kenyon grills"
@@ -68,71 +120,6 @@
       "related_procedures": [
         "Drain Connection",
         "Installation"
-      ]
-    },
-    {
-      "query": "Is grill properly connected to power source?",
-      "expected_value": "48VDC power supply connected and LED indicator lit",
-      "test_method": "Visual inspection of power connection and LED status",
-      "failure_indication": "No power to unit, LED unlit, grill non-functional",
-      "models": [
-        "48VDC Single Zone Grill"
-      ],
-      "related_procedures": [
-        "Initial Installation",
-        "Power Supply Check"
-      ]
-    },
-    {
-      "query": "Does touch control panel respond to input?",
-      "expected_value": "Panel illuminates and responds to touch within 1 second",
-      "test_method": "Press power button and observe response",
-      "failure_indication": "Control panel unresponsive or delayed response",
-      "models": [
-        "48VDC Single Zone Grill with IntelliKEN Touch"
-      ],
-      "related_procedures": [
-        "User Interface Test",
-        "Control Panel Diagnostics"
-      ]
-    },
-    {
-      "query": "Is temperature display accurate?",
-      "expected_value": "Display shows actual temperature within \u00b15\u00b0F",
-      "test_method": "Compare display reading with calibrated temperature probe",
-      "failure_indication": "Inaccurate temperature readings, inconsistent heating",
-      "models": [
-        "48VDC Single Zone Grill with IntelliKEN Touch"
-      ],
-      "related_procedures": [
-        "Temperature Calibration",
-        "Sensor Testing"
-      ]
-    },
-    {
-      "query": "Does auto-shutoff function work?",
-      "expected_value": "Unit powers down after 90 minutes of continuous operation",
-      "test_method": "Run unit for 90 minutes and verify shutdown",
-      "failure_indication": "Unit fails to shut off automatically",
-      "models": [
-        "48VDC Single Zone Grill with IntelliKEN Touch"
-      ],
-      "related_procedures": [
-        "Safety Feature Verification",
-        "Timer Testing"
-      ]
-    },
-    {
-      "query": "Is heating element functioning properly?",
-      "expected_value": "Even heat distribution across cooking surface",
-      "test_method": "Thermal imaging scan of cooking surface",
-      "failure_indication": "Hot spots or cold zones on cooking surface",
-      "models": [
-        "48VDC Single Zone Grill"
-      ],
-      "related_procedures": [
-        "Heating Element Test",
-        "Performance Verification"
       ]
     },
     {
@@ -185,7 +172,7 @@
     },
     {
       "query": "Is minimum water level maintained in drip tray?",
-      "expected_value": "At least 2 cups of water in disposable drip tray",
+      "expected_value": "Minimum 2 cups water in disposable drip tray",
       "test_method": "Measure water volume in drip tray",
       "failure_indication": "Fire risk from insufficient water",
       "models": [
@@ -322,9 +309,81 @@
         "Current Testing",
         "Load Analysis"
       ]
+    },
+    {
+      "query": "Confirm B70770 power output",
+      "expected_value": "1300 Watts",
+      "test_method": "Calculate power output under load",
+      "failure_indication": "Insufficient heating capacity",
+      "models": [
+        "B70770"
+      ],
+      "related_procedures": [
+        "Performance Testing"
+      ]
     }
   ],
   "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is grill properly connected to power source?",
+            "expected_value": "48VDC power supply connected and LED indicator lit",
+            "test_method": "Visual inspection of power connection and LED status",
+            "failure_indication": "No power to unit, LED unlit, grill non-functional",
+            "models": [
+              "48VDC Single Zone Grill"
+            ],
+            "related_procedures": [
+              "Initial Installation",
+              "Power Supply Check"
+            ]
+          },
+          {
+            "query": "Does touch control panel respond to input?",
+            "expected_value": "Panel illuminates and responds to touch within 1 second",
+            "test_method": "Press power button and observe response",
+            "failure_indication": "Control panel unresponsive or delayed response indicates system fault",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Control Panel Test",
+              "User Interface Verification"
+            ]
+          },
+          {
+            "query": "Is temperature display accurate?",
+            "expected_value": "Display shows actual temperature within +/- 5\u00b0F",
+            "test_method": "Compare display reading with calibrated temperature probe",
+            "failure_indication": "Inaccurate temperature reading indicates sensor failure",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Temperature Calibration",
+              "Sensor Testing"
+            ]
+          },
+          {
+            "query": "Does auto-shutoff function work?",
+            "expected_value": "Unit powers down after 90 minutes of continuous operation",
+            "test_method": "Run unit for 90 minutes and verify shutdown",
+            "failure_indication": "Failure to auto-shutoff indicates safety system malfunction",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Safety System Check",
+              "Timer Verification"
+            ]
+          }
+        ]
+      }
+    },
     {
       "chunk_num": 2,
       "pages": "2-2",
@@ -359,7 +418,7 @@
           {
             "query": "Does automatic shut-off activate?",
             "expected_value": "Unit powers down after preset time limit",
-            "test_method": "Run unit until auto shut-off time",
+            "test_method": "Run unit until auto shut-off time is reached",
             "failure_indication": "Safety feature failure if unit continues running",
             "models": [
               "All Kenyon grills"
@@ -393,79 +452,6 @@
             "related_procedures": [
               "Drain Connection",
               "Installation"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 1,
-      "pages": "1-1",
-      "result": {
-        "golden_rules": [
-          {
-            "query": "Is grill properly connected to power source?",
-            "expected_value": "48VDC power supply connected and LED indicator lit",
-            "test_method": "Visual inspection of power connection and LED status",
-            "failure_indication": "No power to unit, LED unlit, grill non-functional",
-            "models": [
-              "48VDC Single Zone Grill"
-            ],
-            "related_procedures": [
-              "Initial Installation",
-              "Power Supply Check"
-            ]
-          },
-          {
-            "query": "Does touch control panel respond to input?",
-            "expected_value": "Panel illuminates and responds to touch within 1 second",
-            "test_method": "Press power button and observe response",
-            "failure_indication": "Control panel unresponsive or delayed response",
-            "models": [
-              "48VDC Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "User Interface Test",
-              "Control Panel Diagnostics"
-            ]
-          },
-          {
-            "query": "Is temperature display accurate?",
-            "expected_value": "Display shows actual temperature within \u00b15\u00b0F",
-            "test_method": "Compare display reading with calibrated temperature probe",
-            "failure_indication": "Inaccurate temperature readings, inconsistent heating",
-            "models": [
-              "48VDC Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "Temperature Calibration",
-              "Sensor Testing"
-            ]
-          },
-          {
-            "query": "Does auto-shutoff function work?",
-            "expected_value": "Unit powers down after 90 minutes of continuous operation",
-            "test_method": "Run unit for 90 minutes and verify shutdown",
-            "failure_indication": "Unit fails to shut off automatically",
-            "models": [
-              "48VDC Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "Safety Feature Verification",
-              "Timer Testing"
-            ]
-          },
-          {
-            "query": "Is heating element functioning properly?",
-            "expected_value": "Even heat distribution across cooking surface",
-            "test_method": "Thermal imaging scan of cooking surface",
-            "failure_indication": "Hot spots or cold zones on cooking surface",
-            "models": [
-              "48VDC Single Zone Grill"
-            ],
-            "related_procedures": [
-              "Heating Element Test",
-              "Performance Verification"
             ]
           }
         ]
@@ -526,7 +512,7 @@
           },
           {
             "query": "Is minimum water level maintained in drip tray?",
-            "expected_value": "At least 2 cups of water in disposable drip tray",
+            "expected_value": "Minimum 2 cups water in disposable drip tray",
             "test_method": "Measure water volume in drip tray",
             "failure_indication": "Fire risk from insufficient water",
             "models": [
@@ -683,20 +669,20 @@
           {
             "query": "Confirm B70770 power output",
             "expected_value": "1300 Watts",
-            "test_method": "Measure power output at full operation",
+            "test_method": "Calculate power output under load",
             "failure_indication": "Insufficient heating capacity",
             "models": [
               "B70770"
             ],
             "related_procedures": [
-              "Power Output Verification"
+              "Performance Testing"
             ]
           },
           {
-            "query": "Check B70770 installation clearance dimensions",
-            "expected_value": "19 3/4\" width x 11 5/8\" depth with 1/4\" radius",
+            "query": "Check B70770 installation clearance",
+            "expected_value": "Cutout dimensions 19 3/4\" x 11 5/8\" with 1/4\" radius",
             "test_method": "Measure cutout dimensions",
-            "failure_indication": "Improper fit, installation issues",
+            "failure_indication": "Improper fit, potential heat management issues",
             "models": [
               "B70770"
             ],
@@ -733,13 +719,13 @@
           {
             "query": "Confirm B70772 power output",
             "expected_value": "1300 Watts",
-            "test_method": "Measure power output at full operation",
+            "test_method": "Calculate power output under load",
             "failure_indication": "Insufficient heating capacity",
             "models": [
               "B70772"
             ],
             "related_procedures": [
-              "Power Output Verification"
+              "Performance Testing"
             ]
           }
         ]
@@ -752,23 +738,23 @@
         "golden_rules": [
           {
             "query": "Is grill properly grounded?",
-            "expected_value": "Grounded by qualified electrician",
-            "test_method": "Professional inspection",
-            "failure_indication": "Risk of electrical shock",
+            "expected_value": "Grounded installation by qualified electrician",
+            "test_method": "Professional inspection of electrical connections",
+            "failure_indication": "Risk of electrical hazard",
             "models": [
-              "All Kenyon grills"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Installation"
+              "Installation requirements"
             ]
           },
           {
-            "query": "What is the power supply rating?",
+            "query": "What is the power supply specification?",
             "expected_value": "DC power with 30-amp circuit breaker protection",
-            "test_method": "Verify circuit breaker rating",
+            "test_method": "Verify circuit breaker rating and type",
             "failure_indication": "Improper power supply protection",
             "models": [
-              "All Kenyon grills"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
               "Electrical installation"
@@ -776,100 +762,86 @@
           },
           {
             "query": "Is RCD protection present?",
-            "expected_value": "RCD with rated residual current not exceeding 30A",
-            "test_method": "Verify RCD specifications",
-            "failure_indication": "Missing safety protection",
+            "expected_value": "RCD with rated residual operating current not exceeding 30A",
+            "test_method": "Verify RCD specifications and test operation",
+            "failure_indication": "Missing or improper ground fault protection",
             "models": [
-              "All Kenyon grills"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Electrical installation"
+              "Electrical safety checks"
             ]
           },
           {
-            "query": "Power cord condition",
-            "expected_value": "No visible damage or wear",
-            "test_method": "Visual inspection of wires",
-            "failure_indication": "Damaged cord - appliance must not be used",
+            "query": "Are power cords intact?",
+            "expected_value": "No visible damage to power wires",
+            "test_method": "Visual inspection of all power cords",
+            "failure_indication": "Damaged cords require appliance shutdown",
             "models": [
-              "All Kenyon grills"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Maintenance",
-              "Safety check"
+              "Regular maintenance checks"
             ]
           },
           {
-            "query": "Drip tray liquid level",
-            "expected_value": "2 cups of liquid",
-            "test_method": "Measure liquid volume in drip tray",
-            "failure_indication": "Risk of grease fire",
+            "query": "Is drip tray properly installed?",
+            "expected_value": "Drip tray inserted with 2 cups of liquid",
+            "test_method": "Visual inspection of drip tray placement and liquid level",
+            "failure_indication": "Risk of grease fire or improper operation",
             "models": [
-              "IntelliKEN Touch"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Pre-operation check",
-              "Cleaning"
+              "Pre-operation checklist"
             ]
           },
           {
-            "query": "Preheat temperature reached",
-            "expected_value": "5-7 minutes with lid closed",
-            "test_method": "Time preheat duration",
-            "failure_indication": "Insufficient cooking temperature",
-            "models": [
-              "IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "Operation"
-            ]
-          },
-          {
-            "query": "Temperature setting for vegetables",
+            "query": "What is vegetable cooking temperature?",
             "expected_value": "350\u00b0F or Power setting 4",
-            "test_method": "Verify control setting",
+            "test_method": "Verify temperature/power setting on control panel",
             "failure_indication": "Incorrect cooking temperature",
             "models": [
-              "IntelliKEN Touch"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Temperature control"
+              "Temperature guidelines"
             ]
           },
           {
-            "query": "Temperature setting for chicken/pork/fish",
+            "query": "What is poultry/pork/fish cooking temperature?",
             "expected_value": "400\u00b0F or Power setting 5",
-            "test_method": "Verify control setting",
+            "test_method": "Verify temperature/power setting on control panel",
             "failure_indication": "Incorrect cooking temperature",
             "models": [
-              "IntelliKEN Touch"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Temperature control"
+              "Temperature guidelines"
             ]
           },
           {
-            "query": "Temperature setting for hamburgers",
+            "query": "What is hamburger cooking temperature?",
             "expected_value": "500\u00b0F or Power setting 9",
-            "test_method": "Verify control setting",
+            "test_method": "Verify temperature/power setting on control panel",
             "failure_indication": "Incorrect cooking temperature",
             "models": [
-              "IntelliKEN Touch"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Temperature control"
+              "Temperature guidelines"
             ]
           },
           {
-            "query": "Temperature setting for steak",
+            "query": "What is steak cooking temperature?",
             "expected_value": "550\u00b0F or Power setting 16",
-            "test_method": "Verify control setting",
+            "test_method": "Verify temperature/power setting on control panel",
             "failure_indication": "Incorrect cooking temperature",
             "models": [
-              "IntelliKEN Touch"
+              "All Kenyon IntelliKEN Touch grills"
             ],
             "related_procedures": [
-              "Temperature control"
+              "Temperature guidelines"
             ]
           }
         ]
@@ -903,7 +875,7 @@
             ],
             "related_procedures": [
               "Current Testing",
-              "Electrical Troubleshooting"
+              "Troubleshooting"
             ]
           },
           {
@@ -949,7 +921,7 @@
             "query": "Is drain fitting height correct?",
             "expected_value": "1 inch",
             "test_method": "Measure height of drain fitting",
-            "failure_indication": "Incorrect drain height may cause drainage issues",
+            "failure_indication": "Incorrect drain height may affect drainage performance",
             "models": [
               "B70760"
             ],
@@ -996,7 +968,7 @@
             "query": "Is touch control area clean and sealed?",
             "expected_value": "Ceramic glass is clean and seal intact",
             "test_method": "Visual inspection and glass cleaner application",
-            "failure_indication": "Stains present or seal compromised",
+            "failure_indication": "Stains present or seal compromise visible",
             "models": [
               "All Kenyon Grills with Touch Controls"
             ],
@@ -1027,7 +999,7 @@
               "All Kenyon Grills"
             ],
             "related_procedures": [
-              "Cooking preparation",
+              "Grill operation",
               "Temperature management"
             ]
           }
@@ -1042,7 +1014,7 @@
           {
             "query": "What utensils must be used for grilling?",
             "expected_value": "High temperature plastic utensils only",
-            "test_method": "Visual inspection of utensils being used",
+            "test_method": "Visual inspection of utensils before use",
             "failure_indication": "Risk of surface damage or melting if incorrect utensils used",
             "models": [
               "All Kenyon grills"
@@ -1055,20 +1027,20 @@
           {
             "query": "Is drip tray properly installed?",
             "expected_value": "Drip tray fully inserted and element bracket resting on support bracket",
-            "test_method": "Visual inspection of drip tray position",
+            "test_method": "Visual inspection before operation",
             "failure_indication": "Improper heating and potential fire hazard",
             "models": [
               "All Kenyon grills"
             ],
             "related_procedures": [
               "Pre-operation setup",
-              "Safety checks"
+              "Safety check"
             ]
           },
           {
-            "query": "Is there liquid in drip tray before use?",
-            "expected_value": "Non-flammable liquid present in drip tray bottom",
-            "test_method": "Visual check of drip tray before operation",
+            "query": "Is liquid present in drip tray before use?",
+            "expected_value": "Water or non-flammable liquid covering bottom of tray",
+            "test_method": "Visual inspection before grilling",
             "failure_indication": "Risk of smoke and improper cooking",
             "models": [
               "All Kenyon grills"
@@ -1080,7 +1052,7 @@
           {
             "query": "What is the correct preheat temperature for steaks?",
             "expected_value": "550\u00b0F / Power setting 16",
-            "test_method": "Temperature gauge reading",
+            "test_method": "Temperature gauge reading after 5-7 minutes preheat",
             "failure_indication": "Improper cooking temperature",
             "models": [
               "All Kenyon grills"
@@ -1093,7 +1065,7 @@
           {
             "query": "What is the correct preheat temperature for burgers?",
             "expected_value": "500\u00b0F / Power setting 9",
-            "test_method": "Temperature gauge reading",
+            "test_method": "Temperature gauge reading after 5-7 minutes preheat",
             "failure_indication": "Improper cooking temperature",
             "models": [
               "All Kenyon grills"
@@ -1106,7 +1078,7 @@
           {
             "query": "What is the correct preheat temperature for pork and fish?",
             "expected_value": "400\u00b0F / Power setting 5",
-            "test_method": "Temperature gauge reading",
+            "test_method": "Temperature gauge reading after 5-7 minutes preheat",
             "failure_indication": "Improper cooking temperature",
             "models": [
               "All Kenyon grills"
@@ -1119,7 +1091,7 @@
           {
             "query": "What is the correct preheat temperature for vegetables?",
             "expected_value": "350\u00b0F / Power setting 4",
-            "test_method": "Temperature gauge reading",
+            "test_method": "Temperature gauge reading after 5-7 minutes preheat",
             "failure_indication": "Improper cooking temperature",
             "models": [
               "All Kenyon grills"
@@ -1130,28 +1102,16 @@
             ]
           },
           {
-            "query": "What is the required preheat time?",
-            "expected_value": "5-7 minutes with lid closed",
-            "test_method": "Time preheat duration",
-            "failure_indication": "Insufficient heating for proper cooking",
-            "models": [
-              "All Kenyon grills"
-            ],
-            "related_procedures": [
-              "Pre-operation procedure"
-            ]
-          },
-          {
-            "query": "Has grill cooled sufficiently for cleaning?",
+            "query": "Is grill surface cool enough for cleaning?",
             "expected_value": "Surface cool enough to touch",
-            "test_method": "Careful touch test of surface",
-            "failure_indication": "Risk of burns if cleaned too soon",
+            "test_method": "Careful touch test",
+            "failure_indication": "Risk of burns if cleaning attempted too soon",
             "models": [
               "All Kenyon grills"
             ],
             "related_procedures": [
-              "Cleaning procedure",
-              "Safety checks"
+              "Cleaning and maintenance",
+              "Safety procedures"
             ]
           }
         ]
@@ -1242,13 +1202,13 @@
           {
             "query": "Can external timers or remote controls be used?",
             "expected_value": "No external timers or remote control systems permitted",
-            "test_method": "Verification of operation method",
+            "test_method": "Operational setup inspection",
             "failure_indication": "Unsafe operation, unintended activation",
             "models": [
               "All Kenyon grills"
             ],
             "related_procedures": [
-              "Operating instructions",
+              "Operating restrictions",
               "Safety guidelines"
             ]
           }
@@ -1261,68 +1221,92 @@
       "result": {
         "golden_rules": [
           {
-            "query": "Is the HOT indicator light functioning correctly?",
-            "expected_value": "Light illuminates when cooking grate is hot and remains on until surface is safe to touch",
-            "test_method": "Activate grill and verify light behavior during and after cooking",
-            "failure_indication": "Safety hazard - users may not be warned of hot surfaces",
+            "query": "Is LED light array illuminated when control is ON?",
+            "expected_value": "LED array should be lit",
+            "test_method": "Visual inspection of LED array when control is activated",
+            "failure_indication": "Element may not be receiving power or LED malfunction",
             "models": [
-              "All grill models with indicator lights"
+              "All grill models with LED indicators"
             ],
             "related_procedures": [
-              "Hot surface safety protocol",
-              "Indicator light testing"
+              "Power-on sequence",
+              "Element activation"
             ]
           },
           {
-            "query": "Does the safety lock feature prevent power adjustment when grill is ON?",
-            "expected_value": "Power settings cannot be adjusted up/down when lock is activated",
-            "test_method": "Activate lock while grill is on and attempt to adjust power settings",
-            "failure_indication": "Lock feature malfunction - settings can be changed while locked",
+            "query": "Does HOT indicator light activate when cooking surface is above safe temperature?",
+            "expected_value": "HOT light illuminated when surface is too warm to touch",
+            "test_method": "Observe indicator during and after cooking cycle",
+            "failure_indication": "Temperature sensor or indicator light malfunction",
+            "models": [
+              "All grill models with HOT indicator"
+            ],
+            "related_procedures": [
+              "Temperature monitoring",
+              "Safety shutdown"
+            ]
+          },
+          {
+            "query": "Does safety lock prevent power adjustment when grill is ON?",
+            "expected_value": "Power settings cannot be adjusted when locked",
+            "test_method": "Attempt to adjust power settings while locked",
+            "failure_indication": "Lock mechanism failure",
             "models": [
               "All models with safety lock feature"
             ],
             "related_procedures": [
-              "Safety lock testing",
-              "Control panel operation"
+              "Lock activation",
+              "Power adjustment"
             ]
           },
           {
-            "query": "Does the safety lock prevent all functions when grill is OFF?",
-            "expected_value": "All control panel functions including master power are deactivated",
-            "test_method": "Activate lock while grill is off and attempt to use any controls",
-            "failure_indication": "Lock feature malfunction - controls remain active while locked",
+            "query": "Does master power button override lock when grill is ON?",
+            "expected_value": "Grill turns off when master power pressed, even when locked",
+            "test_method": "Press master power while locked and running",
+            "failure_indication": "Emergency shutoff failure",
             "models": [
               "All models with safety lock feature"
             ],
             "related_procedures": [
-              "Safety lock testing",
-              "Control panel operation"
+              "Emergency shutdown",
+              "Safety override"
             ]
           },
           {
-            "query": "Does the LED light array indicate element operation?",
-            "expected_value": "LED lights illuminate when corresponding element is on",
-            "test_method": "Activate each element and verify LED indicator illumination",
-            "failure_indication": "Element status indication failure",
+            "query": "Does lock prevent all control panel functions when grill is OFF?",
+            "expected_value": "No control functions operate when locked and off",
+            "test_method": "Attempt to activate controls while locked and off",
+            "failure_indication": "Lock mechanism failure",
             "models": [
-              "All models with LED indicators"
+              "All models with safety lock feature"
             ],
             "related_procedures": [
-              "Element operation verification",
-              "Indicator light testing"
+              "Lock function verification"
             ]
           },
           {
-            "query": "Does the auto-shutoff function work after 15 seconds of inactivity?",
-            "expected_value": "Grill de-powers if element not activated within 15 seconds of power on",
+            "query": "Does unit auto-shutdown if element not activated within 15 seconds of power-on?",
+            "expected_value": "Unit powers off after 15 seconds without element activation",
             "test_method": "Power on unit and wait 15 seconds without activating element",
-            "failure_indication": "Auto-shutoff failure - unit remains powered",
+            "failure_indication": "Auto-shutdown timer malfunction",
             "models": [
-              "All models with auto-shutoff feature"
+              "All grill models"
             ],
             "related_procedures": [
-              "Power management testing",
-              "Safety timeout verification"
+              "Auto-shutdown verification",
+              "Power-on sequence"
+            ]
+          },
+          {
+            "query": "Does element power activation require 2-second button hold?",
+            "expected_value": "Element activates only after 2-second button hold",
+            "test_method": "Test button press duration for element activation",
+            "failure_indication": "Timer mechanism failure or button malfunction",
+            "models": [
+              "All grill models"
+            ],
+            "related_procedures": [
+              "Element activation sequence"
             ]
           }
         ]
@@ -1337,12 +1321,12 @@
             "query": "What is the default heat level when starting any element?",
             "expected_value": "0",
             "test_method": "Power on element and observe initial setting",
-            "failure_indication": "Element starts at non-zero level",
+            "failure_indication": "Element starts at non-zero heat level",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Element startup sequence"
+              "Element Power-Up Sequence"
             ]
           },
           {
@@ -1351,247 +1335,94 @@
             "test_method": "Set element to 0 and time until de-power",
             "failure_indication": "Element remains powered after 15 seconds at 0",
             "models": [
-              "All heat level cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Auto shutdown sequence"
+              "Auto Shutdown Safety Features"
             ]
           },
           {
-            "query": "What is the temperature range in Fahrenheit?",
+            "query": "What is the temperature range in Fahrenheit mode?",
             "expected_value": "150\u00b0F to 550\u00b0F",
-            "test_method": "Verify minimum and maximum temperature settings",
+            "test_method": "Verify min and max temperature settings",
             "failure_indication": "Temperature range falls outside specified limits",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Temperature calibration"
+              "Temperature Range Verification"
             ]
           },
           {
-            "query": "What is the temperature range in Celsius?",
+            "query": "What is the temperature range in Celsius mode?",
             "expected_value": "65\u00b0C to 287\u00b0C",
-            "test_method": "Verify minimum and maximum temperature settings in Celsius",
+            "test_method": "Switch to Celsius and verify min/max settings",
             "failure_indication": "Temperature range falls outside specified limits",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Temperature calibration"
+              "Temperature Range Verification"
             ]
           },
           {
-            "query": "What are the temperature increment steps?",
+            "query": "What is the temperature increment step size?",
             "expected_value": "10\u00b0F (12\u00b0C)",
-            "test_method": "Verify temperature changes in correct increments",
-            "failure_indication": "Temperature changes in different increment steps",
+            "test_method": "Press + button and verify increment amount",
+            "failure_indication": "Temperature changes by different increment",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Temperature control verification"
+              "Temperature Control Calibration"
             ]
           },
           {
-            "query": "What is the default temperature on startup?",
+            "query": "What is the default temperature in temperature cooking mode?",
             "expected_value": "150\u00b0F (65\u00b0C)",
-            "test_method": "Power on unit and verify initial temperature setting",
-            "failure_indication": "Different default temperature on startup",
+            "test_method": "Enter temperature mode and verify initial setting",
+            "failure_indication": "Default temperature is not 150\u00b0F",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Startup sequence verification"
+              "Temperature Mode Setup"
             ]
           },
           {
             "query": "How many heat level increments are available?",
             "expected_value": "16 increments from LOW to HIGH",
-            "test_method": "Count LED array indicators and verify increment steps",
+            "test_method": "Count LED array positions",
             "failure_indication": "Incorrect number of heat level steps",
             "models": [
-              "All heat level cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Heat level control verification"
+              "Heat Level Control Verification"
             ]
           },
           {
             "query": "Does temperature setting persist after reaching target?",
-            "expected_value": "Yes, value stops flashing and remains steady",
-            "test_method": "Set temperature and observe display behavior",
-            "failure_indication": "Temperature value continues flashing or changes",
+            "expected_value": "Yes, remains set until changed",
+            "test_method": "Set temperature and monitor after reaching target",
+            "failure_indication": "Temperature setting changes without user input",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Temperature control verification"
+              "Temperature Control Stability Test"
             ]
           },
           {
             "query": "Do temperature units persist between uses?",
-            "expected_value": "Yes, chosen units remain until manually changed",
+            "expected_value": "Yes, remains in chosen units until manually changed",
             "test_method": "Set units, power cycle, verify setting remains",
-            "failure_indication": "Unit preference resets between uses",
+            "failure_indication": "Unit setting reverts after power cycle",
             "models": [
-              "All temperature cooking models"
+              "All induction cooktop models"
             ],
             "related_procedures": [
-              "Temperature unit configuration"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 13,
-      "pages": "13-13",
-      "result": {
-        "golden_rules": [
-          {
-            "query": "Does cooking timer shut off heating element at end of set time?",
-            "expected_value": "Yes, heating element automatically shuts off",
-            "test_method": "Set cooking timer and verify element stops at time completion",
-            "failure_indication": "Heating element continues running after timer expires",
-            "models": [
-              "All models with cooking timer"
-            ],
-            "related_procedures": [
-              "Timer operation",
-              "Auto shutoff"
-            ]
-          },
-          {
-            "query": "What is the initial time increment for timer settings?",
-            "expected_value": "1 minute increments from 1-10 minutes",
-            "test_method": "Press + button and verify increment steps",
-            "failure_indication": "Incorrect time increment steps",
-            "models": [
-              "All timer-equipped models"
-            ],
-            "related_procedures": [
-              "Timer programming"
-            ]
-          },
-          {
-            "query": "What is the secondary time increment for timer settings?",
-            "expected_value": "5 minute increments after 10 minutes",
-            "test_method": "Press + button past 10 minutes and verify increment steps",
-            "failure_indication": "Incorrect time increment steps above 10 minutes",
-            "models": [
-              "All timer-equipped models"
-            ],
-            "related_procedures": [
-              "Timer programming"
-            ]
-          },
-          {
-            "query": "Does timer deactivate if no time set?",
-            "expected_value": "Yes, after 20 seconds",
-            "test_method": "Activate timer without setting time and measure deactivation time",
-            "failure_indication": "Timer doesn't auto-deactivate or wrong timing",
-            "models": [
-              "All timer-equipped models"
-            ],
-            "related_procedures": [
-              "Timer operation"
-            ]
-          },
-          {
-            "query": "Does cooking timer display change to seconds in final minute?",
-            "expected_value": "Yes, switches from minutes to seconds countdown below 1 minute",
-            "test_method": "Set timer for 2 minutes and observe display format change",
-            "failure_indication": "Display format doesn't switch to seconds",
-            "models": [
-              "All timer-equipped models"
-            ],
-            "related_procedures": [
-              "Timer display operation"
-            ]
-          },
-          {
-            "query": "Does cooking timer alarm sound correctly after completion?",
-            "expected_value": "Single beep every 5 seconds until power button touched or 30 second timeout",
-            "test_method": "Let timer complete and verify alarm pattern",
-            "failure_indication": "Incorrect alarm pattern or duration",
-            "models": [
-              "All cooking timer models"
-            ],
-            "related_procedures": [
-              "Timer alarms"
-            ]
-          },
-          {
-            "query": "Does kitchen timer alarm sound correctly after completion?",
-            "expected_value": "Double beep every 10 seconds for 3 minutes or until power button touched",
-            "test_method": "Let timer complete and verify alarm pattern",
-            "failure_indication": "Incorrect alarm pattern or duration",
-            "models": [
-              "All kitchen timer models"
-            ],
-            "related_procedures": [
-              "Timer alarms"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 15,
-      "pages": "15-15",
-      "result": {
-        "golden_rules": [
-          {
-            "query": "Is unit displaying error code E04?",
-            "expected_value": "No error code displayed",
-            "test_method": "Check display panel for error codes",
-            "failure_indication": "Unit is operating at high temperature",
-            "models": [
-              "Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "Allow unit to cool",
-              "Verify correct cookware",
-              "Lower cooking level/temperature"
-            ]
-          },
-          {
-            "query": "Are errors E06, E07, E08, or E09 displayed?",
-            "expected_value": "No error codes displayed",
-            "test_method": "Check display panel for error codes",
-            "failure_indication": "Internal electronic control issue requiring service",
-            "models": [
-              "Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "Contact Kenyon Customer Care"
-            ]
-          },
-          {
-            "query": "Is error E10 displayed?",
-            "expected_value": "No error code displayed",
-            "test_method": "Check display panel for error codes",
-            "failure_indication": "Multiple control functions activated simultaneously",
-            "models": [
-              "Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "De-power unit",
-              "Use single control input at a time"
-            ]
-          },
-          {
-            "query": "Does unit clear error after de-powering?",
-            "expected_value": "Error display clears after restart",
-            "test_method": "De-power and restart unit",
-            "failure_indication": "Persistent error condition requiring service",
-            "models": [
-              "Single Zone Grill with IntelliKEN Touch"
-            ],
-            "related_procedures": [
-              "Lock out main power",
-              "Contact customer service"
+              "Temperature Unit Persistence Test"
             ]
           }
         ]
@@ -1655,131 +1486,207 @@
             ]
           },
           {
-            "query": "Are settings 3-4 appropriate for pancakes and french toast?",
-            "expected_value": "Temperature suitable for pancakes/french toast",
-            "test_method": "Cook test with pancake batter",
-            "failure_indication": "Pancakes burn or cook unevenly",
+            "query": "Are settings 15-16 appropriate for steaks?",
+            "expected_value": "Temperature suitable for cooking steaks",
+            "test_method": "Cook test with steak",
+            "failure_indication": "Steak does not cook properly at maximum settings",
             "models": [
               "All electric grill models"
             ],
             "related_procedures": [
               "Temperature calibration",
-              "Griddle operation"
-            ]
-          },
-          {
-            "query": "Are settings 5-8 appropriate for vegetables?",
-            "expected_value": "Temperature suitable for vegetable cooking",
-            "test_method": "Cook test with standard vegetables",
-            "failure_indication": "Vegetables burn or remain undercooked",
-            "models": [
-              "All electric grill models"
-            ],
-            "related_procedures": [
-              "Temperature calibration",
-              "Grill operation"
-            ]
-          },
-          {
-            "query": "Are settings 9-10 appropriate for fish and chicken?",
-            "expected_value": "Temperature suitable for fish/chicken cooking",
-            "test_method": "Cook test with fish/chicken portions",
-            "failure_indication": "Meat undercooked or burns",
-            "models": [
-              "All electric grill models"
-            ],
-            "related_procedures": [
-              "Temperature calibration",
-              "Grill operation"
-            ]
-          },
-          {
-            "query": "Are settings 11-14 appropriate for hamburgers and steaks?",
-            "expected_value": "Temperature suitable for hamburger/steak cooking",
-            "test_method": "Cook test with hamburger/steak",
-            "failure_indication": "Meat undercooked or burns",
-            "models": [
-              "All electric grill models"
-            ],
-            "related_procedures": [
-              "Temperature calibration",
-              "Grill operation"
-            ]
-          },
-          {
-            "query": "Does lid position affect cooking performance?",
-            "expected_value": "Optimal performance with lid closed",
-            "test_method": "Compare cooking with lid open vs closed",
-            "failure_indication": "No significant difference in cooking performance",
-            "models": [
-              "All electric grill models"
-            ],
-            "related_procedures": [
-              "Lid operation check",
-              "Performance testing"
+              "High heat operation"
             ]
           }
         ]
       }
     },
     {
-      "chunk_num": 17,
-      "pages": "17-17",
+      "chunk_num": 13,
+      "pages": "13-13",
       "result": {
         "golden_rules": [
           {
-            "query": "What is the minimum safe temperature for collapsing the silicone lid?",
-            "expected_value": "Completely cool to touch",
-            "test_method": "Wait for grill to cool and verify lid temperature by touch",
-            "failure_indication": "Risk of burns or lid damage if collapsed while hot",
+            "query": "Does cooking timer shut off heating element at end of set time?",
+            "expected_value": "Yes, heating element automatically shuts off",
+            "test_method": "Set cooking timer and verify element stops at time completion",
+            "failure_indication": "Heating element continues running after timer expires",
             "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
+              "All models with cooking timer"
             ],
             "related_procedures": [
-              "Lid Operation",
-              "Cooling Procedures"
+              "Timer operation",
+              "Auto shutoff"
             ]
           },
           {
-            "query": "What is the minimum collapsed height of the silicone lid?",
-            "expected_value": "Two inches",
-            "test_method": "Measure collapsed lid height with ruler",
-            "failure_indication": "Lid damage or improper assembly if height exceeds 2 inches when fully collapsed",
+            "query": "What is the initial time increment for timer settings?",
+            "expected_value": "1 minute increments from 1-10 minutes",
+            "test_method": "Press + button and verify increment steps",
+            "failure_indication": "Incorrect time increment steps",
             "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
+              "All timer-equipped models"
             ],
             "related_procedures": [
-              "Lid Collapse Operation"
+              "Timer programming"
             ]
           },
           {
-            "query": "Is the quick release pin fully engaged in lid hinge?",
-            "expected_value": "Pin fully inserted through hinge mechanism",
-            "test_method": "Visual inspection of pin placement",
-            "failure_indication": "Lid may detach unexpectedly if pin not properly engaged",
+            "query": "What is the secondary time increment for timer settings?",
+            "expected_value": "5 minute increments after 10 minutes",
+            "test_method": "Press + button past 10 minutes and verify increment steps",
+            "failure_indication": "Incorrect time increment steps above 10 minutes",
             "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
+              "All timer-equipped models"
             ],
             "related_procedures": [
-              "Lid Assembly",
-              "Lid Removal"
+              "Timer programming"
             ]
           },
           {
-            "query": "Are all three sides of lid properly vented?",
-            "expected_value": "Vents present and unobstructed on three sides",
-            "test_method": "Visual inspection of vent openings",
-            "failure_indication": "Poor ventilation and heat management if vents blocked",
+            "query": "Does timer deactivate if no time set?",
+            "expected_value": "Yes, after 20 seconds",
+            "test_method": "Activate timer without setting time and measure deactivation time",
+            "failure_indication": "Timer doesn't auto-deactivate or wrong timing",
             "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
+              "All timer-equipped models"
             ],
             "related_procedures": [
-              "Ventilation Check",
-              "Cleaning Procedures"
+              "Timer operation"
+            ]
+          },
+          {
+            "query": "Does cooking timer display switch to seconds in final minute?",
+            "expected_value": "Yes, changes from minutes to seconds countdown below 1 minute",
+            "test_method": "Set short timer and observe display transition",
+            "failure_indication": "Display doesn't switch to seconds format",
+            "models": [
+              "All timer-equipped models"
+            ],
+            "related_procedures": [
+              "Timer display operation"
+            ]
+          },
+          {
+            "query": "Does cooking timer alarm sound correctly?",
+            "expected_value": "Single beep every 5 seconds after time elapsed",
+            "test_method": "Let timer complete and verify alarm pattern",
+            "failure_indication": "No alarm or wrong pattern",
+            "models": [
+              "All cooking timer models"
+            ],
+            "related_procedures": [
+              "Timer alarms"
+            ]
+          },
+          {
+            "query": "Does kitchen timer alarm sound correctly?",
+            "expected_value": "Double beep every 10 seconds after time elapsed",
+            "test_method": "Let timer complete and verify alarm pattern",
+            "failure_indication": "No alarm or wrong pattern",
+            "models": [
+              "All kitchen timer models"
+            ],
+            "related_procedures": [
+              "Timer alarms"
+            ]
+          },
+          {
+            "query": "Does cooking timer shut off after elapsed time with no input?",
+            "expected_value": "Yes, after 30 seconds of no activity",
+            "test_method": "Let timer complete and measure auto-shutoff time",
+            "failure_indication": "Timer doesn't auto-shutoff or wrong timing",
+            "models": [
+              "All cooking timer models"
+            ],
+            "related_procedures": [
+              "Timer auto-shutoff"
+            ]
+          },
+          {
+            "query": "Does kitchen timer alarm deactivate automatically?",
+            "expected_value": "Yes, after 3 minutes",
+            "test_method": "Let timer complete and measure alarm duration",
+            "failure_indication": "Alarm doesn't stop or wrong timing",
+            "models": [
+              "All kitchen timer models"
+            ],
+            "related_procedures": [
+              "Timer alarms"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is unit displaying error code E04?",
+            "expected_value": "No error code displayed",
+            "test_method": "Check display panel for error codes",
+            "failure_indication": "Unit is operating at high temperature",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Allow unit to cool",
+              "Verify correct cookware",
+              "Lower cooking level/temperature"
+            ]
+          },
+          {
+            "query": "Are errors E06, E07, E08, or E09 displayed?",
+            "expected_value": "No error codes displayed",
+            "test_method": "Check display panel for error codes",
+            "failure_indication": "Internal electronic control issue requiring service",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Contact Kenyon Customer Care"
+            ]
+          },
+          {
+            "query": "Is error E10 displayed?",
+            "expected_value": "No error code displayed",
+            "test_method": "Check display panel for error codes",
+            "failure_indication": "Multiple control functions activated simultaneously",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "De-power unit",
+              "Use single control input at a time"
+            ]
+          },
+          {
+            "query": "Does unit respond to error reset procedure?",
+            "expected_value": "Error clears after reset",
+            "test_method": "De-power and restart unit",
+            "failure_indication": "Persistent error condition requiring service",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Power cycle unit",
+              "Allow cooling",
+              "Contact service if persistent"
+            ]
+          },
+          {
+            "query": "Is unit serviceable by user?",
+            "expected_value": "No user serviceable parts",
+            "test_method": "Check manual maintenance section",
+            "failure_indication": "Sealed unit requiring authorized service only",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "related_procedures": [
+              "Contact authorized service personnel",
+              "Call Kenyon Customer Care"
             ]
           }
         ]
@@ -1791,25 +1698,25 @@
       "result": {
         "golden_rules": [
           {
-            "query": "Can heating element pivot upward?",
-            "expected_value": "Element should pivot up and stay in position",
-            "test_method": "Manually lift heating element",
-            "failure_indication": "Element does not stay up or pivot freely",
+            "query": "Is heating element pivot mechanism functional?",
+            "expected_value": "Element stays in up position when lifted and can be lowered with slight pressure",
+            "test_method": "Manually lift heating element and verify it stays up, then apply light downward pressure",
+            "failure_indication": "Element won't stay up or requires excessive force to lower",
             "models": [
-              "All indoor grill models"
+              "All grill models"
             ],
             "related_procedures": [
-              "Element maintenance",
-              "Baffle tray removal"
+              "Baffle tray removal",
+              "Drip tray maintenance"
             ]
           },
           {
-            "query": "Is baffle tray installed during operation?",
-            "expected_value": "Baffle tray must be present and properly seated",
-            "test_method": "Visual inspection before use",
-            "failure_indication": "Missing or improperly placed baffle tray",
+            "query": "Is baffle tray properly installed?",
+            "expected_value": "Tray is present and properly supporting drip tray, heating element and grate",
+            "test_method": "Visual inspection of baffle tray position and component support",
+            "failure_indication": "Missing baffle tray or improper component support",
             "models": [
-              "All indoor grill models"
+              "All grill models"
             ],
             "related_procedures": [
               "Grill assembly",
@@ -1818,54 +1725,105 @@
           },
           {
             "query": "Is drip tray properly positioned in baffle tray?",
-            "expected_value": "Drip tray completely contained within baffle tray edges",
-            "test_method": "Visual inspection of tray placement",
-            "failure_indication": "Drip tray rim protruding beyond baffle tray",
+            "expected_value": "Drip tray completely contained within baffle tray with no protruding edges",
+            "test_method": "Visual inspection of drip tray placement relative to baffle tray edges",
+            "failure_indication": "Drip tray edges extending beyond baffle tray perimeter",
             "models": [
-              "All indoor grill models"
+              "All grill models"
             ],
             "related_procedures": [
               "Drip tray installation",
-              "Safety checks"
+              "Pre-cooking checklist"
             ]
           },
           {
-            "query": "Is drip tray emptied after use?",
-            "expected_value": "Drip tray empty and clean after each use",
-            "test_method": "Visual inspection post-cooking",
-            "failure_indication": "Accumulated fat and juices from previous use",
+            "query": "Is minimum water level maintained in drip tray?",
+            "expected_value": "2 cups of water or enough to cover bottom of pan",
+            "test_method": "Visual inspection of water level in drip tray before cooking",
+            "failure_indication": "Insufficient water leading to smoking during operation",
             "models": [
-              "All indoor grill models"
+              "All grill models"
             ],
             "related_procedures": [
-              "Cleaning procedure",
-              "Maintenance schedule"
-            ]
-          },
-          {
-            "query": "Is water present in drip tray before cooking?",
-            "expected_value": "2 cups water or enough to cover bottom",
-            "test_method": "Visual check of water level",
-            "failure_indication": "No water present, risk of smoking",
-            "models": [
-              "All indoor grill models"
-            ],
-            "related_procedures": [
-              "Pre-cooking setup",
+              "Pre-cooking preparation",
               "Smoke prevention"
             ]
           },
           {
-            "query": "Is grate cleaned after each use?",
-            "expected_value": "Grate clean and free of residue",
-            "test_method": "Visual inspection and cleaning with warm soapy water",
-            "failure_indication": "Food residue or grease on grate",
+            "query": "Has grate been cleaned after previous use?",
+            "expected_value": "Grate is clean with no food residue",
+            "test_method": "Visual inspection and cleaning with warm soapy water after each use",
+            "failure_indication": "Food residue or debris present on grate surface",
             "models": [
-              "All indoor grill models"
+              "All grill models"
             ],
             "related_procedures": [
-              "Grate cleaning",
-              "Maintenance schedule"
+              "Post-cooking maintenance",
+              "Grate cleaning"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum collapsed height of the silicone lid?",
+            "expected_value": "Two inches",
+            "test_method": "Measure collapsed lid height with ruler",
+            "failure_indication": "Lid not collapsing properly or damaged",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "related_procedures": [
+              "Lid Maintenance",
+              "Cleaning Procedures"
+            ]
+          },
+          {
+            "query": "Is the grill completely cool before lid collapse?",
+            "expected_value": "Yes, grill must be completely cooled",
+            "test_method": "Temperature check of grill surface",
+            "failure_indication": "Risk of burns or lid damage if collapsed while hot",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "related_procedures": [
+              "Safety Procedures",
+              "Cooling Requirements"
+            ]
+          },
+          {
+            "query": "Is quick release pin fully removed before lid removal?",
+            "expected_value": "Yes, pin completely removed from hinge",
+            "test_method": "Visual inspection of hinge area",
+            "failure_indication": "Cannot safely remove lid, potential damage to hinge",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "related_procedures": [
+              "Lid Removal",
+              "Cleaning Procedures"
+            ]
+          },
+          {
+            "query": "Are all three sides of lid properly vented?",
+            "expected_value": "Yes, vents present and unobstructed on three sides",
+            "test_method": "Visual inspection of lid vents",
+            "failure_indication": "Improper ventilation, cooking performance issues",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "related_procedures": [
+              "Ventilation Check",
+              "Safety Inspection"
             ]
           }
         ]
@@ -1945,10 +1903,10 @@
             ]
           },
           {
-            "query": "Is disconnection means properly installed?",
-            "expected_value": "Disconnection means incorporated in fixed wiring per wiring rules",
-            "test_method": "Verify presence and proper installation of disconnect mechanism",
-            "failure_indication": "Missing or improper disconnect means violates electrical codes",
+            "query": "Is disconnect means properly installed?",
+            "expected_value": "Disconnect incorporated in fixed wiring per wiring rules",
+            "test_method": "Visual inspection of wiring installation",
+            "failure_indication": "Missing or improper disconnect violates electrical codes",
             "models": [
               "B70750",
               "B70760",
@@ -1959,6 +1917,181 @@
             "related_procedures": [
               "Electrical installation",
               "Safety verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum clearance between cooking surface and unprotected cabinet?",
+            "expected_value": "30 inches",
+            "test_method": "Measure vertical distance from cooking surface to cabinet bottom",
+            "failure_indication": "Fire hazard due to insufficient clearance",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Cabinet Installation",
+              "Safety Clearances"
+            ]
+          },
+          {
+            "query": "What is the minimum clearance with protected cabinet bottom?",
+            "expected_value": "24 inches",
+            "test_method": "Measure vertical distance with flame retardant protection installed",
+            "failure_indication": "Fire hazard due to insufficient clearance",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Protected Cabinet Installation"
+            ]
+          },
+          {
+            "query": "What is the minimum clearance between grill bottom and combustible surface?",
+            "expected_value": "2 inches",
+            "test_method": "Measure gap between grill bottom and any combustible surface below",
+            "failure_indication": "Fire hazard risk",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Ventilation Requirements",
+              "Safety Installation"
+            ]
+          },
+          {
+            "query": "What is the minimum backsplash clearance?",
+            "expected_value": "6 inches",
+            "test_method": "Measure from backsplash to grill edge",
+            "failure_indication": "Improper fit and potential safety hazard",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Countertop Installation"
+            ]
+          },
+          {
+            "query": "What is the minimum front counter clearance?",
+            "expected_value": "1.5 inches",
+            "test_method": "Measure from front counter edge to grill",
+            "failure_indication": "Improper fit and potential safety hazard",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Countertop Installation"
+            ]
+          },
+          {
+            "query": "What is the maximum overhead cabinet depth?",
+            "expected_value": "13 inches",
+            "test_method": "Measure cabinet depth above grill",
+            "failure_indication": "Interference with grill operation",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Cabinet Installation"
+            ]
+          },
+          {
+            "query": "What is the minimum countertop height?",
+            "expected_value": "36 inches",
+            "test_method": "Measure from floor to countertop surface",
+            "failure_indication": "Non-compliant installation height",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Basic Installation Requirements"
+            ]
+          },
+          {
+            "query": "What is the minimum clearance from adjacent surfaces in Canada?",
+            "expected_value": "1/2 inch (12mm)",
+            "test_method": "Measure gap to all adjacent surfaces",
+            "failure_indication": "Non-compliant with Canadian installation requirements",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "related_procedures": [
+              "Canadian Installation Requirements"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum horizontal projection required for range hood beyond cabinet bottom?",
+            "expected_value": "5 inches minimum",
+            "test_method": "Measure distance from cabinet bottom edge to hood edge with tape measure",
+            "failure_indication": "Insufficient protection from heat/burns risk for overhead storage",
+            "models": [
+              "All grill models with overhead cabinets"
+            ],
+            "related_procedures": [
+              "Cabinet installation",
+              "Range hood installation"
+            ]
+          },
+          {
+            "query": "What are the required ventilation openings in cabinet?",
+            "expected_value": "Two openings of 8 square inches each - one for intake, one for exhaust",
+            "test_method": "Measure opening dimensions to calculate area",
+            "failure_indication": "Insufficient ventilation causing overheating",
+            "models": [
+              "All built-in grill models"
+            ],
+            "related_procedures": [
+              "Cabinet ventilation installation"
+            ]
+          },
+          {
+            "query": "What additional ventilation is needed above 85\u00b0F/30\u00b0C ambient temperature?",
+            "expected_value": "Larger than 8 square inch openings required",
+            "test_method": "Measure ambient temperature and verify opening sizes",
+            "failure_indication": "Risk of overheating in high ambient temperatures",
+            "models": [
+              "All built-in grill models"
+            ],
+            "related_procedures": [
+              "Ventilation requirements"
+            ]
+          },
+          {
+            "query": "What is the minimum corner radius for countertop cutout?",
+            "expected_value": "1/4 inch typical radius (or manufacturer specification)",
+            "test_method": "Measure radius of cutout corners",
+            "failure_indication": "Risk of countertop cracking",
+            "models": [
+              "All built-in grill models"
+            ],
+            "related_procedures": [
+              "Countertop preparation"
+            ]
+          },
+          {
+            "query": "What is the correct drain fitting specification?",
+            "expected_value": "1/2 inch NPT brass pipe fitting with 90\u00b0 brass elbow",
+            "test_method": "Verify fitting type and size",
+            "failure_indication": "Incorrect drain connection",
+            "models": [
+              "All grill models except portable"
+            ],
+            "related_procedures": [
+              "Drain installation"
             ]
           }
         ]
@@ -2012,180 +2145,6 @@
       }
     },
     {
-      "chunk_num": 20,
-      "pages": "20-20",
-      "result": {
-        "golden_rules": [
-          {
-            "query": "What is the minimum horizontal projection required for range hood?",
-            "expected_value": "5 inches beyond bottom of cabinets",
-            "test_method": "Measure distance from cabinet face to hood edge with tape measure",
-            "failure_indication": "Insufficient clearance for burn prevention",
-            "models": [
-              "All grill models"
-            ],
-            "related_procedures": [
-              "Cabinet installation",
-              "Hood installation"
-            ]
-          },
-          {
-            "query": "What are the required ventilation opening specifications?",
-            "expected_value": "Two openings, 8 square inches each",
-            "test_method": "Measure ventilation opening dimensions",
-            "failure_indication": "Insufficient airflow causing overheating",
-            "models": [
-              "All built-in models"
-            ],
-            "related_procedures": [
-              "Cabinet ventilation setup"
-            ]
-          },
-          {
-            "query": "What is the minimum corner radius for countertop cutout?",
-            "expected_value": "1/4 inch radius",
-            "test_method": "Measure radius of countertop cutout corners",
-            "failure_indication": "Risk of countertop cracking",
-            "models": [
-              "All built-in models"
-            ],
-            "related_procedures": [
-              "Countertop preparation"
-            ]
-          },
-          {
-            "query": "What is the required drain connection fitting?",
-            "expected_value": "1/2 inch NPT brass pipe fitting with 90\u00b0 brass elbow",
-            "test_method": "Verify fitting type and size",
-            "failure_indication": "Improper drainage connection",
-            "models": [
-              "All models except portable"
-            ],
-            "related_procedures": [
-              "Drain installation"
-            ]
-          },
-          {
-            "query": "What are the ventilation requirements for ambient temperatures above 85\u00b0F/30\u00b0C?",
-            "expected_value": "Larger than 8 square inches per opening",
-            "test_method": "Measure ventilation opening size and verify ambient temperature",
-            "failure_indication": "Risk of overheating in high temperature environments",
-            "models": [
-              "All built-in models"
-            ],
-            "related_procedures": [
-              "Ventilation verification"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 19,
-      "pages": "19-19",
-      "result": {
-        "golden_rules": [
-          {
-            "query": "What is the minimum clearance between cooking surface and unprotected cabinet?",
-            "expected_value": "30 inches",
-            "test_method": "Measure vertical distance from cooking surface to cabinet bottom",
-            "failure_indication": "Fire hazard due to insufficient clearance",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Cabinet Installation",
-              "Safety Clearances"
-            ]
-          },
-          {
-            "query": "What is the minimum clearance with protected cabinet bottom?",
-            "expected_value": "24 inches",
-            "test_method": "Measure vertical distance with flame retardant protection installed",
-            "failure_indication": "Fire hazard due to insufficient clearance",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Protected Cabinet Installation"
-            ]
-          },
-          {
-            "query": "What is the minimum clearance from backsplash to grill edge?",
-            "expected_value": "6 inches",
-            "test_method": "Measure horizontal distance from backsplash to grill edge",
-            "failure_indication": "Improper installation clearance",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Countertop Installation"
-            ]
-          },
-          {
-            "query": "What is the minimum clearance from counter front to grill?",
-            "expected_value": "1.5 inches",
-            "test_method": "Measure horizontal distance from counter front to grill",
-            "failure_indication": "Improper installation clearance",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Countertop Installation"
-            ]
-          },
-          {
-            "query": "What is the minimum clearance between grill bottom and combustible surface below?",
-            "expected_value": "2 inches",
-            "test_method": "Measure vertical distance from grill bottom to combustible surface",
-            "failure_indication": "Fire hazard due to insufficient ventilation",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Ventilation Requirements"
-            ]
-          },
-          {
-            "query": "What is the maximum depth of overhead cabinets?",
-            "expected_value": "13 inches",
-            "test_method": "Measure cabinet depth",
-            "failure_indication": "Installation clearance violation",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Cabinet Installation"
-            ]
-          },
-          {
-            "query": "What is the minimum countertop height from floor?",
-            "expected_value": "36 inches",
-            "test_method": "Measure vertical distance from floor to countertop",
-            "failure_indication": "Improper installation height",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Countertop Installation"
-            ]
-          },
-          {
-            "query": "What is the minimum clearance from adjacent surfaces in Canada?",
-            "expected_value": "0.5 inches (12mm)",
-            "test_method": "Measure distance to all adjacent surfaces",
-            "failure_indication": "Non-compliance with Canadian installation requirements",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "related_procedures": [
-              "Canadian Installation Requirements"
-            ]
-          }
-        ]
-      }
-    },
-    {
       "chunk_num": 22,
       "pages": "22-22",
       "result": {
@@ -2230,8 +2189,8 @@
           {
             "query": "Is service center authorized by Kenyon?",
             "expected_value": "Listed as Authorized Kenyon International Service Center",
-            "test_method": "Check against authorized service center list",
-            "failure_indication": "Service may void warranty coverage",
+            "test_method": "Verify service center credentials",
+            "failure_indication": "Warranty may be void if unauthorized service performed",
             "models": [
               "All Kenyon products"
             ],
@@ -2240,15 +2199,15 @@
             ]
           },
           {
-            "query": "Is monthly maintenance being performed?",
-            "expected_value": "Maintenance performed as outlined in owner's manual",
-            "test_method": "Review maintenance records",
-            "failure_indication": "May void corrosion warranty coverage",
+            "query": "Is product being used as intended?",
+            "expected_value": "Used in accordance with product specifications",
+            "test_method": "Review installation and usage against manual specifications",
+            "failure_indication": "Warranty void due to improper application",
             "models": [
-              "All stainless steel components"
+              "All Kenyon products"
             ],
             "related_procedures": [
-              "Monthly maintenance protocol"
+              "Product application review"
             ]
           }
         ]
