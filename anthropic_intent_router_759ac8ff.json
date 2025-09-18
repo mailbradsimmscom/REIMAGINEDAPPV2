@@ -1,0 +1,10 @@
+{
+  "total_chunks_processed": 0,
+  "successful_chunks": 0,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 0,
+  "unique_intent_routes": 0,
+  "question_type_breakdown": {},
+  "intent_routes": [],
+  "chunk_results": []
+}

@@ -9,6 +9,8 @@ import time
 import os
 import requests
 import io
+import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
@@ -391,44 +393,190 @@ class DIPProcessor:
             return await self._extract_playbook_hints_anthropic_impl(doc_id, chunks)
     
     async def _extract_playbook_hints_anthropic_impl(self, doc_id: str, chunks: List[Dict]) -> List[Dict[str, Any]]:
-        """Extract playbook procedures using Anthropic with PDF content"""
+        """Extract playbook procedures using Anthropic with parallel chunk processing"""
         if not self.anthropic_client:
             logger.warning("Anthropic client not available - skipping playbook extraction")
             return []
         
         try:
-            logger.info(f"Starting Anthropic playbook extraction for document {doc_id}")
+            logger.info(f"Starting Anthropic parallel playbook extraction for document {doc_id}")
             
-            # Combine all chunk content into a single document
-            document_text = ""
-            for chunk in chunks:
-                document_text += f"Page {chunk.get('page', 1)}: {chunk.get('content', '')}\n\n"
+            # Fetch chunks from database instead of using passed chunks parameter
+            chunks_data = await self._fetch_chunks_from_database(doc_id)
+            if not chunks_data:
+                logger.warning(f"No chunks found in database for document {doc_id}")
+                return []
             
-            # Limit document size to avoid token limits (roughly 300k characters)
-            if len(document_text) > 300000:
-                document_text = document_text[:300000]
-                logger.info(f"Document truncated to 300k characters for Anthropic processing")
+            logger.info(f"Found {len(chunks_data)} chunks in database for parallel processing")
             
-            # Your exact prompt
-            system_prompt = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
+            # Process chunks in parallel
+            all_procedures, chunk_results = await self._process_chunks_parallel_anthropic(chunks_data)
+            
+            # Remove duplicates and cap at 25 procedures
+            unique_procedures = []
+            seen_titles = set()
+            for proc in all_procedures:
+                title = proc.get('title', '').strip().lower()
+                if title and title not in seen_titles and len(unique_procedures) < 25:
+                    unique_procedures.append(proc)
+                    seen_titles.add(title)
+            
+            logger.info(f"Extracted {len(unique_procedures)} unique procedures after deduplication")
+            
+            # Convert to the format expected by the playbook_hints table
+            playbook_hints = []
+            for procedure in unique_procedures:
+                playbook_hint = {
+                    'id': f"{doc_id}_{len(playbook_hints) + 1}",
+                    'title': procedure.get('title', ''),
+                    'description': ", ".join(procedure.get('models', [])),  # Convert models array to comma-separated string
+                    'steps': procedure.get('steps', []),  # Direct mapping to steps array
+                    'expected_outcome': procedure.get('expected_outcome', ''),
+                    'preconditions': procedure.get('preconditions', []),
+                    'error_codes': procedure.get('error_codes', []),
+                    'category': self._categorize_procedure(procedure.get('title', '')),
+                    'system_norm': '',  # Will be populated based on models
+                    'subsystem_norm': '',  # Will be populated based on models
+                    'manufacturer_norm': '',  # Will be populated based on models
+                    'model_norm': '',  # Will be populated based on models
+                    'asset_uid': '',  # Will be populated based on models
+                    'doc_id': doc_id,
+                    'created_at': time.time(),
+                    'confidence': 0.9  # High confidence for AI extraction
+                }
+                playbook_hints.append(playbook_hint)
+            
+            logger.info(f"Successfully extracted {len(playbook_hints)} playbook procedures for document {doc_id}")
+            return playbook_hints
+            
+        except Exception as e:
+            logger.error(f"Anthropic parallel playbook extraction failed for document {doc_id}: {e}")
+            return []
+    
+    async def _fetch_chunks_from_database(self, doc_id: str) -> List[Dict]:
+        """Fetch document chunks from Supabase database"""
+        supabase_url = os.getenv('SUPABASE_URL')
+        supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        
+        if not supabase_url or not supabase_key:
+            logger.error("Missing Supabase credentials")
+            return []
+        
+        url = supabase_url.rstrip("/")
+        headers = {
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}",
+            "Content-Type": "application/json"
+        }
+        
+        # Query chunks from database
+        params = {
+            "doc_id": f"eq.{doc_id}",
+            "content_type": "eq.text",
+            "text": "not.is.null",
+            "select": "chunk_id,doc_id,text,page_start,page_end,chunk_index,metadata",
+            "order": "page_start,chunk_index"
+        }
+        
+        try:
+            response = requests.get(
+                f"{url}/rest/v1/document_chunks",
+                headers=headers,
+                params=params
+            )
+            
+            if response.status_code != 200:
+                logger.error(f"Failed to fetch chunks: {response.status_code} - {response.text}")
+                return []
+            
+            chunks_data = response.json()
+            logger.info(f"Fetched {len(chunks_data)} chunks from database for document {doc_id}")
+            return chunks_data
+            
+        except Exception as e:
+            logger.error(f"Error fetching chunks from database: {e}")
+            return []
+    
+    async def _process_chunks_parallel_anthropic(self, chunks_data: List[Dict], max_workers: int = 3) -> tuple:
+        """Process chunks in parallel using Anthropic"""
+        
+        def process_single_chunk(chunk_info):
+            chunk_data, chunk_num = chunk_info
+            return self._process_text_chunk_anthropic(
+                chunk_data, chunk_num, len(chunks_data)
+            )
+        
+        # Create list of (chunk_data, chunk_number) tuples
+        chunk_tasks = [(chunk_data, i+1) for i, chunk_data in enumerate(chunks_data)]
+        
+        all_procedures = []
+        chunk_results = []
+        completed_count = 0
+        
+        logger.info(f"Processing {len(chunks_data)} chunks with {max_workers} parallel workers...")
+        
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit all tasks
+            future_to_chunk = {executor.submit(process_single_chunk, chunk_info): chunk_info 
+                              for chunk_info in chunk_tasks}
+            
+            # Collect results as they complete
+            for future in concurrent.futures.as_completed(future_to_chunk):
+                chunk_data, chunk_num = future_to_chunk[future]
+                completed_count += 1
+                
+                try:
+                    result = future.result()
+                    
+                    chunk_results.append({
+                        'chunk_num': chunk_num,
+                        'pages': f"{chunk_data.get('page_start', '?')}-{chunk_data.get('page_end', '?')}",
+                        'result': result
+                    })
+                    
+                    if 'procedures' in result:
+                        all_procedures.extend(result['procedures'])
+                        
+                    logger.info(f"Completed chunk {chunk_num} ({completed_count}/{len(chunks_data)})")
+                    
+                except Exception as e:
+                    logger.error(f"Chunk {chunk_num} failed: {e}")
+                    chunk_results.append({
+                        'chunk_num': chunk_num,
+                        'pages': f"{chunk_data.get('page_start', '?')}-{chunk_data.get('page_end', '?')}",
+                        'result': {"procedures": [], "error": str(e)}
+                    })
+        
+        return all_procedures, chunk_results
+    
+    def _process_text_chunk_anthropic(self, chunk_data: Dict, chunk_num: int, total_chunks: int) -> Dict:
+        """Process a single text chunk with Anthropic API"""
+        pages = f"{chunk_data.get('page_start', '?')}-{chunk_data.get('page_end', '?')}"
+        text_content = chunk_data.get('text', '')
+        
+        logger.info(f"Processing chunk {chunk_num}/{total_chunks} (Pages {pages}, {len(text_content)} chars)")
+        
+        user_prompt = f"Extract all actionable procedures from this section of the technical manual:\n\n{text_content}"
+        
+        # System prompt - updated to remove installation references and cap at 25 procedures
+        system_prompt = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
 FORMAT REQUIREMENT: Output must start with { and end with }. Nothing else.
 If you add ANY text outside the JSON brackets, the system will fail.
 
 TASK: Extract ALL procedures, error codes, and maintenance steps from technical manuals.
-INCLUDE EVERYTHING: installation, setup, operation, troubleshooting, maintenance, cleaning, error resolution, safety procedures.
+INCLUDE EVERYTHING: setup, operation, troubleshooting, maintenance, cleaning, error resolution, safety procedures.
 OUTPUT FORMAT (copy exactly):
 {"procedures":[{"title":"string","preconditions":["string"],"steps":["string"],"expected_outcome":"string","models":["string"],"error_codes":["string"]}]}
 
 RULES:
-- Extract ALL procedures found in the manual
-- Include installation, operation, maintenance, troubleshooting, cleaning procedures
+- Extract ALL procedures found in the manual, maximum 25 procedures total
+- Include operation, maintenance, troubleshooting, cleaning procedures
 - Include all error codes and their resolution steps
 - Extract every procedure or sub-procedure as its own entry
 - If a section has multiple modes or features (such as cooking modes), create separate procedures for each. Do not merge them
 - Safety and lock features must always be their own procedure
 - Cleaning and maintenance routines must always be their own procedure
 - Error codes and their resolutions must be included as their own procedure
-- For installation content: merge and cap at 2 procedures total (Unpacking/Setup and Countertop/Connections)
 - Exclude recipes or non-technical content
 - Start response with { character
 - End response with } character
@@ -436,195 +584,46 @@ RULES:
 - No explanatory text after JSON
 - No markdown code blocks
 - No 'Here is the JSON:' or similar phrases"""
-
-            user_prompt = f"""Extract all actionable procedures from this technical manual:
-
-{document_text}"""
+        
+        try:
+            logger.info(f"  Making Anthropic API call for chunk {chunk_num}...")
             
-            # Call Anthropic API
             response = self.anthropic_client.messages.create(
                 model=self.anthropic_model,
-                max_tokens=self.anthropic_max_tokens,  # Use environment variable
+                max_tokens=self.anthropic_max_tokens,
                 temperature=self.anthropic_temperature,
                 system=system_prompt,
                 messages=[
-                    {"role": "user", "content": user_prompt}
-                ]
+                    {
+                        "role": "user",
+                        "content": user_prompt
+                    }
+                ],
+                timeout=30  # 30 second timeout
             )
             
-            # ROLLBACK: To revert to OpenAI, replace the above with:
-            # # Advanced system prompt (same as Anthropic)
-            # system_prompt = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
-            # FORMAT REQUIREMENT: Output must start with { and end with }. Nothing else.
-            # If you add ANY text outside the JSON brackets, the system will fail.
-            #
-            # TASK: Extract ALL procedures, error codes, and maintenance steps from technical manuals.
-            # INCLUDE EVERYTHING: installation, setup, operation, troubleshooting, maintenance, cleaning, error resolution, safety procedures.
-            # OUTPUT FORMAT (copy exactly):
-            # {"procedures":[{"title":"string","preconditions":["string"],"steps":["string"],"expected_outcome":"string","models":["string"],"error_codes":["string"]}]}
-            #
-            # RULES:
-            # - Extract ALL procedures found in the manual
-            # - Include installation, operation, maintenance, troubleshooting, cleaning procedures
-            # - Include all error codes and their resolution steps
-            # - Start response with { character
-            # - End response with } character
-            # - No explanatory text before JSON
-            # - No explanatory text after JSON
-            # - No markdown code blocks
-            # - No 'Here is the JSON:' or similar phrases"""
-            #
-            # # Limit document size to avoid token limits (roughly 300k characters)
-            # if len(document_text) > 300000:
-            #     document_text = document_text[:300000]
-            #     logger.info(f"Document truncated to 300k characters for OpenAI processing")
-            #
-            # response = self.openai_client.chat.completions.create(
-            #     model=self.openai_model,
-            #     messages=[
-            #         {"role": "system", "content": system_prompt},
-            #         {"role": "user", "content": user_prompt}
-            #     ],
-            #     max_tokens=self.openai_max_tokens,
-            #     temperature=self.openai_temperature
-            # )
+            logger.info(f"  API call successful for chunk {chunk_num}")
             
-            # Parse the response with robust error handling
             if response.content and len(response.content) > 0:
                 response_content = response.content[0].text
+                
+                # Try to parse as JSON
+                try:
+                    parsed_response = json.loads(response_content)
+                    procedures = parsed_response.get('procedures', [])
+                    logger.info(f"  Extracted {len(procedures)} procedures from chunk {chunk_num}")
+                    return parsed_response
+                except json.JSONDecodeError as e:
+                    logger.error(f"  JSON parse error in chunk {chunk_num}: {e}")
+                    logger.error(f"  Raw response preview: {response_content[:200]}...")
+                    return {"procedures": [], "error": "JSON parse failed", "raw_response": response_content}
             else:
-                logger.error("Empty response from Anthropic API")
-                return []
-            
-            logger.info(f"Anthropic response received for document {doc_id}")
-            logger.info(f"Raw response content: {response_content}")  # Show full response
-            
-            # ROLLBACK: To revert to OpenAI, replace the above with:
-            # # Parse the response with robust error handling
-            # if response.choices and len(response.choices) > 0:
-            #     response_content = response.choices[0].message.content
-            # else:
-            #     logger.error("Empty response from OpenAI API")
-            #     return []
-            # 
-            # logger.info(f"OpenAI response received for document {doc_id}")
-            # logger.info(f"Raw response content: {response_content}")  # Show full response
-            # 
-            # # Extract JSON from response (handles explanatory text + markdown)
-            # json_content = response_content.strip()
-            #
-            # # Remove markdown code blocks if present
-            # if '```json' in json_content:
-            #     json_start = json_content.find('```json') + 7
-            #     json_end = json_content.find('```', json_start)
-            #     if json_end != -1:
-            #         json_content = json_content[json_start:json_end].strip()
-            #     else:
-            #         json_content = json_content[json_start:].strip()
-            #
-            # # Find JSON object start if there's explanatory text
-            # json_start_pos = json_content.find('{')
-            # if json_start_pos > 0:
-            #     json_content = json_content[json_start_pos:].strip()
-            #
-            # # Find JSON object end (handle potential trailing text)
-            # brace_count = 0
-            # json_end_pos = -1
-            # for i, char in enumerate(json_content):
-            #     if char == '{':
-            #         brace_count += 1
-            #     elif char == '}':
-            #         brace_count -= 1
-            #         if brace_count == 0:
-            #             json_end_pos = i + 1
-            #             break
-            #
-            # if json_end_pos > 0:
-            #     json_content = json_content[:json_end_pos].strip()
-            #
-            # logger.info("=" * 80)
-            logger.info("CLEANED JSON CONTENT - NO LIMITS:")
-            logger.info("=" * 80)
-            logger.info(json_content)
-            logger.info("=" * 80)
-            logger.info("END OF CLEANED JSON CONTENT")
-            logger.info("=" * 80)
-            
-            # Extract JSON from response (handles explanatory text + markdown)
-            json_content = response_content.strip()
-
-            # Remove markdown code blocks if present
-            if '```json' in json_content:
-                json_start = json_content.find('```json') + 7
-                json_end = json_content.find('```', json_start)
-                if json_end != -1:
-                    json_content = json_content[json_start:json_end].strip()
-                else:
-                    json_content = json_content[json_start:].strip()
-
-            # Find JSON object start if there's explanatory text
-            json_start_pos = json_content.find('{')
-            if json_start_pos > 0:
-                json_content = json_content[json_start_pos:].strip()
-
-            # Find JSON object end (handle potential trailing text)
-            brace_count = 0
-            json_end_pos = -1
-            for i, char in enumerate(json_content):
-                if char == '{':
-                    brace_count += 1
-                elif char == '}':
-                    brace_count -= 1
-                    if brace_count == 0:
-                        json_end_pos = i + 1
-                        break
-
-            if json_end_pos > 0:
-                json_content = json_content[:json_end_pos].strip()
-
-            logger.info("=" * 80)
-            logger.info("CLEANED JSON CONTENT - NO LIMITS:")
-            logger.info("=" * 80)
-            logger.info(json_content)
-            logger.info("=" * 80)
-            logger.info("END OF CLEANED JSON CONTENT")
-            logger.info("=" * 80)
-
-            # Parse JSON response
-            try:
-                parsed_response = json.loads(json_content)
-                procedures = parsed_response.get('procedures', [])
-                
-                # Convert to the format expected by the staging table
-                playbook_hints = []
-                for procedure in procedures:
-                    playbook_hint = {
-                        'id': f"{doc_id}_{len(playbook_hints) + 1}",
-                        'title': procedure.get('title', ''),
-                        'procedures': [procedure],  # Store the full procedure in the procedures JSONB field
-                        'preconditions': procedure.get('preconditions', []),
-                        'error_codes': procedure.get('error_codes', []),
-                        'related_procedures': [],  # Could be populated from cross-references
-                        'page_references': [],  # Could be populated from chunk page numbers
-                        'category': self._categorize_procedure(procedure.get('title', '')),
-                        'system_norm': '',  # Will be populated based on models
-                        'subsystem_norm': '',  # Will be populated based on models
-                        'doc_id': doc_id,
-                        'created_at': time.time(),
-                        'confidence': 0.9  # High confidence for AI extraction
-                    }
-                    playbook_hints.append(playbook_hint)
-                
-                logger.info(f"Successfully extracted {len(playbook_hints)} playbook procedures for document {doc_id}")
-                return playbook_hints
-                
-            except json.JSONDecodeError as e:
-                logger.error(f"Failed to parse Anthropic JSON response for document {doc_id}: {e}")
-                return []
+                logger.error(f"  Empty response for chunk {chunk_num}")
+                return {"procedures": [], "error": "Empty response"}
                 
         except Exception as e:
-            logger.error(f"Anthropic playbook extraction failed for document {doc_id}: {e}")
-            return []
+            logger.error(f"  API error for chunk {chunk_num}: {type(e).__name__}: {e}")
+            return {"procedures": [], "error": str(e)}
     
     async def _extract_playbook_hints_openai(self, doc_id: str, chunks: List[Dict]) -> List[Dict[str, Any]]:
         """Extract playbook procedures using OpenAI with PDF content"""

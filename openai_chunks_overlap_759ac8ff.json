@@ -1,0 +1,192 @@
+{
+  "procedures": [
+    {
+      "title": "Unpacking and Initial Setup",
+      "preconditions": [
+        "Product received and box intact",
+        "Area clear for unpacking"
+      ],
+      "steps": [
+        "Carefully open the packaging box.",
+        "Remove all protective materials from the ZEN 150 unit.",
+        "Inspect the unit for any visible damage.",
+        "Check that all accessories and documentation are included as per the packing list."
+      ],
+      "expected_outcome": "ZEN 150 and all accessories are unpacked, undamaged, and ready for installation.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Countertop Placement and Electrical Connection",
+      "preconditions": [
+        "ZEN 150 unit fully unpacked and inspected",
+        "Countertop surface is clean, level, and stable",
+        "Designated power supply (48 V DC) is available"
+      ],
+      "steps": [
+        "Place the ZEN 150 on the designated countertop.",
+        "Ensure the unit is stable and level.",
+        "Connect the power cable to the 48 V DC power supply port.",
+        "Ensure the power connection is secure and the cable is not pinched.",
+        "Turn on the power switch, if present.",
+        "Wait for the touchscreen to initialize."
+      ],
+      "expected_outcome": "ZEN 150 is securely placed and correctly connected to the power supply, ready for use.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E01",
+        "E02"
+      ]
+    },
+    {
+      "title": "Starting the ZEN 150 - Normal Operating Mode",
+      "preconditions": [
+        "ZEN 150 is installed and powered on",
+        "Touchscreen displays main menu"
+      ],
+      "steps": [
+        "Touch the power icon on the screen.",
+        "Wait for the system self-check to complete.",
+        "Navigate to the main functional menu."
+      ],
+      "expected_outcome": "ZEN 150 is operational in normal mode and ready for user commands.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E10"
+      ]
+    },
+    {
+      "title": "Activating Safety Lock Feature",
+      "preconditions": [
+        "ZEN 150 is powered on and operational"
+      ],
+      "steps": [
+        "Touch the settings icon on the touchscreen.",
+        "Select 'Safety Lock'.",
+        "Confirm activation when prompted."
+      ],
+      "expected_outcome": "ZEN 150 enters safety lock mode, disabling unauthorized operations.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Deactivating Safety Lock Feature",
+      "preconditions": [
+        "ZEN 150 is in safety lock mode"
+      ],
+      "steps": [
+        "Touch the settings icon on the screen.",
+        "Select 'Safety Lock'.",
+        "Enter authorized user PIN or passcode.",
+        "Confirm to deactivate safety lock."
+      ],
+      "expected_outcome": "ZEN 150 exits safety lock mode and normal operations resume.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E20"
+      ]
+    },
+    {
+      "title": "Routine Cleaning and Maintenance",
+      "preconditions": [
+        "ZEN 150 is turned off and unplugged",
+        "All accessories are removed"
+      ],
+      "steps": [
+        "Wipe the exterior surfaces using a soft, damp cloth.",
+        "Clean the touchscreen with an approved screen cleaner.",
+        "Check all vents and openings for dust, removing buildup with compressed air if necessary.",
+        "Inspect the power cable for any visible damage."
+      ],
+      "expected_outcome": "ZEN 150 is clean and free of dust or residue; device is maintained for optimal performance.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Error Code E01 - Power Supply Fault",
+      "preconditions": [
+        "ZEN 150 displays E01 on touchscreen"
+      ],
+      "steps": [
+        "Check the power connection.",
+        "Ensure the power supply provides the correct 48 V DC.",
+        "Inspect the power cable for damage.",
+        "Reset the device after resolving any issues."
+      ],
+      "expected_outcome": "Power supply is restored, and ZEN 150 operates normally.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E01"
+      ]
+    },
+    {
+      "title": "Error Code E02 - Touchscreen Not Responding",
+      "preconditions": [
+        "ZEN 150 displays E02 on touchscreen"
+      ],
+      "steps": [
+        "Power off the device.",
+        "Check touchscreen connections at rear panel.",
+        "Ensure no external substances are contaminating the screen.",
+        "Restart the device."
+      ],
+      "expected_outcome": "Touchscreen responds to user input and normal operation resumes.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E02"
+      ]
+    },
+    {
+      "title": "Error Code E10 - System Self-Check Failure",
+      "preconditions": [
+        "ZEN 150 displays E10 during startup sequence"
+      ],
+      "steps": [
+        "Note the exact error description on the display.",
+        "Restart the device to repeat self-check.",
+        "If the error persists, contact technical support."
+      ],
+      "expected_outcome": "System passes self-check and proceeds to main menu, or issue escalated for service.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E10"
+      ]
+    },
+    {
+      "title": "Error Code E20 - Safety Lock Deactivation Failure",
+      "preconditions": [
+        "ZEN 150 displays E20 when attempting to unlock Safety Lock mode"
+      ],
+      "steps": [
+        "Verify that the correct PIN or passcode was entered.",
+        "Wait 30 seconds and retry unlocking.",
+        "If error persists, use master unlock procedure or contact support."
+      ],
+      "expected_outcome": "ZEN 150 exits safety lock mode, or alternate unlocking procedure is initiated.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E20"
+      ]
+    }
+  ]
+}

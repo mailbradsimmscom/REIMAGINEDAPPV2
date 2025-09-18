@@ -1,0 +1,3652 @@
+{
+  "total_chunks_processed": 53,
+  "successful_chunks": 53,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 151,
+  "unique_procedures": 25,
+  "watermaker_specific_count": 15,
+  "generic_count": 10,
+  "procedures": [
+    {
+      "title": "Initial Installation",
+      "preconditions": [
+        "Power supply 48V DC available",
+        "Mounting surface prepared",
+        "Installation tools ready"
+      ],
+      "steps": [
+        "Mount the ZEN 150 unit using provided brackets",
+        "Connect 48V DC power supply to terminals",
+        "Verify ground connection",
+        "Power on unit",
+        "Confirm touch screen responds"
+      ],
+      "expected_outcome": "Unit powers on with responsive touch screen",
+      "models": [
+        "ZEN 150"
+      ],
+      "error_codes": [
+        "E01 - Power failure",
+        "E02 - Touch calibration error"
+      ]
+    },
+    {
+      "title": "Touch Screen Calibration",
+      "preconditions": [
+        "Unit powered on",
+        "Screen visible"
+      ],
+      "steps": [
+        "Enter settings menu",
+        "Select calibration option",
+        "Touch indicated points on screen",
+        "Confirm calibration accuracy",
+        "Save settings"
+      ],
+      "expected_outcome": "Touch screen responds accurately to input",
+      "models": [
+        "ZEN 150"
+      ],
+      "error_codes": [
+        "E02 - Touch calibration error"
+      ]
+    },
+    {
+      "title": "Maintenance Cleaning",
+      "preconditions": [
+        "Unit powered off",
+        "Screen cool to touch"
+      ],
+      "steps": [
+        "Use soft, lint-free cloth",
+        "Apply approved screen cleaner sparingly",
+        "Wipe screen gently",
+        "Dry with clean cloth",
+        "Power on unit"
+      ],
+      "expected_outcome": "Clean, clear screen surface",
+      "models": [
+        "ZEN 150"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "First Start Up Procedure",
+      "preconditions": [
+        "System must be fully installed",
+        "All connections must be properly made",
+        "Power supply must be available"
+      ],
+      "steps": [
+        "Perform preliminary checks before startup",
+        "Verify all hydraulic connections",
+        "Check electrical connections",
+        "Confirm power supply voltage"
+      ],
+      "expected_outcome": "System ready for initial operation",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pump Group Installation",
+      "preconditions": [
+        "Installation location identified",
+        "Mounting surface prepared"
+      ],
+      "steps": [
+        "Position pump group in designated location",
+        "Secure pump group to mounting surface",
+        "Connect hydraulic lines",
+        "Verify proper mounting"
+      ],
+      "expected_outcome": "Pump group securely installed and connected",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Remote Control Panel Installation",
+      "preconditions": [
+        "Control panel mounting location identified",
+        "Power disconnected"
+      ],
+      "steps": [
+        "Mount control panel in designated location",
+        "Route control cables",
+        "Make electrical connections",
+        "Verify proper mounting"
+      ],
+      "expected_outcome": "Control panel properly mounted and connected",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Seawater Intake Installation",
+      "preconditions": [
+        "Hull penetration completed",
+        "Seacock installed"
+      ],
+      "steps": [
+        "Connect seawater intake to seacock",
+        "Install strainer",
+        "Route intake piping to watermaker",
+        "Secure all connections"
+      ],
+      "expected_outcome": "Seawater intake system properly installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Brine Discharge Installation",
+      "preconditions": [
+        "Discharge location identified",
+        "Hull fitting installed"
+      ],
+      "steps": [
+        "Connect discharge line to watermaker",
+        "Route discharge piping",
+        "Connect to hull fitting",
+        "Secure all connections"
+      ],
+      "expected_outcome": "Brine discharge system properly installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Manual Structure Understanding",
+      "preconditions": [
+        "Have access to manual COD.150Z48.T.2024 EN"
+      ],
+      "steps": [
+        "Locate chapter number at start of section",
+        "Find paragraph numbers under chapter (format: X.X)",
+        "Navigate to subtitles under paragraphs (format: X.X.X)",
+        "Look for further subtitles if present (format: X.X.X.X)",
+        "Note that figure and table numbering restarts with each chapter"
+      ],
+      "expected_outcome": "User can effectively navigate and reference manual content",
+      "models": [
+        "COD.150Z48.T.2024 EN"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Understanding Warning Symbols",
+      "preconditions": [
+        "Review manual safety section"
+      ],
+      "steps": [
+        "Identify ATTENTION symbol for accident prevention warnings",
+        "Identify CAUTION symbol for system damage warnings",
+        "Identify NOTE symbol for useful information"
+      ],
+      "expected_outcome": "User can recognize and interpret all safety and information symbols",
+      "models": [
+        "COD.150Z48.T.2024 EN"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Normal Operating Without Final Flushing",
+      "preconditions": [
+        "System installed",
+        "Power available"
+      ],
+      "steps": [
+        "Start system",
+        "Run without final flush cycle"
+      ],
+      "expected_outcome": "System operates normally without flush",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Normal Operating With Final Flushing",
+      "preconditions": [
+        "System installed",
+        "Power available"
+      ],
+      "steps": [
+        "Start system",
+        "Run normal cycle",
+        "Execute final flush"
+      ],
+      "expected_outcome": "System operates with final flush cycle",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Working Cycle with Timer",
+      "preconditions": [
+        "System installed",
+        "Timer configured"
+      ],
+      "steps": [
+        "Set timer",
+        "Start timed cycle"
+      ],
+      "expected_outcome": "System operates on timer schedule",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Long Flushing Procedure",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Initiate extended flush cycle"
+      ],
+      "expected_outcome": "Extended system flush completed",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Reset Procedure",
+      "preconditions": [
+        "System error or malfunction"
+      ],
+      "steps": [
+        "Power down system",
+        "Wait specified time",
+        "Restart system"
+      ],
+      "expected_outcome": "System reset to default state",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Filter Cleanliness Check",
+      "preconditions": [
+        "System accessible"
+      ],
+      "steps": [
+        "Inspect filter",
+        "Clean or replace if necessary"
+      ],
+      "expected_outcome": "Filter confirmed clean and functional",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Plant Working Pressure Check",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Monitor pressure gauges",
+        "Verify within specifications"
+      ],
+      "expected_outcome": "Pressure confirmed within normal range",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Leak Check",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Inspect all connections",
+        "Check for water leakage"
+      ],
+      "expected_outcome": "No leaks detected",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Membrane Replacement Check",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Check membrane condition",
+        "Verify performance"
+      ],
+      "expected_outcome": "Membrane condition assessed",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Shutdown Procedure",
+      "preconditions": [
+        "System operational",
+        "Necessary equipment available"
+      ],
+      "steps": [
+        "Follow shutdown sequence",
+        "Secure system"
+      ],
+      "expected_outcome": "System properly shut down",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Antifreeze Procedure",
+      "preconditions": [
+        "Temperature below 5\u00b0C",
+        "Winterizing needed"
+      ],
+      "steps": [
+        "Drain system",
+        "Add antifreeze",
+        "Protect components"
+      ],
+      "expected_outcome": "System protected from freezing",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Membrane Replacement",
+      "preconditions": [
+        "Replacement needed",
+        "New membrane available"
+      ],
+      "steps": [
+        "Remove old membrane",
+        "Install new membrane",
+        "Test system"
+      ],
+      "expected_outcome": "New membrane installed and functioning",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pre-Operation Safety Check",
+      "preconditions": [
+        "Manual must be available and accessible",
+        "Operator must be qualified"
+      ],
+      "steps": [
+        "Read entire instruction manual carefully",
+        "Verify manual is complete and legible",
+        "Ensure manual is accessible to all operators",
+        "Confirm manual location is known to all relevant personnel"
+      ],
+      "expected_outcome": "Operator is fully informed of safety requirements and operation procedures",
+      "models": [
+        "All Schenker Italia models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Personal Protective Equipment Protocol",
+      "preconditions": [
+        "Service operation to be performed"
+      ],
+      "steps": [
+        "Select protective equipment appropriate for service operation",
+        "Ensure clothing is tight to body",
+        "Verify clothing is resistant to cleaning products used",
+        "Put on all required protective equipment"
+      ],
+      "expected_outcome": "Operator is properly protected for service operations",
+      "models": [
+        "All Schenker Italia models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installation Verification",
+      "preconditions": [
+        "Plant installation completed"
+      ],
+      "steps": [
+        "Contact Schenker service point",
+        "Verify electric connections meet specifications",
+        "Verify hydraulic connections meet specifications",
+        "Check for any leaks in the system",
+        "Confirm installation location prevents damage from potential leaks"
+      ],
+      "expected_outcome": "Plant is correctly installed and safe for operation",
+      "models": [
+        "All Schenker Italia models"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Installation",
+            "preconditions": [
+              "Power supply 48V DC available",
+              "Mounting surface prepared",
+              "Installation tools ready"
+            ],
+            "steps": [
+              "Mount the ZEN 150 unit using provided brackets",
+              "Connect 48V DC power supply to terminals",
+              "Verify ground connection",
+              "Power on unit",
+              "Confirm touch screen responds"
+            ],
+            "expected_outcome": "Unit powers on with responsive touch screen",
+            "models": [
+              "ZEN 150"
+            ],
+            "error_codes": [
+              "E01 - Power failure",
+              "E02 - Touch calibration error"
+            ]
+          },
+          {
+            "title": "Touch Screen Calibration",
+            "preconditions": [
+              "Unit powered on",
+              "Screen visible"
+            ],
+            "steps": [
+              "Enter settings menu",
+              "Select calibration option",
+              "Touch indicated points on screen",
+              "Confirm calibration accuracy",
+              "Save settings"
+            ],
+            "expected_outcome": "Touch screen responds accurately to input",
+            "models": [
+              "ZEN 150"
+            ],
+            "error_codes": [
+              "E02 - Touch calibration error"
+            ]
+          },
+          {
+            "title": "Maintenance Cleaning",
+            "preconditions": [
+              "Unit powered off",
+              "Screen cool to touch"
+            ],
+            "steps": [
+              "Use soft, lint-free cloth",
+              "Apply approved screen cleaner sparingly",
+              "Wipe screen gently",
+              "Dry with clean cloth",
+              "Power on unit"
+            ],
+            "expected_outcome": "Clean, clear screen surface",
+            "models": [
+              "ZEN 150"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "First Start Up Procedure",
+            "preconditions": [
+              "System must be fully installed",
+              "All connections must be properly made",
+              "Power supply must be available"
+            ],
+            "steps": [
+              "Perform preliminary checks before startup",
+              "Verify all hydraulic connections",
+              "Check electrical connections",
+              "Confirm power supply voltage"
+            ],
+            "expected_outcome": "System ready for initial operation",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump Group Installation",
+            "preconditions": [
+              "Installation location identified",
+              "Mounting surface prepared"
+            ],
+            "steps": [
+              "Position pump group in designated location",
+              "Secure pump group to mounting surface",
+              "Connect hydraulic lines",
+              "Verify proper mounting"
+            ],
+            "expected_outcome": "Pump group securely installed and connected",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Remote Control Panel Installation",
+            "preconditions": [
+              "Control panel mounting location identified",
+              "Power disconnected"
+            ],
+            "steps": [
+              "Mount control panel in designated location",
+              "Route control cables",
+              "Make electrical connections",
+              "Verify proper mounting"
+            ],
+            "expected_outcome": "Control panel properly mounted and connected",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Seawater Intake Installation",
+            "preconditions": [
+              "Hull penetration completed",
+              "Seacock installed"
+            ],
+            "steps": [
+              "Connect seawater intake to seacock",
+              "Install strainer",
+              "Route intake piping to watermaker",
+              "Secure all connections"
+            ],
+            "expected_outcome": "Seawater intake system properly installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Brine Discharge Installation",
+            "preconditions": [
+              "Discharge location identified",
+              "Hull fitting installed"
+            ],
+            "steps": [
+              "Connect discharge line to watermaker",
+              "Route discharge piping",
+              "Connect to hull fitting",
+              "Secure all connections"
+            ],
+            "expected_outcome": "Brine discharge system properly installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Manual Structure Understanding",
+            "preconditions": [
+              "Have access to manual COD.150Z48.T.2024 EN"
+            ],
+            "steps": [
+              "Locate chapter number at start of section",
+              "Find paragraph numbers under chapter (format: X.X)",
+              "Navigate to subtitles under paragraphs (format: X.X.X)",
+              "Look for further subtitles if present (format: X.X.X.X)",
+              "Note that figure and table numbering restarts with each chapter"
+            ],
+            "expected_outcome": "User can effectively navigate and reference manual content",
+            "models": [
+              "COD.150Z48.T.2024 EN"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Understanding Warning Symbols",
+            "preconditions": [
+              "Review manual safety section"
+            ],
+            "steps": [
+              "Identify ATTENTION symbol for accident prevention warnings",
+              "Identify CAUTION symbol for system damage warnings",
+              "Identify NOTE symbol for useful information"
+            ],
+            "expected_outcome": "User can recognize and interpret all safety and information symbols",
+            "models": [
+              "COD.150Z48.T.2024 EN"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "procedures": [
+          {
+            "title": "Normal Operating Without Final Flushing",
+            "preconditions": [
+              "System installed",
+              "Power available"
+            ],
+            "steps": [
+              "Start system",
+              "Run without final flush cycle"
+            ],
+            "expected_outcome": "System operates normally without flush",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Normal Operating With Final Flushing",
+            "preconditions": [
+              "System installed",
+              "Power available"
+            ],
+            "steps": [
+              "Start system",
+              "Run normal cycle",
+              "Execute final flush"
+            ],
+            "expected_outcome": "System operates with final flush cycle",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Working Cycle with Timer",
+            "preconditions": [
+              "System installed",
+              "Timer configured"
+            ],
+            "steps": [
+              "Set timer",
+              "Start timed cycle"
+            ],
+            "expected_outcome": "System operates on timer schedule",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Long Flushing Procedure",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Initiate extended flush cycle"
+            ],
+            "expected_outcome": "Extended system flush completed",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Reset Procedure",
+            "preconditions": [
+              "System error or malfunction"
+            ],
+            "steps": [
+              "Power down system",
+              "Wait specified time",
+              "Restart system"
+            ],
+            "expected_outcome": "System reset to default state",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Filter Cleanliness Check",
+            "preconditions": [
+              "System accessible"
+            ],
+            "steps": [
+              "Inspect filter",
+              "Clean or replace if necessary"
+            ],
+            "expected_outcome": "Filter confirmed clean and functional",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Plant Working Pressure Check",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Monitor pressure gauges",
+              "Verify within specifications"
+            ],
+            "expected_outcome": "Pressure confirmed within normal range",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Leak Check",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Inspect all connections",
+              "Check for water leakage"
+            ],
+            "expected_outcome": "No leaks detected",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Membrane Replacement Check",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Check membrane condition",
+              "Verify performance"
+            ],
+            "expected_outcome": "Membrane condition assessed",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Shutdown Procedure",
+            "preconditions": [
+              "System operational",
+              "Necessary equipment available"
+            ],
+            "steps": [
+              "Follow shutdown sequence",
+              "Secure system"
+            ],
+            "expected_outcome": "System properly shut down",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Antifreeze Procedure",
+            "preconditions": [
+              "Temperature below 5\u00b0C",
+              "Winterizing needed"
+            ],
+            "steps": [
+              "Drain system",
+              "Add antifreeze",
+              "Protect components"
+            ],
+            "expected_outcome": "System protected from freezing",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Membrane Replacement",
+            "preconditions": [
+              "Replacement needed",
+              "New membrane available"
+            ],
+            "steps": [
+              "Remove old membrane",
+              "Install new membrane",
+              "Test system"
+            ],
+            "expected_outcome": "New membrane installed and functioning",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pre-Operation Safety Check",
+            "preconditions": [
+              "Manual must be available and accessible",
+              "Operator must be qualified"
+            ],
+            "steps": [
+              "Read entire instruction manual carefully",
+              "Verify manual is complete and legible",
+              "Ensure manual is accessible to all operators",
+              "Confirm manual location is known to all relevant personnel"
+            ],
+            "expected_outcome": "Operator is fully informed of safety requirements and operation procedures",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Personal Protective Equipment Protocol",
+            "preconditions": [
+              "Service operation to be performed"
+            ],
+            "steps": [
+              "Select protective equipment appropriate for service operation",
+              "Ensure clothing is tight to body",
+              "Verify clothing is resistant to cleaning products used",
+              "Put on all required protective equipment"
+            ],
+            "expected_outcome": "Operator is properly protected for service operations",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installation Verification",
+            "preconditions": [
+              "Plant installation completed"
+            ],
+            "steps": [
+              "Contact Schenker service point",
+              "Verify electric connections meet specifications",
+              "Verify hydraulic connections meet specifications",
+              "Check for any leaks in the system",
+              "Confirm installation location prevents damage from potential leaks"
+            ],
+            "expected_outcome": "Plant is correctly installed and safe for operation",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Periodic Leak Inspection",
+            "preconditions": [
+              "Plant is installed"
+            ],
+            "steps": [
+              "Visually inspect all connections",
+              "Check for water leaks",
+              "Verify leak containment measures are in place",
+              "Document any findings"
+            ],
+            "expected_outcome": "No leaks present in system",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Operation Safety Protocol",
+            "preconditions": [
+              "Plant is installed and verified"
+            ],
+            "steps": [
+              "Verify sea water is not polluted",
+              "Ensure no children or inexperienced people have access to plant",
+              "Confirm all safety devices are in place",
+              "Verify accident prevention protection is active"
+            ],
+            "expected_outcome": "Plant is safe for operation",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "procedures": [
+          {
+            "title": "Warranty Claim Procedure",
+            "preconditions": [
+              "Equipment must be within 12-month warranty period from delivery date",
+              "ERS device must be within 36-month warranty period",
+              "Maintenance must have been performed by authorized Schenker technician",
+              "Equipment must not have been dismantled by unauthorized personnel"
+            ],
+            "steps": [
+              "Identify faulty parts requiring replacement/repair",
+              "Contact authorized Schenker Service point",
+              "Arrange transportation of equipment to Service Point at customer expense",
+              "For on-vessel repairs, schedule authorized technician visit",
+              "Customer pays for manpower and travel expenses for on-site repairs",
+              "Customer handles transportation risks for warranty parts"
+            ],
+            "expected_outcome": "Replacement or repair of faulty parts under warranty coverage",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Technical Modification Procedure",
+            "preconditions": [
+              "Technical changes affecting operation or safety are required",
+              "Must be performed by manufacturer's technical staff or authorized technicians only"
+            ],
+            "steps": [
+              "Contact manufacturer's technical staff or authorized technician",
+              "Do not attempt modifications without proper authorization",
+              "Allow only authorized personnel to perform technical changes"
+            ],
+            "expected_outcome": "Safe and authorized technical modifications to equipment",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Operation in Contaminated Water Prevention",
+            "preconditions": [
+              "Water conditions must be assessed before operation",
+              "System must be properly maintained"
+            ],
+            "steps": [
+              "Check water for silt or contamination before operation",
+              "Avoid operating in silty or contaminated water",
+              "Use only genuine Schenker spare parts",
+              "Perform regular general maintenance as specified in Section 6"
+            ],
+            "expected_outcome": "Prevention of damage to internal components and maintained efficiency",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "procedures": [
+          {
+            "title": "Fire Prevention and Response",
+            "preconditions": [
+              "System must be operational",
+              "Fire extinguisher must be readily available"
+            ],
+            "steps": [
+              "Keep machine clean and free from debris",
+              "Check electrical wiring and connections regularly",
+              "Look for loose or damaged wiring",
+              "If fire occurs, turn off power supply immediately",
+              "Use appropriate fire extinguisher to contain and extinguish flames",
+              "Perform regular machine inspections"
+            ],
+            "expected_outcome": "Safe operation with minimized fire risk",
+            "models": [
+              "Watermaker systems"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Electrical Safety Protocol",
+            "preconditions": [
+              "System must be properly grounded",
+              "Wiring must be intact"
+            ],
+            "steps": [
+              "Verify electrical requirements before operation",
+              "Ensure use of grounded electrical outlet",
+              "Inspect wiring for damage before operation",
+              "Do not operate with frayed or damaged wiring",
+              "If electrical shock occurs, turn off power immediately",
+              "Contact professional assistance if electrical issues arise",
+              "Monitor for unusual smells or smoke"
+            ],
+            "expected_outcome": "Safe electrical operation without incidents",
+            "models": [
+              "Watermaker systems"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Flood Prevention Protocol",
+            "preconditions": [
+              "System must be properly installed",
+              "All connections must be secure"
+            ],
+            "steps": [
+              "Monitor system during operation",
+              "Check all hoses and connections for tightness",
+              "Inspect for signs of wear or damage",
+              "Listen for unusual noises",
+              "Turn off system immediately if leaks detected",
+              "Replace filters regularly",
+              "Check membranes for wear or damage",
+              "Perform regular system inspections"
+            ],
+            "expected_outcome": "Prevention of flooding incidents",
+            "models": [
+              "Watermaker systems"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "procedures": [
+          {
+            "title": "Watermaker Installation",
+            "preconditions": [
+              "Manual must be available",
+              "Professional technician recommended"
+            ],
+            "steps": [
+              "Follow installation instructions in manual",
+              "Ensure system is properly set up",
+              "Verify all components are correctly installed",
+              "Have professional technician perform or verify installation"
+            ],
+            "expected_outcome": "Properly installed and functioning watermaker system",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Regular Maintenance Protocol",
+            "preconditions": [
+              "Watermaker must be installed",
+              "Maintenance schedule available"
+            ],
+            "steps": [
+              "Follow maintenance schedule in manual",
+              "Perform routine inspections",
+              "Complete necessary repairs promptly",
+              "Document all maintenance activities"
+            ],
+            "expected_outcome": "Well-maintained watermaker system with minimized risk of failure",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Locating Serial Number",
+            "preconditions": [
+              "Access to watermaker unit"
+            ],
+            "steps": [
+              "Locate the top valve of the unit",
+              "Find label on top valve",
+              "Read serial number from label"
+            ],
+            "expected_outcome": "Successful identification of watermaker unit serial number",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "procedures": [
+          {
+            "title": "General Safety for Transport and Handling",
+            "preconditions": [
+              "Equipment must be transported in cardboard box",
+              "Proper lifting equipment must be available",
+              "Personal protective equipment must be available"
+            ],
+            "steps": [
+              "Wear appropriate protective equipment",
+              "Select lifting equipment suitable for weight and size of box",
+              "Verify lifting equipment is in good condition and maintained",
+              "Check attachment points for loading devices",
+              "Ensure no personnel are standing or passing under lifted equipment",
+              "Follow handling instructions in manual"
+            ],
+            "expected_outcome": "Safe transport and handling of watermaker unit",
+            "models": [
+              "Zen 150"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Materials Handling Specifications",
+            "preconditions": [
+              "Watermaker unit must be in cardboard box packaging"
+            ],
+            "steps": [
+              "Verify package dimensions: Length 87cm",
+              "Verify package width: 64cm",
+              "Verify package height: 55cm",
+              "Confirm package weight: 80kg"
+            ],
+            "expected_outcome": "Correct identification and handling of packaged watermaker unit",
+            "models": [
+              "Zen 150"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "procedures": [
+          {
+            "title": "Machine Disposal and Material Segregation",
+            "preconditions": [
+              "Machine must be at end of life/decommissioned",
+              "Local disposal regulations must be consulted"
+            ],
+            "steps": [
+              "Verify machine is fully decommissioned",
+              "Dismantle the machine completely",
+              "Segregate stainless steel components",
+              "Segregate plastic components",
+              "Segregate carbon fibre components",
+              "Segregate motors, cables and electrical materials",
+              "Segregate rubber and polyurethane seals",
+              "Dispose of each material category according to local regulations"
+            ],
+            "expected_outcome": "Machine materials properly segregated and disposed of according to environmental regulations",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Regulatory Compliance Verification",
+            "preconditions": [
+              "Machine is in operation or being installed"
+            ],
+            "steps": [
+              "Verify compliance with Machinery Directive 2006/42/EC",
+              "Verify compliance with Low Voltage Directive 73/23/EEC and 93/68/CEE",
+              "Verify compliance with Electromagnetic Compatibility Directive 89/336/EEC and 93/31/CEE",
+              "Verify compliance with UNI EN 292/1 and 292/2 safety standards",
+              "Verify compliance with Supply of Machinery Regulations 2008 (S.I. 2008:1597)",
+              "Verify compliance with Electrical Equipment Regulations 2016 (S.I. 2016:1101)",
+              "Verify compliance with Electromagnetic Compatibility Regulations 2016 (S.I. 2016:1091)"
+            ],
+            "expected_outcome": "Machine confirmed compliant with all applicable safety and regulatory standards",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "procedures": [
+          {
+            "title": "Storage Requirements",
+            "preconditions": [
+              "Unit must be prepared for storage",
+              "Storage location must be available"
+            ],
+            "steps": [
+              "Select a dry storage location",
+              "Ensure storage temperature remains between 5\u00b0C and 45\u00b0C",
+              "Protect system from freezing temperatures to prevent fluid freezing",
+              "Place unit in selected storage location"
+            ],
+            "expected_outcome": "Unit safely stored without risk of temperature damage",
+            "models": [
+              "ZEN 150"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Packaging Contents Verification",
+            "preconditions": [
+              "Packaging box received",
+              "Unobstructed workspace available"
+            ],
+            "steps": [
+              "Locate and verify Watermaker Pump group",
+              "Check for Active carbon filter with electrovalve",
+              "Verify presence of 5 microns filter with accumulator",
+              "Locate Mesh filter",
+              "Confirm Non-return valve with Tee fitting",
+              "Check for Remote panel",
+              "Verify 10mt extension cable for remote panel",
+              "Locate Installation kit",
+              "Check for Filter key",
+              "Verify 6x8 hose for production",
+              "Confirm Computer box presence"
+            ],
+            "expected_outcome": "All package contents verified and accounted for",
+            "models": [
+              "ZEN 150"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "procedures": [
+          {
+            "title": "Document Review and Installation Preparation",
+            "preconditions": [
+              "Unit packaging received",
+              "Documentation package present"
+            ],
+            "steps": [
+              "Locate technical documentation in packaging",
+              "Review use and maintenance manual thoroughly before installation",
+              "Verify presence of electric and hydraulic schemes",
+              "Check for warnings and instruction documents"
+            ],
+            "expected_outcome": "Complete understanding of installation requirements and documentation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Material Verification",
+            "preconditions": [
+              "Installation planned",
+              "Manual available for reference"
+            ],
+            "steps": [
+              "Review manual for recommended materials list",
+              "Verify correct hoses are available",
+              "Confirm appropriate fittings are present",
+              "Validate seals match specifications"
+            ],
+            "expected_outcome": "All installation materials verified as compliant with manual specifications",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Storage Temperature Management",
+            "preconditions": [
+              "Unit requires storage",
+              "Temperature monitoring capability"
+            ],
+            "steps": [
+              "Identify storage location",
+              "Verify storage temperature range is between 5\u00b0C and 45\u00b0C",
+              "Monitor storage temperature regularly",
+              "Relocate unit if temperature limits are exceeded"
+            ],
+            "expected_outcome": "Unit stored within safe temperature range",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "procedures": [
+          {
+            "title": "Energy Recovery System Operation",
+            "preconditions": [
+              "System must be properly installed",
+              "System must be connected to power source"
+            ],
+            "steps": [
+              "Activate low-pressure pump",
+              "Allow Energy Recovery System to amplify pressure",
+              "System automatically recoups hydraulic energy from membranes",
+              "No manual pressure adjustments needed during operation"
+            ],
+            "expected_outcome": "Silent, vibration-free water purification with high energy efficiency",
+            "models": [
+              "Schenker Watermaker COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Basic System Setup",
+            "preconditions": [
+              "Manual must be accessible for reference",
+              "System must be in designated installation location"
+            ],
+            "steps": [
+              "Review operating procedures in manual",
+              "Review maintenance procedures in manual",
+              "Ensure system is properly connected",
+              "Verify power supply connection"
+            ],
+            "expected_outcome": "System ready for operation with operator familiar with procedures",
+            "models": [
+              "Schenker Watermaker COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "procedures": [
+          {
+            "title": "Hydraulic Connection Setup - Main Unit",
+            "preconditions": [
+              "All components present",
+              "Installation area prepared"
+            ],
+            "steps": [
+              "Connect seawater inlet using 20mm internal diameter reinforced hose",
+              "Connect brine discharge using 16mm internal diameter reinforced hose",
+              "Connect fresh water line using 6x8mm hose to \u00bc'' fitting"
+            ],
+            "expected_outcome": "All hydraulic connections properly secured and leak-free",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Hydraulic Connection Setup - Pump",
+            "preconditions": [
+              "Pump unit present",
+              "Installation area prepared"
+            ],
+            "steps": [
+              "Connect water inlet using 20mm internal diameter reinforced hose",
+              "Connect water outlet using 16mm internal diameter reinforced hose",
+              "Install 5 micron cartridge filter (2.32\" x 9 \u00be\")",
+              "Install active carbon filter (2.32\" x 9 \u00be\")"
+            ],
+            "expected_outcome": "Pump connections complete and filters installed",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power System Setup",
+            "preconditions": [
+              "Power source available"
+            ],
+            "steps": [
+              "Verify power supply meets 48 VDC +/- 15% requirement",
+              "Connect power supply ensuring proper polarity",
+              "Verify power consumption does not exceed 600 Watt/h average",
+              "Ensure peak power capacity of 1.2 KWatt is available"
+            ],
+            "expected_outcome": "System properly powered within specifications",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Water Safety Maintenance",
+            "preconditions": [
+              "Watermaker operational"
+            ],
+            "steps": [
+              "Follow proper shutdown procedures after each use",
+              "Perform regular cleaning procedures",
+              "Install UV sterilizer or microfiltration system as backup treatment",
+              "Monitor water quality regularly"
+            ],
+            "expected_outcome": "Maintained water purity and system cleanliness",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "procedures": [
+          {
+            "title": "Routine System Monitoring",
+            "preconditions": [
+              "System must be installed",
+              "System must be operational"
+            ],
+            "steps": [
+              "Monitor system operation regularly",
+              "Perform routine maintenance checks",
+              "Verify safe operation",
+              "Check system effectiveness"
+            ],
+            "expected_outcome": "Safe and effective watermaker operation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Component Identification",
+            "preconditions": [
+              "Access to watermaker unit",
+              "Cover removed"
+            ],
+            "steps": [
+              "Locate watermaker outlet/discharge",
+              "Locate watermaker inlet",
+              "Identify reverse osmosis membranes",
+              "Locate fresh water production area",
+              "Identify reset valve",
+              "Locate positioner knob",
+              "Find signal pressure switch",
+              "Locate manometer",
+              "Identify depressurization valve"
+            ],
+            "expected_outcome": "All major watermaker components identified and located",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "procedures": [
+          {
+            "title": "Accumulator Air Pressure Check",
+            "preconditions": [
+              "System must be off",
+              "Access to accumulator Schrader valve required"
+            ],
+            "steps": [
+              "Locate the polypropylene air reservoir (accumulator)",
+              "Check air pressure through Schrader valve",
+              "Verify pressure is approximately 5 Bar",
+              "If pressure is incorrect, adjust to factory specifications"
+            ],
+            "expected_outcome": "Accumulator maintains correct 5 Bar pre-charge pressure",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "High Pressure Safety Shutdown",
+            "preconditions": [
+              "System must be operational",
+              "Pressure switch must be connected"
+            ],
+            "steps": [
+              "Monitor pump pressure through pressure switch",
+              "If pressure exceeds 15 bar:",
+              "System automatically shuts down",
+              "High-pressure alarm activates on control panel",
+              "Investigate cause of high pressure",
+              "Reset system once pressure issue is resolved"
+            ],
+            "expected_outcome": "System shuts down safely when pressure exceeds 15 bar",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": [
+              "High Pressure Alarm"
+            ]
+          },
+          {
+            "title": "System Safety Monitoring",
+            "preconditions": [
+              "System is operational"
+            ],
+            "steps": [
+              "Do not leave system running unattended for extended periods",
+              "Regularly monitor system operation",
+              "Maintain proper control checks",
+              "Monitor pressure sensor readings"
+            ],
+            "expected_outcome": "Safe and controlled system operation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "procedures": [
+          {
+            "title": "Air Bleeding Operation",
+            "preconditions": [
+              "System must be off",
+              "Watermaker must be installed"
+            ],
+            "steps": [
+              "Locate the depressurization valve on top of the watermaker",
+              "Slightly unscrew the depressurization valve to open it",
+              "Allow air to bleed from system",
+              "Once complete, close valve by screwing completely in"
+            ],
+            "expected_outcome": "System properly bled of air",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Hydraulic Block Reset Procedure",
+            "preconditions": [
+              "System is in hydraulic block state"
+            ],
+            "steps": [
+              "Locate the reset valve with blue lever on top of ERS",
+              "Open reset valve (move lever parallel to valve)",
+              "Locate the positioner (stainless steel arm with black knob)",
+              "Screw in the positioner to reset the unit",
+              "Close reset valve (return lever to perpendicular position)"
+            ],
+            "expected_outcome": "System released from hydraulic block",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Emergency Manual Start Procedure",
+            "preconditions": [
+              "Electronic computer failure",
+              "System non-operational"
+            ],
+            "steps": [
+              "Locate microswitches P1 and EV on computer box",
+              "Switch on P1 to activate pump",
+              "Switch on EV to activate electrovalve",
+              "Monitor system operation"
+            ],
+            "expected_outcome": "Watermaker operational in manual mode",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "procedures": [
+          {
+            "title": "Diverting Valve Installation",
+            "preconditions": [
+              "Diverting valve (optional) available",
+              "Access to PCB electric box",
+              "Salinity probe installed"
+            ],
+            "steps": [
+              "Locate the salinity probe cables",
+              "Connect first probe cable to Salinity clamp on PCB",
+              "Connect second probe cable to Salinity clamp on PCB",
+              "Locate the diverting valve cables",
+              "Connect first valve cable to Chem clamp on PCB",
+              "Connect second valve cable to (-) clamp on PCB"
+            ],
+            "expected_outcome": "Diverting valve properly connected to control fresh water flow based on salinity readings",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "procedures": [
+          {
+            "title": "Diverting Valve Installation",
+            "preconditions": [
+              "Access to membrane outlet",
+              "Access to tank connection points",
+              "Access to discharge connection points"
+            ],
+            "steps": [
+              "Locate the fresh water outlet from valve",
+              "Install diverting valve at the fresh water outlet point",
+              "Connect IN port to membrane outlet",
+              "Connect first OUT port to tank connection",
+              "Connect second OUT port to discharge connection",
+              "Install probe if included"
+            ],
+            "expected_outcome": "Diverting valve properly installed and connected to all required ports",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Tee Discharge Connection Setup",
+            "preconditions": [
+              "Diverting valve installed",
+              "Access to outboard discharge point",
+              "Access to watermaker discharge point"
+            ],
+            "steps": [
+              "Locate the connection point from diverting valve",
+              "Connect tee fitting to diverting valve outlet",
+              "Connect one end to outboard discharge",
+              "Connect other end to watermaker discharge"
+            ],
+            "expected_outcome": "Tee discharge connection properly installed and connected",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pressure Transducer Installation",
+            "preconditions": [
+              "Pressure transducer must be optional component",
+              "Access to watermaker inlet and electric box PCB required"
+            ],
+            "steps": [
+              "Install pressure transducer on the inlet of the watermaker",
+              "Connect red wire to clamp 12 on PCB",
+              "Connect green wire to clamp HP on PCB"
+            ],
+            "expected_outcome": "Pressure value readable on touch-screen display",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Digital Flow Meter Installation",
+            "preconditions": [
+              "Digital flow meter must be optional component",
+              "Access to watermaker outlet and electric box PCB required"
+            ],
+            "steps": [
+              "Identify proper flow direction using arrow on bottom of device",
+              "Connect meter to watermaker outlet hydraulically",
+              "If diverting valve present, install on inlet instead",
+              "Connect red wire to clamp 12 on PCB",
+              "Connect black wire to clamp (-) on PCB",
+              "Connect brown wire to clamp PrBa on PCB"
+            ],
+            "expected_outcome": "Fresh water production flow rate readable on touch-screen display",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "procedures": [
+          {
+            "title": "Active Carbon Filter Installation",
+            "preconditions": [
+              "Fresh water system available",
+              "Filter holder with electrovalve present"
+            ],
+            "steps": [
+              "Connect filter between fresh water system and electrovalve on filter holder",
+              "Ensure manual valve is installed on filter inlet",
+              "Verify connections are secure"
+            ],
+            "expected_outcome": "Filter properly connected allowing cartridge replacement without system depressurization",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Non-return Valve Installation",
+            "preconditions": [
+              "Inlet hose available",
+              "Seacock accessible"
+            ],
+            "steps": [
+              "Identify proper installation location",
+              "Install valve in vertical orientation only",
+              "Connect to inlet hose",
+              "Verify proper water flow direction"
+            ],
+            "expected_outcome": "Valve prevents water backflow and fresh water leakage during washing",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Mesh Filter Installation",
+            "preconditions": [
+              "Seacock accessible",
+              "Pump accessible"
+            ],
+            "steps": [
+              "Locate position between seacock and pump",
+              "Install mesh filter",
+              "Secure all connections",
+              "Verify proper water flow"
+            ],
+            "expected_outcome": "Pump protected from macro sediments",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Electrovalve Operation",
+            "preconditions": [
+              "Watermaker system installed",
+              "Fresh water tank connected"
+            ],
+            "steps": [
+              "Verify electrovalve connections",
+              "Switch from seawater intake position",
+              "Switch to fresh water tank position for washing"
+            ],
+            "expected_outcome": "Successful switching between seawater and fresh water sources",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pump Group Installation",
+            "preconditions": [
+              "Adequately ventilated area required",
+              "Room temperature must not exceed 45\u00b0C",
+              "Horizontal base suitable to sustain pump weight needed",
+              "Location must be away from flammable materials and liquids"
+            ],
+            "steps": [
+              "Install pump below waterline if possible",
+              "Position pump within 2m maximum of water inlet",
+              "Ensure location prevents water damage in case of leaks",
+              "Place pump on horizontal base",
+              "Secure pump to support structure using passing bolts"
+            ],
+            "expected_outcome": "Pump group securely mounted in safe, accessible location",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Group Installation",
+            "preconditions": [
+              "Room temperature must not exceed 40\u00b0C",
+              "Flat supporting surface required",
+              "Must be installed above pump",
+              "Rubber-based adhesive and L-brackets required"
+            ],
+            "steps": [
+              "Position watermaker above pump location",
+              "Choose horizontal or vertical orientation",
+              "Apply supplied rubber-based adhesive to supporting surface",
+              "Place watermaker completely on flat surface",
+              "Secure watermaker using provided L-brackets",
+              "Ensure watermaker is not suspended by L-brackets alone",
+              "Install support shelf if needed for additional support"
+            ],
+            "expected_outcome": "Watermaker securely mounted with proper support and adhesion",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 24,
+      "pages": "24-24",
+      "result": {
+        "procedures": [
+          {
+            "title": "Mounting Installation",
+            "preconditions": [
+              "Have antivibration rubber stickers ready",
+              "Review mounting configuration diagrams"
+            ],
+            "steps": [
+              "Check mounting orientation using Fig 4-2",
+              "Verify acceptable mounting configurations shown in Fig 4-3",
+              "Apply antivibration rubber stickers to mounting points",
+              "Mount unit according to approved configuration"
+            ],
+            "expected_outcome": "Unit securely mounted with vibration dampening",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "procedures": [
+          {
+            "title": "Watermaker Installation Planning",
+            "preconditions": [
+              "Access to boat hull",
+              "Installation space available",
+              "Installation tools ready"
+            ],
+            "steps": [
+              "Plan and evaluate equipment siting locations",
+              "Select seawater inlet/outlet positions",
+              "Determine positions for pump group, watermaker group, and active carbon filter",
+              "Plan position of thermal-magnetic circuit breaker",
+              "Plan routing paths for hoses and electric cables",
+              "Create schematic drawing of hydraulic and electric connections",
+              "Attach drawings to manual for reference"
+            ],
+            "expected_outcome": "Complete installation plan with all component locations mapped",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Through-hull Fitting Installation",
+            "preconditions": [
+              "Hull access",
+              "Installation tools ready"
+            ],
+            "steps": [
+              "Locate central and low position on hull",
+              "Ensure position prevents air suction into pump",
+              "Install through-hull fitting",
+              "Install non-return valve under seawater level",
+              "Position non-return valve close to through-hull fitting",
+              "Mount non-return valve in vertical position"
+            ],
+            "expected_outcome": "Properly positioned and sealed through-hull fitting with valve",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump Installation",
+            "preconditions": [
+              "Through-hull fitting installed",
+              "Ventilated space available"
+            ],
+            "steps": [
+              "Position pump as low as possible relative to waterline",
+              "Install pump within 2m of seawater intake",
+              "Ensure pump is in ventilated location for motor cooling",
+              "Avoid contact with flammable liquids and materials",
+              "Verify pump location is below waterline if distance exceeds 2m"
+            ],
+            "expected_outcome": "Properly positioned and secured pump installation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Unit Mounting",
+            "preconditions": [
+              "Adequate support structure available",
+              "Installation tools ready"
+            ],
+            "steps": [
+              "Identify location with ambient temperature not exceeding 40\u00b0C",
+              "Prepare support structure capable of holding 60 Kg",
+              "Position watermaker unit on support",
+              "Secure watermaker unit to support"
+            ],
+            "expected_outcome": "Securely mounted watermaker unit",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 25,
+      "pages": "25-25",
+      "result": {
+        "procedures": [
+          {
+            "title": "Watermaker Unit Installation",
+            "preconditions": [
+              "Installation area selected",
+              "Installation orientation determined (vertical or horizontal)",
+              "Required fittings available"
+            ],
+            "steps": [
+              "Verify rubber sticker positions according to chosen orientation (vertical or horizontal)",
+              "For horizontal installation, connect manometer horizontally using provided fittings",
+              "If mounting horizontally, use the following fittings in sequence:",
+              "- Install 1/2\" M to 3/8\" F reducer",
+              "- Connect 3/8\" 90\u00b0-Degree Elbow",
+              "- Attach 3/8\" Nipples",
+              "- Install 3/8\" M to 1/4\" F reducer",
+              "Ensure lateral manifolds are not stressed during installation"
+            ],
+            "expected_outcome": "Watermaker unit securely mounted with proper orientation and fittings",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 28,
+      "pages": "28-28",
+      "result": {
+        "procedures": [
+          {
+            "title": "Hydraulic System Installation",
+            "preconditions": [
+              "Access to boat's fresh water system",
+              "Required hoses and fittings available",
+              "Installation area prepared"
+            ],
+            "steps": [
+              "Connect 'Armorvin' type hose with 16mm internal diameter for brine discharge",
+              "Install reinforced hose with minimum internal diameter of 20mm (PN16 rating)",
+              "Connect reinforced hose to pressure side of boat's fresh water system"
+            ],
+            "expected_outcome": "Properly connected hydraulic system with correct hose specifications for both brine discharge and fresh water supply",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 26,
+      "pages": "26-26",
+      "result": {
+        "procedures": [
+          {
+            "title": "Housebarb Installation",
+            "preconditions": [
+              "Access to right side of watermaker",
+              "Installation kit with housebarb available",
+              "Key #27 and #24 available"
+            ],
+            "steps": [
+              "Locate plug on right side of watermaker",
+              "Remove plug using key #27",
+              "Install provided housebarb using key #24",
+              "Tighten until mechanical stop",
+              "Do not exceed torque limits"
+            ],
+            "expected_outcome": "Properly installed housebarb fitting",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Non-Return Valve Installation",
+            "preconditions": [
+              "Access to seawater intake area",
+              "Non-return valve available"
+            ],
+            "steps": [
+              "Identify location as close as possible to seawater intake",
+              "Orient valve according to direction arrow",
+              "Install valve in vertical position"
+            ],
+            "expected_outcome": "Properly installed non-return valve",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Active Carbon Filter Installation",
+            "preconditions": [
+              "Access to pump group area",
+              "Active carbon filter with electrovalve available"
+            ],
+            "steps": [
+              "Position filter next to pump group",
+              "Mount in vertical position if possible",
+              "Ensure filter is easily accessible"
+            ],
+            "expected_outcome": "Properly installed active carbon filter",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Seawater Intake Installation",
+            "preconditions": [
+              "Access to hull",
+              "3/4\" minimum size seacock available",
+              "Through-hull fitting available"
+            ],
+            "steps": [
+              "Locate central position well under waterline",
+              "Install 3/4\" minimum size seacock",
+              "Install scoop skin fitting oriented toward bow",
+              "For boats exceeding 15 knots: drill 8mm hole on back of shape"
+            ],
+            "expected_outcome": "Properly installed seawater intake system",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 27,
+      "pages": "27-27",
+      "result": {
+        "procedures": [
+          {
+            "title": "Seacock Water Inlet Installation",
+            "preconditions": [
+              "Pre-existing seacock must be available",
+              "Installation location must be below waterline"
+            ],
+            "steps": [
+              "Verify seacock is minimum 3/4\" size",
+              "Ensure fitting is located low and central in hull",
+              "Confirm location is not forward of keel",
+              "Verify no air can be introduced from other systems",
+              "Confirm location remains underwater when vessel heels",
+              "Check distance from WC discharge is adequate"
+            ],
+            "expected_outcome": "Properly installed water inlet that meets all safety requirements",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Hose Connection Installation",
+            "preconditions": [
+              "Proper hose size available",
+              "Access to installation location"
+            ],
+            "steps": [
+              "Install mesh type filter (50 Mesh) near water intake",
+              "Secure connections below waterline with double hose clamps",
+              "Position strainer close to through-hull",
+              "Ensure strainer is accessible for inspection"
+            ],
+            "expected_outcome": "Secure and serviceable hose connections",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Fresh Water Flushing Connection",
+            "preconditions": [
+              "Access to boat's fresh water pressure pump",
+              "Minimum flow rate capability of 20 lit/min at 1 bar"
+            ],
+            "steps": [
+              "Tee into line downstream of fresh water pressure pump",
+              "Verify pump meets minimum flow requirements",
+              "Ensure fresh water pump is ON during flushing"
+            ],
+            "expected_outcome": "Functional fresh water flushing system",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Brine Discharge Installation",
+            "preconditions": [
+              "Access to discharge location above sea level",
+              "Minimum \u00bd\" BSP fitting available"
+            ],
+            "steps": [
+              "Install discharge connection above sea level",
+              "Use minimum \u00bd\" BSP size fitting",
+              "Optional: Tee into existing discharge hoses",
+              "Verify no backflow of dirty water possible"
+            ],
+            "expected_outcome": "Properly functioning discharge system without backflow",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 31,
+      "pages": "31-31",
+      "result": {
+        "procedures": [
+          {
+            "title": "Remote Control Panel Installation",
+            "preconditions": [
+              "Must be performed by qualified technician/operator",
+              "Access to electrical drawings required",
+              "Internal boat panel must be free of humidity and condensation",
+              "Minimum 50mm depth behind panel required"
+            ],
+            "steps": [
+              "Identify mounting location on boat panel",
+              "Verify area behind panel is free of humidity and condensation",
+              "Confirm minimum 50mm depth clearance behind panel",
+              "Cut opening in boat panel to dimensions: 110mm width x 90mm height",
+              "Connect pre-wired multiple cable (10m standard length)",
+              "Mount control panel (overall dimensions 135mm width x 116mm height)"
+            ],
+            "expected_outcome": "Remote control panel securely mounted with proper electrical connection",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 29,
+      "pages": "29-29",
+      "result": {
+        "procedures": [
+          {
+            "title": "Hydraulic Connections Installation",
+            "preconditions": [
+              "All required components present: pump, electrovalve, filters, valves",
+              "Access to vessel's fresh water system",
+              "Proper hoses and fittings available"
+            ],
+            "steps": [
+              "Install low pressure connections (max 3 bar) using Armorvin reinforced pipe PN 6 with 20mm internal diameter between seawater intake, mesh filter, non-return valve inlet, and pump group",
+              "Connect watermaker discharge to vessel's through hull discharge using Armorvin reinforced pipe PN6 with 16mm internal diameter",
+              "Install medium pressure connections (max 10 bar) using rubber reinforced pipe PN 20 (min) with 20mm internal diameter between fresh water system, carbon filter, backflow valve outlet, and pump inlet",
+              "Connect pump outlet to 5 microns filter and watermaker inlet using appropriate pressure-rated hose",
+              "Connect watermaker to fresh water tank using \u00bc'' fittings and small plastic blue pipe 6x8mm"
+            ],
+            "expected_outcome": "All hydraulic connections properly installed and secured with appropriate pressure ratings",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Safety Requirements for Hydraulic Installation",
+            "preconditions": [
+              "Installation area accessible",
+              "Proper hoses available"
+            ],
+            "steps": [
+              "Verify all connections (except fresh water production) use 16mm internal diameter hose",
+              "Ensure pump outlet to 5m filter to watermaker inlet section uses minimum PN 16 reinforced hose",
+              "Verify all pressure ratings match connection requirements: Low pressure (max 3 bar), Medium pressure (max 10 bar)",
+              "Check all fittings are properly secured",
+              "Verify hose quality meets safety requirements"
+            ],
+            "expected_outcome": "All connections meet safety requirements and pressure ratings",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 30,
+      "pages": "30-30",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pump Connection Installation",
+            "preconditions": [
+              "Pump must be positioned near seawater intake",
+              "Pump must be positioned as low as possible relative to seawater level"
+            ],
+            "steps": [
+              "Connect inlet hose to pump IN port",
+              "Connect outlet hose to pump OUT port",
+              "Ensure hose paths are short and straight (not convoluted)"
+            ],
+            "expected_outcome": "Properly connected pump with optimal hose routing",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Inlet Connection",
+            "preconditions": [
+              "Pump must be properly installed"
+            ],
+            "steps": [
+              "Locate holder on right side of watermaker marked 'IN'",
+              "Connect seawater inlet hose from pump to the IN holder"
+            ],
+            "expected_outcome": "Secure connection between pump and watermaker inlet",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Outlet Connection",
+            "preconditions": [
+              "Watermaker must be installed"
+            ],
+            "steps": [
+              "Locate holder on right side marked 'OUT'",
+              "Connect discharge hose to OUT holder",
+              "If drain outlet is below watermaker, create upward swan neck in hose to ensure water head"
+            ],
+            "expected_outcome": "Proper discharge connection with appropriate water head",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Fresh Water Tank Connection",
+            "preconditions": [
+              "Fresh water tank must be accessible",
+              "Supplied small hose must be available"
+            ],
+            "steps": [
+              "Locate polyethylene pipe on right side of watermaker",
+              "Connect supplied hose between watermaker pipe and tank",
+              "For metal tanks: Create 1/4\" threaded hole if needed",
+              "Alternative: Connect to tank air vent hose using T-fitting"
+            ],
+            "expected_outcome": "Secure fresh water connection between watermaker and tank",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 34,
+      "pages": "34-34",
+      "result": {
+        "procedures": [
+          {
+            "title": "48V DC Electric Installation",
+            "preconditions": [
+              "Access to electrical installation area",
+              "48V DC power source available",
+              "Installation manual COD.150Z48.T.2024 EN"
+            ],
+            "steps": [
+              "Refer to electrical scheme diagram FIG. 4-5",
+              "Connect power supply to 48V DC terminals",
+              "Verify proper voltage at connection points",
+              "Follow wiring diagram for component connections"
+            ],
+            "expected_outcome": "Proper 48V DC electrical connection established according to scheme",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 33,
+      "pages": "33-33",
+      "result": {
+        "procedures": [
+          {
+            "title": "48V DC Wiring Installation",
+            "preconditions": [
+              "Power supply disconnected",
+              "Access to wiring area",
+              "48V DC power source available"
+            ],
+            "steps": [
+              "Verify power is disconnected",
+              "Connect positive (+) wire to terminal marked 48V+",
+              "Connect negative (-) wire to terminal marked 48V-",
+              "Verify polarity before powering on",
+              "Secure all wire connections",
+              "Close wiring access panel"
+            ],
+            "expected_outcome": "System properly wired for 48V DC operation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": [
+              "Incorrect polarity - Reverse wire connections",
+              "Loose connection - Retighten terminal screws"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 32,
+      "pages": "32-32",
+      "result": {
+        "procedures": [
+          {
+            "title": "Electric Connection Installation for ZEN 150 48V DC",
+            "preconditions": [
+              "Access to service batteries",
+              "Access to vessel panel",
+              "Required cables and connectors available",
+              "25 Ampere automatic circuit breaker available"
+            ],
+            "steps": [
+              "Locate electric connectors inside the small electric box connected to computer box",
+              "Connect power supply from service batteries to terminals - and +",
+              "Connect to vessel panel downstream of voltmeter and ammeter on panelboard",
+              "Install 25 Ampere automatic circuit breaker on power supply",
+              "Select appropriate cable size based on voltage and length according to selection table",
+              "Connect negative battery to pump box negative terminal",
+              "Connect positive battery to pump box positive terminal",
+              "Connect pump box to computer box negative terminal",
+              "Connect pump box to computer box positive terminal",
+              "Connect P1 from pump box to computer box using 2.5mm\u00b2 cable",
+              "Connect pressure switch signals (PS) to computer box using 2.5mm\u00b2 cable",
+              "Connect electrovalve (EV) to computer box using 2.5mm\u00b2 cable",
+              "Connect remote panel to computer box using supplied pre-wired 10m cable"
+            ],
+            "expected_outcome": "Complete electrical installation with all components properly connected",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Cable Selection Procedure",
+            "preconditions": [
+              "Known cable run length",
+              "48V system voltage",
+              "25A current requirement"
+            ],
+            "steps": [
+              "For runs up to 3 meters: Use 10mm\u00b2 or AWG 7 cable",
+              "For runs 3-7 meters: Use 10mm\u00b2 or AWG 7 cable",
+              "For runs 7-10 meters: Use 16mm\u00b2 or AWG 5 cable"
+            ],
+            "expected_outcome": "Correct cable size selected for installation distance",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 35,
+      "pages": "35-35",
+      "result": {
+        "procedures": [
+          {
+            "title": "Starting the Watermaker System",
+            "preconditions": [
+              "Remote panel must be powered (12/24V)",
+              "Display must be active"
+            ],
+            "steps": [
+              "Locate START button on home screen",
+              "Press START button",
+              "System will run continuously until stopped"
+            ],
+            "expected_outcome": "Watermaker begins operation",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Normal System Shutdown",
+            "preconditions": [
+              "System must be running",
+              "Display must be active"
+            ],
+            "steps": [
+              "Press STOP button",
+              "Wait 2-3 seconds for internal valve positioning",
+              "If automatic washing is enabled, system will perform 1-minute wash cycle",
+              "System will shut down"
+            ],
+            "expected_outcome": "Watermaker stops operation safely",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Emergency System Shutdown",
+            "preconditions": [
+              "System must be running",
+              "Display must be active"
+            ],
+            "steps": [
+              "Press and hold STOP button for 5 seconds"
+            ],
+            "expected_outcome": "Watermaker stops immediately",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Automatic Washing Cycle",
+            "preconditions": [
+              "System must be in stopped state",
+              "Display must be active"
+            ],
+            "steps": [
+              "Press FLUSH button",
+              "System will perform 1-minute washing cycle"
+            ],
+            "expected_outcome": "Washing cycle completed",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Waking Display From Sleep Mode",
+            "preconditions": [
+              "Display must be in sleep mode (occurs after 3 minutes of inactivity)"
+            ],
+            "steps": [
+              "Touch anywhere on the screen"
+            ],
+            "expected_outcome": "Display activates without triggering other commands",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 37,
+      "pages": "37-37",
+      "result": {
+        "procedures": [
+          {
+            "title": "Bypass Switch Operation",
+            "preconditions": [
+              "Signal pressure switch malfunction detected",
+              "System blocked message present",
+              "No actual hydraulic problems present"
+            ],
+            "steps": [
+              "Verify system is displaying 'SYSTEM BLOCKED' message",
+              "Confirm no actual hydraulic issues exist",
+              "Activate bypass switch to exclude pressure sensor",
+              "Complete one production cycle",
+              "Bypass will automatically deactivate after cycle completion"
+            ],
+            "expected_outcome": "System operates for one cycle bypassing pressure sensor",
+            "models": [
+              "ERS System"
+            ],
+            "error_codes": [
+              "SYSTEM BLOCKED"
+            ]
+          },
+          {
+            "title": "Bypass Valve Operation (Optional)",
+            "preconditions": [
+              "Bypass valve installed",
+              "Need to override salinity probe"
+            ],
+            "steps": [
+              "Activate bypass valve",
+              "Fresh water will be diverted to tank regardless of quality"
+            ],
+            "expected_outcome": "All fresh water diverted to tank without quality check",
+            "models": [
+              "Systems with optional bypass valve"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Level Control Setup (Optional)",
+            "preconditions": [
+              "Level control feature installed",
+              "One or two level switches available for fresh water tank"
+            ],
+            "steps": [
+              "Install level switches in fresh water tank",
+              "Enable level control working procedure",
+              "System will operate with automatic level control"
+            ],
+            "expected_outcome": "Automatic water level control active",
+            "models": [
+              "Systems with optional level control"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 36,
+      "pages": "36-36",
+      "result": {
+        "procedures": [
+          {
+            "title": "Production Timer Setting",
+            "preconditions": [
+              "Watermaker system powered on",
+              "Control panel accessible"
+            ],
+            "steps": [
+              "Access the Production Timer control",
+              "Press the arrow '>' button to select desired duration",
+              "Select between 1-6 hours of operation time"
+            ],
+            "expected_outcome": "Watermaker operation time is set for selected duration",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Automatic Startup Procedure",
+            "preconditions": [
+              "New machine installation",
+              "After filter cartridge replacement",
+              "After general service",
+              "Depressurization valve accessible"
+            ],
+            "steps": [
+              "Open the depressurization valve",
+              "Select Automatic Startup function (indicated by YELLOW color)",
+              "Wait for system to complete air purging from seawater and washing fresh water hoses"
+            ],
+            "expected_outcome": "System completely purged of air and ready for operation",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Periodic Wash Setup",
+            "preconditions": [
+              "Fresh water reservoir contains sufficient water (minimum 20L per cycle)",
+              "System in operational state"
+            ],
+            "steps": [
+              "Activate Periodic Wash function",
+              "Verify FLUSH button is illuminated",
+              "Confirm countdown appears in Timer box",
+              "System will automatically perform 1-minute wash every 6-10 days"
+            ],
+            "expected_outcome": "System scheduled for automatic periodic washing",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Manual Wash Operation",
+            "preconditions": [
+              "System in operational state"
+            ],
+            "steps": [
+              "Select Manual Wash function",
+              "Allow system to run for 10-minute washing cycle",
+              "Press STOP if early termination is needed"
+            ],
+            "expected_outcome": "System completes washing cycle",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 40,
+      "pages": "40-40",
+      "result": {
+        "procedures": [
+          {
+            "title": "Preliminary Checks Before Start-up",
+            "preconditions": [
+              "New system installation",
+              "After filter replacement",
+              "After chemical washing"
+            ],
+            "steps": [
+              "Verify all components and hoses are connected correctly",
+              "Verify 5 micron and active carbon cartridges are installed",
+              "Check seawater inlet valve and salt water drain valve are open",
+              "Check reset valve is closed (lever orthogonal to body valve) and positioner completely unscrewed",
+              "Check fresh water pressurizing pump of the boat is on",
+              "Check grey valve on active carbon filter is open"
+            ],
+            "expected_outcome": "System ready for start-up procedure",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "System Start-up Procedure",
+            "preconditions": [
+              "All preliminary checks completed successfully"
+            ],
+            "steps": [
+              "Open the depressurization valve (unscrew the valve)",
+              "Activate start-up procedure through function on second page",
+              "Close depressurization valve when display shows specific message",
+              "Wait for completion of procedure"
+            ],
+            "expected_outcome": "System successfully started and operational",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 39,
+      "pages": "39-39",
+      "result": {
+        "procedures": [
+          {
+            "title": "System Block Reset",
+            "preconditions": [
+              "System displays RED alarm message",
+              "System is in blocked state"
+            ],
+            "steps": [
+              "Press STOP button to reset system",
+              "Investigate potential hydraulic issues",
+              "If pressure switch malfunction detected, activate bypass"
+            ],
+            "expected_outcome": "System returns to operational state",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": [
+              "SYSTEM BLOCKED"
+            ]
+          },
+          {
+            "title": "Control Cable Verification",
+            "preconditions": [
+              "Control Cable alarm displayed"
+            ],
+            "steps": [
+              "Check connection continuity between remote panel and computer box"
+            ],
+            "expected_outcome": "Verified cable connection",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": [
+              "CONTROL CABLE"
+            ]
+          },
+          {
+            "title": "Bad Water Quality Response",
+            "preconditions": [
+              "Water quality sensor installed",
+              "High salinity detected for 15 seconds"
+            ],
+            "steps": [
+              "System displays 'DIVERT TO DISCHARGE'",
+              "Fresh water production diverts to discharge for 2:45 minutes",
+              "System enters alarm state",
+              "Pump group shuts off"
+            ],
+            "expected_outcome": "System safely shut down due to poor water quality",
+            "models": [
+              "COD.150Z48"
+            ],
+            "error_codes": [
+              "BAD WATER QUALITY"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 38,
+      "pages": "38-38",
+      "result": {
+        "procedures": [
+          {
+            "title": "System Status Monitoring",
+            "preconditions": [
+              "System must be powered on",
+              "Display must be functional"
+            ],
+            "steps": [
+              "Monitor system status messages on display",
+              "Verify 'SYSTEM RUNNING' indicates normal operation",
+              "Check 'SYSTEM STOP' indicates ready state",
+              "Observe 'TANK FULL / AUTO' indicates standby mode when tank is full"
+            ],
+            "expected_outcome": "Operator understands current system state",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": [
+              "SYSTEM RUNNING - Normal operation",
+              "SYSTEM STOP - Ready state",
+              "TANK FULL / AUTO - Standby mode"
+            ]
+          },
+          {
+            "title": "Water Quality Monitoring",
+            "preconditions": [
+              "Salinity probe installed",
+              "System in operation"
+            ],
+            "steps": [
+              "Monitor salinity probe messages",
+              "Wait for 'S = wait' to complete calculations",
+              "Check final reading: S = OK, S = MED, or S = BAD",
+              "If 'DIVERT TO DISCHARGE' appears, wait 1 minute for water diversion"
+            ],
+            "expected_outcome": "Water quality level confirmed",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": [
+              "S = wait - Calculations in progress",
+              "S = OK - Good water quality",
+              "S = MED - Medium water quality",
+              "S = BAD - Bad water quality",
+              "DIVERT TO DISCHARGE - Water diversion active"
+            ]
+          },
+          {
+            "title": "Warning Message Monitoring",
+            "preconditions": [
+              "System in operation"
+            ],
+            "steps": [
+              "Monitor for orange warning messages",
+              "Check for 'BYPASS WARNING' indicating bypass mode",
+              "Check for 'DIV. VALVE BY-PASS' indicating disabled salinity probe control"
+            ],
+            "expected_outcome": "Warning conditions identified and understood",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": [
+              "BYPASS WARNING - System in bypass mode",
+              "DIV. VALVE BY-PASS - Salinity probe control disabled"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 43,
+      "pages": "43-43",
+      "result": {
+        "procedures": [
+          {
+            "title": "Reset Positioner Knob Operation",
+            "preconditions": [
+              "System must be in default state",
+              "Access to positioner knob required"
+            ],
+            "steps": [
+              "Screw the positioner knob clockwise until it reaches maximum position (minimum 18 complete turns)",
+              "Unscrew the positioner knob counterclockwise to original position until it stops",
+              "Close the reset valve by moving lever to vertical position"
+            ],
+            "expected_outcome": "Positioner knob properly reset and valve closed",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 42,
+      "pages": "42-42",
+      "result": {
+        "procedures": [
+          {
+            "title": "Operating in Clean Waters",
+            "preconditions": [
+              "Watermaker must be used in waters with turbidity 5 NTU max",
+              "Stay away from coral reefs",
+              "5 micron filter must be installed"
+            ],
+            "steps": [
+              "Check water clarity before operation",
+              "Ensure operation is away from coral reefs",
+              "Verify 5 micron filter is clean and properly installed",
+              "Consider installing additional 20 micron pre-filter for harsh conditions"
+            ],
+            "expected_outcome": "Safe operation without particle damage to watermaker",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Filter Replacement Procedure",
+            "preconditions": [
+              "Filter needs regular replacement",
+              "Have replacement 5 micron filter ready"
+            ],
+            "steps": [
+              "Remove old filter",
+              "Clean filter container thoroughly",
+              "Prevent particles from entering machine during replacement",
+              "Install new 5 micron filter",
+              "Verify proper installation"
+            ],
+            "expected_outcome": "New filter properly installed without contamination",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Manual Reset Procedure",
+            "preconditions": [
+              "System has high pressure without cycling",
+              "Pump shuts off after few seconds",
+              "Automatic hydraulic valve stopped in central position"
+            ],
+            "steps": [
+              "Open the reset valve (move lever to horizontal position)",
+              "Open the depressurization valve slightly"
+            ],
+            "expected_outcome": "System reset and proper valve operation restored",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 44,
+      "pages": "44-44",
+      "result": {
+        "procedures": [
+          {
+            "title": "System Restart Procedure",
+            "preconditions": [
+              "System must be in stopped state",
+              "Depressurization valve must be accessible"
+            ],
+            "steps": [
+              "Restart the system",
+              "Wait several seconds",
+              "Close the depressurization valve"
+            ],
+            "expected_outcome": "System successfully restarted with depressurization valve closed",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 41,
+      "pages": "41-41",
+      "result": {
+        "procedures": [
+          {
+            "title": "Normal Operating Without Final Flushing",
+            "preconditions": [
+              "Reset valve must be closed (lever orthogonal to body valve)",
+              "Positioner must be completely unscrewed",
+              "Depressurization valve must be closed",
+              "Grey valve on active carbon filter must be open"
+            ],
+            "steps": [
+              "Press START to turn on the watermaker",
+              "Press STOP to turn off the watermaker"
+            ],
+            "expected_outcome": "Watermaker operates and stops normally",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Normal Operating With Final Flushing",
+            "preconditions": [
+              "Reset valve must be closed (lever orthogonal to body valve)",
+              "Positioner must be completely unscrewed",
+              "Depressurization valve must be closed",
+              "Grey valve on active carbon filter must be open"
+            ],
+            "steps": [
+              "Press START to turn on the watermaker",
+              "Press FLUSH to set the final flushing",
+              "Press STOP to turn off the watermaker"
+            ],
+            "expected_outcome": "Watermaker operates and performs final flush using approximately 20L of fresh water",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Working Cycle with Timer",
+            "preconditions": [
+              "Reset valve must be closed (lever orthogonal to body valve)",
+              "Positioner must be completely unscrewed",
+              "Depressurization valve must be closed",
+              "Grey valve on active carbon filter must be open"
+            ],
+            "steps": [
+              "Select working time (1-6 hours) using arrow '>' button",
+              "Press START to turn on the watermaker",
+              "To stop: Press STOP (without flushing) or press FLUSH then STOP (with flushing)"
+            ],
+            "expected_outcome": "Watermaker operates for selected duration with optional final flush",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Long Flushing Procedure",
+            "preconditions": [
+              "Reset valve must be closed (lever orthogonal to body valve)",
+              "Positioner must be completely unscrewed",
+              "Depressurization valve must be closed",
+              "Grey valve on active carbon filter must be open"
+            ],
+            "steps": [
+              "Press START in the MANUAL WASH function",
+              "Allow 10-minute flushing procedure to complete",
+              "Can be stopped at any time by pressing STOP"
+            ],
+            "expected_outcome": "Watermaker performs extended 10-minute flush cycle",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 45,
+      "pages": "45-45",
+      "result": {
+        "procedures": [
+          {
+            "title": "Strainer Inspection and Cleaning",
+            "preconditions": [
+              "System must be powered off",
+              "Access to strainer must be available"
+            ],
+            "steps": [
+              "Perform visual inspection of strainer",
+              "Remove strainer from housing",
+              "Wash strainer thoroughly",
+              "Reinstall strainer"
+            ],
+            "expected_outcome": "Clean strainer free of debris and contaminants",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "5 Micron Cartridge Filter Replacement",
+            "preconditions": [
+              "System must be powered off",
+              "New 5 micron cartridge filter available",
+              "Filter housing key available"
+            ],
+            "steps": [
+              "Unscrew the filter housing counter clockwise using the provided specific key",
+              "Remove old cartridge filter",
+              "Install new cartridge filter",
+              "Reinstall housing",
+              "Open depressurization valve for 2-3 minutes to purge air from system"
+            ],
+            "expected_outcome": "New filter installed and system purged of air",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Active Carbon Filter Replacement",
+            "preconditions": [
+              "System must be powered off",
+              "New active carbon filter available",
+              "Filter housing key available"
+            ],
+            "steps": [
+              "Unscrew the filter housing counter clockwise using the provided specific key",
+              "Remove old active carbon filter",
+              "Install new active carbon filter",
+              "Reinstall housing"
+            ],
+            "expected_outcome": "New active carbon filter installed",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 48,
+      "pages": "48-48",
+      "result": {
+        "procedures": [
+          {
+            "title": "Shutdown Operating Procedure",
+            "preconditions": [
+              "SC1 or SC2 solution bottle available",
+              "15 litres of unchlorinated water available",
+              "Pump and watermaker system accessible"
+            ],
+            "steps": [
+              "Prepare solution by mixing SC1 (or SC2) bottle with 15 litres of unchlorinated water",
+              "Connect 3 hoses to the pump and watermaker",
+              "Submerge hoses in the prepared solution",
+              "Ensure pipes are below the free water surface",
+              "Verify hoses are well submerged and not sucking air",
+              "Open the depressurization valve"
+            ],
+            "expected_outcome": "System properly shut down and prepared for maintenance",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 47,
+      "pages": "47-47",
+      "result": {
+        "procedures": [
+          {
+            "title": "Watermaker Shutdown Procedure Equipment Preparation",
+            "preconditions": [
+              "System must be ready for shutdown",
+              "All required equipment must be available"
+            ],
+            "steps": [
+              "Prepare 15 litre tank of fresh water",
+              "Gather 3 hoses for connection to: inlet pump, watermaker discharge, and fresh water out",
+              "Obtain bottle of SCHENKER CLEANING 1 (SC1) powder",
+              "Prepare SC1 solution according to bottle label instructions using unchlorinated water",
+              "Gather necessary tools (screwdrivers, pliers) for pipe dismounting"
+            ],
+            "expected_outcome": "All equipment ready for shutdown procedure",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Chemical Cleaning - Standard Procedure",
+            "preconditions": [
+              "Equipment prepared",
+              "System ready for cleaning"
+            ],
+            "steps": [
+              "Partially open depressurizing knob",
+              "Apply SCHENKER CLEANING 1 (SC1) solution",
+              "Allow 20 minutes contact time",
+              "Flush system",
+              "Replace filters with new ones (if continuing operation)",
+              "Remove filters if storing for extended period"
+            ],
+            "expected_outcome": "System cleaned and prepared for storage",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Chemical Cleaning - Organic Contamination Procedure",
+            "preconditions": [
+              "Bad egg smell present",
+              "Equipment prepared",
+              "Both SC1 and SC2 solutions available"
+            ],
+            "steps": [
+              "Partially open depressurizing knob",
+              "Apply SCHENKER CLEANING 2 (SC2) solution first",
+              "Allow 20 minutes contact time",
+              "Flush system with fresh water",
+              "Apply SCHENKER CLEANING 1 (SC1) solution",
+              "Allow 20 minutes contact time",
+              "Leave SC1 in system for winterization",
+              "Replace filters with new ones (if continuing operation)",
+              "Remove filters if storing for extended period"
+            ],
+            "expected_outcome": "System cleaned of organic contamination and prepared for storage",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 46,
+      "pages": "46-46",
+      "result": {
+        "procedures": [
+          {
+            "title": "Air Purge Procedure",
+            "preconditions": [
+              "System must be installed",
+              "Depressurization valve accessible"
+            ],
+            "steps": [
+              "Locate the depressurization valve",
+              "Open the valve slightly",
+              "Keep valve open for 2-3 minutes",
+              "Close the valve"
+            ],
+            "expected_outcome": "Air removed from system",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Working Pressure Check",
+            "preconditions": [
+              "System operational",
+              "Manometer accessible"
+            ],
+            "steps": [
+              "Check pressure reading on main unit manometer",
+              "Verify pressure is within 10-11 bar range",
+              "Note any pressure peaks during commutation (should be 0.4 bar)",
+              "If pressure exceeds normal range, check membrane cleanliness",
+              "If pressure is high, perform SC1 chemical cleaning",
+              "If SC1 cleaning insufficient, perform SC2 alkaline washing"
+            ],
+            "expected_outcome": "Pressure confirmed within operational range",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Leak Check Procedure",
+            "preconditions": [
+              "System accessible"
+            ],
+            "steps": [
+              "Inspect all hoses for bursting",
+              "Check all hose clamps for tightness",
+              "Examine equipment for failures",
+              "Look for any water leakage"
+            ],
+            "expected_outcome": "No leaks detected in system",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Membrane Replacement Check",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Monitor water quality",
+              "Check working pressure",
+              "Perform chemical washings if needed",
+              "If no improvement after washing, replace membranes",
+              "Replace membranes every 6-7 years on average"
+            ],
+            "expected_outcome": "Membrane condition verified or replaced",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Long-term Shutdown Procedure",
+            "preconditions": [
+              "System operational",
+              "Planning shutdown longer than 2-3 months"
+            ],
+            "steps": [
+              "Flush system to remove organic sediments",
+              "Flush system to remove inorganic sediments",
+              "Apply bacterial growth inhibitor"
+            ],
+            "expected_outcome": "System properly prepared for long-term storage",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 49,
+      "pages": "49-49",
+      "result": {
+        "procedures": [
+          {
+            "title": "Watermaker Restart After Shutdown",
+            "preconditions": [
+              "Watermaker must be in shutdown state",
+              "Original hoses must be disconnected"
+            ],
+            "steps": [
+              "Start the watermaker with by-pass activated",
+              "Run unit for approximately 20 minutes",
+              "Ensure hoses are properly positioned in recipient to avoid air intake",
+              "Stop the unit",
+              "Reconnect original hoses"
+            ],
+            "expected_outcome": "System purged of air and chemicals",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 50,
+      "pages": "50-50",
+      "result": {
+        "procedures": [
+          {
+            "title": "Antifreeze Winterizing Procedure",
+            "preconditions": [
+              "Temperature below 5\u00b0C",
+              "Normal shutdown procedure with SC1 must be completed first",
+              "15 liters of unchlorinated water available",
+              "Propylene glycol solution prepared"
+            ],
+            "steps": [
+              "Prepare solution by mixing propylene glycol with 15 litres of unchlorinated water (45% concentration for temperatures to -20\u00b0C, 55% for temperatures to -30\u00b0C)",
+              "Disconnect the drain hose and the pumps suction hose",
+              "Connect two hose pieces to the drain and to the pump suction",
+              "Insert the end side of the hoses into the bucket with solution",
+              "Verify hoses are properly dipped in solution and don't inhale air",
+              "Open the depressurization valve",
+              "Start the watermaker",
+              "Leave unit running for approximately 5 minutes",
+              "Stop the unit",
+              "Connect the original hoses while ensuring system remains filled with antifreeze solution"
+            ],
+            "expected_outcome": "System properly winterized with antifreeze solution",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Safety Warnings for Antifreeze Procedure",
+            "preconditions": [
+              "Before starting winterizing procedure"
+            ],
+            "steps": [
+              "Read manual instructions carefully before any service",
+              "Never use ethylene glycol as antifreeze solution",
+              "Use only propylene glycol solution",
+              "Ensure proper concentration based on temperature requirements"
+            ],
+            "expected_outcome": "Safe execution of winterizing procedure",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 51,
+      "pages": "51-51",
+      "result": {
+        "procedures": [
+          {
+            "title": "Membrane Replacement",
+            "preconditions": [
+              "Membranes are 6-7 years old",
+              "Water quality has decreased",
+              "Working pressure has increased",
+              "Chemical washing did not improve performance"
+            ],
+            "steps": [
+              "Replace reverse osmosis membranes"
+            ],
+            "expected_outcome": "Restored water quality and normal working pressure",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump High Pressure Switch Calibration",
+            "preconditions": [
+              "Access to pressure switch",
+              "Small screwdriver available"
+            ],
+            "steps": [
+              "Pull out the plug",
+              "Remove the security nut",
+              "Engage the small internal screw with screwdriver",
+              "Turn clockwise to increase pressure calibration",
+              "Turn counterclockwise to decrease pressure calibration"
+            ],
+            "expected_outcome": "Pressure switch calibrated to approximately 15 Bar",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Accumulator Pressure Check",
+            "preconditions": [
+              "Access to polypropylene air reservoir"
+            ],
+            "steps": [
+              "Check accumulator pressure level periodically",
+              "Verify pressure is maintained at approximately 5 bar"
+            ],
+            "expected_outcome": "Proper pressure damping during watermaker operation",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 53,
+      "pages": "53-53",
+      "result": {
+        "procedures": [
+          {
+            "title": "Short Term Cruising Spare Parts Preparation",
+            "preconditions": [
+              "Planning for short term cruising"
+            ],
+            "steps": [
+              "Obtain SC1 cleaning product",
+              "Obtain SC2 cleaning product",
+              "Obtain one 5 microns cartridge filter"
+            ],
+            "expected_outcome": "Essential spare parts ready for short term cruising",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Long Term Cruising Spare Parts Preparation",
+            "preconditions": [
+              "Planning for long term cruising"
+            ],
+            "steps": [
+              "Obtain three 5 microns cartridge filters",
+              "Obtain one active carbon filter",
+              "Obtain one cleaning kit (SC1+SC2)",
+              "Obtain one pump pressure switch",
+              "Consider additional recommended parts: pump head, membrane 4021, portable salinity tester, pressure switches, spare seals kit"
+            ],
+            "expected_outcome": "Complete spare parts kit ready for long term cruising",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 52,
+      "pages": "52-52",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pump Start Failure Resolution",
+            "preconditions": [
+              "Pump not starting"
+            ],
+            "steps": [
+              "Check pump pressure switch connection",
+              "Replace pressure switch if burned",
+              "If electronic failure detected, start pump using microswitches",
+              "Start electrovalve using microswitches"
+            ],
+            "expected_outcome": "Pump starts normally",
+            "models": [
+              "150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "High Pressure System Block Resolution",
+            "preconditions": [
+              "Pump starts but system blocks in high pressure"
+            ],
+            "steps": [
+              "Identify hydraulic block",
+              "Perform system reset procedure",
+              "Check and replace dirty filters if necessary"
+            ],
+            "expected_outcome": "System operates without blocking",
+            "models": [
+              "150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump Start/Stop Cycling Fix",
+            "preconditions": [
+              "Pump temporarily switches off during operation"
+            ],
+            "steps": [
+              "Check pump pressure switch calibration",
+              "Adjust and calibrate pump pressure switch"
+            ],
+            "expected_outcome": "Pump operates continuously without cycling",
+            "models": [
+              "150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "High Pressure Variations Resolution",
+            "preconditions": [
+              "Pressure variations during commutation"
+            ],
+            "steps": [
+              "Clean or replace dirty filters",
+              "Clean or replace dirty membranes",
+              "Check accumulator pressure",
+              "Inflate accumulator to 5 Bar pressure if low"
+            ],
+            "expected_outcome": "Stable pressure during operation",
+            "models": [
+              "150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Low Production with Normal/Low Pressure Fix",
+            "preconditions": [
+              "Low production with normal or low pressure"
+            ],
+            "steps": [
+              "Check battery charge level",
+              "Purge air from system by opening pressure valve temporarily"
+            ],
+            "expected_outcome": "Normal production levels restored",
+            "models": [
+              "150Z48"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Low Production with High Pressure Resolution",
+            "preconditions": [
+              "Low production with pressure > 10 Bar"
+            ],
+            "steps": [
+              "Check for clogged filters",
+              "Replace clogged filters",
+              "Check for clogged membranes",
+              "Perform membrane washing with SC1 if clogged"
+            ],
+            "expected_outcome": "Normal production levels restored",
+            "models": [
+              "150Z48"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "procedures": [
+    {
+      "title": "Unpacking and Product Setup",
+      "preconditions": [
+        "Product has arrived at installation site.",
+        "Packaging is intact."
+      ],
+      "steps": [
+        "Carefully open the shipping box.",
+        "Remove the ZEN 150 unit from the packaging.",
+        "Verify that all accessories and documentation are present.",
+        "Inspect the unit for any visible transportation damage."
+      ],
+      "expected_outcome": "ZEN 150 and all accessories are present and free from damage, ready for further installation.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Countertop Placement and Electrical/Water Connection",
+      "preconditions": [
+        "ZEN 150 has been unpacked and inspected.",
+        "Installation location has sufficient space and resources as per manual requirements."
+      ],
+      "steps": [
+        "Place the unit on a flat, stable countertop.",
+        "Ensure adequate ventilation around the unit.",
+        "Connect the water line according to the diagram, ensuring all fittings are tight.",
+        "Connect the 48 V DC power supply to a compliant power source.",
+        "Verify electrical connections are secure."
+      ],
+      "expected_outcome": "ZEN 150 is positioned on the counter with water and power properly connected for operation.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E01",
+        "E02"
+      ]
+    },
+    {
+      "title": "Touchscreen Operation - Standard Mode",
+      "preconditions": [
+        "Unit is fully installed and powered.",
+        "System initialization complete."
+      ],
+      "steps": [
+        "Tap the touchscreen to wake the display.",
+        "Navigate through the home screen to select 'Standard Mode.'",
+        "Follow on-screen prompts to start standard operation."
+      ],
+      "expected_outcome": "ZEN 150 operates in Standard Mode as per user selection.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touchscreen Operation - Maintenance Mode",
+      "preconditions": [
+        "Unit is powered and touchscreen is responsive."
+      ],
+      "steps": [
+        "Tap the touchscreen to access menu options.",
+        "Select 'Maintenance Mode' from the menu.",
+        "Follow prompts to perform specific maintenance functions."
+      ],
+      "expected_outcome": "ZEN 150 enters Maintenance Mode, enabling authorized maintenance operations.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Child Safety Lock Feature Activation",
+      "preconditions": [
+        "Unit is in operational state.",
+        "Touchscreen is responsive."
+      ],
+      "steps": [
+        "Access the safety settings from the touchscreen menu.",
+        "Enable the 'Child Safety Lock' feature.",
+        "Confirm activation by following screen instructions."
+      ],
+      "expected_outcome": "Child Safety Lock is enabled, restricting unauthorized use.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Daily Cleaning Routine",
+      "preconditions": [
+        "Unit is powered down or placed in cleaning mode."
+      ],
+      "steps": [
+        "Wipe exterior surfaces with a soft, damp cloth.",
+        "Check and empty the drip tray if present.",
+        "Clean the dispensing area with non-abrasive cleaner."
+      ],
+      "expected_outcome": "ZEN 150 exterior remains clean and sanitary according to daily cleaning standards.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Weekly Maintenance Routine",
+      "preconditions": [
+        "Unit has been operating for one week."
+      ],
+      "steps": [
+        "Inspect water line connections for leaks.",
+        "Test touchscreen functionality.",
+        "Check filter status as indicated on the maintenance menu.",
+        "Remove and rinse detachable components per manual instructions."
+      ],
+      "expected_outcome": "ZEN 150's functionality is verified and routine maintenance is performed.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Error Code E01 Resolution",
+      "preconditions": [
+        "System displays Error Code E01."
+      ],
+      "steps": [
+        "Consult the troubleshooting section for E01.",
+        "Check electrical connections and ensure power source is stable.",
+        "Reset the unit by powering off and on.",
+        "If error persists, contact technical support."
+      ],
+      "expected_outcome": "Error E01 is resolved and unit resumes normal operation or is marked for professional service.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E01"
+      ]
+    },
+    {
+      "title": "Error Code E02 Resolution",
+      "preconditions": [
+        "System displays Error Code E02."
+      ],
+      "steps": [
+        "Refer to the troubleshooting section for E02.",
+        "Inspect water line and ensure water flow is not obstructed.",
+        "Ensure all water connections are properly fitted.",
+        "Reset unit and test water dispensing.",
+        "Contact technical support if issue persists."
+      ],
+      "expected_outcome": "Error E02 is cleared, and water flow is restored or escalated for further assistance.",
+      "models": [
+        "ZEN 150 TOUCH SCREEN - 48 V DC"
+      ],
+      "error_codes": [
+        "E02"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4450 @@
+{
+  "total_chunks_processed": 22,
+  "successful_chunks": 22,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 125,
+  "unique_specifications": 30,
+  "category_breakdown": {
+    "Installation": 7,
+    "Electrical": 8,
+    "Performance": 9,
+    "Safety": 1,
+    "Environmental": 1,
+    "Dimensions": 4
+  },
+  "specifications": [
+    {
+      "parameter": "Name Plate Location",
+      "normalized_parameter": "identification_plate_location",
+      "parameter_aliases": [
+        "serial plate",
+        "model plate",
+        "identification label"
+      ],
+      "value": "Bottom plate",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "where is name plate",
+        "serial number location",
+        "model number location",
+        "identification plate"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "manual cover page"
+      ]
+    },
+    {
+      "parameter": "Electrical Supply Requirements",
+      "normalized_parameter": "electrical_requirements",
+      "parameter_aliases": [
+        "power requirements",
+        "electrical specs"
+      ],
+      "value": "Check required",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power needs",
+        "electrical requirements",
+        "voltage requirements",
+        "electrical specifications"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "page 18"
+      ]
+    },
+    {
+      "parameter": "Temperature Units",
+      "normalized_parameter": "temperature_scale",
+      "parameter_aliases": [
+        "temp units",
+        "temperature display"
+      ],
+      "value": "Configurable",
+      "range": null,
+      "units": "\u00b0F/\u00b0C",
+      "normalized_units": "\u00b0F/\u00b0C",
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how to change temperature units",
+        "fahrenheit celsius",
+        "temperature display units"
+      ],
+      "concept_group": "operation_settings",
+      "references": [
+        "page 12"
+      ]
+    },
+    {
+      "parameter": "Automatic Shut-Off Time",
+      "normalized_parameter": "auto_shutoff_timer",
+      "parameter_aliases": [
+        "safety shutoff",
+        "auto-off",
+        "timeout"
+      ],
+      "value": "Present",
+      "range": null,
+      "units": "minutes",
+      "normalized_units": "minutes",
+      "converted_value": null,
+      "models": [
+        "All Kenyon grills"
+      ],
+      "category": "Safety",
+      "search_terms": [
+        "auto shutoff",
+        "automatic turn off",
+        "safety timer",
+        "timeout setting"
+      ],
+      "concept_group": "safety_features",
+      "references": [
+        "page 14"
+      ]
+    },
+    {
+      "parameter": "Input Voltage",
+      "normalized_parameter": "input_voltage",
+      "parameter_aliases": [
+        "supply voltage",
+        "power input",
+        "voltage requirement"
+      ],
+      "value": "48",
+      "range": "45-51",
+      "units": "VDC",
+      "normalized_units": "V",
+      "converted_value": "48",
+      "models": [
+        "145775"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power supply",
+        "electrical requirements",
+        "DC voltage",
+        "input power"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "p.1"
+      ]
+    },
+    {
+      "parameter": "Model Number",
+      "normalized_parameter": "model_number",
+      "parameter_aliases": [
+        "part number",
+        "product code",
+        "item number"
+      ],
+      "value": "145775",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "145775"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "model",
+        "part number",
+        "product identifier",
+        "serial number",
+        "SKU"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "p.1"
+      ]
+    },
+    {
+      "parameter": "Control System",
+      "normalized_parameter": "control_system",
+      "parameter_aliases": [
+        "control interface",
+        "user interface"
+      ],
+      "value": "Intelliken Touch",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "145775"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "touch control",
+        "interface",
+        "control panel",
+        "touch screen",
+        "intelliken"
+      ],
+      "concept_group": "control_specifications",
+      "references": [
+        "p.1"
+      ]
+    },
+    {
+      "parameter": "Cooking Zones",
+      "normalized_parameter": "cooking_zones",
+      "parameter_aliases": [
+        "heating zones",
+        "grill zones"
+      ],
+      "value": "1",
+      "range": null,
+      "units": "zones",
+      "normalized_units": "zones",
+      "converted_value": "1",
+      "models": [
+        "145775"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "zones",
+        "cooking areas",
+        "heating sections",
+        "single zone",
+        "burners"
+      ],
+      "concept_group": "cooking_specifications",
+      "references": [
+        "p.1"
+      ]
+    },
+    {
+      "parameter": "Minimum Water in Drip Tray",
+      "normalized_parameter": "minimum_drip_tray_water",
+      "parameter_aliases": [
+        "drip tray water requirement",
+        "water level",
+        "drip pan water"
+      ],
+      "value": "2",
+      "range": "2 cups minimum",
+      "units": "cups",
+      "normalized_units": "ml",
+      "converted_value": "473",
+      "models": [
+        "all KENYON Grills"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "drip tray water",
+        "minimum water",
+        "water requirement",
+        "drip pan setup",
+        "grill preparation"
+      ],
+      "concept_group": "operation_requirements",
+      "references": [
+        "page 3"
+      ]
+    },
+    {
+      "parameter": "Surface Material",
+      "normalized_parameter": "cooking_surface_material",
+      "parameter_aliases": [
+        "hob surface",
+        "grill surface",
+        "cooktop material"
+      ],
+      "value": "glass-ceramic or similar material",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "all KENYON Grills"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "surface type",
+        "cooktop material",
+        "glass ceramic",
+        "hob material",
+        "grill surface"
+      ],
+      "concept_group": "construction_specifications",
+      "references": [
+        "page 3"
+      ]
+    },
+    {
+      "parameter": "Power Connection",
+      "normalized_parameter": "electrical_connection",
+      "parameter_aliases": [
+        "power source",
+        "electrical supply",
+        "power requirement"
+      ],
+      "value": "electric",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "all KENYON Grills"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power type",
+        "electrical requirements",
+        "power source",
+        "electric grill"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "page 3"
+      ]
+    },
+    {
+      "parameter": "Storage Environment",
+      "normalized_parameter": "storage_conditions",
+      "parameter_aliases": [
+        "storage requirements",
+        "storage location",
+        "storage specs"
+      ],
+      "value": "indoors",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "portable KENYON Grills"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "storage requirements",
+        "indoor storage",
+        "storage location",
+        "where to store",
+        "storage conditions"
+      ],
+      "concept_group": "storage_specifications",
+      "references": [
+        "page 3"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "operating_voltage",
+      "parameter_aliases": [
+        "voltage",
+        "power supply",
+        "input voltage"
+      ],
+      "value": "48",
+      "range": "35-55",
+      "units": "V DC",
+      "normalized_units": "vdc",
+      "converted_value": "48",
+      "models": [
+        "B70750",
+        "B70790"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "electrical specs",
+        "DC voltage",
+        "power supply voltage"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Burner Data"
+      ]
+    },
+    {
+      "parameter": "Current Draw",
+      "normalized_parameter": "current_draw",
+      "parameter_aliases": [
+        "amperage",
+        "current",
+        "amps"
+      ],
+      "value": "27",
+      "range": null,
+      "units": "A",
+      "normalized_units": "amperes",
+      "converted_value": "27",
+      "models": [
+        "B70750",
+        "B70790"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "amperage",
+        "current draw",
+        "amps",
+        "power consumption"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Burner Data"
+      ]
+    },
+    {
+      "parameter": "Power Output",
+      "normalized_parameter": "power_output",
+      "parameter_aliases": [
+        "wattage",
+        "output power",
+        "power consumption"
+      ],
+      "value": "1300",
+      "range": null,
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "1300",
+      "models": [
+        "B70750",
+        "B70790"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "watts",
+        "power output",
+        "wattage",
+        "power consumption"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Burner Data"
+      ]
+    },
+    {
+      "parameter": "Built-in Width",
+      "normalized_parameter": "width",
+      "parameter_aliases": [
+        "width dimension"
+      ],
+      "value": "21",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "533",
+      "models": [
+        "B70750"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "width",
+        "size",
+        "dimensions",
+        "how wide"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Product Dimensions"
+      ]
+    },
+    {
+      "parameter": "Built-in Depth",
+      "normalized_parameter": "depth",
+      "parameter_aliases": [
+        "depth dimension"
+      ],
+      "value": "12",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "305",
+      "models": [
+        "B70750"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "depth",
+        "size",
+        "dimensions",
+        "how deep"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Product Dimensions"
+      ]
+    },
+    {
+      "parameter": "Built-in Height",
+      "normalized_parameter": "height",
+      "parameter_aliases": [
+        "height dimension"
+      ],
+      "value": "4 15/16",
+      "range": "4 15/16 - 8 5/16",
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "125-211",
+      "models": [
+        "B70750"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "height",
+        "size",
+        "dimensions",
+        "how tall",
+        "lid height"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Product Dimensions"
+      ]
+    },
+    {
+      "parameter": "Cutout Width",
+      "normalized_parameter": "cutout_width",
+      "parameter_aliases": [
+        "installation width",
+        "mounting width"
+      ],
+      "value": "19 3/4",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "502",
+      "models": [
+        "B70750"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "cutout width",
+        "installation size",
+        "mounting dimensions"
+      ],
+      "concept_group": "installation_dimensions",
+      "references": [
+        "Cutout Dimensions"
+      ]
+    },
+    {
+      "parameter": "Cutout Depth",
+      "normalized_parameter": "cutout_depth",
+      "parameter_aliases": [
+        "installation depth",
+        "mounting depth"
+      ],
+      "value": "11 5/8",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "295",
+      "models": [
+        "B70750"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "cutout depth",
+        "installation size",
+        "mounting dimensions"
+      ],
+      "concept_group": "installation_dimensions",
+      "references": [
+        "Cutout Dimensions"
+      ]
+    },
+    {
+      "parameter": "Cutout Corner Radius",
+      "normalized_parameter": "corner_radius",
+      "parameter_aliases": [
+        "radius",
+        "corner dimension"
+      ],
+      "value": "1/4",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "6",
+      "models": [
+        "B70750"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "corner radius",
+        "rounded corners",
+        "cutout radius"
+      ],
+      "concept_group": "installation_dimensions",
+      "references": [
+        "Cutout Dimensions"
+      ]
+    },
+    {
+      "parameter": "Circuit Breaker Rating",
+      "normalized_parameter": "circuit_breaker_rating",
+      "parameter_aliases": [
+        "breaker size",
+        "electrical protection",
+        "overcurrent protection"
+      ],
+      "value": "30",
+      "range": null,
+      "units": "amp",
+      "normalized_units": "A",
+      "converted_value": "30",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "circuit breaker",
+        "breaker rating",
+        "electrical requirements",
+        "amp rating",
+        "protection rating"
+      ],
+      "concept_group": "electrical_protection",
+      "references": [
+        "Safety Instructions"
+      ]
+    },
+    {
+      "parameter": "RCD Operating Current",
+      "normalized_parameter": "rcd_operating_current",
+      "parameter_aliases": [
+        "residual current",
+        "ground fault protection",
+        "earth leakage"
+      ],
+      "value": "30",
+      "range": "0-30",
+      "units": "amp",
+      "normalized_units": "A",
+      "converted_value": "30",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "RCD rating",
+        "residual current",
+        "ground fault",
+        "electrical safety"
+      ],
+      "concept_group": "electrical_protection",
+      "references": [
+        "Safety Instructions"
+      ]
+    },
+    {
+      "parameter": "Drip Tray Liquid Capacity",
+      "normalized_parameter": "drip_tray_capacity",
+      "parameter_aliases": [
+        "liquid volume",
+        "drip pan capacity"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "cups",
+      "normalized_units": "ml",
+      "converted_value": "473",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "drip tray volume",
+        "liquid capacity",
+        "drip pan size"
+      ],
+      "concept_group": "maintenance",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Vegetable Cooking Temperature",
+      "normalized_parameter": "vegetable_cooking_temp",
+      "parameter_aliases": [
+        "veggie temperature",
+        "vegetable heat setting"
+      ],
+      "value": "350",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "177",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "vegetable temperature",
+        "cooking temp",
+        "heat setting"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Chicken/Pork/Fish Cooking Temperature",
+      "normalized_parameter": "poultry_meat_fish_temp",
+      "parameter_aliases": [
+        "meat temperature",
+        "protein cooking temp"
+      ],
+      "value": "400",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "204",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "meat temperature",
+        "chicken temp",
+        "pork temp",
+        "fish temp"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Hamburger Cooking Temperature",
+      "normalized_parameter": "hamburger_cooking_temp",
+      "parameter_aliases": [
+        "burger temperature",
+        "ground beef temp"
+      ],
+      "value": "500",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "260",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "hamburger temperature",
+        "burger temp",
+        "ground beef temperature"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Steak Cooking Temperature",
+      "normalized_parameter": "steak_cooking_temp",
+      "parameter_aliases": [
+        "beef temperature",
+        "red meat temp"
+      ],
+      "value": "550",
+      "range": null,
+      "units": "\u00b0F",
+      "normalized_units": "\u00b0C",
+      "converted_value": "288",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "steak temperature",
+        "beef temp",
+        "maximum temperature"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Preheat Time",
+      "normalized_parameter": "preheat_duration",
+      "parameter_aliases": [
+        "warm up time",
+        "heating time"
+      ],
+      "value": "5-7",
+      "range": "5-7",
+      "units": "minutes",
+      "normalized_units": "min",
+      "converted_value": "5-7",
+      "models": [
+        "Kenyon IntelliKEN Touch"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "preheat time",
+        "warm up period",
+        "heating duration"
+      ],
+      "concept_group": "operation",
+      "references": [
+        "Quick Start Tips"
+      ]
+    },
+    {
+      "parameter": "Portable Depth",
+      "normalized_parameter": "depth",
+      "parameter_aliases": [
+        "depth dimension"
+      ],
+      "value": "12 1/16",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "millimeters",
+      "converted_value": "306",
+      "models": [
+        "B70772"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "depth",
+        "size",
+        "dimensions"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Product Dimensions"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Name Plate Location",
+            "normalized_parameter": "identification_plate_location",
+            "parameter_aliases": [
+              "serial plate",
+              "model plate",
+              "identification label"
+            ],
+            "value": "Bottom plate",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "where is name plate",
+              "serial number location",
+              "model number location",
+              "identification plate"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "manual cover page"
+            ]
+          },
+          {
+            "parameter": "Electrical Supply Requirements",
+            "normalized_parameter": "electrical_requirements",
+            "parameter_aliases": [
+              "power requirements",
+              "electrical specs"
+            ],
+            "value": "Check required",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power needs",
+              "electrical requirements",
+              "voltage requirements",
+              "electrical specifications"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "page 18"
+            ]
+          },
+          {
+            "parameter": "Temperature Units",
+            "normalized_parameter": "temperature_scale",
+            "parameter_aliases": [
+              "temp units",
+              "temperature display"
+            ],
+            "value": "Configurable",
+            "range": null,
+            "units": "\u00b0F/\u00b0C",
+            "normalized_units": "\u00b0F/\u00b0C",
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how to change temperature units",
+              "fahrenheit celsius",
+              "temperature display units"
+            ],
+            "concept_group": "operation_settings",
+            "references": [
+              "page 12"
+            ]
+          },
+          {
+            "parameter": "Automatic Shut-Off Time",
+            "normalized_parameter": "auto_shutoff_timer",
+            "parameter_aliases": [
+              "safety shutoff",
+              "auto-off",
+              "timeout"
+            ],
+            "value": "Present",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "minutes",
+            "converted_value": null,
+            "models": [
+              "All Kenyon grills"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "auto shutoff",
+              "automatic turn off",
+              "safety timer",
+              "timeout setting"
+            ],
+            "concept_group": "safety_features",
+            "references": [
+              "page 14"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Input Voltage",
+            "normalized_parameter": "input_voltage",
+            "parameter_aliases": [
+              "supply voltage",
+              "power input",
+              "voltage requirement"
+            ],
+            "value": "48",
+            "range": "45-51",
+            "units": "VDC",
+            "normalized_units": "V",
+            "converted_value": "48",
+            "models": [
+              "145775"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power supply",
+              "electrical requirements",
+              "DC voltage",
+              "input power"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "p.1"
+            ]
+          },
+          {
+            "parameter": "Model Number",
+            "normalized_parameter": "model_number",
+            "parameter_aliases": [
+              "part number",
+              "product code",
+              "item number"
+            ],
+            "value": "145775",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "145775"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "model",
+              "part number",
+              "product identifier",
+              "serial number",
+              "SKU"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "p.1"
+            ]
+          },
+          {
+            "parameter": "Control System",
+            "normalized_parameter": "control_system",
+            "parameter_aliases": [
+              "control interface",
+              "user interface"
+            ],
+            "value": "Intelliken Touch",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "145775"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "touch control",
+              "interface",
+              "control panel",
+              "touch screen",
+              "intelliken"
+            ],
+            "concept_group": "control_specifications",
+            "references": [
+              "p.1"
+            ]
+          },
+          {
+            "parameter": "Cooking Zones",
+            "normalized_parameter": "cooking_zones",
+            "parameter_aliases": [
+              "heating zones",
+              "grill zones"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "zones",
+            "normalized_units": "zones",
+            "converted_value": "1",
+            "models": [
+              "145775"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "zones",
+              "cooking areas",
+              "heating sections",
+              "single zone",
+              "burners"
+            ],
+            "concept_group": "cooking_specifications",
+            "references": [
+              "p.1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Minimum Water in Drip Tray",
+            "normalized_parameter": "minimum_drip_tray_water",
+            "parameter_aliases": [
+              "drip tray water requirement",
+              "water level",
+              "drip pan water"
+            ],
+            "value": "2",
+            "range": "2 cups minimum",
+            "units": "cups",
+            "normalized_units": "ml",
+            "converted_value": "473",
+            "models": [
+              "all KENYON Grills"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drip tray water",
+              "minimum water",
+              "water requirement",
+              "drip pan setup",
+              "grill preparation"
+            ],
+            "concept_group": "operation_requirements",
+            "references": [
+              "page 3"
+            ]
+          },
+          {
+            "parameter": "Surface Material",
+            "normalized_parameter": "cooking_surface_material",
+            "parameter_aliases": [
+              "hob surface",
+              "grill surface",
+              "cooktop material"
+            ],
+            "value": "glass-ceramic or similar material",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "all KENYON Grills"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "surface type",
+              "cooktop material",
+              "glass ceramic",
+              "hob material",
+              "grill surface"
+            ],
+            "concept_group": "construction_specifications",
+            "references": [
+              "page 3"
+            ]
+          },
+          {
+            "parameter": "Power Connection",
+            "normalized_parameter": "electrical_connection",
+            "parameter_aliases": [
+              "power source",
+              "electrical supply",
+              "power requirement"
+            ],
+            "value": "electric",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "all KENYON Grills"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power type",
+              "electrical requirements",
+              "power source",
+              "electric grill"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "page 3"
+            ]
+          },
+          {
+            "parameter": "Storage Environment",
+            "normalized_parameter": "storage_conditions",
+            "parameter_aliases": [
+              "storage requirements",
+              "storage location",
+              "storage specs"
+            ],
+            "value": "indoors",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "portable KENYON Grills"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "storage requirements",
+              "indoor storage",
+              "storage location",
+              "where to store",
+              "storage conditions"
+            ],
+            "concept_group": "storage_specifications",
+            "references": [
+              "page 3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "voltage",
+              "power supply",
+              "input voltage"
+            ],
+            "value": "48",
+            "range": "35-55",
+            "units": "V DC",
+            "normalized_units": "vdc",
+            "converted_value": "48",
+            "models": [
+              "B70750",
+              "B70790"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "electrical specs",
+              "DC voltage",
+              "power supply voltage"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Burner Data"
+            ]
+          },
+          {
+            "parameter": "Current Draw",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "amperage",
+              "current",
+              "amps"
+            ],
+            "value": "27",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "27",
+            "models": [
+              "B70750",
+              "B70790"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "amperage",
+              "current draw",
+              "amps",
+              "power consumption"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Burner Data"
+            ]
+          },
+          {
+            "parameter": "Power Output",
+            "normalized_parameter": "power_output",
+            "parameter_aliases": [
+              "wattage",
+              "output power",
+              "power consumption"
+            ],
+            "value": "1300",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1300",
+            "models": [
+              "B70750",
+              "B70790"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "watts",
+              "power output",
+              "wattage",
+              "power consumption"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Burner Data"
+            ]
+          },
+          {
+            "parameter": "Built-in Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "width dimension"
+            ],
+            "value": "21",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "533",
+            "models": [
+              "B70750"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions",
+              "how wide"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Built-in Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "depth dimension"
+            ],
+            "value": "12",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "305",
+            "models": [
+              "B70750"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "size",
+              "dimensions",
+              "how deep"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Built-in Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "height dimension"
+            ],
+            "value": "4 15/16",
+            "range": "4 15/16 - 8 5/16",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "125-211",
+            "models": [
+              "B70750"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions",
+              "how tall",
+              "lid height"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Cutout Width",
+            "normalized_parameter": "cutout_width",
+            "parameter_aliases": [
+              "installation width",
+              "mounting width"
+            ],
+            "value": "19 3/4",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "502",
+            "models": [
+              "B70750"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cutout width",
+              "installation size",
+              "mounting dimensions"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Cutout Dimensions"
+            ]
+          },
+          {
+            "parameter": "Cutout Depth",
+            "normalized_parameter": "cutout_depth",
+            "parameter_aliases": [
+              "installation depth",
+              "mounting depth"
+            ],
+            "value": "11 5/8",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "295",
+            "models": [
+              "B70750"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cutout depth",
+              "installation size",
+              "mounting dimensions"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Cutout Dimensions"
+            ]
+          },
+          {
+            "parameter": "Cutout Corner Radius",
+            "normalized_parameter": "corner_radius",
+            "parameter_aliases": [
+              "radius",
+              "corner dimension"
+            ],
+            "value": "1/4",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "6",
+            "models": [
+              "B70750"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "corner radius",
+              "rounded corners",
+              "cutout radius"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Cutout Dimensions"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Circuit Breaker Rating",
+            "normalized_parameter": "circuit_breaker_rating",
+            "parameter_aliases": [
+              "breaker size",
+              "electrical protection",
+              "overcurrent protection"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "amp",
+            "normalized_units": "A",
+            "converted_value": "30",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "circuit breaker",
+              "breaker rating",
+              "electrical requirements",
+              "amp rating",
+              "protection rating"
+            ],
+            "concept_group": "electrical_protection",
+            "references": [
+              "Safety Instructions"
+            ]
+          },
+          {
+            "parameter": "RCD Operating Current",
+            "normalized_parameter": "rcd_operating_current",
+            "parameter_aliases": [
+              "residual current",
+              "ground fault protection",
+              "earth leakage"
+            ],
+            "value": "30",
+            "range": "0-30",
+            "units": "amp",
+            "normalized_units": "A",
+            "converted_value": "30",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "RCD rating",
+              "residual current",
+              "ground fault",
+              "electrical safety"
+            ],
+            "concept_group": "electrical_protection",
+            "references": [
+              "Safety Instructions"
+            ]
+          },
+          {
+            "parameter": "Drip Tray Liquid Capacity",
+            "normalized_parameter": "drip_tray_capacity",
+            "parameter_aliases": [
+              "liquid volume",
+              "drip pan capacity"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "cups",
+            "normalized_units": "ml",
+            "converted_value": "473",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drip tray volume",
+              "liquid capacity",
+              "drip pan size"
+            ],
+            "concept_group": "maintenance",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Vegetable Cooking Temperature",
+            "normalized_parameter": "vegetable_cooking_temp",
+            "parameter_aliases": [
+              "veggie temperature",
+              "vegetable heat setting"
+            ],
+            "value": "350",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "177",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "vegetable temperature",
+              "cooking temp",
+              "heat setting"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Chicken/Pork/Fish Cooking Temperature",
+            "normalized_parameter": "poultry_meat_fish_temp",
+            "parameter_aliases": [
+              "meat temperature",
+              "protein cooking temp"
+            ],
+            "value": "400",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "204",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "meat temperature",
+              "chicken temp",
+              "pork temp",
+              "fish temp"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Hamburger Cooking Temperature",
+            "normalized_parameter": "hamburger_cooking_temp",
+            "parameter_aliases": [
+              "burger temperature",
+              "ground beef temp"
+            ],
+            "value": "500",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "260",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "hamburger temperature",
+              "burger temp",
+              "ground beef temperature"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Steak Cooking Temperature",
+            "normalized_parameter": "steak_cooking_temp",
+            "parameter_aliases": [
+              "beef temperature",
+              "red meat temp"
+            ],
+            "value": "550",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "288",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "steak temperature",
+              "beef temp",
+              "maximum temperature"
+            ],
+            "concept_group": "temperature_settings",
+            "references": [
+              "Quick Start Tips"
+            ]
+          },
+          {
+            "parameter": "Preheat Time",
+            "normalized_parameter": "preheat_duration",
+            "parameter_aliases": [
+              "warm up time",
+              "heating time"
+            ],
+            "value": "5-7",
+            "range": "5-7",
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "5-7",
+            "models": [
+              "Kenyon IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "preheat time",
+              "warm up period",
+              "heating duration"
+            ],
+            "concept_group": "operation",
+            "references": [
+              "Quick Start Tips"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "voltage",
+              "input voltage",
+              "power supply voltage"
+            ],
+            "value": "48",
+            "range": "35-55",
+            "units": "V DC",
+            "normalized_units": "vdc",
+            "converted_value": "48",
+            "models": [
+              "B70770",
+              "B70772"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "electrical specs",
+              "DC voltage",
+              "power input"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Burner Data"
+            ]
+          },
+          {
+            "parameter": "Current Draw",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "amperage",
+              "current",
+              "amps"
+            ],
+            "value": "27",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "27",
+            "models": [
+              "B70770",
+              "B70772"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "amperage",
+              "current",
+              "amps",
+              "power draw"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Burner Data"
+            ]
+          },
+          {
+            "parameter": "Power Output",
+            "normalized_parameter": "power_output",
+            "parameter_aliases": [
+              "wattage",
+              "output power",
+              "power consumption"
+            ],
+            "value": "1300",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1300",
+            "models": [
+              "B70770",
+              "B70772"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "watts",
+              "power",
+              "output",
+              "consumption"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Burner Data"
+            ]
+          },
+          {
+            "parameter": "Built-in Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "width dimension"
+            ],
+            "value": "21",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "533",
+            "models": [
+              "B70770"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Built-in Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "depth dimension"
+            ],
+            "value": "12",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "305",
+            "models": [
+              "B70770"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "size",
+              "dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Built-in Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "height dimension"
+            ],
+            "value": "4 15/16",
+            "range": "4 15/16 - 9",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "125-229",
+            "models": [
+              "B70770"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions",
+              "lid height"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Cutout Width",
+            "normalized_parameter": "cutout_width",
+            "parameter_aliases": [
+              "installation width",
+              "mounting width"
+            ],
+            "value": "19 3/4",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "502",
+            "models": [
+              "B70770"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cutout width",
+              "mounting dimensions",
+              "installation size"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Cutout Dimensions"
+            ]
+          },
+          {
+            "parameter": "Cutout Depth",
+            "normalized_parameter": "cutout_depth",
+            "parameter_aliases": [
+              "installation depth",
+              "mounting depth"
+            ],
+            "value": "11 5/8",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "295",
+            "models": [
+              "B70770"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cutout depth",
+              "mounting dimensions",
+              "installation size"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Cutout Dimensions"
+            ]
+          },
+          {
+            "parameter": "Portable Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "width dimension"
+            ],
+            "value": "21",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "533",
+            "models": [
+              "B70772"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Portable Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "depth dimension"
+            ],
+            "value": "12 1/16",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "306",
+            "models": [
+              "B70772"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "size",
+              "dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          },
+          {
+            "parameter": "Portable Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "height dimension"
+            ],
+            "value": "9 5/8",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "244",
+            "models": [
+              "B70772"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Dimensions"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Control Panel Material",
+            "normalized_parameter": "control_panel_material",
+            "parameter_aliases": [
+              "touch control surface",
+              "control interface material"
+            ],
+            "value": "ceramic glass",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Kenyon Grill"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "control panel",
+              "touch control",
+              "ceramic glass panel",
+              "control surface material",
+              "interface material"
+            ],
+            "concept_group": "construction_materials",
+            "references": [
+              "Page 9"
+            ]
+          },
+          {
+            "parameter": "Preheat Time",
+            "normalized_parameter": "preheat_duration",
+            "parameter_aliases": [
+              "warm up time",
+              "heating time"
+            ],
+            "value": "5-7",
+            "range": "5-7",
+            "units": "minutes",
+            "normalized_units": "minutes",
+            "converted_value": null,
+            "models": [
+              "Kenyon Grill"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "preheat",
+              "warm up",
+              "heating time",
+              "preparation time",
+              "ready time"
+            ],
+            "concept_group": "operation_parameters",
+            "references": [
+              "Page 9"
+            ]
+          },
+          {
+            "parameter": "Drip Tray Water Capacity",
+            "normalized_parameter": "drip_tray_capacity",
+            "parameter_aliases": [
+              "water reservoir volume",
+              "drip pan capacity"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "cup",
+            "normalized_units": "ml",
+            "converted_value": "236.6",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "drip tray",
+              "water capacity",
+              "reservoir",
+              "drip pan",
+              "water volume"
+            ],
+            "concept_group": "specifications",
+            "references": [
+              "Page 9"
+            ]
+          },
+          {
+            "parameter": "Maintenance Interval",
+            "normalized_parameter": "cleaning_interval",
+            "parameter_aliases": [
+              "cleaning frequency",
+              "maintenance frequency"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "month",
+            "normalized_units": "months",
+            "converted_value": null,
+            "models": [
+              "Kenyon Grill"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "cleaning schedule",
+              "maintenance schedule",
+              "cleaning frequency",
+              "upkeep interval"
+            ],
+            "concept_group": "maintenance_requirements",
+            "references": [
+              "Page 9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "voltage input",
+              "power supply",
+              "DC voltage"
+            ],
+            "value": "48",
+            "range": "35-55",
+            "units": "V DC",
+            "normalized_units": "VDC",
+            "converted_value": "48",
+            "models": [
+              "B70760"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "DC voltage",
+              "electrical specs",
+              "power input"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Current Draw",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "amperage",
+              "current consumption",
+              "amps"
+            ],
+            "value": "27",
+            "range": "",
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "27",
+            "models": [
+              "B70760"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "amps",
+              "amperage",
+              "current",
+              "power draw"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Power Output",
+            "normalized_parameter": "power_output",
+            "parameter_aliases": [
+              "wattage",
+              "output power"
+            ],
+            "value": "1300",
+            "range": "",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1300",
+            "models": [
+              "B70760"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "watts",
+              "power output",
+              "wattage",
+              "power consumption"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "product width"
+            ],
+            "value": "21",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "533",
+            "models": [
+              "B70760"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions",
+              "product width"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "product depth"
+            ],
+            "value": "12",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "305",
+            "models": [
+              "B70760"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "size",
+              "dimensions",
+              "product depth"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "product height"
+            ],
+            "value": "4 15/16",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "125",
+            "models": [
+              "B70760"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions",
+              "product height"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Cutout Width",
+            "normalized_parameter": "cutout_width",
+            "parameter_aliases": [
+              "installation width",
+              "mounting width"
+            ],
+            "value": "19 3/4",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "502",
+            "models": [
+              "B70760"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cutout width",
+              "installation dimensions",
+              "mounting width"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Cutout Depth",
+            "normalized_parameter": "cutout_depth",
+            "parameter_aliases": [
+              "installation depth",
+              "mounting depth"
+            ],
+            "value": "11 5/8",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "295",
+            "models": [
+              "B70760"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cutout depth",
+              "installation dimensions",
+              "mounting depth"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Product Specifications"
+            ]
+          },
+          {
+            "parameter": "Corner Radius",
+            "normalized_parameter": "corner_radius",
+            "parameter_aliases": [
+              "cutout radius",
+              "mounting radius"
+            ],
+            "value": "1/4",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "millimeters",
+            "converted_value": "6",
+            "models": [
+              "B70760"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "corner radius",
+              "cutout radius",
+              "mounting specifications"
+            ],
+            "concept_group": "installation_dimensions",
+            "references": [
+              "Product Specifications"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Steak Temperature Setting",
+            "normalized_parameter": "cooking_temp_steak",
+            "parameter_aliases": [
+              "steak temp",
+              "steak temperature",
+              "steak heat"
+            ],
+            "value": "550",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "288",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "steak temperature",
+              "how hot for steak",
+              "steak cooking temp",
+              "steak heat setting"
+            ],
+            "concept_group": "cooking_temperatures",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Steak Power Setting",
+            "normalized_parameter": "power_level_steak",
+            "parameter_aliases": [
+              "steak power",
+              "steak setting"
+            ],
+            "value": "16",
+            "range": null,
+            "units": "level",
+            "normalized_units": "level",
+            "converted_value": "16",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "steak power",
+              "power for steak",
+              "steak setting level"
+            ],
+            "concept_group": "power_settings",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Burger Temperature Setting",
+            "normalized_parameter": "cooking_temp_burger",
+            "parameter_aliases": [
+              "burger temp",
+              "hamburger temperature"
+            ],
+            "value": "500",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "260",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "burger temperature",
+              "hamburger temp",
+              "burger heat setting"
+            ],
+            "concept_group": "cooking_temperatures",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Burger Power Setting",
+            "normalized_parameter": "power_level_burger",
+            "parameter_aliases": [
+              "burger power",
+              "hamburger setting"
+            ],
+            "value": "9",
+            "range": null,
+            "units": "level",
+            "normalized_units": "level",
+            "converted_value": "9",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "burger power",
+              "power for burgers",
+              "hamburger power level"
+            ],
+            "concept_group": "power_settings",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Pork/Fish Temperature Setting",
+            "normalized_parameter": "cooking_temp_pork_fish",
+            "parameter_aliases": [
+              "pork temp",
+              "fish temp"
+            ],
+            "value": "400",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "204",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "pork temperature",
+              "fish temperature",
+              "seafood temp"
+            ],
+            "concept_group": "cooking_temperatures",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Pork/Fish Power Setting",
+            "normalized_parameter": "power_level_pork_fish",
+            "parameter_aliases": [
+              "pork power",
+              "fish power"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "level",
+            "normalized_units": "level",
+            "converted_value": "5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "pork power setting",
+              "fish power level"
+            ],
+            "concept_group": "power_settings",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Vegetable Temperature Setting",
+            "normalized_parameter": "cooking_temp_vegetable",
+            "parameter_aliases": [
+              "veggie temp",
+              "vegetable temperature"
+            ],
+            "value": "350",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "177",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "vegetable temperature",
+              "veggie temp",
+              "vegetable heat"
+            ],
+            "concept_group": "cooking_temperatures",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Vegetable Power Setting",
+            "normalized_parameter": "power_level_vegetable",
+            "parameter_aliases": [
+              "veggie power",
+              "vegetable setting"
+            ],
+            "value": "4",
+            "range": null,
+            "units": "level",
+            "normalized_units": "level",
+            "converted_value": "4",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "vegetable power",
+              "veggie power level"
+            ],
+            "concept_group": "power_settings",
+            "references": [
+              "Section 6"
+            ]
+          },
+          {
+            "parameter": "Preheat Time",
+            "normalized_parameter": "preheat_duration",
+            "parameter_aliases": [
+              "warm up time",
+              "heating time"
+            ],
+            "value": null,
+            "range": "5-7",
+            "units": "minutes",
+            "normalized_units": "minutes",
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "preheat time",
+              "warm up duration",
+              "how long to preheat"
+            ],
+            "concept_group": "operation_times",
+            "references": [
+              "Section 6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Water Pressure for Cleaning",
+            "normalized_parameter": "cleaning_water_pressure",
+            "parameter_aliases": [
+              "cleaning pressure",
+              "wash pressure",
+              "water pressure limit"
+            ],
+            "value": "0",
+            "range": "0 PSI",
+            "units": "PSI",
+            "normalized_units": "PSI",
+            "converted_value": "0",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "category": "Cleaning",
+            "search_terms": [
+              "cleaning pressure",
+              "water pressure",
+              "pressure washing",
+              "cleaning requirements"
+            ],
+            "concept_group": "maintenance_specifications",
+            "references": [
+              "Operation Section"
+            ]
+          },
+          {
+            "parameter": "Drip Tray Water Capacity",
+            "normalized_parameter": "drip_tray_water_volume",
+            "parameter_aliases": [
+              "water amount",
+              "drip pan capacity"
+            ],
+            "value": "2",
+            "range": "2 cups minimum",
+            "units": "cups",
+            "normalized_units": "milliliters",
+            "converted_value": "473",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "drip tray water",
+              "smoke prevention",
+              "water amount",
+              "drip pan"
+            ],
+            "concept_group": "operation_specifications",
+            "references": [
+              "Operation Section"
+            ]
+          },
+          {
+            "parameter": "Remote Control Capability",
+            "normalized_parameter": "remote_control_compatible",
+            "parameter_aliases": [
+              "remote operation",
+              "external timer control"
+            ],
+            "value": "Not compatible",
+            "range": "N/A",
+            "units": "binary",
+            "normalized_units": "boolean",
+            "converted_value": "false",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "remote control",
+              "timer control",
+              "external control",
+              "remote operation"
+            ],
+            "concept_group": "control_specifications",
+            "references": [
+              "Operation Section"
+            ]
+          },
+          {
+            "parameter": "Installation Types",
+            "normalized_parameter": "installation_classification",
+            "parameter_aliases": [
+              "usage environment",
+              "application type"
+            ],
+            "value": "Household and similar applications",
+            "range": "N/A",
+            "units": "classification",
+            "normalized_units": "classification",
+            "converted_value": "residential",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "installation type",
+              "usage environment",
+              "application",
+              "where to use"
+            ],
+            "concept_group": "installation_specifications",
+            "references": [
+              "Operation Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Control Panel Lock",
+            "normalized_parameter": "control_lock",
+            "parameter_aliases": [
+              "safety lock",
+              "panel lock",
+              "lockout"
+            ],
+            "value": "Available in ON and OFF states",
+            "range": "N/A",
+            "units": "binary",
+            "normalized_units": "boolean",
+            "converted_value": "N/A",
+            "models": [
+              "all"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "lock",
+              "safety lock",
+              "control lock",
+              "panel lockout",
+              "disable controls"
+            ],
+            "concept_group": "safety_features",
+            "references": [
+              "Operation section"
+            ]
+          },
+          {
+            "parameter": "Power Level Range",
+            "normalized_parameter": "power_level",
+            "parameter_aliases": [
+              "heating level",
+              "temperature setting",
+              "heat setting"
+            ],
+            "value": "Low to High",
+            "range": "Low-High",
+            "units": "levels",
+            "normalized_units": "levels",
+            "converted_value": "N/A",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "power level",
+              "heat setting",
+              "temperature control",
+              "heating level"
+            ],
+            "concept_group": "cooking_controls",
+            "references": [
+              "Cooking Mode Options"
+            ]
+          },
+          {
+            "parameter": "Auto Shutdown Timer",
+            "normalized_parameter": "auto_shutdown_delay",
+            "parameter_aliases": [
+              "timeout",
+              "auto power off"
+            ],
+            "value": "15",
+            "range": "N/A",
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "15",
+            "models": [
+              "all"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "auto shutdown",
+              "timeout",
+              "automatic power off",
+              "safety timer"
+            ],
+            "concept_group": "safety_features",
+            "references": [
+              "Turning On section"
+            ]
+          },
+          {
+            "parameter": "Element Activation Time",
+            "normalized_parameter": "activation_hold_time",
+            "parameter_aliases": [
+              "power on hold",
+              "start delay"
+            ],
+            "value": "2",
+            "range": "N/A",
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "2",
+            "models": [
+              "all"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "activation time",
+              "power on time",
+              "start delay",
+              "hold time"
+            ],
+            "concept_group": "operation_parameters",
+            "references": [
+              "Turning On section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Temperature Range",
+            "normalized_parameter": "cooking_temperature_range",
+            "parameter_aliases": [
+              "cooking temp",
+              "temperature setting",
+              "heat range"
+            ],
+            "value": "150\u00b0F to 550\u00b0F",
+            "range": "150-550\u00b0F / 65-287\u00b0C",
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "65-287",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "temperature range",
+              "cooking temperature",
+              "max temp",
+              "min temp",
+              "heat range",
+              "temperature limits"
+            ],
+            "concept_group": "temperature_control",
+            "references": [
+              "page 12"
+            ]
+          },
+          {
+            "parameter": "Temperature Increment",
+            "normalized_parameter": "temperature_increment",
+            "parameter_aliases": [
+              "temp step",
+              "temperature adjustment"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "12",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "temperature increment",
+              "temperature steps",
+              "temp adjustment",
+              "temperature control precision"
+            ],
+            "concept_group": "temperature_control",
+            "references": [
+              "page 12"
+            ]
+          },
+          {
+            "parameter": "Heat Level Settings",
+            "normalized_parameter": "heat_level_increments",
+            "parameter_aliases": [
+              "power levels",
+              "heat settings"
+            ],
+            "value": "16",
+            "range": "LOW-MED-HIGH",
+            "units": "increments",
+            "normalized_units": "increments",
+            "converted_value": "16",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "heat levels",
+              "power settings",
+              "temperature levels",
+              "heat increments"
+            ],
+            "concept_group": "heat_control",
+            "references": [
+              "page 12"
+            ]
+          },
+          {
+            "parameter": "Default Temperature",
+            "normalized_parameter": "default_temperature",
+            "parameter_aliases": [
+              "startup temp",
+              "initial temperature"
+            ],
+            "value": "150",
+            "range": null,
+            "units": "\u00b0F",
+            "normalized_units": "celsius",
+            "converted_value": "65",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "default temperature",
+              "startup temperature",
+              "initial temp",
+              "default setting"
+            ],
+            "concept_group": "temperature_control",
+            "references": [
+              "page 12"
+            ]
+          },
+          {
+            "parameter": "Auto Shutoff Time",
+            "normalized_parameter": "auto_shutoff_delay",
+            "parameter_aliases": [
+              "timeout",
+              "automatic shutdown"
+            ],
+            "value": "15",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "15",
+            "models": [
+              "all"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "auto shutoff",
+              "timeout",
+              "automatic shutdown",
+              "safety timeout",
+              "inactivity shutdown"
+            ],
+            "concept_group": "safety_features",
+            "references": [
+              "page 12"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Automatic Shut-off Time Setting 1-4",
+            "normalized_parameter": "auto_shutoff_time_low",
+            "parameter_aliases": [
+              "safety shutoff",
+              "auto timeout",
+              "automatic shutdown"
+            ],
+            "value": "90",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "90",
+            "models": [
+              "all"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "how long until auto shutoff",
+              "safety timer",
+              "automatic shutdown time",
+              "low heat shutoff"
+            ],
+            "concept_group": "safety_timers",
+            "references": [
+              "Operation Section"
+            ]
+          },
+          {
+            "parameter": "Automatic Shut-off Time Setting 5-10",
+            "normalized_parameter": "auto_shutoff_time_medium",
+            "parameter_aliases": [
+              "safety shutoff",
+              "auto timeout",
+              "automatic shutdown"
+            ],
+            "value": "70",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "70",
+            "models": [
+              "all"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "how long until auto shutoff",
+              "safety timer",
+              "automatic shutdown time",
+              "medium heat shutoff"
+            ],
+            "concept_group": "safety_timers",
+            "references": [
+              "Operation Section"
+            ]
+          },
+          {
+            "parameter": "Automatic Shut-off Time Setting 11-16",
+            "normalized_parameter": "auto_shutoff_time_high",
+            "parameter_aliases": [
+              "safety shutoff",
+              "auto timeout",
+              "automatic shutdown"
+            ],
+            "value": "60",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "60",
+            "models": [
+              "all"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "how long until auto shutoff",
+              "safety timer",
+              "automatic shutdown time",
+              "high heat shutoff"
+            ],
+            "concept_group": "safety_timers",
+            "references": [
+              "Operation Section"
+            ]
+          },
+          {
+            "parameter": "Temperature Settings Range",
+            "normalized_parameter": "temperature_control_range",
+            "parameter_aliases": [
+              "heat settings",
+              "temperature control",
+              "heat control"
+            ],
+            "value": "1-16",
+            "range": "1-16",
+            "units": "setting",
+            "normalized_units": "setting",
+            "converted_value": "1-16",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "temperature settings",
+              "heat levels",
+              "temperature control",
+              "heat settings range"
+            ],
+            "concept_group": "temperature_control",
+            "references": [
+              "Operation Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Timer Increment (1-10 min)",
+            "normalized_parameter": "timer_increment_low_range",
+            "parameter_aliases": [
+              "time increment",
+              "timer step",
+              "minute increment"
+            ],
+            "value": "1",
+            "range": "1-10",
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "1",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timer step",
+              "time increment",
+              "minute increment",
+              "timer resolution",
+              "timer precision"
+            ],
+            "concept_group": "timer_settings",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Timer Increment (>10 min)",
+            "normalized_parameter": "timer_increment_high_range",
+            "parameter_aliases": [
+              "time increment",
+              "timer step",
+              "minute increment"
+            ],
+            "value": "5",
+            "range": ">10",
+            "units": "minutes",
+            "normalized_units": "min",
+            "converted_value": "5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timer step",
+              "time increment",
+              "minute increment",
+              "timer resolution",
+              "timer precision"
+            ],
+            "concept_group": "timer_settings",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Timer Inactivity Timeout",
+            "normalized_parameter": "timer_inactivity_timeout",
+            "parameter_aliases": [
+              "auto shutoff",
+              "timeout period",
+              "inactivity period"
+            ],
+            "value": "20",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "20",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timer timeout",
+              "auto shutoff",
+              "inactivity timeout",
+              "timer deactivation"
+            ],
+            "concept_group": "timer_settings",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Kitchen Timer Alarm Interval",
+            "normalized_parameter": "kitchen_timer_alarm_interval",
+            "parameter_aliases": [
+              "beep interval",
+              "alarm frequency"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "10",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "alarm interval",
+              "beep frequency",
+              "timer alarm",
+              "alert interval"
+            ],
+            "concept_group": "timer_alerts",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Cooking Timer Alarm Interval",
+            "normalized_parameter": "cooking_timer_alarm_interval",
+            "parameter_aliases": [
+              "beep interval",
+              "alarm frequency"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "alarm interval",
+              "beep frequency",
+              "timer alarm",
+              "alert interval"
+            ],
+            "concept_group": "timer_alerts",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Kitchen Timer Alarm Duration",
+            "normalized_parameter": "kitchen_timer_alarm_duration",
+            "parameter_aliases": [
+              "alarm timeout",
+              "alert duration"
+            ],
+            "value": "180",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "180",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "alarm duration",
+              "alert timeout",
+              "beeping duration",
+              "alarm period"
+            ],
+            "concept_group": "timer_alerts",
+            "references": [
+              "p.13"
+            ]
+          },
+          {
+            "parameter": "Cooking Timer Post-Completion Timeout",
+            "normalized_parameter": "cooking_timer_completion_timeout",
+            "parameter_aliases": [
+              "post-cooking timeout",
+              "completion shutdown time"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "30",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "completion timeout",
+              "final shutdown",
+              "post-cooking shutdown",
+              "timer shutdown"
+            ],
+            "concept_group": "timer_settings",
+            "references": [
+              "p.13"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Customer Service Hours",
+            "normalized_parameter": "service_hours",
+            "parameter_aliases": [
+              "support hours",
+              "operating hours",
+              "business hours"
+            ],
+            "value": "8AM - 5PM EST",
+            "range": "8:00-17:00",
+            "units": "hours",
+            "normalized_units": "hours_EST",
+            "converted_value": "8:00-17:00 EST",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "service hours",
+              "when to call",
+              "support availability",
+              "customer care hours",
+              "contact hours"
+            ],
+            "concept_group": "support_contact",
+            "references": [
+              "Page 15"
+            ]
+          },
+          {
+            "parameter": "Customer Service Phone",
+            "normalized_parameter": "support_phone",
+            "parameter_aliases": [
+              "contact number",
+              "service number",
+              "phone number"
+            ],
+            "value": "860-664-4906",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "phone number",
+              "contact",
+              "support line",
+              "service number",
+              "help line"
+            ],
+            "concept_group": "support_contact",
+            "references": [
+              "Page 15"
+            ]
+          },
+          {
+            "parameter": "Control Input Limit",
+            "normalized_parameter": "simultaneous_control_inputs",
+            "parameter_aliases": [
+              "control functions",
+              "input limit",
+              "simultaneous controls"
+            ],
+            "value": "2",
+            "range": "\u2264 2",
+            "units": "functions",
+            "normalized_units": "functions",
+            "converted_value": "2",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "control inputs",
+              "simultaneous functions",
+              "control limit",
+              "operation limit"
+            ],
+            "concept_group": "operation_limits",
+            "references": [
+              "Page 15"
+            ]
+          },
+          {
+            "parameter": "Control Input Time Limit",
+            "normalized_parameter": "control_input_timeout",
+            "parameter_aliases": [
+              "input timeout",
+              "control timeout"
+            ],
+            "value": "3",
+            "range": "< 3",
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "3",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timeout",
+              "control time",
+              "input duration",
+              "operation timeout"
+            ],
+            "concept_group": "operation_limits",
+            "references": [
+              "Page 15"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Drip Tray Water Requirement",
+            "normalized_parameter": "drip_tray_water_volume",
+            "parameter_aliases": [
+              "water amount",
+              "drip pan water",
+              "water requirement"
+            ],
+            "value": "2",
+            "range": "2 cups or more",
+            "units": "cups",
+            "normalized_units": "ml",
+            "converted_value": "473",
+            "models": [
+              "all"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "how much water in drip tray",
+              "drip tray water amount",
+              "water needed for drip tray",
+              "minimum water requirement"
+            ],
+            "concept_group": "maintenance_requirements",
+            "references": [
+              "page 16"
+            ]
+          },
+          {
+            "parameter": "Heating Element Movement",
+            "normalized_parameter": "heating_element_pivot",
+            "parameter_aliases": [
+              "element position",
+              "heating element adjustment"
+            ],
+            "value": "pivoting up/down",
+            "range": "0-90 degrees",
+            "units": "degrees",
+            "normalized_units": "degrees",
+            "converted_value": "90",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how to move heating element",
+              "heating element position",
+              "adjust heating element",
+              "lift heating element"
+            ],
+            "concept_group": "component_adjustment",
+            "references": [
+              "page 16"
+            ]
+          },
+          {
+            "parameter": "Grate Cleaning Frequency",
+            "normalized_parameter": "grate_cleaning_interval",
+            "parameter_aliases": [
+              "cleaning schedule",
+              "maintenance interval"
+            ],
+            "value": "after every use",
+            "range": "every use",
+            "units": "uses",
+            "normalized_units": "uses",
+            "converted_value": "1",
+            "models": [
+              "all"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "when to clean grate",
+              "grate cleaning schedule",
+              "how often clean grill grate",
+              "grate maintenance"
+            ],
+            "concept_group": "cleaning_requirements",
+            "references": [
+              "page 16"
+            ]
+          },
+          {
+            "parameter": "Grate Surface Treatment",
+            "normalized_parameter": "grate_coating",
+            "parameter_aliases": [
+              "grate finish",
+              "cooking surface coating"
+            ],
+            "value": "nonstick",
+            "range": "n/a",
+            "units": "coating type",
+            "normalized_units": "coating type",
+            "converted_value": "nonstick",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "grate coating",
+              "nonstick surface",
+              "grate material",
+              "cooking surface type"
+            ],
+            "concept_group": "materials_specifications",
+            "references": [
+              "page 16"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Collapsed Lid Height",
+            "normalized_parameter": "minimum_lid_height",
+            "parameter_aliases": [
+              "collapsed height",
+              "minimum height",
+              "storage height"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "50.8",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "how tall is collapsed lid",
+              "minimum lid height",
+              "storage dimensions",
+              "collapsed size",
+              "lid thickness when folded"
+            ],
+            "concept_group": "lid_specifications",
+            "references": [
+              "Page 17"
+            ]
+          },
+          {
+            "parameter": "Lid Vent Configuration",
+            "normalized_parameter": "vent_placement",
+            "parameter_aliases": [
+              "ventilation location",
+              "air vent position"
+            ],
+            "value": "three sides",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "where are the vents",
+              "vent locations",
+              "lid ventilation",
+              "air vent placement"
+            ],
+            "concept_group": "ventilation_system",
+            "references": [
+              "Page 17"
+            ]
+          },
+          {
+            "parameter": "Handle Configuration",
+            "normalized_parameter": "handle_count",
+            "parameter_aliases": [
+              "number of handles",
+              "grip locations"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "handles",
+            "normalized_units": "count",
+            "converted_value": "2",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how many handles",
+              "handle positions",
+              "lid handles",
+              "grip locations"
+            ],
+            "concept_group": "lid_specifications",
+            "references": [
+              "Page 17"
+            ]
+          },
+          {
+            "parameter": "Lid Material",
+            "normalized_parameter": "lid_material",
+            "parameter_aliases": [
+              "cover material",
+              "top material"
+            ],
+            "value": "high temperature silicone",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "what is lid made of",
+              "lid material type",
+              "silicone lid",
+              "cover material"
+            ],
+            "concept_group": "materials",
+            "references": [
+              "Page 17"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Connected Load",
+            "normalized_parameter": "max_power_load",
+            "parameter_aliases": [
+              "power consumption",
+              "wattage",
+              "power draw"
+            ],
+            "value": "1300",
+            "range": null,
+            "units": "Watts",
+            "normalized_units": "W",
+            "converted_value": "1300",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power requirement",
+              "wattage",
+              "power consumption",
+              "electrical load",
+              "max power"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "p.18"
+            ]
+          },
+          {
+            "parameter": "Input Voltage",
+            "normalized_parameter": "input_voltage",
+            "parameter_aliases": [
+              "supply voltage",
+              "DC voltage",
+              "power supply voltage"
+            ],
+            "value": "48",
+            "range": "35-55",
+            "units": "V DC",
+            "normalized_units": "VDC",
+            "converted_value": "48",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage requirement",
+              "DC voltage",
+              "power supply",
+              "voltage range"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "p.18"
+            ]
+          },
+          {
+            "parameter": "Current Draw",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "amperage",
+              "current requirement",
+              "amp draw"
+            ],
+            "value": "27",
+            "range": null,
+            "units": "A",
+            "normalized_units": "A",
+            "converted_value": "27",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "amperage",
+              "current",
+              "amps",
+              "power draw"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "p.18"
+            ]
+          },
+          {
+            "parameter": "Wire Gauge Requirement",
+            "normalized_parameter": "wire_gauge",
+            "parameter_aliases": [
+              "cable size",
+              "wiring requirement"
+            ],
+            "value": "8",
+            "range": null,
+            "units": "AWG",
+            "normalized_units": "AWG",
+            "converted_value": "8",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "wire size",
+              "cable gauge",
+              "wiring gauge",
+              "AWG requirement"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "p.18"
+            ]
+          },
+          {
+            "parameter": "Maximum Power Supply Run",
+            "normalized_parameter": "max_power_cable_length",
+            "parameter_aliases": [
+              "cable run",
+              "wiring distance",
+              "power supply distance"
+            ],
+            "value": "40",
+            "range": null,
+            "units": "feet",
+            "normalized_units": "ft",
+            "converted_value": "40",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cable length",
+              "wiring length",
+              "power cable distance",
+              "maximum cable run"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "p.18"
+            ]
+          },
+          {
+            "parameter": "Disconnect Distance Requirement",
+            "normalized_parameter": "disconnect_distance",
+            "parameter_aliases": [
+              "disconnect location",
+              "shutoff distance"
+            ],
+            "value": "3",
+            "range": null,
+            "units": "feet",
+            "normalized_units": "ft",
+            "converted_value": "3",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "disconnect requirement",
+              "shutoff distance",
+              "disconnect location"
+            ],
+            "concept_group": "safety_requirements",
+            "references": [
+              "p.18"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Overhead Cabinet Clearance",
+            "normalized_parameter": "overhead_cabinet_depth",
+            "parameter_aliases": [
+              "cabinet depth",
+              "upper cabinet depth"
+            ],
+            "value": "13",
+            "range": "0-13",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "13",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cabinet clearance",
+              "overhead cabinet",
+              "upper cabinet depth",
+              "cabinet installation height",
+              "maximum cabinet depth"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Countertop Height",
+            "normalized_parameter": "counter_height",
+            "parameter_aliases": [
+              "installation height",
+              "counter installation height"
+            ],
+            "value": "36",
+            "range": "36+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "36",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "counter height",
+              "minimum counter height",
+              "installation height",
+              "height from floor"
+            ],
+            "concept_group": "dimensions",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Unprotected Cabinet Clearance",
+            "normalized_parameter": "unprotected_cabinet_clearance",
+            "parameter_aliases": [
+              "cooking surface clearance",
+              "cabinet spacing"
+            ],
+            "value": "30",
+            "range": "30+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "30",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cabinet clearance",
+              "cooking surface clearance",
+              "unprotected cabinet space",
+              "minimum clearance"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Protected Cabinet Clearance",
+            "normalized_parameter": "protected_cabinet_clearance",
+            "parameter_aliases": [
+              "protected cooking clearance",
+              "flame retardant clearance"
+            ],
+            "value": "24",
+            "range": "24+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "24",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "protected clearance",
+              "flame retardant clearance",
+              "minimum protected space"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Backsplash Minimum Clearance",
+            "normalized_parameter": "backsplash_clearance",
+            "parameter_aliases": [
+              "back clearance",
+              "rear spacing"
+            ],
+            "value": "6",
+            "range": "6+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "6",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "backsplash clearance",
+              "rear clearance",
+              "back spacing",
+              "minimum back distance"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Front Counter Minimum Clearance",
+            "normalized_parameter": "front_counter_clearance",
+            "parameter_aliases": [
+              "front spacing",
+              "front edge clearance"
+            ],
+            "value": "1.5",
+            "range": "1.5+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "1.5",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "front clearance",
+              "front edge space",
+              "minimum front distance"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          },
+          {
+            "parameter": "Bottom Combustible Surface Clearance",
+            "normalized_parameter": "bottom_clearance",
+            "parameter_aliases": [
+              "drawer clearance",
+              "bottom spacing"
+            ],
+            "value": "2",
+            "range": "2+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "2",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "bottom clearance",
+              "drawer space",
+              "minimum bottom distance",
+              "combustible clearance"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19, page 22"
+            ]
+          },
+          {
+            "parameter": "Canadian Installation Adjacent Surface Clearance",
+            "normalized_parameter": "canadian_adjacent_clearance",
+            "parameter_aliases": [
+              "canadian spacing",
+              "adjacent surface spacing"
+            ],
+            "value": "0.5",
+            "range": "0.5+",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "0.5",
+            "models": [
+              "IntelliKEN Touch Grill"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "canadian clearance",
+              "adjacent surface",
+              "minimum adjacent distance",
+              "canadian requirements"
+            ],
+            "concept_group": "clearances",
+            "references": [
+              "page 19"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Manual Section",
+            "normalized_parameter": "manual_section",
+            "parameter_aliases": [
+              "chapter",
+              "documentation section",
+              "manual part"
+            ],
+            "value": "Installation",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "installation instructions",
+              "setup guide",
+              "installation manual",
+              "setup section"
+            ],
+            "concept_group": "documentation",
+            "references": [
+              "page 5",
+              "page 21"
+            ]
+          },
+          {
+            "parameter": "Cleaning Components",
+            "normalized_parameter": "cleaning_components",
+            "parameter_aliases": [
+              "parts to clean",
+              "components requiring cleaning"
+            ],
+            "value": "lid, trim flange, glass panel, nonstick coated grates",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "what to clean",
+              "cleaning requirements",
+              "initial cleaning",
+              "pre-use cleaning",
+              "preparation steps"
+            ],
+            "concept_group": "preparation",
+            "references": [
+              "page 5"
+            ]
+          },
+          {
+            "parameter": "Cleaning Method",
+            "normalized_parameter": "cleaning_method",
+            "parameter_aliases": [
+              "cleaning procedure",
+              "cleaning instructions"
+            ],
+            "value": "stainless steel or glass cleaner for surfaces, warm soapy water for grates",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how to clean",
+              "cleaning products",
+              "cleaning solution",
+              "cleaning instructions",
+              "first time cleaning"
+            ],
+            "concept_group": "preparation",
+            "references": [
+              "page 5",
+              "page 21"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Hood Extension",
+            "normalized_parameter": "hood_horizontal_extension",
+            "parameter_aliases": [
+              "hood overhang",
+              "hood projection",
+              "cabinet clearance"
+            ],
+            "value": "5",
+            "range": "minimum 5 inches",
+            "units": "inches",
+            "normalized_units": "mm",
+            "converted_value": "127",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "hood extension",
+              "cabinet clearance",
+              "safety distance",
+              "minimum hood projection"
+            ],
+            "concept_group": "safety_clearances",
+            "references": [
+              "Installation section"
+            ]
+          },
+          {
+            "parameter": "Ventilation Opening Size",
+            "normalized_parameter": "ventilation_opening_area",
+            "parameter_aliases": [
+              "air vent size",
+              "ventilation requirement"
+            ],
+            "value": "8",
+            "range": "minimum 8 square inches each",
+            "units": "square inches",
+            "normalized_units": "square_cm",
+            "converted_value": "51.6",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "ventilation",
+              "air flow",
+              "cooling requirements",
+              "air intake"
+            ],
+            "concept_group": "ventilation_requirements",
+            "references": [
+              "Installation section"
+            ]
+          },
+          {
+            "parameter": "Maximum Ambient Temperature",
+            "normalized_parameter": "max_ambient_temp",
+            "parameter_aliases": [
+              "operating temperature",
+              "environmental temperature"
+            ],
+            "value": "85",
+            "range": "below 85\u00b0F",
+            "units": "\u00b0F",
+            "normalized_units": "\u00b0C",
+            "converted_value": "30",
+            "models": [
+              "all"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "ambient temperature",
+              "operating temperature",
+              "environment temp"
+            ],
+            "concept_group": "operating_conditions",
+            "references": [
+              "Installation section"
+            ]
+          },
+          {
+            "parameter": "Drain Fitting Size",
+            "normalized_parameter": "drain_fitting_diameter",
+            "parameter_aliases": [
+              "drain connection",
+              "drain pipe size"
+            ],
+            "value": "0.5",
+            "range": null,
+            "units": "NPT inches",
+            "normalized_units": "mm",
+            "converted_value": "12.7",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drain size",
+              "drain fitting",
+              "drain connection",
+              "NPT fitting"
+            ],
+            "concept_group": "plumbing_specifications",
+            "references": [
+              "Drain Connection section"
+            ]
+          },
+          {
+            "parameter": "Drain Hose Size",
+            "normalized_parameter": "drain_hose_diameter",
+            "parameter_aliases": [
+              "hose ID",
+              "drain tube size"
+            ],
+            "value": "0.625",
+            "range": null,
+            "units": "ID inches",
+            "normalized_units": "mm",
+            "converted_value": "15.875",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drain hose",
+              "hose diameter",
+              "drain tube"
+            ],
+            "concept_group": "plumbing_specifications",
+            "references": [
+              "Drain Connection section"
+            ]
+          },
+          {
+            "parameter": "Countertop Corner Radius",
+            "normalized_parameter": "cutout_corner_radius",
+            "parameter_aliases": [
+              "corner radius",
+              "cutout radius"
+            ],
+            "value": "0.25",
+            "range": "minimum 0.25 inches",
+            "units": "inches",
+            "normalized_units": "mm",
+            "converted_value": "6.35",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "corner radius",
+              "cutout specifications",
+              "countertop cutting"
+            ],
+            "concept_group": "installation_specifications",
+            "references": [
+              "Installation section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Standard Warranty Duration",
+            "normalized_parameter": "warranty_duration_standard",
+            "parameter_aliases": [
+              "warranty period",
+              "guarantee length",
+              "coverage period"
+            ],
+            "value": "3 years",
+            "range": "up to 3 years",
+            "units": "years",
+            "normalized_units": "years",
+            "converted_value": "3",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "warranty length",
+              "how long is warranty",
+              "warranty period",
+              "guarantee duration"
+            ],
+            "concept_group": "warranty_terms",
+            "references": [
+              "paragraph 1"
+            ]
+          },
+          {
+            "parameter": "Alternative Warranty Start",
+            "normalized_parameter": "warranty_duration_from_invoice",
+            "parameter_aliases": [
+              "invoice-based warranty",
+              "alternative coverage period"
+            ],
+            "value": "42 months",
+            "range": "up to 42 months",
+            "units": "months",
+            "normalized_units": "months",
+            "converted_value": "42",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "warranty from invoice",
+              "invoice date warranty",
+              "months from purchase"
+            ],
+            "concept_group": "warranty_terms",
+            "references": [
+              "paragraph 1"
+            ]
+          },
+          {
+            "parameter": "Stainless Steel Warranty",
+            "normalized_parameter": "warranty_duration_stainless",
+            "parameter_aliases": [
+              "rust warranty",
+              "corrosion guarantee"
+            ],
+            "value": "lifetime",
+            "range": "unlimited",
+            "units": "years",
+            "normalized_units": "years",
+            "converted_value": "lifetime",
+            "models": [
+              "all stainless steel components"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "rust free guarantee",
+              "stainless warranty",
+              "corrosion coverage",
+              "lifetime warranty"
+            ],
+            "concept_group": "warranty_terms",
+            "references": [
+              "paragraph 1"
+            ]
+          },
+          {
+            "parameter": "Maintenance Interval",
+            "normalized_parameter": "maintenance_frequency",
+            "parameter_aliases": [
+              "care interval",
+              "service frequency"
+            ],
+            "value": "monthly",
+            "range": "every month",
+            "units": "months",
+            "normalized_units": "months",
+            "converted_value": "1",
+            "models": [
+              "all stainless steel components"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "maintenance schedule",
+              "care frequency",
+              "how often maintain",
+              "monthly care"
+            ],
+            "concept_group": "maintenance",
+            "references": [
+              "paragraph 1"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,753 @@
+{
+  "total_chunks_processed": 6,
+  "successful_chunks": 6,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 22,
+  "unique_procedures": 22,
+  "procedures": [
+    {
+      "title": "Language Selection",
+      "preconditions": [
+        "Device powered on",
+        "At initial setup screen"
+      ],
+      "steps": [
+        "Select desired language from available options: English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587"
+      ],
+      "expected_outcome": "Interface language changed to selected option",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Accessing Home Screen",
+      "preconditions": [
+        "System is powered on"
+      ],
+      "steps": [
+        "Select the Home button",
+        "View available options on home screen: Settings, Browser, Dashboards, Status bar, Dashboard bar"
+      ],
+      "expected_outcome": "Home screen is displayed with all navigation options visible",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Using Dashboard Bar",
+      "preconditions": [
+        "System is on home screen"
+      ],
+      "steps": [
+        "Locate dashboard bar at bottom of screen",
+        "View pinned dashboards in favorites section",
+        "View recently used dashboards",
+        "Note that active dashboard will be highlighted",
+        "Use Lock button to secure dashboard",
+        "Use Home button to return to main screen"
+      ],
+      "expected_outcome": "Successfully navigate and use dashboard bar features",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Creating New Dashboard",
+      "preconditions": [
+        "System is on home screen"
+      ],
+      "steps": [
+        "Select Dashboards option",
+        "Choose 'new dashboard' option",
+        "Create custom dashboard"
+      ],
+      "expected_outcome": "New custom dashboard created",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Accessing B&G CPU Web Server",
+      "preconditions": [
+        "System is on home screen"
+      ],
+      "steps": [
+        "Select Browser button",
+        "Access B&G CPU web server or browse internet"
+      ],
+      "expected_outcome": "Successfully connected to B&G CPU web server or internet",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pin Dashboard",
+      "preconditions": [
+        "Must be on home screen",
+        "Dashboard must be visible"
+      ],
+      "steps": [
+        "Press and hold on desired dashboard",
+        "Select position on dashboard bar",
+        "Release to pin dashboard"
+      ],
+      "expected_outcome": "Dashboard is pinned to dashboard bar",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Unpin Dashboard",
+      "preconditions": [
+        "Dashboard must be currently pinned to dashboard bar"
+      ],
+      "steps": [
+        "Press and hold on pinned dashboard in dashboard bar",
+        "Select unpin option when displayed",
+        "Release to confirm unpin"
+      ],
+      "expected_outcome": "Dashboard is removed from dashboard bar",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Navigate Between Pinned Dashboards",
+      "preconditions": [
+        "Multiple dashboards must be pinned"
+      ],
+      "steps": [
+        "Swipe left to view next pinned dashboard",
+        "Swipe right to view previous pinned dashboard"
+      ],
+      "expected_outcome": "Successfully switch between pinned dashboards",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "First Time System Setup",
+      "preconditions": [
+        "Power available",
+        "Unit not previously configured"
+      ],
+      "steps": [
+        "Apply power to turn on unit",
+        "Wait for setup wizard to appear",
+        "Follow wizard prompts to set screen orientation",
+        "Set language preferences",
+        "Configure additional settings as prompted"
+      ],
+      "expected_outcome": "Unit configured with basic settings",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Locking Screen - Landscape Orientation",
+      "preconditions": [
+        "Unit powered on",
+        "Dashboard bar visible",
+        "Landscape orientation"
+      ],
+      "steps": [
+        "Locate lock button on dashboard bar",
+        "Press lock button"
+      ],
+      "expected_outcome": "Screen locked",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Unlocking Screen - Landscape Orientation",
+      "preconditions": [
+        "Screen locked",
+        "Landscape orientation"
+      ],
+      "steps": [
+        "Swipe from right edge of display"
+      ],
+      "expected_outcome": "Screen unlocked",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Locking Screen - Portrait Orientation",
+      "preconditions": [
+        "Unit powered on",
+        "Dashboard bar visible",
+        "Portrait orientation"
+      ],
+      "steps": [
+        "Locate lock button on dashboard bar",
+        "Press lock button"
+      ],
+      "expected_outcome": "Screen locked",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Unlocking Screen - Portrait Orientation",
+      "preconditions": [
+        "Screen locked",
+        "Portrait orientation"
+      ],
+      "steps": [
+        "Swipe from bottom of display"
+      ],
+      "expected_outcome": "Screen unlocked",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Power On Procedure",
+      "preconditions": [
+        "Power available"
+      ],
+      "steps": [
+        "Apply power to unit"
+      ],
+      "expected_outcome": "Unit powers on",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Edit or Delete Dashboard",
+      "preconditions": [
+        "Must be on home screen",
+        "Dashboard must exist"
+      ],
+      "steps": [
+        "Navigate to home screen",
+        "Press and hold on desired dashboard",
+        "Select edit or delete option from menu"
+      ],
+      "expected_outcome": "Dashboard edited or deleted as selected",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Customize Gauge Settings",
+      "preconditions": [
+        "Dashboard must contain gauges"
+      ],
+      "steps": [
+        "Locate gauge to customize",
+        "Press and hold on the gauge",
+        "Select from available edit options"
+      ],
+      "expected_outcome": "Gauge settings updated according to selections",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Create New Dashboard",
+      "preconditions": [
+        "Access to dashboard creation interface"
+      ],
+      "steps": [
+        "Select create new dashboard option",
+        "Choose starting point: blank dashboard, template, or saved dashboard"
+      ],
+      "expected_outcome": "New dashboard created based on selected starting point",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Change Gauge Settings",
+      "preconditions": [
+        "On gauge display screen"
+      ],
+      "steps": [
+        "Select gauge",
+        "Choose data to display on gauge"
+      ],
+      "expected_outcome": "Gauge displays selected data",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Resize Gauge",
+      "preconditions": [
+        "On gauge display screen"
+      ],
+      "steps": [
+        "Select gauge",
+        "Use resize controls to adjust gauge size"
+      ],
+      "expected_outcome": "Gauge size is adjusted",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Change Dashboard Attributes",
+      "preconditions": [
+        "On dashboard screen"
+      ],
+      "steps": [
+        "Access dashboard settings",
+        "Modify dashboard attributes"
+      ],
+      "expected_outcome": "Dashboard attributes are updated",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Access System Settings",
+      "preconditions": [
+        "On home screen"
+      ],
+      "steps": [
+        "Select system settings option from home screen"
+      ],
+      "expected_outcome": "System settings menu opens",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Use Quick Access Menu",
+      "preconditions": [
+        "On any screen"
+      ],
+      "steps": [
+        "Swipe from top edge of display",
+        "Select desired option (brightness/night mode/day mode/report issue)"
+      ],
+      "expected_outcome": "Selected quick access function is activated",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Language Selection",
+            "preconditions": [
+              "Device powered on",
+              "At initial setup screen"
+            ],
+            "steps": [
+              "Select desired language from available options: English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587"
+            ],
+            "expected_outcome": "Interface language changed to selected option",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Accessing Home Screen",
+            "preconditions": [
+              "System is powered on"
+            ],
+            "steps": [
+              "Select the Home button",
+              "View available options on home screen: Settings, Browser, Dashboards, Status bar, Dashboard bar"
+            ],
+            "expected_outcome": "Home screen is displayed with all navigation options visible",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Using Dashboard Bar",
+            "preconditions": [
+              "System is on home screen"
+            ],
+            "steps": [
+              "Locate dashboard bar at bottom of screen",
+              "View pinned dashboards in favorites section",
+              "View recently used dashboards",
+              "Note that active dashboard will be highlighted",
+              "Use Lock button to secure dashboard",
+              "Use Home button to return to main screen"
+            ],
+            "expected_outcome": "Successfully navigate and use dashboard bar features",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Creating New Dashboard",
+            "preconditions": [
+              "System is on home screen"
+            ],
+            "steps": [
+              "Select Dashboards option",
+              "Choose 'new dashboard' option",
+              "Create custom dashboard"
+            ],
+            "expected_outcome": "New custom dashboard created",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Accessing B&G CPU Web Server",
+            "preconditions": [
+              "System is on home screen"
+            ],
+            "steps": [
+              "Select Browser button",
+              "Access B&G CPU web server or browse internet"
+            ],
+            "expected_outcome": "Successfully connected to B&G CPU web server or internet",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "5-5",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pin Dashboard",
+            "preconditions": [
+              "Must be on home screen",
+              "Dashboard must be visible"
+            ],
+            "steps": [
+              "Press and hold on desired dashboard",
+              "Select position on dashboard bar",
+              "Release to pin dashboard"
+            ],
+            "expected_outcome": "Dashboard is pinned to dashboard bar",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Unpin Dashboard",
+            "preconditions": [
+              "Dashboard must be currently pinned to dashboard bar"
+            ],
+            "steps": [
+              "Press and hold on pinned dashboard in dashboard bar",
+              "Select unpin option when displayed",
+              "Release to confirm unpin"
+            ],
+            "expected_outcome": "Dashboard is removed from dashboard bar",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Navigate Between Pinned Dashboards",
+            "preconditions": [
+              "Multiple dashboards must be pinned"
+            ],
+            "steps": [
+              "Swipe left to view next pinned dashboard",
+              "Swipe right to view previous pinned dashboard"
+            ],
+            "expected_outcome": "Successfully switch between pinned dashboards",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "3-3",
+      "result": {
+        "procedures": [
+          {
+            "title": "First Time System Setup",
+            "preconditions": [
+              "Power available",
+              "Unit not previously configured"
+            ],
+            "steps": [
+              "Apply power to turn on unit",
+              "Wait for setup wizard to appear",
+              "Follow wizard prompts to set screen orientation",
+              "Set language preferences",
+              "Configure additional settings as prompted"
+            ],
+            "expected_outcome": "Unit configured with basic settings",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Locking Screen - Landscape Orientation",
+            "preconditions": [
+              "Unit powered on",
+              "Dashboard bar visible",
+              "Landscape orientation"
+            ],
+            "steps": [
+              "Locate lock button on dashboard bar",
+              "Press lock button"
+            ],
+            "expected_outcome": "Screen locked",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Unlocking Screen - Landscape Orientation",
+            "preconditions": [
+              "Screen locked",
+              "Landscape orientation"
+            ],
+            "steps": [
+              "Swipe from right edge of display"
+            ],
+            "expected_outcome": "Screen unlocked",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Locking Screen - Portrait Orientation",
+            "preconditions": [
+              "Unit powered on",
+              "Dashboard bar visible",
+              "Portrait orientation"
+            ],
+            "steps": [
+              "Locate lock button on dashboard bar",
+              "Press lock button"
+            ],
+            "expected_outcome": "Screen locked",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Unlocking Screen - Portrait Orientation",
+            "preconditions": [
+              "Screen locked",
+              "Portrait orientation"
+            ],
+            "steps": [
+              "Swipe from bottom of display"
+            ],
+            "expected_outcome": "Screen unlocked",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power On Procedure",
+            "preconditions": [
+              "Power available"
+            ],
+            "steps": [
+              "Apply power to unit"
+            ],
+            "expected_outcome": "Unit powers on",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "6-6",
+      "result": {
+        "procedures": [
+          {
+            "title": "Edit or Delete Dashboard",
+            "preconditions": [
+              "Must be on home screen",
+              "Dashboard must exist"
+            ],
+            "steps": [
+              "Navigate to home screen",
+              "Press and hold on desired dashboard",
+              "Select edit or delete option from menu"
+            ],
+            "expected_outcome": "Dashboard edited or deleted as selected",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Customize Gauge Settings",
+            "preconditions": [
+              "Dashboard must contain gauges"
+            ],
+            "steps": [
+              "Locate gauge to customize",
+              "Press and hold on the gauge",
+              "Select from available edit options"
+            ],
+            "expected_outcome": "Gauge settings updated according to selections",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Create New Dashboard",
+            "preconditions": [
+              "Access to dashboard creation interface"
+            ],
+            "steps": [
+              "Select create new dashboard option",
+              "Choose starting point: blank dashboard, template, or saved dashboard"
+            ],
+            "expected_outcome": "New dashboard created based on selected starting point",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "7-7",
+      "result": {
+        "procedures": [
+          {
+            "title": "Change Gauge Settings",
+            "preconditions": [
+              "On gauge display screen"
+            ],
+            "steps": [
+              "Select gauge",
+              "Choose data to display on gauge"
+            ],
+            "expected_outcome": "Gauge displays selected data",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Resize Gauge",
+            "preconditions": [
+              "On gauge display screen"
+            ],
+            "steps": [
+              "Select gauge",
+              "Use resize controls to adjust gauge size"
+            ],
+            "expected_outcome": "Gauge size is adjusted",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Change Dashboard Attributes",
+            "preconditions": [
+              "On dashboard screen"
+            ],
+            "steps": [
+              "Access dashboard settings",
+              "Modify dashboard attributes"
+            ],
+            "expected_outcome": "Dashboard attributes are updated",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Access System Settings",
+            "preconditions": [
+              "On home screen"
+            ],
+            "steps": [
+              "Select system settings option from home screen"
+            ],
+            "expected_outcome": "System settings menu opens",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Use Quick Access Menu",
+            "preconditions": [
+              "On any screen"
+            ],
+            "steps": [
+              "Swipe from top edge of display",
+              "Select desired option (brightness/night mode/day mode/report issue)"
+            ],
+            "expected_outcome": "Selected quick access function is activated",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

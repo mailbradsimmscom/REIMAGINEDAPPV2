@@ -1,0 +1,881 @@
+{
+  "total_chunks_processed": 5,
+  "total_procedures_extracted": 24,
+  "unique_procedures": 24,
+  "watermaker_specific_count": 14,
+  "generic_count": 10,
+  "procedures": [
+    {
+      "title": "Initial Unpacking and Setup",
+      "preconditions": [
+        "Power supply disconnected",
+        "Packaging intact",
+        "Minimum 2 people required for lifting"
+      ],
+      "steps": [
+        "Remove outer packaging carefully",
+        "Check for any shipping damage",
+        "Remove protective films",
+        "Verify all components are present",
+        "Place unit on stable surface"
+      ],
+      "expected_outcome": "Unit ready for installation",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Power Connection Setup",
+      "preconditions": [
+        "Unit unpacked",
+        "48V DC power supply available",
+        "Installation location prepared"
+      ],
+      "steps": [
+        "Verify power requirements match 48V DC",
+        "Connect power cable to terminal block",
+        "Secure all connections",
+        "Test power indicator lights"
+      ],
+      "expected_outcome": "Unit powered and ready for configuration",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "error_codes": [
+        "E01: Power Connection Fault"
+      ]
+    },
+    {
+      "title": "Touch Screen Calibration",
+      "preconditions": [
+        "Unit powered on",
+        "Display visible"
+      ],
+      "steps": [
+        "Enter calibration mode by holding power button for 5 seconds",
+        "Touch indicated points on screen",
+        "Confirm calibration accuracy",
+        "Save settings"
+      ],
+      "expected_outcome": "Touch screen accurately responds to input",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "error_codes": [
+        "E02: Calibration Failed"
+      ]
+    },
+    {
+      "title": "First Start-up Procedure",
+      "preconditions": [
+        "System must be fully installed",
+        "All connections must be properly made"
+      ],
+      "steps": [
+        "Perform preliminary checks",
+        "Verify all hydraulic connections",
+        "Check electrical connections",
+        "Confirm proper mounting of components"
+      ],
+      "expected_outcome": "System ready for initial operation",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pump Group Installation",
+      "preconditions": [
+        "Suitable mounting location identified",
+        "Installation tools available"
+      ],
+      "steps": [
+        "Mount pump group on stable surface",
+        "Ensure proper ventilation",
+        "Connect hydraulic fittings",
+        "Secure all mounting points"
+      ],
+      "expected_outcome": "Pump group securely installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Watermaker Group Installation",
+      "preconditions": [
+        "Installation location prepared",
+        "Access to water connections available"
+      ],
+      "steps": [
+        "Position watermaker unit",
+        "Connect seawater intake",
+        "Install fresh water flushing connection",
+        "Connect brine discharge",
+        "Verify all connections are secure"
+      ],
+      "expected_outcome": "Watermaker group properly installed and connected",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Remote Control Panel Installation",
+      "preconditions": [
+        "Mounting location identified",
+        "Access to power supply"
+      ],
+      "steps": [
+        "Mount control panel in designated location",
+        "Connect electrical wires according to scheme",
+        "Verify 48V DC power connection",
+        "Test panel functionality"
+      ],
+      "expected_outcome": "Control panel installed and operational",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Normal Operating Without Final Flushing",
+      "preconditions": [
+        "System installed",
+        "Power available"
+      ],
+      "steps": [
+        "Follow standard operation sequence",
+        "Skip final flush cycle"
+      ],
+      "expected_outcome": "System produces filtered water",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Normal Operating With Final Flushing",
+      "preconditions": [
+        "System installed",
+        "Power available"
+      ],
+      "steps": [
+        "Follow standard operation sequence",
+        "Execute final flush cycle"
+      ],
+      "expected_outcome": "System produces filtered water with membrane cleaning",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Timer Operation",
+      "preconditions": [
+        "System installed",
+        "Timer configured"
+      ],
+      "steps": [
+        "Set desired operation time",
+        "Start timed cycle"
+      ],
+      "expected_outcome": "Automated timed operation",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Long Flushing Procedure",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Initiate extended flush cycle",
+        "Monitor flush completion"
+      ],
+      "expected_outcome": "Deep membrane cleaning",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "System Reset",
+      "preconditions": [
+        "System error or malfunction"
+      ],
+      "steps": [
+        "Power down system",
+        "Wait 30 seconds",
+        "Restart system"
+      ],
+      "expected_outcome": "System returns to normal operation",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Filter Maintenance Check",
+      "preconditions": [
+        "Regular maintenance schedule"
+      ],
+      "steps": [
+        "Inspect filter condition",
+        "Clean or replace if necessary"
+      ],
+      "expected_outcome": "Clean, functional filter",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pressure Check",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Monitor pressure gauge",
+        "Verify within specifications"
+      ],
+      "expected_outcome": "Correct working pressure confirmed",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Leak Inspection",
+      "preconditions": [
+        "System operational"
+      ],
+      "steps": [
+        "Visual inspection of all connections",
+        "Check for water drops or moisture"
+      ],
+      "expected_outcome": "No leaks detected",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Membrane Replacement Check",
+      "preconditions": [
+        "Regular maintenance schedule"
+      ],
+      "steps": [
+        "Assess membrane performance",
+        "Replace if efficiency decreased"
+      ],
+      "expected_outcome": "Optimal membrane function",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "System Shutdown",
+      "preconditions": [
+        "System operational",
+        "Necessary equipment available"
+      ],
+      "steps": [
+        "Follow shutdown sequence",
+        "Secure all components"
+      ],
+      "expected_outcome": "System safely shut down",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Winterizing Procedure",
+      "preconditions": [
+        "Temperature below 5\u00b0C",
+        "System operational"
+      ],
+      "steps": [
+        "Drain system",
+        "Add antifreeze",
+        "Secure components"
+      ],
+      "expected_outcome": "System protected from freezing",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Membrane Replacement",
+      "preconditions": [
+        "Replacement needed",
+        "New membrane available"
+      ],
+      "steps": [
+        "Remove old membrane",
+        "Install new membrane",
+        "Test system"
+      ],
+      "expected_outcome": "New membrane installed and functioning",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Understanding Manual Structure",
+      "preconditions": [
+        "Have manual COD.150Z48.T.2024 EN"
+      ],
+      "steps": [
+        "Locate chapter number at start of section",
+        "Find paragraph numbers after decimal point",
+        "Follow subtitles with additional decimal numbers",
+        "Note figure/table numbers reset with each chapter",
+        "Figures and tables use chapter prefix followed by sequential number"
+      ],
+      "expected_outcome": "User can effectively navigate and reference manual content",
+      "models": [
+        "COD.150Z48.T.2024 EN"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Interpreting Safety Pictograms",
+      "preconditions": [
+        "Review manual safety section"
+      ],
+      "steps": [
+        "Identify ATTENTION symbol for accident prevention warnings",
+        "Recognize CAUTION symbol for potential system damage warnings",
+        "Note information symbol for helpful tips"
+      ],
+      "expected_outcome": "User can understand and respond to safety symbols appropriately",
+      "models": [
+        "COD.150Z48.T.2024 EN"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Manual Reading Safety Procedure",
+      "preconditions": [
+        "Access to complete operations manual",
+        "Operator involved in machine use, maintenance or adjustment"
+      ],
+      "steps": [
+        "Ensure manual is complete and legible",
+        "Verify manual is accessible to all operators",
+        "Read all instructions carefully before any operation",
+        "Keep manual in known location for reference"
+      ],
+      "expected_outcome": "Operator is fully informed of safety procedures and machine operation",
+      "models": [
+        "All Schenker Italia models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Personal Safety and Operation Procedure",
+      "preconditions": [
+        "Machine requires operation or maintenance",
+        "Operator is qualified for the task"
+      ],
+      "steps": [
+        "Wear appropriate protective equipment",
+        "Ensure clothing is tight-fitting",
+        "Verify clothing is resistant to cleaning products",
+        "Maintain all safety devices and accident prevention protection in place",
+        "Verify electric and hydraulic connections meet specifications",
+        "Avoid operation with polluted sea water",
+        "Keep children and inexperienced people away from plant",
+        "Perform periodic leak checks",
+        "Ensure plant location prevents damage from potential leaks"
+      ],
+      "expected_outcome": "Safe operation of machine with minimal risk to operator and equipment",
+      "models": [
+        "All Schenker Italia models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installation Verification Procedure",
+      "preconditions": [
+        "Plant is newly installed or requires verification"
+      ],
+      "steps": [
+        "Contact authorized Schenker service point",
+        "Have qualified personnel verify installation",
+        "Confirm electric connections meet specifications",
+        "Confirm hydraulic connections meet specifications"
+      ],
+      "expected_outcome": "Plant installation verified as correct and safe",
+      "models": [
+        "All Schenker Italia models"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Unpacking and Setup",
+            "preconditions": [
+              "Power supply disconnected",
+              "Packaging intact",
+              "Minimum 2 people required for lifting"
+            ],
+            "steps": [
+              "Remove outer packaging carefully",
+              "Check for any shipping damage",
+              "Remove protective films",
+              "Verify all components are present",
+              "Place unit on stable surface"
+            ],
+            "expected_outcome": "Unit ready for installation",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power Connection Setup",
+            "preconditions": [
+              "Unit unpacked",
+              "48V DC power supply available",
+              "Installation location prepared"
+            ],
+            "steps": [
+              "Verify power requirements match 48V DC",
+              "Connect power cable to terminal block",
+              "Secure all connections",
+              "Test power indicator lights"
+            ],
+            "expected_outcome": "Unit powered and ready for configuration",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "error_codes": [
+              "E01: Power Connection Fault"
+            ]
+          },
+          {
+            "title": "Touch Screen Calibration",
+            "preconditions": [
+              "Unit powered on",
+              "Display visible"
+            ],
+            "steps": [
+              "Enter calibration mode by holding power button for 5 seconds",
+              "Touch indicated points on screen",
+              "Confirm calibration accuracy",
+              "Save settings"
+            ],
+            "expected_outcome": "Touch screen accurately responds to input",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "error_codes": [
+              "E02: Calibration Failed"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "First Start-up Procedure",
+            "preconditions": [
+              "System must be fully installed",
+              "All connections must be properly made"
+            ],
+            "steps": [
+              "Perform preliminary checks",
+              "Verify all hydraulic connections",
+              "Check electrical connections",
+              "Confirm proper mounting of components"
+            ],
+            "expected_outcome": "System ready for initial operation",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump Group Installation",
+            "preconditions": [
+              "Suitable mounting location identified",
+              "Installation tools available"
+            ],
+            "steps": [
+              "Mount pump group on stable surface",
+              "Ensure proper ventilation",
+              "Connect hydraulic fittings",
+              "Secure all mounting points"
+            ],
+            "expected_outcome": "Pump group securely installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Group Installation",
+            "preconditions": [
+              "Installation location prepared",
+              "Access to water connections available"
+            ],
+            "steps": [
+              "Position watermaker unit",
+              "Connect seawater intake",
+              "Install fresh water flushing connection",
+              "Connect brine discharge",
+              "Verify all connections are secure"
+            ],
+            "expected_outcome": "Watermaker group properly installed and connected",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Remote Control Panel Installation",
+            "preconditions": [
+              "Mounting location identified",
+              "Access to power supply"
+            ],
+            "steps": [
+              "Mount control panel in designated location",
+              "Connect electrical wires according to scheme",
+              "Verify 48V DC power connection",
+              "Test panel functionality"
+            ],
+            "expected_outcome": "Control panel installed and operational",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "procedures": [
+          {
+            "title": "Normal Operating Without Final Flushing",
+            "preconditions": [
+              "System installed",
+              "Power available"
+            ],
+            "steps": [
+              "Follow standard operation sequence",
+              "Skip final flush cycle"
+            ],
+            "expected_outcome": "System produces filtered water",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Normal Operating With Final Flushing",
+            "preconditions": [
+              "System installed",
+              "Power available"
+            ],
+            "steps": [
+              "Follow standard operation sequence",
+              "Execute final flush cycle"
+            ],
+            "expected_outcome": "System produces filtered water with membrane cleaning",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Timer Operation",
+            "preconditions": [
+              "System installed",
+              "Timer configured"
+            ],
+            "steps": [
+              "Set desired operation time",
+              "Start timed cycle"
+            ],
+            "expected_outcome": "Automated timed operation",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Long Flushing Procedure",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Initiate extended flush cycle",
+              "Monitor flush completion"
+            ],
+            "expected_outcome": "Deep membrane cleaning",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "System Reset",
+            "preconditions": [
+              "System error or malfunction"
+            ],
+            "steps": [
+              "Power down system",
+              "Wait 30 seconds",
+              "Restart system"
+            ],
+            "expected_outcome": "System returns to normal operation",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Filter Maintenance Check",
+            "preconditions": [
+              "Regular maintenance schedule"
+            ],
+            "steps": [
+              "Inspect filter condition",
+              "Clean or replace if necessary"
+            ],
+            "expected_outcome": "Clean, functional filter",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pressure Check",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Monitor pressure gauge",
+              "Verify within specifications"
+            ],
+            "expected_outcome": "Correct working pressure confirmed",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Leak Inspection",
+            "preconditions": [
+              "System operational"
+            ],
+            "steps": [
+              "Visual inspection of all connections",
+              "Check for water drops or moisture"
+            ],
+            "expected_outcome": "No leaks detected",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Membrane Replacement Check",
+            "preconditions": [
+              "Regular maintenance schedule"
+            ],
+            "steps": [
+              "Assess membrane performance",
+              "Replace if efficiency decreased"
+            ],
+            "expected_outcome": "Optimal membrane function",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "System Shutdown",
+            "preconditions": [
+              "System operational",
+              "Necessary equipment available"
+            ],
+            "steps": [
+              "Follow shutdown sequence",
+              "Secure all components"
+            ],
+            "expected_outcome": "System safely shut down",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Winterizing Procedure",
+            "preconditions": [
+              "Temperature below 5\u00b0C",
+              "System operational"
+            ],
+            "steps": [
+              "Drain system",
+              "Add antifreeze",
+              "Secure components"
+            ],
+            "expected_outcome": "System protected from freezing",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Membrane Replacement",
+            "preconditions": [
+              "Replacement needed",
+              "New membrane available"
+            ],
+            "steps": [
+              "Remove old membrane",
+              "Install new membrane",
+              "Test system"
+            ],
+            "expected_outcome": "New membrane installed and functioning",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Understanding Manual Structure",
+            "preconditions": [
+              "Have manual COD.150Z48.T.2024 EN"
+            ],
+            "steps": [
+              "Locate chapter number at start of section",
+              "Find paragraph numbers after decimal point",
+              "Follow subtitles with additional decimal numbers",
+              "Note figure/table numbers reset with each chapter",
+              "Figures and tables use chapter prefix followed by sequential number"
+            ],
+            "expected_outcome": "User can effectively navigate and reference manual content",
+            "models": [
+              "COD.150Z48.T.2024 EN"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Interpreting Safety Pictograms",
+            "preconditions": [
+              "Review manual safety section"
+            ],
+            "steps": [
+              "Identify ATTENTION symbol for accident prevention warnings",
+              "Recognize CAUTION symbol for potential system damage warnings",
+              "Note information symbol for helpful tips"
+            ],
+            "expected_outcome": "User can understand and respond to safety symbols appropriately",
+            "models": [
+              "COD.150Z48.T.2024 EN"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "procedures": [
+          {
+            "title": "Manual Reading Safety Procedure",
+            "preconditions": [
+              "Access to complete operations manual",
+              "Operator involved in machine use, maintenance or adjustment"
+            ],
+            "steps": [
+              "Ensure manual is complete and legible",
+              "Verify manual is accessible to all operators",
+              "Read all instructions carefully before any operation",
+              "Keep manual in known location for reference"
+            ],
+            "expected_outcome": "Operator is fully informed of safety procedures and machine operation",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Personal Safety and Operation Procedure",
+            "preconditions": [
+              "Machine requires operation or maintenance",
+              "Operator is qualified for the task"
+            ],
+            "steps": [
+              "Wear appropriate protective equipment",
+              "Ensure clothing is tight-fitting",
+              "Verify clothing is resistant to cleaning products",
+              "Maintain all safety devices and accident prevention protection in place",
+              "Verify electric and hydraulic connections meet specifications",
+              "Avoid operation with polluted sea water",
+              "Keep children and inexperienced people away from plant",
+              "Perform periodic leak checks",
+              "Ensure plant location prevents damage from potential leaks"
+            ],
+            "expected_outcome": "Safe operation of machine with minimal risk to operator and equipment",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installation Verification Procedure",
+            "preconditions": [
+              "Plant is newly installed or requires verification"
+            ],
+            "steps": [
+              "Contact authorized Schenker service point",
+              "Have qualified personnel verify installation",
+              "Confirm electric connections meet specifications",
+              "Confirm hydraulic connections meet specifications"
+            ],
+            "expected_outcome": "Plant installation verified as correct and safe",
+            "models": [
+              "All Schenker Italia models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}
