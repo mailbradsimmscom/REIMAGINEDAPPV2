@@ -10,6 +10,7 @@ import { getEnv } from '../config/env.js';
 import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
 import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
 import { ingestDipOutputsToDb } from './dip.ingest.service.js';
+import { anthropicExtractionService } from './anthropic.extraction.service.js';
 import { buildIntentSuggestions } from './suggestions/intent.suggestions.js';
 
 class DocumentService {
@@ -370,7 +371,24 @@ class DocumentService {
 
       const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
 
-      // Step 30: Ingest DIP JSON outputs into database
+      // Step 3: Run Anthropic extraction
+      this.requestLogger.info('Starting Anthropic extraction', { 
+        jobId, 
+        docId: job.doc_id,
+        storagePath: job.storage_path
+      });
+
+      const extractionResult = await anthropicExtractionService.runAnthropicExtraction(
+        job.doc_id, 
+        job.storage_path, 
+        {
+          job_id: job.job_id,
+          manufacturer: document.manufacturer,
+          model: document.model
+        }
+      );
+
+      // Step 4: Ingest DIP JSON outputs into database
       this.requestLogger.info('Starting DIP JSON ingestion to database', { 
         jobId, 
         docId: job.doc_id
@@ -389,6 +407,12 @@ class DocumentService {
         vectors_upserted: processingResult.vectors_upserted || 0,
         processing_time: processingResult.processing_time || 0,
         dip_success: true,
+        extraction_results: {
+          spec_suggestions: extractionResult.storageResults.spec_suggestions?.success || false,
+          golden_rules: extractionResult.storageResults.golden_rules?.success || false,
+          intent_router: extractionResult.storageResults.intent_router?.success || false,
+          playbook_hints: extractionResult.storageResults.playbook_hints?.success || false
+        },
         dip_results: {
           spec_suggestions: ingestionResult.inserted.spec_suggestions,
           playbook_hints: ingestionResult.inserted.playbook_hints,
@@ -411,6 +435,7 @@ class DocumentService {
         jobId,
         docId: job.doc_id,
         processingResult,
+        extractionResult,
         ingestionResult
       };
 

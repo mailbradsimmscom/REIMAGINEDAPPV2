@@ -23,10 +23,10 @@ export async function ingestDipOutputsToDb({ docId, paths = null }) {
 
   // Build storage paths if not provided
   const storagePaths = paths || {
-    spec_suggestions: `manuals/${docId}/DIP/${docId}_spec_suggestions.json`,
-    playbook_hints: `manuals/${docId}/DIP/${docId}_playbook_hints.json`,
-    intent_router: `manuals/${docId}/DIP/${docId}_intent_router.json`,
-    golden_tests: `manuals/${docId}/DIP/${docId}_golden_tests.json`
+    spec_suggestions: `manuals/${docId}/DIP/${docId}_spec_suggestions_an.json`,
+    playbook_hints: `manuals/${docId}/DIP/${docId}_playbook_hints_an.json`,
+    intent_router: `manuals/${docId}/DIP/${docId}_intent_router_an.json`,
+    golden_tests: `manuals/${docId}/DIP/${docId}_golden_rules_an.json`
   };
 
   const results = {
@@ -67,13 +67,13 @@ export async function ingestDipOutputsToDb({ docId, paths = null }) {
 }
 
 /**
- * Process spec_suggestions.json and insert into spec_suggestions table
+ * Process spec_suggestions_an.json and insert into staging_spec_suggestions table
  */
 async function processSpecSuggestions(supabase, docId, storagePath, results) {
   try {
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
-    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
+    if (!jsonData || !jsonData.specifications || !Array.isArray(jsonData.specifications) || jsonData.specifications.length === 0) {
       logger.info('No spec_suggestions data to process', { docId });
       return;
     }
@@ -88,36 +88,47 @@ async function processSpecSuggestions(supabase, docId, storagePath, results) {
       logger.warning('Failed to cleanup existing spec_suggestions', { docId, error: deleteError.message });
     }
 
-    // Normalize and prepare insert data with correct schema mapping
-    const insertData = jsonData
+    // Normalize and prepare insert data with Anthropic JSON structure
+    const insertData = jsonData.specifications
       .filter(item => {
         // Skip rows with missing required fields
-        if (!item.spec_name) {
-          logger.warning('Skipping spec_suggestion with missing spec_name', { docId, item });
+        if (!item.parameter) {
+          logger.warning('Skipping spec_suggestion with missing parameter', { docId, item });
           return false;
         }
         return true;
       })
       .map(item => {
-        // Convert spec_value to number if possible, otherwise use null
-        let specValue = null;
-        if (item.spec_value && item.spec_value !== '.' && item.spec_value !== 'N/A' && item.spec_value !== '---') {
-          const numValue = parseFloat(item.spec_value);
+        // Convert value to number if possible, otherwise use null
+        let convertedValue = null;
+        if (item.converted_value !== undefined && item.converted_value !== null) {
+          convertedValue = item.converted_value;
+        } else if (item.value && item.value !== '.' && item.value !== 'N/A' && item.value !== '---') {
+          const numValue = parseFloat(item.value);
           if (!isNaN(numValue)) {
-            specValue = numValue;
+            convertedValue = numValue;
           }
         }
         
         return {
           doc_id: docId,
-          spec_name: item.spec_name, // Required field
-          spec_value: specValue, // Numeric or null
-          spec_unit: item.spec_unit || null,
-          page: typeof item.page === 'number' ? item.page : null,
-          context: item.context || '', // Empty string if not provided
-          confidence: typeof item.confidence === 'number' ? item.confidence : null,
-          bbox: item.bbox || null,
-          status: 'pending' // Always pending for new records
+          manufacturer_norm: null, // Will be populated from systems table
+          model_norm: null, // Will be populated from systems table
+          asset_uid: null, // Will be populated from systems table
+          description: item.parameter || '',
+          parameter: item.parameter || '',
+          normalized_parameter: item.normalized_parameter || '',
+          parameter_aliases: item.parameter_aliases || [],
+          value: item.value || '',
+          range: item.range || '',
+          units: item.units || '',
+          normalized_units: item.normalized_units || '',
+          converted_value: convertedValue,
+          category: item.category || '',
+          search_terms: item.search_terms || [],
+          concept_group: item.concept_group || '',
+          references: item.references || [],
+          status: 'pending'
         };
       });
 
@@ -141,14 +152,62 @@ async function processSpecSuggestions(supabase, docId, storagePath, results) {
 }
 
 /**
- * Process playbook_hints.json and insert into playbook_hints table
- * DISABLED - OpenAI extraction now writes directly to playbook_hints table
+ * Process playbook_hints_an.json and insert into staging_playbook_hints table
  */
 async function processPlaybookHints(supabase, docId, storagePath, results) {
   try {
-    logger.info('Playbook hints processing DISABLED - using OpenAI extraction instead', { docId });
-    results.inserted.playbook_hints = 0;
-    return;
+    // Fetch JSON from Supabase Storage
+    const jsonData = await fetchJsonFromStorage(supabase, storagePath);
+    if (!jsonData || !jsonData.playbook_hints || !Array.isArray(jsonData.playbook_hints) || jsonData.playbook_hints.length === 0) {
+      logger.info('No playbook_hints data to process', { docId });
+      return;
+    }
+
+    // Clean up existing rows for this doc_id
+    const { error: deleteError } = await supabase
+      .from('staging_playbook_hints')
+      .delete()
+      .eq('doc_id', docId);
+
+    if (deleteError) {
+      logger.warning('Failed to cleanup existing playbook_hints', { docId, error: deleteError.message });
+    }
+
+    // Normalize and prepare insert data with Anthropic JSON structure
+    const insertData = jsonData.playbook_hints
+      .filter(item => {
+        // Skip rows with missing required fields
+        if (!item.title) {
+          logger.warning('Skipping playbook_hint with missing title', { docId, item });
+          return false;
+        }
+        return true;
+      })
+      .map(item => ({
+        doc_id: docId,
+        manufacturer_norm: null, // Will be populated from systems table
+        model_norm: null, // Will be populated from systems table
+        asset_uid: null, // Will be populated from systems table
+        description: item.description || '',
+        title: item.title || '',
+        steps: item.steps || [],
+        expected_result: item.expected_result || '',
+        confidence: typeof item.confidence === 'number' ? item.confidence : null,
+        status: 'pending'
+      }));
+
+    // Batch insert
+    const { data, error } = await supabase
+      .from('staging_playbook_hints')
+      .insert(insertData);
+
+    if (error) {
+      logger.error('Failed to insert playbook_hints', { docId, error: error.message });
+      throw error;
+    }
+
+    results.inserted.playbook_hints = insertData.length;
+    logger.info('Playbook hints processed', { docId, count: insertData.length });
 
   } catch (error) {
     logger.error('Failed to process playbook_hints', { docId, error: error.message });
@@ -157,13 +216,13 @@ async function processPlaybookHints(supabase, docId, storagePath, results) {
 }
 
 /**
- * Process intent_router.json and insert into intent_router table
+ * Process intent_router_an.json and insert into staging_intent_router table
  */
 async function processIntentRouter(supabase, docId, storagePath, results) {
   try {
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
-    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
+    if (!jsonData || !jsonData.intent_router || !Array.isArray(jsonData.intent_router) || jsonData.intent_router.length === 0) {
       logger.info('No intent_router data to process', { docId });
       return;
     }
@@ -178,24 +237,31 @@ async function processIntentRouter(supabase, docId, storagePath, results) {
       logger.warning('Failed to cleanup existing intent_router', { docId, error: deleteError.message });
     }
 
-    // Normalize and prepare insert data
-    // Use whatever "pattern-like" field the sidecar provided if present.
-    // Fall back to item.intent (but do NOT prefix or duplicate noise).
-    const insertData = jsonData
-      .map(item => {
-        const raw = (item.pattern ?? item.intent ?? item.hint ?? item.description ?? '').toString().trim();
-        if (!raw) return null; // skip empties
-
-        return {
-          doc_id: docId,
-          pattern: raw,          // ← clean, no "[doc:…]" prefix
-          intent: null,          // let the cleaner/LLM fill this later
-          route_to: null,        // let the cleaner/LLM/system mapping fill
-          intent_hint_id: null,
-          created_by: 'system'
-        };
+    // Normalize and prepare insert data with Anthropic JSON structure
+    const insertData = jsonData.intent_router
+      .filter(item => {
+        // Skip rows with missing required fields
+        if (!item.question) {
+          logger.warning('Skipping intent_router with missing question', { docId, item });
+          return false;
+        }
+        return true;
       })
-      .filter(Boolean);
+      .map(item => ({
+        doc_id: docId,
+        manufacturer_norm: null, // Will be populated from systems table
+        model_norm: null, // Will be populated from systems table
+        asset_uid: null, // Will be populated from systems table
+        description: item.question || '',
+        models: item.models || [],
+        question: item.question || '',
+        question_variations: item.question_variations || [],
+        answer: item.answer || '',
+        question_type: item.question_type || '',
+        references: item.references || [],
+        created_by: 'system',
+        status: 'pending'
+      }));
 
     // Batch insert
     const { data, error } = await supabase
@@ -217,37 +283,52 @@ async function processIntentRouter(supabase, docId, storagePath, results) {
 }
 
 /**
- * Process golden_tests.json and insert into golden_tests table
+ * Process golden_rules_an.json and insert into staging_golden_tests table
  */
 async function processGoldenTests(supabase, docId, storagePath, results) {
   try {
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
-    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
-      logger.info('No golden_tests data to process', { docId });
+    if (!jsonData || !jsonData.golden_rules || !Array.isArray(jsonData.golden_rules) || jsonData.golden_rules.length === 0) {
+      logger.info('No golden_rules data to process', { docId });
       return;
     }
 
-    // Clean up existing unapproved rows for this doc_id
+    // Clean up existing rows for this doc_id
     const { error: deleteError } = await supabase
       .from('staging_golden_tests')
       .delete()
-      .eq('doc_id', docId)
-      .is('approved_by', null)
-      .is('approved_at', null);
+      .eq('doc_id', docId);
 
     if (deleteError) {
       logger.warning('Failed to cleanup existing golden_tests', { docId, error: deleteError.message });
     }
 
-    // Normalize and prepare insert data
-    const insertData = jsonData.map(item => ({
-      doc_id: docId,
-      query: item.query || null,
-      expected: item.expected || null,
-      approved_by: 'system', // Set to 'system' instead of null
-      approved_at: null // As specified
-    }));
+    // Normalize and prepare insert data with Anthropic JSON structure
+    const insertData = jsonData.golden_rules
+      .filter(item => {
+        // Skip rows with missing required fields
+        if (!item.query) {
+          logger.warning('Skipping golden_rule with missing query', { docId, item });
+          return false;
+        }
+        return true;
+      })
+      .map(item => ({
+        doc_id: docId,
+        manufacturer_norm: null, // Will be populated from systems table
+        model_norm: null, // Will be populated from systems table
+        asset_uid: null, // Will be populated from systems table
+        description: item.query || '',
+        query: item.query || '',
+        expected: item.expected || '',
+        test_method: item.test_method || '',
+        failure_indication: item.failure_indication || '',
+        related_procedures: item.related_procedures || [],
+        approved_by: null,
+        approved_at: null,
+        status: 'pending'
+      }));
 
     // Batch insert
     const { data, error } = await supabase
