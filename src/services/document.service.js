@@ -9,7 +9,6 @@ import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
 import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
 import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
-import dipService from './dip.service.js';
 import { ingestDipOutputsToDb } from './dip.ingest.service.js';
 import { buildIntentSuggestions } from './suggestions/intent.suggestions.js';
 
@@ -371,24 +370,6 @@ class DocumentService {
 
       const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
 
-      // Step 30: Run DIP packet processing
-      this.requestLogger.info('Starting DIP packet processing', { 
-        jobId, 
-        docId: job.doc_id,
-        storagePath: job.storage_path
-      });
-
-      const dipResult = await dipService.runDIPPacket(
-        job.doc_id, 
-        job.storage_path, 
-        '/tmp', 
-        {
-          job_id: job.job_id,
-          manufacturer: document.manufacturer,
-          model: document.model
-        }
-      );
-
       // Step 30: Ingest DIP JSON outputs into database
       this.requestLogger.info('Starting DIP JSON ingestion to database', { 
         jobId, 
@@ -402,11 +383,11 @@ class DocumentService {
 
       // Update job with results
       await documentRepository.updateJobProgress(jobId, {
-        pages_total: dipResult.pages_total || 0,
-        pages_ocr: dipResult.pages_ocr || 0,
-        tables: dipResult.tables_found || 0,
-        vectors_upserted: dipResult.vectors_upserted || 0,
-        processing_time: dipResult.processing_time || 0,
+        pages_total: processingResult.pages_total || 0,
+        pages_ocr: processingResult.pages_ocr || 0,
+        tables: processingResult.tables_found || 0,
+        vectors_upserted: processingResult.vectors_upserted || 0,
+        processing_time: processingResult.processing_time || 0,
         dip_success: true,
         dip_results: {
           spec_suggestions: ingestionResult.inserted.spec_suggestions,
@@ -415,13 +396,6 @@ class DocumentService {
           golden_tests: ingestionResult.inserted.golden_tests
         }
       });
-
-      // Mark job as DIP cleaning
-      await documentRepository.updateJobStatus(jobId, 'parsing');
-
-      // Clean and move staging data to production
-      const { cleanDipForDoc } = await import('../services/dip-cleaner/dip-cleaner.service.js');
-      await cleanDipForDoc(job.doc_id, jobId);
 
       // Mark job as completed
       await documentRepository.updateJobStatus(jobId, 'completed');
@@ -436,7 +410,7 @@ class DocumentService {
         success: true,
         jobId,
         docId: job.doc_id,
-        dipResult,
+        processingResult,
         ingestionResult
       };
 

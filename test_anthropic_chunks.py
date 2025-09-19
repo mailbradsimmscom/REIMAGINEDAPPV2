@@ -158,6 +158,59 @@ def process_chunks_parallel(client, chunks_data, anthropic_model, anthropic_max_
     
     return all_procedures, chunk_results
 
+def store_to_supabase_storage(doc_id, procedures):
+    """Store playbook procedures to Supabase Storage"""
+    try:
+        from supabase import create_client
+        from dotenv import load_dotenv
+        
+        # Load environment variables
+        load_dotenv()
+        
+        # Prepare data for storage
+        data = {
+            "playbook_hints": procedures
+        }
+        
+        # Convert to JSON string
+        json_content = json.dumps(data, indent=2)
+        
+        # Supabase configuration
+        url = os.getenv('SUPABASE_URL')
+        key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        
+        if not url or not key:
+            print("❌ Supabase credentials not found")
+            return False
+        
+        # Initialize Supabase client
+        supabase = create_client(url, key)
+        
+        # Storage path
+        file_path = f"manuals/{doc_id}/DIP/{doc_id}_playbook_hints_an.json"
+        
+        # Upload to Supabase Storage using Python client
+        result = supabase.storage.from_('documents').upload(
+            file_path,
+            json_content.encode('utf-8'),
+            file_options={
+                "content-type": "text/plain",
+                "cache-control": "3600"
+            }
+        )
+        
+        # Check for errors in the response
+        if hasattr(result, 'error') and result.error:
+            print(f"❌ Failed to upload to storage: {result.error}")
+            return False
+        else:
+            print(f"✅ Successfully stored playbook procedures to Supabase Storage: {file_path}")
+            return True
+            
+    except Exception as e:
+        print(f"❌ Error storing to Supabase Storage: {e}")
+        return False
+
 def test_anthropic_chunks_extraction():
     """Test Anthropic chunk-based extraction with parallel processing"""
     
@@ -283,6 +336,13 @@ RULES:
         with open(output_file, 'w') as f:
             json.dump(final_result, f, indent=2)
         print(f"\n💾 Results saved to: {output_file}")
+        
+        # Store to Supabase Storage
+        storage_success = store_to_supabase_storage(doc_id, unique_procedures)
+        if storage_success:
+            print(f"✅ Playbook procedures stored to Supabase Storage")
+        else:
+            print(f"❌ Failed to store playbook procedures to Supabase Storage")
         
         return final_result
         

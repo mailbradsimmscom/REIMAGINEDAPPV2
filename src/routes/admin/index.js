@@ -10,7 +10,6 @@ import pineconeRouter from './pinecone.route.js';
 import metricsRouter from './metrics.route.js';
 import suggestionsRouter from './suggestions.route.js';
 import systemsMinimalRoute from "./systems-minimal.route.js";
-import dipRouter from './dip.route.js';
 import snapshotsRouter from './snapshots.route.js';
 import textExtractionRouter from './text-extraction.route.js';
 import jobsRouter from './jobs.route.js';
@@ -19,7 +18,6 @@ import chunksRouter from './chunks.route.js';
 import intentRouter from './intent-router.route.js';
 import playbooksRouter from './playbooks.route.js';
 import goldenTestsRouter from './golden-tests.route.js';
-import { dipCleanerRouter } from './dip-cleaner.route.js';
 
 const router = express.Router();
 
@@ -41,7 +39,6 @@ router.use('/manufacturers', manufacturersRouter);
 router.use('/models', modelsRouter);
 router.use('/pinecone', pineconeRouter);
 router.use('/metrics', metricsRouter);
-router.use('/dip', dipRouter);
 router.use('/snapshots', snapshotsRouter);
 router.use('/suggestions', suggestionsRouter);
 router.use("/systems/minimal", systemsMinimalRoute);
@@ -52,7 +49,6 @@ router.use('/chunks', chunksRouter);
 router.use('/intent-router', intentRouter);
 router.use('/playbooks', playbooksRouter);
 router.use('/golden-tests', goldenTestsRouter);
-router.use('/', dipCleanerRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin
