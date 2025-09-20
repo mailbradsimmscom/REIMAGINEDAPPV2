@@ -1,0 +1,736 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 22,
+  "unique_intent_routes": 22,
+  "question_type_breakdown": {
+    "What": 15,
+    "How": 6,
+    "Where": 1
+  },
+  "intent_routes": [
+    {
+      "question": "What is the minimum speed the DST810 can measure?",
+      "question_variations": [
+        "What's the lowest speed the DST810 can detect?",
+        "At what speed does the DST810 start working?"
+      ],
+      "answer": "The DST810 with Gen2 paddlewheel can measure speeds starting from 0.3 knots and becomes linear at 0.6 knots",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section, Speed specifications"
+      ]
+    },
+    {
+      "question": "What is the maximum speed range of the DST810?",
+      "question_variations": [
+        "How fast can the DST810 measure?",
+        "What's the upper speed limit for the DST810?"
+      ],
+      "answer": "The DST810 can accurately measure speeds up to 45 knots",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "question": "How often does the DST810 update speed measurements?",
+      "question_variations": [
+        "What is the speed reporting frequency of the DST810?",
+        "How many times per second does the DST810 measure speed?"
+      ],
+      "answer": "The DST810 features a 5.7 Hz speed output, updating 5 times per second",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "question": "What measurements does the DST810 provide?",
+      "question_variations": [
+        "What sensors are included in the DST810?",
+        "What can the DST810 measure?"
+      ],
+      "answer": "The DST810 measures depth, speed-through-water, water temperature, and boat attitude (heel and trim)",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Product description"
+      ]
+    },
+    {
+      "question": "How do you calibrate the DST810?",
+      "question_variations": [
+        "What's needed to calibrate the DST810?",
+        "Can I calibrate the DST810 myself?"
+      ],
+      "answer": "The DST810 can be calibrated using Airmar's CAST mobile app, which allows for both basic and advanced heel-compensated speed calibrations. The app enables manual speed entries for multiple heel angles and up to 10 speeds",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section, Calibration details"
+      ]
+    },
+    {
+      "question": "How do I calibrate the DST810 speed sensor?",
+      "question_variations": [
+        "What's the process for DST810 speed calibration?",
+        "How can I calibrate my DST810?",
+        "What app do I use to calibrate DST810?"
+      ],
+      "answer": "Use the Airmar CAST app to calibrate speed at multiple heel angles and numerous speeds. You can calibrate at 5 different heel angles and up to 10 different speeds for optimal performance.",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "question": "Where are DST810 calibrations stored?",
+      "question_variations": [
+        "Does the DST810 save calibration data?",
+        "How are DST810 calibrations saved?",
+        "Will I lose calibration if I disconnect power?"
+      ],
+      "answer": "The DST810 stores all calibrations and configurations internally in the device itself.",
+      "question_type": "Where",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "question": "What devices can the CAST app connect to?",
+      "question_variations": [
+        "Which instruments work with CAST app?",
+        "Is CAST compatible with my device?",
+        "What systems can I use with CAST?"
+      ],
+      "answer": "The CAST app can connect to DST810, DX900+, and SmartBoat Modules.",
+      "question_type": "What",
+      "models": [
+        "DST810",
+        "DX900+",
+        "SmartBoat Modules"
+      ],
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "question": "What can I configure using the CAST app?",
+      "question_variations": [
+        "What settings can I adjust in CAST?",
+        "What features does CAST app have?",
+        "What can CAST app do?"
+      ],
+      "answer": "With CAST app you can display data/gauges, configure offsets, calibrate attitude, configure outputs and connectivity, and calibrate basic or heel compensated speeds.",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "question": "How does DST810 share calibrated speed data?",
+      "question_variations": [
+        "Where does DST810 send speed data?",
+        "Can DST810 connect to other instruments?",
+        "How is DST810 speed data distributed?"
+      ],
+      "answer": "The DST810 delivers calibrated speed data to the entire NMEA 2000 network.",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "question": "What is the speed range of the Gen2 paddlewheel?",
+      "question_variations": [
+        "What speeds can the paddlewheel measure?",
+        "What's the minimum and maximum speed for the Gen2?",
+        "How fast can the paddlewheel measure?"
+      ],
+      "answer": "The Gen2 paddlewheel measures speeds from 0.3 knots to 45 knots, becoming linear at 0.6 knots",
+      "question_type": "What",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "What are the different weight options for the paddlewheel?",
+      "question_variations": [
+        "How much does each paddlewheel material weigh?",
+        "What's the weight difference between materials?",
+        "Which paddlewheel material is lightest?"
+      ],
+      "answer": "Plastic: 0.9 kg (2.0 lb), Bronze: 1.6 kg (3.5 lb), Stainless Steel: 1.9 kg (4.2 lb)",
+      "question_type": "What",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "What is the depth range of the paddlewheel?",
+      "question_variations": [
+        "How deep can the paddlewheel measure?",
+        "What's the minimum and maximum depth range?",
+        "What depth measurements can it handle?"
+      ],
+      "answer": "Minimum depth range is 0.5 m (1.6') and maximum depth range is up to 100 m (330') for NMEA 2000\u00ae",
+      "question_type": "What",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "What is the temperature measurement range?",
+      "question_variations": [
+        "What temperatures can it measure?",
+        "What's the temperature sensor range?",
+        "How accurate is the temperature sensor?"
+      ],
+      "answer": "Temperature range is -10\u00b0C to 40\u00b0C (14\u00b0F to 104\u00b0F) with accuracy of \u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+      "question_type": "What",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "What is the wireless range of the device?",
+      "question_variations": [
+        "How far does the wireless signal reach?",
+        "What's the Bluetooth range?",
+        "How far can it transmit data?"
+      ],
+      "answer": "Wireless range is up to 30 feet depending on mount location, using Bluetooth Low Energy (BLE) protocol",
+      "question_type": "What",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "What is the power supply requirement?",
+      "question_variations": [
+        "What voltage does it need?",
+        "What's the power requirement?",
+        "How much power does it use?"
+      ],
+      "answer": "Supply voltage is 9 VDC to 16 VDC per NMEA 2000\u00ae with supply current <200 mA",
+      "question_type": "What",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "How often does it update data?",
+      "question_variations": [
+        "What's the data update rate?",
+        "How frequently does it measure?",
+        "What's the measurement frequency?"
+      ],
+      "answer": "Data update rates are: Depth: 1X/second, Speed: 5X/second, Heel/Trim: 10X/second",
+      "question_type": "How",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "references": [
+        "Specifications Section"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the P617V plastic model?",
+      "question_variations": [
+        "How big is the P617V plastic sensor?",
+        "What's the size of the plastic P617V?"
+      ],
+      "answer": "The P617V plastic model has a diameter of 75mm (2.94\") and a height of 30mm (1.19\")",
+      "question_type": "What",
+      "models": [
+        "P617V Plastic"
+      ],
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "question": "What communication protocols does the device support?",
+      "question_variations": [
+        "Which PGN protocols are compatible?",
+        "What data output protocols are used?"
+      ],
+      "answer": "The device supports NMEA 2000\u00ae protocol with multiple PGNs including 059904 ISO Request, 060928 ISO Address Claim, 065240 Commanded Address, and various other PGNs for environmental parameters, speed, depth, and temperature data",
+      "question_type": "What",
+      "models": [
+        "All models"
+      ],
+      "references": [
+        "Data Output Protocol section"
+      ]
+    },
+    {
+      "question": "What thread size is used on the bronze model?",
+      "question_variations": [
+        "What are the threading specifications for the B617V?",
+        "What size threads does the bronze version use?"
+      ],
+      "answer": "The bronze model uses 2\"-12 threads",
+      "question_type": "What",
+      "models": [
+        "B617V Bronze"
+      ],
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "question": "How does the housing prevent water ingress?",
+      "question_variations": [
+        "What prevents water from entering when removing the insert?",
+        "How is water flow minimized during insert removal?"
+      ],
+      "answer": "The housing incorporates a self-closing valve that minimizes water flow into the boat when the insert is removed",
+      "question_type": "How",
+      "models": [
+        "All models"
+      ],
+      "references": [
+        "Housing design section"
+      ]
+    },
+    {
+      "question": "What environmental parameters can the device measure?",
+      "question_variations": [
+        "Which environmental data does it collect?",
+        "What types of measurements does it take?"
+      ],
+      "answer": "The device measures water depth, speed, water temperature, and includes extended range temperature capabilities",
+      "question_type": "What",
+      "models": [
+        "All models"
+      ],
+      "references": [
+        "PGN list section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the minimum speed the DST810 can measure?",
+            "question_variations": [
+              "What's the lowest speed the DST810 can detect?",
+              "At what speed does the DST810 start working?"
+            ],
+            "answer": "The DST810 with Gen2 paddlewheel can measure speeds starting from 0.3 knots and becomes linear at 0.6 knots",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section, Speed specifications"
+            ]
+          },
+          {
+            "question": "What is the maximum speed range of the DST810?",
+            "question_variations": [
+              "How fast can the DST810 measure?",
+              "What's the upper speed limit for the DST810?"
+            ],
+            "answer": "The DST810 can accurately measure speeds up to 45 knots",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "question": "How often does the DST810 update speed measurements?",
+            "question_variations": [
+              "What is the speed reporting frequency of the DST810?",
+              "How many times per second does the DST810 measure speed?"
+            ],
+            "answer": "The DST810 features a 5.7 Hz speed output, updating 5 times per second",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "question": "What measurements does the DST810 provide?",
+            "question_variations": [
+              "What sensors are included in the DST810?",
+              "What can the DST810 measure?"
+            ],
+            "answer": "The DST810 measures depth, speed-through-water, water temperature, and boat attitude (heel and trim)",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Product description"
+            ]
+          },
+          {
+            "question": "How do you calibrate the DST810?",
+            "question_variations": [
+              "What's needed to calibrate the DST810?",
+              "Can I calibrate the DST810 myself?"
+            ],
+            "answer": "The DST810 can be calibrated using Airmar's CAST mobile app, which allows for both basic and advanced heel-compensated speed calibrations. The app enables manual speed entries for multiple heel angles and up to 10 speeds",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section, Calibration details"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I calibrate the DST810 speed sensor?",
+            "question_variations": [
+              "What's the process for DST810 speed calibration?",
+              "How can I calibrate my DST810?",
+              "What app do I use to calibrate DST810?"
+            ],
+            "answer": "Use the Airmar CAST app to calibrate speed at multiple heel angles and numerous speeds. You can calibrate at 5 different heel angles and up to 10 different speeds for optimal performance.",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "question": "Where are DST810 calibrations stored?",
+            "question_variations": [
+              "Does the DST810 save calibration data?",
+              "How are DST810 calibrations saved?",
+              "Will I lose calibration if I disconnect power?"
+            ],
+            "answer": "The DST810 stores all calibrations and configurations internally in the device itself.",
+            "question_type": "Where",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "question": "What devices can the CAST app connect to?",
+            "question_variations": [
+              "Which instruments work with CAST app?",
+              "Is CAST compatible with my device?",
+              "What systems can I use with CAST?"
+            ],
+            "answer": "The CAST app can connect to DST810, DX900+, and SmartBoat Modules.",
+            "question_type": "What",
+            "models": [
+              "DST810",
+              "DX900+",
+              "SmartBoat Modules"
+            ],
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "question": "What can I configure using the CAST app?",
+            "question_variations": [
+              "What settings can I adjust in CAST?",
+              "What features does CAST app have?",
+              "What can CAST app do?"
+            ],
+            "answer": "With CAST app you can display data/gauges, configure offsets, calibrate attitude, configure outputs and connectivity, and calibrate basic or heel compensated speeds.",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "question": "How does DST810 share calibrated speed data?",
+            "question_variations": [
+              "Where does DST810 send speed data?",
+              "Can DST810 connect to other instruments?",
+              "How is DST810 speed data distributed?"
+            ],
+            "answer": "The DST810 delivers calibrated speed data to the entire NMEA 2000 network.",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the speed range of the Gen2 paddlewheel?",
+            "question_variations": [
+              "What speeds can the paddlewheel measure?",
+              "What's the minimum and maximum speed for the Gen2?",
+              "How fast can the paddlewheel measure?"
+            ],
+            "answer": "The Gen2 paddlewheel measures speeds from 0.3 knots to 45 knots, becoming linear at 0.6 knots",
+            "question_type": "What",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          },
+          {
+            "question": "What are the different weight options for the paddlewheel?",
+            "question_variations": [
+              "How much does each paddlewheel material weigh?",
+              "What's the weight difference between materials?",
+              "Which paddlewheel material is lightest?"
+            ],
+            "answer": "Plastic: 0.9 kg (2.0 lb), Bronze: 1.6 kg (3.5 lb), Stainless Steel: 1.9 kg (4.2 lb)",
+            "question_type": "What",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the depth range of the paddlewheel?",
+            "question_variations": [
+              "How deep can the paddlewheel measure?",
+              "What's the minimum and maximum depth range?",
+              "What depth measurements can it handle?"
+            ],
+            "answer": "Minimum depth range is 0.5 m (1.6') and maximum depth range is up to 100 m (330') for NMEA 2000\u00ae",
+            "question_type": "What",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the temperature measurement range?",
+            "question_variations": [
+              "What temperatures can it measure?",
+              "What's the temperature sensor range?",
+              "How accurate is the temperature sensor?"
+            ],
+            "answer": "Temperature range is -10\u00b0C to 40\u00b0C (14\u00b0F to 104\u00b0F) with accuracy of \u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+            "question_type": "What",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the wireless range of the device?",
+            "question_variations": [
+              "How far does the wireless signal reach?",
+              "What's the Bluetooth range?",
+              "How far can it transmit data?"
+            ],
+            "answer": "Wireless range is up to 30 feet depending on mount location, using Bluetooth Low Energy (BLE) protocol",
+            "question_type": "What",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the power supply requirement?",
+            "question_variations": [
+              "What voltage does it need?",
+              "What's the power requirement?",
+              "How much power does it use?"
+            ],
+            "answer": "Supply voltage is 9 VDC to 16 VDC per NMEA 2000\u00ae with supply current <200 mA",
+            "question_type": "What",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          },
+          {
+            "question": "How often does it update data?",
+            "question_variations": [
+              "What's the data update rate?",
+              "How frequently does it measure?",
+              "What's the measurement frequency?"
+            ],
+            "answer": "Data update rates are: Depth: 1X/second, Speed: 5X/second, Heel/Trim: 10X/second",
+            "question_type": "How",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "references": [
+              "Specifications Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the P617V plastic model?",
+            "question_variations": [
+              "How big is the P617V plastic sensor?",
+              "What's the size of the plastic P617V?"
+            ],
+            "answer": "The P617V plastic model has a diameter of 75mm (2.94\") and a height of 30mm (1.19\")",
+            "question_type": "What",
+            "models": [
+              "P617V Plastic"
+            ],
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "question": "What communication protocols does the device support?",
+            "question_variations": [
+              "Which PGN protocols are compatible?",
+              "What data output protocols are used?"
+            ],
+            "answer": "The device supports NMEA 2000\u00ae protocol with multiple PGNs including 059904 ISO Request, 060928 ISO Address Claim, 065240 Commanded Address, and various other PGNs for environmental parameters, speed, depth, and temperature data",
+            "question_type": "What",
+            "models": [
+              "All models"
+            ],
+            "references": [
+              "Data Output Protocol section"
+            ]
+          },
+          {
+            "question": "What thread size is used on the bronze model?",
+            "question_variations": [
+              "What are the threading specifications for the B617V?",
+              "What size threads does the bronze version use?"
+            ],
+            "answer": "The bronze model uses 2\"-12 threads",
+            "question_type": "What",
+            "models": [
+              "B617V Bronze"
+            ],
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "question": "How does the housing prevent water ingress?",
+            "question_variations": [
+              "What prevents water from entering when removing the insert?",
+              "How is water flow minimized during insert removal?"
+            ],
+            "answer": "The housing incorporates a self-closing valve that minimizes water flow into the boat when the insert is removed",
+            "question_type": "How",
+            "models": [
+              "All models"
+            ],
+            "references": [
+              "Housing design section"
+            ]
+          },
+          {
+            "question": "What environmental parameters can the device measure?",
+            "question_variations": [
+              "Which environmental data does it collect?",
+              "What types of measurements does it take?"
+            ],
+            "answer": "The device measures water depth, speed, water temperature, and includes extended range temperature capabilities",
+            "question_type": "What",
+            "models": [
+              "All models"
+            ],
+            "references": [
+              "PGN list section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

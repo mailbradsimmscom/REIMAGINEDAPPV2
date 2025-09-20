@@ -151,8 +151,13 @@ function setupEventListeners() {
         }
 
         const json = await res.json();
-        // OPTIONAL: update your UI (jobs list / progress), or just alert for now:
-        alert('Upload started successfully.');
+        
+        // Show progress popup with job ID
+        if (json.data && json.data.job_id) {
+          showProgressPopup(json.data.job_id);
+        } else {
+          alert('Upload started successfully.');
+        }
       } catch (e) {
         console.error(e);
         alert(e.message || 'Upload failed.');
@@ -278,6 +283,370 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+// Progress popup functionality
+function showProgressPopup(jobId) {
+  // Create popup overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'progress-popup-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
+
+  // Create progress card
+  const progressCard = document.createElement('div');
+  progressCard.id = 'progress-popup-card';
+  progressCard.innerHTML = `
+    <div class="progress-card">
+      <div class="card-header">
+        <div class="manufacturer" id="popup-manufacturer">Loading...</div>
+        <div class="system" id="popup-system">Loading...</div>
+      </div>
+      
+      <div class="progress-container">
+        <svg class="progress-ring" viewBox="0 0 200 200">
+          <circle class="progress-ring-circle progress-ring-background" cx="100" cy="100" r="90"></circle>
+          <circle class="progress-ring-circle progress-ring-fill" cx="100" cy="100" r="90" id="popup-progress-circle"></circle>
+        </svg>
+        
+        <div class="progress-stage">
+          <div id="popup-current-stage">Loading...</div>
+          <div class="progress-percentage" id="popup-progress-percentage">0%</div>
+        </div>
+      </div>
+      
+      <div class="status-indicator" id="popup-status-indicator">
+        <div class="loading-spinner"></div>
+        <span>Processing</span>
+      </div>
+      
+      <div id="popup-error-message" class="error-message" style="display: none;"></div>
+      
+      <button class="close-button" onclick="closeProgressPopup()">Close</button>
+    </div>
+  `;
+
+  // Add CSS styles
+  const style = document.createElement('style');
+  style.textContent = `
+    .progress-card {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border: 1px solid #C6C6C8;
+      width: 300px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .card-header {
+      margin-bottom: 24px;
+    }
+
+    .manufacturer {
+      font-size: 14px;
+      font-weight: 600;
+      color: #8E8E93;
+      margin-bottom: 4px;
+    }
+
+    .system {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 8px;
+    }
+
+    .progress-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 24px;
+    }
+
+    .progress-ring {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease-in-out;
+    }
+
+    .progress-ring-background {
+      stroke: #C6C6C8;
+    }
+
+    .progress-ring-fill {
+      stroke-dasharray: 565.48;
+      stroke-dashoffset: 565.48;
+    }
+
+    .progress-stage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: #000000;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .progress-percentage {
+      font-size: 14px;
+      color: #8E8E93;
+      margin-top: 4px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-indicator.active {
+      background: #007AFF;
+      color: white;
+    }
+
+    .status-indicator.completed {
+      background: #34C759;
+      color: white;
+    }
+
+    .status-indicator.error {
+      background: #FF3B30;
+      color: white;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #C6C6C8;
+      border-radius: 50%;
+      border-top-color: #007AFF;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      color: #FF3B30;
+      font-size: 14px;
+      margin-top: 16px;
+      padding: 8px;
+      background: rgba(255, 59, 48, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 59, 48, 0.2);
+    }
+
+    .close-button {
+      background: #007AFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 16px;
+    }
+
+    .close-button:hover {
+      background: #0056CC;
+      transform: translateY(-1px);
+    }
+  `;
+
+  document.head.appendChild(style);
+  overlay.appendChild(progressCard);
+  document.body.appendChild(overlay);
+
+  // Start progress tracking
+  startProgressTracking(jobId);
+}
+
+function closeProgressPopup() {
+  const overlay = document.getElementById('progress-popup-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
+  // Clear any intervals
+  if (window.progressInterval) {
+    clearInterval(window.progressInterval);
+    window.progressInterval = null;
+  }
+}
+
+// Progress tracking functionality
+const STAGES = [
+  { name: 'upload_complete', label: 'Upload Complete', color: '#007AFF', progress: 0 },
+  { name: 'parsing', label: 'Parsing', color: '#007AFF', progress: 16.67 },
+  { name: 'pinecone_upsert', label: 'Processing', color: '#FF9500', progress: 50 },
+  { name: 'extraction', label: 'Extraction', color: '#FF9500', progress: 66.67 },
+  { name: 'ingestion', label: 'Ingestion', color: '#5AC8FA', progress: 83.33 },
+  { name: 'completed', label: 'Completed', color: '#34C759', progress: 100 }
+];
+
+function getProgressForStage(stage) {
+  const stageConfig = STAGES.find(s => s.name === stage);
+  return stageConfig ? stageConfig.progress : 0;
+}
+
+function getColorForStage(stage) {
+  const stageConfig = STAGES.find(s => s.name === stage);
+  return stageConfig ? stageConfig.color : '#007AFF';
+}
+
+function getLabelForStage(stage) {
+  const stageConfig = STAGES.find(s => s.name === stage);
+  return stageConfig ? stageConfig.label : stage;
+}
+
+function updateProgressRing(progress, color) {
+  const circle = document.getElementById('popup-progress-circle');
+  if (!circle) return;
+  
+  const circumference = 2 * Math.PI * 90; // radius = 90
+  const offset = circumference - (progress / 100) * circumference;
+  
+  circle.style.strokeDashoffset = offset;
+  circle.style.stroke = color;
+}
+
+function updateProgressUI(jobData) {
+  // Update header
+  const manufacturer = jobData.manufacturer_norm || 
+                     jobData.params?.manufacturer || 
+                     jobData.manufacturer || 
+                     'Unknown Manufacturer';
+  const system = jobData.model_norm || 
+                jobData.params?.model || 
+                jobData.model || 
+                jobData.doc_id || 
+                'Unknown System';
+  
+  const manufacturerEl = document.getElementById('popup-manufacturer');
+  const systemEl = document.getElementById('popup-system');
+  if (manufacturerEl) manufacturerEl.textContent = manufacturer;
+  if (systemEl) systemEl.textContent = system;
+  
+  // Update progress
+  const stage = jobData.status_v2 || 'upload_complete';
+  const progress = getProgressForStage(stage);
+  const color = getColorForStage(stage);
+  const label = getLabelForStage(stage);
+  
+  const stageEl = document.getElementById('popup-current-stage');
+  const percentageEl = document.getElementById('popup-progress-percentage');
+  if (stageEl) stageEl.textContent = label;
+  if (percentageEl) percentageEl.textContent = `${Math.round(progress)}%`;
+  
+  // Update progress ring
+  updateProgressRing(progress, color);
+  
+  // Update status indicator
+  const statusIndicator = document.getElementById('popup-status-indicator');
+  if (statusIndicator) {
+    statusIndicator.className = 'status-indicator';
+    
+    if (stage === 'completed') {
+      statusIndicator.classList.add('completed');
+      statusIndicator.innerHTML = '<span>✓ Completed</span>';
+    } else if (jobData.status === 'failed') {
+      statusIndicator.classList.add('error');
+      statusIndicator.innerHTML = '<span>✗ Failed</span>';
+    } else {
+      statusIndicator.classList.add('active');
+      statusIndicator.innerHTML = '<div class="loading-spinner"></div><span>Processing</span>';
+    }
+  }
+  
+  // Hide error message if job is processing successfully
+  const errorEl = document.getElementById('popup-error-message');
+  if (errorEl && jobData.status !== 'failed') {
+    errorEl.style.display = 'none';
+  }
+}
+
+async function fetchJobStatus(jobId) {
+  try {
+    const response = await window.adminFetch(`/admin/api/jobs/${jobId}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error(result.error?.message || 'Failed to fetch job status');
+    }
+
+    updateProgressUI(result.data);
+    
+    // Stop refreshing if job is completed or failed
+    if (result.data.status === 'completed' || result.data.status === 'failed') {
+      if (window.progressInterval) {
+        clearInterval(window.progressInterval);
+        window.progressInterval = null;
+      }
+    }
+
+  } catch (error) {
+    console.error('Error fetching job status:', error);
+    const errorEl = document.getElementById('popup-error-message');
+    if (errorEl) {
+      errorEl.textContent = `Error: ${error.message}`;
+      errorEl.style.display = 'block';
+    }
+  }
+}
+
+function startProgressTracking(jobId) {
+  // Clear any existing interval
+  if (window.progressInterval) {
+    clearInterval(window.progressInterval);
+  }
+  
+  // Fetch immediately
+  fetchJobStatus(jobId);
+  
+  // Then fetch every 2 seconds
+  window.progressInterval = setInterval(() => {
+    fetchJobStatus(jobId);
+  }, 2000);
+}
+
+// Make functions available globally
+window.showProgressPopup = showProgressPopup;
+window.closeProgressPopup = closeProgressPopup;
 
 // Auto-initialize if this script is loaded directly (for development)
 if (document.readyState === 'loading') {

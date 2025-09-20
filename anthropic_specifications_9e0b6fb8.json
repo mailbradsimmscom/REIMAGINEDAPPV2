@@ -1,0 +1,1436 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 25,
+  "unique_specifications": 25,
+  "category_breakdown": {
+    "Performance": 11,
+    "Environmental": 3,
+    "Network": 2,
+    "Physical": 3,
+    "Electrical": 2,
+    "Dimensions": 3,
+    "Installation": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Maximum Depth Range",
+      "normalized_parameter": "depth_range_max",
+      "parameter_aliases": [
+        "depth limit",
+        "maximum depth",
+        "depth capacity"
+      ],
+      "value": "15.5",
+      "range": "0-15.5",
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "15.5",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "depth range",
+        "maximum depth",
+        "depth limit",
+        "how deep",
+        "depth capacity"
+      ],
+      "concept_group": "depth_measurement",
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "parameter": "Temperature Reading",
+      "normalized_parameter": "temperature",
+      "parameter_aliases": [
+        "temp",
+        "water temperature",
+        "thermal reading"
+      ],
+      "value": "5",
+      "range": null,
+      "units": "\u00b0",
+      "normalized_units": "celsius",
+      "converted_value": "5",
+      "models": [
+        "DST810"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "temperature",
+        "water temp",
+        "thermal reading",
+        "temperature measurement"
+      ],
+      "concept_group": "environmental_sensors",
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "parameter": "Speed Calibration Points",
+      "normalized_parameter": "speed_calibration_points",
+      "parameter_aliases": [
+        "speed points",
+        "calibration speeds"
+      ],
+      "value": "10",
+      "range": "1-10",
+      "units": "points",
+      "normalized_units": "points",
+      "converted_value": "10",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "speed calibration",
+        "calibration points",
+        "speed settings",
+        "speed configuration"
+      ],
+      "concept_group": "calibration",
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "parameter": "Heel Angle Calibration Points",
+      "normalized_parameter": "heel_calibration_points",
+      "parameter_aliases": [
+        "heel angles",
+        "heel calibration"
+      ],
+      "value": "5",
+      "range": "1-5",
+      "units": "points",
+      "normalized_units": "points",
+      "converted_value": "5",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "heel calibration",
+        "angle calibration",
+        "heel points",
+        "heel settings"
+      ],
+      "concept_group": "calibration",
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "parameter": "Network Protocol",
+      "normalized_parameter": "network_protocol",
+      "parameter_aliases": [
+        "communication protocol",
+        "data protocol"
+      ],
+      "value": "NMEA 2000",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "DST810"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "NMEA",
+        "network protocol",
+        "communication standard",
+        "data protocol"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "DST810 Configuration Section"
+      ]
+    },
+    {
+      "parameter": "Minimum Speed Detection",
+      "normalized_parameter": "min_speed_detection",
+      "parameter_aliases": [
+        "startup speed",
+        "minimum measurable speed",
+        "low speed threshold"
+      ],
+      "value": "0.3",
+      "range": "0.3-45",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "0.3",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "minimum speed",
+        "slowest detectable speed",
+        "speed threshold",
+        "low speed detection"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Linear Speed Performance",
+      "normalized_parameter": "linear_speed_threshold",
+      "parameter_aliases": [
+        "speed linearity",
+        "accurate speed measurement"
+      ],
+      "value": "0.6",
+      "range": "0.6-45",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "0.6",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "linear speed",
+        "speed accuracy",
+        "speed measurement range"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Main description"
+      ]
+    },
+    {
+      "parameter": "Maximum Speed Range",
+      "normalized_parameter": "max_speed_range",
+      "parameter_aliases": [
+        "speed limit",
+        "maximum measurable speed"
+      ],
+      "value": "45",
+      "range": "0.3-45",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "45",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "maximum speed",
+        "speed range",
+        "upper speed limit",
+        "speed capacity"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Speed Update Rate",
+      "normalized_parameter": "speed_update_frequency",
+      "parameter_aliases": [
+        "refresh rate",
+        "sampling rate",
+        "update frequency"
+      ],
+      "value": "5.7",
+      "range": null,
+      "units": "Hz",
+      "normalized_units": "Hz",
+      "converted_value": "5.7",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "update rate",
+        "refresh rate",
+        "speed updates",
+        "sampling frequency"
+      ],
+      "concept_group": "data_output",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Sensor Types",
+      "normalized_parameter": "sensor_capabilities",
+      "parameter_aliases": [
+        "measurement types",
+        "sensor functions"
+      ],
+      "value": "Depth, Speed-Through-Water, Water Temperature, Boat Attitude",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "sensor types",
+        "measurements",
+        "capabilities",
+        "functions"
+      ],
+      "concept_group": "sensor_features",
+      "references": [
+        "Header section"
+      ]
+    },
+    {
+      "parameter": "Speed Range",
+      "normalized_parameter": "speed_range",
+      "parameter_aliases": [
+        "operating speed",
+        "velocity range",
+        "speed limits"
+      ],
+      "value": "0.3 to 45",
+      "range": "0.3-45 knots",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "0.3-45",
+      "models": [
+        "Gen2 paddlewheel"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "speed range",
+        "maximum speed",
+        "minimum speed",
+        "operating speed",
+        "velocity"
+      ],
+      "concept_group": "performance_metrics",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Weight (Plastic)",
+      "normalized_parameter": "weight_plastic",
+      "parameter_aliases": [
+        "mass",
+        "plastic housing weight"
+      ],
+      "value": "0.9",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "0.9",
+      "models": [
+        "Plastic model"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "weight",
+        "mass",
+        "plastic version weight",
+        "how heavy"
+      ],
+      "concept_group": "physical_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Weight (Bronze)",
+      "normalized_parameter": "weight_bronze",
+      "parameter_aliases": [
+        "mass",
+        "bronze housing weight"
+      ],
+      "value": "1.6",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "1.6",
+      "models": [
+        "Bronze model"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "weight",
+        "mass",
+        "bronze version weight",
+        "how heavy"
+      ],
+      "concept_group": "physical_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Weight (Stainless Steel)",
+      "normalized_parameter": "weight_stainless_steel",
+      "parameter_aliases": [
+        "mass",
+        "stainless steel housing weight"
+      ],
+      "value": "1.9",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "1.9",
+      "models": [
+        "Stainless Steel model"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "weight",
+        "mass",
+        "stainless steel version weight",
+        "how heavy"
+      ],
+      "concept_group": "physical_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Pressure Rating",
+      "normalized_parameter": "pressure_rating",
+      "parameter_aliases": [
+        "depth rating",
+        "water pressure resistance"
+      ],
+      "value": "3",
+      "range": null,
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "3",
+      "models": [
+        "all"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "pressure rating",
+        "depth rating",
+        "water resistance",
+        "maximum depth"
+      ],
+      "concept_group": "environmental_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Supply Voltage",
+      "normalized_parameter": "supply_voltage",
+      "parameter_aliases": [
+        "operating voltage",
+        "input voltage",
+        "power supply"
+      ],
+      "value": "9 to 16",
+      "range": "9-16 VDC",
+      "units": "VDC",
+      "normalized_units": "VDC",
+      "converted_value": "9-16",
+      "models": [
+        "all"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirement",
+        "electrical specs",
+        "input voltage"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Supply Current",
+      "normalized_parameter": "supply_current",
+      "parameter_aliases": [
+        "current draw",
+        "power consumption"
+      ],
+      "value": "<200",
+      "range": "0-200",
+      "units": "mA",
+      "normalized_units": "milliamperes",
+      "converted_value": "<200",
+      "models": [
+        "all"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "current",
+        "power consumption",
+        "amperage",
+        "current draw"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Wireless Range",
+      "normalized_parameter": "wireless_range",
+      "parameter_aliases": [
+        "bluetooth range",
+        "transmission distance"
+      ],
+      "value": "30",
+      "range": "0-30",
+      "units": "feet",
+      "normalized_units": "feet",
+      "converted_value": "30",
+      "models": [
+        "all"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "wireless range",
+        "bluetooth range",
+        "transmission distance",
+        "connectivity range"
+      ],
+      "concept_group": "communication_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Temperature Sensor Range",
+      "normalized_parameter": "temperature_range",
+      "parameter_aliases": [
+        "operating temperature",
+        "temp range"
+      ],
+      "value": "-10 to 40",
+      "range": "-10\u00b0C to 40\u00b0C",
+      "units": "\u00b0C",
+      "normalized_units": "celsius",
+      "converted_value": "-10 to 40",
+      "models": [
+        "all"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "temperature range",
+        "operating temperature",
+        "temp limits"
+      ],
+      "concept_group": "environmental_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Temperature Sensor Accuracy",
+      "normalized_parameter": "temperature_accuracy",
+      "parameter_aliases": [
+        "temp precision",
+        "temperature tolerance"
+      ],
+      "value": "\u00b10.5",
+      "range": null,
+      "units": "\u00b0C",
+      "normalized_units": "celsius",
+      "converted_value": "\u00b10.5",
+      "models": [
+        "all"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "temperature accuracy",
+        "temp precision",
+        "temperature tolerance"
+      ],
+      "concept_group": "sensor_specifications",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Housing Diameter P617V",
+      "normalized_parameter": "housing_diameter_plastic",
+      "parameter_aliases": [
+        "outer diameter",
+        "housing width",
+        "plastic housing size"
+      ],
+      "value": "75",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "75",
+      "models": [
+        "P617V"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "diameter",
+        "housing size",
+        "width",
+        "P617V dimensions"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "parameter": "Housing Diameter B617V/SS617V",
+      "normalized_parameter": "housing_diameter_metal",
+      "parameter_aliases": [
+        "outer diameter",
+        "housing width",
+        "metal housing size"
+      ],
+      "value": "78",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "78",
+      "models": [
+        "B617V",
+        "SS617V"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "diameter",
+        "housing size",
+        "width",
+        "B617V dimensions",
+        "SS617V dimensions"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "parameter": "Thread Size",
+      "normalized_parameter": "thread_specification",
+      "parameter_aliases": [
+        "threading",
+        "thread pitch",
+        "mounting threads"
+      ],
+      "value": "2-12",
+      "range": null,
+      "units": "inches-TPI",
+      "normalized_units": "inches-TPI",
+      "converted_value": "2-12",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "thread size",
+        "mounting threads",
+        "thread pitch",
+        "installation requirements"
+      ],
+      "concept_group": "mounting_specifications",
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "parameter": "Protocol Support",
+      "normalized_parameter": "communication_protocol",
+      "parameter_aliases": [
+        "data protocol",
+        "network standard"
+      ],
+      "value": "NMEA 2000",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "NMEA",
+        "protocol",
+        "network",
+        "communication standard",
+        "data output"
+      ],
+      "concept_group": "communication_specifications",
+      "references": [
+        "Data Output Protocol section"
+      ]
+    },
+    {
+      "parameter": "Insert Depth",
+      "normalized_parameter": "insertion_depth",
+      "parameter_aliases": [
+        "probe depth",
+        "sensor depth"
+      ],
+      "value": "30",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "30",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "depth",
+        "insertion",
+        "probe length",
+        "sensor depth"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "Dimensions section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Depth Range",
+            "normalized_parameter": "depth_range_max",
+            "parameter_aliases": [
+              "depth limit",
+              "maximum depth",
+              "depth capacity"
+            ],
+            "value": "15.5",
+            "range": "0-15.5",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "15.5",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "depth range",
+              "maximum depth",
+              "depth limit",
+              "how deep",
+              "depth capacity"
+            ],
+            "concept_group": "depth_measurement",
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "parameter": "Temperature Reading",
+            "normalized_parameter": "temperature",
+            "parameter_aliases": [
+              "temp",
+              "water temperature",
+              "thermal reading"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "\u00b0",
+            "normalized_units": "celsius",
+            "converted_value": "5",
+            "models": [
+              "DST810"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature",
+              "water temp",
+              "thermal reading",
+              "temperature measurement"
+            ],
+            "concept_group": "environmental_sensors",
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "parameter": "Speed Calibration Points",
+            "normalized_parameter": "speed_calibration_points",
+            "parameter_aliases": [
+              "speed points",
+              "calibration speeds"
+            ],
+            "value": "10",
+            "range": "1-10",
+            "units": "points",
+            "normalized_units": "points",
+            "converted_value": "10",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "speed calibration",
+              "calibration points",
+              "speed settings",
+              "speed configuration"
+            ],
+            "concept_group": "calibration",
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "parameter": "Heel Angle Calibration Points",
+            "normalized_parameter": "heel_calibration_points",
+            "parameter_aliases": [
+              "heel angles",
+              "heel calibration"
+            ],
+            "value": "5",
+            "range": "1-5",
+            "units": "points",
+            "normalized_units": "points",
+            "converted_value": "5",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "heel calibration",
+              "angle calibration",
+              "heel points",
+              "heel settings"
+            ],
+            "concept_group": "calibration",
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          },
+          {
+            "parameter": "Network Protocol",
+            "normalized_parameter": "network_protocol",
+            "parameter_aliases": [
+              "communication protocol",
+              "data protocol"
+            ],
+            "value": "NMEA 2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "DST810"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "NMEA",
+              "network protocol",
+              "communication standard",
+              "data protocol"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "DST810 Configuration Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Minimum Speed Detection",
+            "normalized_parameter": "min_speed_detection",
+            "parameter_aliases": [
+              "startup speed",
+              "minimum measurable speed",
+              "low speed threshold"
+            ],
+            "value": "0.3",
+            "range": "0.3-45",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "0.3",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "minimum speed",
+              "slowest detectable speed",
+              "speed threshold",
+              "low speed detection"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Linear Speed Performance",
+            "normalized_parameter": "linear_speed_threshold",
+            "parameter_aliases": [
+              "speed linearity",
+              "accurate speed measurement"
+            ],
+            "value": "0.6",
+            "range": "0.6-45",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "0.6",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "linear speed",
+              "speed accuracy",
+              "speed measurement range"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Main description"
+            ]
+          },
+          {
+            "parameter": "Maximum Speed Range",
+            "normalized_parameter": "max_speed_range",
+            "parameter_aliases": [
+              "speed limit",
+              "maximum measurable speed"
+            ],
+            "value": "45",
+            "range": "0.3-45",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "45",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "maximum speed",
+              "speed range",
+              "upper speed limit",
+              "speed capacity"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Speed Update Rate",
+            "normalized_parameter": "speed_update_frequency",
+            "parameter_aliases": [
+              "refresh rate",
+              "sampling rate",
+              "update frequency"
+            ],
+            "value": "5.7",
+            "range": null,
+            "units": "Hz",
+            "normalized_units": "Hz",
+            "converted_value": "5.7",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "update rate",
+              "refresh rate",
+              "speed updates",
+              "sampling frequency"
+            ],
+            "concept_group": "data_output",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Sensor Types",
+            "normalized_parameter": "sensor_capabilities",
+            "parameter_aliases": [
+              "measurement types",
+              "sensor functions"
+            ],
+            "value": "Depth, Speed-Through-Water, Water Temperature, Boat Attitude",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "sensor types",
+              "measurements",
+              "capabilities",
+              "functions"
+            ],
+            "concept_group": "sensor_features",
+            "references": [
+              "Header section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Speed Range",
+            "normalized_parameter": "speed_range",
+            "parameter_aliases": [
+              "operating speed",
+              "velocity range",
+              "speed limits"
+            ],
+            "value": "0.3 to 45",
+            "range": "0.3-45 knots",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "0.3-45",
+            "models": [
+              "Gen2 paddlewheel"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "speed range",
+              "maximum speed",
+              "minimum speed",
+              "operating speed",
+              "velocity"
+            ],
+            "concept_group": "performance_metrics",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Weight (Plastic)",
+            "normalized_parameter": "weight_plastic",
+            "parameter_aliases": [
+              "mass",
+              "plastic housing weight"
+            ],
+            "value": "0.9",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "0.9",
+            "models": [
+              "Plastic model"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "plastic version weight",
+              "how heavy"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Weight (Bronze)",
+            "normalized_parameter": "weight_bronze",
+            "parameter_aliases": [
+              "mass",
+              "bronze housing weight"
+            ],
+            "value": "1.6",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "1.6",
+            "models": [
+              "Bronze model"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "bronze version weight",
+              "how heavy"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Weight (Stainless Steel)",
+            "normalized_parameter": "weight_stainless_steel",
+            "parameter_aliases": [
+              "mass",
+              "stainless steel housing weight"
+            ],
+            "value": "1.9",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "1.9",
+            "models": [
+              "Stainless Steel model"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "stainless steel version weight",
+              "how heavy"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Pressure Rating",
+            "normalized_parameter": "pressure_rating",
+            "parameter_aliases": [
+              "depth rating",
+              "water pressure resistance"
+            ],
+            "value": "3",
+            "range": null,
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "3",
+            "models": [
+              "all"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "pressure rating",
+              "depth rating",
+              "water resistance",
+              "maximum depth"
+            ],
+            "concept_group": "environmental_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Supply Voltage",
+            "normalized_parameter": "supply_voltage",
+            "parameter_aliases": [
+              "operating voltage",
+              "input voltage",
+              "power supply"
+            ],
+            "value": "9 to 16",
+            "range": "9-16 VDC",
+            "units": "VDC",
+            "normalized_units": "VDC",
+            "converted_value": "9-16",
+            "models": [
+              "all"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirement",
+              "electrical specs",
+              "input voltage"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Supply Current",
+            "normalized_parameter": "supply_current",
+            "parameter_aliases": [
+              "current draw",
+              "power consumption"
+            ],
+            "value": "<200",
+            "range": "0-200",
+            "units": "mA",
+            "normalized_units": "milliamperes",
+            "converted_value": "<200",
+            "models": [
+              "all"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "power consumption",
+              "amperage",
+              "current draw"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Wireless Range",
+            "normalized_parameter": "wireless_range",
+            "parameter_aliases": [
+              "bluetooth range",
+              "transmission distance"
+            ],
+            "value": "30",
+            "range": "0-30",
+            "units": "feet",
+            "normalized_units": "feet",
+            "converted_value": "30",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "wireless range",
+              "bluetooth range",
+              "transmission distance",
+              "connectivity range"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Temperature Sensor Range",
+            "normalized_parameter": "temperature_range",
+            "parameter_aliases": [
+              "operating temperature",
+              "temp range"
+            ],
+            "value": "-10 to 40",
+            "range": "-10\u00b0C to 40\u00b0C",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "-10 to 40",
+            "models": [
+              "all"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature range",
+              "operating temperature",
+              "temp limits"
+            ],
+            "concept_group": "environmental_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Temperature Sensor Accuracy",
+            "normalized_parameter": "temperature_accuracy",
+            "parameter_aliases": [
+              "temp precision",
+              "temperature tolerance"
+            ],
+            "value": "\u00b10.5",
+            "range": null,
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "\u00b10.5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "temperature accuracy",
+              "temp precision",
+              "temperature tolerance"
+            ],
+            "concept_group": "sensor_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Housing Diameter P617V",
+            "normalized_parameter": "housing_diameter_plastic",
+            "parameter_aliases": [
+              "outer diameter",
+              "housing width",
+              "plastic housing size"
+            ],
+            "value": "75",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "75",
+            "models": [
+              "P617V"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "diameter",
+              "housing size",
+              "width",
+              "P617V dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "parameter": "Housing Diameter B617V/SS617V",
+            "normalized_parameter": "housing_diameter_metal",
+            "parameter_aliases": [
+              "outer diameter",
+              "housing width",
+              "metal housing size"
+            ],
+            "value": "78",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "78",
+            "models": [
+              "B617V",
+              "SS617V"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "diameter",
+              "housing size",
+              "width",
+              "B617V dimensions",
+              "SS617V dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "parameter": "Thread Size",
+            "normalized_parameter": "thread_specification",
+            "parameter_aliases": [
+              "threading",
+              "thread pitch",
+              "mounting threads"
+            ],
+            "value": "2-12",
+            "range": null,
+            "units": "inches-TPI",
+            "normalized_units": "inches-TPI",
+            "converted_value": "2-12",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "thread size",
+              "mounting threads",
+              "thread pitch",
+              "installation requirements"
+            ],
+            "concept_group": "mounting_specifications",
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "parameter": "Protocol Support",
+            "normalized_parameter": "communication_protocol",
+            "parameter_aliases": [
+              "data protocol",
+              "network standard"
+            ],
+            "value": "NMEA 2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "NMEA",
+              "protocol",
+              "network",
+              "communication standard",
+              "data output"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Data Output Protocol section"
+            ]
+          },
+          {
+            "parameter": "Insert Depth",
+            "normalized_parameter": "insertion_depth",
+            "parameter_aliases": [
+              "probe depth",
+              "sensor depth"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "30",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "insertion",
+              "probe length",
+              "sensor depth"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Dimensions section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

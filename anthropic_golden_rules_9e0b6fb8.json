@@ -1,0 +1,687 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 25,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "Is DST810 storing calibration data?",
+      "expected_value": "Calibrations and configurations stored internally",
+      "test_method": "Check device memory through CAST app interface",
+      "failure_indication": "Calibration settings lost after power cycle",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "CAST app configuration",
+        "Memory verification"
+      ]
+    },
+    {
+      "query": "Are heel angle calibrations complete?",
+      "expected_value": "5 heel angles calibrated",
+      "test_method": "Review calibration points in CAST app",
+      "failure_indication": "Missing heel angle calibration points",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Heel angle calibration",
+        "Speed calibration"
+      ]
+    },
+    {
+      "query": "Are speed calibrations complete?",
+      "expected_value": "Up to 10 speeds calibrated",
+      "test_method": "Verify speed calibration points in CAST app",
+      "failure_indication": "Incomplete speed calibration range",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration",
+        "NMEA 2000 verification"
+      ]
+    },
+    {
+      "query": "Is NMEA 2000 network receiving speed data?",
+      "expected_value": "Calibrated speed data transmitted to network",
+      "test_method": "Check NMEA 2000 network data feed",
+      "failure_indication": "No speed data on network or uncalibrated data",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Network connectivity check",
+        "Data verification"
+      ]
+    },
+    {
+      "query": "Is wireless connectivity functional?",
+      "expected_value": "Device connects wirelessly to CAST app",
+      "test_method": "Attempt wireless connection through CAST app",
+      "failure_indication": "Unable to establish wireless connection",
+      "models": [
+        "DST810",
+        "DX900+",
+        "SmartBoat"
+      ],
+      "related_procedures": [
+        "Wireless setup",
+        "Connection troubleshooting"
+      ]
+    },
+    {
+      "query": "What is the minimum speed for accurate paddlewheel startup?",
+      "expected_value": "0.3 knots",
+      "test_method": "Gradually increase vessel speed and monitor when paddlewheel begins reporting",
+      "failure_indication": "Paddlewheel not reporting below 0.3 knots indicates potential sensor issue",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration",
+        "Sensor initialization"
+      ]
+    },
+    {
+      "query": "At what speed does the paddlewheel achieve linear performance?",
+      "expected_value": "0.6 knots",
+      "test_method": "Monitor speed readings for linear response as vessel speed increases",
+      "failure_indication": "Non-linear readings at 0.6 knots suggests calibration or paddlewheel issue",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration",
+        "Performance verification"
+      ]
+    },
+    {
+      "query": "What is the maximum speed rating for the sensor?",
+      "expected_value": "45 knots",
+      "test_method": "Verify speed readings at high vessel speeds",
+      "failure_indication": "Erratic or non-linear readings above 45 knots indicates operating outside specs",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed range verification",
+        "Performance limits testing"
+      ]
+    },
+    {
+      "query": "What is the speed data output frequency?",
+      "expected_value": "5.7 Hz (5 times per second)",
+      "test_method": "Monitor data output timing using diagnostic tools",
+      "failure_indication": "Lower frequency output indicates potential communication or sensor issue",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Data output verification",
+        "Communication testing"
+      ]
+    },
+    {
+      "query": "Does the sensor support heel-compensated speed calibration?",
+      "expected_value": "Yes, across multiple heel angles",
+      "test_method": "Perform calibration at various heel angles using CAST app",
+      "failure_indication": "Unable to calibrate at different heel angles suggests sensor or app malfunction",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Heel compensation setup",
+        "Advanced calibration"
+      ]
+    },
+    {
+      "query": "What is the minimum speed for accurate paddlewheel response?",
+      "expected_value": "0.3 knots",
+      "test_method": "Verify speed readings at low speed operation",
+      "failure_indication": "No speed reading below 0.3 knots indicates sensor failure",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "related_procedures": [
+        "Speed Sensor Calibration"
+      ]
+    },
+    {
+      "query": "At what speed does paddlewheel reading become linear?",
+      "expected_value": "0.6 knots",
+      "test_method": "Plot speed readings vs actual speed",
+      "failure_indication": "Non-linear readings above 0.6 knots indicate malfunction",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "related_procedures": [
+        "Linearity Testing"
+      ]
+    },
+    {
+      "query": "What is the maximum speed rating?",
+      "expected_value": "45 knots",
+      "test_method": "Verify readings at high speed operation",
+      "failure_indication": "Erratic readings or failure above 45 knots",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "related_procedures": [
+        "High Speed Performance Testing"
+      ]
+    },
+    {
+      "query": "What is the operating voltage range?",
+      "expected_value": "9 VDC to 16 VDC",
+      "test_method": "Measure supply voltage at sensor",
+      "failure_indication": "Device non-functional outside voltage range",
+      "models": [
+        "NMEA 2000 Models"
+      ],
+      "related_procedures": [
+        "Power Supply Testing"
+      ]
+    },
+    {
+      "query": "What is the maximum current draw?",
+      "expected_value": "Less than 200 mA",
+      "test_method": "Measure current consumption",
+      "failure_indication": "Current draw exceeding 200mA indicates fault",
+      "models": [
+        "NMEA 2000 Models"
+      ],
+      "related_procedures": [
+        "Power Consumption Testing"
+      ]
+    },
+    {
+      "query": "What is the maximum hull deadrise angle?",
+      "expected_value": "22 degrees",
+      "test_method": "Measure hull angle at mounting location",
+      "failure_indication": "Installation on steeper angle may cause inaccurate readings",
+      "models": [
+        "All Models"
+      ],
+      "related_procedures": [
+        "Installation Guidelines"
+      ]
+    },
+    {
+      "query": "What is the wireless range?",
+      "expected_value": "Up to 30 feet",
+      "test_method": "Test signal strength at various distances",
+      "failure_indication": "Loss of connection within 30 feet indicates interference or malfunction",
+      "models": [
+        "Bluetooth Models"
+      ],
+      "related_procedures": [
+        "Wireless Range Testing"
+      ]
+    },
+    {
+      "query": "What is the temperature sensor accuracy?",
+      "expected_value": "\u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+      "test_method": "Compare against calibrated reference thermometer",
+      "failure_indication": "Deviation beyond \u00b10.5\u00b0C indicates sensor fault",
+      "models": [
+        "All Models"
+      ],
+      "related_procedures": [
+        "Temperature Calibration"
+      ]
+    },
+    {
+      "query": "What is the temperature operating range?",
+      "expected_value": "-10\u00b0C to 40\u00b0C (14\u00b0F to 104\u00b0F)",
+      "test_method": "Verify operation across temperature range",
+      "failure_indication": "Failure outside temperature range",
+      "models": [
+        "All Models"
+      ],
+      "related_procedures": [
+        "Environmental Testing"
+      ]
+    },
+    {
+      "query": "What is the minimum depth range?",
+      "expected_value": "0.5 m (1.6')",
+      "test_method": "Verify depth readings in shallow water",
+      "failure_indication": "Unable to read depths less than 0.5m",
+      "models": [
+        "All Models"
+      ],
+      "related_procedures": [
+        "Depth Range Verification"
+      ]
+    },
+    {
+      "query": "Is NMEA 2000 PGN 059904 supported?",
+      "expected_value": "ISO Request PGN must be functional",
+      "test_method": "Send ISO Request and verify response",
+      "failure_indication": "Device not responding to ISO requests",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "related_procedures": [
+        "NMEA 2000 network testing"
+      ]
+    },
+    {
+      "query": "Is heartbeat signal present?",
+      "expected_value": "PGN 126993 heartbeat signal transmitting regularly",
+      "test_method": "Monitor network for heartbeat PGN",
+      "failure_indication": "Device offline or malfunctioning",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "related_procedures": [
+        "Network connectivity verification"
+      ]
+    },
+    {
+      "query": "Are thread dimensions correct?",
+      "expected_value": "2\"-12 threads",
+      "test_method": "Physical measurement of threads",
+      "failure_indication": "Incorrect threading may cause mounting issues",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "related_procedures": [
+        "Installation specifications"
+      ]
+    },
+    {
+      "query": "Is water depth data transmitting?",
+      "expected_value": "PGN 128267 data streaming with transducer offset",
+      "test_method": "Monitor NMEA 2000 data stream",
+      "failure_indication": "Depth sensor malfunction",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "related_procedures": [
+        "Depth sensor calibration"
+      ]
+    },
+    {
+      "query": "Is self-closing valve functioning?",
+      "expected_value": "Valve closes automatically when insert removed",
+      "test_method": "Remove insert and verify valve closure",
+      "failure_indication": "Water intrusion risk during maintenance",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "related_procedures": [
+        "Maintenance safety checks"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is DST810 storing calibration data?",
+            "expected_value": "Calibrations and configurations stored internally",
+            "test_method": "Check device memory through CAST app interface",
+            "failure_indication": "Calibration settings lost after power cycle",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "CAST app configuration",
+              "Memory verification"
+            ]
+          },
+          {
+            "query": "Are heel angle calibrations complete?",
+            "expected_value": "5 heel angles calibrated",
+            "test_method": "Review calibration points in CAST app",
+            "failure_indication": "Missing heel angle calibration points",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Heel angle calibration",
+              "Speed calibration"
+            ]
+          },
+          {
+            "query": "Are speed calibrations complete?",
+            "expected_value": "Up to 10 speeds calibrated",
+            "test_method": "Verify speed calibration points in CAST app",
+            "failure_indication": "Incomplete speed calibration range",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration",
+              "NMEA 2000 verification"
+            ]
+          },
+          {
+            "query": "Is NMEA 2000 network receiving speed data?",
+            "expected_value": "Calibrated speed data transmitted to network",
+            "test_method": "Check NMEA 2000 network data feed",
+            "failure_indication": "No speed data on network or uncalibrated data",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Network connectivity check",
+              "Data verification"
+            ]
+          },
+          {
+            "query": "Is wireless connectivity functional?",
+            "expected_value": "Device connects wirelessly to CAST app",
+            "test_method": "Attempt wireless connection through CAST app",
+            "failure_indication": "Unable to establish wireless connection",
+            "models": [
+              "DST810",
+              "DX900+",
+              "SmartBoat"
+            ],
+            "related_procedures": [
+              "Wireless setup",
+              "Connection troubleshooting"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum speed for accurate paddlewheel startup?",
+            "expected_value": "0.3 knots",
+            "test_method": "Gradually increase vessel speed and monitor when paddlewheel begins reporting",
+            "failure_indication": "Paddlewheel not reporting below 0.3 knots indicates potential sensor issue",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration",
+              "Sensor initialization"
+            ]
+          },
+          {
+            "query": "At what speed does the paddlewheel achieve linear performance?",
+            "expected_value": "0.6 knots",
+            "test_method": "Monitor speed readings for linear response as vessel speed increases",
+            "failure_indication": "Non-linear readings at 0.6 knots suggests calibration or paddlewheel issue",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration",
+              "Performance verification"
+            ]
+          },
+          {
+            "query": "What is the maximum speed rating for the sensor?",
+            "expected_value": "45 knots",
+            "test_method": "Verify speed readings at high vessel speeds",
+            "failure_indication": "Erratic or non-linear readings above 45 knots indicates operating outside specs",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed range verification",
+              "Performance limits testing"
+            ]
+          },
+          {
+            "query": "What is the speed data output frequency?",
+            "expected_value": "5.7 Hz (5 times per second)",
+            "test_method": "Monitor data output timing using diagnostic tools",
+            "failure_indication": "Lower frequency output indicates potential communication or sensor issue",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Data output verification",
+              "Communication testing"
+            ]
+          },
+          {
+            "query": "Does the sensor support heel-compensated speed calibration?",
+            "expected_value": "Yes, across multiple heel angles",
+            "test_method": "Perform calibration at various heel angles using CAST app",
+            "failure_indication": "Unable to calibrate at different heel angles suggests sensor or app malfunction",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Heel compensation setup",
+              "Advanced calibration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum speed for accurate paddlewheel response?",
+            "expected_value": "0.3 knots",
+            "test_method": "Verify speed readings at low speed operation",
+            "failure_indication": "No speed reading below 0.3 knots indicates sensor failure",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "related_procedures": [
+              "Speed Sensor Calibration"
+            ]
+          },
+          {
+            "query": "At what speed does paddlewheel reading become linear?",
+            "expected_value": "0.6 knots",
+            "test_method": "Plot speed readings vs actual speed",
+            "failure_indication": "Non-linear readings above 0.6 knots indicate malfunction",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "related_procedures": [
+              "Linearity Testing"
+            ]
+          },
+          {
+            "query": "What is the maximum speed rating?",
+            "expected_value": "45 knots",
+            "test_method": "Verify readings at high speed operation",
+            "failure_indication": "Erratic readings or failure above 45 knots",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "related_procedures": [
+              "High Speed Performance Testing"
+            ]
+          },
+          {
+            "query": "What is the operating voltage range?",
+            "expected_value": "9 VDC to 16 VDC",
+            "test_method": "Measure supply voltage at sensor",
+            "failure_indication": "Device non-functional outside voltage range",
+            "models": [
+              "NMEA 2000 Models"
+            ],
+            "related_procedures": [
+              "Power Supply Testing"
+            ]
+          },
+          {
+            "query": "What is the maximum current draw?",
+            "expected_value": "Less than 200 mA",
+            "test_method": "Measure current consumption",
+            "failure_indication": "Current draw exceeding 200mA indicates fault",
+            "models": [
+              "NMEA 2000 Models"
+            ],
+            "related_procedures": [
+              "Power Consumption Testing"
+            ]
+          },
+          {
+            "query": "What is the maximum hull deadrise angle?",
+            "expected_value": "22 degrees",
+            "test_method": "Measure hull angle at mounting location",
+            "failure_indication": "Installation on steeper angle may cause inaccurate readings",
+            "models": [
+              "All Models"
+            ],
+            "related_procedures": [
+              "Installation Guidelines"
+            ]
+          },
+          {
+            "query": "What is the wireless range?",
+            "expected_value": "Up to 30 feet",
+            "test_method": "Test signal strength at various distances",
+            "failure_indication": "Loss of connection within 30 feet indicates interference or malfunction",
+            "models": [
+              "Bluetooth Models"
+            ],
+            "related_procedures": [
+              "Wireless Range Testing"
+            ]
+          },
+          {
+            "query": "What is the temperature sensor accuracy?",
+            "expected_value": "\u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+            "test_method": "Compare against calibrated reference thermometer",
+            "failure_indication": "Deviation beyond \u00b10.5\u00b0C indicates sensor fault",
+            "models": [
+              "All Models"
+            ],
+            "related_procedures": [
+              "Temperature Calibration"
+            ]
+          },
+          {
+            "query": "What is the temperature operating range?",
+            "expected_value": "-10\u00b0C to 40\u00b0C (14\u00b0F to 104\u00b0F)",
+            "test_method": "Verify operation across temperature range",
+            "failure_indication": "Failure outside temperature range",
+            "models": [
+              "All Models"
+            ],
+            "related_procedures": [
+              "Environmental Testing"
+            ]
+          },
+          {
+            "query": "What is the minimum depth range?",
+            "expected_value": "0.5 m (1.6')",
+            "test_method": "Verify depth readings in shallow water",
+            "failure_indication": "Unable to read depths less than 0.5m",
+            "models": [
+              "All Models"
+            ],
+            "related_procedures": [
+              "Depth Range Verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is NMEA 2000 PGN 059904 supported?",
+            "expected_value": "ISO Request PGN must be functional",
+            "test_method": "Send ISO Request and verify response",
+            "failure_indication": "Device not responding to ISO requests",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "related_procedures": [
+              "NMEA 2000 network testing"
+            ]
+          },
+          {
+            "query": "Is heartbeat signal present?",
+            "expected_value": "PGN 126993 heartbeat signal transmitting regularly",
+            "test_method": "Monitor network for heartbeat PGN",
+            "failure_indication": "Device offline or malfunctioning",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "related_procedures": [
+              "Network connectivity verification"
+            ]
+          },
+          {
+            "query": "Are thread dimensions correct?",
+            "expected_value": "2\"-12 threads",
+            "test_method": "Physical measurement of threads",
+            "failure_indication": "Incorrect threading may cause mounting issues",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "related_procedures": [
+              "Installation specifications"
+            ]
+          },
+          {
+            "query": "Is water depth data transmitting?",
+            "expected_value": "PGN 128267 data streaming with transducer offset",
+            "test_method": "Monitor NMEA 2000 data stream",
+            "failure_indication": "Depth sensor malfunction",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "related_procedures": [
+              "Depth sensor calibration"
+            ]
+          },
+          {
+            "query": "Is self-closing valve functioning?",
+            "expected_value": "Valve closes automatically when insert removed",
+            "test_method": "Remove insert and verify valve closure",
+            "failure_indication": "Water intrusion risk during maintenance",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "related_procedures": [
+              "Maintenance safety checks"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

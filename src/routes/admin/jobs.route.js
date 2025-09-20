@@ -124,6 +124,77 @@ router.get('/queue', async (req, res, next) => {
 });
 
 /**
+ * GET /admin/jobs/:jobId
+ * Get individual job status and details
+ */
+router.get('/:jobId', async (req, res, next) => {
+  try {
+    const { jobId } = req.params;
+    
+    const job = await documentRepository.getJob(jobId);
+    
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Job not found' }
+      });
+    }
+    
+    // Get document details for manufacturer/system info
+    let document = null;
+    if (job.doc_id) {
+      try {
+        document = await documentRepository.getDocument(job.doc_id);
+        log.info('Document fetched for job', { 
+          jobId, 
+          docId: job.doc_id, 
+          manufacturer_norm: document?.manufacturer_norm,
+          model_norm: document?.model_norm,
+          manufacturer: document?.manufacturer,
+          model: document?.model
+        });
+        
+        // Debug: log what we're actually returning
+        log.info('Returning data for progress page', {
+          manufacturer_norm: document?.manufacturer || job.manufacturer_norm,
+          model_norm: document?.model || job.model_norm
+        });
+      } catch (docError) {
+        log.warn('Could not fetch document details', { docId: job.doc_id, error: docError.message });
+      }
+    }
+    
+        res.json({
+          success: true,
+          data: {
+            job_id: job.job_id,
+            doc_id: job.doc_id,
+            status: job.status,
+            status_v2: job.status_v2,
+            job_type: job.job_type,
+            manufacturer_norm: document?.manufacturer_norm || job.manufacturer_norm,
+            model_norm: document?.model_norm || job.model_norm,
+            system_norm: document?.system_norm || job.system_norm,
+            manufacturer: document?.manufacturer,
+            model: document?.model,
+            created_at: job.created_at,
+            updated_at: job.updated_at,
+            started_at: job.started_at,
+            completed_at: job.completed_at,
+            storage_path: job.storage_path,
+            params: job.params,
+            counters: job.counters,
+            dip_success: job.dip_success
+          }
+        });
+    
+  } catch (error) {
+    log.error('Failed to get job', { error: error.message, jobId: req.params.jobId });
+    next(error);
+  }
+});
+
+/**
  * GET /admin/jobs/status
  * Get job processor status
  */

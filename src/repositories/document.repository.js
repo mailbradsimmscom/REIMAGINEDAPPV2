@@ -117,6 +117,29 @@ class DocumentRepository {
     }
   }
 
+  async updateJobStatusV2(jobId, statusV2) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .update({ 
+          status_v2: statusV2,
+          updated_at: new Date().toISOString()
+        })
+        .eq('job_id', jobId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      this.requestLogger.info('Job status_v2 updated', { jobId, statusV2 });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update job status_v2', { error: error.message, jobId, statusV2 });
+      throw error;
+    }
+  }
+
   async updateJobDIPSuccess(jobId, dipSuccess) {
     const supabase = await this.checkSupabaseAvailability();
     try {

@@ -285,6 +285,9 @@ class DocumentService {
         
       // Update job with storage path
       await documentRepository.updateJobStatus(job.job_id, 'upload_complete', { storage_path: storagePath });
+      
+      // Update detailed processing stage
+      await documentRepository.updateJobStatusV2(job.job_id, 'upload_complete');
         
         // Update document with storage path
         await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
@@ -333,6 +336,9 @@ class DocumentService {
 
       // Update job status to parsing
       await documentRepository.updateJobStatus(jobId, 'parsing');
+      
+      // Update detailed processing stage
+      await documentRepository.updateJobStatusV2(jobId, 'parsing');
 
       // Get document details
       const document = await documentRepository.getDocument(job.doc_id);
@@ -371,6 +377,9 @@ class DocumentService {
 
       const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
 
+      // Update processing stage after Python sidecar (chunking, embedding, pinecone_upsert)
+      await documentRepository.updateJobStatusV2(jobId, 'pinecone_upsert');
+
       // Step 3: Run Anthropic extraction
       this.requestLogger.info('Starting Anthropic extraction', { 
         jobId, 
@@ -388,6 +397,9 @@ class DocumentService {
         }
       );
 
+      // Update processing stage after Anthropic extraction
+      await documentRepository.updateJobStatusV2(jobId, 'extraction');
+
       // Step 4: Ingest DIP JSON outputs into database
       this.requestLogger.info('Starting DIP JSON ingestion to database', { 
         jobId, 
@@ -403,6 +415,9 @@ class DocumentService {
           asset_uid: document.asset_uid
         }
       });
+
+      // Update processing stage after DIP ingestion
+      await documentRepository.updateJobStatusV2(jobId, 'ingestion');
 
       // Update job with results
       await documentRepository.updateJobProgress(jobId, {
@@ -428,6 +443,9 @@ class DocumentService {
 
       // Mark job as completed
       await documentRepository.updateJobStatus(jobId, 'completed');
+      
+      // Update final processing stage
+      await documentRepository.updateJobStatusV2(jobId, 'completed');
 
       this.requestLogger.info('Job processing completed successfully', { 
         jobId,

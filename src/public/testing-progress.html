@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIP Processing Progress</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+            
+            /* Progress colors */
+            --progress-blue: #007AFF;
+            --progress-orange: #FF9500;
+            --progress-teal: #5AC8FA;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: var(--spacing-xl);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .progress-card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+            width: 300px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .progress-card:hover {
+            box-shadow: var(--shadow-heavy);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .manufacturer {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .system {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .progress-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        .progress-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+
+        .progress-ring-background {
+            stroke: var(--border-color);
+        }
+
+        .progress-ring-fill {
+            stroke-dasharray: 565.48;
+            stroke-dashoffset: 565.48;
+        }
+
+        .progress-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .progress-percentage {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-small);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-indicator.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .status-indicator.completed {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-indicator.error {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background: rgba(255, 59, 48, 0.1);
+            border-radius: var(--border-radius-small);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        .refresh-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: var(--spacing-md);
+        }
+
+        .refresh-button:hover {
+            background: #0056CC;
+            transform: translateY(-1px);
+        }
+
+        .refresh-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-card">
+            <div class="card-header">
+                <div class="manufacturer" id="manufacturer">Loading...</div>
+                <div class="system" id="system">Loading...</div>
+            </div>
+            
+            <div class="progress-container">
+                <svg class="progress-ring" viewBox="0 0 200 200">
+                    <circle class="progress-ring-circle progress-ring-background" cx="100" cy="100" r="90"></circle>
+                    <circle class="progress-ring-circle progress-ring-fill" cx="100" cy="100" r="90" id="progress-circle"></circle>
+                </svg>
+                
+                <div class="progress-stage">
+                    <div id="current-stage">Loading...</div>
+                    <div class="progress-percentage" id="progress-percentage">0%</div>
+                </div>
+            </div>
+            
+            <div class="status-indicator" id="status-indicator">
+                <div class="loading-spinner"></div>
+                <span>Processing</span>
+            </div>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            
+            <button class="refresh-button" onclick="refreshProgress()">Refresh Status</button>
+        </div>
+    </div>
+
+    <script>
+        // Processing stages configuration
+        const STAGES = [
+            { name: 'upload_complete', label: 'Upload Complete', color: '#007AFF', progress: 0 },
+            { name: 'parsing', label: 'Parsing', color: '#007AFF', progress: 16.67 },
+            { name: 'pinecone_upsert', label: 'Processing', color: '#FF9500', progress: 50 },
+            { name: 'extraction', label: 'Extraction', color: '#FF9500', progress: 66.67 },
+            { name: 'ingestion', label: 'Ingestion', color: '#5AC8FA', progress: 83.33 },
+            { name: 'completed', label: 'Completed', color: '#34C759', progress: 100 }
+        ];
+
+        let currentJobId = null;
+        let refreshInterval = null;
+
+        // Get job ID from URL parameters
+        function getJobIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('jobId');
+        }
+
+        // Calculate progress based on stage
+        function getProgressForStage(stage) {
+            const stageConfig = STAGES.find(s => s.name === stage);
+            return stageConfig ? stageConfig.progress : 0;
+        }
+
+        // Get color for stage
+        function getColorForStage(stage) {
+            const stageConfig = STAGES.find(s => s.name === stage);
+            return stageConfig ? stageConfig.color : '#007AFF';
+        }
+
+        // Get label for stage
+        function getLabelForStage(stage) {
+            const stageConfig = STAGES.find(s => s.name === stage);
+            return stageConfig ? stageConfig.label : stage;
+        }
+
+        // Update progress ring
+        function updateProgressRing(progress, color) {
+            const circle = document.getElementById('progress-circle');
+            const circumference = 2 * Math.PI * 90; // radius = 90
+            const offset = circumference - (progress / 100) * circumference;
+            
+            circle.style.strokeDashoffset = offset;
+            circle.style.stroke = color;
+        }
+
+        // Update UI elements
+        function updateUI(jobData) {
+            // Update header - try multiple field sources
+            const manufacturer = jobData.manufacturer_norm || 
+                               jobData.params?.manufacturer || 
+                               jobData.manufacturer || 
+                               'Unknown Manufacturer';
+            const system = jobData.model_norm || 
+                          jobData.params?.model || 
+                          jobData.model || 
+                          jobData.doc_id || 
+                          'Unknown System';
+            
+            document.getElementById('manufacturer').textContent = manufacturer;
+            document.getElementById('system').textContent = system;
+            
+            // Update progress
+            const stage = jobData.status_v2 || 'upload_complete';
+            const progress = getProgressForStage(stage);
+            const color = getColorForStage(stage);
+            const label = getLabelForStage(stage);
+            
+            document.getElementById('current-stage').textContent = label;
+            document.getElementById('progress-percentage').textContent = `${Math.round(progress)}%`;
+            
+            // Update progress ring
+            updateProgressRing(progress, color);
+            
+            // Update status indicator
+            const statusIndicator = document.getElementById('status-indicator');
+            statusIndicator.className = 'status-indicator';
+            
+            if (stage === 'completed') {
+                statusIndicator.classList.add('completed');
+                statusIndicator.innerHTML = '<span>✓ Completed</span>';
+            } else if (jobData.status === 'failed') {
+                statusIndicator.classList.add('error');
+                statusIndicator.innerHTML = '<span>✗ Failed</span>';
+            } else {
+                statusIndicator.classList.add('active');
+                statusIndicator.innerHTML = '<div class="loading-spinner"></div><span>Processing</span>';
+            }
+            
+            // Hide error message if job is processing successfully
+            if (jobData.status !== 'failed') {
+                document.getElementById('error-message').style.display = 'none';
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Fetch job status
+        async function fetchJobStatus() {
+            try {
+                const jobId = getJobIdFromUrl();
+                if (!jobId) {
+                    showError('No job ID provided in URL. Add ?jobId=YOUR_JOB_ID to the URL.');
+                    return;
+                }
+
+                currentJobId = jobId;
+
+                const response = await fetch(`/admin/api/jobs/${jobId}`, {
+                    headers: {
+                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.error?.message || 'Failed to fetch job status');
+                }
+
+                console.log('Job data received:', result.data);
+                updateUI(result.data);
+                
+                // Stop refreshing if job is completed or failed
+                if (result.data.status === 'completed' || result.data.status === 'failed') {
+                    if (refreshInterval) {
+                        clearInterval(refreshInterval);
+                        refreshInterval = null;
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error fetching job status:', error);
+                showError(`Error: ${error.message}`);
+            }
+        }
+
+        // Refresh progress
+        function refreshProgress() {
+            fetchJobStatus();
+        }
+
+        // Start auto-refresh
+        function startAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            refreshInterval = setInterval(fetchJobStatus, 2000); // Refresh every 2 seconds
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchJobStatus();
+            startAutoRefresh();
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

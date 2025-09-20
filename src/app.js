@@ -144,6 +144,17 @@ app.get('/admin/testing/golden-tests', async (req, res) => {
   }
 });
 
+// Progress tracking page (no auth required for HTML page)
+app.get('/admin/testing-progress', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/testing-progress.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Progress page not found' });
+  }
+});
+
 // DIP suggestions review route (no auth required for HTML page)
 app.get('/suggestions.html', async (req, res) => {
   try {

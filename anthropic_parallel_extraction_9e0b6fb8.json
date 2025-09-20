@@ -1,0 +1,503 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 11,
+  "unique_procedures": 11,
+  "procedures": [
+    {
+      "title": "DST810 Speed Calibration Using CAST App",
+      "preconditions": [
+        "DST810 device installed",
+        "CAST app installed",
+        "Wireless connection available"
+      ],
+      "steps": [
+        "Launch Airmar CAST app",
+        "Connect wirelessly to DST810",
+        "Select speed calibration mode",
+        "Calibrate speed at 5 different heel angles",
+        "Calibrate speed at up to 10 different speeds",
+        "Save calibrations to DST810's internal storage"
+      ],
+      "expected_outcome": "Calibrated speed data available across NMEA 2000 network",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "DST810 Basic Configuration",
+      "preconditions": [
+        "DST810 device installed",
+        "CAST app installed"
+      ],
+      "steps": [
+        "Launch CAST app",
+        "Connect to DST810",
+        "Configure device outputs",
+        "Set up connectivity options",
+        "Configure basic speeds",
+        "Configure heel compensation"
+      ],
+      "expected_outcome": "DST810 configured with basic settings",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Display Data and Attitude Calibration",
+      "preconditions": [
+        "DST810 device installed",
+        "CAST app installed"
+      ],
+      "steps": [
+        "Open CAST app",
+        "Connect to DST810",
+        "Access display data/gauges section",
+        "Calibrate attitude settings",
+        "Verify data display"
+      ],
+      "expected_outcome": "Properly calibrated attitude measurements and accurate data display",
+      "models": [
+        "DST810",
+        "DX900+",
+        "SmartBoat Modules"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "DST810 Basic Speed Calibration",
+      "preconditions": [
+        "DST810 Smart Multisensor installed",
+        "CAST app installed on mobile device",
+        "Bluetooth connection established"
+      ],
+      "steps": [
+        "Open CAST app on mobile device",
+        "Connect to DST810 sensor",
+        "Select basic calibration mode",
+        "Follow app prompts for speed calibration",
+        "Verify calibrated speed readings"
+      ],
+      "expected_outcome": "Accurate speed-through-water measurements from 0.3 to 45 knots",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Advanced Heel-Compensated Speed Calibration",
+      "preconditions": [
+        "DST810 Smart Multisensor installed",
+        "CAST app installed on mobile device",
+        "Bluetooth connection established"
+      ],
+      "steps": [
+        "Open CAST app on mobile device",
+        "Connect to DST810 sensor",
+        "Select advanced calibration mode",
+        "Enter manual speed entries for multiple heel angles",
+        "Input up to 10 different speed points",
+        "Verify calibration across all heel angles"
+      ],
+      "expected_outcome": "Accurate speed readings across multiple heel angles and speed ranges",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Sensor Data Verification",
+      "preconditions": [
+        "DST810 Smart Multisensor installed and powered",
+        "System operational"
+      ],
+      "steps": [
+        "Verify depth readings are present",
+        "Confirm water temperature readings",
+        "Check speed-through-water output at 5.7 Hz",
+        "Verify heel and trim data from attitude sensor",
+        "Confirm all data displaying on navigation system"
+      ],
+      "expected_outcome": "All sensor data streams functioning and reporting correctly",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Paddlewheel Installation Requirements",
+      "preconditions": [
+        "Suitable hull location with deadrise up to 22\u00b0",
+        "NMEA 2000\u00ae network available",
+        "Power supply 9-16 VDC available"
+      ],
+      "steps": [
+        "Ensure mounting location can support weight (0.9-1.9kg depending on material)",
+        "Verify depth range requirements are within 0.5m to 100m",
+        "Confirm operating temperature range is within -10\u00b0C to 40\u00b0C",
+        "Install with proper pressure rating consideration (3m max)",
+        "Connect to NMEA 2000\u00ae network with standard 6m DeviceNet cable",
+        "Verify power draw is less than 200mA"
+      ],
+      "expected_outcome": "Properly installed paddlewheel providing accurate speed readings from 0.3 to 45 knots",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Wireless Connection Setup",
+      "preconditions": [
+        "Device with Bluetooth Low Energy (BLE) capability",
+        "Within 30 feet of mount location"
+      ],
+      "steps": [
+        "Enable Bluetooth on receiving device",
+        "Initiate pairing process",
+        "Verify connection established",
+        "Confirm data reception (depth 1x/sec, speed 5x/sec, heel/trim 10x/sec)"
+      ],
+      "expected_outcome": "Successfully established wireless connection with paddlewheel sensor",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Temperature Sensor Calibration",
+      "preconditions": [
+        "Sensor installed and powered",
+        "Operating within -10\u00b0C to 40\u00b0C range"
+      ],
+      "steps": [
+        "Verify sensor reading against known reference temperature",
+        "Account for \u00b10.5\u00b0C accuracy tolerance",
+        "Adjust calibration if needed"
+      ],
+      "expected_outcome": "Accurate temperature readings within \u00b10.5\u00b0C tolerance",
+      "models": [
+        "Gen2 Paddlewheel"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Data Protocol Configuration",
+      "preconditions": [
+        "NMEA 2000 network connection"
+      ],
+      "steps": [
+        "Verify PGN 059904 for ISO Request",
+        "Confirm PGN 060928 for ISO Address Claim",
+        "Set PGN 065240 for Commanded Address",
+        "Enable PGN 59392 for ISO Acknowledgement",
+        "Configure PGN 126208 for Group Function Acknowledgement",
+        "Set up PGN 126464 for Transmit List Functions",
+        "Enable PGN 126993 for Heartbeat monitoring",
+        "Configure PGN 126996 for Product Information",
+        "Set PGN 126998 for Configuration Information",
+        "Enable PGN 127257 for Attitude data",
+        "Configure PGN 128259 for Water Speed Reference",
+        "Set PGN 128267 for Water Depth with Transducer Offset",
+        "Enable PGN 128275 for Distance Log",
+        "Configure PGNs 130310-130312 for Water Temperature Parameters",
+        "Set PGN 130316 for Extended Range Temperature"
+      ],
+      "expected_outcome": "All NMEA 2000 PGNs properly configured for data transmission",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V",
+        "B17V"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Transducer Insert Removal",
+      "preconditions": [
+        "Boat stationary",
+        "System powered down"
+      ],
+      "steps": [
+        "Locate the self-closing valve housing",
+        "Prepare for minimal water ingress",
+        "Remove transducer insert",
+        "Verify self-closing valve activation"
+      ],
+      "expected_outcome": "Transducer insert removed with minimal water ingress",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V",
+        "B17V"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "procedures": [
+          {
+            "title": "DST810 Speed Calibration Using CAST App",
+            "preconditions": [
+              "DST810 device installed",
+              "CAST app installed",
+              "Wireless connection available"
+            ],
+            "steps": [
+              "Launch Airmar CAST app",
+              "Connect wirelessly to DST810",
+              "Select speed calibration mode",
+              "Calibrate speed at 5 different heel angles",
+              "Calibrate speed at up to 10 different speeds",
+              "Save calibrations to DST810's internal storage"
+            ],
+            "expected_outcome": "Calibrated speed data available across NMEA 2000 network",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "DST810 Basic Configuration",
+            "preconditions": [
+              "DST810 device installed",
+              "CAST app installed"
+            ],
+            "steps": [
+              "Launch CAST app",
+              "Connect to DST810",
+              "Configure device outputs",
+              "Set up connectivity options",
+              "Configure basic speeds",
+              "Configure heel compensation"
+            ],
+            "expected_outcome": "DST810 configured with basic settings",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Display Data and Attitude Calibration",
+            "preconditions": [
+              "DST810 device installed",
+              "CAST app installed"
+            ],
+            "steps": [
+              "Open CAST app",
+              "Connect to DST810",
+              "Access display data/gauges section",
+              "Calibrate attitude settings",
+              "Verify data display"
+            ],
+            "expected_outcome": "Properly calibrated attitude measurements and accurate data display",
+            "models": [
+              "DST810",
+              "DX900+",
+              "SmartBoat Modules"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "DST810 Basic Speed Calibration",
+            "preconditions": [
+              "DST810 Smart Multisensor installed",
+              "CAST app installed on mobile device",
+              "Bluetooth connection established"
+            ],
+            "steps": [
+              "Open CAST app on mobile device",
+              "Connect to DST810 sensor",
+              "Select basic calibration mode",
+              "Follow app prompts for speed calibration",
+              "Verify calibrated speed readings"
+            ],
+            "expected_outcome": "Accurate speed-through-water measurements from 0.3 to 45 knots",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Advanced Heel-Compensated Speed Calibration",
+            "preconditions": [
+              "DST810 Smart Multisensor installed",
+              "CAST app installed on mobile device",
+              "Bluetooth connection established"
+            ],
+            "steps": [
+              "Open CAST app on mobile device",
+              "Connect to DST810 sensor",
+              "Select advanced calibration mode",
+              "Enter manual speed entries for multiple heel angles",
+              "Input up to 10 different speed points",
+              "Verify calibration across all heel angles"
+            ],
+            "expected_outcome": "Accurate speed readings across multiple heel angles and speed ranges",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Sensor Data Verification",
+            "preconditions": [
+              "DST810 Smart Multisensor installed and powered",
+              "System operational"
+            ],
+            "steps": [
+              "Verify depth readings are present",
+              "Confirm water temperature readings",
+              "Check speed-through-water output at 5.7 Hz",
+              "Verify heel and trim data from attitude sensor",
+              "Confirm all data displaying on navigation system"
+            ],
+            "expected_outcome": "All sensor data streams functioning and reporting correctly",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "Paddlewheel Installation Requirements",
+            "preconditions": [
+              "Suitable hull location with deadrise up to 22\u00b0",
+              "NMEA 2000\u00ae network available",
+              "Power supply 9-16 VDC available"
+            ],
+            "steps": [
+              "Ensure mounting location can support weight (0.9-1.9kg depending on material)",
+              "Verify depth range requirements are within 0.5m to 100m",
+              "Confirm operating temperature range is within -10\u00b0C to 40\u00b0C",
+              "Install with proper pressure rating consideration (3m max)",
+              "Connect to NMEA 2000\u00ae network with standard 6m DeviceNet cable",
+              "Verify power draw is less than 200mA"
+            ],
+            "expected_outcome": "Properly installed paddlewheel providing accurate speed readings from 0.3 to 45 knots",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Wireless Connection Setup",
+            "preconditions": [
+              "Device with Bluetooth Low Energy (BLE) capability",
+              "Within 30 feet of mount location"
+            ],
+            "steps": [
+              "Enable Bluetooth on receiving device",
+              "Initiate pairing process",
+              "Verify connection established",
+              "Confirm data reception (depth 1x/sec, speed 5x/sec, heel/trim 10x/sec)"
+            ],
+            "expected_outcome": "Successfully established wireless connection with paddlewheel sensor",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Temperature Sensor Calibration",
+            "preconditions": [
+              "Sensor installed and powered",
+              "Operating within -10\u00b0C to 40\u00b0C range"
+            ],
+            "steps": [
+              "Verify sensor reading against known reference temperature",
+              "Account for \u00b10.5\u00b0C accuracy tolerance",
+              "Adjust calibration if needed"
+            ],
+            "expected_outcome": "Accurate temperature readings within \u00b10.5\u00b0C tolerance",
+            "models": [
+              "Gen2 Paddlewheel"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Data Protocol Configuration",
+            "preconditions": [
+              "NMEA 2000 network connection"
+            ],
+            "steps": [
+              "Verify PGN 059904 for ISO Request",
+              "Confirm PGN 060928 for ISO Address Claim",
+              "Set PGN 065240 for Commanded Address",
+              "Enable PGN 59392 for ISO Acknowledgement",
+              "Configure PGN 126208 for Group Function Acknowledgement",
+              "Set up PGN 126464 for Transmit List Functions",
+              "Enable PGN 126993 for Heartbeat monitoring",
+              "Configure PGN 126996 for Product Information",
+              "Set PGN 126998 for Configuration Information",
+              "Enable PGN 127257 for Attitude data",
+              "Configure PGN 128259 for Water Speed Reference",
+              "Set PGN 128267 for Water Depth with Transducer Offset",
+              "Enable PGN 128275 for Distance Log",
+              "Configure PGNs 130310-130312 for Water Temperature Parameters",
+              "Set PGN 130316 for Extended Range Temperature"
+            ],
+            "expected_outcome": "All NMEA 2000 PGNs properly configured for data transmission",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V",
+              "B17V"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Transducer Insert Removal",
+            "preconditions": [
+              "Boat stationary",
+              "System powered down"
+            ],
+            "steps": [
+              "Locate the self-closing valve housing",
+              "Prepare for minimal water ingress",
+              "Remove transducer insert",
+              "Verify self-closing valve activation"
+            ],
+            "expected_outcome": "Transducer insert removed with minimal water ingress",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V",
+              "B17V"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}
