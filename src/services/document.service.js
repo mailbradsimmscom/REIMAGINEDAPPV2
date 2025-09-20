@@ -396,7 +396,12 @@ class DocumentService {
 
       const ingestionResult = await ingestDipOutputsToDb({ 
         docId: job.doc_id,
-        paths: null
+        paths: null,
+        systemMetadata: {
+          manufacturer_norm: document.manufacturer_norm,
+          model_norm: document.model_norm,
+          asset_uid: document.asset_uid
+        }
       });
 
       // Update job with results

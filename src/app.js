@@ -93,6 +93,57 @@ app.get('/admin', async (req, res) => {
   }
 });
 
+// Testing pages (no auth required for HTML pages)
+app.get('/admin/testing', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/testing.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Testing dashboard not found' });
+  }
+});
+
+app.get('/admin/testing/specifications', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/testing-specifications.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Testing specifications page not found' });
+  }
+});
+
+app.get('/admin/testing/playbook', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/testing-playbook.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Testing playbook page not found' });
+  }
+});
+
+app.get('/admin/testing/intent-router', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/testing-intent-router.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Testing intent router page not found' });
+  }
+});
+
+app.get('/admin/testing/golden-tests', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/testing-golden-tests.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Testing golden tests page not found' });
+  }
+});
+
 // DIP suggestions review route (no auth required for HTML page)
 app.get('/suggestions.html', async (req, res) => {
   try {

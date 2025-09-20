@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Tests Testing - DIP Testing</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header with navigation */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .nav-cards {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-left: var(--spacing-xl);
+        }
+
+        .nav-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md) var(--spacing-lg);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-card.specifications:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .nav-card.playbook:hover {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .nav-card.intent-router:hover {
+            background: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 200px;
+        }
+
+        .filter-select:hover {
+            border-color: var(--primary-color);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-separator {
+            margin: 0 var(--spacing-sm);
+            color: var(--text-secondary);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Actions bar */
+        .actions-bar {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--background-color);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #30B04A;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Items list */
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .item-card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .item-card:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .item-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .item-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .item-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .item-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .field-group {
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            padding: var(--spacing-md);
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .field-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .field-value.array {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .field-value.array .badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px var(--spacing-xs);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .test-status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-small);
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: var(--spacing-sm);
+        }
+
+        .test-status-pass {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+        }
+
+        .test-status-fail {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+        }
+
+        .test-status-pending {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-small);
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: var(--spacing-sm);
+        }
+
+        .confidence-high {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+        }
+
+        .confidence-medium {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .confidence-low {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+        }
+
+        /* Loading and error states */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin: var(--spacing-md) 0;
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        .empty {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .header {
+                padding: var(--spacing-lg);
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+            }
+
+            .actions-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .item-fields {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="nav-breadcrumb">
+                    <a href="/admin/testing" class="nav-link">← Testing Dashboard</a>
+                    <span class="nav-separator">/</span>
+                    <span>Golden Tests</span>
+                </div>
+                <h1>Golden Tests Testing</h1>
+                <p>Review and approve test cases from staging data</p>
+            </div>
+            <div class="nav-cards">
+                <a href="/admin/testing/specifications" class="nav-card specifications">Specifications</a>
+                <a href="/admin/testing/playbook" class="nav-card playbook">Playbook</a>
+                <a href="/admin/testing/intent-router" class="nav-card intent-router">Intent Router</a>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <span class="filter-label">Filter by Model:</span>
+            <select id="model-filter" class="filter-select">
+                <option value="">All Models</option>
+            </select>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <div>Loading golden tests data...</div>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="content" style="display: none;">
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-items">0</div>
+                    <div class="stat-label">Total Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="selected-items">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-pages">0</div>
+                    <div class="stat-label">Total Pages</div>
+                </div>
+            </div>
+
+            <div class="actions-bar">
+                <div>
+                    <button id="select-all" class="btn btn-secondary">Select All</button>
+                    <button id="deselect-all" class="btn btn-secondary">Deselect All</button>
+                </div>
+                <div>
+                    <button id="approve-selected" class="btn btn-success" disabled>Approve Selected</button>
+                    <button id="decline-selected" class="btn btn-danger" disabled>Decline Selected</button>
+                </div>
+            </div>
+
+            <div id="items-list" class="items-list"></div>
+        </div>
+    </div>
+
+    <script>
+        class GoldenTestsTesting {
+            constructor() {
+                this.items = [];
+                this.selectedItems = new Set();
+                this.init();
+            }
+
+            async init() {
+                this.setupEventListeners();
+                await this.loadData();
+            }
+
+            setupEventListeners() {
+                document.getElementById('select-all').addEventListener('click', () => this.selectAll());
+                document.getElementById('deselect-all').addEventListener('click', () => this.deselectAll());
+                document.getElementById('approve-selected').addEventListener('click', () => this.approveSelected());
+                document.getElementById('decline-selected').addEventListener('click', () => this.declineSelected());
+                document.getElementById('model-filter').addEventListener('change', (e) => this.filterByModel(e.target.value));
+            }
+
+            async loadData() {
+                try {
+                    const response = await fetch('/admin/api/testing/golden-tests', {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const result = await response.json();
+                    this.items = result.data?.items || [];
+                    this.renderItems();
+                } catch (error) {
+                    this.showError(`Failed to load golden tests: ${error.message}`);
+                }
+            }
+
+            renderItems() {
+                const container = document.getElementById('items-list');
+                const totalItems = document.getElementById('total-items');
+                
+                totalItems.textContent = this.items.length;
+                
+                if (this.items.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty">
+                            <div class="empty-icon">🧪</div>
+                            <div>No golden tests data available for review.</div>
+                        </div>
+                    `;
+                    document.getElementById('content').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                    return;
+                }
+
+                // Populate model filter dropdown
+                this.populateModelFilter();
+                
+                // Render all items initially
+                this.renderFilteredItems();
+                
+                document.getElementById('content').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            populateModelFilter() {
+                const modelFilter = document.getElementById('model-filter');
+                const models = [...new Set(this.items.map(item => item.model_norm).filter(Boolean))].sort();
+                
+                // Clear existing options except "All Models"
+                modelFilter.innerHTML = '<option value="">All Models</option>';
+                
+                models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    modelFilter.appendChild(option);
+                });
+            }
+
+            renderFilteredItems() {
+                const container = document.getElementById('items-list');
+                const selectedModel = document.getElementById('model-filter').value;
+                
+                let filteredItems = this.items;
+                if (selectedModel) {
+                    filteredItems = this.items.filter(item => item.model_norm === selectedModel);
+                }
+                
+                container.innerHTML = '';
+                
+                filteredItems.forEach(item => {
+                    const itemElement = this.createItemElement(item);
+                    container.appendChild(itemElement);
+                });
+            }
+
+            filterByModel(model) {
+                this.renderFilteredItems();
+            }
+
+            createItemElement(item) {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.dataset.itemId = item.id;
+                
+                const confidence = item.confidence || 0;
+                const confidenceClass = confidence >= 0.8 ? 'confidence-high' : 
+                                       confidence >= 0.6 ? 'confidence-medium' : 'confidence-low';
+                const confidenceText = Math.round(confidence * 100) + '%';
+
+                const status = item.status || 'pending';
+                const statusClass = `test-status-${status}`;
+
+                div.innerHTML = `
+                    <div class="item-header">
+                        <input type="checkbox" class="item-checkbox" data-item-id="${item.id}">
+                        <div class="item-content">
+                            <div class="item-title">
+                                ${item.query || 'Untitled Test'}
+                                <span class="test-status-badge ${statusClass}">${status}</span>
+                                <span class="confidence-badge ${confidenceClass}">${confidenceText}</span>
+                            </div>
+                            <div class="item-meta">
+                                ${item.manufacturer_norm || 'Unknown'} - ${item.model_norm || 'Unknown'} | 
+                                Page ${item.page || 'N/A'} | 
+                                Created ${new Date(item.created_at).toLocaleDateString()}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-fields">
+                        <div class="field-group">
+                            <div class="field-label">Query</div>
+                            <div class="field-value">${item.query || ''}</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Expected Result</div>
+                            <div class="field-value">${item.expected || ''}</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Test Method</div>
+                            <div class="field-value">${item.test_method || ''}</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Failure Indication</div>
+                            <div class="field-value">${item.failure_indication || ''}</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Related Procedures</div>
+                            <div class="field-value array">
+                                ${(item.related_procedures || []).map(proc => `<span class="badge">${proc}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Description</div>
+                            <div class="field-value">${item.description || ''}</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Manufacturer</div>
+                            <div class="field-value">${item.manufacturer_norm || ''}</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="field-label">Model</div>
+                            <div class="field-value">${item.model_norm || ''}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Add checkbox event listener
+                const checkbox = div.querySelector('.item-checkbox');
+                checkbox.addEventListener('change', (e) => {
+                    this.toggleItemSelection(item.id, e.target.checked);
+                });
+
+                return div;
+            }
+
+            toggleItemSelection(itemId, selected) {
+                if (selected) {
+                    this.selectedItems.add(itemId);
+                } else {
+                    this.selectedItems.delete(itemId);
+                }
+                this.updateSelection();
+            }
+
+            selectAll() {
+                this.items.forEach(item => {
+                    this.selectedItems.add(item.id);
+                    const checkbox = document.querySelector(`[data-item-id="${item.id}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                this.updateSelection();
+            }
+
+            deselectAll() {
+                this.selectedItems.clear();
+                document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                this.updateSelection();
+            }
+
+            updateSelection() {
+                const selectedCount = this.selectedItems.size;
+                document.getElementById('selected-items').textContent = selectedCount;
+                document.getElementById('approve-selected').disabled = selectedCount === 0;
+                document.getElementById('decline-selected').disabled = selectedCount === 0;
+
+                // Update card visual state
+                document.querySelectorAll('.item-card').forEach(card => {
+                    const itemId = card.dataset.itemId;
+                    if (this.selectedItems.has(itemId)) {
+                        card.classList.add('selected');
+                    } else {
+                        card.classList.remove('selected');
+                    }
+                });
+            }
+
+            async approveSelected() {
+                if (this.selectedItems.size === 0) return;
+
+                const itemIds = Array.from(this.selectedItems);
+                
+                try {
+                    const response = await fetch('/admin/api/testing/golden-tests/approve', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        },
+                        body: JSON.stringify({ itemIds })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    alert('Successfully approved golden tests!');
+                    
+                    // Reload data
+                    this.deselectAll();
+                    await this.loadData();
+                } catch (error) {
+                    alert(`Failed to approve golden tests: ${error.message}`);
+                }
+            }
+
+            async declineSelected() {
+                if (this.selectedItems.size === 0) return;
+
+                const itemIds = Array.from(this.selectedItems);
+                
+                try {
+                    const response = await fetch('/admin/api/testing/golden-tests/decline', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        },
+                        body: JSON.stringify({ itemIds })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    alert(`Successfully declined golden tests!`);
+                    
+                    // Reload data
+                    this.deselectAll();
+                    await this.loadData();
+                } catch (error) {
+                    alert(`Failed to decline golden tests: ${error.message}`);
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Initialize the testing interface when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new GoldenTestsTesting();
+        });
+    </script>
+</body>
+</html>
+

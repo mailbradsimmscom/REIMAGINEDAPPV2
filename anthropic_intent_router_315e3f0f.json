@@ -2,10 +2,10 @@
   "total_chunks_processed": 6,
   "successful_chunks": 6,
   "failed_chunks": 0,
-  "total_intent_routes_extracted": 25,
-  "unique_intent_routes": 24,
+  "total_intent_routes_extracted": 26,
+  "unique_intent_routes": 25,
   "question_type_breakdown": {
-    "What": 6,
+    "What": 7,
     "Where": 3,
     "How": 15
   },
@@ -14,8 +14,8 @@
       "question": "What languages is the Nemesis manual available in?",
       "question_variations": [
         "Which languages can I get the Nemesis manual in?",
-        "Is the Nemesis manual available in Spanish?",
-        "What language versions exist for the Nemesis guide?"
+        "What language options are there for the Nemesis guide?",
+        "Is the Nemesis manual available in my language?"
       ],
       "answer": "The Nemesis manual is available in 11 languages: English, Deutsch (German), Espa\u00f1ol (Spanish), Suomi (Finnish), Fran\u00e7ais (French), Italiano (Italian), Nederlands (Dutch), Norsk (Norwegian), Portugu\u00eas (Portuguese), Svenska (Swedish), and \u4e2d\u6587 (Chinese)",
       "question_type": "What",
@@ -111,7 +111,7 @@
       "question_variations": [
         "Where is the new dashboard option?",
         "Can I make a custom dashboard?",
-        "How to add a dashboard?"
+        "How to add a new dashboard?"
       ],
       "answer": "Select the new dashboard option in the Dashboards section to create a custom dashboard",
       "question_type": "How",
@@ -141,14 +141,14 @@
     {
       "question": "How do I turn on the Nemesis system?",
       "question_variations": [
-        "How to power up Nemesis?",
-        "What's the startup procedure for Nemesis?",
-        "Can you tell me how to start the Nemesis unit?"
+        "What's the power up procedure for Nemesis?",
+        "How to start the Nemesis unit?",
+        "Can you tell me how to power on Nemesis?"
       ],
-      "answer": "The Nemesis unit automatically turns ON when power is applied to the system.",
+      "answer": "The unit automatically turns ON when power is applied to the system.",
       "question_type": "How",
       "models": [
-        "Nemesis"
+        "NEMESIS"
       ],
       "references": [
         "Quick Guide, Page 3, Power Section"
@@ -157,65 +157,81 @@
     {
       "question": "What happens on first startup of Nemesis?",
       "question_variations": [
-        "What do I see when starting Nemesis for the first time?",
-        "Is there a setup wizard on first use?",
-        "How does initial setup work?"
+        "How does initial setup work?",
+        "What's the first time startup process?",
+        "Will I see a setup wizard on first use?"
       ],
-      "answer": "On first startup or after factory reset, the unit displays a setup wizard that guides you through configuring screen orientation, language, and other settings.",
+      "answer": "On first startup or after factory reset, the unit displays a setup wizard that guides you through screen orientation, language, and other basic settings configuration.",
       "question_type": "What",
       "models": [
-        "Nemesis"
+        "NEMESIS"
       ],
       "references": [
         "Quick Guide, Page 3, First Time Startup Section"
       ]
     },
     {
+      "question": "How do I unlock the Nemesis screen in landscape mode?",
+      "question_variations": [
+        "What's the process to unlock landscape orientation?",
+        "How can I unlock my Nemesis display in landscape?",
+        "Screen unlock procedure for landscape mode?"
+      ],
+      "answer": "To unlock the screen in landscape orientation, swipe from the right edge of the display.",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide, Page 3, Lock/Unlock Screen Section"
+      ]
+    },
+    {
+      "question": "How do I unlock the Nemesis screen in portrait mode?",
+      "question_variations": [
+        "What's the process to unlock portrait orientation?",
+        "How can I unlock my Nemesis display in portrait?",
+        "Screen unlock procedure for portrait mode?"
+      ],
+      "answer": "To unlock the screen in portrait orientation, swipe from the bottom of the display.",
+      "question_type": "How",
+      "models": [
+        "NEMESIS"
+      ],
+      "references": [
+        "Quick Guide, Page 3, Lock/Unlock Screen Section"
+      ]
+    },
+    {
       "question": "How do I lock the Nemesis screen?",
       "question_variations": [
-        "What's the process to lock the display?",
+        "What's the method to lock the display?",
         "Can I manually lock the screen?",
-        "Where is the lock button?"
+        "How to lock Nemesis display?"
       ],
-      "answer": "When the dashboard bar is shown, press the lock button to lock the screen. The screen also locks automatically after a period of inactivity by default.",
+      "answer": "When the dashboard bar is shown, press the lock button to lock the screen. The screen also locks automatically when idle for a period of time.",
       "question_type": "How",
       "models": [
-        "Nemesis"
+        "NEMESIS"
       ],
       "references": [
         "Quick Guide, Page 3, Lock/Unlock Screen Section"
       ]
     },
     {
-      "question": "How do I unlock the Nemesis screen?",
+      "question": "Can I change the settings I chose during initial setup?",
       "question_variations": [
-        "What's the process to unlock the display?",
-        "How can I unlock my Nemesis unit?",
-        "Which way do I swipe to unlock?"
+        "Are first time setup settings permanent?",
+        "How do I modify initial configuration?",
+        "Can setup wizard settings be changed later?"
       ],
-      "answer": "To unlock, swipe from the right edge if in landscape orientation, or swipe from the bottom if in portrait orientation.",
-      "question_type": "How",
+      "answer": "Yes, any settings made during the first time setup can be changed later from the system settings menu.",
+      "question_type": "What",
       "models": [
-        "Nemesis"
+        "NEMESIS"
       ],
       "references": [
-        "Quick Guide, Page 3, Lock/Unlock Screen Section"
-      ]
-    },
-    {
-      "question": "Can I change the screen lock settings?",
-      "question_variations": [
-        "How do I modify screen lock timing?",
-        "Where are the lock screen settings?",
-        "Is the screen lock configurable?"
-      ],
-      "answer": "Yes, the screen lock feature and its settings can be modified through the system settings menu.",
-      "question_type": "How",
-      "models": [
-        "Nemesis"
-      ],
-      "references": [
-        "Quick Guide, Page 3, Lock/Unlock Screen Section"
+        "Quick Guide, Page 3, First Time Startup Section"
       ]
     },
     {
@@ -237,8 +253,8 @@
     {
       "question": "How do I unpin a dashboard?",
       "question_variations": [
-        "Can I remove a dashboard from the bar?",
-        "What's the way to unpin dashboards?",
+        "How can I remove a dashboard from the bar?",
+        "What's the process to unpin dashboards?",
         "How do you delete pinned dashboards?"
       ],
       "answer": "From the dashboard bar, press and hold to display the unpin option.",
@@ -254,8 +270,8 @@
       "question": "How do I switch between dashboards?",
       "question_variations": [
         "How can I change dashboards?",
-        "What's the way to move between pinned dashboards?",
-        "How do you navigate different dashboards?"
+        "How do I navigate between pinned dashboards?",
+        "What's the way to move between dashboards?"
       ],
       "answer": "Swipe left or right to change between pinned dashboards.",
       "question_type": "How",
@@ -287,7 +303,7 @@
       "question_variations": [
         "Can I remove a dashboard?",
         "What's the way to delete dashboards?",
-        "How to get rid of a dashboard?"
+        "How to erase a dashboard?"
       ],
       "answer": "On the home screen, press and hold on the dashboard you want to delete",
       "question_type": "How",
@@ -321,7 +337,7 @@
         "Where do I customize gauge display?",
         "How to edit gauge information?"
       ],
-      "answer": "Select the gauge settings option (A) to change which data is shown on the gauge display",
+      "answer": "Select the gauge settings option (A) to choose which data will be shown on the gauge display",
       "question_type": "How",
       "models": [
         "NEMESIS"
@@ -335,7 +351,7 @@
       "question_variations": [
         "Can I make gauges bigger or smaller?",
         "How to change gauge size?",
-        "How do I adjust gauge dimensions?"
+        "Is it possible to adjust gauge dimensions?"
       ],
       "answer": "Select option B to resize the gauge to desired dimensions",
       "question_type": "How",
@@ -367,7 +383,7 @@
       "question_variations": [
         "Where is the Quick access menu?",
         "How to open Quick access menu?",
-        "How do I find Quick access options?"
+        "What gesture opens Quick access?"
       ],
       "answer": "Swipe from the top edge of the display to access the Quick access menu",
       "question_type": "How",
@@ -381,11 +397,11 @@
     {
       "question": "Where can I find product documentation?",
       "question_variations": [
-        "How do I get product manuals?",
-        "Where are the latest product documents?",
-        "How to access updated documentation?"
+        "How do I get updated manuals?",
+        "Where are the latest product manuals?",
+        "How to access documentation?"
       ],
-      "answer": "The latest product documentation can be found at www.bandg.com",
+      "answer": "The latest information and updated documentation can be found at www.bandg.com",
       "question_type": "Where",
       "models": [
         "NEMESIS"
@@ -405,8 +421,8 @@
             "question": "What languages is the Nemesis manual available in?",
             "question_variations": [
               "Which languages can I get the Nemesis manual in?",
-              "Is the Nemesis manual available in Spanish?",
-              "What language versions exist for the Nemesis guide?"
+              "What language options are there for the Nemesis guide?",
+              "Is the Nemesis manual available in my language?"
             ],
             "answer": "The Nemesis manual is available in 11 languages: English, Deutsch (German), Espa\u00f1ol (Spanish), Suomi (Finnish), Fran\u00e7ais (French), Italiano (Italian), Nederlands (Dutch), Norsk (Norwegian), Portugu\u00eas (Portuguese), Svenska (Swedish), and \u4e2d\u6587 (Chinese)",
             "question_type": "What",
@@ -510,7 +526,7 @@
             "question_variations": [
               "Where is the new dashboard option?",
               "Can I make a custom dashboard?",
-              "How to add a dashboard?"
+              "How to add a new dashboard?"
             ],
             "answer": "Select the new dashboard option in the Dashboards section to create a custom dashboard",
             "question_type": "How",
@@ -548,14 +564,14 @@
           {
             "question": "How do I turn on the Nemesis system?",
             "question_variations": [
-              "How to power up Nemesis?",
-              "What's the startup procedure for Nemesis?",
-              "Can you tell me how to start the Nemesis unit?"
+              "What's the power up procedure for Nemesis?",
+              "How to start the Nemesis unit?",
+              "Can you tell me how to power on Nemesis?"
             ],
-            "answer": "The Nemesis unit automatically turns ON when power is applied to the system.",
+            "answer": "The unit automatically turns ON when power is applied to the system.",
             "question_type": "How",
             "models": [
-              "Nemesis"
+              "NEMESIS"
             ],
             "references": [
               "Quick Guide, Page 3, Power Section"
@@ -564,65 +580,81 @@
           {
             "question": "What happens on first startup of Nemesis?",
             "question_variations": [
-              "What do I see when starting Nemesis for the first time?",
-              "Is there a setup wizard on first use?",
-              "How does initial setup work?"
+              "How does initial setup work?",
+              "What's the first time startup process?",
+              "Will I see a setup wizard on first use?"
             ],
-            "answer": "On first startup or after factory reset, the unit displays a setup wizard that guides you through configuring screen orientation, language, and other settings.",
+            "answer": "On first startup or after factory reset, the unit displays a setup wizard that guides you through screen orientation, language, and other basic settings configuration.",
             "question_type": "What",
             "models": [
-              "Nemesis"
+              "NEMESIS"
             ],
             "references": [
               "Quick Guide, Page 3, First Time Startup Section"
             ]
           },
           {
+            "question": "How do I unlock the Nemesis screen in landscape mode?",
+            "question_variations": [
+              "What's the process to unlock landscape orientation?",
+              "How can I unlock my Nemesis display in landscape?",
+              "Screen unlock procedure for landscape mode?"
+            ],
+            "answer": "To unlock the screen in landscape orientation, swipe from the right edge of the display.",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide, Page 3, Lock/Unlock Screen Section"
+            ]
+          },
+          {
+            "question": "How do I unlock the Nemesis screen in portrait mode?",
+            "question_variations": [
+              "What's the process to unlock portrait orientation?",
+              "How can I unlock my Nemesis display in portrait?",
+              "Screen unlock procedure for portrait mode?"
+            ],
+            "answer": "To unlock the screen in portrait orientation, swipe from the bottom of the display.",
+            "question_type": "How",
+            "models": [
+              "NEMESIS"
+            ],
+            "references": [
+              "Quick Guide, Page 3, Lock/Unlock Screen Section"
+            ]
+          },
+          {
             "question": "How do I lock the Nemesis screen?",
             "question_variations": [
-              "What's the process to lock the display?",
+              "What's the method to lock the display?",
               "Can I manually lock the screen?",
-              "Where is the lock button?"
+              "How to lock Nemesis display?"
             ],
-            "answer": "When the dashboard bar is shown, press the lock button to lock the screen. The screen also locks automatically after a period of inactivity by default.",
+            "answer": "When the dashboard bar is shown, press the lock button to lock the screen. The screen also locks automatically when idle for a period of time.",
             "question_type": "How",
             "models": [
-              "Nemesis"
+              "NEMESIS"
             ],
             "references": [
               "Quick Guide, Page 3, Lock/Unlock Screen Section"
             ]
           },
           {
-            "question": "How do I unlock the Nemesis screen?",
+            "question": "Can I change the settings I chose during initial setup?",
             "question_variations": [
-              "What's the process to unlock the display?",
-              "How can I unlock my Nemesis unit?",
-              "Which way do I swipe to unlock?"
+              "Are first time setup settings permanent?",
+              "How do I modify initial configuration?",
+              "Can setup wizard settings be changed later?"
             ],
-            "answer": "To unlock, swipe from the right edge if in landscape orientation, or swipe from the bottom if in portrait orientation.",
-            "question_type": "How",
+            "answer": "Yes, any settings made during the first time setup can be changed later from the system settings menu.",
+            "question_type": "What",
             "models": [
-              "Nemesis"
+              "NEMESIS"
             ],
             "references": [
-              "Quick Guide, Page 3, Lock/Unlock Screen Section"
-            ]
-          },
-          {
-            "question": "Can I change the screen lock settings?",
-            "question_variations": [
-              "How do I modify screen lock timing?",
-              "Where are the lock screen settings?",
-              "Is the screen lock configurable?"
-            ],
-            "answer": "Yes, the screen lock feature and its settings can be modified through the system settings menu.",
-            "question_type": "How",
-            "models": [
-              "Nemesis"
-            ],
-            "references": [
-              "Quick Guide, Page 3, Lock/Unlock Screen Section"
+              "Quick Guide, Page 3, First Time Startup Section"
             ]
           }
         ]
@@ -652,8 +684,8 @@
           {
             "question": "How do I unpin a dashboard?",
             "question_variations": [
-              "Can I remove a dashboard from the bar?",
-              "What's the way to unpin dashboards?",
+              "How can I remove a dashboard from the bar?",
+              "What's the process to unpin dashboards?",
               "How do you delete pinned dashboards?"
             ],
             "answer": "From the dashboard bar, press and hold to display the unpin option.",
@@ -669,8 +701,8 @@
             "question": "How do I switch between dashboards?",
             "question_variations": [
               "How can I change dashboards?",
-              "What's the way to move between pinned dashboards?",
-              "How do you navigate different dashboards?"
+              "How do I navigate between pinned dashboards?",
+              "What's the way to move between dashboards?"
             ],
             "answer": "Swipe left or right to change between pinned dashboards.",
             "question_type": "How",
@@ -710,7 +742,7 @@
             "question_variations": [
               "Can I remove a dashboard?",
               "What's the way to delete dashboards?",
-              "How to get rid of a dashboard?"
+              "How to erase a dashboard?"
             ],
             "answer": "On the home screen, press and hold on the dashboard you want to delete",
             "question_type": "How",
@@ -740,11 +772,11 @@
           {
             "question": "How do I create a new dashboard?",
             "question_variations": [
-              "What are my options for making a new dashboard?",
+              "What are the options for making a new dashboard?",
               "Can I create a dashboard from scratch?",
               "How to set up a new dashboard?"
             ],
-            "answer": "You can create a new dashboard by starting from a blank dashboard, using a template, or from a previously saved dashboard",
+            "answer": "You can start from a blank dashboard, a template, or from a saved dashboard (one of your previous dashboards)",
             "question_type": "How",
             "models": [
               "NEMESIS"
@@ -768,7 +800,7 @@
               "Where do I customize gauge display?",
               "How to edit gauge information?"
             ],
-            "answer": "Select the gauge settings option (A) to change which data is shown on the gauge display",
+            "answer": "Select the gauge settings option (A) to choose which data will be shown on the gauge display",
             "question_type": "How",
             "models": [
               "NEMESIS"
@@ -782,7 +814,7 @@
             "question_variations": [
               "Can I make gauges bigger or smaller?",
               "How to change gauge size?",
-              "How do I adjust gauge dimensions?"
+              "Is it possible to adjust gauge dimensions?"
             ],
             "answer": "Select option B to resize the gauge to desired dimensions",
             "question_type": "How",
@@ -814,7 +846,7 @@
             "question_variations": [
               "Where is the Quick access menu?",
               "How to open Quick access menu?",
-              "How do I find Quick access options?"
+              "What gesture opens Quick access?"
             ],
             "answer": "Swipe from the top edge of the display to access the Quick access menu",
             "question_type": "How",
@@ -828,11 +860,11 @@
           {
             "question": "Where can I find product documentation?",
             "question_variations": [
-              "How do I get product manuals?",
-              "Where are the latest product documents?",
-              "How to access updated documentation?"
+              "How do I get updated manuals?",
+              "Where are the latest product manuals?",
+              "How to access documentation?"
             ],
-            "answer": "The latest product documentation can be found at www.bandg.com",
+            "answer": "The latest information and updated documentation can be found at www.bandg.com",
             "question_type": "Where",
             "models": [
               "NEMESIS"

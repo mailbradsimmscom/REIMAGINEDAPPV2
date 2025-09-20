@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIP Testing Dashboard</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--primary-color);
+        }
+
+        .card:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-light);
+        }
+
+        /* Card Types */
+        .card.specifications {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .card.playbook {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .card.intent-router {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .card.golden-tests {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-right: var(--spacing-md);
+        }
+
+        .card.specifications .card-icon {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .card.playbook .card-icon {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+        }
+
+        .card.intent-router .card-icon {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .card.golden-tests .card-icon {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        .card-stats {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-value.highlight {
+            color: var(--primary-color);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .card-arrow {
+            font-size: 16px;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error States */
+        .error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin: var(--spacing-md) 0;
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        /* Empty States */
+        .empty {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .header {
+                padding: var(--spacing-lg);
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .card {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Accessibility */
+        .card:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DIP Testing Dashboard</h1>
+            <p>Review and approve Anthropic extraction data from staging tables</p>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <div>Loading staging data...</div>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="content" style="display: none;">
+            <div class="cards-grid">
+                <!-- Specifications Card -->
+                <div class="card specifications" data-table="specifications" tabindex="0" role="button" aria-label="View specifications staging data">
+                    <div class="card-header">
+                        <div class="card-icon">📋</div>
+                        <div>
+                            <div class="card-title">Specifications</div>
+                            <div class="card-subtitle">Parameter specifications and values</div>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Total Items</span>
+                            <span class="stat-value" id="spec-total">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Model</span>
+                            <span class="stat-value" id="spec-models">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Manufacturer</span>
+                            <span class="stat-value" id="spec-manufacturers">-</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="last-updated" id="spec-updated">-</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Playbook Hints Card -->
+                <div class="card playbook" data-table="playbook" tabindex="0" role="button" aria-label="View playbook hints staging data">
+                    <div class="card-header">
+                        <div class="card-icon">📖</div>
+                        <div>
+                            <div class="card-title">Playbook Hints</div>
+                            <div class="card-subtitle">Procedures and operational steps</div>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Total Items</span>
+                            <span class="stat-value" id="playbook-total">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Model</span>
+                            <span class="stat-value" id="playbook-models">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Manufacturer</span>
+                            <span class="stat-value" id="playbook-manufacturers">-</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="last-updated" id="playbook-updated">-</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Intent Router Card -->
+                <div class="card intent-router" data-table="intent-router" tabindex="0" role="button" aria-label="View intent router staging data">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <div>
+                            <div class="card-title">Intent Router</div>
+                            <div class="card-subtitle">Q&A pairs for natural language queries</div>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Total Items</span>
+                            <span class="stat-value" id="intent-total">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Model</span>
+                            <span class="stat-value" id="intent-models">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Manufacturer</span>
+                            <span class="stat-value" id="intent-manufacturers">-</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="last-updated" id="intent-updated">-</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Golden Tests Card -->
+                <div class="card golden-tests" data-table="golden-tests" tabindex="0" role="button" aria-label="View golden tests staging data">
+                    <div class="card-header">
+                        <div class="card-icon">🧪</div>
+                        <div>
+                            <div class="card-title">Golden Tests</div>
+                            <div class="card-subtitle">Test cases and validation rules</div>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Total Items</span>
+                            <span class="stat-value" id="golden-total">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Model</span>
+                            <span class="stat-value" id="golden-models">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">By Manufacturer</span>
+                            <span class="stat-value" id="golden-manufacturers">-</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="last-updated" id="golden-updated">-</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class TestingDashboard {
+            constructor() {
+                this.data = {};
+                this.init();
+            }
+
+            async init() {
+                this.setupEventListeners();
+                await this.loadDashboardData();
+            }
+
+            setupEventListeners() {
+                // Card click handlers
+                document.querySelectorAll('.card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        const table = e.currentTarget.dataset.table;
+                        this.navigateToTable(table);
+                    });
+
+                    // Keyboard navigation
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const table = e.currentTarget.dataset.table;
+                            this.navigateToTable(table);
+                        }
+                    });
+                });
+            }
+
+            async loadDashboardData() {
+                try {
+                    const response = await fetch('/admin/api/testing/dashboard', {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const result = await response.json();
+                    this.data = result.data || {};
+                    this.renderDashboard();
+                } catch (error) {
+                    this.showError(`Failed to load dashboard data: ${error.message}`);
+                }
+            }
+
+            renderDashboard() {
+                // Update each card with data
+                this.updateCard('spec', this.data.specifications);
+                this.updateCard('playbook', this.data.playbook_hints);
+                this.updateCard('intent', this.data.intent_router);
+                this.updateCard('golden', this.data.golden_tests);
+
+                // Show content
+                document.getElementById('content').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            updateCard(prefix, data) {
+                if (!data) return;
+
+                // Update totals
+                document.getElementById(`${prefix}-total`).textContent = data.total || 0;
+                
+                // Update model breakdown
+                const modelBreakdown = this.formatBreakdown(data.by_model);
+                document.getElementById(`${prefix}-models`).textContent = modelBreakdown;
+                
+                // Update manufacturer breakdown
+                const manufacturerBreakdown = this.formatBreakdown(data.by_manufacturer);
+                document.getElementById(`${prefix}-manufacturers`).textContent = manufacturerBreakdown;
+                
+                // Update last updated
+                const lastUpdated = data.last_updated ? 
+                    new Date(data.last_updated).toLocaleString() : 'Never';
+                document.getElementById(`${prefix}-updated`).textContent = lastUpdated;
+            }
+
+            formatBreakdown(breakdown) {
+                if (!breakdown || Object.keys(breakdown).length === 0) {
+                    return 'None';
+                }
+                
+                const items = Object.entries(breakdown)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(([key, value]) => `${key}: ${value}`);
+                
+                return items.join(', ');
+            }
+
+            navigateToTable(table) {
+                // Navigate to the specific table detail page
+                window.location.href = `/admin/testing/${table}`;
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Initialize the dashboard when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new TestingDashboard();
+        });
+    </script>
+</body>
+</html>

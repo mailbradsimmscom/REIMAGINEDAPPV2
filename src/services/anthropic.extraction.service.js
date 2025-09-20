@@ -120,30 +120,11 @@ class AnthropicExtractionService {
       });
       
       if (stderr) {
-        this.requestLogger.warning('Specifications extraction stderr', { docId, stderr });
+        this.requestLogger.warn('Specifications extraction stderr', { docId, stderr });
       }
 
-      // The Python script should have stored the result in Supabase Storage
-      // We'll read it back to return the data structure
-      this.requestLogger.debug('Attempting to read JSON file from Supabase Storage', { 
-        docId, 
-        fileName: `${docId}_spec_suggestions_an.json`,
-        expectedPath: `manuals/${docId}/DIP/${docId}_spec_suggestions_an.json`
-      });
-      
-      const result = await anthropicExtractionRepository.readJsonFile(
-        docId, 
-        `${docId}_spec_suggestions_an.json`
-      );
-      
-      this.requestLogger.debug('JSON file read successfully', { 
-        docId, 
-        resultKeys: Object.keys(result),
-        resultSize: JSON.stringify(result).length
-      });
-
       this.requestLogger.info('Specifications extraction completed', { docId });
-      return result;
+      return { success: true, message: 'Python script completed successfully' };
 
     } catch (error) {
       this.requestLogger.error('Specifications extraction failed', { 
@@ -173,17 +154,11 @@ class AnthropicExtractionService {
       const { stdout, stderr } = await execAsync(command);
       
       if (stderr) {
-        this.requestLogger.warning('Golden rules extraction stderr', { docId, stderr });
+        this.requestLogger.warn('Golden rules extraction stderr', { docId, stderr });
       }
 
-      // Read the result from Supabase Storage
-      const result = await anthropicExtractionRepository.readJsonFile(
-        docId, 
-        `${docId}_golden_rules_an.json`
-      );
-
       this.requestLogger.info('Golden rules extraction completed', { docId });
-      return result;
+      return { success: true, message: 'Python script completed successfully' };
 
     } catch (error) {
       this.requestLogger.error('Golden rules extraction failed', { 
@@ -213,17 +188,11 @@ class AnthropicExtractionService {
       const { stdout, stderr } = await execAsync(command);
       
       if (stderr) {
-        this.requestLogger.warning('Intent router extraction stderr', { docId, stderr });
+        this.requestLogger.warn('Intent router extraction stderr', { docId, stderr });
       }
 
-      // Read the result from Supabase Storage
-      const result = await anthropicExtractionRepository.readJsonFile(
-        docId, 
-        `${docId}_intent_router_an.json`
-      );
-
       this.requestLogger.info('Intent router extraction completed', { docId });
-      return result;
+      return { success: true, message: 'Python script completed successfully' };
 
     } catch (error) {
       this.requestLogger.error('Intent router extraction failed', { 
@@ -253,17 +222,11 @@ class AnthropicExtractionService {
       const { stdout, stderr } = await execAsync(command);
       
       if (stderr) {
-        this.requestLogger.warning('Playbook hints extraction stderr', { docId, stderr });
+        this.requestLogger.warn('Playbook hints extraction stderr', { docId, stderr });
       }
 
-      // Read the result from Supabase Storage
-      const result = await anthropicExtractionRepository.readJsonFile(
-        docId, 
-        `${docId}_playbook_hints_an.json`
-      );
-
       this.requestLogger.info('Playbook hints extraction completed', { docId });
-      return result;
+      return { success: true, message: 'Python script completed successfully' };
 
     } catch (error) {
       this.requestLogger.error('Playbook hints extraction failed', { 

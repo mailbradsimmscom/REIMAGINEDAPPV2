@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, validator
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
@@ -27,7 +27,7 @@ class TableCell(BaseModel):
     row: int
     col: int
 
-    @field_validator("bbox", mode="before")
+    @validator("bbox", pre=True)
     @classmethod
     def _bbox_tuple_ok(cls, v): return _coerce_bbox(v)
 
@@ -39,7 +39,7 @@ class Table(BaseModel):
     rows: int
     cols: int
 
-    @field_validator("bbox", mode="before")
+    @validator("bbox", pre=True)
     @classmethod
     def _bbox_tuple_ok(cls, v): return _coerce_bbox(v)
 
@@ -52,7 +52,7 @@ class PageElement(BaseModel):
     ocr_used: bool = False
     confidence: Optional[float] = None
 
-    @field_validator("bbox", mode="before")
+    @validator("bbox", pre=True)
     @classmethod
     def _bbox_tuple_ok(cls, v): return _coerce_bbox(v)
 

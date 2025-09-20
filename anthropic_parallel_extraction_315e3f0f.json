@@ -2,8 +2,8 @@
   "total_chunks_processed": 6,
   "successful_chunks": 6,
   "failed_chunks": 0,
-  "total_procedures_extracted": 22,
-  "unique_procedures": 22,
+  "total_procedures_extracted": 23,
+  "unique_procedures": 23,
   "procedures": [
     {
       "title": "Language Selection",
@@ -15,119 +15,6 @@
         "Select desired language from available options: English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587"
       ],
       "expected_outcome": "Interface language changed to selected option",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Accessing Home Screen",
-      "preconditions": [
-        "System is powered on"
-      ],
-      "steps": [
-        "Select the Home button",
-        "View available options on home screen: Settings, Browser, Dashboards, Status bar, Dashboard bar"
-      ],
-      "expected_outcome": "Home screen is displayed with all navigation options visible",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Using Dashboard Bar",
-      "preconditions": [
-        "System is on home screen"
-      ],
-      "steps": [
-        "Locate dashboard bar at bottom of screen",
-        "View pinned dashboards in favorites section",
-        "View recently used dashboards",
-        "Note that active dashboard will be highlighted",
-        "Use Lock button to secure dashboard",
-        "Use Home button to return to main screen"
-      ],
-      "expected_outcome": "Successfully navigate and use dashboard bar features",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Creating New Dashboard",
-      "preconditions": [
-        "System is on home screen"
-      ],
-      "steps": [
-        "Select Dashboards option",
-        "Choose 'new dashboard' option",
-        "Create custom dashboard"
-      ],
-      "expected_outcome": "New custom dashboard created",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Accessing B&G CPU Web Server",
-      "preconditions": [
-        "System is on home screen"
-      ],
-      "steps": [
-        "Select Browser button",
-        "Access B&G CPU web server or browse internet"
-      ],
-      "expected_outcome": "Successfully connected to B&G CPU web server or internet",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Pin Dashboard",
-      "preconditions": [
-        "Must be on home screen",
-        "Dashboard must be visible"
-      ],
-      "steps": [
-        "Press and hold on desired dashboard",
-        "Select position on dashboard bar",
-        "Release to pin dashboard"
-      ],
-      "expected_outcome": "Dashboard is pinned to dashboard bar",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Unpin Dashboard",
-      "preconditions": [
-        "Dashboard must be currently pinned to dashboard bar"
-      ],
-      "steps": [
-        "Press and hold on pinned dashboard in dashboard bar",
-        "Select unpin option when displayed",
-        "Release to confirm unpin"
-      ],
-      "expected_outcome": "Dashboard is removed from dashboard bar",
-      "models": [
-        "NEMESIS"
-      ],
-      "error_codes": []
-    },
-    {
-      "title": "Navigate Between Pinned Dashboards",
-      "preconditions": [
-        "Multiple dashboards must be pinned"
-      ],
-      "steps": [
-        "Swipe left to view next pinned dashboard",
-        "Swipe right to view previous pinned dashboard"
-      ],
-      "expected_outcome": "Successfully switch between pinned dashboards",
       "models": [
         "NEMESIS"
       ],
@@ -157,11 +44,10 @@
       "preconditions": [
         "Unit powered on",
         "Dashboard bar visible",
-        "Landscape orientation"
+        "Landscape orientation installed"
       ],
       "steps": [
-        "Locate lock button on dashboard bar",
-        "Press lock button"
+        "Press lock button on dashboard bar"
       ],
       "expected_outcome": "Screen locked",
       "models": [
@@ -173,7 +59,7 @@
       "title": "Unlocking Screen - Landscape Orientation",
       "preconditions": [
         "Screen locked",
-        "Landscape orientation"
+        "Landscape orientation installed"
       ],
       "steps": [
         "Swipe from right edge of display"
@@ -189,11 +75,10 @@
       "preconditions": [
         "Unit powered on",
         "Dashboard bar visible",
-        "Portrait orientation"
+        "Portrait orientation installed"
       ],
       "steps": [
-        "Locate lock button on dashboard bar",
-        "Press lock button"
+        "Press lock button on dashboard bar"
       ],
       "expected_outcome": "Screen locked",
       "models": [
@@ -205,7 +90,7 @@
       "title": "Unlocking Screen - Portrait Orientation",
       "preconditions": [
         "Screen locked",
-        "Portrait orientation"
+        "Portrait orientation installed"
       ],
       "steps": [
         "Swipe from bottom of display"
@@ -225,6 +110,134 @@
         "Apply power to unit"
       ],
       "expected_outcome": "Unit powers on",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pin Dashboard",
+      "preconditions": [
+        "Must be on home screen",
+        "Dashboard must be visible"
+      ],
+      "steps": [
+        "Press and hold on desired dashboard",
+        "Select position on dashboard bar",
+        "Release to pin dashboard"
+      ],
+      "expected_outcome": "Dashboard is pinned to dashboard bar",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Unpin Dashboard",
+      "preconditions": [
+        "Dashboard must be currently pinned to dashboard bar"
+      ],
+      "steps": [
+        "Press and hold on pinned dashboard in dashboard bar",
+        "Select unpin option when it appears",
+        "Release to unpin dashboard"
+      ],
+      "expected_outcome": "Dashboard is removed from dashboard bar",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Navigate Between Pinned Dashboards",
+      "preconditions": [
+        "Multiple dashboards must be pinned"
+      ],
+      "steps": [
+        "Swipe left to view next pinned dashboard",
+        "Swipe right to view previous pinned dashboard"
+      ],
+      "expected_outcome": "Successfully switch between pinned dashboards",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Accessing Home Screen",
+      "preconditions": [
+        "System is powered on"
+      ],
+      "steps": [
+        "Select the Home button",
+        "View available options on screen: Settings, Browser, Dashboards, Status bar, and Dashboard bar"
+      ],
+      "expected_outcome": "Home screen is displayed with all navigation options visible",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Using Dashboard Bar",
+      "preconditions": [
+        "System is on Home screen"
+      ],
+      "steps": [
+        "Locate Dashboard bar at bottom of screen",
+        "View pinned dashboards in favorites section",
+        "View recently used dashboards",
+        "Note that active dashboard will be highlighted",
+        "Use Lock button to secure dashboard"
+      ],
+      "expected_outcome": "Successfully navigate and manage dashboards via Dashboard bar",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Creating New Dashboard",
+      "preconditions": [
+        "System is on Home screen"
+      ],
+      "steps": [
+        "Select Dashboards option",
+        "Choose 'new dashboard' option",
+        "Create custom dashboard"
+      ],
+      "expected_outcome": "New custom dashboard created",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Accessing System Settings",
+      "preconditions": [
+        "System is on Home screen"
+      ],
+      "steps": [
+        "Locate Settings button",
+        "Select Settings button"
+      ],
+      "expected_outcome": "System settings menu opened",
+      "models": [
+        "NEMESIS"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Using Browser Function",
+      "preconditions": [
+        "System is on Home screen"
+      ],
+      "steps": [
+        "Locate Browser button",
+        "Select Browser button",
+        "Access B&G CPU web server or browse internet"
+      ],
+      "expected_outcome": "Browser function activated for web access",
       "models": [
         "NEMESIS"
       ],
@@ -269,10 +282,11 @@
         "Access to dashboard creation interface"
       ],
       "steps": [
-        "Select create new dashboard option",
-        "Choose starting point: blank dashboard, template, or saved dashboard"
+        "Select 'Create New Dashboard' option",
+        "Choose starting point: blank dashboard, template, or saved dashboard",
+        "Follow configuration prompts"
       ],
-      "expected_outcome": "New dashboard created based on selected starting point",
+      "expected_outcome": "New dashboard created",
       "models": [
         "NEMESIS"
       ],
@@ -344,9 +358,9 @@
       ],
       "steps": [
         "Swipe from top edge of display",
-        "Select desired option (brightness/night mode/day mode/report issue)"
+        "Select desired option (brightness/night/day mode/report issue)"
       ],
-      "expected_outcome": "Selected quick access function is activated",
+      "expected_outcome": "Quick access menu appears and selected function activates",
       "models": [
         "NEMESIS"
       ],
@@ -369,135 +383,6 @@
               "Select desired language from available options: English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587"
             ],
             "expected_outcome": "Interface language changed to selected option",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 3,
-      "pages": "4-4",
-      "result": {
-        "procedures": [
-          {
-            "title": "Accessing Home Screen",
-            "preconditions": [
-              "System is powered on"
-            ],
-            "steps": [
-              "Select the Home button",
-              "View available options on home screen: Settings, Browser, Dashboards, Status bar, Dashboard bar"
-            ],
-            "expected_outcome": "Home screen is displayed with all navigation options visible",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          },
-          {
-            "title": "Using Dashboard Bar",
-            "preconditions": [
-              "System is on home screen"
-            ],
-            "steps": [
-              "Locate dashboard bar at bottom of screen",
-              "View pinned dashboards in favorites section",
-              "View recently used dashboards",
-              "Note that active dashboard will be highlighted",
-              "Use Lock button to secure dashboard",
-              "Use Home button to return to main screen"
-            ],
-            "expected_outcome": "Successfully navigate and use dashboard bar features",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          },
-          {
-            "title": "Creating New Dashboard",
-            "preconditions": [
-              "System is on home screen"
-            ],
-            "steps": [
-              "Select Dashboards option",
-              "Choose 'new dashboard' option",
-              "Create custom dashboard"
-            ],
-            "expected_outcome": "New custom dashboard created",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          },
-          {
-            "title": "Accessing B&G CPU Web Server",
-            "preconditions": [
-              "System is on home screen"
-            ],
-            "steps": [
-              "Select Browser button",
-              "Access B&G CPU web server or browse internet"
-            ],
-            "expected_outcome": "Successfully connected to B&G CPU web server or internet",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 4,
-      "pages": "5-5",
-      "result": {
-        "procedures": [
-          {
-            "title": "Pin Dashboard",
-            "preconditions": [
-              "Must be on home screen",
-              "Dashboard must be visible"
-            ],
-            "steps": [
-              "Press and hold on desired dashboard",
-              "Select position on dashboard bar",
-              "Release to pin dashboard"
-            ],
-            "expected_outcome": "Dashboard is pinned to dashboard bar",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          },
-          {
-            "title": "Unpin Dashboard",
-            "preconditions": [
-              "Dashboard must be currently pinned to dashboard bar"
-            ],
-            "steps": [
-              "Press and hold on pinned dashboard in dashboard bar",
-              "Select unpin option when displayed",
-              "Release to confirm unpin"
-            ],
-            "expected_outcome": "Dashboard is removed from dashboard bar",
-            "models": [
-              "NEMESIS"
-            ],
-            "error_codes": []
-          },
-          {
-            "title": "Navigate Between Pinned Dashboards",
-            "preconditions": [
-              "Multiple dashboards must be pinned"
-            ],
-            "steps": [
-              "Swipe left to view next pinned dashboard",
-              "Swipe right to view previous pinned dashboard"
-            ],
-            "expected_outcome": "Successfully switch between pinned dashboards",
             "models": [
               "NEMESIS"
             ],
@@ -535,11 +420,10 @@
             "preconditions": [
               "Unit powered on",
               "Dashboard bar visible",
-              "Landscape orientation"
+              "Landscape orientation installed"
             ],
             "steps": [
-              "Locate lock button on dashboard bar",
-              "Press lock button"
+              "Press lock button on dashboard bar"
             ],
             "expected_outcome": "Screen locked",
             "models": [
@@ -551,7 +435,7 @@
             "title": "Unlocking Screen - Landscape Orientation",
             "preconditions": [
               "Screen locked",
-              "Landscape orientation"
+              "Landscape orientation installed"
             ],
             "steps": [
               "Swipe from right edge of display"
@@ -567,11 +451,10 @@
             "preconditions": [
               "Unit powered on",
               "Dashboard bar visible",
-              "Portrait orientation"
+              "Portrait orientation installed"
             ],
             "steps": [
-              "Locate lock button on dashboard bar",
-              "Press lock button"
+              "Press lock button on dashboard bar"
             ],
             "expected_outcome": "Screen locked",
             "models": [
@@ -583,7 +466,7 @@
             "title": "Unlocking Screen - Portrait Orientation",
             "preconditions": [
               "Screen locked",
-              "Portrait orientation"
+              "Portrait orientation installed"
             ],
             "steps": [
               "Swipe from bottom of display"
@@ -603,6 +486,150 @@
               "Apply power to unit"
             ],
             "expected_outcome": "Unit powers on",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "5-5",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pin Dashboard",
+            "preconditions": [
+              "Must be on home screen",
+              "Dashboard must be visible"
+            ],
+            "steps": [
+              "Press and hold on desired dashboard",
+              "Select position on dashboard bar",
+              "Release to pin dashboard"
+            ],
+            "expected_outcome": "Dashboard is pinned to dashboard bar",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Unpin Dashboard",
+            "preconditions": [
+              "Dashboard must be currently pinned to dashboard bar"
+            ],
+            "steps": [
+              "Press and hold on pinned dashboard in dashboard bar",
+              "Select unpin option when it appears",
+              "Release to unpin dashboard"
+            ],
+            "expected_outcome": "Dashboard is removed from dashboard bar",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Navigate Between Pinned Dashboards",
+            "preconditions": [
+              "Multiple dashboards must be pinned"
+            ],
+            "steps": [
+              "Swipe left to view next pinned dashboard",
+              "Swipe right to view previous pinned dashboard"
+            ],
+            "expected_outcome": "Successfully switch between pinned dashboards",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Accessing Home Screen",
+            "preconditions": [
+              "System is powered on"
+            ],
+            "steps": [
+              "Select the Home button",
+              "View available options on screen: Settings, Browser, Dashboards, Status bar, and Dashboard bar"
+            ],
+            "expected_outcome": "Home screen is displayed with all navigation options visible",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Using Dashboard Bar",
+            "preconditions": [
+              "System is on Home screen"
+            ],
+            "steps": [
+              "Locate Dashboard bar at bottom of screen",
+              "View pinned dashboards in favorites section",
+              "View recently used dashboards",
+              "Note that active dashboard will be highlighted",
+              "Use Lock button to secure dashboard"
+            ],
+            "expected_outcome": "Successfully navigate and manage dashboards via Dashboard bar",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Creating New Dashboard",
+            "preconditions": [
+              "System is on Home screen"
+            ],
+            "steps": [
+              "Select Dashboards option",
+              "Choose 'new dashboard' option",
+              "Create custom dashboard"
+            ],
+            "expected_outcome": "New custom dashboard created",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Accessing System Settings",
+            "preconditions": [
+              "System is on Home screen"
+            ],
+            "steps": [
+              "Locate Settings button",
+              "Select Settings button"
+            ],
+            "expected_outcome": "System settings menu opened",
+            "models": [
+              "NEMESIS"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Using Browser Function",
+            "preconditions": [
+              "System is on Home screen"
+            ],
+            "steps": [
+              "Locate Browser button",
+              "Select Browser button",
+              "Access B&G CPU web server or browse internet"
+            ],
+            "expected_outcome": "Browser function activated for web access",
             "models": [
               "NEMESIS"
             ],
@@ -655,10 +682,11 @@
               "Access to dashboard creation interface"
             ],
             "steps": [
-              "Select create new dashboard option",
-              "Choose starting point: blank dashboard, template, or saved dashboard"
+              "Select 'Create New Dashboard' option",
+              "Choose starting point: blank dashboard, template, or saved dashboard",
+              "Follow configuration prompts"
             ],
-            "expected_outcome": "New dashboard created based on selected starting point",
+            "expected_outcome": "New dashboard created",
             "models": [
               "NEMESIS"
             ],
@@ -738,9 +766,9 @@
             ],
             "steps": [
               "Swipe from top edge of display",
-              "Select desired option (brightness/night mode/day mode/report issue)"
+              "Select desired option (brightness/night/day mode/report issue)"
             ],
-            "expected_outcome": "Selected quick access function is activated",
+            "expected_outcome": "Quick access menu appears and selected function activates",
             "models": [
               "NEMESIS"
             ],

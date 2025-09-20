@@ -534,11 +534,11 @@ async def _write_dip_artifacts(url, headers, doc_id, dip_result):
         dip_data = dip_result.get("dip", {})
         # Convert Pydantic models to dicts for JSON serialization
         if "entities" in dip_data:
-            dip_data["entities"] = [entity.model_dump() if hasattr(entity, 'model_dump') else entity for entity in dip_data["entities"]]
+            dip_data["entities"] = [entity.dict() if hasattr(entity, 'dict') else entity for entity in dip_data["entities"]]
         if "spec_hints" in dip_data:
-            dip_data["spec_hints"] = [hint.model_dump() if hasattr(hint, 'model_dump') else hint for hint in dip_data["spec_hints"]]
+            dip_data["spec_hints"] = [hint.dict() if hasattr(hint, 'dict') else hint for hint in dip_data["spec_hints"]]
         if "golden_tests" in dip_data:
-            dip_data["golden_tests"] = [test.model_dump() if hasattr(test, 'model_dump') else test for test in dip_data["golden_tests"]]
+            dip_data["golden_tests"] = [test.dict() if hasattr(test, 'dict') else test for test in dip_data["golden_tests"]]
         
         dip_response = requests.post(
             f"{url}/storage/v1/object/{dip_path}",

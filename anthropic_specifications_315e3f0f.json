@@ -2,76 +2,16 @@
   "total_chunks_processed": 6,
   "successful_chunks": 6,
   "failed_chunks": 0,
-  "total_specifications_extracted": 17,
-  "unique_specifications": 17,
+  "total_specifications_extracted": 18,
+  "unique_specifications": 18,
   "category_breakdown": {
-    "Software": 1,
-    "Support": 1,
     "Performance": 13,
+    "Software": 2,
+    "Support": 1,
     "Installation": 1,
     "Power": 1
   },
   "specifications": [
-    {
-      "parameter": "Language Support",
-      "normalized_parameter": "supported_languages",
-      "parameter_aliases": [
-        "languages",
-        "localization",
-        "translations"
-      ],
-      "value": "11 languages",
-      "range": null,
-      "units": "count",
-      "normalized_units": "count",
-      "converted_value": "11",
-      "models": [
-        "NEMESIS"
-      ],
-      "category": "Software",
-      "search_terms": [
-        "languages",
-        "language options",
-        "localization",
-        "translations",
-        "supported languages",
-        "interface language"
-      ],
-      "concept_group": "localization",
-      "references": [
-        "Quick Guides section"
-      ]
-    },
-    {
-      "parameter": "Website",
-      "normalized_parameter": "manufacturer_website",
-      "parameter_aliases": [
-        "url",
-        "web address",
-        "site"
-      ],
-      "value": "www.bandg.com",
-      "range": null,
-      "units": "url",
-      "normalized_units": "url",
-      "converted_value": "www.bandg.com",
-      "models": [
-        "NEMESIS"
-      ],
-      "category": "Support",
-      "search_terms": [
-        "website",
-        "support site",
-        "manufacturer site",
-        "bandg.com",
-        "web address",
-        "url"
-      ],
-      "concept_group": "support_resources",
-      "references": [
-        "Quick Guides footer"
-      ]
-    },
     {
       "parameter": "Screen Navigation Elements",
       "normalized_parameter": "ui_navigation_elements",
@@ -112,7 +52,7 @@
       ],
       "value": "4 components",
       "range": null,
-      "units": "components",
+      "units": "elements",
       "normalized_units": "count",
       "converted_value": "4",
       "models": [
@@ -132,7 +72,7 @@
       ]
     },
     {
-      "parameter": "Web Browser Compatibility",
+      "parameter": "Web Browser Capability",
       "normalized_parameter": "browser_compatibility",
       "parameter_aliases": [
         "internet access",
@@ -150,14 +90,102 @@
       "search_terms": [
         "browser",
         "internet",
+        "web",
+        "connectivity",
         "web server",
-        "B&G CPU",
-        "web access",
-        "connectivity"
+        "B&G CPU"
       ],
       "concept_group": "connectivity",
       "references": [
         "Page 4"
+      ]
+    },
+    {
+      "parameter": "Language Support",
+      "normalized_parameter": "supported_languages",
+      "parameter_aliases": [
+        "languages",
+        "localization",
+        "translations"
+      ],
+      "value": "11 languages",
+      "range": null,
+      "units": "count",
+      "normalized_units": "count",
+      "converted_value": "11",
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Software",
+      "search_terms": [
+        "languages",
+        "language options",
+        "localization",
+        "translations",
+        "supported languages",
+        "interface language"
+      ],
+      "concept_group": "User Interface",
+      "references": [
+        "Quick Guides section"
+      ]
+    },
+    {
+      "parameter": "Supported Languages List",
+      "normalized_parameter": "language_list",
+      "parameter_aliases": [
+        "available languages",
+        "language options"
+      ],
+      "value": "English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587",
+      "range": null,
+      "units": "text",
+      "normalized_units": "text",
+      "converted_value": null,
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Software",
+      "search_terms": [
+        "language list",
+        "available languages",
+        "supported languages",
+        "language options",
+        "interface languages"
+      ],
+      "concept_group": "User Interface",
+      "references": [
+        "Quick Guides section"
+      ]
+    },
+    {
+      "parameter": "Web Support",
+      "normalized_parameter": "web_support_url",
+      "parameter_aliases": [
+        "website",
+        "support site",
+        "online documentation"
+      ],
+      "value": "www.bandg.com",
+      "range": null,
+      "units": "url",
+      "normalized_units": "url",
+      "converted_value": null,
+      "models": [
+        "NEMESIS"
+      ],
+      "category": "Support",
+      "search_terms": [
+        "website",
+        "support site",
+        "online help",
+        "documentation",
+        "web address",
+        "url"
+      ],
+      "concept_group": "Documentation",
+      "references": [
+        "Quick Guides section"
       ]
     },
     {
@@ -171,8 +199,8 @@
       "value": "Landscape or Portrait",
       "range": "2 positions",
       "units": "orientation",
-      "normalized_units": "degrees",
-      "converted_value": "0/90",
+      "normalized_units": "orientation",
+      "converted_value": "N/A",
       "models": [
         "NEMESIS"
       ],
@@ -183,7 +211,8 @@
         "portrait mode",
         "landscape mode",
         "screen position",
-        "display layout"
+        "display layout",
+        "screen setup"
       ],
       "concept_group": "display_settings",
       "references": [
@@ -198,11 +227,11 @@
         "display timeout",
         "screen timeout"
       ],
-      "value": "Configurable",
-      "range": "User defined",
+      "value": "Automatic when idle",
+      "range": "User configurable",
       "units": "time",
       "normalized_units": "seconds",
-      "converted_value": "variable",
+      "converted_value": "configurable",
       "models": [
         "NEMESIS"
       ],
@@ -213,6 +242,7 @@
         "display timeout",
         "screen timeout",
         "lock settings",
+        "security timeout",
         "idle timeout"
       ],
       "concept_group": "security_settings",
@@ -231,8 +261,8 @@
       "value": "Auto-on with power",
       "range": "On/Off",
       "units": "state",
-      "normalized_units": "binary",
-      "converted_value": "1/0",
+      "normalized_units": "binary_state",
+      "converted_value": "N/A",
       "models": [
         "NEMESIS"
       ],
@@ -241,8 +271,9 @@
         "power on",
         "startup",
         "system power",
-        "boot up",
+        "auto power",
         "power state",
+        "power status",
         "turn on"
       ],
       "concept_group": "power_management",
@@ -262,7 +293,7 @@
       "range": "bidirectional",
       "units": "gesture",
       "normalized_units": "gesture",
-      "converted_value": "swipe",
+      "converted_value": "swipe left/right",
       "models": [
         "NEMESIS"
       ],
@@ -274,7 +305,7 @@
         "swipe dashboards",
         "move between dashboards"
       ],
-      "concept_group": "user_interface",
+      "concept_group": "user_interface_controls",
       "references": [
         "Quick Guide - EN, p.5"
       ]
@@ -291,19 +322,19 @@
       "range": "single gesture",
       "units": "gesture",
       "normalized_units": "gesture",
-      "converted_value": "long press",
+      "converted_value": "press and hold",
       "models": [
         "NEMESIS"
       ],
       "category": "Performance",
       "search_terms": [
         "how to pin dashboard",
-        "pin to dashboard bar",
-        "dashboard customization",
-        "dashboard position",
-        "pin dashboard location"
+        "pin dashboard",
+        "attach dashboard",
+        "add dashboard to bar",
+        "dashboard customization"
       ],
-      "concept_group": "user_interface",
+      "concept_group": "user_interface_controls",
       "references": [
         "Quick Guide - EN, p.5"
       ]
@@ -320,19 +351,19 @@
       "range": "single gesture",
       "units": "gesture",
       "normalized_units": "gesture",
-      "converted_value": "long press",
+      "converted_value": "press and hold",
       "models": [
         "NEMESIS"
       ],
       "category": "Performance",
       "search_terms": [
         "how to unpin dashboard",
-        "remove from dashboard bar",
+        "remove dashboard",
         "delete dashboard",
-        "unpin from favorites",
-        "dashboard removal"
+        "remove from dashboard bar",
+        "unpin from bar"
       ],
-      "concept_group": "user_interface",
+      "concept_group": "user_interface_controls",
       "references": [
         "Quick Guide - EN, p.5"
       ]
@@ -412,8 +443,9 @@
       "search_terms": [
         "what can be customized",
         "gauge customization",
-        "customizable elements",
-        "dashboard components"
+        "customize dashboard",
+        "gauge settings",
+        "configurable elements"
       ],
       "concept_group": "display_configuration",
       "references": [
@@ -438,12 +470,11 @@
       ],
       "category": "Performance",
       "search_terms": [
-        "brightness",
+        "how bright",
         "screen brightness",
         "display brightness",
         "dim screen",
-        "brighten screen",
-        "adjust brightness"
+        "brighten display"
       ],
       "concept_group": "display_settings",
       "references": [
@@ -472,8 +503,7 @@
         "day mode",
         "display mode",
         "screen mode",
-        "dark mode",
-        "light mode"
+        "dark mode"
       ],
       "concept_group": "display_settings",
       "references": [
@@ -481,104 +511,36 @@
       ]
     },
     {
-      "parameter": "Display Resize Function",
-      "normalized_parameter": "display_resize",
+      "parameter": "Screen Interface",
+      "normalized_parameter": "touch_interface",
       "parameter_aliases": [
-        "gauge size",
-        "resize gauge",
-        "display size"
+        "touch control",
+        "gesture control",
+        "input method"
       ],
-      "value": "Variable",
+      "value": "Swipe from top",
       "range": "N/A",
-      "units": "N/A",
-      "normalized_units": "N/A",
+      "units": "gesture",
+      "normalized_units": "gesture",
       "converted_value": "N/A",
       "models": [
         "NEMESIS"
       ],
       "category": "Performance",
       "search_terms": [
-        "resize",
-        "gauge size",
-        "change size",
-        "display size",
-        "resize gauge"
+        "how to access menu",
+        "swipe controls",
+        "touch controls",
+        "menu access",
+        "quick access"
       ],
-      "concept_group": "display_settings",
+      "concept_group": "user_interface",
       "references": [
-        "Section B"
+        "Quick access menu section"
       ]
     }
   ],
   "chunk_results": [
-    {
-      "chunk_num": 1,
-      "pages": "1-1",
-      "result": {
-        "specifications": [
-          {
-            "parameter": "Language Support",
-            "normalized_parameter": "supported_languages",
-            "parameter_aliases": [
-              "languages",
-              "localization",
-              "translations"
-            ],
-            "value": "11 languages",
-            "range": null,
-            "units": "count",
-            "normalized_units": "count",
-            "converted_value": "11",
-            "models": [
-              "NEMESIS"
-            ],
-            "category": "Software",
-            "search_terms": [
-              "languages",
-              "language options",
-              "localization",
-              "translations",
-              "supported languages",
-              "interface language"
-            ],
-            "concept_group": "localization",
-            "references": [
-              "Quick Guides section"
-            ]
-          },
-          {
-            "parameter": "Website",
-            "normalized_parameter": "manufacturer_website",
-            "parameter_aliases": [
-              "url",
-              "web address",
-              "site"
-            ],
-            "value": "www.bandg.com",
-            "range": null,
-            "units": "url",
-            "normalized_units": "url",
-            "converted_value": "www.bandg.com",
-            "models": [
-              "NEMESIS"
-            ],
-            "category": "Support",
-            "search_terms": [
-              "website",
-              "support site",
-              "manufacturer site",
-              "bandg.com",
-              "web address",
-              "url"
-            ],
-            "concept_group": "support_resources",
-            "references": [
-              "Quick Guides footer"
-            ]
-          }
-        ]
-      }
-    },
     {
       "chunk_num": 3,
       "pages": "4-4",
@@ -624,7 +586,7 @@
             ],
             "value": "4 components",
             "range": null,
-            "units": "components",
+            "units": "elements",
             "normalized_units": "count",
             "converted_value": "4",
             "models": [
@@ -644,7 +606,7 @@
             ]
           },
           {
-            "parameter": "Web Browser Compatibility",
+            "parameter": "Web Browser Capability",
             "normalized_parameter": "browser_compatibility",
             "parameter_aliases": [
               "internet access",
@@ -662,14 +624,110 @@
             "search_terms": [
               "browser",
               "internet",
+              "web",
+              "connectivity",
               "web server",
-              "B&G CPU",
-              "web access",
-              "connectivity"
+              "B&G CPU"
             ],
             "concept_group": "connectivity",
             "references": [
               "Page 4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Language Support",
+            "normalized_parameter": "supported_languages",
+            "parameter_aliases": [
+              "languages",
+              "localization",
+              "translations"
+            ],
+            "value": "11 languages",
+            "range": null,
+            "units": "count",
+            "normalized_units": "count",
+            "converted_value": "11",
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Software",
+            "search_terms": [
+              "languages",
+              "language options",
+              "localization",
+              "translations",
+              "supported languages",
+              "interface language"
+            ],
+            "concept_group": "User Interface",
+            "references": [
+              "Quick Guides section"
+            ]
+          },
+          {
+            "parameter": "Supported Languages List",
+            "normalized_parameter": "language_list",
+            "parameter_aliases": [
+              "available languages",
+              "language options"
+            ],
+            "value": "English, Deutsch, Espa\u00f1ol, Suomi, Fran\u00e7ais, Italiano, Nederlands, Norsk, Portugu\u00eas, Svenska, \u4e2d\u6587",
+            "range": null,
+            "units": "text",
+            "normalized_units": "text",
+            "converted_value": null,
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Software",
+            "search_terms": [
+              "language list",
+              "available languages",
+              "supported languages",
+              "language options",
+              "interface languages"
+            ],
+            "concept_group": "User Interface",
+            "references": [
+              "Quick Guides section"
+            ]
+          },
+          {
+            "parameter": "Web Support",
+            "normalized_parameter": "web_support_url",
+            "parameter_aliases": [
+              "website",
+              "support site",
+              "online documentation"
+            ],
+            "value": "www.bandg.com",
+            "range": null,
+            "units": "url",
+            "normalized_units": "url",
+            "converted_value": null,
+            "models": [
+              "NEMESIS"
+            ],
+            "category": "Support",
+            "search_terms": [
+              "website",
+              "support site",
+              "online help",
+              "documentation",
+              "web address",
+              "url"
+            ],
+            "concept_group": "Documentation",
+            "references": [
+              "Quick Guides section"
             ]
           }
         ]
@@ -691,8 +749,8 @@
             "value": "Landscape or Portrait",
             "range": "2 positions",
             "units": "orientation",
-            "normalized_units": "degrees",
-            "converted_value": "0/90",
+            "normalized_units": "orientation",
+            "converted_value": "N/A",
             "models": [
               "NEMESIS"
             ],
@@ -703,7 +761,8 @@
               "portrait mode",
               "landscape mode",
               "screen position",
-              "display layout"
+              "display layout",
+              "screen setup"
             ],
             "concept_group": "display_settings",
             "references": [
@@ -718,11 +777,11 @@
               "display timeout",
               "screen timeout"
             ],
-            "value": "Configurable",
-            "range": "User defined",
+            "value": "Automatic when idle",
+            "range": "User configurable",
             "units": "time",
             "normalized_units": "seconds",
-            "converted_value": "variable",
+            "converted_value": "configurable",
             "models": [
               "NEMESIS"
             ],
@@ -733,6 +792,7 @@
               "display timeout",
               "screen timeout",
               "lock settings",
+              "security timeout",
               "idle timeout"
             ],
             "concept_group": "security_settings",
@@ -751,8 +811,8 @@
             "value": "Auto-on with power",
             "range": "On/Off",
             "units": "state",
-            "normalized_units": "binary",
-            "converted_value": "1/0",
+            "normalized_units": "binary_state",
+            "converted_value": "N/A",
             "models": [
               "NEMESIS"
             ],
@@ -761,8 +821,9 @@
               "power on",
               "startup",
               "system power",
-              "boot up",
+              "auto power",
               "power state",
+              "power status",
               "turn on"
             ],
             "concept_group": "power_management",
@@ -790,7 +851,7 @@
             "range": "bidirectional",
             "units": "gesture",
             "normalized_units": "gesture",
-            "converted_value": "swipe",
+            "converted_value": "swipe left/right",
             "models": [
               "NEMESIS"
             ],
@@ -802,7 +863,7 @@
               "swipe dashboards",
               "move between dashboards"
             ],
-            "concept_group": "user_interface",
+            "concept_group": "user_interface_controls",
             "references": [
               "Quick Guide - EN, p.5"
             ]
@@ -819,19 +880,19 @@
             "range": "single gesture",
             "units": "gesture",
             "normalized_units": "gesture",
-            "converted_value": "long press",
+            "converted_value": "press and hold",
             "models": [
               "NEMESIS"
             ],
             "category": "Performance",
             "search_terms": [
               "how to pin dashboard",
-              "pin to dashboard bar",
-              "dashboard customization",
-              "dashboard position",
-              "pin dashboard location"
+              "pin dashboard",
+              "attach dashboard",
+              "add dashboard to bar",
+              "dashboard customization"
             ],
-            "concept_group": "user_interface",
+            "concept_group": "user_interface_controls",
             "references": [
               "Quick Guide - EN, p.5"
             ]
@@ -848,19 +909,19 @@
             "range": "single gesture",
             "units": "gesture",
             "normalized_units": "gesture",
-            "converted_value": "long press",
+            "converted_value": "press and hold",
             "models": [
               "NEMESIS"
             ],
             "category": "Performance",
             "search_terms": [
               "how to unpin dashboard",
-              "remove from dashboard bar",
+              "remove dashboard",
               "delete dashboard",
-              "unpin from favorites",
-              "dashboard removal"
+              "remove from dashboard bar",
+              "unpin from bar"
             ],
-            "concept_group": "user_interface",
+            "concept_group": "user_interface_controls",
             "references": [
               "Quick Guide - EN, p.5"
             ]
@@ -948,8 +1009,9 @@
             "search_terms": [
               "what can be customized",
               "gauge customization",
-              "customizable elements",
-              "dashboard components"
+              "customize dashboard",
+              "gauge settings",
+              "configurable elements"
             ],
             "concept_group": "display_configuration",
             "references": [
@@ -982,12 +1044,11 @@
             ],
             "category": "Performance",
             "search_terms": [
-              "brightness",
+              "how bright",
               "screen brightness",
               "display brightness",
               "dim screen",
-              "brighten screen",
-              "adjust brightness"
+              "brighten display"
             ],
             "concept_group": "display_settings",
             "references": [
@@ -1016,8 +1077,7 @@
               "day mode",
               "display mode",
               "screen mode",
-              "dark mode",
-              "light mode"
+              "dark mode"
             ],
             "concept_group": "display_settings",
             "references": [
@@ -1025,32 +1085,32 @@
             ]
           },
           {
-            "parameter": "Display Resize Function",
-            "normalized_parameter": "display_resize",
+            "parameter": "Screen Interface",
+            "normalized_parameter": "touch_interface",
             "parameter_aliases": [
-              "gauge size",
-              "resize gauge",
-              "display size"
+              "touch control",
+              "gesture control",
+              "input method"
             ],
-            "value": "Variable",
+            "value": "Swipe from top",
             "range": "N/A",
-            "units": "N/A",
-            "normalized_units": "N/A",
+            "units": "gesture",
+            "normalized_units": "gesture",
             "converted_value": "N/A",
             "models": [
               "NEMESIS"
             ],
             "category": "Performance",
             "search_terms": [
-              "resize",
-              "gauge size",
-              "change size",
-              "display size",
-              "resize gauge"
+              "how to access menu",
+              "swipe controls",
+              "touch controls",
+              "menu access",
+              "quick access"
             ],
-            "concept_group": "display_settings",
+            "concept_group": "user_interface",
             "references": [
-              "Section B"
+              "Quick access menu section"
             ]
           }
         ]

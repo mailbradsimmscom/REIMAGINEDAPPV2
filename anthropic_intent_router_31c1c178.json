@@ -1,14 +1,14 @@
 {
   "total_chunks_processed": 22,
-  "successful_chunks": 21,
-  "failed_chunks": 1,
-  "total_intent_routes_extracted": 110,
+  "successful_chunks": 20,
+  "failed_chunks": 2,
+  "total_intent_routes_extracted": 101,
   "unique_intent_routes": 25,
   "question_type_breakdown": {
-    "What": 13,
+    "What": 15,
     "When": 2,
-    "Where": 4,
-    "How": 6
+    "Where": 3,
+    "How": 5
   },
   "intent_routes": [
     {
@@ -76,6 +76,86 @@
       ]
     },
     {
+      "question": "How do I turn on the Kenyon grill?",
+      "question_variations": [
+        "How to start the Kenyon grill?",
+        "What's the power-up process for Kenyon grill?",
+        "How do you activate a Kenyon grill?"
+      ],
+      "answer": "The turn-on process can be found in the Operation section on page 11 of the manual",
+      "question_type": "How",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "references": [
+        "Operation section, page 11"
+      ]
+    },
+    {
+      "question": "What are the cooking mode options?",
+      "question_variations": [
+        "What cooking modes are available?",
+        "How many cooking modes does the grill have?",
+        "What are the different cooking settings?"
+      ],
+      "answer": "The grill has two main cooking modes: Heat Level Cooking Mode and Temperature Cooking Mode, detailed on page 11-12",
+      "question_type": "What",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "references": [
+        "Cooking Mode Options, pages 11-12"
+      ]
+    },
+    {
+      "question": "Where should I place the grill outlet?",
+      "question_variations": [
+        "What's the proper outlet location?",
+        "Where does the electrical outlet go?",
+        "How should I position the power outlet?"
+      ],
+      "answer": "Outlet location specifications can be found in the Installation section on page 21",
+      "question_type": "Where",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "references": [
+        "Installation section, page 21"
+      ]
+    },
+    {
+      "question": "How do I prepare the countertop for installation?",
+      "question_variations": [
+        "What's needed for countertop preparation?",
+        "How to prepare counter for grill installation?",
+        "What are the countertop requirements?"
+      ],
+      "answer": "Countertop preparation instructions are detailed in the Installation section on page 19",
+      "question_type": "How",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "references": [
+        "Installation section, page 19"
+      ]
+    },
+    {
+      "question": "How do I remove the grill lid?",
+      "question_variations": [
+        "Can I take off the grill lid?",
+        "What's the process for lid removal?",
+        "How to detach the grill cover?"
+      ],
+      "answer": "Lid removal instructions can be found in the Grill Parts section on page 17",
+      "question_type": "How",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "references": [
+        "Grill Parts section, page 17"
+      ]
+    },
+    {
       "question": "How do I protect the grill from rain?",
       "question_variations": [
         "Can the grill be used in rain?",
@@ -95,8 +175,8 @@
       "question": "What should I do if the grill surface is cracked?",
       "question_variations": [
         "Is it safe to use a cracked grill?",
-        "My grill surface has a crack, what now?",
-        "Cracked grill surface safety concerns"
+        "My grill surface has a crack, now what?",
+        "Cracked grill surface safety"
       ],
       "answer": "If the surface is cracked, switch off the appliance immediately to avoid potential electric shock. This applies particularly to glass-ceramic surfaces or similar materials that protect live parts.",
       "question_type": "What",
@@ -114,7 +194,7 @@
         "Drip tray water requirements",
         "Water amount for drip tray"
       ],
-      "answer": "Always place a minimum of two (2) cups of water in the disposable drip tray prior to grilling.",
+      "answer": "Always place a minimum of two (2) cups of water in disposable drip tray prior to grilling.",
       "question_type": "How",
       "models": [
         "All KENYON Grills"
@@ -144,7 +224,7 @@
       "question_variations": [
         "How often should I clean the drip tray?",
         "Drip tray maintenance schedule",
-        "Is it necessary to clean drip tray after each use?"
+        "Is it important to clean the drip tray?"
       ],
       "answer": "Clean the drip tray after each use to prevent possible fire.",
       "question_type": "When",
@@ -160,7 +240,7 @@
       "question_variations": [
         "How to store the grill?",
         "Proper grill storage",
-        "Can I store the grill outside?"
+        "Where to keep the grill when not using it?"
       ],
       "answer": "When used as a portable grill, store indoors when not in use, out of the reach of children.",
       "question_type": "Where",
@@ -169,118 +249,6 @@
       ],
       "references": [
         "Safety Instructions Section, Page 3"
-      ]
-    },
-    {
-      "question": "How do I turn on the Kenyon grill?",
-      "question_variations": [
-        "How to power up the Kenyon grill?",
-        "What's the startup process for Kenyon grill?",
-        "How do you start the grill?"
-      ],
-      "answer": "Refer to the Turning On section on page 11 of the manual for startup instructions",
-      "question_type": "How",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Page 11 - Turning On"
-      ]
-    },
-    {
-      "question": "What are the cooking mode options?",
-      "question_variations": [
-        "What cooking modes are available?",
-        "How many cooking modes does the grill have?",
-        "What are the different cooking settings?"
-      ],
-      "answer": "The grill has two main cooking modes: Heat Level Cooking Mode and Temperature Cooking Mode",
-      "question_type": "What",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Page 11-12 - Cooking Mode Options"
-      ]
-    },
-    {
-      "question": "Where should I place the electrical outlet?",
-      "question_variations": [
-        "What's the proper outlet location?",
-        "Where does the power outlet need to be?",
-        "How should I position the electrical outlet?"
-      ],
-      "answer": "Outlet location specifications can be found in the Installation section on page 21",
-      "question_type": "Where",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Page 21 - Outlet Location"
-      ]
-    },
-    {
-      "question": "How do I prepare the countertop for installation?",
-      "question_variations": [
-        "What's needed for countertop preparation?",
-        "How to prepare counter for grill installation?",
-        "What are the countertop requirements?"
-      ],
-      "answer": "Countertop preparation instructions are detailed in the Installation section on page 19",
-      "question_type": "How",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Page 19 - Countertop Preparation"
-      ]
-    },
-    {
-      "question": "How do I remove the grill lid?",
-      "question_variations": [
-        "Can I take off the grill lid?",
-        "What's the process for lid removal?",
-        "How to detach the grill cover?"
-      ],
-      "answer": "Lid removal instructions can be found in the Grill Parts section on page 17",
-      "question_type": "How",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Page 17 - Lid Removal"
-      ]
-    },
-    {
-      "question": "What are the electrical supply requirements?",
-      "question_variations": [
-        "What power supply do I need?",
-        "What are the electrical specifications?",
-        "What voltage does the grill need?"
-      ],
-      "answer": "Electrical supply requirements are detailed in the Installation section on page 18",
-      "question_type": "What",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Page 18 - Check Electrical Supply Requirements"
-      ]
-    },
-    {
-      "question": "Where can I find the model number?",
-      "question_variations": [
-        "How do I locate the model number?",
-        "Where is the model number located?",
-        "What's the model number location?"
-      ],
-      "answer": "The model number can be found on the name plate. The name plate location is shown on the last page of the manual",
-      "question_type": "Where",
-      "models": [
-        "All Kenyon Grills"
-      ],
-      "references": [
-        "Name plate location page"
       ]
     },
     {
@@ -332,13 +300,13 @@
       ]
     },
     {
-      "question": "What is the power output of the Frontier Portable Grill?",
+      "question": "What are the power specifications for the Frontier Portable Grill?",
       "question_variations": [
-        "How many watts does the Frontier Portable use?",
-        "What's the wattage of model B70790?",
-        "What's the power consumption of the Portable Frontier?"
+        "What's the power output of the Portable Frontier?",
+        "How many watts does model B70790 use?",
+        "What are the electrical specs for the Portable Frontier?"
       ],
-      "answer": "The Frontier Portable Grill has a power output of 1300 watts and draws 27 amps",
+      "answer": "The Frontier Portable Grill operates at 48V DC, draws 27 amps, and has an output of 1300 watts",
       "question_type": "What",
       "models": [
         "B70790"
@@ -364,55 +332,83 @@
       ]
     },
     {
-      "question": "How do I clean the grill grates?",
+      "question": "What are the voltage requirements for the SilKEN Built-in Grill?",
       "question_variations": [
-        "Can I put the grill grates in dishwasher?",
-        "What's the best way to clean the grill grates?",
-        "How should I clean the grates after grilling?"
+        "What voltage does the SilKEN Built-in Grill need?",
+        "What's the operating voltage for model B70770?",
+        "What power requirements does the built-in grill have?"
       ],
-      "answer": "Remove the grates and place them in the dishwasher along with regular dishes. They are dishwasher safe.",
-      "question_type": "How",
+      "answer": "The SilKEN Built-in Grill operates on 48V DC with a range of MIN 35V DC to MAX 55V DC",
+      "question_type": "What",
       "models": [
-        "IntelliKEN Touch",
-        "All Seasons Electric Grill"
+        "B70770"
       ],
       "references": [
-        "Quick Start Tips Section, Item 5"
+        "Product Specifications Section"
       ]
     },
     {
-      "question": "What temperature should I use for cooking steak?",
+      "question": "What are the dimensions of the SilKEN Built-in Grill?",
       "question_variations": [
-        "What's the best temperature for grilling steak?",
-        "What power setting for steak?",
-        "How hot should the grill be for steak?"
+        "How big is the built-in grill?",
+        "What's the size of model B70770?",
+        "What are the measurements of the SilKEN built-in grill?"
       ],
-      "answer": "For steak, use temperature setting 550\u00b0F or power setting 16",
+      "answer": "The built-in grill dimensions are 21\" width (533mm), 12\" depth (305mm), and 4 15/16\" height (125mm), or 9\" height with lid (229mm). Height includes 1\" drain fitting.",
       "question_type": "What",
       "models": [
-        "IntelliKEN Touch",
-        "All Seasons Electric Grill"
+        "B70770"
       ],
       "references": [
-        "Quick Start Tips Section, Item 4"
+        "Product Dimensions Section"
       ]
     },
     {
-      "question": "Can I use charcoal in this grill?",
+      "question": "What are the cutout dimensions for installing the SilKEN Built-in Grill?",
       "question_variations": [
-        "Is it safe to use charcoal?",
-        "Can I add charcoal briquettes?",
-        "What fuel can I use in this grill?"
+        "What size opening do I need for the built-in grill?",
+        "What are the installation dimensions for model B70770?",
+        "How big should the cutout be for the built-in grill?"
       ],
-      "answer": "No, charcoal or similar combustible fuels must not be used with this appliance. This is an electric grill only.",
+      "answer": "The cutout dimensions are 19 3/4\" (502mm) width, 11 5/8\" (295mm) depth, with a 1/4\" (6mm) radius",
       "question_type": "What",
       "models": [
-        "IntelliKEN Touch",
-        "All Seasons Electric Grill"
+        "B70770"
       ],
       "references": [
-        "Safety Instructions",
-        "Warning Section"
+        "Cutout Dimensions Section"
+      ]
+    },
+    {
+      "question": "What is the power output of the SilKEN Portable Grill?",
+      "question_variations": [
+        "How many watts is the portable grill?",
+        "What's the wattage of model B70772?",
+        "How powerful is the SilKEN portable grill?"
+      ],
+      "answer": "The SilKEN Portable Grill has an output of 1300 watts and draws 27 amps",
+      "question_type": "What",
+      "models": [
+        "B70772"
+      ],
+      "references": [
+        "Burner Data Section"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the SilKEN Portable Grill?",
+      "question_variations": [
+        "How big is the portable grill?",
+        "What's the size of model B70772?",
+        "What are the measurements of the portable grill?"
+      ],
+      "answer": "The portable grill dimensions are 21\" width (533mm), 12 1/16\" depth (306mm), and 9 5/8\" height (244mm)",
+      "question_type": "What",
+      "models": [
+        "B70772"
+      ],
+      "references": [
+        "Product Dimensions Section"
       ]
     }
   ],
@@ -490,6 +486,94 @@
       }
     },
     {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I turn on the Kenyon grill?",
+            "question_variations": [
+              "How to start the Kenyon grill?",
+              "What's the power-up process for Kenyon grill?",
+              "How do you activate a Kenyon grill?"
+            ],
+            "answer": "The turn-on process can be found in the Operation section on page 11 of the manual",
+            "question_type": "How",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "references": [
+              "Operation section, page 11"
+            ]
+          },
+          {
+            "question": "What are the cooking mode options?",
+            "question_variations": [
+              "What cooking modes are available?",
+              "How many cooking modes does the grill have?",
+              "What are the different cooking settings?"
+            ],
+            "answer": "The grill has two main cooking modes: Heat Level Cooking Mode and Temperature Cooking Mode, detailed on page 11-12",
+            "question_type": "What",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "references": [
+              "Cooking Mode Options, pages 11-12"
+            ]
+          },
+          {
+            "question": "Where should I place the grill outlet?",
+            "question_variations": [
+              "What's the proper outlet location?",
+              "Where does the electrical outlet go?",
+              "How should I position the power outlet?"
+            ],
+            "answer": "Outlet location specifications can be found in the Installation section on page 21",
+            "question_type": "Where",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "references": [
+              "Installation section, page 21"
+            ]
+          },
+          {
+            "question": "How do I prepare the countertop for installation?",
+            "question_variations": [
+              "What's needed for countertop preparation?",
+              "How to prepare counter for grill installation?",
+              "What are the countertop requirements?"
+            ],
+            "answer": "Countertop preparation instructions are detailed in the Installation section on page 19",
+            "question_type": "How",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "references": [
+              "Installation section, page 19"
+            ]
+          },
+          {
+            "question": "How do I remove the grill lid?",
+            "question_variations": [
+              "Can I take off the grill lid?",
+              "What's the process for lid removal?",
+              "How to detach the grill cover?"
+            ],
+            "answer": "Lid removal instructions can be found in the Grill Parts section on page 17",
+            "question_type": "How",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "references": [
+              "Grill Parts section, page 17"
+            ]
+          }
+        ]
+      }
+    },
+    {
       "chunk_num": 3,
       "pages": "3-3",
       "result": {
@@ -514,8 +598,8 @@
             "question": "What should I do if the grill surface is cracked?",
             "question_variations": [
               "Is it safe to use a cracked grill?",
-              "My grill surface has a crack, what now?",
-              "Cracked grill surface safety concerns"
+              "My grill surface has a crack, now what?",
+              "Cracked grill surface safety"
             ],
             "answer": "If the surface is cracked, switch off the appliance immediately to avoid potential electric shock. This applies particularly to glass-ceramic surfaces or similar materials that protect live parts.",
             "question_type": "What",
@@ -533,7 +617,7 @@
               "Drip tray water requirements",
               "Water amount for drip tray"
             ],
-            "answer": "Always place a minimum of two (2) cups of water in the disposable drip tray prior to grilling.",
+            "answer": "Always place a minimum of two (2) cups of water in disposable drip tray prior to grilling.",
             "question_type": "How",
             "models": [
               "All KENYON Grills"
@@ -563,7 +647,7 @@
             "question_variations": [
               "How often should I clean the drip tray?",
               "Drip tray maintenance schedule",
-              "Is it necessary to clean drip tray after each use?"
+              "Is it important to clean the drip tray?"
             ],
             "answer": "Clean the drip tray after each use to prevent possible fire.",
             "question_type": "When",
@@ -579,7 +663,7 @@
             "question_variations": [
               "How to store the grill?",
               "Proper grill storage",
-              "Can I store the grill outside?"
+              "Where to keep the grill when not using it?"
             ],
             "answer": "When used as a portable grill, store indoors when not in use, out of the reach of children.",
             "question_type": "Where",
@@ -588,126 +672,6 @@
             ],
             "references": [
               "Safety Instructions Section, Page 3"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 2,
-      "pages": "2-2",
-      "result": {
-        "intent_routes": [
-          {
-            "question": "How do I turn on the Kenyon grill?",
-            "question_variations": [
-              "How to power up the Kenyon grill?",
-              "What's the startup process for Kenyon grill?",
-              "How do you start the grill?"
-            ],
-            "answer": "Refer to the Turning On section on page 11 of the manual for startup instructions",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 11 - Turning On"
-            ]
-          },
-          {
-            "question": "What are the cooking mode options?",
-            "question_variations": [
-              "What cooking modes are available?",
-              "How many cooking modes does the grill have?",
-              "What are the different cooking settings?"
-            ],
-            "answer": "The grill has two main cooking modes: Heat Level Cooking Mode and Temperature Cooking Mode",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 11-12 - Cooking Mode Options"
-            ]
-          },
-          {
-            "question": "Where should I place the electrical outlet?",
-            "question_variations": [
-              "What's the proper outlet location?",
-              "Where does the power outlet need to be?",
-              "How should I position the electrical outlet?"
-            ],
-            "answer": "Outlet location specifications can be found in the Installation section on page 21",
-            "question_type": "Where",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 21 - Outlet Location"
-            ]
-          },
-          {
-            "question": "How do I prepare the countertop for installation?",
-            "question_variations": [
-              "What's needed for countertop preparation?",
-              "How to prepare counter for grill installation?",
-              "What are the countertop requirements?"
-            ],
-            "answer": "Countertop preparation instructions are detailed in the Installation section on page 19",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 19 - Countertop Preparation"
-            ]
-          },
-          {
-            "question": "How do I remove the grill lid?",
-            "question_variations": [
-              "Can I take off the grill lid?",
-              "What's the process for lid removal?",
-              "How to detach the grill cover?"
-            ],
-            "answer": "Lid removal instructions can be found in the Grill Parts section on page 17",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 17 - Lid Removal"
-            ]
-          },
-          {
-            "question": "What are the electrical supply requirements?",
-            "question_variations": [
-              "What power supply do I need?",
-              "What are the electrical specifications?",
-              "What voltage does the grill need?"
-            ],
-            "answer": "Electrical supply requirements are detailed in the Installation section on page 18",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 18 - Check Electrical Supply Requirements"
-            ]
-          },
-          {
-            "question": "Where can I find the model number?",
-            "question_variations": [
-              "How do I locate the model number?",
-              "Where is the model number located?",
-              "What's the model number location?"
-            ],
-            "answer": "The model number can be found on the name plate. The name plate location is shown on the last page of the manual",
-            "question_type": "Where",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Name plate location page"
             ]
           }
         ]
@@ -767,13 +731,13 @@
             ]
           },
           {
-            "question": "What is the power output of the Frontier Portable Grill?",
+            "question": "What are the power specifications for the Frontier Portable Grill?",
             "question_variations": [
-              "How many watts does the Frontier Portable use?",
-              "What's the wattage of model B70790?",
-              "What's the power consumption of the Portable Frontier?"
+              "What's the power output of the Portable Frontier?",
+              "How many watts does model B70790 use?",
+              "What are the electrical specs for the Portable Frontier?"
             ],
-            "answer": "The Frontier Portable Grill has a power output of 1300 watts and draws 27 amps",
+            "answer": "The Frontier Portable Grill operates at 48V DC, draws 27 amps, and has an output of 1300 watts",
             "question_type": "What",
             "models": [
               "B70790"
@@ -796,151 +760,6 @@
             ],
             "references": [
               "Product Specifications Section"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 4,
-      "pages": "4-4",
-      "result": {
-        "intent_routes": [
-          {
-            "question": "How do I clean the grill grates?",
-            "question_variations": [
-              "Can I put the grill grates in dishwasher?",
-              "What's the best way to clean the grill grates?",
-              "How should I clean the grates after grilling?"
-            ],
-            "answer": "Remove the grates and place them in the dishwasher along with regular dishes. They are dishwasher safe.",
-            "question_type": "How",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Quick Start Tips Section, Item 5"
-            ]
-          },
-          {
-            "question": "What temperature should I use for cooking steak?",
-            "question_variations": [
-              "What's the best temperature for grilling steak?",
-              "What power setting for steak?",
-              "How hot should the grill be for steak?"
-            ],
-            "answer": "For steak, use temperature setting 550\u00b0F or power setting 16",
-            "question_type": "What",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Quick Start Tips Section, Item 4"
-            ]
-          },
-          {
-            "question": "Can I use charcoal in this grill?",
-            "question_variations": [
-              "Is it safe to use charcoal?",
-              "Can I add charcoal briquettes?",
-              "What fuel can I use in this grill?"
-            ],
-            "answer": "No, charcoal or similar combustible fuels must not be used with this appliance. This is an electric grill only.",
-            "question_type": "What",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Safety Instructions",
-              "Warning Section"
-            ]
-          },
-          {
-            "question": "How do I prepare the drip tray before grilling?",
-            "question_variations": [
-              "What should I put in the drip tray?",
-              "How much liquid goes in the drip tray?",
-              "Do I need to fill the drip tray?"
-            ],
-            "answer": "Fill the drip tray with 2 cups of liquid. You can use water, beer, or wine to add flavor to your food.",
-            "question_type": "How",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Quick Start Tips Section, Item 3"
-            ]
-          },
-          {
-            "question": "What temperature should I use for cooking chicken?",
-            "question_variations": [
-              "What's the best temperature for grilling chicken?",
-              "What power setting for chicken?",
-              "How hot should the grill be for poultry?"
-            ],
-            "answer": "For chicken, pork and fish, use temperature setting 400\u00b0F or power setting 5",
-            "question_type": "What",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Quick Start Tips Section, Item 4"
-            ]
-          },
-          {
-            "question": "How long should I preheat the grill?",
-            "question_variations": [
-              "What's the preheat time?",
-              "How long to warm up the grill?",
-              "When is the grill ready to cook?"
-            ],
-            "answer": "Preheat the grill with the lid closed for 5-7 minutes",
-            "question_type": "How",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Quick Start Tips Section, Item 4"
-            ]
-          },
-          {
-            "question": "What should I do if there's a grease fire?",
-            "question_variations": [
-              "How do I put out a grease fire?",
-              "Can I use water for a grease fire?",
-              "What extinguisher should I use?"
-            ],
-            "answer": "Do not use water to extinguish a grease fire. Use a dry chemical fire extinguisher.",
-            "question_type": "What",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Safety Instructions"
-            ]
-          },
-          {
-            "question": "What power supply requirements are needed?",
-            "question_variations": [
-              "What kind of electrical connection is needed?",
-              "What circuit breaker is required?",
-              "How should the grill be powered?"
-            ],
-            "answer": "The appliance must be connected to a DC power supply protected by a 30-amp circuit breaker and supplied through a residual current device (RCD) having a rated residual operating current not exceeding 30A.",
-            "question_type": "What",
-            "models": [
-              "IntelliKEN Touch",
-              "All Seasons Electric Grill"
-            ],
-            "references": [
-              "Safety Instructions"
             ]
           }
         ]
@@ -972,7 +791,7 @@
             "question_variations": [
               "How big is the built-in grill?",
               "What's the size of model B70770?",
-              "What are the measurements for the SilKEN built-in grill?"
+              "What are the measurements of the SilKEN built-in grill?"
             ],
             "answer": "The built-in grill dimensions are 21\" width (533mm), 12\" depth (305mm), and 4 15/16\" height (125mm), or 9\" height with lid (229mm). Height includes 1\" drain fitting.",
             "question_type": "What",
@@ -986,9 +805,9 @@
           {
             "question": "What are the cutout dimensions for installing the SilKEN Built-in Grill?",
             "question_variations": [
-              "How big should the cutout be for the built-in grill?",
-              "What size opening do I need for the SilKEN grill?",
-              "What are the installation dimensions?"
+              "What size opening do I need for the built-in grill?",
+              "What are the installation dimensions for model B70770?",
+              "How big should the cutout be for the built-in grill?"
             ],
             "answer": "The cutout dimensions are 19 3/4\" (502mm) width, 11 5/8\" (295mm) depth, with a 1/4\" (6mm) radius",
             "question_type": "What",
@@ -1006,7 +825,7 @@
               "What's the wattage of model B70772?",
               "How powerful is the SilKEN portable grill?"
             ],
-            "answer": "The SilKEN Portable Grill has an output of 1300 watts",
+            "answer": "The SilKEN Portable Grill has an output of 1300 watts and draws 27 amps",
             "question_type": "What",
             "models": [
               "B70772"
@@ -1020,15 +839,135 @@
             "question_variations": [
               "How big is the portable grill?",
               "What's the size of model B70772?",
-              "What are the measurements for the portable version?"
+              "What are the measurements of the portable grill?"
             ],
-            "answer": "The portable grill dimensions are 21\" (533mm) width, 12 1/16\" (306mm) depth, and 9 5/8\" (244mm) height",
+            "answer": "The portable grill dimensions are 21\" width (533mm), 12 1/16\" depth (306mm), and 9 5/8\" height (244mm)",
             "question_type": "What",
             "models": [
               "B70772"
             ],
             "references": [
               "Product Dimensions Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I clean the grill grates?",
+            "question_variations": [
+              "Can I put the grill grates in dishwasher?",
+              "What's the best way to clean the grill grates?",
+              "How should I maintain the grill grates?"
+            ],
+            "answer": "Remove the grates and clean them. The grates are dishwasher-safe and can be placed in the dishwasher along with regular dishes.",
+            "question_type": "How",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Quick Start Tips Section, Item 5"
+            ]
+          },
+          {
+            "question": "What temperature should I use for cooking steak?",
+            "question_variations": [
+              "What's the best temperature for grilling steak?",
+              "What power setting for steak?",
+              "How hot should the grill be for steak?"
+            ],
+            "answer": "For steak, use temperature setting 550\u00b0F or power setting 16",
+            "question_type": "What",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Quick Start Tips Section, Item 4"
+            ]
+          },
+          {
+            "question": "Can I use charcoal in this grill?",
+            "question_variations": [
+              "Is it safe to use charcoal?",
+              "Can I use briquettes in this grill?",
+              "What fuel can I use in this grill?"
+            ],
+            "answer": "No, charcoal or similar combustible fuels must not be used with this appliance. This is an electric grill only.",
+            "question_type": "What",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Safety Instructions, Warning Section"
+            ]
+          },
+          {
+            "question": "How do I prepare the drip tray?",
+            "question_variations": [
+              "What should I put in the drip tray?",
+              "How much liquid goes in the drip tray?",
+              "Do I need to fill the drip tray?"
+            ],
+            "answer": "Fill the drip tray with 2 cups of liquid. You can use water, beer, or wine to add flavor to your food.",
+            "question_type": "How",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Quick Start Tips Section, Item 3"
+            ]
+          },
+          {
+            "question": "What temperature should I use for vegetables?",
+            "question_variations": [
+              "How hot should the grill be for veggies?",
+              "What's the best power setting for vegetables?",
+              "What temperature do I grill vegetables at?"
+            ],
+            "answer": "For vegetables, use temperature setting 350\u00b0F or power setting 4",
+            "question_type": "What",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Quick Start Tips Section, Item 4"
+            ]
+          },
+          {
+            "question": "Can I use an external timer with this grill?",
+            "question_variations": [
+              "Does this grill work with a remote control?",
+              "Can I operate the grill with a timer?",
+              "Is remote operation possible?"
+            ],
+            "answer": "No, the appliance is not intended to be operated by means of an external timer or separate remote-control system.",
+            "question_type": "What",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Safety Instructions"
+            ]
+          },
+          {
+            "question": "What should I do in case of a grease fire?",
+            "question_variations": [
+              "How do I extinguish a grease fire?",
+              "Can I use water for a grease fire?",
+              "What fire extinguisher should I use?"
+            ],
+            "answer": "Do not use water to extinguish a grease fire. Use a dry chemical fire extinguisher instead.",
+            "question_type": "What",
+            "models": [
+              "Kenyon IntelliKEN Touch Electric Grill"
+            ],
+            "references": [
+              "Safety Instructions"
             ]
           }
         ]
@@ -1046,7 +985,7 @@
               "What's the operating voltage for the B70760?",
               "What power requirements does Model B70760 have?"
             ],
-            "answer": "Model B70760 requires 48V DC with a minimum of 35V DC and maximum of 55V DC",
+            "answer": "Model B70760 operates on 48V DC with a minimum of 35V DC and maximum of 55V DC",
             "question_type": "What",
             "models": [
               "B70760"
@@ -1059,8 +998,8 @@
             "question": "What are the dimensions of the built-in grill?",
             "question_variations": [
               "How big is the built-in grill?",
-              "What's the size of the no lid grill?",
-              "What are the product measurements?"
+              "What's the size of the no lid built-in grill?",
+              "What are the measurements of the grill unit?"
             ],
             "answer": "The grill dimensions are 21 inches width, 12 inches depth, and 4 15/16 inches height (including 1 inch drain fitting)",
             "question_type": "What",
@@ -1091,10 +1030,10 @@
             "question": "What is the power output of the grill?",
             "question_variations": [
               "How many watts does the grill use?",
-              "What's the wattage output?",
-              "How much power does it output?"
+              "What's the wattage of the B70760?",
+              "How much power does the grill output?"
             ],
-            "answer": "The grill outputs 1300 watts",
+            "answer": "The grill outputs 1300 watts and draws 27 amps",
             "question_type": "What",
             "models": [
               "B70760"
@@ -1104,107 +1043,19 @@
             ]
           },
           {
-            "question": "How many amps does the grill draw?",
+            "question": "What control system does this grill use?",
             "question_variations": [
-              "What's the amperage requirement?",
-              "What's the amp draw?",
-              "How many amps does it need?"
+              "What type of controls does the grill have?",
+              "Does this grill have smart controls?",
+              "What control interface is used?"
             ],
-            "answer": "The grill draws 27 amps",
-            "question_type": "How",
+            "answer": "The grill uses the IntelliKEN Touch\u2122 control system",
+            "question_type": "What",
             "models": [
               "B70760"
             ],
             "references": [
               "Product Specifications Section, Page 7"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 9,
-      "pages": "9-9",
-      "result": {
-        "intent_routes": [
-          {
-            "question": "How do I clean the stainless steel surfaces on my Kenyon grill?",
-            "question_variations": [
-              "What's the best way to clean my Kenyon grill?",
-              "How should I maintain the stainless steel on my grill?",
-              "What do I use to clean my grill's stainless steel?"
-            ],
-            "answer": "Wipe the stainless steel surfaces with a damp cloth to remove residue from previous grilling sessions. Use the provided stainless steel cleaner once a month to maintain the grill's appearance.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 9, Section 13-14"
-            ]
-          },
-          {
-            "question": "How do I clean the touch control area of my Kenyon grill?",
-            "question_variations": [
-              "What should I use to clean the control panel?",
-              "How do I clean the ceramic glass on my grill?",
-              "What removes stains from the touch control area?"
-            ],
-            "answer": "Use a glass cleaner and soft towel to clean the ceramic glass touch control area. For stubborn stains, use a ceramic glass cleaner available at local grocery stores.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills with Touch Controls"
-            ],
-            "references": [
-              "Page 9, Section 15"
-            ]
-          },
-          {
-            "question": "How long should I marinate flank steak?",
-            "question_variations": [
-              "What's the marinating time for flank steak?",
-              "How many hours should I marinate steak?",
-              "When should I start marinating the flank steak?"
-            ],
-            "answer": "Marinate the flank steak for at least 4 hours or up to overnight in the refrigerator.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 9, Recipe Instructions"
-            ]
-          },
-          {
-            "question": "How do I preheat my Kenyon Grill?",
-            "question_variations": [
-              "What's the preheating process for a Kenyon Grill?",
-              "How long should I preheat the grill?",
-              "What temperature should I preheat to?"
-            ],
-            "answer": "Add 1 cup water to the drip tray, then preheat the grill on high for 5 to 7 minutes.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 9, Recipe Instructions"
-            ]
-          },
-          {
-            "question": "How long do I grill flank steak?",
-            "question_variations": [
-              "What's the cooking time for flank steak?",
-              "How many minutes per side for flank steak?",
-              "When is the flank steak done?"
-            ],
-            "answer": "Grill covered for 6 to 8 minutes per side for medium-rare. Let stand for 10 minutes before slicing thinly.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Page 9, Recipe Instructions"
             ]
           }
         ]
@@ -1214,85 +1065,8 @@
       "chunk_num": 8,
       "pages": "8-8",
       "result": {
-        "intent_routes": [
-          {
-            "question": "How do I prepare the grill before first use?",
-            "question_variations": [
-              "What should I do before using the grill?",
-              "How do I set up the grill initially?",
-              "What are the pre-use steps for the grill?"
-            ],
-            "answer": "Remove cooking grate and drip tray, wash grill with warm soapy water using a non-abrasive cloth. Make sure drip tray is fully inserted and element bracket rests on support bracket.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Electric Grills"
-            ],
-            "references": [
-              "Section: Before Using the Grill, Steps 1-2"
-            ]
-          },
-          {
-            "question": "What temperature should I use for different foods?",
-            "question_variations": [
-              "What's the right temperature setting for steaks?",
-              "How hot should the grill be for burgers?",
-              "What power setting for vegetables?"
-            ],
-            "answer": "Steak: 550\u00b0F/Power 16, Burgers: 500\u00b0F/Power 9, Pork and Fish: 400\u00b0F/Power 5, Vegetables: 350\u00b0F/Power 4",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Electric Grills"
-            ],
-            "references": [
-              "Section: Before Using the Grill, Step 6"
-            ]
-          },
-          {
-            "question": "What utensils should I use with the grill?",
-            "question_variations": [
-              "Can I use metal utensils on the grill?",
-              "What kind of grilling tools are safe to use?"
-            ],
-            "answer": "Use ONLY HIGH TEMP PLASTIC UTENSILS when grilling. High quality stainless steel/high temp plastic grill utensils can be purchased at www.cookwithkenyon.com",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Electric Grills"
-            ],
-            "references": [
-              "Section: Before Using the Grill, Step 1"
-            ]
-          },
-          {
-            "question": "How do I clean the grill after use?",
-            "question_variations": [
-              "What's the best way to clean the grill?",
-              "How should I maintain the grill after cooking?"
-            ],
-            "answer": "After cooling, place paper towels on grilling surface, add water, and swab with high temperature nylon tongs. Wipe grates with dry paper towel. Remove grate and clean in dishwasher. Lift elements, remove and empty drip tray, wipe with paper towel.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Electric Grills"
-            ],
-            "references": [
-              "Section: Before Using the Grill, Steps 8-10"
-            ]
-          },
-          {
-            "question": "What liquid should I put in the drip tray?",
-            "question_variations": [
-              "Can I use any liquid in the drip tray?",
-              "What should I fill the drip tray with?"
-            ],
-            "answer": "Use water in the drip tray. DO NOT USE FLAMMABLE LIQUIDS. Optional: Use apple juice for pork or lime soda for fish to add flavor. Always add liquid before grilling.",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Electric Grills"
-            ],
-            "references": [
-              "Section: Before Using the Grill, Step 3"
-            ]
-          }
-        ]
+        "intent_routes": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTKtANyaN3woswWh8XYDT'}"
       }
     },
     {
@@ -1331,33 +1105,18 @@
             ]
           },
           {
-            "question": "What should I do if the grill grate breaks?",
+            "question": "What should I use to clean the grill?",
             "question_variations": [
-              "Can I use the grill with a broken grate?",
-              "Who do I contact if the grate breaks?"
+              "Can I pressure wash the grill?",
+              "How do I properly clean the grill?"
             ],
-            "answer": "Do not cook on a broken grill grate. Contact an authorized service center or KENYON Customer Care immediately at (860) 664-4906.",
+            "answer": "Never clean with pressurized water or other pressurized cleaners. Always clean the grill with a cloth and a stainless steel or glass surface cleaner.",
             "question_type": "What",
             "models": [
               "All Kenyon Grills"
             ],
             "references": [
-              "Operation Instructions, Page 10"
-            ]
-          },
-          {
-            "question": "How should I clean the grill?",
-            "question_variations": [
-              "What's the proper way to clean the grill?",
-              "Can I use pressurized water to clean the grill?"
-            ],
-            "answer": "Never clean with pressurized water. Always clean the grill with a cloth and a stainless steel or glass surface cleaner. Using pressurized water will void the warranty and may cause electric shock.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Grills"
-            ],
-            "references": [
-              "Operation Instructions, Page 10"
+              "Cleaning Instructions, Page 10"
             ]
           },
           {
@@ -1379,7 +1138,7 @@
             "question": "How can I prevent smoke while grilling?",
             "question_variations": [
               "What should I put in the drip tray to prevent smoking?",
-              "How do I stop the drip tray from smoking?"
+              "How do I stop my grill from smoking?"
             ],
             "answer": "Place 2 cups of water (or enough to cover the bottom of the pan) in the drip tray before cooking to prevent the contents from smoking.",
             "question_type": "How",
@@ -1389,20 +1148,90 @@
             "references": [
               "Operation Instructions, Page 10"
             ]
-          },
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "intent_routes": [
           {
-            "question": "What type of pot holders should I use?",
+            "question": "How do I clean the stainless steel surfaces on my Kenyon grill?",
             "question_variations": [
-              "Can I use damp pot holders?",
-              "Is it safe to use a towel instead of pot holders?"
+              "What's the best way to clean my Kenyon grill?",
+              "How should I maintain the stainless steel on my grill?",
+              "How do I clean my grill after use?"
             ],
-            "answer": "Use only DRY pot holders. Moist or damp pot holders can cause steam burns. Do not use towels or bulky cloth in place of pot holders.",
-            "question_type": "What",
+            "answer": "Wipe the stainless steel surfaces with a damp cloth to remove residue from previous grilling sessions. Use the provided stainless steel cleaner once a month to maintain the grill's appearance.",
+            "question_type": "How",
             "models": [
               "All Kenyon Grills"
             ],
             "references": [
-              "Safety Instructions, Page 10"
+              "Page 9, Section 13-14"
+            ]
+          },
+          {
+            "question": "How do I clean the touch control area of my Kenyon grill?",
+            "question_variations": [
+              "What should I use to clean the control panel?",
+              "How do I clean the ceramic glass on my grill?",
+              "What cleaner should I use for the touch controls?"
+            ],
+            "answer": "The touch control area is ceramic glass and can be cleaned using a glass cleaner and soft towel. For stubborn stains, use a ceramic glass cleaner available at local grocery stores.",
+            "question_type": "How",
+            "models": [
+              "All Kenyon Grills with Touch Controls"
+            ],
+            "references": [
+              "Page 9, Section 15"
+            ]
+          },
+          {
+            "question": "How long should I marinate flank steak?",
+            "question_variations": [
+              "What's the marinating time for flank steak?",
+              "How many hours should I marinate steak before grilling?"
+            ],
+            "answer": "Marinate the flank steak for at least 4 hours or up to overnight in the refrigerator.",
+            "question_type": "How",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "references": [
+              "Page 9, Recipe Instructions"
+            ]
+          },
+          {
+            "question": "How do I preheat my Kenyon Grill?",
+            "question_variations": [
+              "What's the preheating process for a Kenyon Grill?",
+              "How long should I preheat my grill?"
+            ],
+            "answer": "Add 1 cup water to the drip tray, then preheat the grill for 5 to 7 minutes on high.",
+            "question_type": "How",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "references": [
+              "Page 9, Recipe Instructions"
+            ]
+          },
+          {
+            "question": "How long do I grill flank steak?",
+            "question_variations": [
+              "What's the cooking time for flank steak?",
+              "How many minutes per side for grilling steak?"
+            ],
+            "answer": "Grill the flank steak covered for 6 to 8 minutes per side for medium-rare. Let stand for 10 minutes before slicing thinly.",
+            "question_type": "How",
+            "models": [
+              "All Kenyon Grills"
+            ],
+            "references": [
+              "Page 9, Recipe Instructions"
             ]
           }
         ]
@@ -1478,7 +1307,7 @@
             ]
           },
           {
-            "question": "When is it safe to place items on the cooking surface?",
+            "question": "When is it safe to place items on the grill surface?",
             "question_variations": [
               "How do I know when the grill is cool enough to touch?",
               "When will the hot indicator light turn off?",
@@ -1536,8 +1365,8 @@
             "question": "How do I change between Fahrenheit and Celsius?",
             "question_variations": [
               "Can I switch from F to C?",
-              "How to change temperature units?",
-              "Switch between \u00b0F and \u00b0C?"
+              "How do I change temperature units?",
+              "How to convert temperature display?"
             ],
             "answer": "Touch the \u00b0F/\u00b0C button in the main power control frame to switch between Fahrenheit and Celsius. The chosen units will remain as default for future use unless changed again.",
             "question_type": "How",
@@ -1553,7 +1382,7 @@
             "question_variations": [
               "What power levels are available?",
               "How many heat settings are there?",
-              "What are the heating level options?"
+              "What are the heating options?"
             ],
             "answer": "The heat level settings range from LOW to MED to HIGH in 16 increments, shown by the LED light array along the control sweep.",
             "question_type": "What",
@@ -1568,8 +1397,7 @@
             "question": "How do I adjust the heat level?",
             "question_variations": [
               "How can I change the power level?",
-              "What's the process to change heat settings?",
-              "How do I control the heat?"
+              "How do I control the heat setting?"
             ],
             "answer": "Swipe your finger along the temperature control arc and release at desired setting, or use the arc + and - signs to toggle to the desired heat level. The LED light array will indicate the selected setting.",
             "question_type": "How",
@@ -1583,9 +1411,8 @@
           {
             "question": "What happens if I leave the element at 0 setting?",
             "question_variations": [
-              "Will the element turn off at 0?",
-              "How long before element powers down?",
-              "Does it auto-shutdown at zero?"
+              "Does the element turn off automatically?",
+              "When does the element shut off?"
             ],
             "answer": "If the element is set or remains at 0 for 15 seconds of inactivity, the element will automatically de-power.",
             "question_type": "What",
@@ -1609,7 +1436,7 @@
             "question_variations": [
               "How does the cooking timer work?",
               "How can I set a timer for cooking?",
-              "How do I use the timer for the heating element?"
+              "How do I use the timer while cooking?"
             ],
             "answer": "Touch the clock graphic, then use + and - buttons to set desired time. Hold buttons to increase/decrease faster. Time increments are 1 minute from 1-10 minutes, then 5 minute increments. Touch timer button to start. The heating element will automatically shut off when time expires.",
             "question_type": "How",
@@ -1627,7 +1454,7 @@
               "How does the grill alert me when timer is done?",
               "Does the grill turn off automatically when timer ends?"
             ],
-            "answer": "The burner automatically shuts off. The display flashes and a single beep alarm sounds every 5 seconds until the power button is touched (within 30 seconds). After 30 seconds of no activity, the timer shuts off.",
+            "answer": "The burner automatically shuts off. The display flashes and a single beep alarm sounds every five seconds until the power button is touched (within 30 seconds). After 30 seconds of no activity, the timer shuts off.",
             "question_type": "What",
             "models": [
               "All models with digital controls"
@@ -1643,7 +1470,7 @@
               "Can I use the timer without cooking?",
               "Are there different types of timers?"
             ],
-            "answer": "The kitchen timer is a general-purpose timer independent of cooking activity. When it expires, it flashes and sounds a double beep every 10 seconds for 3 minutes or until power button is touched, but does not control the heating element.",
+            "answer": "The kitchen timer is a general-purpose timer independent of cooking activity. When it expires, it flashes and sounds a double beep every 10 seconds for 3 minutes or until power button is touched, but does not shut off any heating elements.",
             "question_type": "How",
             "models": [
               "All models with digital controls"
@@ -1675,7 +1502,7 @@
               "How does the timer count down?",
               "How does the timer display change?"
             ],
-            "answer": "Time increments run from 1-10 minutes in 1 minute increments, then change to 5 minute increments. During countdown, display shows remaining minutes until one minute, then switches to seconds remaining to zero.",
+            "answer": "Time increments run from 1-10 minutes in 1 minute increments, then change to 5 minute increments. During countdown, display shows remaining minutes until one minute remains, then switches to showing seconds remaining until zero.",
             "question_type": "How",
             "models": [
               "All models with digital controls"
@@ -1691,169 +1518,85 @@
       "chunk_num": 14,
       "pages": "14-14",
       "result": {
-        "intent_routes": [],
-        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTEvbq5seQsx28tTGP6DJ'}"
-      }
-    },
-    {
-      "chunk_num": 17,
-      "pages": "17-17",
-      "result": {
         "intent_routes": [
           {
-            "question": "How do I remove the SilKEN grill lid for cleaning?",
+            "question": "What is the automatic shut-off time for heat setting 1?",
             "question_variations": [
-              "Can I take off the lid to clean it?",
-              "What's the process for removing the SilKEN lid?",
-              "How do you detach the grill lid?"
+              "How long before setting 1 shuts off automatically?",
+              "What's the auto-shutoff timer for level 1?",
+              "When does heat level 1 automatically turn off?"
             ],
-            "answer": "Remove the quick release pin from the hinge, then lift the left side of the lid to clear the hinge and slide it left until it clears the right hinge pin. The lid can then be washed in warm, soapy water.",
-            "question_type": "How",
-            "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
-            ],
-            "references": [
-              "Page 17, Lid Removal Section"
-            ]
-          },
-          {
-            "question": "What are the special features of the SilKEN grill lid?",
-            "question_variations": [
-              "How is the SilKEN lid designed?",
-              "What makes the SilKEN grill lid unique?",
-              "What type of lid does the SilKEN grill have?"
-            ],
-            "answer": "The SilKEN grill features a high temperature silicone lid that can collapse accordion-style to a height of two inches. It has two handles - one on top and one on the front edge, with vents on three sides.",
+            "answer": "Heat setting 1 has an automatic shut-off time of 90 minutes",
             "question_type": "What",
             "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
+              "All grill models with automatic shut-off"
             ],
             "references": [
-              "Page 17, Operation Section"
+              "Operation section - Automatic Shut-Off Time Table"
             ]
           },
           {
-            "question": "When can I collapse the silicone lid?",
+            "question": "What temperature setting should I use for cooking pancakes?",
             "question_variations": [
-              "Is it safe to collapse the lid while hot?",
-              "Do I need to wait before collapsing the lid?",
-              "What's the safety procedure for collapsing the lid?"
+              "Which heat level is best for pancakes?",
+              "What setting do I use for French toast?",
+              "What's the recommended temperature for griddle cooking pancakes?"
             ],
-            "answer": "The grill must cool completely before collapsing the silicone lid.",
-            "question_type": "When",
-            "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
-            ],
-            "references": [
-              "Page 17, Warning Section"
-            ]
-          },
-          {
-            "question": "How do I use the handles on the SilKEN grill lid?",
-            "question_variations": [
-              "Which handle should I use on the grill lid?",
-              "What are the lid handles for?",
-              "When do I use the top versus front handle?"
-            ],
-            "answer": "Use the front handle when the lid is hinged. The top handle is used to collapse and expand the lid into the desired height.",
-            "question_type": "How",
-            "models": [
-              "SilKEN Portable Grill",
-              "SilKEN Built-in Grill"
-            ],
-            "references": [
-              "Page 17, Operation Section"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 16,
-      "pages": "16-16",
-      "result": {
-        "intent_routes": [
-          {
-            "question": "How do I adjust the heating element?",
-            "question_variations": [
-              "How does the heating element move?",
-              "Can I lift up the heating element?",
-              "How do I put down the heating element?"
-            ],
-            "answer": "The heating element pivots up and stays in position. To lower it, apply slight downward pressure.",
-            "question_type": "How",
-            "models": [
-              "All grill models"
-            ],
-            "references": [
-              "Page 16, Operation section"
-            ]
-          },
-          {
-            "question": "What is the baffle tray for?",
-            "question_variations": [
-              "Do I need to use the baffle tray?",
-              "What's the purpose of the baffle tray?",
-              "Is the baffle tray required?"
-            ],
-            "answer": "The baffle tray supports the drip tray, heating element and grate. It must always be used when operating the grill.",
+            "answer": "Use heat settings 3-4 for cooking pancakes and French toast on the griddle",
             "question_type": "What",
             "models": [
               "All grill models"
             ],
             "references": [
-              "Page 16, Operation section"
+              "Operation section - Food Types Guide"
             ]
           },
           {
-            "question": "How do I use the drip tray?",
+            "question": "What temperature setting should I use for cooking steaks?",
             "question_variations": [
-              "Where does the drip tray go?",
-              "How should I position the drip tray?",
-              "Do I need to empty the drip tray?"
+              "Which heat level is best for steaks?",
+              "What's the recommended temperature for grilling steaks?",
+              "What setting should I use to cook a steak?"
             ],
-            "answer": "The drip tray must be positioned completely inside the baffle tray with its rim not protruding outside. Empty it after each use. Add 2 cups of water before cooking to prevent contents from smoking.",
+            "answer": "Use heat settings 15-16 (highest) for cooking steaks",
+            "question_type": "What",
+            "models": [
+              "All grill models"
+            ],
+            "references": [
+              "Operation section - Food Types Guide"
+            ]
+          },
+          {
+            "question": "How should I cook vegetables on this grill?",
+            "question_variations": [
+              "What temperature setting is best for grilling vegetables?",
+              "Which heat level should I use for veggies?",
+              "What's the recommended setting for cooking vegetables?"
+            ],
+            "answer": "Use heat settings 5-6 or 7-8 for cooking vegetables",
             "question_type": "How",
             "models": [
               "All grill models"
             ],
             "references": [
-              "Page 16, Operation section"
+              "Operation section - Food Types Guide"
             ]
           },
           {
-            "question": "How do I clean the grate?",
+            "question": "What is the automatic shut-off time for high heat settings?",
             "question_variations": [
-              "What's the best way to clean the grill grate?",
-              "Can I wash the grate?",
-              "Is the grate dishwasher safe?"
+              "How long before high temperatures shut off?",
+              "What's the auto-shutoff time for settings 13-16?",
+              "When do the highest heat levels automatically turn off?"
             ],
-            "answer": "Clean the grate after every use. It has a nonstick coating and should be washed in warm soapy water after each use.",
-            "question_type": "How",
+            "answer": "Heat settings 13-16 have an automatic shut-off time of 60 minutes",
+            "question_type": "What",
             "models": [
-              "All grill models"
+              "All grill models with automatic shut-off"
             ],
             "references": [
-              "Page 16, Operation section"
-            ]
-          },
-          {
-            "question": "How do I prevent the drip tray from smoking?",
-            "question_variations": [
-              "Why is my drip tray smoking?",
-              "What should I put in the drip tray?",
-              "How much water goes in the drip tray?"
-            ],
-            "answer": "Place 2 cups of water (or enough to cover the bottom of the pan) in the drip tray before cooking to prevent contents from smoking.",
-            "question_type": "How",
-            "models": [
-              "All grill models"
-            ],
-            "references": [
-              "Page 16, Operation section"
+              "Operation section - Automatic Shut-Off Time Table"
             ]
           }
         ]
@@ -1899,10 +1642,11 @@
           {
             "question": "What do error codes E06, E07, E08, and E09 mean?",
             "question_variations": [
-              "How do I fix E06-E09 errors?",
-              "What should I do for error codes E06 through E09?"
+              "How do I fix error codes E06-E09?",
+              "What should I do if I see error E07?",
+              "What causes E08 error code?"
             ],
-            "answer": "These error codes indicate an internal electronic control issue. Contact Kenyon Customer Care for assistance at 860-664-4906.",
+            "answer": "These error codes indicate an internal electronic control issue. Contact Kenyon Customer Care at 860-664-4906 for assistance.",
             "question_type": "What",
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
@@ -1915,10 +1659,10 @@
             "question": "What does error code E10 mean?",
             "question_variations": [
               "How do I fix E10 error?",
-              "Why am I getting error E10?",
-              "What causes E10 on my Kenyon grill?"
+              "Why am I getting error code E10?",
+              "What causes the E10 error message?"
             ],
-            "answer": "E10 indicates more than two control functions were activated at the same time for three seconds. To fix, re-power the unit and use only one control input at a time.",
+            "answer": "E10 indicates more than two control functions were activated at the same time for three seconds, causing the unit to de-power. To fix, re-power the unit and use only one control input at a time.",
             "question_type": "What",
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
@@ -1934,7 +1678,7 @@
               "Is grill maintenance required?",
               "Can I service the grill myself?"
             ],
-            "answer": "The grill is a sealed unit that does not require regular maintenance. Any service must be performed by Authorized Personnel only. Contact Kenyon Customer Care at 860-664-4906.",
+            "answer": "The grill is a sealed unit that does not require regular maintenance. Any service must be performed by Authorized Personnel only. Contact Kenyon Customer Care at 860-664-4906 for service needs.",
             "question_type": "Who",
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
@@ -1947,16 +1691,180 @@
             "question": "How do I contact Kenyon Customer Care?",
             "question_variations": [
               "What is Kenyon's customer service number?",
-              "How can I reach Kenyon support?",
-              "When can I call Kenyon service?"
+              "When can I call Kenyon support?",
+              "How do I reach Kenyon service?"
             ],
-            "answer": "Contact Kenyon Customer Care at 860-664-4906, Monday-Friday, 8AM \u2013 5PM EST, or email at customercare@cookwithkenyon.com",
+            "answer": "Contact Kenyon Customer Care at 860-664-4906, Monday through Friday, 8AM \u2013 5PM EST, or email at customercare@cookwithkenyon.com.",
             "question_type": "How",
             "models": [
               "Single Zone Grill with IntelliKEN Touch"
             ],
             "references": [
               "Maintenance Section, Page 15"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I remove the SilKEN grill lid for cleaning?",
+            "question_variations": [
+              "Can I take off the lid to clean it?",
+              "What's the process for removing the SilKEN lid?",
+              "How do you detach the grill lid?"
+            ],
+            "answer": "Remove the quick release pin from the hinge, then lift the left side of the lid to clear the hinge and slide it left until clear of the right hinge pin. The lid can then be washed in warm, soapy water.",
+            "question_type": "How",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "references": [
+              "Page 17, Lid Removal Section"
+            ]
+          },
+          {
+            "question": "What are the special features of the SilKEN grill lid?",
+            "question_variations": [
+              "How is the SilKEN lid designed?",
+              "What makes the SilKEN grill lid unique?",
+              "What type of lid does the SilKEN grill have?"
+            ],
+            "answer": "The SilKEN grill features a high temperature silicone lid that can collapse accordion-style to a height of two inches. It has two handles - one on top and one on the front edge, with vents on three sides.",
+            "question_type": "What",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "references": [
+              "Page 17, Operation Section"
+            ]
+          },
+          {
+            "question": "When can I collapse the SilKEN grill lid?",
+            "question_variations": [
+              "Is it safe to collapse the lid while hot?",
+              "Do I need to wait before collapsing the lid?",
+              "How long should I wait before collapsing the silicone lid?"
+            ],
+            "answer": "The grill must cool completely before collapsing the silicone lid.",
+            "question_type": "When",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "references": [
+              "Page 17, Warning Section"
+            ]
+          },
+          {
+            "question": "How do I use the handles on the SilKEN grill lid?",
+            "question_variations": [
+              "Which handle should I use on the SilKEN lid?",
+              "What are the lid handles for?",
+              "When do I use the top versus front handle?"
+            ],
+            "answer": "Use the front handle when the lid is hinged. The top handle is used to collapse and expand the lid to the desired height.",
+            "question_type": "How",
+            "models": [
+              "SilKEN Portable Grill",
+              "SilKEN Built-in Grill"
+            ],
+            "references": [
+              "Page 17, Operation Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I adjust the heating element?",
+            "question_variations": [
+              "How does the heating element move?",
+              "Can I lift up the heating element?",
+              "How do I put down the heating element?"
+            ],
+            "answer": "The heating element pivots up and stays in position. To lower it, apply slight downward pressure.",
+            "question_type": "How",
+            "models": [
+              "All grill models"
+            ],
+            "references": [
+              "Page 16, Operation Section"
+            ]
+          },
+          {
+            "question": "What is the baffle tray for?",
+            "question_variations": [
+              "Do I need to use the baffle tray?",
+              "What's the purpose of the baffle tray?",
+              "Is the baffle tray required?"
+            ],
+            "answer": "The baffle tray supports the drip tray, heating element and grate. It must always be used when operating the grill.",
+            "question_type": "What",
+            "models": [
+              "All grill models"
+            ],
+            "references": [
+              "Page 16, Operation Section"
+            ]
+          },
+          {
+            "question": "How do I use the drip tray?",
+            "question_variations": [
+              "Where does the drip tray go?",
+              "How should I position the drip tray?",
+              "Do I need to empty the drip tray?"
+            ],
+            "answer": "The drip tray must be positioned completely inside the baffle tray with its rim not protruding outside. Empty it after each use. Add 2 cups of water before cooking to prevent contents from smoking.",
+            "question_type": "How",
+            "models": [
+              "All grill models"
+            ],
+            "references": [
+              "Page 16, Operation Section"
+            ]
+          },
+          {
+            "question": "How do I clean the grate?",
+            "question_variations": [
+              "What's the best way to clean the grill grate?",
+              "Can I wash the grate?",
+              "Is the grate dishwasher safe?"
+            ],
+            "answer": "Clean the grate after every use. It has a nonstick coating and should be washed in warm soapy water after each use.",
+            "question_type": "How",
+            "models": [
+              "All grill models"
+            ],
+            "references": [
+              "Page 16, Operation Section"
+            ]
+          },
+          {
+            "question": "How do I prevent the drip tray from smoking?",
+            "question_variations": [
+              "Why is my drip tray smoking?",
+              "What should I put in the drip tray?",
+              "How much water goes in the drip tray?"
+            ],
+            "answer": "Place 2 cups of water (or enough to cover the bottom of the pan) in the drip tray before cooking to prevent contents from smoking.",
+            "question_type": "How",
+            "models": [
+              "All grill models"
+            ],
+            "references": [
+              "Page 16, Operation Section"
             ]
           }
         ]
@@ -2034,7 +1942,7 @@
               "What are the requirements for electrical disconnection?",
               "How do I install the power disconnect?"
             ],
-            "answer": "The means for disconnection must be incorporated in the fixed wiring in accordance with the wiring rules, and installation must comply with national, state and local electric codes.",
+            "answer": "The means for disconnection must be incorporated in the fixed wiring in accordance with the wiring rules, and must be installed according to national, state and local electric codes.",
             "question_type": "How",
             "models": [
               "B70750",
@@ -2054,85 +1962,165 @@
       "chunk_num": 19,
       "pages": "19-19",
       "result": {
+        "intent_routes": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTKtEjjrZFdoDHjqTdNfe'}"
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
         "intent_routes": [
           {
-            "question": "What are the minimum clearance requirements for cabinets above the grill?",
+            "question": "How do I prepare the grill for first time use?",
             "question_variations": [
-              "How much space do I need above the grill?",
-              "What's the required distance between grill and cabinets?",
-              "How far should cabinets be from cooking surface?"
+              "What should I do before using my grill for the first time?",
+              "How to set up new grill before first use?",
+              "Initial grill setup instructions?"
             ],
-            "answer": "30 inches minimum clearance is required between the cooking surface and unprotected wood/metal cabinets. This can be reduced to 24 inches if the cabinet bottom is protected with 1/4-inch flame retardant millboard covered with specified metal sheeting.",
-            "question_type": "What",
-            "models": [
-              "IntelliKEN Touch Grill"
-            ],
-            "references": [
-              "Page 19"
-            ]
-          },
-          {
-            "question": "How do I remove the grill if it's sealed to the countertop?",
-            "question_variations": [
-              "What's the process for removing an installed grill?",
-              "How can I take out the grill after installation?",
-              "What do I do if I need to remove the sealed grill?"
-            ],
-            "answer": "Use fishing line and run it back and forth under the trim flange to break the caulk bond.",
+            "answer": "Remove protective plastic film from lid, trim flange and glass panel. Clean the grill thoroughly with stainless steel or glass cleaner to remove adhesives and manufacturing oils. Wash the nonstick coated grates in warm soapy water.",
             "question_type": "How",
             "models": [
-              "IntelliKEN Touch Grill"
+              "All grill models"
             ],
             "references": [
-              "Page 19"
+              "Installation Manual p.21, Section 5: Final Preparations Prior to Use"
             ]
           },
           {
-            "question": "What is the minimum clearance needed below the grill?",
+            "question": "What should I use to clean my new grill initially?",
             "question_variations": [
-              "How much space is required under the grill?",
-              "What's the minimum distance below the grill for safety?",
-              "How far should the grill be from combustible surfaces below?"
+              "Best cleaner for first time grill cleaning?",
+              "How to clean manufacturing residue off new grill?",
+              "What cleaning products for new grill setup?"
             ],
-            "answer": "A 2 inch minimum clearance is required between the bottom of the grill and any combustible surface located below, such as the upper edge of a drawer.",
+            "answer": "Use stainless steel or glass cleaner for the grill surfaces to remove adhesives and manufacturing oils. For the nonstick grates, use warm soapy water.",
             "question_type": "What",
             "models": [
-              "IntelliKEN Touch Grill"
+              "All grill models"
             ],
             "references": [
-              "Page 19"
+              "Installation Manual p.21, Section 5: Final Preparations Prior to Use"
             ]
           },
           {
-            "question": "What are the minimum countertop requirements for installation?",
+            "question": "How do I clean the grill grates before first use?",
             "question_variations": [
-              "How much counter space do I need for the grill?",
-              "What size countertop is required?",
-              "What are the counter specifications for installation?"
+              "Do I need to wash grill grates before using?",
+              "New grill grate preparation?",
+              "Should I clean grates on new grill?"
             ],
-            "answer": "The minimum flat countertop surface must be equal to or greater than the overall grill dimensions. There must be 6 inches minimum from backsplash to edge of grill, and 1-1/2 inches minimum from front of counter to grill.",
-            "question_type": "What",
+            "answer": "Wash the nonstick coated grates in warm soapy water before initial use.",
+            "question_type": "How",
             "models": [
-              "IntelliKEN Touch Grill"
+              "All grill models with nonstick grates"
             ],
             "references": [
-              "Page 19"
+              "Installation Manual p.21, Section 5: Final Preparations Prior to Use"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the warranty period for Kenyon electronic components?",
+            "question_variations": [
+              "How long is the warranty good for?",
+              "What's covered under the Kenyon warranty?",
+              "How many years is the electronic warranty?"
+            ],
+            "answer": "Electronic components are warranted for 3 years from original installation or 42 months from invoice date, whichever comes first. This covers parts and labor at pre-approved rates.",
+            "question_type": "What",
+            "models": [
+              "All Kenyon products"
+            ],
+            "references": [
+              "Warranty Statement Section 1"
             ]
           },
           {
-            "question": "What type of sealant should be used for installation?",
+            "question": "What is the warranty coverage for stainless steel?",
             "question_variations": [
-              "How should I seal the grill to the countertop?",
-              "What's recommended for sealing the trim flange?",
-              "What kind of caulk should I use?"
+              "Is stainless steel covered under lifetime warranty?",
+              "How long is the stainless steel warranted for?",
+              "What's the rust warranty on stainless steel?"
             ],
-            "answer": "A NON-ADHESIVE sealant such as Plumber's Putty is recommended. This helps reduce potential damage to the trim flange if the unit needs to be removed.",
+            "answer": "Stainless steel has a lifetime guarantee to be rust free when cared for monthly as outlined in owner's manual. If corrosion occurs, contact Kenyon with photo evidence for replacement components.",
             "question_type": "What",
             "models": [
-              "IntelliKEN Touch Grill"
+              "All Kenyon stainless steel products"
             ],
             "references": [
-              "Page 19"
+              "Warranty Statement Section 1"
+            ]
+          },
+          {
+            "question": "How do I submit a warranty claim?",
+            "question_variations": [
+              "What's the process for warranty service?",
+              "How do I get warranty service?",
+              "Where do I send my product for warranty repair?"
+            ],
+            "answer": "Contact kenyonservice@cookwithkenyon.com for return instructions. Product must be returned to the Company for evaluation to be covered under warranty.",
+            "question_type": "How",
+            "models": [
+              "All Kenyon products"
+            ],
+            "references": [
+              "Warranty Statement Introduction"
+            ]
+          },
+          {
+            "question": "What damage is not covered by the warranty?",
+            "question_variations": [
+              "What voids the warranty?",
+              "What's excluded from warranty coverage?",
+              "When does the warranty not apply?"
+            ],
+            "answer": "The warranty does not cover damage from: use of product in unintended applications, corrosion, wear and tear, abuse, neglect, improper installation or maintenance, or breakage of glass (accidental or otherwise).",
+            "question_type": "What",
+            "models": [
+              "All Kenyon products"
+            ],
+            "references": [
+              "Warranty Statement Section 3"
+            ]
+          },
+          {
+            "question": "Who pays for shipping under warranty?",
+            "question_variations": [
+              "Is shipping covered by warranty?",
+              "Do I have to pay for warranty shipping?",
+              "What are the shipping terms for warranty service?"
+            ],
+            "answer": "Kenyon covers ground shipping charges within Continental United States and Canada. Any duties, express or special shipping charges are the buyer's responsibility.",
+            "question_type": "Who",
+            "models": [
+              "All Kenyon products"
+            ],
+            "references": [
+              "Warranty Statement Section 4"
+            ]
+          },
+          {
+            "question": "Where can warranty service be performed?",
+            "question_variations": [
+              "Who can do warranty repairs?",
+              "Can any repair shop do warranty work?",
+              "What service centers are authorized for warranty?"
+            ],
+            "answer": "All warranty labor must be pre-authorized and performed by an Authorized Kenyon International Service Center, unless otherwise specified in writing by the Company.",
+            "question_type": "Where",
+            "models": [
+              "All Kenyon products"
+            ],
+            "references": [
+              "Warranty Statement Section 5"
             ]
           }
         ]
@@ -2214,157 +2202,13 @@
               "Do I need to radius the corners of the cutout?",
               "How do I prepare the counter for grill installation?"
             ],
-            "answer": "When making the cutout, radius the corners to prevent cracking. Typically use 1/4 inch radius, but follow countertop manufacturer's instructions for minimum radius and any required reinforcements.",
+            "answer": "When making the cutout, radius the corners with a minimum 1/4 inch radius to prevent cracking. Follow countertop manufacturer's instructions for exact radius size and any required reinforcement to prevent damage over time.",
             "question_type": "How",
             "models": [
               "All built-in grill models"
             ],
             "references": [
               "Installation Section - Countertop Preparation"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 21,
-      "pages": "21-21",
-      "result": {
-        "intent_routes": [
-          {
-            "question": "How do I prepare the grill for first use?",
-            "question_variations": [
-              "What should I do before using my grill for the first time?",
-              "How to set up new grill before initial use?",
-              "First time grill setup instructions?"
-            ],
-            "answer": "Remove protective plastic film from lid, trim flange and glass panel. Clean the grill thoroughly with stainless steel or glass cleaner to remove adhesives and manufacturing oils. Wash the nonstick coated grates in warm soapy water.",
-            "question_type": "How",
-            "models": [
-              "All grill models with glass panels"
-            ],
-            "references": [
-              "Page 21, Installation Section 5"
-            ]
-          },
-          {
-            "question": "What should I use to clean a new grill?",
-            "question_variations": [
-              "Best cleaner for new grill setup?",
-              "How to clean grill before first use?",
-              "What cleaning products for new grill preparation?"
-            ],
-            "answer": "Use stainless steel or glass cleaner for the grill surfaces and warm soapy water for the nonstick coated grates.",
-            "question_type": "What",
-            "models": [
-              "All grill models"
-            ],
-            "references": [
-              "Page 21, Installation Section 5"
-            ]
-          },
-          {
-            "question": "Where is the protective film located on a new grill?",
-            "question_variations": [
-              "Which parts have protective plastic film?",
-              "What protective coverings need removal?",
-              "Where do I find plastic film on new grill?"
-            ],
-            "answer": "The protective plastic film is located on the lid, trim flange, and glass panel.",
-            "question_type": "Where",
-            "models": [
-              "All grill models with glass panels"
-            ],
-            "references": [
-              "Page 21, Installation Section 5"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "chunk_num": 22,
-      "pages": "22-22",
-      "result": {
-        "intent_routes": [
-          {
-            "question": "What is the warranty period for Kenyon products?",
-            "question_variations": [
-              "How long is the warranty good for?",
-              "What's covered under Kenyon's warranty?",
-              "How many years is the warranty?"
-            ],
-            "answer": "The warranty covers parts and labor for 3 years from original installation or 42 months from invoice date, whichever comes first. Stainless steel has a lifetime guarantee against rust when properly maintained.",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Products"
-            ],
-            "references": [
-              "Warranty Statement Section 1"
-            ]
-          },
-          {
-            "question": "How do I submit a warranty claim?",
-            "question_variations": [
-              "What's the process for warranty service?",
-              "How do I get warranty service?",
-              "Where do I send my product for warranty repair?"
-            ],
-            "answer": "Contact kenyonservice@cookwithkenyon.com for return instructions. The product must be returned to the Company for evaluation to be covered under warranty.",
-            "question_type": "How",
-            "models": [
-              "All Kenyon Products"
-            ],
-            "references": [
-              "Warranty Statement Introduction"
-            ]
-          },
-          {
-            "question": "What is not covered under the warranty?",
-            "question_variations": [
-              "What voids the warranty?",
-              "What damage isn't covered by warranty?",
-              "When does the warranty not apply?"
-            ],
-            "answer": "The warranty does not cover damage from: use of product in unintended applications, corrosion, wear and tear, abuse, neglect, improper installation or maintenance, or breakage of glass (accidental or otherwise).",
-            "question_type": "What",
-            "models": [
-              "All Kenyon Products"
-            ],
-            "references": [
-              "Warranty Statement Section 3"
-            ]
-          },
-          {
-            "question": "Who pays for shipping under warranty?",
-            "question_variations": [
-              "Is shipping covered by warranty?",
-              "Do I have to pay for warranty shipping?",
-              "What are the shipping costs for warranty service?"
-            ],
-            "answer": "The Company covers ground shipping charges within the Continental United States and Canada. Any duties, express or special shipping charges are the buyer's responsibility.",
-            "question_type": "Who",
-            "models": [
-              "All Kenyon Products"
-            ],
-            "references": [
-              "Warranty Statement Section 4"
-            ]
-          },
-          {
-            "question": "Where can warranty service be performed?",
-            "question_variations": [
-              "Who can repair my Kenyon product under warranty?",
-              "What service centers can I use?",
-              "Are repairs covered anywhere?"
-            ],
-            "answer": "All warranty labor must be pre-authorized and performed by an Authorized Kenyon International Service Center, unless otherwise specified in writing by the Company.",
-            "question_type": "Where",
-            "models": [
-              "All Kenyon Products"
-            ],
-            "references": [
-              "Warranty Statement Section 5"
             ]
           }
         ]
