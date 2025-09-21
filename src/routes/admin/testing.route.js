@@ -259,66 +259,32 @@ router.post('/:table/approve', adminOnly, async (req, res) => {
         switch (table) {
           case 'specifications':
             productionTable = 'spec_suggestions';
-            productionData = {
-              doc_id: item.doc_id,
-              hint_type: item.parameter || 'specification',
-              value: item.value,
-              unit: item.units,
-              page: item.page,
-              context: item.description,
-              confidence: item.confidence,
-              bbox: item.bbox
-            };
             break;
 
           case 'playbook':
             productionTable = 'playbook_hints';
-            productionData = {
-              doc_id: item.doc_id,
-              test_name: item.title,
-              test_type: item.category || 'procedure',
-              description: item.description,
-              steps: item.steps,
-              expected_result: item.expected_outcome,
-              page: item.page,
-              confidence: item.confidence,
-              bbox: item.bbox
-            };
             break;
 
           case 'intent-router':
-            productionTable = 'intent_hints';
-            productionData = {
-              doc_id: item.doc_id,
-              intent_type: item.question_type || 'question',
-              prompt: item.question,
-              context: item.description,
-              page: item.page,
-              confidence: item.confidence,
-              bbox: item.bbox
-            };
+            productionTable = 'intent_router';
             break;
 
           case 'golden-tests':
-            // For golden tests, we'll insert into a new golden_tests table
             productionTable = 'golden_tests';
-            productionData = {
-              doc_id: item.doc_id,
-              query: item.query,
-              expected: item.expected,
-              test_method: item.test_method,
-              failure_indication: item.failure_indication,
-              related_procedures: item.related_procedures,
-              description: item.description,
-              page: item.page,
-              confidence: item.confidence,
-              bbox: item.bbox
-            };
             break;
 
           default:
             throw new Error(`Unknown table type: ${table}`);
         }
+
+        // Copy all fields from staging to production (preserving ID)
+        productionData = {
+          ...item,
+          status: 'approved',
+          approved_by: req.user?.email || 'admin',
+          approved_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
 
         // Insert into production table
         const { error: insertError } = await supabaseClient
