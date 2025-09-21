@@ -1,221 +1,386 @@
-import express from 'express';
-import { z } from 'zod';
+// src/routes/admin/intent-router.route.js
+import { Router } from 'express';
 import { adminOnly } from '../../middleware/admin.js';
-import { validate } from '../../middleware/validate.js';
-import intentRepository from '../../repositories/intent.repository.js';
 import { logger } from '../../utils/logger.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 
-const router = express.Router();
-const requestLogger = logger.createRequestLogger();
+const router = Router();
 
-// Validation schemas
-const createIntentRouteSchema = z.object({
-  pattern: z.string().min(1, 'Pattern is required').max(200, 'Pattern too long'),
-  intent: z.string().min(1, 'Intent is required').max(100, 'Intent too long'),
-  route_to: z.string().min(1, 'Route destination is required').max(200, 'Route too long'),
-  intent_hint_id: z.string().uuid().optional().nullable()
-});
-
-const updateIntentRouteSchema = createIntentRouteSchema.partial();
-
-const intentRouteParamsSchema = z.object({
-  id: z.string().uuid('Invalid route ID')
-});
-
-// GET /admin/intent-router - Get all intent routes
-router.get('/', adminOnly, async (req, res) => {
+/**
+ * POST /admin/api/intent-router/approve
+ * Bulk approve multiple intent router entries
+ */
+router.post('/approve', adminOnly, async (req, res) => {
   try {
-    const filters = {
-      pattern: req.query.pattern,
-      intent: req.query.intent
+    const { itemIds, approved_by } = req.body;
+
+    if (!Array.isArray(itemIds) || itemIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        error: { code: 'BAD_REQUEST', message: 'itemIds array is required' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    if (!approved_by) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        error: { code: 'BAD_REQUEST', message: 'approved_by is required' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    const supabaseClient = await getSupabaseClient();
+    if (!supabaseClient) {
+      return res.status(503).json({
+        success: false,
+        data: null,
+        error: { code: 'SUPABASE_DISABLED', message: 'Database not available' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    let approvedCount = 0;
+    const errors = [];
+
+    for (const id of itemIds) {
+      try {
+        // First, get the staging record
+        const { data: stagingRecord, error: fetchError } = await supabaseClient
+          .from('staging_intent_router')
+          .select('*')
+          .eq('id', id)
+          .eq('status', 'pending')
+          .single();
+
+        if (fetchError || !stagingRecord) {
+          errors.push(`Item ${id}: Staging record not found or already processed`);
+          continue;
+        }
+
+        // Copy all fields from staging to production (preserving ID)
+        const productionData = {
+          ...stagingRecord,
+          status: 'approved',
+          approved_by: approved_by,
+          approved_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        // Insert into production table
+        const { error: insertError } = await supabaseClient
+          .from('intent_router')
+          .insert(productionData);
+
+        if (insertError) {
+          errors.push(`Item ${id}: Failed to insert into production - ${insertError.message}`);
+          continue;
+        }
+
+        // Update staging status to approved
+        const { error: updateError } = await supabaseClient
+          .from('staging_intent_router')
+          .update({ 
+            status: 'approved',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', id);
+
+        if (updateError) {
+          errors.push(`Item ${id}: Failed to update staging status - ${updateError.message}`);
+          continue;
+        }
+
+        approvedCount++;
+
+      } catch (error) {
+        errors.push(`Item ${id}: ${error.message}`);
+      }
+    }
+
+    logger.info('Bulk approved intent router entries', { 
+      totalRequested: itemIds.length,
+      approvedCount,
+      errors: errors.length
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        approved_count: approvedCount,
+        total_requested: itemIds.length,
+        errors: errors,
+        message: `Successfully approved ${approvedCount} of ${itemIds.length} intent router entries`
+      },
+      error: null,
+      requestId: res.locals?.requestId ?? null,
+    });
+
+  } catch (error) {
+    logger.error('Intent router bulk approve route error', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      data: null,
+      error: { code: 'INTERNAL_ERROR', message: 'Unexpected error occurred' },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+});
+
+/**
+ * GET /admin/api/intent-router/pending
+ * Get all pending intent router entries with document info
+ */
+router.get('/pending', adminOnly, async (req, res) => {
+  try {
+    const { docId } = req.query;
+    
+    // Build the query conditions
+    const conditions = { status: 'pending' };
+    if (docId) {
+      conditions.doc_id = docId;
+    }
+
+    const supabaseClient = await getSupabaseClient();
+    if (!supabaseClient) {
+      return res.status(503).json({
+        success: false,
+        data: null,
+        error: { code: 'SUPABASE_DISABLED', message: 'Database not available' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    const { data: intentRouterEntries, error } = await supabaseClient
+      .from('staging_intent_router')
+      .select(`
+        *,
+        documents!inner(
+          model_norm,
+          manufacturer_norm,
+          model,
+          manufacturer
+        )
+      `)
+      .match(conditions)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      logger.error('Failed to fetch pending intent router entries', { error: error.message });
+      return res.status(500).json({
+        success: false,
+        data: null,
+        error: { code: 'DATABASE_ERROR', message: 'Failed to fetch intent router entries' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: intentRouterEntries,
+      error: null,
+      requestId: res.locals?.requestId ?? null,
+    });
+
+  } catch (error) {
+    logger.error('Intent router pending route error', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      data: null,
+      error: { code: 'INTERNAL_ERROR', message: 'Unexpected error occurred' },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+});
+
+/**
+ * POST /admin/api/intent-router/:id/approve
+ * Approve an intent router entry
+ */
+router.post('/:id/approve', adminOnly, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { approved_by } = req.body;
+
+    if (!approved_by) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        error: { code: 'BAD_REQUEST', message: 'approved_by is required' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    const supabaseClient = await getSupabaseClient();
+    if (!supabaseClient) {
+      return res.status(503).json({
+        success: false,
+        data: null,
+        error: { code: 'SUPABASE_DISABLED', message: 'Database not available' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    // First, get the staging record
+    const { data: stagingRecord, error: fetchError } = await supabaseClient
+      .from('staging_intent_router')
+      .select('*')
+      .eq('id', id)
+      .eq('status', 'pending')
+      .single();
+
+    if (fetchError || !stagingRecord) {
+      return res.status(404).json({
+        success: false,
+        data: null,
+        error: { code: 'NOT_FOUND', message: 'Staging record not found or already processed' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    // Copy all fields from staging to production (preserving ID)
+    const productionData = {
+      ...stagingRecord,
+      status: 'approved',
+      approved_by: approved_by,
+      approved_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
 
-    const result = await intentRepository.getAllIntentRoutes(filters);
-    
-    res.json({
-      success: true,
-      data: result.data,
-      requestId: req.id
-    });
-  } catch (error) {
-    requestLogger.error('Failed to get intent routes', { error: error.message, query: req.query });
-    res.status(500).json({
-      success: false,
-      error: 'Failed to retrieve intent routes',
-      requestId: req.id
-    });
-  }
-});
+    // Insert into production table
+    const { data: insertedData, error: insertError } = await supabaseClient
+      .from('intent_router')
+      .insert(productionData)
+      .select()
+      .single();
 
-// GET /admin/intent-router/stats - Get intent route statistics
-router.get('/stats', adminOnly, async (req, res) => {
-  try {
-    const result = await intentRepository.getIntentRouteStats();
-    
-    res.json({
-      success: true,
-      data: result.data,
-      requestId: req.id
-    });
-  } catch (error) {
-    requestLogger.error('Failed to get intent route stats', { error: error.message });
-    res.status(500).json({
-      success: false,
-      error: 'Failed to retrieve intent route statistics',
-      requestId: req.id
-    });
-  }
-});
-
-// GET /admin/intent-router/:id - Get specific intent route
-router.get('/:id', adminOnly, validate(intentRouteParamsSchema, 'params'), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await intentRepository.getIntentRouteById(id);
-    
-    if (!result.data) {
-      return res.status(404).json({
+    if (insertError) {
+      logger.error('Failed to insert into production table', { id, error: insertError.message });
+      return res.status(500).json({
         success: false,
-        error: 'Intent route not found',
-        requestId: req.id
+        data: null,
+        error: { code: 'DATABASE_ERROR', message: 'Failed to insert into production table' },
+        requestId: res.locals?.requestId ?? null,
       });
     }
-    
-    res.json({
-      success: true,
-      data: result.data,
-      requestId: req.id
-    });
-  } catch (error) {
-    requestLogger.error('Failed to get intent route by ID', { error: error.message, id: req.params.id });
-    res.status(500).json({
-      success: false,
-      error: 'Failed to retrieve intent route',
-      requestId: req.id
-    });
-  }
-});
 
-// POST /admin/intent-router - Create new intent route
-router.post('/', adminOnly, validate(createIntentRouteSchema, 'body'), async (req, res) => {
-  try {
-    const routeData = req.body;
-    const createdBy = req.user?.id || 'admin';
-    
-    const result = await intentRepository.createIntentRoute(routeData, createdBy);
-    
-    requestLogger.info('Intent route created', { 
-      id: result.data.id, 
-      pattern: result.data.pattern,
-      intent: result.data.intent,
-      createdBy 
-    });
-    
-    res.status(201).json({
-      success: true,
-      data: result.data,
-      requestId: req.id
-    });
-  } catch (error) {
-    requestLogger.error('Failed to create intent route', { error: error.message, body: req.body });
-    res.status(500).json({
-      success: false,
-      error: 'Failed to create intent route',
-      requestId: req.id
-    });
-  }
-});
+    // Update staging status to approved
+    const { error: updateError } = await supabaseClient
+      .from('staging_intent_router')
+      .update({ 
+        status: 'approved',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id);
 
-// PUT /admin/intent-router/:id - Update intent route
-router.put('/:id', adminOnly, validate(updateIntentRouteSchema, 'body'), validate(intentRouteParamsSchema, 'params'), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-    const updatedBy = req.user?.id || 'admin';
-    
-    // Check if route exists
-    const existingRoute = await intentRepository.getIntentRouteById(id);
-    if (!existingRoute.data) {
+    if (updateError) {
+      logger.error('Failed to update staging status', { id, error: updateError.message });
+      // Don't fail the request, but log the error
+    }
+
+    if (!insertedData) {
       return res.status(404).json({
         success: false,
-        error: 'Intent route not found',
-        requestId: req.id
+        data: null,
+        error: { code: 'NOT_FOUND', message: 'Failed to create production record' },
+        requestId: res.locals?.requestId ?? null,
       });
     }
-    
-    const result = await intentRepository.updateIntentRoute(id, updates, updatedBy);
-    
-    requestLogger.info('Intent route updated', { 
-      id, 
-      updates,
-      updatedBy 
-    });
-    
-    res.json({
+
+    logger.info('Intent router entry approved', { id, approved_by });
+    return res.status(200).json({
       success: true,
-      data: result.data,
-      requestId: req.id
+      data: insertedData,
+      error: null,
+      requestId: res.locals?.requestId ?? null,
     });
+
   } catch (error) {
-    requestLogger.error('Failed to update intent route', { error: error.message, id: req.params.id, body: req.body });
-    res.status(500).json({
+    logger.error('Intent router entry approve route error', { error: error.message });
+    return res.status(500).json({
       success: false,
-      error: 'Failed to update intent route',
-      requestId: req.id
+      data: null,
+      error: { code: 'INTERNAL_ERROR', message: 'Unexpected error occurred' },
+      requestId: res.locals?.requestId ?? null,
     });
   }
 });
 
-// DELETE /admin/intent-router/:id - Delete intent route
-router.delete('/:id', adminOnly, validate(intentRouteParamsSchema, 'params'), async (req, res) => {
+/**
+ * POST /admin/api/intent-router/:id/reject
+ * Reject an intent router entry
+ */
+router.post('/:id/reject', adminOnly, async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Check if route exists
-    const existingRoute = await intentRepository.getIntentRouteById(id);
-    if (!existingRoute.data) {
-      return res.status(404).json({
+    const { rejected_by, reason } = req.body;
+
+    if (!rejected_by) {
+      return res.status(400).json({
         success: false,
-        error: 'Intent route not found',
-        requestId: req.id
+        data: null,
+        error: { code: 'BAD_REQUEST', message: 'rejected_by is required' },
+        requestId: res.locals?.requestId ?? null,
       });
     }
-    
-    await intentRepository.deleteIntentRoute(id);
-    
-    requestLogger.info('Intent route deleted', { id });
-    
-    res.json({
-      success: true,
-      requestId: req.id
-    });
-  } catch (error) {
-    requestLogger.error('Failed to delete intent route', { error: error.message, id: req.params.id });
-    res.status(500).json({
-      success: false,
-      error: 'Failed to delete intent route',
-      requestId: req.id
-    });
-  }
-});
 
-// POST /admin/intent-router/match - Find matching route for a query
-router.post('/match', adminOnly, validate(z.object({ query: z.string().min(1, 'Query is required') }), 'body'), async (req, res) => {
-  try {
-    const { query } = req.body;
-    const result = await intentRepository.findMatchingRoute(query);
-    
-    res.json({
+    const supabaseClient = await getSupabaseClient();
+    if (!supabaseClient) {
+      return res.status(503).json({
+        success: false,
+        data: null,
+        error: { code: 'SUPABASE_DISABLED', message: 'Database not available' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    const { data, error } = await supabaseClient
+      .from('staging_intent_router')
+      .update({
+        status: 'rejected',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .eq('status', 'pending') // Only reject pending items
+      .select()
+      .single();
+
+    if (error) {
+      logger.error('Failed to reject intent router entry', { id, error: error.message });
+      return res.status(500).json({
+        success: false,
+        data: null,
+        error: { code: 'DATABASE_ERROR', message: 'Failed to reject intent router entry' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        data: null,
+        error: { code: 'NOT_FOUND', message: 'Intent router entry not found or already processed' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    logger.info('Intent router entry rejected', { id, rejected_by, reason });
+    return res.status(200).json({
       success: true,
-      data: result.data,
-      requestId: req.id
+      data: data,
+      error: null,
+      requestId: res.locals?.requestId ?? null,
     });
+
   } catch (error) {
-    requestLogger.error('Failed to find matching route', { error: error.message, query: req.body.query });
-    res.status(500).json({
+    logger.error('Intent router entry reject route error', { error: error.message });
+    return res.status(500).json({
       success: false,
-      error: 'Failed to find matching route',
-      requestId: req.id
+      data: null,
+      error: { code: 'INTERNAL_ERROR', message: 'Unexpected error occurred' },
+      requestId: res.locals?.requestId ?? null,
     });
   }
 });

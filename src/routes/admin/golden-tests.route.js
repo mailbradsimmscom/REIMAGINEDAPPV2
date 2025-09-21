@@ -31,7 +31,7 @@ router.get('/pending', adminOnly, async (req, res) => {
     }
 
     const { data: goldenTests, error } = await supabaseClient
-      .from('golden_tests')
+      .from('staging_golden_tests')
       .select(`
         *,
         documents!inner(
@@ -100,34 +100,68 @@ router.post('/:id/approve', adminOnly, async (req, res) => {
       });
     }
 
-    const { data, error } = await supabaseClient
-      .from('golden_tests')
-      .update({
-        status: 'approved',
-        approved_by: approved_by,
-        approved_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
+    // First, get the staging record
+    const { data: stagingRecord, error: fetchError } = await supabaseClient
+      .from('staging_golden_tests')
+      .select('*')
       .eq('id', id)
-      .eq('status', 'pending') // Only approve pending items
-      .select()
+      .eq('status', 'pending')
       .single();
 
-    if (error) {
-      logger.error('Failed to approve golden test', { id, error: error.message });
-      return res.status(500).json({
+    if (fetchError || !stagingRecord) {
+      return res.status(404).json({
         success: false,
         data: null,
-        error: { code: 'DATABASE_ERROR', message: 'Failed to approve golden test' },
+        error: { code: 'NOT_FOUND', message: 'Staging record not found or already processed' },
         requestId: res.locals?.requestId ?? null,
       });
     }
 
-    if (!data) {
+    // Copy all fields from staging to production (preserving ID)
+    const productionData = {
+      ...stagingRecord,
+      status: 'approved',
+      approved_by: approved_by,
+      approved_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    // Insert into production table
+    const { data: insertedData, error: insertError } = await supabaseClient
+      .from('golden_tests')
+      .insert(productionData)
+      .select()
+      .single();
+
+    if (insertError) {
+      logger.error('Failed to insert into production table', { id, error: insertError.message });
+      return res.status(500).json({
+        success: false,
+        data: null,
+        error: { code: 'DATABASE_ERROR', message: 'Failed to insert into production table' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    // Update staging status to approved
+    const { error: updateError } = await supabaseClient
+      .from('staging_golden_tests')
+      .update({ 
+        status: 'approved',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id);
+
+    if (updateError) {
+      logger.error('Failed to update staging status', { id, error: updateError.message });
+      // Don't fail the request, but log the error
+    }
+
+    if (!insertedData) {
       return res.status(404).json({
         success: false,
         data: null,
-        error: { code: 'NOT_FOUND', message: 'Golden test not found or already processed' },
+        error: { code: 'NOT_FOUND', message: 'Failed to create production record' },
         requestId: res.locals?.requestId ?? null,
       });
     }
@@ -135,7 +169,7 @@ router.post('/:id/approve', adminOnly, async (req, res) => {
     logger.info('Golden test approved', { id, approved_by });
     return res.status(200).json({
       success: true,
-      data: data,
+      data: insertedData,
       error: null,
       requestId: res.locals?.requestId ?? null,
     });
@@ -180,14 +214,10 @@ router.post('/:id/reject', adminOnly, async (req, res) => {
     }
 
     const { data, error } = await supabaseClient
-      .from('golden_tests')
+      .from('staging_golden_tests')
       .update({
         status: 'rejected',
-        approved_by: rejected_by, // Store who rejected it
-        approved_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        // Store rejection reason in a comment field if available
-        ...(reason && { context: reason })
+        updated_at: new Date().toISOString()
       })
       .eq('id', id)
       .eq('status', 'pending') // Only reject pending items
@@ -223,6 +253,129 @@ router.post('/:id/reject', adminOnly, async (req, res) => {
 
   } catch (error) {
     logger.error('Golden test reject route error', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      data: null,
+      error: { code: 'INTERNAL_ERROR', message: 'Unexpected error occurred' },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+});
+
+/**
+ * POST /admin/api/golden-tests/approve
+ * Bulk approve multiple golden tests
+ */
+router.post('/approve', adminOnly, async (req, res) => {
+  try {
+    const { itemIds, approved_by } = req.body;
+
+    if (!Array.isArray(itemIds) || itemIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        error: { code: 'BAD_REQUEST', message: 'itemIds array is required' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    if (!approved_by) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        error: { code: 'BAD_REQUEST', message: 'approved_by is required' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    const supabaseClient = await getSupabaseClient();
+    if (!supabaseClient) {
+      return res.status(503).json({
+        success: false,
+        data: null,
+        error: { code: 'SUPABASE_DISABLED', message: 'Database not available' },
+        requestId: res.locals?.requestId ?? null,
+      });
+    }
+
+    let approvedCount = 0;
+    const errors = [];
+
+    for (const id of itemIds) {
+      try {
+        // First, get the staging record
+        const { data: stagingRecord, error: fetchError } = await supabaseClient
+          .from('staging_golden_tests')
+          .select('*')
+          .eq('id', id)
+          .eq('status', 'pending')
+          .single();
+
+        if (fetchError || !stagingRecord) {
+          errors.push(`Item ${id}: Staging record not found or already processed`);
+          continue;
+        }
+
+        // Copy all fields from staging to production (preserving ID)
+        const productionData = {
+          ...stagingRecord,
+          status: 'approved',
+          approved_by: approved_by,
+          approved_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        // Insert into production table
+        const { error: insertError } = await supabaseClient
+          .from('golden_tests')
+          .insert(productionData);
+
+        if (insertError) {
+          errors.push(`Item ${id}: Failed to insert into production - ${insertError.message}`);
+          continue;
+        }
+
+        // Update staging status to approved
+        const { error: updateError } = await supabaseClient
+          .from('staging_golden_tests')
+          .update({ 
+            status: 'approved',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', id);
+
+        if (updateError) {
+          errors.push(`Item ${id}: Failed to update staging status - ${updateError.message}`);
+          continue;
+        }
+
+        approvedCount++;
+
+      } catch (error) {
+        errors.push(`Item ${id}: ${error.message}`);
+      }
+    }
+
+    logger.info('Bulk approved golden tests', { 
+      totalRequested: itemIds.length,
+      approvedCount,
+      errors: errors.length
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        approved_count: approvedCount,
+        total_requested: itemIds.length,
+        errors: errors,
+        message: `Successfully approved ${approvedCount} of ${itemIds.length} golden tests`
+      },
+      error: null,
+      requestId: res.locals?.requestId ?? null,
+    });
+
+  } catch (error) {
+    logger.error('Golden tests bulk approve route error', { error: error.message });
     return res.status(500).json({
       success: false,
       data: null,

@@ -110,7 +110,7 @@ router.get('/dashboard', adminOnly, async (req, res) => {
 router.get('/:table', adminOnly, async (req, res) => {
   try {
     const { table } = req.params;
-    const { docId, page = 1, limit = 50 } = req.query;
+    const { docId, page = 1, limit = 1000 } = req.query;
     
     // Validate table name
     const validTables = ['specifications', 'playbook', 'intent-router', 'golden-tests'];
@@ -163,6 +163,12 @@ router.get('/:table', adminOnly, async (req, res) => {
       total: count,
       page,
       limit
+    });
+
+    // Debug: Log actual data structure
+    logger.info('API response data sample', { 
+      sampleItem: data?.[0], 
+      modelNormValues: data?.map(item => item.model_norm) 
     });
 
     res.json({
