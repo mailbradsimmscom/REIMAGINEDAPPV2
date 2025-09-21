@@ -228,8 +228,7 @@ router.post('/:table/approve', adminOnly, async (req, res) => {
     const { data: itemsToApprove, error: fetchError } = await supabaseClient
       .from(dbTable)
       .select('*')
-      .in('id', itemIds)
-      .eq('status', 'pending');
+      .in('id', itemIds);
 
     if (fetchError) {
       logger.error(`Failed to fetch items for approval`, { error: fetchError.message });
@@ -302,7 +301,7 @@ router.post('/:table/approve', adminOnly, async (req, res) => {
 
         // Update staging item status to approved
         const { error: updateError } = await supabaseClient
-          .from(dbTable)
+          .from(tableMap[table])
           .update({ 
             status: 'approved'
           })
@@ -355,7 +354,7 @@ router.post('/:table/approve', adminOnly, async (req, res) => {
 router.post('/:table/decline', adminOnly, async (req, res) => {
   try {
     const { table } = req.params;
-    const { itemIds, declineReason } = req.body;
+    const { itemIds } = req.body;
 
     if (!Array.isArray(itemIds) || itemIds.length === 0) {
       return res.status(400).json({
@@ -372,17 +371,9 @@ router.post('/:table/decline', adminOnly, async (req, res) => {
       'golden-tests': 'staging_golden_tests'
     };
 
-    const declinedTableMap = {
-      'specifications': 'declined_spec_suggestions',
-      'playbook': 'declined_playbook_hints',
-      'intent-router': 'declined_intent_router',
-      'golden-tests': 'declined_golden_tests'
-    };
-
     const dbTable = tableMap[table];
-    const declinedTable = declinedTableMap[table];
     
-    if (!dbTable || !declinedTable) {
+    if (!dbTable) {
       return res.status(400).json({
         success: false,
         error: { code: 'INVALID_TABLE', message: 'Invalid table name' }
@@ -395,8 +386,7 @@ router.post('/:table/decline', adminOnly, async (req, res) => {
     const { data: itemsToDecline, error: fetchError } = await supabaseClient
       .from(dbTable)
       .select('*')
-      .in('id', itemIds)
-      .eq('status', 'pending');
+      .in('id', itemIds);
 
     if (fetchError) {
       logger.error(`Failed to fetch items for decline`, { error: fetchError.message });
@@ -409,7 +399,7 @@ router.post('/:table/decline', adminOnly, async (req, res) => {
     if (!itemsToDecline || itemsToDecline.length === 0) {
       return res.status(404).json({
         success: false,
-        error: { code: 'NOT_FOUND', message: 'No pending items found for decline' }
+        error: { code: 'NOT_FOUND', message: 'No items found for decline' }
       });
     }
 
@@ -419,31 +409,6 @@ router.post('/:table/decline', adminOnly, async (req, res) => {
 
     for (const item of itemsToDecline) {
       try {
-        // Prepare declined item data (copy all fields plus decline tracking)
-        const declinedData = {
-          ...item,
-          declined_at: new Date().toISOString(),
-          declined_by: req.user?.email || 'admin',
-          decline_reason: declineReason || 'No reason provided'
-        };
-
-        // Keep the original id to maintain audit trail
-        // (don't delete declinedData.id)
-
-        // Insert into declined table
-        const { error: insertError } = await supabaseClient
-          .from(declinedTable)
-          .insert(declinedData);
-
-        if (insertError) {
-          logger.error(`Failed to insert into ${declinedTable}`, {
-            error: insertError.message,
-            itemId: item.id
-          });
-          errors.push(`Failed to insert item ${item.id}: ${insertError.message}`);
-          continue;
-        }
-
         // Update staging item status to declined
         const { error: updateError } = await supabaseClient
           .from(dbTable)
