@@ -524,6 +524,45 @@
             }
         }
 
+        /* Asset UID Display */
+        .asset-uid-display {
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            border: 1px solid var(--border-color);
+        }
+
+        .asset-uid-line {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .asset-uid-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .asset-uid-icon.success {
+            color: var(--success-color);
+        }
+
+        .asset-uid-icon.error {
+            color: var(--error-color);
+        }
+
+        .asset-uid-icon.loading {
+            color: var(--text-secondary);
+        }
+
+        .asset-uid-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
         /* Accessibility */
         .sr-only {
             position: absolute;
@@ -563,6 +602,14 @@
                             <option value="">Select Model</option>
                             <!-- Options will be populated dynamically -->
                         </select>
+                    </div>
+                </div>
+                
+                <!-- Asset UID Display -->
+                <div class="asset-uid-display" id="assetUidDisplay" style="display: none;">
+                    <div class="asset-uid-line">
+                        <span class="asset-uid-icon" id="assetUidIcon">⏳</span>
+                        <span class="asset-uid-text" id="assetUidText">Asset UID: Loading...</span>
                     </div>
                 </div>
             </div>
@@ -678,9 +725,9 @@
                     
                     const result = await response.json();
                     this.manufacturers = result.data.manufacturers.map(name => ({
-                        id: name.toLowerCase().replace(/\s+/g, '_'),
+                        id: name,
                         name: name,
-                        normalized: name.toLowerCase().replace(/\s+/g, '_')
+                        normalized: name
                     }));
 
                     const manufacturerSelect = document.getElementById('manufacturer');
@@ -782,6 +829,7 @@
                 if (!manufacturerId) {
                     document.getElementById('model').disabled = true;
                     document.getElementById('model').innerHTML = '<option value="">Select Model</option>';
+                    this.hideAssetUidDisplay();
                     return;
                 }
 
@@ -789,7 +837,8 @@
             }
 
             onModelChange(modelId) {
-                // Model selected - no additional action needed
+                // Model selected - check for asset UID
+                this.checkAssetUid();
             }
 
             onFileSelect(event) {
@@ -1394,6 +1443,104 @@
                 const sizes = ['Bytes', 'KB', 'MB', 'GB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Asset UID Display Methods
+            async checkAssetUid() {
+                const manufacturer = document.getElementById('manufacturer').value;
+                const model = document.getElementById('model').value;
+                
+                console.log('🔍 checkAssetUid called with:', { manufacturer, model });
+                
+                if (!manufacturer || !model) {
+                    console.log('❌ Missing manufacturer or model, hiding display');
+                    this.hideAssetUidDisplay();
+                    return;
+                }
+
+                this.showAssetUidLoading();
+                
+                try {
+                    // Get the manufacturer name from the ID
+                    const manufacturerObj = this.manufacturers.find(m => m.id === manufacturer);
+                    console.log('🏭 Manufacturer object:', manufacturerObj);
+                    
+                    if (!manufacturerObj) {
+                        console.log('❌ Manufacturer object not found');
+                        this.showAssetUidError();
+                        return;
+                    }
+
+                    const url = `/admin/api/systems/lookup?manufacturer=${encodeURIComponent(manufacturerObj.name)}&model=${encodeURIComponent(model)}`;
+                    console.log('🌐 Making request to:', url);
+
+                    // Query the systems table for asset_uid
+                    const response = await fetch(url, {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+                    
+                    console.log('📡 Response status:', response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        console.log('❌ Response not OK');
+                        this.showAssetUidError();
+                        return;
+                    }
+                    
+                    const result = await response.json();
+                    console.log('📦 Full response:', result);
+                    
+                    // The lookup endpoint returns the system data directly
+                    if (result.success && result.data && result.data.asset_uid) {
+                        console.log('✅ Found asset_uid:', result.data.asset_uid);
+                        this.showAssetUidSuccess(result.data.asset_uid);
+                    } else {
+                        console.log('❌ No system found or no asset_uid');
+                        this.showAssetUidError();
+                    }
+                    
+                } catch (error) {
+                    console.error('💥 Failed to check asset UID:', error);
+                    this.showAssetUidError();
+                }
+            }
+
+            showAssetUidLoading() {
+                const display = document.getElementById('assetUidDisplay');
+                const icon = document.getElementById('assetUidIcon');
+                const text = document.getElementById('assetUidText');
+                
+                display.style.display = 'block';
+                icon.textContent = '⏳';
+                icon.className = 'asset-uid-icon loading';
+                text.textContent = 'Asset UID: Loading...';
+            }
+
+            showAssetUidSuccess(assetUid) {
+                const display = document.getElementById('assetUidDisplay');
+                const icon = document.getElementById('assetUidIcon');
+                const text = document.getElementById('assetUidText');
+                
+                display.style.display = 'block';
+                icon.textContent = '✅';
+                icon.className = 'asset-uid-icon success';
+                text.textContent = `Asset UID: ${assetUid}`;
+            }
+
+            showAssetUidError() {
+                const display = document.getElementById('assetUidDisplay');
+                const icon = document.getElementById('assetUidIcon');
+                const text = document.getElementById('assetUidText');
+                
+                display.style.display = 'block';
+                icon.textContent = '❌';
+                icon.className = 'asset-uid-icon error';
+                text.textContent = 'Asset UID: cannot match asset UID';
+            }
+
+            hideAssetUidDisplay() {
+                const display = document.getElementById('assetUidDisplay');
+                display.style.display = 'none';
             }
         }
 

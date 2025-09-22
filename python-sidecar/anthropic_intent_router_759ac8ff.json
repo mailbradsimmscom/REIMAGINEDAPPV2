@@ -1,0 +1,4648 @@
+{
+  "total_chunks_processed": 53,
+  "successful_chunks": 51,
+  "failed_chunks": 2,
+  "total_intent_routes_extracted": 241,
+  "unique_intent_routes": 25,
+  "question_type_breakdown": {
+    "How": 9,
+    "What": 10,
+    "Where": 3,
+    "When": 1,
+    "Who": 2
+  },
+  "intent_routes": [
+    {
+      "question": "How do I install the ZEN 150 touch screen?",
+      "question_variations": [
+        "What's the installation process for ZEN 150?",
+        "Can you explain ZEN 150 mounting steps?",
+        "How to mount a ZEN 150 touch display?"
+      ],
+      "answer": "Mount the ZEN 150 on a flat surface using the 4 mounting brackets provided. Ensure 10cm clearance on all sides. Connect 48V DC power supply to terminals marked + and -. Ground the unit using the GND terminal.",
+      "question_type": "How",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "references": [
+        "Section 2.1 Installation",
+        "Page 4"
+      ]
+    },
+    {
+      "question": "What are the power requirements for ZEN 150?",
+      "question_variations": [
+        "What voltage does the ZEN 150 need?",
+        "What's the power supply for ZEN 150?",
+        "How much power does ZEN 150 use?"
+      ],
+      "answer": "The ZEN 150 requires 48V DC power supply with maximum current draw of 2.5A. Input voltage tolerance is 45-52V DC.",
+      "question_type": "What",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "references": [
+        "Section 1.2 Technical Specifications",
+        "Page 2"
+      ]
+    },
+    {
+      "question": "Where should I mount the ZEN 150?",
+      "question_variations": [
+        "What's the best location for ZEN 150?",
+        "Where to install ZEN 150 screen?",
+        "Mounting location for ZEN 150?"
+      ],
+      "answer": "Mount the ZEN 150 in a dry, indoor location away from direct sunlight. Operating temperature range is 0-50\u00b0C. Ensure adequate ventilation with minimum 10cm clearance on all sides. Mount on flat, stable surface.",
+      "question_type": "Where",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "references": [
+        "Section 2.2 Location Requirements",
+        "Page 5"
+      ]
+    },
+    {
+      "question": "How do I perform first startup of the watermaker?",
+      "question_variations": [
+        "What's the startup procedure?",
+        "How do I start the system for the first time?",
+        "What checks are needed before first use?"
+      ],
+      "answer": "Before first startup, perform preliminary checks according to section 5.2.1. Then follow the complete startup procedure detailed in section 5.2.",
+      "question_type": "How",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "references": [
+        "Section 5.2",
+        "Section 5.2.1"
+      ]
+    },
+    {
+      "question": "What are the electrical connection requirements?",
+      "question_variations": [
+        "How do I wire the system?",
+        "What's the electrical setup?",
+        "How is the unit wired?"
+      ],
+      "answer": "The unit requires 48V DC connections. Refer to the electric layout scheme in section 4.5.3 and follow wire connection guidelines in section 4.5.2 for proper installation.",
+      "question_type": "What",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "references": [
+        "Section 4.5.2",
+        "Section 4.5.3"
+      ]
+    },
+    {
+      "question": "Where should the watermaker be mounted?",
+      "question_variations": [
+        "How do I install the watermaker unit?",
+        "What are the mounting requirements?",
+        "Where can I place the system?"
+      ],
+      "answer": "Follow general mounting criteria in section 4.1. The watermaker group should be installed according to specific guidelines in section 4.2.2, considering proper component placement and accessibility.",
+      "question_type": "Where",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "references": [
+        "Section 4.1",
+        "Section 4.2.2"
+      ]
+    },
+    {
+      "question": "How do I connect the seawater intake?",
+      "question_variations": [
+        "What are the water intake requirements?",
+        "How should I set up water intake?",
+        "Where does seawater enter the system?"
+      ],
+      "answer": "Seawater intake must be installed according to section 4.3.2 specifications. Connect to water intake and discharge systems following guidelines in section 4.3.1 for proper operation.",
+      "question_type": "How",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "references": [
+        "Section 4.3.1",
+        "Section 4.3.2"
+      ]
+    },
+    {
+      "question": "What are the hydraulic connection requirements?",
+      "question_variations": [
+        "How do I connect the water lines?",
+        "What plumbing is needed?",
+        "How should I pipe the system?"
+      ],
+      "answer": "Hydraulic connections must be made according to section 4.4 specifications, including proper connection of intake, discharge, and freshwater flushing lines.",
+      "question_type": "What",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "references": [
+        "Section 4.4"
+      ]
+    },
+    {
+      "question": "How do I start up the watermaker?",
+      "question_variations": [
+        "What's the startup procedure?",
+        "How to turn on the watermaker?",
+        "What are the steps to start the system?"
+      ],
+      "answer": "Refer to section 5.2.2 for complete startup procedure",
+      "question_type": "How",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 5.2.2, Page 39"
+      ]
+    },
+    {
+      "question": "What is the recommended normal operating procedure?",
+      "question_variations": [
+        "How should I normally operate the system?",
+        "What's the best way to run the watermaker?"
+      ],
+      "answer": "The recommended procedure is normal operation with final flushing",
+      "question_type": "What",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 5.3.2, Page 40"
+      ]
+    },
+    {
+      "question": "How do I check the filter?",
+      "question_variations": [
+        "When should I clean the filter?",
+        "How to maintain filter cleanliness?"
+      ],
+      "answer": "Regular filter cleanliness checks should be performed according to maintenance schedule",
+      "question_type": "How",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 6.1, Page 44"
+      ]
+    },
+    {
+      "question": "What is the winterizing procedure?",
+      "question_variations": [
+        "How do I prepare for cold weather?",
+        "What's the antifreeze procedure?",
+        "How to winterize below 5\u00b0C?"
+      ],
+      "answer": "Special antifreeze procedure required for temperatures under 5\u00b0C",
+      "question_type": "What",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 6.6, Page 49"
+      ]
+    },
+    {
+      "question": "When should membranes be replaced?",
+      "question_variations": [
+        "How often to change membranes?",
+        "What's the membrane replacement schedule?"
+      ],
+      "answer": "Check membrane replacement requirements according to periodic maintenance schedule",
+      "question_type": "When",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 6.7.1, Page 50"
+      ]
+    },
+    {
+      "question": "What spare parts do I need for short term cruising?",
+      "question_variations": [
+        "Which spares should I carry for short trips?",
+        "What's the recommended short-term spare parts list?"
+      ],
+      "answer": "Refer to short term cruising spare parts list",
+      "question_type": "What",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 8.1, Page 52"
+      ]
+    },
+    {
+      "question": "How do I shut down the system?",
+      "question_variations": [
+        "What's the correct shutdown procedure?",
+        "How to turn off the watermaker properly?"
+      ],
+      "answer": "Follow the shutdown operating procedure using necessary equipment",
+      "question_type": "How",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 6.5.2, Page 47"
+      ]
+    },
+    {
+      "question": "Where can I find troubleshooting information?",
+      "question_variations": [
+        "How do I diagnose problems?",
+        "What should I do if something goes wrong?"
+      ],
+      "answer": "Consult the troubleshooting chart for system issues",
+      "question_type": "Where",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "references": [
+        "Section 7.1, Page 51"
+      ]
+    },
+    {
+      "question": "How is the manual structured?",
+      "question_variations": [
+        "What is the layout of the manual?",
+        "How is the manual organized?",
+        "What is the manual structure?"
+      ],
+      "answer": "The manual is divided into chapters with subdivided paragraphs. Each chapter contains essential information, with paragraphs focusing on key points. The structure uses a hierarchical numbering system (1, 1.1, 1.1.1, 1.1.1.1).",
+      "question_type": "How",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "references": [
+        "Section 1.1"
+      ]
+    },
+    {
+      "question": "How are figures and tables numbered in the manual?",
+      "question_variations": [
+        "What is the numbering system for figures?",
+        "How do you find figure numbers in the manual?",
+        "What is the table numbering convention?"
+      ],
+      "answer": "Figures and tables are numbered with a prefix indicating the chapter followed by a progressive number that resets at the beginning of each chapter.",
+      "question_type": "How",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "references": [
+        "Section 1.1"
+      ]
+    },
+    {
+      "question": "What do the pictograms in the manual mean?",
+      "question_variations": [
+        "What symbols are used in the manual?",
+        "What do the warning symbols mean?",
+        "How are warnings indicated in the manual?"
+      ],
+      "answer": "The manual uses three main symbols: ATTENTION (for accident prevention and safety), CAUTION (for potential system damage), and NOTE (for useful information).",
+      "question_type": "What",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "references": [
+        "Section 1.2"
+      ]
+    },
+    {
+      "question": "What does the ATTENTION symbol indicate?",
+      "question_variations": [
+        "When is the ATTENTION symbol used?",
+        "What does the attention warning mean?",
+        "What is the purpose of the attention symbol?"
+      ],
+      "answer": "The ATTENTION symbol indicates accident prevention regulations for the operator and/or any exposed persons.",
+      "question_type": "What",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "references": [
+        "Section 1.2"
+      ]
+    },
+    {
+      "question": "What does the CAUTION symbol mean?",
+      "question_variations": [
+        "When is the CAUTION symbol used?",
+        "What does the caution warning indicate?",
+        "What is the purpose of the caution symbol?"
+      ],
+      "answer": "The CAUTION symbol indicates the possibility of damaging the system and/or its components.",
+      "question_type": "What",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "references": [
+        "Section 1.2"
+      ]
+    },
+    {
+      "question": "Who is allowed to operate this machine?",
+      "question_variations": [
+        "Can anyone use this equipment?",
+        "What are the operator requirements?",
+        "Is there an age restriction for using the machine?"
+      ],
+      "answer": "Only experienced adults can operate the plant. Children and inexperienced people are explicitly prohibited from touching or operating the equipment.",
+      "question_type": "Who",
+      "models": [
+        "All Schenker Models"
+      ],
+      "references": [
+        "Section 2.2 Safety Warnings"
+      ]
+    },
+    {
+      "question": "What protective equipment is required?",
+      "question_variations": [
+        "What safety gear should I wear?",
+        "Do I need special clothing to operate this?",
+        "What PPE is needed?"
+      ],
+      "answer": "Operators must wear protective equipment suitable for service operation. Clothing must be tight to the body and resistant to cleaning products used.",
+      "question_type": "What",
+      "models": [
+        "All Schenker Models"
+      ],
+      "references": [
+        "Section 2.2 Safety Warnings"
+      ]
+    },
+    {
+      "question": "How often should I check for leaks?",
+      "question_variations": [
+        "When do I need to inspect for leakage?",
+        "What is the leak inspection schedule?",
+        "How frequently should I inspect the system?"
+      ],
+      "answer": "The system should be checked periodically for leaks. The plant should be installed where potential leaks won't cause damage or compromise vessel safety.",
+      "question_type": "How",
+      "models": [
+        "All Schenker Models"
+      ],
+      "references": [
+        "Section 2.2 Safety Warnings"
+      ]
+    },
+    {
+      "question": "Who can perform maintenance on the system?",
+      "question_variations": [
+        "Can I service the machine myself?",
+        "Who is authorized to do maintenance?",
+        "What are the maintenance personnel requirements?"
+      ],
+      "answer": "Maintenance should only be performed by suitably qualified persons or Schenker personnel.",
+      "question_type": "Who",
+      "models": [
+        "All Schenker Models"
+      ],
+      "references": [
+        "Section 2.2 Safety Warnings"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I install the ZEN 150 touch screen?",
+            "question_variations": [
+              "What's the installation process for ZEN 150?",
+              "Can you explain ZEN 150 mounting steps?",
+              "How to mount a ZEN 150 touch display?"
+            ],
+            "answer": "Mount the ZEN 150 on a flat surface using the 4 mounting brackets provided. Ensure 10cm clearance on all sides. Connect 48V DC power supply to terminals marked + and -. Ground the unit using the GND terminal.",
+            "question_type": "How",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "references": [
+              "Section 2.1 Installation",
+              "Page 4"
+            ]
+          },
+          {
+            "question": "What are the power requirements for ZEN 150?",
+            "question_variations": [
+              "What voltage does the ZEN 150 need?",
+              "What's the power supply for ZEN 150?",
+              "How much power does ZEN 150 use?"
+            ],
+            "answer": "The ZEN 150 requires 48V DC power supply with maximum current draw of 2.5A. Input voltage tolerance is 45-52V DC.",
+            "question_type": "What",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "references": [
+              "Section 1.2 Technical Specifications",
+              "Page 2"
+            ]
+          },
+          {
+            "question": "Where should I mount the ZEN 150?",
+            "question_variations": [
+              "What's the best location for ZEN 150?",
+              "Where to install ZEN 150 screen?",
+              "Mounting location for ZEN 150?"
+            ],
+            "answer": "Mount the ZEN 150 in a dry, indoor location away from direct sunlight. Operating temperature range is 0-50\u00b0C. Ensure adequate ventilation with minimum 10cm clearance on all sides. Mount on flat, stable surface.",
+            "question_type": "Where",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "references": [
+              "Section 2.2 Location Requirements",
+              "Page 5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I perform first startup of the watermaker?",
+            "question_variations": [
+              "What's the startup procedure?",
+              "How do I start the system for the first time?",
+              "What checks are needed before first use?"
+            ],
+            "answer": "Before first startup, perform preliminary checks according to section 5.2.1. Then follow the complete startup procedure detailed in section 5.2.",
+            "question_type": "How",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 5.2",
+              "Section 5.2.1"
+            ]
+          },
+          {
+            "question": "What are the electrical connection requirements?",
+            "question_variations": [
+              "How do I wire the system?",
+              "What's the electrical setup?",
+              "How is the unit wired?"
+            ],
+            "answer": "The unit requires 48V DC connections. Refer to the electric layout scheme in section 4.5.3 and follow wire connection guidelines in section 4.5.2 for proper installation.",
+            "question_type": "What",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.5.2",
+              "Section 4.5.3"
+            ]
+          },
+          {
+            "question": "Where should the watermaker be mounted?",
+            "question_variations": [
+              "How do I install the watermaker unit?",
+              "What are the mounting requirements?",
+              "Where can I place the system?"
+            ],
+            "answer": "Follow general mounting criteria in section 4.1. The watermaker group should be installed according to specific guidelines in section 4.2.2, considering proper component placement and accessibility.",
+            "question_type": "Where",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.1",
+              "Section 4.2.2"
+            ]
+          },
+          {
+            "question": "How do I connect the seawater intake?",
+            "question_variations": [
+              "What are the water intake requirements?",
+              "How should I set up water intake?",
+              "Where does seawater enter the system?"
+            ],
+            "answer": "Seawater intake must be installed according to section 4.3.2 specifications. Connect to water intake and discharge systems following guidelines in section 4.3.1 for proper operation.",
+            "question_type": "How",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.3.1",
+              "Section 4.3.2"
+            ]
+          },
+          {
+            "question": "What are the hydraulic connection requirements?",
+            "question_variations": [
+              "How do I connect the water lines?",
+              "What plumbing is needed?",
+              "How should I pipe the system?"
+            ],
+            "answer": "Hydraulic connections must be made according to section 4.4 specifications, including proper connection of intake, discharge, and freshwater flushing lines.",
+            "question_type": "What",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I start up the watermaker?",
+            "question_variations": [
+              "What's the startup procedure?",
+              "How to turn on the watermaker?",
+              "What are the steps to start the system?"
+            ],
+            "answer": "Refer to section 5.2.2 for complete startup procedure",
+            "question_type": "How",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.2.2, Page 39"
+            ]
+          },
+          {
+            "question": "What is the recommended normal operating procedure?",
+            "question_variations": [
+              "How should I normally operate the system?",
+              "What's the best way to run the watermaker?"
+            ],
+            "answer": "The recommended procedure is normal operation with final flushing",
+            "question_type": "What",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.3.2, Page 40"
+            ]
+          },
+          {
+            "question": "How do I check the filter?",
+            "question_variations": [
+              "When should I clean the filter?",
+              "How to maintain filter cleanliness?"
+            ],
+            "answer": "Regular filter cleanliness checks should be performed according to maintenance schedule",
+            "question_type": "How",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 6.1, Page 44"
+            ]
+          },
+          {
+            "question": "What is the winterizing procedure?",
+            "question_variations": [
+              "How do I prepare for cold weather?",
+              "What's the antifreeze procedure?",
+              "How to winterize below 5\u00b0C?"
+            ],
+            "answer": "Special antifreeze procedure required for temperatures under 5\u00b0C",
+            "question_type": "What",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 6.6, Page 49"
+            ]
+          },
+          {
+            "question": "When should membranes be replaced?",
+            "question_variations": [
+              "How often to change membranes?",
+              "What's the membrane replacement schedule?"
+            ],
+            "answer": "Check membrane replacement requirements according to periodic maintenance schedule",
+            "question_type": "When",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 6.7.1, Page 50"
+            ]
+          },
+          {
+            "question": "What spare parts do I need for short term cruising?",
+            "question_variations": [
+              "Which spares should I carry for short trips?",
+              "What's the recommended short-term spare parts list?"
+            ],
+            "answer": "Refer to short term cruising spare parts list",
+            "question_type": "What",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 8.1, Page 52"
+            ]
+          },
+          {
+            "question": "How do I shut down the system?",
+            "question_variations": [
+              "What's the correct shutdown procedure?",
+              "How to turn off the watermaker properly?"
+            ],
+            "answer": "Follow the shutdown operating procedure using necessary equipment",
+            "question_type": "How",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 6.5.2, Page 47"
+            ]
+          },
+          {
+            "question": "Where can I find troubleshooting information?",
+            "question_variations": [
+              "How do I diagnose problems?",
+              "What should I do if something goes wrong?"
+            ],
+            "answer": "Consult the troubleshooting chart for system issues",
+            "question_type": "Where",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "references": [
+              "Section 7.1, Page 51"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How is the manual structured?",
+            "question_variations": [
+              "What is the layout of the manual?",
+              "How is the manual organized?",
+              "What is the manual structure?"
+            ],
+            "answer": "The manual is divided into chapters with subdivided paragraphs. Each chapter contains essential information, with paragraphs focusing on key points. The structure uses a hierarchical numbering system (1, 1.1, 1.1.1, 1.1.1.1).",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 1.1"
+            ]
+          },
+          {
+            "question": "How are figures and tables numbered in the manual?",
+            "question_variations": [
+              "What is the numbering system for figures?",
+              "How do you find figure numbers in the manual?",
+              "What is the table numbering convention?"
+            ],
+            "answer": "Figures and tables are numbered with a prefix indicating the chapter followed by a progressive number that resets at the beginning of each chapter.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 1.1"
+            ]
+          },
+          {
+            "question": "What do the pictograms in the manual mean?",
+            "question_variations": [
+              "What symbols are used in the manual?",
+              "What do the warning symbols mean?",
+              "How are warnings indicated in the manual?"
+            ],
+            "answer": "The manual uses three main symbols: ATTENTION (for accident prevention and safety), CAUTION (for potential system damage), and NOTE (for useful information).",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 1.2"
+            ]
+          },
+          {
+            "question": "What does the ATTENTION symbol indicate?",
+            "question_variations": [
+              "When is the ATTENTION symbol used?",
+              "What does the attention warning mean?",
+              "What is the purpose of the attention symbol?"
+            ],
+            "answer": "The ATTENTION symbol indicates accident prevention regulations for the operator and/or any exposed persons.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 1.2"
+            ]
+          },
+          {
+            "question": "What does the CAUTION symbol mean?",
+            "question_variations": [
+              "When is the CAUTION symbol used?",
+              "What does the caution warning indicate?",
+              "What is the purpose of the caution symbol?"
+            ],
+            "answer": "The CAUTION symbol indicates the possibility of damaging the system and/or its components.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 1.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "Who is allowed to operate this machine?",
+            "question_variations": [
+              "Can anyone use this equipment?",
+              "What are the operator requirements?",
+              "Is there an age restriction for using the machine?"
+            ],
+            "answer": "Only experienced adults can operate the plant. Children and inexperienced people are explicitly prohibited from touching or operating the equipment.",
+            "question_type": "Who",
+            "models": [
+              "All Schenker Models"
+            ],
+            "references": [
+              "Section 2.2 Safety Warnings"
+            ]
+          },
+          {
+            "question": "What protective equipment is required?",
+            "question_variations": [
+              "What safety gear should I wear?",
+              "Do I need special clothing to operate this?",
+              "What PPE is needed?"
+            ],
+            "answer": "Operators must wear protective equipment suitable for service operation. Clothing must be tight to the body and resistant to cleaning products used.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Models"
+            ],
+            "references": [
+              "Section 2.2 Safety Warnings"
+            ]
+          },
+          {
+            "question": "How often should I check for leaks?",
+            "question_variations": [
+              "When do I need to inspect for leakage?",
+              "What is the leak inspection schedule?",
+              "How frequently should I inspect the system?"
+            ],
+            "answer": "The system should be checked periodically for leaks. The plant should be installed where potential leaks won't cause damage or compromise vessel safety.",
+            "question_type": "How",
+            "models": [
+              "All Schenker Models"
+            ],
+            "references": [
+              "Section 2.2 Safety Warnings"
+            ]
+          },
+          {
+            "question": "Who can perform maintenance on the system?",
+            "question_variations": [
+              "Can I service the machine myself?",
+              "Who is authorized to do maintenance?",
+              "What are the maintenance personnel requirements?"
+            ],
+            "answer": "Maintenance should only be performed by suitably qualified persons or Schenker personnel.",
+            "question_type": "Who",
+            "models": [
+              "All Schenker Models"
+            ],
+            "references": [
+              "Section 2.2 Safety Warnings"
+            ]
+          },
+          {
+            "question": "Can I reproduce the manual?",
+            "question_variations": [
+              "Am I allowed to copy the manual?",
+              "Can I share the manual with others?",
+              "What are the manual reproduction rights?"
+            ],
+            "answer": "No, all rights of reproduction are reserved to SCHENKER ITALIA. The manual cannot be transferred to third parties without written authorization from SCHENKER ITALIA.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Models"
+            ],
+            "references": [
+              "Section 2.1 Important Information"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the warranty period for the watermaker?",
+            "question_variations": [
+              "How long is the warranty?",
+              "What's the standard warranty duration?",
+              "How many months is the equipment covered for?"
+            ],
+            "answer": "The equipment and accessories have a 12-month limited warranty from delivery date, while the ERS pressure amplification device has a 36-month limited warranty if maintained by a specialized Schenker technician",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 2.3 Limited Warranty"
+            ]
+          },
+          {
+            "question": "What items are not covered under the limited warranty?",
+            "question_variations": [
+              "Which parts are excluded from warranty?",
+              "What's not included in the warranty coverage?",
+              "Are filters covered by warranty?"
+            ],
+            "answer": "Consumable items including filters, carbon filters, and membranes are not covered under the limited warranty",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 2.3 Limited Warranty"
+            ]
+          },
+          {
+            "question": "How does the warranty become invalid?",
+            "question_variations": [
+              "What voids the warranty?",
+              "When does the warranty become void?",
+              "Can I lose warranty coverage?"
+            ],
+            "answer": "The limited warranty becomes invalid if the equipment is dismantled by non-authorized personnel",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 2.3 Limited Warranty"
+            ]
+          },
+          {
+            "question": "What costs are covered under warranty repairs?",
+            "question_variations": [
+              "Who pays for warranty repair costs?",
+              "Are travel expenses covered under warranty?",
+              "What expenses are included in warranty service?"
+            ],
+            "answer": "Under warranty repairs, Schenker covers faulty parts replacement costs only. Customers must pay for disconnecting/reinstalling on vessel, transportation to/from Service Point, manpower, and travel expenses",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 2.3 Limited Warranty"
+            ]
+          },
+          {
+            "question": "What can reduce the life expectancy of the watermaker?",
+            "question_variations": [
+              "How can I avoid damaging my watermaker?",
+              "What affects watermaker longevity?",
+              "What causes premature wear?"
+            ],
+            "answer": "Lack of general maintenance, using non-genuine Schenker spare parts, and operating in silty or contaminated water can reduce life expectancy and cause damage to internal components",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 2.3 Limited Warranty"
+            ]
+          },
+          {
+            "question": "Who can make technical changes to the machine?",
+            "question_variations": [
+              "Can I modify the watermaker?",
+              "Who is authorized to alter the equipment?",
+              "Are technical modifications allowed?"
+            ],
+            "answer": "Only manufacturer's technical staff or technicians formally authorized by the manufacturer can make technical changes that affect operation or safety",
+            "question_type": "Who",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 2 - General Warnings"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How should I install the watermaker?",
+            "question_variations": [
+              "What's the proper way to install this watermaker?",
+              "Can I install the watermaker myself?",
+              "Do I need professional help for installation?"
+            ],
+            "answer": "The watermaker must be installed according to the manual instructions and it is strictly recommended to seek assistance from a professional technician for installation.",
+            "question_type": "How",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "references": [
+              "Section 2.5 - Risk Mitigation Strategies"
+            ]
+          },
+          {
+            "question": "How often should maintenance be performed?",
+            "question_variations": [
+              "What is the maintenance schedule?",
+              "When do I need to service the watermaker?",
+              "Is regular maintenance required?"
+            ],
+            "answer": "Regular maintenance is essential and must be performed according to the maintenance schedule provided in the manual. Any necessary repairs should be completed promptly.",
+            "question_type": "When",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "references": [
+              "Section 2.5 - Risk Mitigation Strategies"
+            ]
+          },
+          {
+            "question": "Where can I find the serial number?",
+            "question_variations": [
+              "How do I identify my unit?",
+              "Where is the unit serial number located?",
+              "How can I find the model number?"
+            ],
+            "answer": "The serial number is printed on a label located on the top valve of the Zen Watermaker unit.",
+            "question_type": "Where",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "references": [
+              "Section 2.6 - Identification of the unit"
+            ]
+          },
+          {
+            "question": "What safety precautions should I follow?",
+            "question_variations": [
+              "How do I use the watermaker safely?",
+              "What are the safety guidelines?",
+              "How can I minimize risks when using the watermaker?"
+            ],
+            "answer": "Follow all instructions in the manual, take appropriate safety precautions when handling system components, ensure proper installation, and maintain regular maintenance schedule to minimize risks.",
+            "question_type": "What",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "references": [
+              "Section 2.5 - Risk Mitigation Strategies"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the main fire hazards for the watermaker system?",
+            "question_variations": [
+              "How can the watermaker catch fire?",
+              "What fire risks should I watch for with the watermaker?"
+            ],
+            "answer": "The main fire hazards come from electrical components and machinery that generate heat. Risks increase with accumulated dust/debris, loose/damaged wiring that can cause sparks, and unauthorized modifications or repairs.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermaker Systems"
+            ],
+            "references": [
+              "Section 2.4 - Risk Overview, Fire Hazards"
+            ]
+          },
+          {
+            "question": "How do I prevent electrical hazards with the watermaker?",
+            "question_variations": [
+              "What electrical safety precautions should I take?",
+              "How can I avoid electrical accidents with the watermaker?"
+            ],
+            "answer": "Use only grounded electrical outlets, never operate with frayed/damaged wiring, avoid unauthorized modifications, ensure proper understanding of electrical requirements, and have professional installation in compliance with regulations. Turn off power immediately if experiencing shocks or unusual smells/smoke.",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermaker Systems"
+            ],
+            "references": [
+              "Section 2.4 - Risk Overview, Electrical Hazards"
+            ]
+          },
+          {
+            "question": "What should I do if the watermaker starts flooding?",
+            "question_variations": [
+              "How do I handle a watermaker flood?",
+              "What are the steps if water starts leaking?"
+            ],
+            "answer": "Turn off the system immediately if you notice any leaks or unusual noises. Monitor the system during operation, ensure all hoses and connections are tight and secure, and regularly check for signs of wear or damage.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermaker Systems"
+            ],
+            "references": [
+              "Section 2.4 - Risk Overview, Flooding Hazards"
+            ]
+          },
+          {
+            "question": "How often should I inspect the watermaker?",
+            "question_variations": [
+              "What is the recommended inspection frequency?",
+              "When should I check my watermaker?"
+            ],
+            "answer": "Regular inspections are recommended to minimize risks. This includes checking electrical wiring and connections, inspecting hoses and connections for wear, replacing filters, and checking membranes for damage.",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermaker Systems"
+            ],
+            "references": [
+              "Section 2.4 - Risk Overview"
+            ]
+          },
+          {
+            "question": "Who can install the electrical components of the watermaker?",
+            "question_variations": [
+              "What are the requirements for electrical installation?",
+              "Can I install the watermaker electrical system myself?"
+            ],
+            "answer": "Electrical components must be installed by a qualified electrician or technician in compliance with all applicable regulations and standards for your jurisdiction. Users should not attempt installation without proper expertise.",
+            "question_type": "Who",
+            "models": [
+              "All Schenker Watermaker Systems"
+            ],
+            "references": [
+              "Section 2.4 - Risk Overview, Attention Notice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What safety directives apply to this machine?",
+            "question_variations": [
+              "Which safety regulations govern this equipment?",
+              "What are the applicable safety standards?",
+              "What compliance requirements apply?"
+            ],
+            "answer": "The machine must comply with Machinery Directive 2006/42/EC, Low Voltage Directive 73/23/EEC (amended by 93/68/CEE), Electromagnetic Compatibility Directive 89/336/EEC, Standards UNI EN 292/1 and 292/2, Supply of Machinery Regulations 2008 (S.I. 2008:1597), Electrical Equipment Regulations 2016 (S.I. 2016:1101), and EMC Regulations 2016 (S.I. 2016:1091)",
+            "question_type": "What",
+            "models": [
+              "All Schenker machines"
+            ],
+            "references": [
+              "Section 2.7.1"
+            ]
+          },
+          {
+            "question": "How should the machine be disposed of?",
+            "question_variations": [
+              "What is the proper disposal procedure?",
+              "How do I dispose of this equipment?",
+              "What are the disposal requirements?"
+            ],
+            "answer": "The machine must be disposed of according to local environmental regulations. Materials should be segregated by type: stainless steel, plastic, carbon fiber, electrical components (motors and cables), and rubber/polyurethane seals. No special removal procedures are required as the machine contains no dangerous components.",
+            "question_type": "How",
+            "models": [
+              "All Schenker machines"
+            ],
+            "references": [
+              "Section 2.7.2"
+            ]
+          },
+          {
+            "question": "What materials is the machine made of?",
+            "question_variations": [
+              "Which materials are used in construction?",
+              "What are the machine components made from?",
+              "List the materials used in this equipment"
+            ],
+            "answer": "The machine is constructed from: stainless steel, plastic, carbon fiber, electrical materials (motors and cables), and rubber/polyurethane seals. None of these materials are classified as dangerous.",
+            "question_type": "What",
+            "models": [
+              "All Schenker machines"
+            ],
+            "references": [
+              "Section 2.7.2"
+            ]
+          },
+          {
+            "question": "Are there any hazardous materials in the machine?",
+            "question_variations": [
+              "Does this equipment contain dangerous components?",
+              "Are special disposal procedures needed for hazardous materials?",
+              "What dangerous substances are in the machine?"
+            ],
+            "answer": "No, the machine does not contain any dangerous components or substances that require special removal procedures.",
+            "question_type": "What",
+            "models": [
+              "All Schenker machines"
+            ],
+            "references": [
+              "Section 2.7.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the Zen 150 watermaker?",
+            "question_variations": [
+              "How big is the Zen 150?",
+              "What's the size of the Zen 150 watermaker unit?",
+              "Can you tell me the measurements of the Zen 150?"
+            ],
+            "answer": "The Zen 150 watermaker dimensions are: Length 87 cm, Width 64 cm, Height 55 cm, Weight 80 Kg",
+            "question_type": "What",
+            "models": [
+              "Zen 150"
+            ],
+            "references": [
+              "Section 3.1, Table 3-1"
+            ]
+          },
+          {
+            "question": "How should the watermaker be transported?",
+            "question_variations": [
+              "What's the proper way to transport the watermaker?",
+              "How is the watermaker unit shipped?",
+              "What packaging is used for the watermaker?"
+            ],
+            "answer": "The watermaker unit is transported in a cardboard box with appropriate dimensions for the model",
+            "question_type": "How",
+            "models": [
+              "Zen 150"
+            ],
+            "references": [
+              "Section 3.1"
+            ]
+          },
+          {
+            "question": "What safety precautions should be taken when handling the watermaker?",
+            "question_variations": [
+              "How do I safely handle the watermaker?",
+              "What safety equipment is needed for watermaker handling?",
+              "What are the safety requirements for moving the watermaker?"
+            ],
+            "answer": "Wear protective equipment suitable for transport and handling operations. Use lifting equipment appropriate to the weight and size. Ensure lifting equipment is well maintained. Do not stand or pass under the unit during lifting or transport.",
+            "question_type": "What",
+            "models": [
+              "Zen 150"
+            ],
+            "references": [
+              "Section 3"
+            ]
+          },
+          {
+            "question": "How much does the Zen 150 watermaker weigh?",
+            "question_variations": [
+              "What is the weight of the Zen 150?",
+              "How heavy is the Zen 150 unit?",
+              "What's the mass of the Zen 150 watermaker?"
+            ],
+            "answer": "The Zen 150 watermaker weighs 80 Kg",
+            "question_type": "What",
+            "models": [
+              "Zen 150"
+            ],
+            "references": [
+              "Section 3.1, Table 3-1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "intent_routes": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTPevNHWyJ6Q1ZH6ZiAuC'}"
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the main advantage of the Schenker Watermaker's Energy Recovery System?",
+            "question_variations": [
+              "Why is Schenker's Energy Recovery System better?",
+              "What makes Schenker watermakers different from traditional systems?",
+              "How does the Energy Recovery System benefit users?"
+            ],
+            "answer": "The Energy Recovery System amplifies pressure from low-pressure pumps and recoups hydraulic energy from membranes, providing high energy efficiency without requiring high-pressure pumps.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.7"
+            ]
+          },
+          {
+            "question": "How quiet is the Schenker Watermaker system?",
+            "question_variations": [
+              "Does the Schenker watermaker make noise?",
+              "Is the system noisy?",
+              "What are the noise levels of the watermaker?"
+            ],
+            "answer": "The system is silent and vibration-free due to the absence of high-pressure pumps.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.7"
+            ]
+          },
+          {
+            "question": "What adjustments are needed to operate the Schenker Watermaker?",
+            "question_variations": [
+              "How do I adjust the watermaker?",
+              "Does the system need calibration?",
+              "Is the watermaker difficult to operate?"
+            ],
+            "answer": "No adjustments are necessary for operation due to the Energy Recovery System design.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.7"
+            ]
+          },
+          {
+            "question": "How does the Energy Recovery System work?",
+            "question_variations": [
+              "What is the operating principle of the Energy Recovery System?",
+              "Can you explain the Energy Recovery System?",
+              "What technology does the watermaker use?"
+            ],
+            "answer": "The system uses a patented Energy Recovery System that amplifies pressure from low-pressure pumps and recoups hydraulic energy from membranes, replacing traditional high-pressure pumps.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.7"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What documents come with the system?",
+            "question_variations": [
+              "What's included in the documentation package?",
+              "Which manuals come with the unit?",
+              "What paperwork is included?"
+            ],
+            "answer": "The packaging contains technical documentation including: use and maintenance manual, electric and hydraulic scheme, warnings and instructions.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.4"
+            ]
+          },
+          {
+            "question": "What are the storage temperature requirements?",
+            "question_variations": [
+              "What temperature can I store the unit at?",
+              "What's the safe storage temperature range?",
+              "How cold can the storage area be?"
+            ],
+            "answer": "The unit must not be stored at temperatures below 5\u00b0C or above 45\u00b0C",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.4"
+            ]
+          },
+          {
+            "question": "What should I do before installation?",
+            "question_variations": [
+              "How do I prepare for installation?",
+              "What's required before installing?",
+              "First steps before installing the system?"
+            ],
+            "answer": "Read the use and maintenance manual carefully before installing the system",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.4"
+            ]
+          },
+          {
+            "question": "What materials should be used for installation?",
+            "question_variations": [
+              "Which parts can I use for installation?",
+              "Are specific materials required for install?",
+              "What components are recommended for setup?"
+            ],
+            "answer": "Use only recommended materials for installation, specifically the hoses, fittings and seals that are in accordance with the manual",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the watermaker pump?",
+            "question_variations": [
+              "How big is the pump?",
+              "What's the size of the watermaker pump?",
+              "What are the pump measurements?"
+            ],
+            "answer": "The pump dimensions are: Length 42 cm, Width 15 cm, Height 23 cm, Weight 14.3 Kg",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "What size hose do I need for seawater inlet?",
+            "question_variations": [
+              "What's the seawater inlet hose size?",
+              "Which hose fits the seawater intake?",
+              "What diameter hose for water inlet?"
+            ],
+            "answer": "The seawater inlet requires a 20mm internal diameter reinforced hose",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Hydraulic Connection"
+            ]
+          },
+          {
+            "question": "How much fresh water does it produce?",
+            "question_variations": [
+              "What's the water production rate?",
+              "How many liters per hour does it make?",
+              "What's the fresh water output?"
+            ],
+            "answer": "Nominal fresh water production is 150 Liters/h +/- 20% at seawater temperature 25\u00b0C and salinity 35,000 ppm",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "What power supply does it need?",
+            "question_variations": [
+              "What voltage does it run on?",
+              "What's the power requirement?",
+              "What electrical supply is needed?"
+            ],
+            "answer": "The unit requires 48 VDC +/- 15% power supply with 600 Watt/h average consumption and 1.2 KWatt peak consumption",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "Is the water safe to drink?",
+            "question_variations": [
+              "Can I drink the water it produces?",
+              "Is the water potable?",
+              "How safe is the produced water?"
+            ],
+            "answer": "While the water produced is highly pure, potability cannot be guaranteed due to possible bacterial growth. It's recommended to install additional treatment like UV sterilizer or microfiltration system for drinking water safety",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.6 - Features of the product"
+            ]
+          },
+          {
+            "question": "What filters does it use?",
+            "question_variations": [
+              "Which filter cartridges are needed?",
+              "What type of filters are installed?",
+              "What are the filter specifications?"
+            ],
+            "answer": "The unit uses 2 filters: 1 Cartridge filter 5 microns 2.32\" x 9 \u00be\" and 1 Active carbon filter 2.32\" x 9 \u00be\"",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the main components of the pump group?",
+            "question_variations": [
+              "What parts make up the pump group?",
+              "What components are in the pump assembly?"
+            ],
+            "answer": "The pump group consists of a 5 micron cartridge filter, pressure switches, pump box, and accumulator",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.1"
+            ]
+          },
+          {
+            "question": "What is the function of the accumulator?",
+            "question_variations": [
+              "How does the accumulator work?",
+              "What does the accumulator do?"
+            ],
+            "answer": "The accumulator is a polypropylene air reservoir that reduces and stabilizes pressure peaks during watermaker operation. It requires pre-charging with air through the Schrader valve to approximately 5 Bar pressure",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.1"
+            ]
+          },
+          {
+            "question": "What happens when the high pressure switch activates?",
+            "question_variations": [
+              "When does the high pressure switch stop the system?",
+              "At what pressure does the safety switch trigger?"
+            ],
+            "answer": "The high pressure switch stops the system if pump pressure exceeds 15 bar, triggering a high-pressure alarm on the control panel",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.1"
+            ]
+          },
+          {
+            "question": "What is the pump box?",
+            "question_variations": [
+              "What's inside the pump box?",
+              "What is the purpose of the pump box?"
+            ],
+            "answer": "The pump box is a plastic box containing all electrical connections for motor power supply, motherboard, pressure switches, remote panel and electrovalve",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.1"
+            ]
+          },
+          {
+            "question": "What is the pre-charge pressure for the accumulator?",
+            "question_variations": [
+              "How much pressure should be in the accumulator?",
+              "What's the correct accumulator pressure setting?"
+            ],
+            "answer": "The accumulator should be pre-charged to approximately 5 Bar through the Schrader valve. This pressure is preset at the factory",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the main components of the watermaker group?",
+            "question_variations": [
+              "What parts make up the watermaker assembly?",
+              "Can you list the watermaker components?",
+              "What are the key parts of the watermaker system?"
+            ],
+            "answer": "The main components of the watermaker group include: inlet, outlet/discharge, reverse osmosis membranes, reset valve, positioner knob, signal pressure switch, manometer, and depressurization valve",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.2, Fig 3-7, Fig 3-8"
+            ]
+          },
+          {
+            "question": "How often should maintenance checks be performed?",
+            "question_variations": [
+              "What is the recommended maintenance schedule?",
+              "When should I check the system?",
+              "How frequently is system monitoring needed?"
+            ],
+            "answer": "Users should regularly monitor the system and perform routine maintenance checks to ensure safe and effective operation at all times. The manual strongly recommends frequent monitoring.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.2"
+            ]
+          },
+          {
+            "question": "Where is the manometer located on the watermaker?",
+            "question_variations": [
+              "What is the position of the pressure gauge?",
+              "How do I find the manometer?",
+              "Where can I see the pressure reading?"
+            ],
+            "answer": "The manometer is located on the front view of the watermaker group, visible when the cover is removed",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.2, Fig 3-8"
+            ]
+          },
+          {
+            "question": "What is the purpose of the depressurization valve?",
+            "question_variations": [
+              "Why is there a depressurization valve?",
+              "How does the depressurization valve work?",
+              "What does the pressure release valve do?"
+            ],
+            "answer": "The depressurization valve is a component of the watermaker group used to release pressure from the system when needed",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.2, Fig 3-8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the main components of the watermaker system?",
+            "question_variations": [
+              "What parts make up the watermaker?",
+              "What are the key elements of the watermaker unit?"
+            ],
+            "answer": "The watermaker consists of reverse osmosis membranes, Energy Recovery System, manometer, depressurization valve, positioner, reset valve, signal pressure switch, computer box, and diverting valve.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "How does the Energy Recovery System work?",
+            "question_variations": [
+              "What is the function of the ERS?",
+              "How does the Energy Recovery System operate?"
+            ],
+            "answer": "The Energy Recovery System amplifies pump pressure and recoups hydraulic energy from the membranes. It operates through periodic cycling controlled by an automatic hydraulic valve, producing a noticeable 'beat' sound. The system uses cylinders and a central body containing the necessary hydraulic valve.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "What is the purpose of the depressurization valve?",
+            "question_variations": [
+              "How does the depressurization valve work?",
+              "When should I use the depressurization valve?"
+            ],
+            "answer": "The depressurization valve is used for air bleeding of the unit. Located on top of the watermaker, it must be closed (completely screwed in) during normal operation and opened (slightly unscrewed) during air bleeding operations.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "How do I reset the system if it blocks?",
+            "question_variations": [
+              "What should I do if the watermaker gets blocked?",
+              "How to unblock the hydraulic system?"
+            ],
+            "answer": "To reset a blocked system, first open the reset valve (blue lever) and then use the positioner (stainless steel threaded arm with black knob) to reset the unit.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "What type of membranes are used in the system?",
+            "question_variations": [
+              "Which membranes does the watermaker use?",
+              "What are the specifications of the reverse osmosis membranes?"
+            ],
+            "answer": "The system uses two SW4021 type reverse osmosis membranes installed inside carbon fibre high-pressure housing. They separate intake high-pressure seawater into salt-water drain and fresh water production flows.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "Where should the computer box be installed?",
+            "question_variations": [
+              "How do I install the computer box?",
+              "What are the installation requirements for the computer box?"
+            ],
+            "answer": "The computer box should be installed relatively close to the watermaker in a position protected from water. It needs to be connected to the remote panel to control watermaker functions automatically.",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          },
+          {
+            "question": "What is the emergency start procedure?",
+            "question_variations": [
+              "How can I start the watermaker if the computer fails?",
+              "What are the emergency controls for the watermaker?"
+            ],
+            "answer": "In case of total computer failure, the microswitches P1 and EV can be used as an emergency solution to directly command the pump and electrovalve respectively. These should be switched off during normal operation.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3 - Product Presentation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the diverting valve used for?",
+            "question_variations": [
+              "What does the diverting valve do?",
+              "How does the diverting valve function?",
+              "What is the purpose of the diverting valve?"
+            ],
+            "answer": "The diverting valve is an electrovalve that diverts fresh water flow based on salinity probe measurements to prevent salty water from entering the production tank",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3-9"
+            ]
+          },
+          {
+            "question": "How do I connect the salinity probe?",
+            "question_variations": [
+              "Where do I connect the salinity probe cables?",
+              "What are the connection points for the salinity probe?",
+              "How to wire the salinity probe?"
+            ],
+            "answer": "The 2 cables of the salinity probe must be connected to the PCB of the electric box at the Salinity clamps",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3-9"
+            ]
+          },
+          {
+            "question": "Where do I connect the diverting valve cables?",
+            "question_variations": [
+              "How do I wire the diverting valve?",
+              "What are the connection points for the diverting valve?",
+              "How to connect the diverting valve?"
+            ],
+            "answer": "The 2 cables of the diverting valve must be connected to the PCB of the electric box at the Chem and (-) clamps",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3-9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the diverting valve used for?",
+            "question_variations": [
+              "What's the purpose of the diverting valve?",
+              "Why do I need a diverting valve?",
+              "What does the diverting valve do?"
+            ],
+            "answer": "The diverting valve manages water flow from the membrane outlet, directing it either to the tank connection or discharge connection",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3, Fig 3-10"
+            ]
+          },
+          {
+            "question": "Where should the diverting valve be installed?",
+            "question_variations": [
+              "What's the correct installation location for the diverting valve?",
+              "How do I position the diverting valve?",
+              "Where does the diverting valve go?"
+            ],
+            "answer": "The diverting valve must be installed on the fresh water outlet from valve",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3, Page 18"
+            ]
+          },
+          {
+            "question": "What are the connection points on the diverting valve?",
+            "question_variations": [
+              "How many connections does the diverting valve have?",
+              "What are the ports on the diverting valve?",
+              "Which connections are on the diverting valve?"
+            ],
+            "answer": "The diverting valve has three connections: IN (from membrane outlet), OUT (tank connection), and OUT (discharge connection), plus a probe connection",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3, Fig 3-10"
+            ]
+          },
+          {
+            "question": "How is the tee discharge connection configured?",
+            "question_variations": [
+              "What connects to the tee discharge?",
+              "How does the tee discharge connection work?",
+              "What's the setup for the tee discharge?"
+            ],
+            "answer": "The tee discharge connection has three connection points: one from the diverting valve, one for outboard discharge, and one for discharge from the watermaker",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3, Fig 3-11"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "intent_routes": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTPeyTcpuoYFddx8XWjAS'}"
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the main accessories of the watermaker?",
+            "question_variations": [
+              "What accessories come with the watermaker?",
+              "Which components are considered accessories for this system?",
+              "Can you list the watermaker accessories?"
+            ],
+            "answer": "The main accessories are: active carbon filter, electrovalve, non-return valve, and mesh filter (strainer)",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.3",
+              "Fig 3-14"
+            ]
+          },
+          {
+            "question": "What is the purpose of the active carbon filter?",
+            "question_variations": [
+              "How does the active carbon filter work?",
+              "Where is the active carbon filter installed?",
+              "What does the carbon filter do in the watermaker?"
+            ],
+            "answer": "The active carbon filter connects between the boat's fresh water pressurized system and the electrovalve on the filter holder. It has a manual valve on the inlet allowing cartridge replacement without depressurizing the vessel's fresh water system.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.3"
+            ]
+          },
+          {
+            "question": "What is the function of the electrovalve?",
+            "question_variations": [
+              "How does the electrovalve work?",
+              "What does the electrovalve do?",
+              "Why is an electrovalve needed?"
+            ],
+            "answer": "The electrovalve switches between seawater intake and fresh water tank when washing the watermaker",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.3"
+            ]
+          },
+          {
+            "question": "What does the non-return valve do?",
+            "question_variations": [
+              "How does the non-return valve function?",
+              "Why is a non-return valve needed?",
+              "What is the purpose of the non-return valve?"
+            ],
+            "answer": "The non-return valve stops water flowing out of the inlet hose and prevents fresh water leaking from the seacock during washing procedures. It must be installed vertically.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.3"
+            ]
+          },
+          {
+            "question": "What is the purpose of the mesh filter?",
+            "question_variations": [
+              "Why is a mesh filter needed?",
+              "What does the strainer do?",
+              "Where is the mesh filter installed?"
+            ],
+            "answer": "The mesh filter (strainer) protects the pump from macro sediments and is installed between the seacock and the pump",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 3.8.3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "Where should the diaphragm pump be installed?",
+            "question_variations": [
+              "What is the proper location for the pump?",
+              "How do I position the diaphragm pump?",
+              "What's the best placement for the pump unit?"
+            ],
+            "answer": "The diaphragm pump should be installed below the waterline and within 2 meters maximum of the water inlet. It needs to be in a ventilated area for motor cooling.",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.2.1"
+            ]
+          },
+          {
+            "question": "What is the maximum temperature for the pump room?",
+            "question_variations": [
+              "How hot can the pump room get?",
+              "What temperature limit applies to the pump installation area?"
+            ],
+            "answer": "The maximum permitted room temperature for the pump installation must not exceed 45\u00b0C",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.2.1"
+            ]
+          },
+          {
+            "question": "How should the watermaker be mounted?",
+            "question_variations": [
+              "What's the proper way to install the watermaker?",
+              "How do I secure the watermaker unit?"
+            ],
+            "answer": "The watermaker must be installed above the pump and can be mounted horizontally or vertically. It must rest completely on a flat surface with rubber-based adhesive applied, and be secured with L-brackets. It cannot be suspended by brackets alone.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.2.2"
+            ]
+          },
+          {
+            "question": "What is the maximum temperature for the watermaker room?",
+            "question_variations": [
+              "How hot can the watermaker room get?",
+              "What's the temperature limit for watermaker installation?"
+            ],
+            "answer": "The maximum permitted room temperature for the watermaker must not exceed 40\u00b0C",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.2.2"
+            ]
+          },
+          {
+            "question": "How should the pump be secured to its base?",
+            "question_variations": [
+              "What's needed to mount the pump?",
+              "How do I attach the pump to its support?"
+            ],
+            "answer": "The pump must be installed on a sufficiently horizontal base capable of supporting its weight. It should be fixed to the support structure using passing bolts.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.2.1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How should the through-hull fitting be positioned?",
+            "question_variations": [
+              "Where do I install the through-hull fitting?",
+              "What is the correct position for the through-hull fitting?",
+              "How do I place the hull fitting?"
+            ],
+            "answer": "The through-hull fitting should be located in a central and low position on the hull to prevent air from being sucked into the pump and watermaker",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "references": [
+              "Section 4.1 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "Where should the non-return valve be installed?",
+            "question_variations": [
+              "How do I position the non-return valve?",
+              "What is the correct placement for the non-return valve?",
+              "How should I install the check valve?"
+            ],
+            "answer": "The non-return valve must be installed under seawater level and as close as possible to the through-hull fitting, in vertical position",
+            "question_type": "Where",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "references": [
+              "Section 4.1 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "How far can the pump be from the seawater intake?",
+            "question_variations": [
+              "What is the maximum distance between pump and water intake?",
+              "How close must the pump be to the through-hull fitting?",
+              "What's the pump installation distance requirement?"
+            ],
+            "answer": "The pump must be no more than 2 meters away from the seawater intake unless a positive feed is achieved by locating the pump below the waterline",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "references": [
+              "Section 4.1 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "What are the weight requirements for the watermaker support?",
+            "question_variations": [
+              "How much weight must the watermaker support hold?",
+              "What is the weight capacity needed for mounting?",
+              "How strong should the watermaker mounting be?"
+            ],
+            "answer": "The support must be able to sustain approximately 60 Kg of weight",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "references": [
+              "Section 4.1 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "What is the maximum allowed room temperature for installation?",
+            "question_variations": [
+              "How hot can the room be for the watermaker?",
+              "What temperature limits apply to installation?",
+              "What's the maximum operating temperature?"
+            ],
+            "answer": "The maximum permitted room temperature must not exceed 40\u00b0C",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "references": [
+              "Section 4.1 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "Where should the pump group be installed?",
+            "question_variations": [
+              "What are the ventilation requirements for the pump?",
+              "How should I position the pump group?",
+              "What kind of space does the pump need?"
+            ],
+            "answer": "The pump group must be installed in a ventilated place to facilitate the cooling of the electric motor",
+            "question_type": "Where",
+            "models": [
+              "All Schenker Watermaker Models"
+            ],
+            "references": [
+              "Section 4.1 - Mounting and Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 24,
+      "pages": "24-24",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I mount the system correctly?",
+            "question_variations": [
+              "What is the proper mounting procedure?",
+              "How should I install this unit?",
+              "What's the installation process?"
+            ],
+            "answer": "The system should be mounted using the provided antivibration rubber stickers for a complete installation. Refer to configuration diagram FIG. 4-3 for proper orientation and placement.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation",
+              "FIG 4-2",
+              "FIG 4-3"
+            ]
+          },
+          {
+            "question": "What mounting accessories are included?",
+            "question_variations": [
+              "What comes with the mounting kit?",
+              "Are mounting materials provided?",
+              "What do I need for installation?"
+            ],
+            "answer": "Antivibration rubber stickers are provided with the unit for complete installation.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "Where can I find the mounting configurations?",
+            "question_variations": [
+              "Which mounting positions are possible?",
+              "How can I see the allowed mounting positions?",
+              "What mounting orientations are acceptable?"
+            ],
+            "answer": "The possible mounting configurations are shown in diagram FIG. 4-3 of the manual.",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation",
+              "FIG 4-3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 25,
+      "pages": "25-25",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How should I mount the watermaker unit?",
+            "question_variations": [
+              "What is the correct way to install the watermaker?",
+              "Can I install the watermaker horizontally?",
+              "What are the mounting options for the watermaker?"
+            ],
+            "answer": "The watermaker can be mounted either vertically or horizontally. For horizontal installation, it is recommended to connect the manometer horizontally as well for visibility using the provided fittings. Incorrect mounting can damage the lateral manifolds.",
+            "question_type": "How",
+            "models": [
+              "Watermaker COD.150Z48"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation, Page 24"
+            ]
+          },
+          {
+            "question": "What fittings are needed for horizontal installation?",
+            "question_variations": [
+              "Which parts do I need for horizontal mounting?",
+              "What components are required for horizontal setup?"
+            ],
+            "answer": "For horizontal installation, you need: 1/2\" M to 3/8\" F reducer, 3/8\" 90-Degree Elbow, 3/8\" Nipples, and 3/8\" M to 1/4\" F reducer.",
+            "question_type": "What",
+            "models": [
+              "Watermaker COD.150Z48"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation, Fig. 4-5, Page 24"
+            ]
+          },
+          {
+            "question": "Where should the rubber stickers be placed?",
+            "question_variations": [
+              "How do I position the rubber stickers?",
+              "What is the correct placement for rubber stickers?"
+            ],
+            "answer": "Rubber sticker positions vary depending on vertical or horizontal installation. Refer to Figure 4-4 in the manual for specific placement locations.",
+            "question_type": "Where",
+            "models": [
+              "Watermaker COD.150Z48"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation, Fig. 4-4, Page 24"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 26,
+      "pages": "26-26",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I install the seawater inlet housebarb?",
+            "question_variations": [
+              "What's the process for installing the water inlet fitting?",
+              "How do I replace the watermaker inlet plug?"
+            ],
+            "answer": "Remove the plug on right side using a #27 key, then install the provided housebarb using a #24 key until it reaches its mechanical stop. Do not overtighten.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "Where should the non-return valve be installed?",
+            "question_variations": [
+              "What is the correct position for the non-return valve?",
+              "How do I mount the check valve?"
+            ],
+            "answer": "The non-return valve must be installed vertically as close as possible to the seawater intake, following the direction of the arrow.",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4.2.3 - Accessories"
+            ]
+          },
+          {
+            "question": "Where should the active carbon filter be placed?",
+            "question_variations": [
+              "How should I install the carbon filter?",
+              "What's the proper mounting location for the carbon filter?"
+            ],
+            "answer": "The active carbon filter and attached electrovalve should be placed next to the pump group, preferably vertically and in an easily accessible location.",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4.2.3 - Accessories"
+            ]
+          },
+          {
+            "question": "What water connections are needed for installation?",
+            "question_variations": [
+              "Which water lines need to be connected?",
+              "What are the required water hookups?"
+            ],
+            "answer": "Three water connections are required: 1) Seawater intake, 2) Fresh water intake for washing, 3) Brine discharge.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4.3.1 - Water intake and discharge"
+            ]
+          },
+          {
+            "question": "What are the specifications for the seawater intake?",
+            "question_variations": [
+              "How should the seawater intake be configured?",
+              "What size seacock do I need?"
+            ],
+            "answer": "Use a minimum 3/4\" seacock with through-hull fitting, positioned centrally and well below the waterline. Install a bow-oriented scoop skin fitting. For boats exceeding 15 knots, drill an 8mm hole on the back of the shape to reduce dynamic prevalence.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4.3.2 - Seawater intake"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 28,
+      "pages": "28-28",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What type of hose is required for brine discharge?",
+            "question_variations": [
+              "Which hose should I use for brine discharge?",
+              "What's the specification for the brine discharge hose?",
+              "What kind of hose do I need for waste water?"
+            ],
+            "answer": "Armorvin type hose with internal diameter of 16mm is required for brine discharge",
+            "question_type": "What",
+            "models": [
+              "All watermaker models"
+            ],
+            "references": [
+              "Section 4.4",
+              "Figure 4-7"
+            ]
+          },
+          {
+            "question": "What are the requirements for the fresh water system connection?",
+            "question_variations": [
+              "How do I connect to the boat's fresh water system?",
+              "What type of hose is needed for fresh water connection?",
+              "What are the fresh water plumbing specifications?"
+            ],
+            "answer": "Use reinforced hose rated PN16 with minimum internal diameter of 20mm, connected to the pressure side of the boat's fresh water system",
+            "question_type": "What",
+            "models": [
+              "All watermaker models"
+            ],
+            "references": [
+              "Section 4.4",
+              "Figure 4-7"
+            ]
+          },
+          {
+            "question": "How do I make the hydraulic connections?",
+            "question_variations": [
+              "What's the procedure for hydraulic installation?",
+              "How should I connect the water lines?",
+              "What are the plumbing connection steps?"
+            ],
+            "answer": "Connect brine discharge using 16mm internal diameter Armorvin hose, and connect fresh water using PN16 reinforced hose with minimum 20mm internal diameter to the pressure side of the boat's water system",
+            "question_type": "How",
+            "models": [
+              "All watermaker models"
+            ],
+            "references": [
+              "Section 4.4",
+              "Figure 4-7",
+              "Page 27"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 27,
+      "pages": "27-27",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What size seacock inlet is required for installation?",
+            "question_variations": [
+              "What is the minimum water inlet size needed?",
+              "How big does the seacock need to be?",
+              "What diameter inlet should I use?"
+            ],
+            "answer": "A minimum 3/4 inch seacock water inlet is required",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "Where should the seacock fitting be located?",
+            "question_variations": [
+              "What is the proper placement for the seacock?",
+              "How should I position the water inlet?",
+              "Where does the seacock need to be mounted?"
+            ],
+            "answer": "The fitting must be located low and central in the hull, not forward of the keel, and must always remain under water even when the vessel heels",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "How should hose connections be secured?",
+            "question_variations": [
+              "What type of hose clamps are needed?",
+              "How do I properly secure the hoses?",
+              "What's required for hose connections below water level?"
+            ],
+            "answer": "Hose connections, especially those under seawater level, must be secured with double hose clamps",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Installation Notes"
+            ]
+          },
+          {
+            "question": "What type of filter is required for the water intake?",
+            "question_variations": [
+              "What filtration is needed for the system?",
+              "What mesh size filter should I use?",
+              "What are the filter requirements?"
+            ],
+            "answer": "An easily inspected mesh type filter of 50 Mesh is required close to the water intake",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Installation Notes"
+            ]
+          },
+          {
+            "question": "What are the fresh water pump requirements for flushing?",
+            "question_variations": [
+              "What flow rate is needed for the fresh water pump?",
+              "What are the flushing system requirements?",
+              "What kind of water pressure is needed for flushing?"
+            ],
+            "answer": "The fresh water pump must provide minimum flow rate of 20 liters/minute at 1 bar pressure, and must be ON during flushing",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4.3.3"
+            ]
+          },
+          {
+            "question": "What are the requirements for brine discharge?",
+            "question_variations": [
+              "How should I install the discharge connection?",
+              "What size discharge fitting is needed?",
+              "Where should the brine discharge be located?"
+            ],
+            "answer": "The discharge connection should be above sea level with a minimum size of \u00bd inch BSP",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 4.3.4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 29,
+      "pages": "29-29",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What size hose should be used for hydraulic connections?",
+            "question_variations": [
+              "What diameter hose do I need for the hydraulic connections?",
+              "What is the required hose size for water connections?",
+              "What are the hydraulic connection specifications?"
+            ],
+            "answer": "16mm internal diameter hose is required for all hydraulic connections except fresh water production. The section under consistent pressure requires PN 16 minimum reinforced hose.",
+            "question_type": "What",
+            "models": [
+              "Watermaker System"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "What are the low pressure connection requirements?",
+            "question_variations": [
+              "What specifications are needed for low pressure connections?",
+              "How should I connect the low pressure components?",
+              "What type of pipe is needed for low pressure connections?"
+            ],
+            "answer": "Low pressure connections (max 3 bar) require Armorvin reinforced pipe PN 6 with 20mm internal diameter for seawater intake, and 16mm internal diameter for watermaker discharge connections.",
+            "question_type": "What",
+            "models": [
+              "Watermaker System"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "How should medium pressure connections be installed?",
+            "question_variations": [
+              "What are the medium pressure connection specifications?",
+              "What type of pipe is needed for medium pressure?",
+              "How do I connect the medium pressure components?"
+            ],
+            "answer": "Medium pressure connections (max 10 bar) require rubber reinforced pipe PN 20 minimum with 20mm internal diameter for fresh water pressurized system and pump connections.",
+            "question_type": "How",
+            "models": [
+              "Watermaker System"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "What are the fresh water tank connection requirements?",
+            "question_variations": [
+              "How do I connect the watermaker to fresh water tank?",
+              "What size pipe is needed for fresh water tank connection?",
+              "What are the specifications for fresh water connections?"
+            ],
+            "answer": "The watermaker to fresh water tank connection requires small plastic blue pipe 6x8mm (\u00bc'' fittings), which is provided within the scope of supply.",
+            "question_type": "What",
+            "models": [
+              "Watermaker System"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "Where is the high pressure section of the system?",
+            "question_variations": [
+              "Which part of the system is under consistent pressure?",
+              "What section requires PN 16 hose?",
+              "Where is the highest pressure in the system?"
+            ],
+            "answer": "The high pressure section is between the pump outlet, 5 micron filter, and watermaker inlet. This section requires PN 16 minimum reinforced hose for safety.",
+            "question_type": "Where",
+            "models": [
+              "Watermaker System"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 30,
+      "pages": "30-30",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How should I connect the pump to seawater?",
+            "question_variations": [
+              "What's the proper way to install the pump connections?",
+              "How do I connect the in/out hose to the pump?",
+              "What are the pump connection requirements?"
+            ],
+            "answer": "The pump should be placed as close as possible to the seawater intake and as low as possible relative to seawater level. Avoid long and convoluted connection hoses. Connect the in/out hose directly to the pump ports.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation, Fig. 4-8"
+            ]
+          },
+          {
+            "question": "Where should the watermaker inlet be connected?",
+            "question_variations": [
+              "How do I connect the sea water inlet to the watermaker?",
+              "Which side is the watermaker inlet on?",
+              "Where does the pump connect to the watermaker?"
+            ],
+            "answer": "Connect the watermaker inlet to the holder located on the right side of the watermaker marked 'IN'. This receives seawater from the pump.",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "How should I connect the watermaker outlet?",
+            "question_variations": [
+              "Where does the discharge water go?",
+              "How do I connect the drain outlet?",
+              "What's the proper way to install the watermaker discharge?"
+            ],
+            "answer": "Connect the outlet to the holder marked 'OUT' on the right side of the unit. If the vessel's drain outlet is below the watermaker unit, create an upward Swan neck to guarantee proper water head.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "How do I connect the fresh water production line?",
+            "question_variations": [
+              "Where does the fresh water output connect?",
+              "How should I connect the produced water to the tank?",
+              "What's the procedure for fresh water connection?"
+            ],
+            "answer": "Use the small supplied hose to connect the polyethylene pipe from the right side of the watermaker to the upper side of the tank using a \u00bc\" outlet. For metal tanks, you can create a \u00bc\" threaded hole for the supplied male connector, or alternatively Tee into the tank air vent hose. There are no specific length limitations for this connection.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          },
+          {
+            "question": "What safety precautions should I take with hose connections?",
+            "question_variations": [
+              "Are there any warnings about hose installation?",
+              "What happens if I use wrong hoses?",
+              "How important is proper hose selection?"
+            ],
+            "answer": "Using improper hoses can lead to bursting, which poses a serious security risk to the vessel. Always use appropriate hoses rated for the application.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 31,
+      "pages": "31-31",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the remote control panel?",
+            "question_variations": [
+              "How big is the remote control panel?",
+              "What's the size of the control panel?",
+              "What are the control panel measurements?"
+            ],
+            "answer": "The remote control panel dimensions are 135mm width and 116mm height",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.5.1"
+            ]
+          },
+          {
+            "question": "How should the remote control panel be mounted?",
+            "question_variations": [
+              "Where can I install the control panel?",
+              "What are the mounting requirements for the control panel?",
+              "How do I install the remote control panel?"
+            ],
+            "answer": "The panel can be fixed on any internal boat panel where the area behind is free of humidity and condensation, with approximately 50mm depth clearance for the rear part",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.5.1"
+            ]
+          },
+          {
+            "question": "What size cut-out is needed for the control panel?",
+            "question_variations": [
+              "What are the panel cut-out dimensions?",
+              "How big should the hole be for mounting the control panel?",
+              "What size opening do I need for the control panel?"
+            ],
+            "answer": "The cut-out dimensions for the control panel are 110mm width and 90mm height",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.5.1"
+            ]
+          },
+          {
+            "question": "What is the standard cable length for the remote control panel?",
+            "question_variations": [
+              "How long is the control panel cable?",
+              "What length cable comes with the remote panel?",
+              "What's the default wire length for the control panel?"
+            ],
+            "answer": "The remote control panel comes with a pre-wired multiple cable of 10 meters standard length. Longer cables can be requested from the factory if needed",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.5.1"
+            ]
+          },
+          {
+            "question": "Who can perform the electrical connections?",
+            "question_variations": [
+              "Who is authorized to do the electrical installation?",
+              "What qualifications are needed for electrical setup?",
+              "Can I install the electrical connections myself?"
+            ],
+            "answer": "The electrical connections must be performed by a qualified technician/operator, following the electrical drawings provided in the documentation",
+            "question_type": "Who",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4.5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 32,
+      "pages": "32-32",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What voltage and amperage is required for the ZEN 150 48V DC system?",
+            "question_variations": [
+              "What are the power requirements for ZEN 150?",
+              "How many amps does the ZEN 150 48V need?",
+              "What's the voltage specification for the ZEN 150?"
+            ],
+            "answer": "The system requires 48V DC power supply with a 25 Ampere automatic circuit breaker",
+            "question_type": "What",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.5.2"
+            ]
+          },
+          {
+            "question": "How should I connect the power supply to the system?",
+            "question_variations": [
+              "Where do I connect the power cables?",
+              "What are the power connection instructions?",
+              "How do I wire the power supply?"
+            ],
+            "answer": "Connect the power supply from service batteries to the terminals marked - and + inside the small electric box connected to the computer box. The connection must be made downstream of the voltmeter and ammeter on the vessel panelboard.",
+            "question_type": "How",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.5.2"
+            ]
+          },
+          {
+            "question": "What size cables should I use for the power connection?",
+            "question_variations": [
+              "What is the recommended wire gauge?",
+              "What cable diameter do I need?",
+              "What are the cable specifications?"
+            ],
+            "answer": "For 48V systems: Use 10mm\u00b2 (AWG 7) for cables up to 7 meters, use 16mm\u00b2 (AWG 5) for cables between 7-10 meters",
+            "question_type": "What",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.5.2 Cable Selection Table"
+            ]
+          },
+          {
+            "question": "How do I connect the remote panel?",
+            "question_variations": [
+              "What cable is used for the remote panel?",
+              "How is the remote panel wired?",
+              "What's the remote panel connection process?"
+            ],
+            "answer": "Connect the remote panel to the computer box using the pre-wired cable supplied with standard length of 10 meters",
+            "question_type": "How",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.5.2"
+            ]
+          },
+          {
+            "question": "What is the power consumption of the system?",
+            "question_variations": [
+              "How many watts does the system use?",
+              "What's the electrical load of the unit?",
+              "How much power does it draw?"
+            ],
+            "answer": "The system has an approximate electrical load of 600 Watts",
+            "question_type": "What",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "references": [
+              "Section 4.5.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 34,
+      "pages": "34-34",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the voltage requirement for the ZEN 150 system?",
+            "question_variations": [
+              "What power does the ZEN 150 need?",
+              "What's the operating voltage for ZEN 150?",
+              "Does the ZEN 150 run on 48V?"
+            ],
+            "answer": "The ZEN 150 system operates on 48V DC power supply",
+            "question_type": "What",
+            "models": [
+              "ZEN 150"
+            ],
+            "references": [
+              "Section 4.5.3",
+              "Fig 4-5"
+            ]
+          },
+          {
+            "question": "Where can I find the electrical layout for ZEN 150?",
+            "question_variations": [
+              "How do I access the wiring diagram?",
+              "Where is the electric scheme for ZEN 150?",
+              "Can I see the electrical connections layout?"
+            ],
+            "answer": "The electrical layout scheme for the ZEN 150 48V DC can be found in Figure 4-5 of the technical manual",
+            "question_type": "Where",
+            "models": [
+              "ZEN 150"
+            ],
+            "references": [
+              "Section 4.5.3",
+              "Fig 4-5"
+            ]
+          },
+          {
+            "question": "How do I install the electrical connections for ZEN 150?",
+            "question_variations": [
+              "What's the electrical installation process?",
+              "How to wire the ZEN 150?",
+              "What's the proper way to connect power to ZEN 150?"
+            ],
+            "answer": "Follow the electric layout scheme shown in Figure 4-5 for proper 48V DC installation of the ZEN 150 system",
+            "question_type": "How",
+            "models": [
+              "ZEN 150"
+            ],
+            "references": [
+              "Section 4 - Mounting and Installation",
+              "Section 4.5.3",
+              "Fig 4-5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 33,
+      "pages": "33-33",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What voltage does this system use?",
+            "question_variations": [
+              "What's the operating voltage?",
+              "What power supply is needed?",
+              "What's the voltage requirement?"
+            ],
+            "answer": "The system operates on 48V DC power supply",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4, Page 32"
+            ]
+          },
+          {
+            "question": "How do I wire the system?",
+            "question_variations": [
+              "What's the wiring diagram?",
+              "Where can I find the wiring scheme?",
+              "How should I connect the wires?"
+            ],
+            "answer": "Refer to the wiring logic scheme shown in Figure 4-4 for 48 VDC connections",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4, Fig 4-4, Page 32"
+            ]
+          },
+          {
+            "question": "Where can I find mounting instructions?",
+            "question_variations": [
+              "How do I mount this unit?",
+              "What are the installation steps?",
+              "Where are the mounting guidelines?"
+            ],
+            "answer": "Mounting and installation instructions can be found in Section 4 of the manual",
+            "question_type": "Where",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 4, Page 32"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 35,
+      "pages": "35-35",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What voltage does the remote panel use?",
+            "question_variations": [
+              "What is the remote panel voltage requirement?",
+              "Does the panel work with 12V or 24V?"
+            ],
+            "answer": "The remote panel can operate on either 12V or 24V",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "How do I start the watermaker?",
+            "question_variations": [
+              "What is the procedure to start the system?",
+              "How do I turn on the watermaker?"
+            ],
+            "answer": "Press the START button on the home screen. The unit will run indefinitely until STOP is pushed.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "How do I stop the watermaker?",
+            "question_variations": [
+              "What is the procedure to stop the system?",
+              "How do I turn off the watermaker?"
+            ],
+            "answer": "Press the STOP button. The system will take 2-3 seconds to position internal valves before stopping. If automatic washing is activated, it will perform a 1-minute wash cycle before stopping.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "How do I perform an emergency stop?",
+            "question_variations": [
+              "What is the emergency stop procedure?",
+              "How can I stop the system immediately?"
+            ],
+            "answer": "Press and hold the STOP button for 5 seconds for an emergency stop. This will stop the watermaker immediately.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "What information is shown on the home page?",
+            "question_variations": [
+              "What can I see on the main screen?",
+              "What parameters are displayed on page 1?"
+            ],
+            "answer": "The home page displays: remote panel voltage, pump status (ON/OFF), timer (working hours/total hours/total liters), pressure control (optional), info box (system status/alarms), salinity control (optional), and flow rate (optional)",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "When does the display turn off?",
+            "question_variations": [
+              "How long until the screen switches off?",
+              "What is the display timeout?"
+            ],
+            "answer": "The display switches off automatically after 3 minutes of inactivity",
+            "question_type": "When",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "How do I wake up the display?",
+            "question_variations": [
+              "How do I turn the screen back on?",
+              "What do I do when the display is off?"
+            ],
+            "answer": "Touch anywhere on the screen to wake it up. This will not activate any commands.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          },
+          {
+            "question": "What does the FLUSH function do?",
+            "question_variations": [
+              "How does the automatic washing work?",
+              "What happens when I press FLUSH?"
+            ],
+            "answer": "The FLUSH function prepares the system to perform an automatic washing cycle that lasts 1 minute once the system is stopped",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "references": [
+              "Section 5.1, Page 34"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 36,
+      "pages": "36-36",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I set the working time for the watermaker?",
+            "question_variations": [
+              "How long can I run the watermaker?",
+              "How do I adjust production timer?",
+              "Can I set operation duration?"
+            ],
+            "answer": "Use the Production Timer function and press the arrow '>' button to select between 1-6 hours of operation time",
+            "question_type": "How",
+            "models": [
+              "Schenker Watermaker 150Z48"
+            ],
+            "references": [
+              "Section 5.2, Page 2"
+            ]
+          },
+          {
+            "question": "What is the Automatic Startup procedure used for?",
+            "question_variations": [
+              "When should I use Automatic Startup?",
+              "How do I start a new machine first time?",
+              "What to do after filter cartridge replacement?"
+            ],
+            "answer": "Automatic Startup is used for first-time machine operation, after filter cartridge replacement, or general service. It purges air from the system, seawater and washing fresh water hoses. The depressurization valve must be opened before starting. The function appears in yellow on the display.",
+            "question_type": "What",
+            "models": [
+              "Schenker Watermaker 150Z48"
+            ],
+            "references": [
+              "Section 5.2, Page 2"
+            ]
+          },
+          {
+            "question": "How does the Periodic Wash function work?",
+            "question_variations": [
+              "What is periodic automatic rinsing?",
+              "How often does periodic wash run?",
+              "How much water does periodic wash use?"
+            ],
+            "answer": "Periodic Wash performs automatic rinsing every 6-10 days. Each wash cycle lasts 1 minute and uses 20 liters of fresh water. When activated, the FLUSH button lights up and a countdown appears in the Timer box.",
+            "question_type": "How",
+            "models": [
+              "Schenker Watermaker 150Z48"
+            ],
+            "references": [
+              "Section 5.2, Page 2"
+            ]
+          },
+          {
+            "question": "What is Manual Wash?",
+            "question_variations": [
+              "How long does manual wash take?",
+              "Can I stop manual wash early?",
+              "How do I start manual washing?"
+            ],
+            "answer": "Manual Wash is a 10-minute washing procedure that can be started manually. It can be stopped at any time by pressing the STOP button.",
+            "question_type": "What",
+            "models": [
+              "Schenker Watermaker 150Z48"
+            ],
+            "references": [
+              "Section 5.2, Page 2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 37,
+      "pages": "37-37",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the bypass switch used for?",
+            "question_variations": [
+              "Why would I use the bypass switch?",
+              "When should I activate the bypass switch?",
+              "What does the bypass switch do?"
+            ],
+            "answer": "The bypass switch excludes the sensor (signal pressure switch) that detects correct ERS cycling. It's used when the signal pressure switch malfunctions or during special operations like chemical washing shutdown procedures. The bypass deactivates automatically after one production cycle.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Page 3, Section 5.3"
+            ]
+          },
+          {
+            "question": "How long does the bypass switch stay activated?",
+            "question_variations": [
+              "When does the bypass switch turn off?",
+              "Does the bypass switch stay on permanently?"
+            ],
+            "answer": "The bypass activation is automatically removed after one single production cycle.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Page 3, Section 5.3"
+            ]
+          },
+          {
+            "question": "What is the bypass valve?",
+            "question_variations": [
+              "How does the bypass valve work?",
+              "What does the bypass valve do?"
+            ],
+            "answer": "The bypass valve is an optional feature that excludes the salinity probe that detects water quality. When activated, all fresh water is diverted to the tank regardless of its quality.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Page 3, Section 5.3"
+            ]
+          },
+          {
+            "question": "What is the level control feature?",
+            "question_variations": [
+              "How does level control work?",
+              "What does the level control do?"
+            ],
+            "answer": "Level control is an optional feature that enables automatic control through one or two level switches installed in the fresh water tank.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Page 3, Section 5.3"
+            ]
+          },
+          {
+            "question": "When should I not use the bypass switch?",
+            "question_variations": [
+              "Is it safe to use the bypass switch regularly?",
+              "Should I leave the bypass switch on?"
+            ],
+            "answer": "Don't activate the bypass if not necessary. It should only be used during signal pressure switch malfunctions or special operations like chemical washing procedures.",
+            "question_type": "When",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Page 3, Section 5.3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 38,
+      "pages": "38-38",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What does SYSTEM RUNNING message mean?",
+            "question_variations": [
+              "What is the meaning of SYSTEM RUNNING?",
+              "When does the system show SYSTEM RUNNING?"
+            ],
+            "answer": "The SYSTEM RUNNING message indicates that the system is operating properly and functioning normally.",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Messages"
+            ]
+          },
+          {
+            "question": "What does TANK FULL / AUTO indicate?",
+            "question_variations": [
+              "Why does it say TANK FULL AUTO?",
+              "What happens when tank full message appears?"
+            ],
+            "answer": "The TANK FULL / AUTO message indicates the system is in standby because the fresh water tank is full. The system will automatically restart operation when the tank becomes empty.",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Messages"
+            ]
+          },
+          {
+            "question": "What do the salinity probe readings mean?",
+            "question_variations": [
+              "How do I interpret salinity readings?",
+              "What are the different salinity values?"
+            ],
+            "answer": "The salinity probe readings are: S = wait (calculations in progress), S = OK (good water quality), S = MED (medium water quality), S = BAD (poor water quality)",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Messages"
+            ]
+          },
+          {
+            "question": "What is the DIVERT TO DISCHARGE message?",
+            "question_variations": [
+              "Why does it show DIVERT TO DISCHARGE?",
+              "What happens during divert to discharge?"
+            ],
+            "answer": "The DIVERT TO DISCHARGE message indicates that fresh water production is being diverted to discharge for a duration of 1 minute.",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Messages"
+            ]
+          },
+          {
+            "question": "What does BYPASS WARNING mean?",
+            "question_variations": [
+              "Why am I getting a bypass warning?",
+              "What is the orange bypass message?"
+            ],
+            "answer": "The BYPASS WARNING message (shown in orange) advises that the unit is operating in bypass mode, which means some safety functions are disabled.",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Warning Messages"
+            ]
+          },
+          {
+            "question": "What does DIV. VALVE BY-PASS mean?",
+            "question_variations": [
+              "Why does it show valve bypass message?",
+              "What is the diversion valve bypass warning?"
+            ],
+            "answer": "The DIV. VALVE BY-PASS message indicates the unit is operating without salinity probe control, and all produced water is being diverted to the fresh water tank.",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Warning Messages"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 39,
+      "pages": "39-39",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What happens when a system block occurs?",
+            "question_variations": [
+              "What does SYSTEM BLOCKED mean?",
+              "Why did my system get blocked?",
+              "What causes a hydraulic block alarm?"
+            ],
+            "answer": "When a system block occurs, the pump automatically switches off as a safety procedure. A reset procedure is required and the hydraulic system should be checked for problems. If the issue is just a malfunctioning pressure switch signal, the unit can be restarted using the bypass.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 38"
+            ]
+          },
+          {
+            "question": "What should I do when I get a CONTROL CABLE alarm?",
+            "question_variations": [
+              "How do I fix a control cable error?",
+              "What does the control cable alarm mean?",
+              "Control cable warning - what now?"
+            ],
+            "answer": "Check the continuity of the connection between the remote panel and the computer box.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 38"
+            ]
+          },
+          {
+            "question": "What happens during a BAD WATER QUALITY alarm?",
+            "question_variations": [
+              "How does the system respond to high salinity?",
+              "What triggers a water quality alarm?",
+              "When does water get diverted to discharge?"
+            ],
+            "answer": "When salinity is too high for 15 seconds, the system displays 'DIVERT TO DISCHARGE' and diverts fresh water production to discharge for 2:45 minutes. After 3 minutes total, the unit enters alarm state and shuts off the pump group.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 38"
+            ]
+          },
+          {
+            "question": "How do I reset an alarm?",
+            "question_variations": [
+              "What do I do when I get an alarm?",
+              "How to clear system alarms?",
+              "Alarm reset procedure?"
+            ],
+            "answer": "Alarms that stop the unit immediately can be reset by pressing the STOP button.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 38"
+            ]
+          },
+          {
+            "question": "What color are the alarm messages?",
+            "question_variations": [
+              "How do I identify an alarm message?",
+              "What indicates an alarm condition?",
+              "What color shows system alarms?"
+            ],
+            "answer": "Alarm messages are displayed in RED.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 38"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 40,
+      "pages": "40-40",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the first start-up procedure used for?",
+            "question_variations": [
+              "When do I need to do a first start-up?",
+              "Why is first start-up necessary?",
+              "In what cases should I perform first start-up?"
+            ],
+            "answer": "The first start-up procedure is necessary when starting a new system, after a filter replacement, or after a chemical washing. Its main purpose is to purge air separately from the unit and pump group.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.2"
+            ]
+          },
+          {
+            "question": "What checks need to be done before start-up?",
+            "question_variations": [
+              "How do I prepare for first start-up?",
+              "What should I verify before starting?",
+              "What are the preliminary checks for start-up?"
+            ],
+            "answer": "1. Verify all components and hoses are connected correctly. 2. Verify 5 micron and active carbon cartridges are installed. 3. Check seawater inlet valve and salt water drain valve are open. 4. Check reset valve is closed and positioner unscrewed. 5. Check boat's fresh water pressurizing pump is on. 6. Check grey valve on active carbon filter is open.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.2.1"
+            ]
+          },
+          {
+            "question": "How do I perform the start-up procedure?",
+            "question_variations": [
+              "What are the steps for start-up?",
+              "How do I start up the system?",
+              "What's the start-up sequence?"
+            ],
+            "answer": "1. Open the depressurization valve (unscrew the valve). 2. Activate the start-up procedure through the function of the second page. 3. Close the depressurization valve when the display shows the specific message and wait for the completion of the procedure.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.2.2"
+            ]
+          },
+          {
+            "question": "What position should the reset valve be in before start-up?",
+            "question_variations": [
+              "How should I set the reset valve?",
+              "What's the correct reset valve position for start-up?",
+              "Should the reset valve be open or closed for start-up?"
+            ],
+            "answer": "The reset valve should be closed (lever orthogonal to the body valve) and the positioner should be completely unscrewed.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.2.1"
+            ]
+          },
+          {
+            "question": "When do I close the depressurization valve?",
+            "question_variations": [
+              "At what point should I close the depressurization valve?",
+              "How do I know when to close the depressurization valve?",
+              "What triggers closing the depressurization valve?"
+            ],
+            "answer": "Close the depressurization valve when the display shows the specific message, then wait for the completion of the procedure.",
+            "question_type": "When",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.2.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 41,
+      "pages": "41-41",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I turn on the watermaker?",
+            "question_variations": [
+              "What's the startup procedure for the watermaker?",
+              "How to start the watermaker system?"
+            ],
+            "answer": "Press START to turn on the watermaker. Ensure reset valve is closed and positioner is unscrewed before starting.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.3.1"
+            ]
+          },
+          {
+            "question": "How do I turn off the watermaker?",
+            "question_variations": [
+              "What's the shutdown procedure?",
+              "How to stop the watermaker?"
+            ],
+            "answer": "Press STOP to turn off the watermaker. If using final flushing (recommended), press FLUSH then STOP.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.3.1",
+              "Section 5.3.2"
+            ]
+          },
+          {
+            "question": "What is the recommended operating procedure?",
+            "question_variations": [
+              "What's the best way to run the watermaker?",
+              "Should I use final flushing?"
+            ],
+            "answer": "The recommended procedure is operation with final flushing: 1. Press START to turn on 2. Press FLUSH to set final flushing 3. Press STOP to turn off. This consumes about 20 liters of fresh water for automatic washing.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.3.2"
+            ]
+          },
+          {
+            "question": "How do I set the timer on the watermaker?",
+            "question_variations": [
+              "Can I set the watermaker to run for a specific time?",
+              "How to use the timer function?"
+            ],
+            "answer": "1. Select working time (1-6 hours) using the arrow '>' button 2. Press START to begin operation 3. Can stop anytime with STOP or FLUSH then STOP for final flushing",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.3.3"
+            ]
+          },
+          {
+            "question": "What are the preliminary checks before starting?",
+            "question_variations": [
+              "What should I check before operating?",
+              "How do I prepare the watermaker for use?"
+            ],
+            "answer": "1. Ensure reset valve is closed (lever orthogonal to body valve) 2. Positioner should be completely unscrewed 3. Depressurization valve should be closed 4. Grey valve on active carbon filter should be open",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.3"
+            ]
+          },
+          {
+            "question": "How do I perform a long flush?",
+            "question_variations": [
+              "What is the long flushing procedure?",
+              "How to do manual wash?"
+            ],
+            "answer": "1. Press START in the MANUAL WASH function to begin a 10-minute flushing procedure 2. Can be stopped anytime by pressing STOP",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.3.4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 42,
+      "pages": "42-42",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What type of water can the watermaker be used in?",
+            "question_variations": [
+              "Is it safe to use the watermaker in murky water?",
+              "What are the water quality requirements for the watermaker?",
+              "Can I use the watermaker near coral reefs?"
+            ],
+            "answer": "The watermaker must be used in reasonably clean and transparent waters with maximum turbidity of 5 NTU. Operation should be avoided near coral reefs due to suspended particles with high abrasive power.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use"
+            ]
+          },
+          {
+            "question": "How often should the filter be replaced?",
+            "question_variations": [
+              "When do I need to change the watermaker filter?",
+              "What is the maintenance schedule for filters?"
+            ],
+            "answer": "The 5 micron filter should be replaced regularly. For harsh conditions, it's recommended to install an additional 20 micron filter before the 5 micron filter.",
+            "question_type": "When",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use"
+            ]
+          },
+          {
+            "question": "How do I reset the watermaker if it sucks air?",
+            "question_variations": [
+              "What is the reset procedure?",
+              "How do I fix the watermaker if pressure gets too high?",
+              "What do I do if the hydraulic valve stops in center position?"
+            ],
+            "answer": "1. Open the reset valve (lever in horizontal position). 2. Open slightly the depressurization valve.",
+            "question_type": "How",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Reset Procedure"
+            ]
+          },
+          {
+            "question": "What happens if the watermaker sucks air?",
+            "question_variations": [
+              "Why does my watermaker get high pressure without cycling?",
+              "What occurs when the hydraulic valve stops in center?"
+            ],
+            "answer": "When air is sucked in, the automatic hydraulic valve may stop in a central position. This causes high pressure without cycling when started, and the computer will shut off the pump after a few seconds. This requires a manual reset but does not damage the system.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5.4 - Reset Procedure"
+            ]
+          },
+          {
+            "question": "What voids the warranty on the watermaker?",
+            "question_variations": [
+              "Is damage from water particles covered under warranty?",
+              "What type of damage isn't covered by the warranty?"
+            ],
+            "answer": "Damages to the machine due to scratches and abrasions caused by water particles are not covered under warranty.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 43,
+      "pages": "43-43",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I adjust the positioner knob?",
+            "question_variations": [
+              "What are the steps to set the positioner?",
+              "How do I calibrate the positioner?",
+              "What's the process for positioning adjustment?"
+            ],
+            "answer": "First screw the positioner knob clockwise until it stops (minimum 18 complete turns). Then unscrew counterclockwise back to original position until it cannot turn further.",
+            "question_type": "How",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5, Page 42"
+            ]
+          },
+          {
+            "question": "How many turns are needed for the positioner knob?",
+            "question_variations": [
+              "What's the required number of turns for positioning?",
+              "How far should I turn the positioner?"
+            ],
+            "answer": "A minimum of 18 complete turns clockwise are normally needed.",
+            "question_type": "How",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5, Page 42"
+            ]
+          },
+          {
+            "question": "What position should the reset valve lever be in?",
+            "question_variations": [
+              "How should I position the reset valve?",
+              "Which way does the reset valve lever go?"
+            ],
+            "answer": "The reset valve should be closed with the lever in vertical position.",
+            "question_type": "What",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5, Page 42"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 44,
+      "pages": "44-44",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I restart the watermaker system?",
+            "question_variations": [
+              "What are the steps to restart the system?",
+              "How to turn the watermaker back on?",
+              "What's the restart procedure?"
+            ],
+            "answer": "To restart the system, first ensure the depressurization valve is open. Then initiate the system restart. After several seconds, close the depressurization valve.",
+            "question_type": "How",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 43"
+            ]
+          },
+          {
+            "question": "When should I close the depressurization valve?",
+            "question_variations": [
+              "How long do I wait before closing depressurization valve?",
+              "What's the timing for the depressurization valve?",
+              "After restart, when do I close the valve?"
+            ],
+            "answer": "Close the depressurization valve after several seconds following system restart.",
+            "question_type": "When",
+            "models": [
+              "150Z48"
+            ],
+            "references": [
+              "Section 5 - Functioning and Use, Page 43"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 45,
+      "pages": "45-45",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How often should I check the strainer filter?",
+            "question_variations": [
+              "What is the maintenance schedule for strainer inspection?",
+              "When do I need to clean the strainer?",
+              "How frequently should strainer maintenance be done?"
+            ],
+            "answer": "The strainer should be visually inspected and cleaned every 5 days",
+            "question_type": "When",
+            "models": [
+              "All Schenker water systems"
+            ],
+            "references": [
+              "Section 6.1 - Maintenance"
+            ]
+          },
+          {
+            "question": "How often should the 5 micron cartridge filter be replaced?",
+            "question_variations": [
+              "When do I need to change the pump filter?",
+              "What's the replacement interval for 5 micron filters?",
+              "How frequently should I replace cartridge filters?"
+            ],
+            "answer": "The 5 micron cartridge filter should be replaced every 100-120 working hours under average conditions. After replacement, purge air from system by opening the depressurization valve for 2-3 minutes",
+            "question_type": "When",
+            "models": [
+              "All Schenker water systems"
+            ],
+            "references": [
+              "Section 6.1 - Maintenance"
+            ]
+          },
+          {
+            "question": "How do I replace the filter cartridges?",
+            "question_variations": [
+              "What's the procedure for changing filters?",
+              "How to change water system filters?",
+              "Filter replacement instructions?"
+            ],
+            "answer": "Unscrew the filter housing counterclockwise using the specific key provided with the system",
+            "question_type": "How",
+            "models": [
+              "All Schenker water systems"
+            ],
+            "references": [
+              "Section 6.1 - Maintenance"
+            ]
+          },
+          {
+            "question": "When should the active carbon filter be replaced?",
+            "question_variations": [
+              "How often to change carbon fiber filter?",
+              "Active carbon filter maintenance schedule?",
+              "Carbon filter replacement interval?"
+            ],
+            "answer": "The active carbon fiber filter should be replaced once per year",
+            "question_type": "When",
+            "models": [
+              "All Schenker water systems"
+            ],
+            "references": [
+              "Section 6.1 - Maintenance"
+            ]
+          },
+          {
+            "question": "What types of filters are in the system?",
+            "question_variations": [
+              "How many filters does the system have?",
+              "Which filters are installed?",
+              "List of system filters?"
+            ],
+            "answer": "The system has three filters: 1. Strainer, 2. Pump filter (5 micron cartridge filter), 3. Active carbon filter",
+            "question_type": "What",
+            "models": [
+              "All Schenker water systems"
+            ],
+            "references": [
+              "Section 6.1 - Maintenance"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 46,
+      "pages": "46-46",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How often should I purge air from the system?",
+            "question_variations": [
+              "When do I need to purge the system?",
+              "What is the air purge interval?",
+              "How frequently should I depressurize the system?"
+            ],
+            "answer": "Purge air from the system every 15-20 days by opening the depressurization valve slightly for 2-3 minutes",
+            "question_type": "When",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 6.1"
+            ]
+          },
+          {
+            "question": "What is the normal working pressure range?",
+            "question_variations": [
+              "What pressure should the system run at?",
+              "What is the correct operating pressure?",
+              "What pressure reading is normal?"
+            ],
+            "answer": "The normal working pressure range is 10-11 bar with periodic small pressure peaks of 0.4 bar during commutation",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 6.2"
+            ]
+          },
+          {
+            "question": "What should I do if the pressure is too high?",
+            "question_variations": [
+              "Why is my system pressure above normal?",
+              "How do I fix high pressure readings?",
+              "What causes high system pressure?"
+            ],
+            "answer": "If pressure exceeds normal range, first check membrane cleanliness. Clean with chemical SC1. If pressure remains high, perform alkaline washing with SC2.",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 6.2"
+            ]
+          },
+          {
+            "question": "How often should I check for leaks?",
+            "question_variations": [
+              "When do I need to inspect for leaks?",
+              "What is the leak check interval?",
+              "How frequently should I check the system for leaks?"
+            ],
+            "answer": "Check for leaks at every system start-up and as frequently as possible to prevent damage from accidental causes like hose bursting or equipment failure",
+            "question_type": "When",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 6.3"
+            ]
+          },
+          {
+            "question": "How long do the membranes last?",
+            "question_variations": [
+              "When should I replace the membranes?",
+              "What is the membrane life expectancy?",
+              "How often do membranes need replacement?"
+            ],
+            "answer": "Reverse osmosis membranes last on average 6-7 years. Replace when water quality decreases or working pressure increases and chemical washing doesn't help",
+            "question_type": "How",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 6.4"
+            ]
+          },
+          {
+            "question": "When is shutdown procedure required?",
+            "question_variations": [
+              "Do I need to shutdown for winter?",
+              "How long can system sit without shutdown procedure?",
+              "When should I perform system shutdown?"
+            ],
+            "answer": "Perform shutdown procedure before any standstill longer than 2-3 months, such as winter laying up, to flush sediments and prevent bacterial growth",
+            "question_type": "When",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 6.5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 47,
+      "pages": "47-47",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What equipment is needed for watermaker shutdown?",
+            "question_variations": [
+              "What do I need to shutdown the watermaker?",
+              "What tools are required for watermaker winterization?",
+              "What supplies do I need for watermaker maintenance?"
+            ],
+            "answer": "You need: 1) A tank with minimum 15 litres of fresh water, 2) 3 hoses for inlet pump, discharge, and fresh water out connections, 3) Bottle of SCHENKER CLEANING 1 (SC1) powder, 4) Basic tools like screwdrivers and pliers for pipe dismounting",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.5.1"
+            ]
+          },
+          {
+            "question": "How long should the cleaning products be left in the system?",
+            "question_variations": [
+              "What's the cleaning duration for SC1 and SC2?",
+              "How much time does the cleaning procedure take?",
+              "What is the wait time for watermaker cleaning?"
+            ],
+            "answer": "Allow a period of 20 minutes for both acid (SC1) and alkaline (SC2) cleaning procedures. The depressurizing knob should be partially opened during this process.",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.5.1"
+            ]
+          },
+          {
+            "question": "What cleaning products can be used for shutdown?",
+            "question_variations": [
+              "Which cleaners are approved for winterization?",
+              "What solutions should I use to clean the watermaker?",
+              "What products are available for system cleaning?"
+            ],
+            "answer": "Two approved products: 1) SCHENKER CLEANING 1 (SC1) - Acid product for removing inorganic components and winter preservation, 2) SCHENKER CLEANING 2 (SC2) - Alkaline product for removing organic components like mould and bacteria. Do NOT use sodium metabisulfite.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.5.1"
+            ]
+          },
+          {
+            "question": "When should I use SC2 cleaner?",
+            "question_variations": [
+              "In what situations do I need SC2?",
+              "What indicates I should use SC2?",
+              "Do I always need to use SC2?"
+            ],
+            "answer": "Use SC2 only when there is a strong bad egg smell indicating organic contamination. Normally only SC1 is required. If SC2 is needed, use it first, then flush with fresh water, and finally use SC1 for winterization.",
+            "question_type": "When",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.5.1"
+            ]
+          },
+          {
+            "question": "What should I do with the filters during long-term storage?",
+            "question_variations": [
+              "How do I handle filters for winter storage?",
+              "Should I change filters after cleaning?",
+              "Do I need to remove filters for winterization?"
+            ],
+            "answer": "It is recommended to replace the filters with new ones after performing the cleaning procedure. If the unit will not be used for a long period (like winter storage), the filters can be completely removed.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.5.1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 49,
+      "pages": "49-49",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I restart the watermaker after shutdown?",
+            "question_variations": [
+              "What's the procedure for starting watermaker after shutdown?",
+              "How to restart watermaker system?",
+              "What steps to take when restarting watermaker?"
+            ],
+            "answer": "To restart the watermaker after shutdown: 1) Activate the by-pass 2) Start the watermaker 3) Run for 20 minutes with hoses in recipient to avoid air intake 4) Stop unit 5) Reconnect original hoses. This purges air and drains chemicals from system.",
+            "question_type": "How",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6 - Maintenance, Page 48"
+            ]
+          },
+          {
+            "question": "How long should watermaker run during restart procedure?",
+            "question_variations": [
+              "What's the runtime for watermaker restart?",
+              "Duration of watermaker restart process?",
+              "How many minutes to run watermaker after shutdown?"
+            ],
+            "answer": "Run the watermaker for approximately 20 minutes during the restart procedure with bypass activated.",
+            "question_type": "How",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6 - Maintenance, Page 48"
+            ]
+          },
+          {
+            "question": "Why is first start-up procedure necessary after shutdown?",
+            "question_variations": [
+              "What's the purpose of restart procedure?",
+              "Reason for watermaker restart protocol?",
+              "Why follow restart procedure after shutdown?"
+            ],
+            "answer": "The first start-up procedure after shutdown is necessary to purge air from the system and drain out any chemicals that may be present in the systems.",
+            "question_type": "Why",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6 - Maintenance, Page 48"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 48,
+      "pages": "48-48",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I prepare the shutdown solution for the watermaker?",
+            "question_variations": [
+              "What solution do I need for watermaker shutdown?",
+              "How to mix shutdown solution for Schenker watermaker?",
+              "What's the correct mixture for watermaker shutdown?"
+            ],
+            "answer": "Mix one bottle of SC1 (or SC2) with approximately 15 litres of unchlorinated water",
+            "question_type": "How",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6.5.2, Page 47"
+            ]
+          },
+          {
+            "question": "What is the shutdown procedure for the watermaker?",
+            "question_variations": [
+              "How do I shutdown the watermaker properly?",
+              "What are the steps to shutdown the watermaker?",
+              "Can you explain the watermaker shutdown process?"
+            ],
+            "answer": "1. Mix SC1/SC2 with 15L unchlorinated water 2. Connect 3 hoses to pump and watermaker 3. Submerge hoses in solution 4. Open depressurization valve",
+            "question_type": "What",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6.5.2, Page 47"
+            ]
+          },
+          {
+            "question": "How should the hoses be positioned during shutdown?",
+            "question_variations": [
+              "Where do I put the hoses during shutdown?",
+              "What's the correct hose placement for shutdown?",
+              "How deep should hoses be during shutdown?"
+            ],
+            "answer": "The hoses must be well submerged in the solution and positioned below the free water surface. Ensure they don't suck air.",
+            "question_type": "How",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6.5.2, Page 47"
+            ]
+          },
+          {
+            "question": "When should I open the depressurization valve?",
+            "question_variations": [
+              "At what point do I depressurize during shutdown?",
+              "Should the depressurization valve be opened during shutdown?",
+              "What's the timing for opening the depressurization valve?"
+            ],
+            "answer": "Open the depressurization valve after connecting and submerging the hoses in the solution, as the final step of the shutdown procedure",
+            "question_type": "When",
+            "models": [
+              "Schenker Watermaker"
+            ],
+            "references": [
+              "Section 6.5.2, Page 47"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 50,
+      "pages": "50-50",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What antifreeze solution should I use for winterizing?",
+            "question_variations": [
+              "What type of antifreeze is recommended?",
+              "Which antifreeze product should I use?",
+              "What's the proper antifreeze for winter storage?"
+            ],
+            "answer": "Use a solution of propylene glycol and unchlorinated water. Do not use ethylene glycol as it is toxic and non-degradable.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.6"
+            ]
+          },
+          {
+            "question": "What concentration of propylene glycol should I use?",
+            "question_variations": [
+              "How much propylene glycol do I need?",
+              "What's the proper antifreeze mixture ratio?"
+            ],
+            "answer": "Use 45% concentration for temperatures up to -20\u00b0C, or 55% concentration for temperatures up to -30\u00b0C",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.6"
+            ]
+          },
+          {
+            "question": "How much antifreeze solution is needed?",
+            "question_variations": [
+              "What's the total volume of antifreeze needed?",
+              "How many liters of antifreeze solution should I prepare?"
+            ],
+            "answer": "The total volume of the solution must be about 15 litres",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.6"
+            ]
+          },
+          {
+            "question": "How do I winterize the watermaker?",
+            "question_variations": [
+              "What's the winterizing procedure?",
+              "How do I prepare the system for cold weather?",
+              "What are the steps for winterization?"
+            ],
+            "answer": "1. Perform normal shutdown with SC1 first. 2. Prepare 15L propylene glycol solution. 3. Disconnect drain and pump suction hoses. 4. Connect hose pieces to drain and pump suction. 5. Place hose ends in solution bucket. 6. Open depressurization valve. 7. Run unit for 5 minutes. 8. Stop unit and reconnect original hoses, keeping solution in system.",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.6, Fig 6-2"
+            ]
+          },
+          {
+            "question": "When should I winterize my watermaker?",
+            "question_variations": [
+              "At what temperature should I perform winterization?",
+              "Under what conditions should I winterize?"
+            ],
+            "answer": "Winterize the system when temperatures are expected to fall below 5\u00b0C",
+            "question_type": "When",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 51,
+      "pages": "51-51",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How often should reverse osmosis membranes be replaced?",
+            "question_variations": [
+              "When do I need to replace RO membranes?",
+              "What is the lifespan of reverse osmosis membranes?",
+              "How long do RO membranes last?"
+            ],
+            "answer": "Reverse osmosis membranes typically last 6-7 years. They should be replaced when water quality decreases and/or working pressure increases, especially if chemical washings don't improve performance.",
+            "question_type": "When",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.7.1"
+            ]
+          },
+          {
+            "question": "How do I adjust the pump high pressure switch?",
+            "question_variations": [
+              "What is the process for calibrating the pressure switch?",
+              "How can I calibrate the high pressure switch?",
+              "What are the steps to adjust pump pressure?"
+            ],
+            "answer": "To calibrate the pressure switch: 1) Pull out the plug 2) Remove the security nut 3) Engage the small internal screw with a screwdriver 4) Turn clockwise to increase pressure or counterclockwise to decrease. The switch is typically set at around 15 Bar.",
+            "question_type": "How",
+            "models": [
+              "All Schenker Watermakers with High Pressure Switch"
+            ],
+            "references": [
+              "Section 6.8"
+            ]
+          },
+          {
+            "question": "What is the accumulator's function?",
+            "question_variations": [
+              "Why is there an accumulator in the watermaker?",
+              "What does the accumulator do?",
+              "What is the purpose of the polypropylene reservoir?"
+            ],
+            "answer": "The accumulator is a polypropylene reservoir of air that dampens pressure oscillations during watermaker commutations. It is factory loaded at approximately 5 bar pressure.",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers with Accumulator"
+            ],
+            "references": [
+              "Section 6.8"
+            ]
+          },
+          {
+            "question": "How often should the accumulator charge level be checked?",
+            "question_variations": [
+              "When should I check the accumulator pressure?",
+              "What is the maintenance schedule for the accumulator?",
+              "How frequently should accumulator charge be inspected?"
+            ],
+            "answer": "The accumulator charge level must be checked periodically to ensure correct functioning of the watermaker. It should maintain approximately 5 bar pressure.",
+            "question_type": "When",
+            "models": [
+              "All Schenker Watermakers with Accumulator"
+            ],
+            "references": [
+              "Section 6.8"
+            ]
+          },
+          {
+            "question": "What are the signs that membranes need replacement?",
+            "question_variations": [
+              "How do I know when to replace RO membranes?",
+              "What indicates membrane failure?",
+              "When should I change the membranes?"
+            ],
+            "answer": "Membranes need replacement when: 1) Water quality decreases 2) Working pressure increases 3) Chemical washings no longer produce significant improvements",
+            "question_type": "What",
+            "models": [
+              "All Schenker Watermakers"
+            ],
+            "references": [
+              "Section 6.7.1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 52,
+      "pages": "52-52",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "Why won't my pump start?",
+            "question_variations": [
+              "What causes pump failure to start?",
+              "My pump isn't starting, what's wrong?",
+              "How do I fix a non-starting pump?"
+            ],
+            "answer": "The pump may not start due to either a disconnected/burned pressure switch or electronic failure. For pressure switch issues, restore or replace the switch. For electronic failures, try starting the pump and electrovalve using microswitches.",
+            "question_type": "Why",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 7.1 Troubleshooting Chart"
+            ]
+          },
+          {
+            "question": "What causes the system to block in high pressure?",
+            "question_variations": [
+              "Why is my system blocking at high pressure?",
+              "How do I fix system blocking in high pressure?"
+            ],
+            "answer": "System blocking in high pressure is typically caused by hydraulic block. The remedy is to perform the reset procedure.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 7.1 Troubleshooting Chart"
+            ]
+          },
+          {
+            "question": "Why does my pump keep starting and stopping?",
+            "question_variations": [
+              "What causes pump cycling on and off?",
+              "How do I fix pump start-stop issues?"
+            ],
+            "answer": "The start-stop phenomenon is usually caused by incorrectly set pump pressure switch or dirty filters. Calibrate the pump pressure switch and/or replace filters as needed.",
+            "question_type": "Why",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 7.1 Troubleshooting Chart"
+            ]
+          },
+          {
+            "question": "What causes high pressure variations during commutation?",
+            "question_variations": [
+              "Why do I have pressure fluctuations?",
+              "How do I fix pressure variations?"
+            ],
+            "answer": "High pressure variations during commutation can be caused by dirty filters/membranes or low accumulator pressure. Clean or replace filters/membranes and ensure accumulator is inflated to 5 Bar pressure.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 7.1 Troubleshooting Chart"
+            ]
+          },
+          {
+            "question": "What causes low production with normal or low pressure?",
+            "question_variations": [
+              "Why is my system producing less than normal?",
+              "How do I fix low production issues?"
+            ],
+            "answer": "Low production with normal/low pressure can be caused by low battery charge or air within the system. Check battery charge and purge air by opening the pressure valve for a while.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 7.1 Troubleshooting Chart"
+            ]
+          },
+          {
+            "question": "What causes low production with high pressure?",
+            "question_variations": [
+              "Why do I have low production and high pressure?",
+              "How do I fix high pressure low production?"
+            ],
+            "answer": "Low production with high pressure (>10 Bar) is typically caused by clogged filters or membranes. Replace filters or perform washing with SC1 for membranes.",
+            "question_type": "What",
+            "models": [
+              "COD.150Z48"
+            ],
+            "references": [
+              "Section 7.1 Troubleshooting Chart"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 53,
+      "pages": "53-53",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What spare parts do I need for short term cruising?",
+            "question_variations": [
+              "What should I carry for a short cruise?",
+              "What's the minimum spare parts kit needed?",
+              "What spares are recommended for brief trips?"
+            ],
+            "answer": "For short term cruising, you need a cleaning kit (containing SC1 and SC2 cleaning products) and one 5 microns cartridge filter",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 8.1"
+            ]
+          },
+          {
+            "question": "What spare parts are needed for long term cruising?",
+            "question_variations": [
+              "What spares should I have for extended voyages?",
+              "What's in the long-term cruising kit?",
+              "What parts do I need for extended trips?"
+            ],
+            "answer": "For long term cruising, you need a cruising kit (containing three 5 microns cartridge filters, one active carbon filter, one cleaning kit) and a pump pressure switch",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 8.2"
+            ]
+          },
+          {
+            "question": "What is the code for the cleaning kit?",
+            "question_variations": [
+              "How do I order a cleaning kit?",
+              "What's the part number for cleaning supplies?",
+              "What's the cleaning kit product code?"
+            ],
+            "answer": "The cleaning kit (SC1+SC2) code is CK",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 8.1"
+            ]
+          },
+          {
+            "question": "What is the code for the cruising kit?",
+            "question_variations": [
+              "How do I order a cruising kit?",
+              "What's the part number for the cruising kit?",
+              "What's the cruising kit product code?"
+            ],
+            "answer": "The cruising kit code is CRK136",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 8.2"
+            ]
+          },
+          {
+            "question": "What is included in the cleaning kit?",
+            "question_variations": [
+              "What comes in the cleaning kit?",
+              "What cleaning products do I need?",
+              "What's in the CK kit?"
+            ],
+            "answer": "The cleaning kit includes SC1 washing product and SC2 washing product",
+            "question_type": "What",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "references": [
+              "Section 8.1"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

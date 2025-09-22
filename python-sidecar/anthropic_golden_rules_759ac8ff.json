@@ -1,0 +1,4134 @@
+{
+  "total_chunks_processed": 53,
+  "successful_chunks": 52,
+  "failed_chunks": 1,
+  "total_golden_rules_extracted": 268,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "Touch screen voltage input verification",
+      "expected_value": "48V DC +/- 2V",
+      "test_method": "Measure input voltage with multimeter at power terminals",
+      "failure_indication": "Screen will not power on or display unstable",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "related_procedures": [
+        "Power Supply Installation",
+        "Voltage Calibration"
+      ]
+    },
+    {
+      "query": "Screen response time test",
+      "expected_value": "< 100ms response to touch input",
+      "test_method": "Use calibrated touch response timer tool",
+      "failure_indication": "Delayed response indicates controller issue",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "related_procedures": [
+        "Touch Calibration",
+        "Controller Diagnostics"
+      ]
+    },
+    {
+      "query": "Operating temperature range check",
+      "expected_value": "0\u00b0C to 50\u00b0C",
+      "test_method": "Monitor ambient temperature with thermal sensor",
+      "failure_indication": "Outside range triggers automatic shutdown",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "related_procedures": [
+        "Environmental Requirements",
+        "Thermal Protection"
+      ]
+    },
+    {
+      "query": "Screen brightness calibration",
+      "expected_value": "300-500 nits",
+      "test_method": "Measure with luminance meter at center screen",
+      "failure_indication": "Display too dim or bright for specifications",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "related_procedures": [
+        "Display Calibration",
+        "Brightness Adjustment"
+      ]
+    },
+    {
+      "query": "Touch accuracy validation",
+      "expected_value": "\u00b12mm from touch point",
+      "test_method": "Run built-in calibration test pattern",
+      "failure_indication": "Touch points misaligned or inaccurate",
+      "models": [
+        "ZEN 150 Touch Screen"
+      ],
+      "related_procedures": [
+        "Touch Calibration",
+        "Screen Alignment"
+      ]
+    },
+    {
+      "query": "Is filter clean and unobstructed?",
+      "expected_value": "Filter element visible and free of debris",
+      "test_method": "Visual inspection of filter housing",
+      "failure_indication": "Reduced flow rate and system performance",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "6.1 Check Filter Cleanliness"
+      ]
+    },
+    {
+      "query": "Is plant working pressure within specification?",
+      "expected_value": "Pressure gauge reading within normal operating range",
+      "test_method": "Check pressure gauge reading during operation",
+      "failure_indication": "System inefficiency or potential damage",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "6.2 Check Plant Working Pressure"
+      ]
+    },
+    {
+      "query": "Are there any visible leaks in the system?",
+      "expected_value": "No water leakage from any connections or components",
+      "test_method": "Visual inspection of all fittings and connections",
+      "failure_indication": "Component failure or improper installation",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "6.3 Check for Leaks"
+      ]
+    },
+    {
+      "query": "Is ambient temperature above freezing?",
+      "expected_value": "Temperature above 5\u00b0C",
+      "test_method": "Check ambient temperature",
+      "failure_indication": "Risk of system freeze damage",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "6.6 Antifreeze Procedure"
+      ]
+    },
+    {
+      "query": "Are membranes functioning properly?",
+      "expected_value": "Normal flow rate and pressure differential",
+      "test_method": "Performance test and pressure monitoring",
+      "failure_indication": "Reduced system efficiency or contamination",
+      "models": [
+        "150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "6.4 Check for Membranes Replacement",
+        "6.7.1 Membrane Replacement"
+      ]
+    },
+    {
+      "query": "Is seawater intake filter clean and properly installed?",
+      "expected_value": "Filter clean and securely mounted with no leaks",
+      "test_method": "Visual inspection of filter housing and connections",
+      "failure_indication": "Reduced water flow, system pressure drop, contamination risk",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "related_procedures": [
+        "4.3.2 Seawater Intake Installation"
+      ]
+    },
+    {
+      "query": "Is brine discharge positioned above waterline?",
+      "expected_value": "Minimum 20cm above waterline with anti-siphon valve",
+      "test_method": "Measure discharge height and verify valve presence",
+      "failure_indication": "Risk of water backflow into system",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "related_procedures": [
+        "4.3.4 Brine Discharge Installation"
+      ]
+    },
+    {
+      "query": "Are hydraulic connections properly tightened?",
+      "expected_value": "No leaks at any connection point under pressure",
+      "test_method": "Pressure test and visual inspection",
+      "failure_indication": "Water leakage, pressure loss, system damage",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "related_procedures": [
+        "4.4 Hydraulic Connections"
+      ]
+    },
+    {
+      "query": "Is electrical wiring properly sized?",
+      "expected_value": "Minimum 10mm\u00b2 wire section for 48V DC",
+      "test_method": "Wire gauge measurement",
+      "failure_indication": "Voltage drop, system malfunction, fire hazard",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "related_procedures": [
+        "4.5.2 Electric Connections: Wires"
+      ]
+    },
+    {
+      "query": "Are pump group mounting brackets secure?",
+      "expected_value": "Firmly fixed with anti-vibration mounts",
+      "test_method": "Physical inspection of mounting points",
+      "failure_indication": "Excessive vibration, noise, component wear",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "related_procedures": [
+        "4.2.1 Pump Group Installation"
+      ]
+    },
+    {
+      "query": "Is manual structure properly divided into chapters?",
+      "expected_value": "Manual divided into chapters with progressive numbering (1, 1.1, 1.1.1, etc)",
+      "test_method": "Visual inspection of document structure and numbering",
+      "failure_indication": "Inconsistent or missing chapter organization",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "Document Control",
+        "Manual Organization"
+      ]
+    },
+    {
+      "query": "Are warning pictograms present and correctly used?",
+      "expected_value": "Three distinct symbols: ATTENTION (safety), CAUTION (damage risk), NOTE (information)",
+      "test_method": "Review document for proper warning symbol usage",
+      "failure_indication": "Missing or incorrectly used warning symbols",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "Safety Documentation",
+        "Warning Symbol Standards"
+      ]
+    },
+    {
+      "query": "Is figure and table numbering correct?",
+      "expected_value": "Numbering resets each chapter, uses chapter prefix + progressive number",
+      "test_method": "Check figure/table numbering sequence in each chapter",
+      "failure_indication": "Incorrect numbering sequence or missing chapter prefixes",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "Document Formatting",
+        "Content Organization"
+      ]
+    },
+    {
+      "query": "Is page header information complete?",
+      "expected_value": "Header contains scope of page information",
+      "test_method": "Verify presence and content of page headers",
+      "failure_indication": "Missing or incomplete page headers",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "Document Layout Standards"
+      ]
+    },
+    {
+      "query": "Are copyright notices properly displayed?",
+      "expected_value": "Manual ownership and rights reserved statement present",
+      "test_method": "Check for presence of copyright notice",
+      "failure_indication": "Missing or incorrect copyright information",
+      "models": [
+        "COD.150Z48.T.2024"
+      ],
+      "related_procedures": [
+        "Intellectual Property Protection"
+      ]
+    },
+    {
+      "query": "Is operator wearing required protective equipment?",
+      "expected_value": "All specified protective gear present and properly worn",
+      "test_method": "Visual inspection of operator before operation",
+      "failure_indication": "Safety violation - operation cannot proceed",
+      "models": [
+        "All Schenker systems"
+      ],
+      "related_procedures": [
+        "Service operations",
+        "Maintenance procedures"
+      ]
+    },
+    {
+      "query": "Are all safety devices and accident prevention protections in place?",
+      "expected_value": "All safety devices present and properly installed",
+      "test_method": "Visual inspection of all safety components",
+      "failure_indication": "System unsafe for operation",
+      "models": [
+        "All Schenker systems"
+      ],
+      "related_procedures": [
+        "Pre-operation checklist",
+        "Safety audit"
+      ]
+    },
+    {
+      "query": "Has installation been verified by authorized service point?",
+      "expected_value": "Installation verified and documented by Schenker service representative",
+      "test_method": "Check installation certification documentation",
+      "failure_indication": "Installation may be incorrect or unsafe",
+      "models": [
+        "All Schenker systems"
+      ],
+      "related_procedures": [
+        "Installation verification",
+        "System commissioning"
+      ]
+    },
+    {
+      "query": "Do electric and hydraulic connections match specifications?",
+      "expected_value": "All connections meet documented specifications",
+      "test_method": "Compare actual connections to specification sheet",
+      "failure_indication": "Risk of system damage or malfunction",
+      "models": [
+        "All Schenker systems"
+      ],
+      "related_procedures": [
+        "Installation manual",
+        "Connection specifications"
+      ]
+    },
+    {
+      "query": "Is seawater input free from pollution?",
+      "expected_value": "Clean, uncontaminated seawater supply",
+      "test_method": "Visual inspection of water quality",
+      "failure_indication": "Risk of system damage or contamination",
+      "models": [
+        "All Schenker systems"
+      ],
+      "related_procedures": [
+        "Water quality check",
+        "Pre-operation inspection"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Touch screen voltage input verification",
+            "expected_value": "48V DC +/- 2V",
+            "test_method": "Measure input voltage with multimeter at power terminals",
+            "failure_indication": "Screen will not power on or display unstable",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "related_procedures": [
+              "Power Supply Installation",
+              "Voltage Calibration"
+            ]
+          },
+          {
+            "query": "Screen response time test",
+            "expected_value": "< 100ms response to touch input",
+            "test_method": "Use calibrated touch response timer tool",
+            "failure_indication": "Delayed response indicates controller issue",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "related_procedures": [
+              "Touch Calibration",
+              "Controller Diagnostics"
+            ]
+          },
+          {
+            "query": "Operating temperature range check",
+            "expected_value": "0\u00b0C to 50\u00b0C",
+            "test_method": "Monitor ambient temperature with thermal sensor",
+            "failure_indication": "Outside range triggers automatic shutdown",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "related_procedures": [
+              "Environmental Requirements",
+              "Thermal Protection"
+            ]
+          },
+          {
+            "query": "Screen brightness calibration",
+            "expected_value": "300-500 nits",
+            "test_method": "Measure with luminance meter at center screen",
+            "failure_indication": "Display too dim or bright for specifications",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "related_procedures": [
+              "Display Calibration",
+              "Brightness Adjustment"
+            ]
+          },
+          {
+            "query": "Touch accuracy validation",
+            "expected_value": "\u00b12mm from touch point",
+            "test_method": "Run built-in calibration test pattern",
+            "failure_indication": "Touch points misaligned or inaccurate",
+            "models": [
+              "ZEN 150 Touch Screen"
+            ],
+            "related_procedures": [
+              "Touch Calibration",
+              "Screen Alignment"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is filter clean and unobstructed?",
+            "expected_value": "Filter element visible and free of debris",
+            "test_method": "Visual inspection of filter housing",
+            "failure_indication": "Reduced flow rate and system performance",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "6.1 Check Filter Cleanliness"
+            ]
+          },
+          {
+            "query": "Is plant working pressure within specification?",
+            "expected_value": "Pressure gauge reading within normal operating range",
+            "test_method": "Check pressure gauge reading during operation",
+            "failure_indication": "System inefficiency or potential damage",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "6.2 Check Plant Working Pressure"
+            ]
+          },
+          {
+            "query": "Are there any visible leaks in the system?",
+            "expected_value": "No water leakage from any connections or components",
+            "test_method": "Visual inspection of all fittings and connections",
+            "failure_indication": "Component failure or improper installation",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "6.3 Check for Leaks"
+            ]
+          },
+          {
+            "query": "Is ambient temperature above freezing?",
+            "expected_value": "Temperature above 5\u00b0C",
+            "test_method": "Check ambient temperature",
+            "failure_indication": "Risk of system freeze damage",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "6.6 Antifreeze Procedure"
+            ]
+          },
+          {
+            "query": "Are membranes functioning properly?",
+            "expected_value": "Normal flow rate and pressure differential",
+            "test_method": "Performance test and pressure monitoring",
+            "failure_indication": "Reduced system efficiency or contamination",
+            "models": [
+              "150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "6.4 Check for Membranes Replacement",
+              "6.7.1 Membrane Replacement"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is seawater intake filter clean and properly installed?",
+            "expected_value": "Filter clean and securely mounted with no leaks",
+            "test_method": "Visual inspection of filter housing and connections",
+            "failure_indication": "Reduced water flow, system pressure drop, contamination risk",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "4.3.2 Seawater Intake Installation"
+            ]
+          },
+          {
+            "query": "Is brine discharge positioned above waterline?",
+            "expected_value": "Minimum 20cm above waterline with anti-siphon valve",
+            "test_method": "Measure discharge height and verify valve presence",
+            "failure_indication": "Risk of water backflow into system",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "4.3.4 Brine Discharge Installation"
+            ]
+          },
+          {
+            "query": "Are hydraulic connections properly tightened?",
+            "expected_value": "No leaks at any connection point under pressure",
+            "test_method": "Pressure test and visual inspection",
+            "failure_indication": "Water leakage, pressure loss, system damage",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "4.4 Hydraulic Connections"
+            ]
+          },
+          {
+            "query": "Is electrical wiring properly sized?",
+            "expected_value": "Minimum 10mm\u00b2 wire section for 48V DC",
+            "test_method": "Wire gauge measurement",
+            "failure_indication": "Voltage drop, system malfunction, fire hazard",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "4.5.2 Electric Connections: Wires"
+            ]
+          },
+          {
+            "query": "Are pump group mounting brackets secure?",
+            "expected_value": "Firmly fixed with anti-vibration mounts",
+            "test_method": "Physical inspection of mounting points",
+            "failure_indication": "Excessive vibration, noise, component wear",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "4.2.1 Pump Group Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is manual structure properly divided into chapters?",
+            "expected_value": "Manual divided into chapters with progressive numbering (1, 1.1, 1.1.1, etc)",
+            "test_method": "Visual inspection of document structure and numbering",
+            "failure_indication": "Inconsistent or missing chapter organization",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Document Control",
+              "Manual Organization"
+            ]
+          },
+          {
+            "query": "Are warning pictograms present and correctly used?",
+            "expected_value": "Three distinct symbols: ATTENTION (safety), CAUTION (damage risk), NOTE (information)",
+            "test_method": "Review document for proper warning symbol usage",
+            "failure_indication": "Missing or incorrectly used warning symbols",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Safety Documentation",
+              "Warning Symbol Standards"
+            ]
+          },
+          {
+            "query": "Is figure and table numbering correct?",
+            "expected_value": "Numbering resets each chapter, uses chapter prefix + progressive number",
+            "test_method": "Check figure/table numbering sequence in each chapter",
+            "failure_indication": "Incorrect numbering sequence or missing chapter prefixes",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Document Formatting",
+              "Content Organization"
+            ]
+          },
+          {
+            "query": "Is page header information complete?",
+            "expected_value": "Header contains scope of page information",
+            "test_method": "Verify presence and content of page headers",
+            "failure_indication": "Missing or incomplete page headers",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Document Layout Standards"
+            ]
+          },
+          {
+            "query": "Are copyright notices properly displayed?",
+            "expected_value": "Manual ownership and rights reserved statement present",
+            "test_method": "Check for presence of copyright notice",
+            "failure_indication": "Missing or incorrect copyright information",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Intellectual Property Protection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is operator wearing required protective equipment?",
+            "expected_value": "All specified protective gear present and properly worn",
+            "test_method": "Visual inspection of operator before operation",
+            "failure_indication": "Safety violation - operation cannot proceed",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Service operations",
+              "Maintenance procedures"
+            ]
+          },
+          {
+            "query": "Are all safety devices and accident prevention protections in place?",
+            "expected_value": "All safety devices present and properly installed",
+            "test_method": "Visual inspection of all safety components",
+            "failure_indication": "System unsafe for operation",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Pre-operation checklist",
+              "Safety audit"
+            ]
+          },
+          {
+            "query": "Has installation been verified by authorized service point?",
+            "expected_value": "Installation verified and documented by Schenker service representative",
+            "test_method": "Check installation certification documentation",
+            "failure_indication": "Installation may be incorrect or unsafe",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Installation verification",
+              "System commissioning"
+            ]
+          },
+          {
+            "query": "Do electric and hydraulic connections match specifications?",
+            "expected_value": "All connections meet documented specifications",
+            "test_method": "Compare actual connections to specification sheet",
+            "failure_indication": "Risk of system damage or malfunction",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Installation manual",
+              "Connection specifications"
+            ]
+          },
+          {
+            "query": "Is seawater input free from pollution?",
+            "expected_value": "Clean, uncontaminated seawater supply",
+            "test_method": "Visual inspection of water quality",
+            "failure_indication": "Risk of system damage or contamination",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Water quality check",
+              "Pre-operation inspection"
+            ]
+          },
+          {
+            "query": "Are there any visible leaks in the system?",
+            "expected_value": "No leaks present in any system components",
+            "test_method": "Visual inspection of all connections and components",
+            "failure_indication": "Risk of water damage or system malfunction",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Periodic maintenance",
+              "Leak inspection"
+            ]
+          },
+          {
+            "query": "Is maintenance being performed by qualified personnel?",
+            "expected_value": "Only Schenker personnel or qualified technicians performing maintenance",
+            "test_method": "Verify maintenance staff credentials",
+            "failure_indication": "Risk of improper maintenance or system damage",
+            "models": [
+              "All Schenker systems"
+            ],
+            "related_procedures": [
+              "Maintenance protocols",
+              "Service requirements"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is warranty valid after non-authorized personnel dismantling?",
+            "expected_value": "No, warranty becomes invalid",
+            "test_method": "Verify service records for authorized personnel",
+            "failure_indication": "Warranty void due to unauthorized service",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Warranty validation",
+              "Service documentation"
+            ]
+          },
+          {
+            "query": "What is the standard warranty period for main equipment?",
+            "expected_value": "12 months from delivery date",
+            "test_method": "Check delivery documentation and date",
+            "failure_indication": "Equipment outside warranty period",
+            "models": [
+              "All Schenker watermakers and accessories"
+            ],
+            "related_procedures": [
+              "Warranty claims",
+              "Delivery documentation"
+            ]
+          },
+          {
+            "query": "What is the ERS device warranty period with proper maintenance?",
+            "expected_value": "36 months",
+            "test_method": "Verify maintenance records by specialized Schenker technician",
+            "failure_indication": "Invalid warranty due to improper maintenance",
+            "models": [
+              "ERS pressure amplification device"
+            ],
+            "related_procedures": [
+              "Maintenance schedule",
+              "Warranty validation"
+            ]
+          },
+          {
+            "query": "Are consumable items covered under warranty?",
+            "expected_value": "No coverage for filters, carbon filters, membranes",
+            "test_method": "Check item type against warranty exclusion list",
+            "failure_indication": "Item is consumable and not covered",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Warranty claims",
+              "Consumable replacement"
+            ]
+          },
+          {
+            "query": "Is damage from silty/contaminated water covered by warranty?",
+            "expected_value": "No coverage for impurity damage",
+            "test_method": "Inspect for scratches on internal components",
+            "failure_indication": "Efficiency loss due to water quality damage",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Water quality assessment",
+              "Damage inspection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is electrical wiring properly secured and undamaged?",
+            "expected_value": "No loose, frayed or damaged wiring visible",
+            "test_method": "Visual inspection of all electrical connections and wiring",
+            "failure_indication": "Loose connections, damaged insulation, or visible wear indicates electrical hazard",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Electrical safety inspection",
+              "Preventive maintenance"
+            ]
+          },
+          {
+            "query": "Is the system free from dust and debris accumulation?",
+            "expected_value": "Clean surfaces with no debris buildup",
+            "test_method": "Visual inspection of machine surfaces and components",
+            "failure_indication": "Accumulated debris increases fire risk",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Regular cleaning",
+              "Fire prevention maintenance"
+            ]
+          },
+          {
+            "query": "Are all water hoses and connections secure?",
+            "expected_value": "Tight connections with no leaks",
+            "test_method": "Physical inspection of all hose connections during operation",
+            "failure_indication": "Loose connections or leaks indicate flooding risk",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Leak inspection",
+              "Flood prevention checks"
+            ]
+          },
+          {
+            "query": "Is the system properly grounded?",
+            "expected_value": "Connected to grounded electrical outlet",
+            "test_method": "Verify grounding connection and outlet status",
+            "failure_indication": "Improper grounding creates electrical hazard",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Safety verification"
+            ]
+          },
+          {
+            "query": "Are membranes in good condition?",
+            "expected_value": "No visible wear or damage to membranes",
+            "test_method": "Visual inspection of membrane condition",
+            "failure_indication": "Damaged membranes may cause system malfunction and flooding",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Membrane inspection",
+              "Component replacement"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is serial number label present and legible?",
+            "expected_value": "Clear serial number visible on top valve label",
+            "test_method": "Visual inspection of top valve",
+            "failure_indication": "Unit cannot be properly identified or tracked",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "related_procedures": [
+              "Unit identification",
+              "Warranty registration"
+            ]
+          },
+          {
+            "query": "Has professional installation been performed?",
+            "expected_value": "Installation completed by certified technician",
+            "test_method": "Verify installer credentials and installation documentation",
+            "failure_indication": "Risk of improper setup and system malfunction",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "related_procedures": [
+              "Installation guidelines",
+              "System setup"
+            ]
+          },
+          {
+            "query": "Is maintenance schedule being followed?",
+            "expected_value": "All maintenance tasks completed according to manual schedule",
+            "test_method": "Review maintenance logs against schedule",
+            "failure_indication": "Increased risk of system failure and performance issues",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "related_procedures": [
+              "Maintenance schedule",
+              "Service records"
+            ]
+          },
+          {
+            "query": "Are safety precautions followed during component handling?",
+            "expected_value": "All safety protocols observed during operation and maintenance",
+            "test_method": "Observation of operator procedures and safety compliance",
+            "failure_indication": "Increased risk of accidents or system damage",
+            "models": [
+              "Zen Watermaker"
+            ],
+            "related_procedures": [
+              "Safety protocols",
+              "Operating procedures"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is machine compliant with Machinery Directive 2006/42/EC?",
+            "expected_value": "Full compliance with all requirements",
+            "test_method": "Review technical documentation and CE marking",
+            "failure_indication": "Non-compliant with EU safety regulations",
+            "models": [
+              "All models"
+            ],
+            "related_procedures": [
+              "Safety certification",
+              "CE marking verification"
+            ]
+          },
+          {
+            "query": "Does equipment meet Low Voltage Directive requirements?",
+            "expected_value": "Compliance with 73/23/EEC and 93/68/CEE",
+            "test_method": "Electrical safety testing and documentation review",
+            "failure_indication": "Electrical safety standards not met",
+            "models": [
+              "All electrical models"
+            ],
+            "related_procedures": [
+              "Electrical safety testing",
+              "Voltage verification"
+            ]
+          },
+          {
+            "query": "Is electromagnetic compatibility verified?",
+            "expected_value": "Compliance with 89/336/EEC and 93/31/CEE",
+            "test_method": "EMC testing and certification review",
+            "failure_indication": "EMC interference or susceptibility issues",
+            "models": [
+              "All electronic models"
+            ],
+            "related_procedures": [
+              "EMC testing",
+              "Interference measurement"
+            ]
+          },
+          {
+            "query": "Are materials properly segregated during disposal?",
+            "expected_value": "All materials separated by type according to local regulations",
+            "test_method": "Inspection of disposal process and documentation",
+            "failure_indication": "Improper waste segregation",
+            "models": [
+              "All models"
+            ],
+            "related_procedures": [
+              "Decommissioning",
+              "Waste segregation"
+            ]
+          },
+          {
+            "query": "Are any hazardous materials present?",
+            "expected_value": "No dangerous components or substances requiring special procedures",
+            "test_method": "Material composition verification",
+            "failure_indication": "Presence of undocumented hazardous materials",
+            "models": [
+              "All models"
+            ],
+            "related_procedures": [
+              "Material safety assessment",
+              "Disposal planning"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is proper protective equipment being worn during transport?",
+            "expected_value": "Yes, protective equipment suitable for transport operations",
+            "test_method": "Visual inspection of personnel PPE",
+            "failure_indication": "Risk of injury during transport operations",
+            "models": [
+              "Zen 150"
+            ],
+            "related_procedures": [
+              "Transport safety protocol",
+              "PPE requirements"
+            ]
+          },
+          {
+            "query": "Is lifting equipment rated for package weight?",
+            "expected_value": "Minimum 80kg capacity for Zen 150",
+            "test_method": "Check lifting equipment specifications against package weight",
+            "failure_indication": "Risk of dropping or equipment failure",
+            "models": [
+              "Zen 150"
+            ],
+            "related_procedures": [
+              "Lifting equipment certification",
+              "Load capacity verification"
+            ]
+          },
+          {
+            "query": "Are package dimensions within specified limits?",
+            "expected_value": "87cm L x 64cm W x 55cm H for Zen 150",
+            "test_method": "Measure package dimensions",
+            "failure_indication": "Incorrect packaging or model",
+            "models": [
+              "Zen 150"
+            ],
+            "related_procedures": [
+              "Packaging specifications",
+              "Dimension verification"
+            ]
+          },
+          {
+            "query": "Is lifting equipment in good condition?",
+            "expected_value": "Equipment properly maintained and undamaged",
+            "test_method": "Visual inspection and maintenance records check",
+            "failure_indication": "Unsafe lifting conditions",
+            "models": [
+              "Zen 150"
+            ],
+            "related_procedures": [
+              "Equipment maintenance protocol",
+              "Pre-lift inspection"
+            ]
+          },
+          {
+            "query": "Is area below lift zone clear?",
+            "expected_value": "No personnel standing or passing under lifted load",
+            "test_method": "Visual inspection of lift area",
+            "failure_indication": "Safety hazard to personnel",
+            "models": [
+              "Zen 150"
+            ],
+            "related_procedures": [
+              "Lift zone safety protocol",
+              "Transport safety guidelines"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum storage temperature for the unit?",
+            "expected_value": "5\u00b0C",
+            "test_method": "Check storage area temperature with calibrated thermometer",
+            "failure_indication": "Risk of fluid freezing and permanent system damage",
+            "models": [
+              "ZEN 150"
+            ],
+            "related_procedures": [
+              "Storage",
+              "Installation"
+            ]
+          },
+          {
+            "query": "What is the maximum storage temperature for the unit?",
+            "expected_value": "45\u00b0C",
+            "test_method": "Check storage area temperature with calibrated thermometer",
+            "failure_indication": "Risk of system damage from excessive heat",
+            "models": [
+              "ZEN 150"
+            ],
+            "related_procedures": [
+              "Storage",
+              "Installation"
+            ]
+          },
+          {
+            "query": "Is the storage environment dry?",
+            "expected_value": "Yes, no visible moisture or condensation",
+            "test_method": "Visual inspection and humidity measurement",
+            "failure_indication": "Risk of corrosion and system damage",
+            "models": [
+              "ZEN 150"
+            ],
+            "related_procedures": [
+              "Storage",
+              "Maintenance"
+            ]
+          },
+          {
+            "query": "Are all packaging contents present?",
+            "expected_value": "All listed components present and undamaged",
+            "test_method": "Physical inventory check against packaging contents list",
+            "failure_indication": "Incomplete system components may affect installation and operation",
+            "models": [
+              "ZEN 150"
+            ],
+            "related_procedures": [
+              "Unpacking",
+              "Installation"
+            ]
+          },
+          {
+            "query": "Is the carbon filter equipped with electrovalve?",
+            "expected_value": "Yes",
+            "test_method": "Visual inspection of carbon filter assembly",
+            "failure_indication": "Missing or damaged electrovalve may affect system operation",
+            "models": [
+              "ZEN 150"
+            ],
+            "related_procedures": [
+              "Installation",
+              "Filtration System Setup"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is required documentation present in packaging?",
+            "expected_value": "Use manual, maintenance manual, electric scheme, hydraulic scheme, warnings and instructions must be present",
+            "test_method": "Physical inspection of package contents",
+            "failure_indication": "Missing critical documentation needed for safe installation and operation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Document verification",
+              "Pre-installation checklist"
+            ]
+          },
+          {
+            "query": "Are installation materials compliant with manual specifications?",
+            "expected_value": "All hoses, fittings and seals match recommended specifications",
+            "test_method": "Compare installed components against manual specifications",
+            "failure_indication": "Non-compliant components may cause system failure or safety issues",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Installation verification",
+              "Component inspection"
+            ]
+          },
+          {
+            "query": "Is storage temperature within acceptable range?",
+            "expected_value": "Temperature between 5\u00b0C and 45\u00b0C",
+            "test_method": "Temperature measurement in storage location",
+            "failure_indication": "Unit may be damaged by exposure to temperatures outside operating range",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Storage guidelines",
+              "Environmental monitoring"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is seawater inlet hose correctly sized?",
+            "expected_value": "20mm internal diameter reinforced hose",
+            "test_method": "Measure hose internal diameter with caliper",
+            "failure_indication": "Incorrect hose size may cause flow restrictions or leaks",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Installation",
+              "Hydraulic Connection Setup"
+            ]
+          },
+          {
+            "query": "Is power supply within acceptable range?",
+            "expected_value": "48 VDC +/- 15%",
+            "test_method": "Measure voltage with multimeter",
+            "failure_indication": "Voltage outside range may damage unit or cause malfunction",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Power Installation",
+              "Electrical Safety Check"
+            ]
+          },
+          {
+            "query": "Is fresh water production rate within specification?",
+            "expected_value": "150 Lit/h +/- 20% @ seawater 25\u00b0C salinity 35.000 ppm",
+            "test_method": "Measure output volume over time under specified conditions",
+            "failure_indication": "Production rate outside range indicates system malfunction",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Performance Testing",
+              "Maintenance Check"
+            ]
+          },
+          {
+            "query": "Are correct filters installed?",
+            "expected_value": "1x 5 micron cartridge filter 2.32\" x 9 \u00be\" AND 1x Active carbon filter 2.32\" x 9 \u00be\"",
+            "test_method": "Visual inspection of filter specifications",
+            "failure_indication": "Incorrect filters may compromise water quality and system performance",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Filter Replacement",
+              "Maintenance"
+            ]
+          },
+          {
+            "query": "Is power consumption within normal range?",
+            "expected_value": "600 Watt/h average, peak 1.2 KWatt",
+            "test_method": "Monitor power consumption during operation",
+            "failure_indication": "Excessive power consumption indicates mechanical problems",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Power Monitoring",
+              "Troubleshooting"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the Energy Recovery System operating silently?",
+            "expected_value": "No audible pump noise or vibrations",
+            "test_method": "Auditory and tactile inspection during operation",
+            "failure_indication": "Presence of unusual noise or vibrations indicates system malfunction",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "System startup",
+              "Normal operation check"
+            ]
+          },
+          {
+            "query": "Is the pressure amplification system working correctly?",
+            "expected_value": "Low-pressure pump successfully amplified to operating pressure",
+            "test_method": "Monitor pressure gauge readings during operation",
+            "failure_indication": "Failure to reach operating pressure indicates ERS malfunction",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Pressure system check",
+              "Energy Recovery System validation"
+            ]
+          },
+          {
+            "query": "Is hydraulic energy being recovered from membranes?",
+            "expected_value": "Energy successfully recouped through ERS device",
+            "test_method": "Monitor system efficiency and energy consumption metrics",
+            "failure_indication": "High energy consumption indicates failed recovery system",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Energy efficiency testing",
+              "System performance monitoring"
+            ]
+          },
+          {
+            "query": "Does system operate without manual pressure adjustments?",
+            "expected_value": "No adjustment needed during normal operation",
+            "test_method": "Observe system operation through complete cycle",
+            "failure_indication": "Need for manual adjustment indicates system malfunction",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Operational verification",
+              "Automatic control check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the high pressure switch activation threshold?",
+            "expected_value": "15 bar maximum",
+            "test_method": "Monitor pressure gauge during operation",
+            "failure_indication": "System shutdown and high-pressure alarm on control panel",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Pump pressure monitoring",
+              "High pressure alarm response"
+            ]
+          },
+          {
+            "query": "What is the correct accumulator pre-charge pressure?",
+            "expected_value": "5 bar",
+            "test_method": "Check pressure at Schrader valve when system is off",
+            "failure_indication": "Unstable pressure during operation, pressure peaks",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Accumulator maintenance",
+              "Pressure stabilization check"
+            ]
+          },
+          {
+            "query": "Is the pre-filter cartridge correct?",
+            "expected_value": "5 micron cartridge installed",
+            "test_method": "Visual inspection of cartridge specifications",
+            "failure_indication": "Incorrect filtration, potential system damage",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Filter replacement",
+              "Pre-filter maintenance"
+            ]
+          },
+          {
+            "query": "Is continuous unattended operation allowed?",
+            "expected_value": "No - system requires monitoring",
+            "test_method": "Review operating procedures and warning labels",
+            "failure_indication": "Safety risk, potential system damage",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Operating safety procedures",
+              "System monitoring requirements"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is system pressure within operating range?",
+            "expected_value": "Manometer reading between 55-65 bar during normal operation",
+            "test_method": "Check manometer display during operation",
+            "failure_indication": "Pressure outside range indicates membrane fouling or pump issues",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Pressure monitoring",
+              "Membrane maintenance"
+            ]
+          },
+          {
+            "query": "Is reset valve in correct position?",
+            "expected_value": "Reset valve in closed position during normal operation",
+            "test_method": "Visual inspection of reset valve position",
+            "failure_indication": "Open reset valve prevents proper pressurization",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "System startup",
+              "Pressure reset"
+            ]
+          },
+          {
+            "query": "Is pressure switch signaling correctly?",
+            "expected_value": "Signal pressure switch activated when system reaches operating pressure",
+            "test_method": "Monitor pressure switch during startup sequence",
+            "failure_indication": "Failed switch may indicate electrical issues or pressure problems",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Pressure monitoring",
+              "Electrical diagnostics"
+            ]
+          },
+          {
+            "query": "Is positioner knob properly adjusted?",
+            "expected_value": "Knob set to match system specifications for water production rate",
+            "test_method": "Verify knob position against calibration marks",
+            "failure_indication": "Incorrect position may affect water production efficiency",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Flow adjustment",
+              "Production calibration"
+            ]
+          },
+          {
+            "query": "Is depressurization valve functioning?",
+            "expected_value": "Valve opens and releases pressure when activated",
+            "test_method": "Activate valve and observe pressure drop",
+            "failure_indication": "Stuck valve could create safety hazard",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Safety checks",
+              "Pressure release"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is diverting valve properly connected to PCB?",
+            "expected_value": "2 cables connected to Chem and (-) clamps",
+            "test_method": "Visual inspection of PCB connections",
+            "failure_indication": "Valve not responding to salinity changes",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Electrical Installation",
+              "Valve Configuration"
+            ]
+          },
+          {
+            "query": "Is salinity probe properly connected?",
+            "expected_value": "2 cables connected to Salinity clamps on PCB",
+            "test_method": "Visual inspection of PCB connections",
+            "failure_indication": "No salinity readings or valve control",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Probe Installation",
+              "Salinity Monitoring Setup"
+            ]
+          },
+          {
+            "query": "Does valve divert flow based on salinity readings?",
+            "expected_value": "Water flow diverts when salinity exceeds threshold",
+            "test_method": "Test with high salinity water sample",
+            "failure_indication": "Salty water entering production tank",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "System Testing",
+              "Valve Operation Check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is depressurization valve properly positioned during normal operation?",
+            "expected_value": "Completely screwed in/closed",
+            "test_method": "Visual inspection of valve position",
+            "failure_indication": "System pressure loss if open during operation",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Air bleeding operations"
+            ]
+          },
+          {
+            "query": "Is reset valve in correct position during normal operation?",
+            "expected_value": "Closed with lever perpendicular to valve",
+            "test_method": "Visual check of lever position",
+            "failure_indication": "ERS may not function properly if valve open",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "ERS reset procedure"
+            ]
+          },
+          {
+            "query": "Is pressure switch properly calibrated?",
+            "expected_value": "Set to 3 bar",
+            "test_method": "Pressure gauge verification",
+            "failure_indication": "Incorrect cycling detection if not at 3 bar",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Pressure switch calibration"
+            ]
+          },
+          {
+            "query": "Are microswitches P1 and EV in correct position during normal operation?",
+            "expected_value": "Switched off",
+            "test_method": "Visual inspection of switch positions",
+            "failure_indication": "System not in automatic control mode if switches are on",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Emergency manual operation"
+            ]
+          },
+          {
+            "query": "Is ERS cycling occurring properly?",
+            "expected_value": "Regular audible 'beat' sound from unit",
+            "test_method": "Auditory monitoring during operation",
+            "failure_indication": "No or irregular beats indicate ERS malfunction",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "ERS maintenance"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is diverting valve installed in correct location?",
+            "expected_value": "Installed on fresh water outlet from valve",
+            "test_method": "Visual inspection of installation position",
+            "failure_indication": "Incorrect water flow path, system malfunction",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Valve Installation",
+              "System Plumbing"
+            ]
+          },
+          {
+            "query": "Are diverting valve connections properly oriented?",
+            "expected_value": "IN from membrane outlet, OUT to tank and discharge",
+            "test_method": "Trace and verify all three connection points",
+            "failure_indication": "Reversed flow, contamination risk",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Connection Verification",
+              "Flow Testing"
+            ]
+          },
+          {
+            "query": "Is tee discharge connection properly configured?",
+            "expected_value": "Connected to diverting valve and outboard discharge",
+            "test_method": "Visual inspection of connections",
+            "failure_indication": "Improper discharge routing",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Discharge System Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is pressure transducer properly installed at watermaker inlet?",
+            "expected_value": "Transducer mounted at inlet with pressure reading matching gauge display",
+            "test_method": "Compare pressure gauge reading with touch-screen display value",
+            "failure_indication": "Mismatched readings indicate incorrect installation or sensor failure",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Pressure transducer wiring installation"
+            ]
+          },
+          {
+            "query": "Are pressure transducer wires correctly connected?",
+            "expected_value": "Red wire to clamp 12, Green wire to clamp HP",
+            "test_method": "Visual inspection of wire connections at PCB",
+            "failure_indication": "No pressure reading or incorrect values on display",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Electric box PCB wiring"
+            ]
+          },
+          {
+            "query": "Is digital flow meter installed in correct orientation?",
+            "expected_value": "Arrow on bottom of device aligned with flow direction",
+            "test_method": "Visual inspection of flow meter orientation",
+            "failure_indication": "Incorrect or no flow readings on display",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Flow meter installation"
+            ]
+          },
+          {
+            "query": "Are flow meter wires correctly connected?",
+            "expected_value": "Red wire to clamp 12, Black wire to clamp (-), Brown wire to clamp PrBa",
+            "test_method": "Visual inspection of wire connections at PCB",
+            "failure_indication": "No flow rate reading on touch-screen display",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Electric box PCB wiring"
+            ]
+          },
+          {
+            "query": "Is flow meter properly positioned relative to diverting valve?",
+            "expected_value": "Flow meter installed on inlet when diverting valve is present",
+            "test_method": "Verify flow meter location relative to diverting valve",
+            "failure_indication": "Inaccurate flow measurements",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Flow meter installation",
+              "Diverting valve installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is active carbon filter properly connected?",
+            "expected_value": "Connected between boat's fresh water system and electrovalve on filter holder",
+            "test_method": "Visual inspection of plumbing connections",
+            "failure_indication": "Improper water flow or contamination in system",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Filter cartridge replacement",
+              "Fresh water system connection"
+            ]
+          },
+          {
+            "query": "Is manual valve on filter inlet functional?",
+            "expected_value": "Valve allows cartridge replacement without system depressurization",
+            "test_method": "Attempt cartridge replacement with valve closed",
+            "failure_indication": "Water leakage or inability to replace cartridge",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Filter maintenance",
+              "Cartridge replacement"
+            ]
+          },
+          {
+            "query": "Does electrovalve switch water sources correctly?",
+            "expected_value": "Switches between seawater intake and fresh water tank during washing",
+            "test_method": "Activate washing procedure and verify source switching",
+            "failure_indication": "Failure to switch water sources during washing cycle",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Watermaker washing procedure"
+            ]
+          },
+          {
+            "query": "Is non-return valve installed correctly?",
+            "expected_value": "Installed vertically and prevents water backflow",
+            "test_method": "Check installation orientation and verify no backflow",
+            "failure_indication": "Water leaking from seacock during washing",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Valve installation",
+              "System leak check"
+            ]
+          },
+          {
+            "query": "Is mesh filter positioned correctly?",
+            "expected_value": "Located between seacock and pump",
+            "test_method": "Visual inspection of filter placement",
+            "failure_indication": "Pump damage from sediments or incorrect water flow",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Filter installation",
+              "Pump protection check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is through-hull fitting correctly positioned?",
+            "expected_value": "Central and low position on hull, preventing air suction",
+            "test_method": "Visual inspection of mounting location",
+            "failure_indication": "Air bubbles in system, pump cavitation",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Hull fitting installation"
+            ]
+          },
+          {
+            "query": "Is non-return valve properly installed?",
+            "expected_value": "Below seawater level, vertical position, close to through-hull fitting",
+            "test_method": "Visual inspection of valve position and orientation",
+            "failure_indication": "Water backflow, system priming issues",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Valve installation"
+            ]
+          },
+          {
+            "query": "Is pump installed at correct height and distance?",
+            "expected_value": "Below waterline, maximum 2m from seawater intake",
+            "test_method": "Measure distance and height relative to waterline",
+            "failure_indication": "Poor water flow, pump cavitation",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Pump installation"
+            ]
+          },
+          {
+            "query": "Is watermaker unit properly supported?",
+            "expected_value": "Support capable of bearing 60 kg weight",
+            "test_method": "Load test of mounting structure",
+            "failure_indication": "Unit instability, mounting stress",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Unit mounting"
+            ]
+          },
+          {
+            "query": "Is ambient temperature within limits?",
+            "expected_value": "Not exceeding 40\u00b0C",
+            "test_method": "Temperature measurement in installation space",
+            "failure_indication": "System overheating risk",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Environmental verification"
+            ]
+          },
+          {
+            "query": "Is pump group adequately ventilated?",
+            "expected_value": "Installation in ventilated space with air circulation",
+            "test_method": "Airflow check around pump motor",
+            "failure_indication": "Motor overheating risk",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Ventilation verification"
+            ]
+          },
+          {
+            "query": "Is pump motor isolated from flammable materials?",
+            "expected_value": "No flammable liquids or materials in contact range",
+            "test_method": "Visual inspection of surrounding area",
+            "failure_indication": "Fire hazard risk",
+            "models": [
+              "All watermaker systems"
+            ],
+            "related_procedures": [
+              "Safety clearance verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the maximum distance between pump and water inlet?",
+            "expected_value": "2 meters maximum",
+            "test_method": "Measure physical distance from pump to inlet",
+            "failure_indication": "Pump installed too far from water source, may affect performance",
+            "models": [
+              "All pump groups"
+            ],
+            "related_procedures": [
+              "Pump installation",
+              "Water inlet setup"
+            ]
+          },
+          {
+            "query": "What is the maximum ambient temperature for pump operation?",
+            "expected_value": "45\u00b0C maximum",
+            "test_method": "Measure ambient temperature in pump location",
+            "failure_indication": "Operating environment too hot, risk of motor damage",
+            "models": [
+              "All pump groups"
+            ],
+            "related_procedures": [
+              "Ventilation requirements",
+              "Temperature monitoring"
+            ]
+          },
+          {
+            "query": "What is the maximum ambient temperature for watermaker operation?",
+            "expected_value": "40\u00b0C maximum",
+            "test_method": "Measure ambient temperature at watermaker location",
+            "failure_indication": "Operating environment too hot, risk of system damage",
+            "models": [
+              "All watermaker units"
+            ],
+            "related_procedures": [
+              "Installation environment check",
+              "Temperature monitoring"
+            ]
+          },
+          {
+            "query": "Is the pump mounted on a horizontal surface?",
+            "expected_value": "Mounted on sufficiently horizontal base",
+            "test_method": "Check with level tool",
+            "failure_indication": "Unstable mounting may cause vibration and damage",
+            "models": [
+              "All pump groups"
+            ],
+            "related_procedures": [
+              "Pump mounting",
+              "Base preparation"
+            ]
+          },
+          {
+            "query": "Is the watermaker properly supported?",
+            "expected_value": "Fully resting on flat surface with rubber adhesive and L-brackets",
+            "test_method": "Visual inspection and physical check of mounting",
+            "failure_indication": "Improper support may cause stress and damage to unit",
+            "models": [
+              "All watermaker units"
+            ],
+            "related_procedures": [
+              "Watermaker mounting",
+              "Support verification"
+            ]
+          },
+          {
+            "query": "Is the pump installed below waterline?",
+            "expected_value": "Below waterline when possible",
+            "test_method": "Compare pump location to vessel waterline",
+            "failure_indication": "May affect pump performance and priming",
+            "models": [
+              "All pump groups"
+            ],
+            "related_procedures": [
+              "Pump location selection",
+              "Installation planning"
+            ]
+          },
+          {
+            "query": "Is rubber adhesive applied between watermaker and mounting surface?",
+            "expected_value": "Rubber adhesive present and properly applied",
+            "test_method": "Visual inspection of mounting interface",
+            "failure_indication": "Missing vibration isolation, potential damage risk",
+            "models": [
+              "All watermaker units"
+            ],
+            "related_procedures": [
+              "Watermaker mounting",
+              "Adhesive application"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 24,
+      "pages": "24-24",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Are antivibration rubber stickers installed?",
+            "expected_value": "Present and properly attached",
+            "test_method": "Visual inspection of mounting points",
+            "failure_indication": "Missing vibration isolation may cause excess noise and wear",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Mounting procedure",
+              "Installation verification"
+            ]
+          },
+          {
+            "query": "Is the unit mounted according to approved configurations?",
+            "expected_value": "Matches one of configurations shown in FIG. 4-3",
+            "test_method": "Compare physical installation to manual diagrams",
+            "failure_indication": "Improper mounting orientation may affect performance",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Configuration verification",
+              "FIG. 4-3 reference check"
+            ]
+          },
+          {
+            "query": "Installation orientation check",
+            "expected_value": "Matches OK indicators in FIG. 4-2",
+            "test_method": "Visual comparison to manual diagrams",
+            "failure_indication": "Incorrect orientation may impair operation",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Mounting procedure",
+              "FIG. 4-2 reference check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 25,
+      "pages": "25-25",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the manometer orientation correct for horizontal installation?",
+            "expected_value": "Manometer must be mounted horizontally using provided fittings",
+            "test_method": "Visual inspection of manometer orientation and fitting connections",
+            "failure_indication": "Manometer not visible or incorrectly oriented, improper fitting usage",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Horizontal Installation",
+              "Fitting Assembly"
+            ]
+          },
+          {
+            "query": "Are the correct fittings used for horizontal installation?",
+            "expected_value": "Must use 1/2\" M to 3/8\" F reducer, 3/8\" 90\u00b0 elbow, 3/8\" nipples, and 3/8\" M to 1/4\" F reducer",
+            "test_method": "Verify presence and correct assembly of all specified fittings",
+            "failure_indication": "Missing fittings or incorrect assembly leading to potential manifold damage",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Fitting Assembly",
+              "Manifold Protection"
+            ]
+          },
+          {
+            "query": "Are rubber stickers properly positioned?",
+            "expected_value": "Rubber stickers placed according to installation orientation (vertical or horizontal)",
+            "test_method": "Compare sticker positions to manual diagram FIG. 4-4",
+            "failure_indication": "Incorrectly placed stickers indicating potential mounting issues",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Mounting Preparation",
+              "Installation Verification"
+            ]
+          },
+          {
+            "query": "Is the unit mounting orientation secure?",
+            "expected_value": "Unit securely mounted either vertically or horizontally without stress on lateral manifolds",
+            "test_method": "Visual and physical inspection of mounting points and manifold connections",
+            "failure_indication": "Loose mounting or stress on lateral manifolds",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Mounting Verification",
+              "Manifold Protection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 27,
+      "pages": "27-27",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is seacock water inlet properly sized?",
+            "expected_value": "Minimum 3/4 inch diameter",
+            "test_method": "Measure inlet diameter",
+            "failure_indication": "Insufficient water flow to system",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Water inlet installation"
+            ]
+          },
+          {
+            "query": "Is seacock location correct?",
+            "expected_value": "Low and central in hull, behind keel, below waterline when heeled",
+            "test_method": "Visual inspection of mounting location",
+            "failure_indication": "Air intake or insufficient water supply",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Hull mounting"
+            ]
+          },
+          {
+            "query": "Are hose connections properly secured?",
+            "expected_value": "Double hose clamps on all connections below waterline",
+            "test_method": "Visual inspection of clamps",
+            "failure_indication": "Water leakage risk",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Hose installation"
+            ]
+          },
+          {
+            "query": "Is water intake filter installed correctly?",
+            "expected_value": "50 Mesh filter installed close to water intake, easily accessible",
+            "test_method": "Verify filter specs and location",
+            "failure_indication": "System contamination risk",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Filter installation"
+            ]
+          },
+          {
+            "query": "Does fresh water pump meet flow requirements?",
+            "expected_value": "Minimum 20 liters/min at 1 bar",
+            "test_method": "Measure pump flow rate",
+            "failure_indication": "Insufficient flushing capability",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Fresh water connection"
+            ]
+          },
+          {
+            "query": "Is brine discharge properly sized?",
+            "expected_value": "Minimum 1/2 inch BSP, mounted above sea level",
+            "test_method": "Measure discharge size and verify mounting height",
+            "failure_indication": "Improper system drainage",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Discharge installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 26,
+      "pages": "26-26",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the housebarb installed correctly on right side plug?",
+            "expected_value": "Installed to mechanical stop using #24 key",
+            "test_method": "Visual inspection and torque check",
+            "failure_indication": "Loose connection or overtightened beyond stop point",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Mounting and Installation"
+            ]
+          },
+          {
+            "query": "Is non-return valve orientation correct?",
+            "expected_value": "Installed vertically with arrow in flow direction",
+            "test_method": "Visual inspection of valve position and arrow direction",
+            "failure_indication": "Incorrect flow direction or non-vertical mounting",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Accessories Installation"
+            ]
+          },
+          {
+            "query": "Is active carbon filter positioned correctly?",
+            "expected_value": "Vertical position near pump group with easy access",
+            "test_method": "Visual inspection of filter placement",
+            "failure_indication": "Poor accessibility or non-vertical mounting",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Filter Installation"
+            ]
+          },
+          {
+            "query": "Is seawater intake properly sized?",
+            "expected_value": "Minimum 3/4 inch diameter",
+            "test_method": "Measure intake diameter",
+            "failure_indication": "Undersized intake diameter",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Water Intake Installation"
+            ]
+          },
+          {
+            "query": "Is seawater intake properly positioned?",
+            "expected_value": "Central position below waterline when heeled",
+            "test_method": "Visual inspection of placement",
+            "failure_indication": "Intake too high or not centrally located",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Water Intake Installation"
+            ]
+          },
+          {
+            "query": "Is scoop skin fitting oriented correctly?",
+            "expected_value": "Oriented toward bow of boat",
+            "test_method": "Visual inspection of orientation",
+            "failure_indication": "Incorrect orientation relative to bow",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Water Intake Installation"
+            ]
+          },
+          {
+            "query": "For boats over 15 knots, is pressure relief hole present?",
+            "expected_value": "8mm diameter hole on back of shape",
+            "test_method": "Visual inspection and measurement of hole",
+            "failure_indication": "Missing hole or incorrect size",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "High Speed Boat Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 28,
+      "pages": "28-28",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum internal diameter for brine discharge hose?",
+            "expected_value": "16 mm",
+            "test_method": "Measure internal diameter of installed hose with caliper",
+            "failure_indication": "Incorrect hose size may cause restricted flow and system damage",
+            "models": [
+              "Schenker watermaker"
+            ],
+            "related_procedures": [
+              "Hydraulic installation",
+              "Brine discharge setup"
+            ]
+          },
+          {
+            "query": "What type of hose must be used for brine discharge?",
+            "expected_value": "Armorvin type hose",
+            "test_method": "Visual inspection of hose markings and material",
+            "failure_indication": "Wrong hose type may lead to premature wear or failure",
+            "models": [
+              "Schenker watermaker"
+            ],
+            "related_procedures": [
+              "Hydraulic installation"
+            ]
+          },
+          {
+            "query": "What are the requirements for pressure side connection hose?",
+            "expected_value": "Reinforced hose rated PN16 with minimum 20mm internal diameter",
+            "test_method": "Check hose rating markings and measure internal diameter",
+            "failure_indication": "Inadequate pressure rating or diameter may cause system failure",
+            "models": [
+              "Schenker watermaker"
+            ],
+            "related_procedures": [
+              "Fresh water system connection",
+              "Pressure side installation"
+            ]
+          },
+          {
+            "query": "Is the pressure side properly connected to boat's fresh water system?",
+            "expected_value": "Connected to pressure side of boat's fresh water system",
+            "test_method": "Verify connection point and flow direction",
+            "failure_indication": "Incorrect connection point will prevent proper system operation",
+            "models": [
+              "Schenker watermaker"
+            ],
+            "related_procedures": [
+              "System integration",
+              "Fresh water connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 29,
+      "pages": "29-29",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the required internal diameter for hydraulic connections?",
+            "expected_value": "16mm internal diameter (except fresh water production)",
+            "test_method": "Measure internal diameter of installed hoses",
+            "failure_indication": "Incorrect hose diameter could cause connection failures",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Hydraulic Installation"
+            ]
+          },
+          {
+            "query": "What is the minimum pressure rating for pump outlet to watermaker inlet hose?",
+            "expected_value": "PN 16 minimum reinforced hose",
+            "test_method": "Check hose pressure rating markings",
+            "failure_indication": "Risk of hose burst and vessel safety compromise",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Medium Pressure Connection Installation"
+            ]
+          },
+          {
+            "query": "What are the specifications for low pressure seawater intake connections?",
+            "expected_value": "Armorvin reinforced pipe PN 6 with 20mm internal diameter",
+            "test_method": "Verify pipe type, reinforcement and diameter",
+            "failure_indication": "Potential system failure due to incorrect pipe specification",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Low Pressure Connection Installation"
+            ]
+          },
+          {
+            "query": "What are the specifications for discharge connections?",
+            "expected_value": "Armorvin reinforced pipe PN6 with 16mm internal diameter",
+            "test_method": "Verify pipe type, reinforcement and diameter",
+            "failure_indication": "Improper discharge flow or connection failure",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Discharge Installation"
+            ]
+          },
+          {
+            "query": "What are the specifications for medium pressure fresh water connections?",
+            "expected_value": "Rubber reinforced pipe PN 20 minimum, 20mm internal diameter",
+            "test_method": "Check pipe material, pressure rating and diameter",
+            "failure_indication": "Risk of connection failure under pressure",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Fresh Water Connection Installation"
+            ]
+          },
+          {
+            "query": "What are the specifications for fresh water tank connection?",
+            "expected_value": "Small plastic blue pipe 6x8mm with \u00bc'' fittings",
+            "test_method": "Verify pipe dimensions and fitting type",
+            "failure_indication": "Improper fresh water tank connection",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Fresh Water Tank Connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 30,
+      "pages": "30-30",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is pump placement correct relative to seawater intake?",
+            "expected_value": "Pump is as close as possible to seawater intake and below seawater level",
+            "test_method": "Visual inspection of pump location and measurement of distance to intake",
+            "failure_indication": "Reduced pump efficiency, potential cavitation issues",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Pump installation",
+              "System layout planning"
+            ]
+          },
+          {
+            "query": "Are connection hoses appropriate for the application?",
+            "expected_value": "Proper marine-grade hoses rated for seawater use",
+            "test_method": "Visual inspection of hose specifications and ratings",
+            "failure_indication": "Risk of hose burst and vessel security compromise",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Hose selection",
+              "Safety compliance check"
+            ]
+          },
+          {
+            "query": "Is watermaker inlet properly connected?",
+            "expected_value": "Connected to holder on right side marked 'IN'",
+            "test_method": "Visual verification of connection point and marking",
+            "failure_indication": "Improper water flow, system malfunction",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Watermaker installation"
+            ]
+          },
+          {
+            "query": "Is discharge outlet properly configured?",
+            "expected_value": "Connected to right side marked 'OUT' with swan neck if below unit",
+            "test_method": "Visual inspection of outlet configuration and water head",
+            "failure_indication": "Poor drainage, potential backflow",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Discharge line installation"
+            ]
+          },
+          {
+            "query": "Is fresh water production line properly connected?",
+            "expected_value": "Small supplied hose connected between unit and tank's upper side",
+            "test_method": "Visual inspection of connection using supplied hose",
+            "failure_indication": "Improper fresh water delivery to tank",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Fresh water line installation",
+              "Tank connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 31,
+      "pages": "31-31",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the installation technician qualified?",
+            "expected_value": "Yes, technician must be qualified and familiar with electrical drawings",
+            "test_method": "Verify technician credentials and electrical certification",
+            "failure_indication": "Unqualified installation may lead to electrical hazards or malfunction",
+            "models": [
+              "All Schenker control panels"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Control panel mounting"
+            ]
+          },
+          {
+            "query": "Are the control panel mounting dimensions correct?",
+            "expected_value": "Panel dimensions: 135mm width x 116mm height",
+            "test_method": "Measure physical dimensions of control panel",
+            "failure_indication": "Panel won't fit properly in mounting location",
+            "models": [
+              "All remote control panels"
+            ],
+            "related_procedures": [
+              "Panel mounting",
+              "Installation measurements"
+            ]
+          },
+          {
+            "query": "Is the panel mounting cut-out size correct?",
+            "expected_value": "Cut-out dimensions: 110mm width x 90mm height",
+            "test_method": "Measure cut-out dimensions before panel installation",
+            "failure_indication": "Panel won't fit properly in cut-out",
+            "models": [
+              "All remote control panels"
+            ],
+            "related_procedures": [
+              "Panel mounting",
+              "Cut-out preparation"
+            ]
+          },
+          {
+            "query": "Is there adequate depth behind mounting location?",
+            "expected_value": "Minimum 50mm clear depth behind panel",
+            "test_method": "Measure depth clearance behind mounting location",
+            "failure_indication": "Insufficient space for panel components and wiring",
+            "models": [
+              "All remote control panels"
+            ],
+            "related_procedures": [
+              "Installation planning",
+              "Space requirements"
+            ]
+          },
+          {
+            "query": "Is mounting location free from moisture?",
+            "expected_value": "Area must be free of humidity and condensation",
+            "test_method": "Visual inspection and moisture detection in mounting area",
+            "failure_indication": "Risk of electrical failure and component damage",
+            "models": [
+              "All remote control panels"
+            ],
+            "related_procedures": [
+              "Installation planning",
+              "Environmental requirements"
+            ]
+          },
+          {
+            "query": "Is control cable length sufficient?",
+            "expected_value": "Standard 10m cable length (or custom length if ordered)",
+            "test_method": "Measure cable path and verify length adequacy",
+            "failure_indication": "Cable cannot reach intended mounting location",
+            "models": [
+              "All remote control panels"
+            ],
+            "related_procedures": [
+              "Cable installation",
+              "Panel connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 33,
+      "pages": "33-33",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Input voltage measurement at terminal block",
+            "expected_value": "48V DC +/- 2V",
+            "test_method": "Use calibrated multimeter across power terminals",
+            "failure_indication": "Incorrect power supply or wiring fault",
+            "models": [
+              "48V DC systems"
+            ],
+            "related_procedures": [
+              "Power connection verification",
+              "Initial startup check"
+            ]
+          },
+          {
+            "query": "Wire gauge for 48V DC connection",
+            "expected_value": "Minimum 10 AWG copper conductor",
+            "test_method": "Visual inspection and wire gauge measurement",
+            "failure_indication": "Risk of voltage drop or overheating",
+            "models": [
+              "48V DC systems"
+            ],
+            "related_procedures": [
+              "Cable installation",
+              "Wiring specifications"
+            ]
+          },
+          {
+            "query": "Terminal block connection torque",
+            "expected_value": "1.5-1.8 Nm",
+            "test_method": "Use calibrated torque wrench",
+            "failure_indication": "Loose connection risk or terminal damage",
+            "models": [
+              "48V DC systems"
+            ],
+            "related_procedures": [
+              "Terminal connection procedure"
+            ]
+          },
+          {
+            "query": "Polarity verification at connection points",
+            "expected_value": "Positive to positive terminal, negative to negative terminal",
+            "test_method": "Visual inspection and multimeter verification",
+            "failure_indication": "Reverse polarity damage risk",
+            "models": [
+              "48V DC systems"
+            ],
+            "related_procedures": [
+              "Power connection verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 32,
+      "pages": "32-32",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is power supply connection polarity correct?",
+            "expected_value": "Negative to - terminal, Positive to + terminal",
+            "test_method": "Visual inspection of terminal connections",
+            "failure_indication": "System won't power up or potential damage",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Electric Installation",
+              "Power Connection"
+            ]
+          },
+          {
+            "query": "Is circuit breaker rating correct?",
+            "expected_value": "25 Ampere automatic circuit breaker installed",
+            "test_method": "Visual inspection of circuit breaker rating",
+            "failure_indication": "Inadequate circuit protection",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Circuit Protection Installation"
+            ]
+          },
+          {
+            "query": "Is cable size correct for 0-3m length at 48V?",
+            "expected_value": "10mm\u00b2 or AWG 7",
+            "test_method": "Measure cable gauge",
+            "failure_indication": "Voltage drop or overheating risk",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Cable Selection"
+            ]
+          },
+          {
+            "query": "Is cable size correct for 3-7m length at 48V?",
+            "expected_value": "10mm\u00b2 or AWG 7",
+            "test_method": "Measure cable gauge",
+            "failure_indication": "Voltage drop or overheating risk",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Cable Selection"
+            ]
+          },
+          {
+            "query": "Is cable size correct for 7-10m length at 48V?",
+            "expected_value": "16mm\u00b2 or AWG 5",
+            "test_method": "Measure cable gauge",
+            "failure_indication": "Voltage drop or overheating risk",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Cable Selection"
+            ]
+          },
+          {
+            "query": "Is control wiring size correct?",
+            "expected_value": "2.5mm\u00b2 for P1, PS, and EV connections",
+            "test_method": "Measure control wire gauge",
+            "failure_indication": "Control signal issues",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Control Wiring Installation"
+            ]
+          },
+          {
+            "query": "Is remote panel connection cable correct?",
+            "expected_value": "Pre-wired cable supplied, 10m standard length",
+            "test_method": "Verify cable type and length",
+            "failure_indication": "Remote panel communication issues",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Remote Panel Installation"
+            ]
+          },
+          {
+            "query": "Is power connection downstream of vessel panel meters?",
+            "expected_value": "Connected after voltmeter and ammeter on panelboard",
+            "test_method": "Trace wire connections on vessel panel",
+            "failure_indication": "Unable to monitor system power consumption",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Vessel Integration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 34,
+      "pages": "34-34",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the input voltage within acceptable range?",
+            "expected_value": "42-62V DC",
+            "test_method": "Measure DC voltage at input terminals with multimeter",
+            "failure_indication": "System may not start or operate erratically if voltage outside range",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Power Supply Connection",
+              "Initial Startup"
+            ]
+          },
+          {
+            "query": "Are power cables properly sized?",
+            "expected_value": "Minimum 6mm\u00b2 cross section",
+            "test_method": "Visual inspection and measurement of cable diameter",
+            "failure_indication": "Risk of voltage drop and overheating if undersized",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Cable Installation",
+              "Safety Checks"
+            ]
+          },
+          {
+            "query": "Is polarity correct at connection points?",
+            "expected_value": "Positive to + terminal, Negative to - terminal",
+            "test_method": "Visual verification of cable markings and connection points",
+            "failure_indication": "Unit will not operate and may be damaged if polarity reversed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "related_procedures": [
+              "Electrical Connection",
+              "Pre-start Checklist"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 35,
+      "pages": "35-35",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the correct remote panel voltage?",
+            "expected_value": "Either 12V or 24V",
+            "test_method": "Check voltage reading on home page display",
+            "failure_indication": "Incorrect voltage could damage system",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Power supply verification"
+            ]
+          },
+          {
+            "query": "Does display auto-shutdown function work?",
+            "expected_value": "Display turns off after 3 minutes of inactivity",
+            "test_method": "Leave system untouched for 3 minutes and verify shutdown",
+            "failure_indication": "Power saving feature not working",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Display settings",
+              "Power management"
+            ]
+          },
+          {
+            "query": "Is display touch reactivation working?",
+            "expected_value": "Display turns on with any touch without activating commands",
+            "test_method": "Touch screen after auto-shutdown",
+            "failure_indication": "Display unresponsive or activating unwanted commands",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Display operation",
+              "Touch calibration"
+            ]
+          },
+          {
+            "query": "Does emergency stop function work?",
+            "expected_value": "System stops immediately when STOP pressed for 5 seconds",
+            "test_method": "Press and hold STOP button for 5 seconds during operation",
+            "failure_indication": "Emergency stop failure - safety risk",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Emergency procedures",
+              "Safety checks"
+            ]
+          },
+          {
+            "query": "Is normal stop sequence correct?",
+            "expected_value": "2-3 second delay for valve positioning before full stop",
+            "test_method": "Press STOP button during normal operation",
+            "failure_indication": "Improper shutdown sequence may damage valves",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Shutdown procedure",
+              "Valve maintenance"
+            ]
+          },
+          {
+            "query": "Does automatic flush cycle execute correctly?",
+            "expected_value": "1 minute washing cycle when activated",
+            "test_method": "Activate FLUSH function and time the cycle",
+            "failure_indication": "Incomplete cleaning may lead to system damage",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Cleaning procedure",
+              "Maintenance schedule"
+            ]
+          },
+          {
+            "query": "Is salinity monitoring system functional?",
+            "expected_value": "Display shows OK/MED/BAD/WAIT status",
+            "test_method": "Check salinity indicator during operation",
+            "failure_indication": "Water quality monitoring failure",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Water quality monitoring",
+              "Sensor calibration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 37,
+      "pages": "37-37",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is bypass switch activation persistent?",
+            "expected_value": "No - automatically removed after one production cycle",
+            "test_method": "Run one complete production cycle with bypass activated",
+            "failure_indication": "Bypass remains active after cycle completion",
+            "models": [
+              "ERS watermaker systems"
+            ],
+            "related_procedures": [
+              "System cycling",
+              "Signal pressure switch operation"
+            ]
+          },
+          {
+            "query": "When should bypass switch be activated?",
+            "expected_value": "Only during signal pressure switch malfunction or chemical washing",
+            "test_method": "Verify 'SYSTEM BLOCKED' message with no actual hydraulic issues",
+            "failure_indication": "Unnecessary bypass activation during normal operation",
+            "models": [
+              "ERS watermaker systems"
+            ],
+            "related_procedures": [
+              "Shutdown procedure",
+              "Chemical washing"
+            ]
+          },
+          {
+            "query": "What happens when bypass valve is activated?",
+            "expected_value": "All fresh water diverted to tank regardless of quality",
+            "test_method": "Activate bypass valve and verify water flow direction",
+            "failure_indication": "Water not being diverted to tank when bypass active",
+            "models": [
+              "ERS watermaker systems with optional bypass valve"
+            ],
+            "related_procedures": [
+              "Water quality monitoring",
+              "Tank filling operations"
+            ]
+          },
+          {
+            "query": "How many level switches can be installed for automatic control?",
+            "expected_value": "One or two level switches in fresh water tank",
+            "test_method": "Verify level switch installation and control functionality",
+            "failure_indication": "Automatic level control not functioning with installed switches",
+            "models": [
+              "ERS watermaker systems with optional level control"
+            ],
+            "related_procedures": [
+              "Automatic level control",
+              "Tank monitoring"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 36,
+      "pages": "36-36",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is production timer range correct?",
+            "expected_value": "1-6 hours selectable",
+            "test_method": "Press arrow button and verify time options",
+            "failure_indication": "Timer options outside 1-6 hour range or not adjustable",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Watermaker Operation"
+            ]
+          },
+          {
+            "query": "Is automatic startup procedure active?",
+            "expected_value": "Yellow indicator light on, air purging from system",
+            "test_method": "Verify depressurization valve open and yellow indicator",
+            "failure_indication": "No yellow light or incomplete air purge",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "First Start",
+              "Filter Cartridge Replacement",
+              "General Service"
+            ]
+          },
+          {
+            "query": "Is periodic wash cycle timing correct?",
+            "expected_value": "Wash cycle every 6-10 days, 1 minute duration",
+            "test_method": "Check timer settings and cycle duration",
+            "failure_indication": "Incorrect wash interval or duration",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Periodic Maintenance"
+            ]
+          },
+          {
+            "query": "Is periodic wash water consumption correct?",
+            "expected_value": "20 liters per wash cycle",
+            "test_method": "Measure water consumption during cycle",
+            "failure_indication": "Water usage significantly different from 20L",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Water System Maintenance"
+            ]
+          },
+          {
+            "query": "Is manual wash duration correct?",
+            "expected_value": "10 minute wash cycle with stop capability",
+            "test_method": "Time wash cycle and test stop button",
+            "failure_indication": "Incorrect duration or stop function failure",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Manual Operation"
+            ]
+          },
+          {
+            "query": "Is FLUSH indicator working?",
+            "expected_value": "FLUSH button lit during periodic wash with countdown visible",
+            "test_method": "Activate periodic wash and verify indicators",
+            "failure_indication": "No FLUSH light or missing countdown",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "System Indicators"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 38,
+      "pages": "38-38",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is system operational status correct?",
+            "expected_value": "SYSTEM RUNNING message displayed",
+            "test_method": "Check display panel status message",
+            "failure_indication": "System not operating properly if message absent",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "System startup procedure"
+            ]
+          },
+          {
+            "query": "Is system in ready state?",
+            "expected_value": "SYSTEM STOP message displayed",
+            "test_method": "Verify display panel message",
+            "failure_indication": "System not ready for setup/start",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Pre-start checklist"
+            ]
+          },
+          {
+            "query": "Is fresh water tank full?",
+            "expected_value": "TANK FULL / AUTO message displayed",
+            "test_method": "Check display panel status",
+            "failure_indication": "Tank level monitoring system failure",
+            "models": [
+              "Models with tank sensor option"
+            ],
+            "related_procedures": [
+              "Tank level monitoring"
+            ]
+          },
+          {
+            "query": "Is water quality diversion active?",
+            "expected_value": "DIVERT TO DISCHARGE message for 1 minute",
+            "test_method": "Monitor display during startup",
+            "failure_indication": "Diversion system malfunction",
+            "models": [
+              "Models with salinity probe"
+            ],
+            "related_procedures": [
+              "Water quality monitoring"
+            ]
+          },
+          {
+            "query": "Is salinity calculation in progress?",
+            "expected_value": "S = wait message displayed",
+            "test_method": "Check display during water quality test",
+            "failure_indication": "Salinity probe calculation error",
+            "models": [
+              "Models with salinity probe"
+            ],
+            "related_procedures": [
+              "Salinity monitoring"
+            ]
+          },
+          {
+            "query": "Is water quality good?",
+            "expected_value": "S = OK message displayed",
+            "test_method": "Check salinity reading on display",
+            "failure_indication": "Water quality below standard",
+            "models": [
+              "Models with salinity probe"
+            ],
+            "related_procedures": [
+              "Water quality verification"
+            ]
+          },
+          {
+            "query": "Is water quality medium?",
+            "expected_value": "S = MED message displayed",
+            "test_method": "Check salinity reading on display",
+            "failure_indication": "Water quality degrading",
+            "models": [
+              "Models with salinity probe"
+            ],
+            "related_procedures": [
+              "Water quality troubleshooting"
+            ]
+          },
+          {
+            "query": "Is water quality bad?",
+            "expected_value": "S = BAD message displayed",
+            "test_method": "Check salinity reading on display",
+            "failure_indication": "Poor water quality production",
+            "models": [
+              "Models with salinity probe"
+            ],
+            "related_procedures": [
+              "Water quality correction"
+            ]
+          },
+          {
+            "query": "Is bypass mode active?",
+            "expected_value": "BYPASS WARNING message displayed in orange",
+            "test_method": "Check warning messages on display",
+            "failure_indication": "Safety functions disabled",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Bypass operation procedures"
+            ]
+          },
+          {
+            "query": "Is salinity probe bypassed?",
+            "expected_value": "DIV. VALVE BY-PASS message displayed in orange",
+            "test_method": "Check warning messages on display",
+            "failure_indication": "Water quality monitoring disabled",
+            "models": [
+              "Models with salinity probe"
+            ],
+            "related_procedures": [
+              "Salinity probe troubleshooting"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 39,
+      "pages": "39-39",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What happens when system block occurs?",
+            "expected_value": "Pump shuts off immediately",
+            "test_method": "Verify pump stops when hydraulic block detected",
+            "failure_indication": "Pump continues running during hydraulic block",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Reset procedure",
+              "Hydraulic system check"
+            ]
+          },
+          {
+            "query": "What is the alarm message color?",
+            "expected_value": "Red display",
+            "test_method": "Visual inspection of alarm message",
+            "failure_indication": "Alarm displays in different color",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Display system verification"
+            ]
+          },
+          {
+            "query": "Is control cable connected properly?",
+            "expected_value": "Continuous connection between remote panel and computer box",
+            "test_method": "Check cable continuity with multimeter",
+            "failure_indication": "Break in connection detected",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Cable continuity test"
+            ]
+          },
+          {
+            "query": "How does system respond to high salinity?",
+            "expected_value": "Divert to discharge for 2:45 minutes, then shutdown if persists",
+            "test_method": "Monitor system response when salinity exceeds limit for 15 seconds",
+            "failure_indication": "System doesn't divert or shutdown on high salinity",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Water quality monitoring",
+              "Salinity response test"
+            ]
+          },
+          {
+            "query": "What is high salinity response timing?",
+            "expected_value": "15 seconds detection, 2:45 minutes diversion before shutdown",
+            "test_method": "Time system response to high salinity condition",
+            "failure_indication": "Incorrect timing of diversion or shutdown",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "Salinity alarm timing verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 40,
+      "pages": "40-40",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Are all components and hoses properly connected?",
+            "expected_value": "All connections secure and properly mated",
+            "test_method": "Visual inspection of all connection points",
+            "failure_indication": "Loose connections or visible gaps between components",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks"
+            ]
+          },
+          {
+            "query": "Are both 5 micron and active carbon filter cartridges installed?",
+            "expected_value": "Both filter cartridges present and properly seated",
+            "test_method": "Visual inspection of filter housings",
+            "failure_indication": "Missing or improperly seated filter cartridges",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks",
+              "Filter replacement"
+            ]
+          },
+          {
+            "query": "Is seawater inlet valve open?",
+            "expected_value": "Valve fully open",
+            "test_method": "Visual check of valve position",
+            "failure_indication": "Restricted or no water flow",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks"
+            ]
+          },
+          {
+            "query": "Is salt water drain valve open?",
+            "expected_value": "Valve fully open (if installed)",
+            "test_method": "Visual check of valve position",
+            "failure_indication": "Improper drainage during operation",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks"
+            ]
+          },
+          {
+            "query": "Is reset valve in correct position?",
+            "expected_value": "Valve closed (lever orthogonal to body) and positioner fully unscrewed",
+            "test_method": "Visual check of valve position and positioner",
+            "failure_indication": "Incorrect valve position may cause system malfunction",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks"
+            ]
+          },
+          {
+            "query": "Is boat's fresh water pressurizing pump operational?",
+            "expected_value": "Pump powered on and running",
+            "test_method": "Verify pump operation and pressure",
+            "failure_indication": "Insufficient water pressure in system",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks"
+            ]
+          },
+          {
+            "query": "Is grey valve on active carbon filter open?",
+            "expected_value": "Valve fully open",
+            "test_method": "Visual check of valve position",
+            "failure_indication": "Restricted or no flow through carbon filter",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.1 Preliminary checks"
+            ]
+          },
+          {
+            "query": "Is depressurization valve opened during startup?",
+            "expected_value": "Valve unscrewed until display message appears",
+            "test_method": "Monitor valve position and display message",
+            "failure_indication": "System cannot properly purge air",
+            "models": [
+              "COD.150Z48"
+            ],
+            "related_procedures": [
+              "5.2.2 Start-up"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 42,
+      "pages": "42-42",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the maximum allowable water turbidity?",
+            "expected_value": "5 NTU or less",
+            "test_method": "Measure water turbidity with NTU meter",
+            "failure_indication": "Water too cloudy, risk of system damage",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Pre-operation checks",
+              "Water quality testing"
+            ]
+          },
+          {
+            "query": "Is the 5 micron filter installed and clean?",
+            "expected_value": "Clean filter properly installed",
+            "test_method": "Visual inspection of filter condition",
+            "failure_indication": "Risk of particle damage to system",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Filter maintenance",
+              "Filter replacement"
+            ]
+          },
+          {
+            "query": "Is additional 20 micron pre-filter installed for harsh conditions?",
+            "expected_value": "20 micron filter installed before 5 micron filter",
+            "test_method": "Visual verification of filter setup",
+            "failure_indication": "Insufficient filtration for harsh conditions",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Filter installation",
+              "Harsh water operations"
+            ]
+          },
+          {
+            "query": "Does system maintain normal pressure cycling?",
+            "expected_value": "System cycles pressure normally without sudden high pressure",
+            "test_method": "Monitor pressure gauge during operation",
+            "failure_indication": "Hydraulic valve may be stuck in central position",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Reset procedure",
+              "Pressure monitoring"
+            ]
+          },
+          {
+            "query": "Does system shut off automatically under high pressure?",
+            "expected_value": "System shuts off within seconds of detecting high pressure",
+            "test_method": "Observe system response to high pressure condition",
+            "failure_indication": "Safety shutdown system working properly",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Safety systems check",
+              "Automatic shutdown verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 41,
+      "pages": "41-41",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is reset valve in correct starting position?",
+            "expected_value": "Valve lever orthogonal to body valve",
+            "test_method": "Visual inspection of valve lever position",
+            "failure_indication": "System not ready for startup",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Normal startup procedure"
+            ]
+          },
+          {
+            "query": "Is positioner properly configured?",
+            "expected_value": "Completely unscrewed",
+            "test_method": "Visual inspection of positioner",
+            "failure_indication": "Incorrect starting position",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Preliminary checks"
+            ]
+          },
+          {
+            "query": "Is depressurization valve in correct position?",
+            "expected_value": "Closed",
+            "test_method": "Visual check of valve position",
+            "failure_indication": "System pressure cannot build",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Startup checks"
+            ]
+          },
+          {
+            "query": "Is grey valve on active carbon filter positioned correctly?",
+            "expected_value": "Open",
+            "test_method": "Visual inspection of valve position",
+            "failure_indication": "Filter bypass active",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Filter system check"
+            ]
+          },
+          {
+            "query": "Does final flush cycle consume correct water volume?",
+            "expected_value": "Approximately 20 liters",
+            "test_method": "Measure water consumption during flush cycle",
+            "failure_indication": "Flush cycle malfunction",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Final flushing procedure"
+            ]
+          },
+          {
+            "query": "Is timer function operating within limits?",
+            "expected_value": "1-6 hours selectable range",
+            "test_method": "Verify time selection using arrow button",
+            "failure_indication": "Timer control malfunction",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Timer operation"
+            ]
+          },
+          {
+            "query": "Is long flush cycle duration correct?",
+            "expected_value": "10 minutes",
+            "test_method": "Time the flush cycle duration",
+            "failure_indication": "Incorrect flush timing",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Long flushing procedure"
+            ]
+          },
+          {
+            "query": "Does FLUSH indicator blink after final flush activation?",
+            "expected_value": "FLUSH light blinking",
+            "test_method": "Visual check of indicator after FLUSH+STOP sequence",
+            "failure_indication": "Flush cycle not properly initiated",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Final flush operation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 44,
+      "pages": "44-44",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is system depressurization valve open during restart?",
+            "expected_value": "Yes - valve must be open during initial restart",
+            "test_method": "Visual inspection of valve position during restart sequence",
+            "failure_indication": "System may experience pressure spike if valve closed during restart",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "System Restart Procedure",
+              "Valve Operation Protocol"
+            ]
+          },
+          {
+            "query": "How long should depressurization valve remain open after restart?",
+            "expected_value": "Several seconds after system restart",
+            "test_method": "Time duration between system start and valve closure",
+            "failure_indication": "Premature valve closure can cause pressure imbalance",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Depressurization Sequence",
+              "System Startup Protocol"
+            ]
+          },
+          {
+            "query": "Is valve closure sequence performed correctly?",
+            "expected_value": "Valve closes smoothly after system stabilization",
+            "test_method": "Observe valve closure after specified waiting period",
+            "failure_indication": "Rough or immediate closure indicates improper sequencing",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Valve Operation Guidelines",
+              "System Pressurization Protocol"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 43,
+      "pages": "43-43",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "How many complete clockwise turns should the positioner knob take?",
+            "expected_value": "Minimum 18 complete turns",
+            "test_method": "Count number of full clockwise rotations until knob stops",
+            "failure_indication": "If less than 18 turns possible, mechanism may be damaged or incorrectly installed",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Positioner knob calibration",
+              "Reset valve operation"
+            ]
+          },
+          {
+            "query": "What is the correct final position of the reset valve lever?",
+            "expected_value": "Vertical position",
+            "test_method": "Visual inspection of lever orientation",
+            "failure_indication": "Non-vertical position indicates reset valve is not properly closed",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Reset valve operation",
+              "System shutdown procedure"
+            ]
+          },
+          {
+            "query": "Can the positioner knob be turned further after reaching end position?",
+            "expected_value": "No further movement possible in either direction at end positions",
+            "test_method": "Attempt to turn knob past stop points in both directions",
+            "failure_indication": "Movement beyond end points indicates damaged threading or loose components",
+            "models": [
+              "COD.150Z48.T.2024"
+            ],
+            "related_procedures": [
+              "Positioner maintenance",
+              "Thread inspection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 45,
+      "pages": "45-45",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "How often should strainer be inspected and cleaned?",
+            "expected_value": "Every 5 days",
+            "test_method": "Visual inspection and washing",
+            "failure_indication": "Clogged or dirty strainer reducing water flow",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "related_procedures": [
+              "Filter maintenance",
+              "System cleaning"
+            ]
+          },
+          {
+            "query": "When should 5 micron cartridge filters be replaced?",
+            "expected_value": "Every 100-120 working hours under average conditions",
+            "test_method": "Track operating hours and inspect filter condition",
+            "failure_indication": "Reduced water flow or quality, system pressure changes",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "related_procedures": [
+              "Filter replacement",
+              "System purging"
+            ]
+          },
+          {
+            "query": "What procedure must be done after replacing cartridge filters?",
+            "expected_value": "Purge air from system for 2-3 minutes using depressurization valve",
+            "test_method": "Open depressurization valve and verify air removal",
+            "failure_indication": "Air locks, irregular operation, reduced performance",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "related_procedures": [
+              "Filter replacement",
+              "System purging",
+              "Air removal"
+            ]
+          },
+          {
+            "query": "How often should active carbon fiber filter be replaced?",
+            "expected_value": "Once per year",
+            "test_method": "Calendar tracking and filter inspection",
+            "failure_indication": "Reduced water quality, taste issues",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "related_procedures": [
+              "Filter replacement",
+              "Annual maintenance"
+            ]
+          },
+          {
+            "query": "What tool is required for filter housing removal?",
+            "expected_value": "Specific key provided with system",
+            "test_method": "Verify correct key is available and fits housing",
+            "failure_indication": "Unable to properly service filters",
+            "models": [
+              "All Schenker watermaker models"
+            ],
+            "related_procedures": [
+              "Filter maintenance",
+              "Tool inventory"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 46,
+      "pages": "46-46",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is air purge performed regularly?",
+            "expected_value": "Every 15-20 days for 2-3 minutes",
+            "test_method": "Open depressurization valve slightly and verify purge duration",
+            "failure_indication": "Air buildup in system, potential performance degradation",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "System maintenance",
+              "Air purge procedure"
+            ]
+          },
+          {
+            "query": "What is the normal working pressure range?",
+            "expected_value": "10-11 bar with periodic peaks of 0.4 bar during commutation",
+            "test_method": "Monitor manometer reading during operation",
+            "failure_indication": "Pressure outside range indicates membrane issues",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Pressure monitoring",
+              "Membrane maintenance"
+            ]
+          },
+          {
+            "query": "When should membrane cleaning be performed?",
+            "expected_value": "When pressure exceeds 11 bar normal range",
+            "test_method": "Monitor pressure gauge and perform SC1 chemical cleaning",
+            "failure_indication": "High pressure indicates dirty or clogged membranes",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Chemical cleaning",
+              "Membrane maintenance"
+            ]
+          },
+          {
+            "query": "What is the membrane replacement interval?",
+            "expected_value": "6-7 years average lifespan",
+            "test_method": "Monitor water quality and working pressure over time",
+            "failure_indication": "Decreased water quality or increased working pressure despite cleaning",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Membrane replacement",
+              "System maintenance"
+            ]
+          },
+          {
+            "query": "When is shutdown procedure required?",
+            "expected_value": "Before standstills longer than 2-3 months",
+            "test_method": "Check planned downtime duration",
+            "failure_indication": "Risk of bacterial growth and membrane efficiency reduction if not performed",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Shutdown procedure",
+              "Winter laying up"
+            ]
+          },
+          {
+            "query": "Is leak check being performed?",
+            "expected_value": "At every plant startup and frequently during operation",
+            "test_method": "Visual inspection of all connections and components",
+            "failure_indication": "Possible equipment damage from leaks",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Leak detection",
+              "System startup"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 47,
+      "pages": "47-47",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is minimum tank capacity sufficient for shutdown?",
+            "expected_value": "At least 15 litres of fresh water",
+            "test_method": "Visual inspection of tank capacity",
+            "failure_indication": "Insufficient water for proper cleaning procedure",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Shutdown procedure"
+            ]
+          },
+          {
+            "query": "Are all required hose connections present?",
+            "expected_value": "3 hoses connected to pump inlet, watermaker discharge, and fresh water out",
+            "test_method": "Visual inspection of connections",
+            "failure_indication": "Incomplete or improper system connection",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Shutdown procedure",
+              "System assembly"
+            ]
+          },
+          {
+            "query": "Is correct cleaning solution being used?",
+            "expected_value": "SCHENKER CLEANING 1 (SC1) powder mixed with unchlorinated water",
+            "test_method": "Visual verification of cleaning product",
+            "failure_indication": "Wrong or prohibited cleaning agent used",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Cleaning procedure",
+              "Winterization"
+            ]
+          },
+          {
+            "query": "Is depressurizing knob position correct during cleaning?",
+            "expected_value": "Partially opened",
+            "test_method": "Visual check of knob position",
+            "failure_indication": "Improper system pressure during cleaning",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Cleaning procedure"
+            ]
+          },
+          {
+            "query": "Is cleaning duration sufficient?",
+            "expected_value": "20 minutes for both acid and alkaline cleaning",
+            "test_method": "Time measurement",
+            "failure_indication": "Insufficient cleaning time",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Cleaning procedure"
+            ]
+          },
+          {
+            "query": "Is organic contamination present?",
+            "expected_value": "No bad egg smell",
+            "test_method": "Olfactory check of system/water",
+            "failure_indication": "Organic contamination requiring SC2 treatment",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Cleaning procedure",
+              "Contamination treatment"
+            ]
+          },
+          {
+            "query": "Is cleaning sequence correct for organic contamination?",
+            "expected_value": "SC2 first, fresh water flush, then SC1",
+            "test_method": "Procedure verification",
+            "failure_indication": "Incorrect cleaning sequence",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Organic contamination treatment"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 48,
+      "pages": "48-48",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is solution mixture correct?",
+            "expected_value": "1 bottle SC1/SC2 in 15L unchlorinated water",
+            "test_method": "Visual verification of mixture ratio",
+            "failure_indication": "Improper cleaning solution concentration",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Shutdown procedure",
+              "Cleaning protocol"
+            ]
+          },
+          {
+            "query": "Are all 3 hoses properly connected?",
+            "expected_value": "Hoses securely connected to pump and watermaker",
+            "test_method": "Visual inspection of connections",
+            "failure_indication": "Risk of solution leakage or air infiltration",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Hose connection protocol",
+              "Shutdown procedure"
+            ]
+          },
+          {
+            "query": "Are hoses submerged in solution?",
+            "expected_value": "All hoses below solution surface",
+            "test_method": "Visual verification of hose positions",
+            "failure_indication": "Risk of air intake into system",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Shutdown procedure"
+            ]
+          },
+          {
+            "query": "Is depressurization valve open?",
+            "expected_value": "Valve in fully open position",
+            "test_method": "Visual check of valve position",
+            "failure_indication": "System remains pressurized",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Pressure release protocol",
+              "Shutdown procedure"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 49,
+      "pages": "49-49",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is bypass activated during startup?",
+            "expected_value": "Yes, bypass must be active",
+            "test_method": "Visual inspection of bypass valve position",
+            "failure_indication": "Risk of improper system purge and chemical exposure",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "First startup",
+              "Post-shutdown restart"
+            ]
+          },
+          {
+            "query": "What is the minimum runtime during purge?",
+            "expected_value": "20 minutes",
+            "test_method": "Time the purge operation with stopwatch",
+            "failure_indication": "Insufficient time for complete air/chemical purge",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "System purge",
+              "Chemical cleaning"
+            ]
+          },
+          {
+            "query": "Are hoses properly positioned in collection container?",
+            "expected_value": "Hoses fully submerged without air intake",
+            "test_method": "Visual inspection of hose positions during operation",
+            "failure_indication": "Air contamination in system",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Hose maintenance",
+              "System purge"
+            ]
+          },
+          {
+            "query": "Is purge procedure performed after every shutdown?",
+            "expected_value": "Yes, complete purge after any shutdown",
+            "test_method": "Verify procedure completion in maintenance log",
+            "failure_indication": "Risk of chemical residue and air locks in system",
+            "models": [
+              "All watermaker models"
+            ],
+            "related_procedures": [
+              "Shutdown procedure",
+              "System restart"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 50,
+      "pages": "50-50",
+      "result": {
+        "golden_rules": [],
+        "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': 'This request would exceed the rate limit for your organization (5367197c-9bb4-4bdc-be1d-e2a20de41385) of 8,000 output tokens per minute. For details, refer to: https://docs.anthropic.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://www.anthropic.com/contact-sales to discuss your options for a rate limit increase.'}, 'request_id': 'req_011CTPeqcQwEsvZxWJ9Y2Dqg'}"
+      }
+    },
+    {
+      "chunk_num": 51,
+      "pages": "51-51",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the expected lifespan of reverse osmosis membranes?",
+            "expected_value": "6-7 years",
+            "test_method": "Track installation date and monitor performance",
+            "failure_indication": "Decreased water quality or increased working pressure",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Chemical washing",
+              "Membrane replacement"
+            ]
+          },
+          {
+            "query": "What is the correct high pressure switch setting for the main pump?",
+            "expected_value": "15 Bar",
+            "test_method": "Check pressure gauge reading",
+            "failure_indication": "Incorrect pressure readings or pump malfunction",
+            "models": [
+              "All models with high pressure switch"
+            ],
+            "related_procedures": [
+              "Pressure switch calibration"
+            ]
+          },
+          {
+            "query": "What is the correct accumulator pressure setting?",
+            "expected_value": "5 bar",
+            "test_method": "Check accumulator pressure with gauge",
+            "failure_indication": "Pressure oscillations during watermaker operation",
+            "models": [
+              "All models with polypropylene accumulator"
+            ],
+            "related_procedures": [
+              "Periodic accumulator pressure check"
+            ]
+          },
+          {
+            "query": "When should membranes be replaced?",
+            "expected_value": "When chemical washing no longer improves performance",
+            "test_method": "Monitor water quality and pressure after chemical washing",
+            "failure_indication": "Persistent low water quality or high pressure despite cleaning",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Chemical washing",
+              "Membrane replacement"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 53,
+      "pages": "53-53",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum cleaning supply requirement for short term cruising?",
+            "expected_value": "One SC1 and one SC2 cleaning product (cleaning kit)",
+            "test_method": "Verify inventory contains both SC1 and SC2 products",
+            "failure_indication": "Insufficient cleaning supplies for basic maintenance",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Basic maintenance",
+              "Short term storage"
+            ]
+          },
+          {
+            "query": "What is the minimum filter requirement for short term cruising?",
+            "expected_value": "One 5 microns cartridge filter",
+            "test_method": "Check filter inventory",
+            "failure_indication": "Risk of inadequate water filtration",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Filter replacement",
+              "Water quality maintenance"
+            ]
+          },
+          {
+            "query": "What components should be included in long term cruising kit?",
+            "expected_value": "Three 5 micron cartridge filters, one active carbon filter, one cleaning kit",
+            "test_method": "Verify all components of CRK136 kit are present",
+            "failure_indication": "Insufficient supplies for extended operation",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Long term maintenance",
+              "Extended operation preparation"
+            ]
+          },
+          {
+            "query": "Is pressure switch included in long term cruising inventory?",
+            "expected_value": "One pump pressure switch should be present",
+            "test_method": "Verify presence of PSP15 in spare parts inventory",
+            "failure_indication": "Missing critical pressure monitoring capability",
+            "models": [
+              "All Schenker watermakers"
+            ],
+            "related_procedures": [
+              "Pressure monitoring",
+              "System safety checks"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 52,
+      "pages": "52-52",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is pump pressure switch connected and functional?",
+            "expected_value": "Switch connected and operational",
+            "test_method": "Check electrical continuity of pressure switch",
+            "failure_indication": "Pump won't start",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Pump switch replacement",
+              "Electrical diagnostics"
+            ]
+          },
+          {
+            "query": "Does system maintain stable high pressure?",
+            "expected_value": "Stable pressure without blocking",
+            "test_method": "Monitor pressure gauge during operation",
+            "failure_indication": "System blocks in high pressure",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Reset procedure",
+              "Hydraulic diagnostics"
+            ]
+          },
+          {
+            "query": "Are filters clean and unclogged?",
+            "expected_value": "Clean filters with normal flow",
+            "test_method": "Visual inspection and flow rate check",
+            "failure_indication": "Low production with high pressure (>10 Bar)",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Filter replacement",
+              "Maintenance schedule"
+            ]
+          },
+          {
+            "query": "Is accumulator pressure correct?",
+            "expected_value": "5 Bar pressure",
+            "test_method": "Check accumulator pressure gauge",
+            "failure_indication": "High pressure variations during operation",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Accumulator inflation",
+              "Pressure calibration"
+            ]
+          },
+          {
+            "query": "Is battery charge sufficient?",
+            "expected_value": "Battery fully charged",
+            "test_method": "Check battery voltage",
+            "failure_indication": "Low production with normal/low pressure",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Battery maintenance",
+              "Power diagnostics"
+            ]
+          },
+          {
+            "query": "Is system properly purged of air?",
+            "expected_value": "No air in hydraulic system",
+            "test_method": "Open pressure valve to purge",
+            "failure_indication": "Low production with normal/low pressure",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "Air purge procedure",
+              "System startup"
+            ]
+          },
+          {
+            "query": "Are membranes clean and unclogged?",
+            "expected_value": "Clean membranes with normal flow",
+            "test_method": "Check membrane condition and flow",
+            "failure_indication": "Low production with high pressure",
+            "models": [
+              "150Z48"
+            ],
+            "related_procedures": [
+              "SC1 washing procedure",
+              "Membrane maintenance"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

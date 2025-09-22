@@ -207,17 +207,16 @@ class DocumentService {
             code: error.code 
           });
           
-          // For testing purposes, create a mock system metadata
-          // TODO: Remove this when proper systems are available
-          systemMetadata = {
-            asset_uid: '550e8400-e29b-41d4-a716-446655440000', // Valid UUID format
-            system_norm: manufacturerNorm + '-' + modelNorm,
-            subsystem_norm: 'test-subsystem'
-          };
-          
-          this.requestLogger.warn('Using mock system metadata for testing', { 
-            systemMetadata 
-          });
+          // Throw a loud and clear error instead of creating mock data
+          const systemLookupError = new Error(
+            `SYSTEM NOT FOUND: No system found for manufacturer "${manufacturerNorm}" and model "${modelNorm}". ` +
+            `This system must exist in the systems table before document upload can proceed. ` +
+            `Please add this system to the database first.`
+          );
+          systemLookupError.code = 'SYSTEM_NOT_FOUND';
+          systemLookupError.manufacturer = manufacturerNorm;
+          systemLookupError.model = modelNorm;
+          throw systemLookupError;
         }
       } else {
         this.requestLogger.warn('No manufacturer/model provided for system lookup', { 
