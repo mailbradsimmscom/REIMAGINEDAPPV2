@@ -99,7 +99,7 @@ class AnthropicExtractionService {
       const execAsync = promisify(exec);
 
       // Run the Python test file for specifications with doc_id inside Docker container
-      const command = `docker exec reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_spec.py`;
+      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_spec.py`;
       
       this.requestLogger.info('Running specifications extraction', { docId, command });
       this.requestLogger.debug('Command details', { 
@@ -146,7 +146,7 @@ class AnthropicExtractionService {
       const execAsync = promisify(exec);
 
       // Run the Python test file for golden rules with doc_id inside Docker container
-      const command = `docker exec reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_GR.py`;
+      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_GR.py`;
       
       this.requestLogger.info('Running golden rules extraction', { docId, command });
       
@@ -180,7 +180,7 @@ class AnthropicExtractionService {
       const execAsync = promisify(exec);
 
       // Run the Python test file for intent router with doc_id inside Docker container
-      const command = `docker exec reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_IR.py`;
+      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_IR.py`;
       
       this.requestLogger.info('Running intent router extraction', { docId, command });
       
@@ -214,7 +214,7 @@ class AnthropicExtractionService {
       const execAsync = promisify(exec);
 
       // Run the Python test file for playbook hints with doc_id inside Docker container
-      const command = `docker exec reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks.py`;
+      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks.py`;
       
       this.requestLogger.info('Running playbook hints extraction', { docId, command });
       

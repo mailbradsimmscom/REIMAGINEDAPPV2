@@ -8,6 +8,9 @@ import os
 import json
 import requests
 import time
+
+# Global configuration from environment
+anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
@@ -79,8 +82,11 @@ def process_text_chunk(client, chunk_data, chunk_num, total_chunks, anthropic_mo
                     "content": user_prompt
                 }
             ],
-            timeout=30  # 30 second timeout
+            timeout=300  # 300 second timeout for complex API calls
         )
+        
+        # Add delay between API calls to avoid rate limits
+        time.sleep(anthropic_api_delay)
         
         print(f"  API call successful for chunk {chunk_num}")
         
@@ -159,9 +165,9 @@ def process_chunks_parallel(client, chunks_data, anthropic_model, anthropic_max_
     return all_golden_rules, chunk_results
 
 def store_to_supabase_storage(doc_id, golden_rules):
-    """Store golden rules to Supabase Storage"""
+    """Store golden rules to Supabase Storage using REST API"""
     try:
-        from supabase import create_client
+        import requests
         from dotenv import load_dotenv
         
         # Load environment variables
@@ -177,35 +183,32 @@ def store_to_supabase_storage(doc_id, golden_rules):
         
         # Supabase configuration
         url = os.getenv('SUPABASE_URL')
-        key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
         
         if not url or not key:
             print("❌ Supabase credentials not found")
             return False
         
-        # Initialize Supabase client
-        supabase = create_client(url, key)
-        
         # Storage path
         file_path = f"manuals/{doc_id}/DIP/{doc_id}_golden_rules_an.json"
         
-        # Upload to Supabase Storage using Python client
-        result = supabase.storage.from_('documents').upload(
-            file_path,
-            json_content.encode('utf-8'),
-            file_options={
-                "content-type": "text/plain",
-                "cache-control": "3600"
-            }
-        )
+        # Upload to Supabase Storage using REST API
+        headers = {
+            'Authorization': f'Bearer {key}',
+            'Content-Type': 'text/plain'
+        }
+        
+        storage_url = f"{url}/storage/v1/object/documents/{file_path}"
+        
+        response = requests.post(storage_url, headers=headers, data=json_content)
         
         # Check for errors in the response
-        if hasattr(result, 'error') and result.error:
-            print(f"❌ Failed to upload to storage: {result.error}")
-            return False
-        else:
+        if response.status_code in [200, 201]:
             print(f"✅ Successfully stored golden rules to Supabase Storage: {file_path}")
             return True
+        else:
+            print(f"❌ Failed to upload to storage: {response.status_code} - {response.text}")
+            return False
             
     except Exception as e:
         print(f"❌ Error storing to Supabase Storage: {e}")
@@ -216,7 +219,7 @@ def test_anthropic_golden_rules_extraction():
     
     # Configuration from environment
     anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
-    anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20240620')
+    anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-latest')
     anthropic_max_tokens = int(os.getenv('ANTHROPIC_MAX_TOKENS', '8000'))
     anthropic_temperature = float(os.getenv('ANTHROPIC_TEMPERATURE', '0'))
     
@@ -354,6 +357,9 @@ RULES:
         print("="*80)
         
         try:
+            print(f"DEBUG: About to call store_to_supabase_storage with doc_id: {doc_id}")
+            print(f"DEBUG: SUPABASE_URL exists: {bool(os.getenv('SUPABASE_URL'))}")
+            print(f"DEBUG: SUPABASE_SERVICE_KEY exists: {bool(os.getenv('SUPABASE_SERVICE_KEY'))}")
             storage_success = store_to_supabase_storage(doc_id, unique_golden_rules)
             if storage_success:
                 print("✅ Successfully stored golden rules to Supabase Storage")

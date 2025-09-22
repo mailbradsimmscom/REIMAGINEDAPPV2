@@ -35,7 +35,9 @@ const EnvSchema = z.object({
   DOC_CHUNKS_TABLE: z.string().optional().default('document_chunks'),
   // Optional column names if your schema differs
   DOC_CHUNKS_PAGE_COL: z.string().optional().default('page_start'),
-  DOC_CHUNKS_TEXT_COL: z.string().optional().default('content')
+  DOC_CHUNKS_TEXT_COL: z.string().optional().default('content'),
+  // Anthropic API delay for rate limiting
+  ANTHROPIC_API_DELAY: z.string().optional().default('2')
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

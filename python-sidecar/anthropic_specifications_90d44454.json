@@ -1,0 +1,527 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 9,
+  "unique_specifications": 9,
+  "category_breakdown": {
+    "Installation": 4,
+    "Dimensions": 1,
+    "Performance": 3,
+    "Electrical": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Model Name",
+      "normalized_parameter": "model_name",
+      "parameter_aliases": [
+        "product name",
+        "device model",
+        "unit model"
+      ],
+      "value": "CZone Touch 7",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "80-911-0200-00"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "czone touch 7",
+        "touch 7 model",
+        "touch 7 device",
+        "model number"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "Section 1"
+      ]
+    },
+    {
+      "parameter": "Part Number",
+      "normalized_parameter": "part_number",
+      "parameter_aliases": [
+        "model number",
+        "product code",
+        "item number"
+      ],
+      "value": "80-911-0200-00",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "part number",
+        "model code",
+        "product number",
+        "reference number"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "Section 1"
+      ]
+    },
+    {
+      "parameter": "Warranty Period",
+      "normalized_parameter": "warranty_duration",
+      "parameter_aliases": [
+        "guarantee period",
+        "warranty coverage"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "years",
+      "normalized_units": "years",
+      "converted_value": "2",
+      "models": [
+        "80-911-0200-00"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "warranty",
+        "guarantee",
+        "warranty period",
+        "warranty duration",
+        "warranty coverage"
+      ],
+      "concept_group": "warranty_information",
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "parameter": "Display Size",
+      "normalized_parameter": "display_diagonal",
+      "parameter_aliases": [
+        "screen size",
+        "display diagonal",
+        "screen diagonal"
+      ],
+      "value": "7",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "inches",
+      "converted_value": "7",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "how big is the screen",
+        "display size",
+        "screen dimensions",
+        "monitor size"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "parameter": "Screen Resolution",
+      "normalized_parameter": "display_resolution",
+      "parameter_aliases": [
+        "pixel resolution",
+        "display pixels"
+      ],
+      "value": "1024 x 600",
+      "range": null,
+      "units": "pixels",
+      "normalized_units": "pixels",
+      "converted_value": "1024 x 600",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "resolution",
+        "screen quality",
+        "display clarity",
+        "pixel count"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "parameter": "Display Brightness",
+      "normalized_parameter": "screen_brightness",
+      "parameter_aliases": [
+        "luminance",
+        "screen intensity"
+      ],
+      "value": "500",
+      "range": "0-500",
+      "units": "nit",
+      "normalized_units": "nit",
+      "converted_value": "500",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how bright",
+        "screen brightness",
+        "display intensity",
+        "nits"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "parameter": "Mounting Depth",
+      "normalized_parameter": "installation_depth",
+      "parameter_aliases": [
+        "install depth",
+        "depth requirement"
+      ],
+      "value": "35",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "35",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how deep",
+        "mounting depth",
+        "installation space",
+        "depth needed"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "voltage_range",
+      "parameter_aliases": [
+        "voltage input",
+        "power requirement"
+      ],
+      "value": "8-32",
+      "range": "8-32",
+      "units": "V DC",
+      "normalized_units": "volts_dc",
+      "converted_value": "8-32",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "electrical specs",
+        "DC voltage"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "parameter": "Color Depth",
+      "normalized_parameter": "color_depth",
+      "parameter_aliases": [
+        "color bits",
+        "color range"
+      ],
+      "value": "24",
+      "range": null,
+      "units": "bit",
+      "normalized_units": "bits",
+      "converted_value": "24",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "color depth",
+        "color quality",
+        "bit depth",
+        "color accuracy"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Section 2 Overview"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Model Name",
+            "normalized_parameter": "model_name",
+            "parameter_aliases": [
+              "product name",
+              "device model",
+              "unit model"
+            ],
+            "value": "CZone Touch 7",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "80-911-0200-00"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "czone touch 7",
+              "touch 7 model",
+              "touch 7 device",
+              "model number"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "Section 1"
+            ]
+          },
+          {
+            "parameter": "Part Number",
+            "normalized_parameter": "part_number",
+            "parameter_aliases": [
+              "model number",
+              "product code",
+              "item number"
+            ],
+            "value": "80-911-0200-00",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "part number",
+              "model code",
+              "product number",
+              "reference number"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "Section 1"
+            ]
+          },
+          {
+            "parameter": "Warranty Period",
+            "normalized_parameter": "warranty_duration",
+            "parameter_aliases": [
+              "guarantee period",
+              "warranty coverage"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "years",
+            "normalized_units": "years",
+            "converted_value": "2",
+            "models": [
+              "80-911-0200-00"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "warranty",
+              "guarantee",
+              "warranty period",
+              "warranty duration",
+              "warranty coverage"
+            ],
+            "concept_group": "warranty_information",
+            "references": [
+              "Warranty Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "display_diagonal",
+            "parameter_aliases": [
+              "screen size",
+              "display diagonal",
+              "screen diagonal"
+            ],
+            "value": "7",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "how big is the screen",
+              "display size",
+              "screen dimensions",
+              "monitor size"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "parameter": "Screen Resolution",
+            "normalized_parameter": "display_resolution",
+            "parameter_aliases": [
+              "pixel resolution",
+              "display pixels"
+            ],
+            "value": "1024 x 600",
+            "range": null,
+            "units": "pixels",
+            "normalized_units": "pixels",
+            "converted_value": "1024 x 600",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "resolution",
+              "screen quality",
+              "display clarity",
+              "pixel count"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "parameter": "Display Brightness",
+            "normalized_parameter": "screen_brightness",
+            "parameter_aliases": [
+              "luminance",
+              "screen intensity"
+            ],
+            "value": "500",
+            "range": "0-500",
+            "units": "nit",
+            "normalized_units": "nit",
+            "converted_value": "500",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how bright",
+              "screen brightness",
+              "display intensity",
+              "nits"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "parameter": "Mounting Depth",
+            "normalized_parameter": "installation_depth",
+            "parameter_aliases": [
+              "install depth",
+              "depth requirement"
+            ],
+            "value": "35",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "35",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how deep",
+              "mounting depth",
+              "installation space",
+              "depth needed"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "voltage_range",
+            "parameter_aliases": [
+              "voltage input",
+              "power requirement"
+            ],
+            "value": "8-32",
+            "range": "8-32",
+            "units": "V DC",
+            "normalized_units": "volts_dc",
+            "converted_value": "8-32",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "electrical specs",
+              "DC voltage"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "parameter": "Color Depth",
+            "normalized_parameter": "color_depth",
+            "parameter_aliases": [
+              "color bits",
+              "color range"
+            ],
+            "value": "24",
+            "range": null,
+            "units": "bit",
+            "normalized_units": "bits",
+            "converted_value": "24",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "color depth",
+              "color quality",
+              "bit depth",
+              "color accuracy"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Section 2 Overview"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 1,
+  "failed_chunks": 1,
+  "total_golden_rules_extracted": 4,
+  "unique_golden_rules": 4,
+  "golden_rules": [
+    {
+      "query": "Is identification label present on device?",
+      "expected_value": "Label must be present and legible on back of Touch 7",
+      "test_method": "Visual inspection of back panel",
+      "failure_indication": "Missing or removed label voids warranty",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Warranty validation",
+        "Service identification"
+      ]
+    },
+    {
+      "query": "Is product within warranty period?",
+      "expected_value": "Less than 2 years from purchase date",
+      "test_method": "Check purchase documentation against current date",
+      "failure_indication": "Product is out of warranty coverage",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Warranty claims",
+        "Service requests"
+      ]
+    },
+    {
+      "query": "Was product installed according to manual instructions?",
+      "expected_value": "Installation follows all manual specifications",
+      "test_method": "Installation audit against manual requirements",
+      "failure_indication": "Non-compliant installation may void warranty",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Installation verification",
+        "Warranty validation"
+      ]
+    },
+    {
+      "query": "Is product being used as intended?",
+      "expected_value": "Usage matches product's intended purpose",
+      "test_method": "Review of application and usage patterns",
+      "failure_indication": "Improper use may void warranty and cause damage",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Usage verification",
+        "Warranty validation"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is identification label present on device?",
+            "expected_value": "Label must be present and legible on back of Touch 7",
+            "test_method": "Visual inspection of back panel",
+            "failure_indication": "Missing or removed label voids warranty",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Warranty validation",
+              "Service identification"
+            ]
+          },
+          {
+            "query": "Is product within warranty period?",
+            "expected_value": "Less than 2 years from purchase date",
+            "test_method": "Check purchase documentation against current date",
+            "failure_indication": "Product is out of warranty coverage",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Warranty claims",
+              "Service requests"
+            ]
+          },
+          {
+            "query": "Was product installed according to manual instructions?",
+            "expected_value": "Installation follows all manual specifications",
+            "test_method": "Installation audit against manual requirements",
+            "failure_indication": "Non-compliant installation may void warranty",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Installation verification",
+              "Warranty validation"
+            ]
+          },
+          {
+            "query": "Is product being used as intended?",
+            "expected_value": "Usage matches product's intended purpose",
+            "test_method": "Review of application and usage patterns",
+            "failure_indication": "Improper use may void warranty and cause damage",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Usage verification",
+              "Warranty validation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "golden_rules": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    }
+  ]
+}

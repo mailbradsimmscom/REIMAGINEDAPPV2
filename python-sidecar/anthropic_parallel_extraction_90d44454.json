@@ -1,0 +1,205 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 5,
+  "unique_procedures": 5,
+  "procedures": [
+    {
+      "title": "Warranty Validation Check",
+      "preconditions": [
+        "Touch 7 product purchased",
+        "Within first two years after purchase date"
+      ],
+      "steps": [
+        "Verify installation was done according to manual instructions",
+        "Verify product usage follows manual instructions",
+        "Confirm identification label is intact on back of Touch 7"
+      ],
+      "expected_outcome": "Valid warranty coverage confirmed",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Identification Label Preservation",
+      "preconditions": [
+        "Touch 7 device with identification label"
+      ],
+      "steps": [
+        "Locate identification label on back of Touch 7",
+        "Ensure label remains attached and undamaged",
+        "Do not remove or tamper with label"
+      ],
+      "expected_outcome": "Identification label remains intact and warranty valid",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touch 7 Display Installation",
+      "preconditions": [
+        "Power supply between 8-32V DC available",
+        "Mounting location with minimum 35mm depth clearance",
+        "Front access for mounting"
+      ],
+      "steps": [
+        "Select mounting location with adequate depth clearance (35mm minimum including cables)",
+        "Ensure front access is available for mounting",
+        "Connect power supply (8-32V DC)",
+        "Mount display from front of panel",
+        "Secure display without rear screws"
+      ],
+      "expected_outcome": "Touch 7 display securely mounted with power connection",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Display Brightness Adjustment",
+      "preconditions": [
+        "Touch 7 display powered on",
+        "Display functioning normally"
+      ],
+      "steps": [
+        "Access brightness controls through display interface",
+        "Adjust brightness level between 0-500 nits",
+        "Set appropriate level for current lighting conditions",
+        "Reduce brightness for night time viewing"
+      ],
+      "expected_outcome": "Display brightness optimized for viewing conditions",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Network Connectivity Setup",
+      "preconditions": [
+        "Touch 7 display powered on",
+        "Wi-Fi network or ethernet connection available"
+      ],
+      "steps": [
+        "Access network settings menu",
+        "Select either Wi-Fi or ethernet connection method",
+        "Configure network parameters",
+        "Establish connection for tablet pairing"
+      ],
+      "expected_outcome": "Touch 7 successfully connected to network for tablet connectivity",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Warranty Validation Check",
+            "preconditions": [
+              "Touch 7 product purchased",
+              "Within first two years after purchase date"
+            ],
+            "steps": [
+              "Verify installation was done according to manual instructions",
+              "Verify product usage follows manual instructions",
+              "Confirm identification label is intact on back of Touch 7"
+            ],
+            "expected_outcome": "Valid warranty coverage confirmed",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Identification Label Preservation",
+            "preconditions": [
+              "Touch 7 device with identification label"
+            ],
+            "steps": [
+              "Locate identification label on back of Touch 7",
+              "Ensure label remains attached and undamaged",
+              "Do not remove or tamper with label"
+            ],
+            "expected_outcome": "Identification label remains intact and warranty valid",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "Touch 7 Display Installation",
+            "preconditions": [
+              "Power supply between 8-32V DC available",
+              "Mounting location with minimum 35mm depth clearance",
+              "Front access for mounting"
+            ],
+            "steps": [
+              "Select mounting location with adequate depth clearance (35mm minimum including cables)",
+              "Ensure front access is available for mounting",
+              "Connect power supply (8-32V DC)",
+              "Mount display from front of panel",
+              "Secure display without rear screws"
+            ],
+            "expected_outcome": "Touch 7 display securely mounted with power connection",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Display Brightness Adjustment",
+            "preconditions": [
+              "Touch 7 display powered on",
+              "Display functioning normally"
+            ],
+            "steps": [
+              "Access brightness controls through display interface",
+              "Adjust brightness level between 0-500 nits",
+              "Set appropriate level for current lighting conditions",
+              "Reduce brightness for night time viewing"
+            ],
+            "expected_outcome": "Display brightness optimized for viewing conditions",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Network Connectivity Setup",
+            "preconditions": [
+              "Touch 7 display powered on",
+              "Wi-Fi network or ethernet connection available"
+            ],
+            "steps": [
+              "Access network settings menu",
+              "Select either Wi-Fi or ethernet connection method",
+              "Configure network parameters",
+              "Establish connection for tablet pairing"
+            ],
+            "expected_outcome": "Touch 7 successfully connected to network for tablet connectivity",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

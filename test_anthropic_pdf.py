@@ -46,9 +46,10 @@ def test_anthropic_pdf_extraction():
     
     # Configuration from environment
     anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
-    anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20241022')
+    anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-latest')
     anthropic_max_tokens = int(os.getenv('ANTHROPIC_MAX_TOKENS', '8000'))
     anthropic_temperature = float(os.getenv('ANTHROPIC_TEMPERATURE', '0'))
+    anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
     
     if not anthropic_api_key:
         raise ValueError("ANTHROPIC_API_KEY not found in environment variables")
@@ -145,6 +146,9 @@ RULES:
                 }
             ]
         )
+        
+        # Add delay between API calls to avoid rate limits
+        time.sleep(anthropic_api_delay)
         
         print("API call successful!")
         

@@ -161,9 +161,10 @@ class DIPProcessor:
             self.anthropic_client = anthropic.Anthropic(api_key=anthropic_api_key)
             
             # Load model configuration from environment
-            self.anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-20241022')
+            self.anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-latest')
             self.anthropic_max_tokens = int(os.getenv('ANTHROPIC_MAX_TOKENS', '8000'))
             self.anthropic_temperature = float(os.getenv('ANTHROPIC_TEMPERATURE', '0') or '0')
+            self.anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
             
             logger.info(f"Anthropic client initialized with model: {self.anthropic_model}")
         else:
@@ -599,8 +600,11 @@ RULES:
                         "content": user_prompt
                     }
                 ],
-                timeout=30  # 30 second timeout
+                timeout=120  # 120 second timeout
             )
+            
+            # Add delay between API calls to avoid rate limits
+            time.sleep(self.anthropic_api_delay)
             
             logger.info(f"  API call successful for chunk {chunk_num}")
             

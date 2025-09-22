@@ -1,0 +1,653 @@
+{
+  "total_chunks_processed": 53,
+  "successful_chunks": 1,
+  "failed_chunks": 52,
+  "total_procedures_extracted": 6,
+  "unique_procedures": 6,
+  "procedures": [
+    {
+      "title": "First Start Up Procedure",
+      "preconditions": [
+        "System must be fully installed",
+        "All connections must be properly made",
+        "Power supply must be available"
+      ],
+      "steps": [
+        "Perform preliminary checks before startup",
+        "Verify all hydraulic connections",
+        "Check electrical connections",
+        "Confirm power supply voltage"
+      ],
+      "expected_outcome": "System ready for initial operation",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pump Group Installation",
+      "preconditions": [
+        "Installation location identified",
+        "Mounting surface prepared"
+      ],
+      "steps": [
+        "Position pump group in designated location",
+        "Secure pump group to mounting surface",
+        "Connect hydraulic lines",
+        "Verify proper mounting"
+      ],
+      "expected_outcome": "Pump group securely installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Watermaker Group Installation",
+      "preconditions": [
+        "Installation location identified",
+        "Mounting surface prepared"
+      ],
+      "steps": [
+        "Position watermaker group",
+        "Secure to mounting surface",
+        "Connect water lines",
+        "Verify installation"
+      ],
+      "expected_outcome": "Watermaker group properly installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Remote Control Panel Installation",
+      "preconditions": [
+        "Panel mounting location identified",
+        "Power supply available"
+      ],
+      "steps": [
+        "Mount control panel in designated location",
+        "Connect electrical wires according to scheme",
+        "Verify connections",
+        "Test panel operation"
+      ],
+      "expected_outcome": "Control panel installed and operational",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Seawater Intake Installation",
+      "preconditions": [
+        "Hull penetration completed",
+        "Seacock installed"
+      ],
+      "steps": [
+        "Connect seawater intake to seacock",
+        "Install strainer",
+        "Connect to pump inlet",
+        "Verify water flow"
+      ],
+      "expected_outcome": "Seawater intake system properly installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Brine Discharge Installation",
+      "preconditions": [
+        "Discharge location identified",
+        "Hull fitting installed"
+      ],
+      "steps": [
+        "Connect discharge line to watermaker",
+        "Route discharge line to hull fitting",
+        "Secure all connections",
+        "Test for leaks"
+      ],
+      "expected_outcome": "Brine discharge system properly installed",
+      "models": [
+        "ZEN 150 48V DC"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "First Start Up Procedure",
+            "preconditions": [
+              "System must be fully installed",
+              "All connections must be properly made",
+              "Power supply must be available"
+            ],
+            "steps": [
+              "Perform preliminary checks before startup",
+              "Verify all hydraulic connections",
+              "Check electrical connections",
+              "Confirm power supply voltage"
+            ],
+            "expected_outcome": "System ready for initial operation",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump Group Installation",
+            "preconditions": [
+              "Installation location identified",
+              "Mounting surface prepared"
+            ],
+            "steps": [
+              "Position pump group in designated location",
+              "Secure pump group to mounting surface",
+              "Connect hydraulic lines",
+              "Verify proper mounting"
+            ],
+            "expected_outcome": "Pump group securely installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Watermaker Group Installation",
+            "preconditions": [
+              "Installation location identified",
+              "Mounting surface prepared"
+            ],
+            "steps": [
+              "Position watermaker group",
+              "Secure to mounting surface",
+              "Connect water lines",
+              "Verify installation"
+            ],
+            "expected_outcome": "Watermaker group properly installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Remote Control Panel Installation",
+            "preconditions": [
+              "Panel mounting location identified",
+              "Power supply available"
+            ],
+            "steps": [
+              "Mount control panel in designated location",
+              "Connect electrical wires according to scheme",
+              "Verify connections",
+              "Test panel operation"
+            ],
+            "expected_outcome": "Control panel installed and operational",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Seawater Intake Installation",
+            "preconditions": [
+              "Hull penetration completed",
+              "Seacock installed"
+            ],
+            "steps": [
+              "Connect seawater intake to seacock",
+              "Install strainer",
+              "Connect to pump inlet",
+              "Verify water flow"
+            ],
+            "expected_outcome": "Seawater intake system properly installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Brine Discharge Installation",
+            "preconditions": [
+              "Discharge location identified",
+              "Hull fitting installed"
+            ],
+            "steps": [
+              "Connect discharge line to watermaker",
+              "Route discharge line to hull fitting",
+              "Secure all connections",
+              "Test for leaks"
+            ],
+            "expected_outcome": "Brine discharge system properly installed",
+            "models": [
+              "ZEN 150 48V DC"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 24,
+      "pages": "24-24",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 26,
+      "pages": "26-26",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 25,
+      "pages": "25-25",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 27,
+      "pages": "27-27",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 30,
+      "pages": "30-30",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 28,
+      "pages": "28-28",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 29,
+      "pages": "29-29",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 31,
+      "pages": "31-31",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 33,
+      "pages": "33-33",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 32,
+      "pages": "32-32",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 34,
+      "pages": "34-34",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 35,
+      "pages": "35-35",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 36,
+      "pages": "36-36",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 37,
+      "pages": "37-37",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 38,
+      "pages": "38-38",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 40,
+      "pages": "40-40",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 39,
+      "pages": "39-39",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 41,
+      "pages": "41-41",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 44,
+      "pages": "44-44",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 43,
+      "pages": "43-43",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 42,
+      "pages": "42-42",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 45,
+      "pages": "45-45",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 47,
+      "pages": "47-47",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 46,
+      "pages": "46-46",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 48,
+      "pages": "48-48",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 49,
+      "pages": "49-49",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 50,
+      "pages": "50-50",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 52,
+      "pages": "52-52",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 51,
+      "pages": "51-51",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    },
+    {
+      "chunk_num": 53,
+      "pages": "53-53",
+      "result": {
+        "procedures": [],
+        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 12,
+  "unique_intent_routes": 12,
+  "question_type_breakdown": {
+    "What": 8,
+    "How": 3,
+    "Where": 1
+  },
+  "intent_routes": [
+    {
+      "question": "What model is covered in this manual?",
+      "question_variations": [
+        "Which Touch 7 model does this manual apply to?",
+        "What's the part number for the CZone Touch 7?"
+      ],
+      "answer": "The manual covers the CZONE TOUCH 7 model with part number 80-911-0200-00",
+      "question_type": "What",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Section 1 - General Information"
+      ]
+    },
+    {
+      "question": "How long is the warranty period for the Touch 7?",
+      "question_variations": [
+        "What's the warranty duration?",
+        "How many years is the Touch 7 warranty?"
+      ],
+      "answer": "The CZone Touch 7 is covered by warranty for two years from the purchase date, provided it is installed and used according to the manual instructions",
+      "question_type": "How",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "question": "What does the warranty cover?",
+      "question_variations": [
+        "Is labor covered under warranty?",
+        "Does the warranty include shipping costs?"
+      ],
+      "answer": "The warranty only covers the cost of repair and/or replacement of the product. Labor and shipping costs are not covered under this warranty",
+      "question_type": "What",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "question": "Where is the identification label located?",
+      "question_variations": [
+        "How can I find the identification label?",
+        "Where do I look for the ID label?"
+      ],
+      "answer": "The identification label is located on the back of the Touch 7",
+      "question_type": "Where",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Identification Label Section"
+      ]
+    },
+    {
+      "question": "Can I remove the identification label?",
+      "question_variations": [
+        "Is it okay to take off the ID label?",
+        "What happens if I remove the identification label?"
+      ],
+      "answer": "No, never remove the identification label as this will void the warranty",
+      "question_type": "What",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Identification Label Section - Caution"
+      ]
+    },
+    {
+      "question": "What is the screen size of the CZone Touch 7?",
+      "question_variations": [
+        "How big is the CZone Touch 7 display?",
+        "What are the display dimensions of the Touch 7?"
+      ],
+      "answer": "The CZone Touch 7 features a 7-inch IPS LCD display",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "question": "What is the screen resolution of the Touch 7?",
+      "question_variations": [
+        "How many pixels does the Touch 7 have?",
+        "What's the display resolution?"
+      ],
+      "answer": "The Touch 7 has a resolution of 1024 x 600 pixels",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    },
+    {
+      "question": "What is the mounting depth required for installation?",
+      "question_variations": [
+        "How deep does the Touch 7 mount?",
+        "What clearance is needed behind the Touch 7?"
+      ],
+      "answer": "The Touch 7 requires 35mm mounting depth including cables",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    },
+    {
+      "question": "What is the operating voltage range?",
+      "question_variations": [
+        "What voltage does the Touch 7 need?",
+        "What power supply is required for the Touch 7?"
+      ],
+      "answer": "The Touch 7 operates on 8-32V DC voltage range",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    },
+    {
+      "question": "How bright is the display?",
+      "question_variations": [
+        "What is the screen brightness?",
+        "Is the Touch 7 display bright enough for daytime viewing?"
+      ],
+      "answer": "The Touch 7 has 500 nit brightness that is dimmable for night time viewing",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    },
+    {
+      "question": "How is the Touch 7 installed?",
+      "question_variations": [
+        "What's the installation method for the Touch 7?",
+        "How do you mount the Touch 7?"
+      ],
+      "answer": "The Touch 7 features easy front mount installation with screwless rear access",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    },
+    {
+      "question": "What connectivity options does the Touch 7 have?",
+      "question_variations": [
+        "How can I connect to the Touch 7?",
+        "Does the Touch 7 have WiFi?"
+      ],
+      "answer": "The Touch 7 has built-in Wi-Fi and ethernet for tablet connectivity",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What model is covered in this manual?",
+            "question_variations": [
+              "Which Touch 7 model does this manual apply to?",
+              "What's the part number for the CZone Touch 7?"
+            ],
+            "answer": "The manual covers the CZONE TOUCH 7 model with part number 80-911-0200-00",
+            "question_type": "What",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Section 1 - General Information"
+            ]
+          },
+          {
+            "question": "How long is the warranty period for the Touch 7?",
+            "question_variations": [
+              "What's the warranty duration?",
+              "How many years is the Touch 7 warranty?"
+            ],
+            "answer": "The CZone Touch 7 is covered by warranty for two years from the purchase date, provided it is installed and used according to the manual instructions",
+            "question_type": "How",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Warranty Section"
+            ]
+          },
+          {
+            "question": "What does the warranty cover?",
+            "question_variations": [
+              "Is labor covered under warranty?",
+              "Does the warranty include shipping costs?"
+            ],
+            "answer": "The warranty only covers the cost of repair and/or replacement of the product. Labor and shipping costs are not covered under this warranty",
+            "question_type": "What",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Warranty Section"
+            ]
+          },
+          {
+            "question": "Where is the identification label located?",
+            "question_variations": [
+              "How can I find the identification label?",
+              "Where do I look for the ID label?"
+            ],
+            "answer": "The identification label is located on the back of the Touch 7",
+            "question_type": "Where",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Identification Label Section"
+            ]
+          },
+          {
+            "question": "Can I remove the identification label?",
+            "question_variations": [
+              "Is it okay to take off the ID label?",
+              "What happens if I remove the identification label?"
+            ],
+            "answer": "No, never remove the identification label as this will void the warranty",
+            "question_type": "What",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Identification Label Section - Caution"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the screen size of the CZone Touch 7?",
+            "question_variations": [
+              "How big is the CZone Touch 7 display?",
+              "What are the display dimensions of the Touch 7?"
+            ],
+            "answer": "The CZone Touch 7 features a 7-inch IPS LCD display",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "question": "What is the screen resolution of the Touch 7?",
+            "question_variations": [
+              "How many pixels does the Touch 7 have?",
+              "What's the display resolution?"
+            ],
+            "answer": "The Touch 7 has a resolution of 1024 x 600 pixels",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "What is the mounting depth required for installation?",
+            "question_variations": [
+              "How deep does the Touch 7 mount?",
+              "What clearance is needed behind the Touch 7?"
+            ],
+            "answer": "The Touch 7 requires 35mm mounting depth including cables",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "What is the operating voltage range?",
+            "question_variations": [
+              "What voltage does the Touch 7 need?",
+              "What power supply is required for the Touch 7?"
+            ],
+            "answer": "The Touch 7 operates on 8-32V DC voltage range",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "How bright is the display?",
+            "question_variations": [
+              "What is the screen brightness?",
+              "Is the Touch 7 display bright enough for daytime viewing?"
+            ],
+            "answer": "The Touch 7 has 500 nit brightness that is dimmable for night time viewing",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "How is the Touch 7 installed?",
+            "question_variations": [
+              "What's the installation method for the Touch 7?",
+              "How do you mount the Touch 7?"
+            ],
+            "answer": "The Touch 7 features easy front mount installation with screwless rear access",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "What connectivity options does the Touch 7 have?",
+            "question_variations": [
+              "How can I connect to the Touch 7?",
+              "Does the Touch 7 have WiFi?"
+            ],
+            "answer": "The Touch 7 has built-in Wi-Fi and ethernet for tablet connectivity",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
