@@ -144,6 +144,17 @@ app.get('/admin/testing/golden-tests', async (req, res) => {
   }
 });
 
+// Document upload page (no auth required for HTML page)
+app.get('/upload', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/upload.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Upload page not found' });
+  }
+});
+
 // Progress tracking page (no auth required for HTML page)
 app.get('/admin/testing-progress', async (req, res) => {
   try {

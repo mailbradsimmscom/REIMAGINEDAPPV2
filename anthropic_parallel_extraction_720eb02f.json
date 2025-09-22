@@ -1,0 +1,1143 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 25,
+  "unique_procedures": 25,
+  "procedures": [
+    {
+      "title": "Horizontal Windlass Model Identification",
+      "preconditions": [
+        "Must have HC3 series windlass"
+      ],
+      "steps": [
+        "Locate model number on windlass",
+        "First digits (7/10/15) indicate power rating in hundreds of watts",
+        "Second digits (12/24) indicate voltage",
+        "Suffix D indicates dual direction",
+        "Suffix DB indicates dual direction with bronze gypsy"
+      ],
+      "expected_outcome": "Correct identification of windlass model and specifications",
+      "models": [
+        "HC3 712",
+        "HC3 712 D",
+        "HC3 712 DB",
+        "HC3 724",
+        "HC3 724 D",
+        "HC3 724 DB",
+        "HC3 1012",
+        "HC3 1012 D",
+        "HC3 1012 DB",
+        "HC3 1024",
+        "HC3 1024 D",
+        "HC3 1024 DB",
+        "HC3 1512",
+        "HC3 1512 D",
+        "HC3 1512 DB",
+        "HC3 1524",
+        "HC3 1524 D",
+        "HC3 1524 DB"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Power Rating Identification",
+      "preconditions": [
+        "Must have HC3 series windlass"
+      ],
+      "steps": [
+        "Identify power rating from model number",
+        "700W models start with 7",
+        "1000W models start with 10",
+        "1500W models start with 15"
+      ],
+      "expected_outcome": "Correct identification of windlass power rating",
+      "models": [
+        "All HC3 Series"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Windlass Installation",
+      "preconditions": [
+        "Deck thickness must match specifications",
+        "Upper and lower deck surfaces should be parallel",
+        "No obstacles under deck for cable/rope/chain passage",
+        "Sufficient peak depth to prevent jamming"
+      ],
+      "steps": [
+        "Establish ideal position with gypsy aligned with bow roller",
+        "Use drilling template to drill four holes",
+        "Remove excess material from chain through hole",
+        "Apply medium grade locking product to thread of stud bolts",
+        "Screw stud bolts (short threaded end) onto base",
+        "Lower windlass from above deck",
+        "Fix windlass by screwing nuts onto fixing studs",
+        "Apply silicone around outside edge of base for watertight seal",
+        "Connect supply cables from windlass to battery"
+      ],
+      "expected_outcome": "Properly mounted and sealed windlass installation",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pre-Navigation Safety Procedure",
+      "preconditions": [
+        "Windlass installed",
+        "Anchor system operational"
+      ],
+      "steps": [
+        "Secure chain with additional device before navigation",
+        "Isolate windlass from power system (switch circuit breaker off)",
+        "Lock chain to fixed point on boat",
+        "Verify anchor is properly secured"
+      ],
+      "expected_outcome": "Safely secured anchor system during navigation",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Post-Anchoring Security Procedure",
+      "preconditions": [
+        "Anchor has been deployed"
+      ],
+      "steps": [
+        "Complete anchorage operation",
+        "Secure chain or rope to fixed points",
+        "Use chain stopper or bollard as securing point",
+        "Verify anchor is properly secured"
+      ],
+      "expected_outcome": "Safely secured anchor at anchorage",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "How to Identify Windlass Model Code",
+      "preconditions": [
+        "Have windlass model code available"
+      ],
+      "steps": [
+        "Identify the line name (HC3)",
+        "Identify motor output (7=700W, 10=1000W, 15=1500W)",
+        "Identify voltage (12=12V, 24=24V)",
+        "Identify carter type (A=aluminum case, -=composite case)",
+        "Identify gypsy/drum configuration (-=gypsy DX, D=drum SX/gypsy DX, DB=gypsy and drum DX)"
+      ],
+      "expected_outcome": "Correct identification of windlass model specifications",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Cable Size Selection",
+      "preconditions": [
+        "Know total cable length needed",
+        "Know windlass model"
+      ],
+      "steps": [
+        "For lengths under 20m, use minimum cable size:",
+        "700W 12V: use 25mm\u00b2 (AWG3)",
+        "700W 24V: use 10mm\u00b2 (AWG7)",
+        "1000W 12V: use 35mm\u00b2 (AWG2)",
+        "1000W 24V: use 16mm\u00b2 (AWG5)",
+        "1500W 12V: use 50mm\u00b2 (AWG0)",
+        "1500W 24V: use 25mm\u00b2 (AWG3)",
+        "For lengths over 20m, increase cable size accordingly"
+      ],
+      "expected_outcome": "Correct cable size selected for installation",
+      "models": [
+        "All HECTOR models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Circuit Breaker Selection",
+      "preconditions": [
+        "Know windlass model and voltage"
+      ],
+      "steps": [
+        "For 700W 12V: install 60A breaker",
+        "For 700W 24V: install 40A breaker",
+        "For 1000W 12V: install 80A breaker",
+        "For 1000W 24V: install 50A breaker",
+        "For 1500W 12V: install 100A breaker",
+        "For 1500W 24V: install 50A breaker",
+        "Ensure breaker is rated for DC current",
+        "Verify breaker has delayed-action (thermal-magnetic or hydraulic-magnetic)"
+      ],
+      "expected_outcome": "Correct circuit breaker installed for protection",
+      "models": [
+        "All HECTOR models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Electrical Connection Setup",
+      "preconditions": [
+        "Power must be off",
+        "Components must be within cable length reach",
+        "Proper tools available"
+      ],
+      "steps": [
+        "Connect white wire from chain counter sensor cable",
+        "Connect green wire from chain counter sensor cable",
+        "Connect black wire from chain counter sensor cable",
+        "Connect L1 blue wire to circuit breaker",
+        "Connect L2 and L3 wires according to diagram",
+        "Install hydraulic-magnetic circuit breaker (refer to table on page 10)",
+        "Install fuse: 4A for 12V systems or 2A for 24V systems",
+        "Connect battery ensuring L = L1 + L2 + L3"
+      ],
+      "expected_outcome": "Properly wired windlass system with all accessories connected",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Remote Control System Installation",
+      "preconditions": [
+        "Main power disconnected",
+        "Access to mounting location"
+      ],
+      "steps": [
+        "Mount watertight hand held windlass control",
+        "Install chain counter control board",
+        "Mount watertight panel",
+        "Connect chain counter",
+        "Install radio receiver for remote controls",
+        "Pair radio pocket handheld transmitter",
+        "Install foot switches model 900U and 900D"
+      ],
+      "expected_outcome": "Fully functional remote control system for windlass operation",
+      "models": [
+        "HRC 1002"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Annual Gypsy Disassembly",
+      "preconditions": [
+        "Ensure electrical power to motor is switched off",
+        "Remove chain/rope from gypsy",
+        "Tools required: handle"
+      ],
+      "steps": [
+        "Using handle (22) remove the bush (2)",
+        "Loosen the screws (21)",
+        "Remove the gypsy cover (20)",
+        "Remove the top clutch cone (19)",
+        "Loosen the fixing screws (30) of the rope/chain stripper (29)",
+        "Remove the rope/chain stripper (29)",
+        "Leave pin, spring and handle in place",
+        "Pull off the gypsy (18)"
+      ],
+      "expected_outcome": "Gypsy side completely disassembled for maintenance",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Annual Drum Disassembly",
+      "preconditions": [
+        "Ensure electrical power to motor is switched off",
+        "Tools required: handle"
+      ],
+      "steps": [
+        "Use handle (22) to release the bush (2)",
+        "Pull off the drum (3)"
+      ],
+      "expected_outcome": "Drum side completely disassembled for maintenance",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Post-Disassembly Maintenance",
+      "preconditions": [
+        "Gypsy and drum parts disassembled",
+        "Marine grease available"
+      ],
+      "steps": [
+        "Clean all removed parts to prevent corrosion",
+        "Apply marine grease to shaft thread (14, 15 or 16)",
+        "Apply marine grease to gypsy (18) where clutch cones rest (17 and 19)"
+      ],
+      "expected_outcome": "Components cleaned and properly lubricated",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Regular Salt Deposit Removal",
+      "preconditions": [
+        "Access to fresh water",
+        "Windlass accessible for cleaning"
+      ],
+      "steps": [
+        "Identify areas with salt deposits",
+        "Wash thoroughly with fresh water",
+        "Ensure all salt deposits are removed"
+      ],
+      "expected_outcome": "Windlass free from corrosive salt deposits",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Safety Warnings",
+      "preconditions": [
+        "Windlass system installed"
+      ],
+      "steps": [
+        "Stay clear of chains, ropes and gypsy",
+        "Ensure electric motor is off during manual operation",
+        "Secure chain before navigation",
+        "Do not operate windlass electrically when handle is inserted",
+        "Install appropriate circuit breaker/fuse for motor protection"
+      ],
+      "expected_outcome": "Safe operation of windlass system",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Clutch Operation",
+      "preconditions": [
+        "Windlass system installed"
+      ],
+      "steps": [
+        "Insert handle (22) into bush (2) of gypsy cover (20)",
+        "Turn counter-clockwise to disengage clutch",
+        "Turn clockwise to engage clutch"
+      ],
+      "expected_outcome": "Successful clutch engagement/disengagement",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Weighing Anchor - Electric Operation",
+      "preconditions": [
+        "Engine running",
+        "Clutch engaged",
+        "Handle removed"
+      ],
+      "steps": [
+        "Press UP button on control",
+        "If windlass stops, wait few seconds before retrying",
+        "If circuit breaker trips, reset and wait few minutes",
+        "If blocked, move boat to release anchor",
+        "Monitor chain movement for last few meters"
+      ],
+      "expected_outcome": "Anchor successfully raised",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Casting Anchor - Manual Operation",
+      "preconditions": [
+        "Windlass system operational"
+      ],
+      "steps": [
+        "Disengage clutch",
+        "Allow gypsy to revolve",
+        "Let rope/chain fall into water",
+        "Turn handle clockwise to slow chain descent",
+        "Secure chain or rope once anchored"
+      ],
+      "expected_outcome": "Anchor successfully deployed manually",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Casting Anchor - Electric Operation",
+      "preconditions": [
+        "Windlass system operational"
+      ],
+      "steps": [
+        "Press DOWN button on control",
+        "Monitor chain/rope unwinding",
+        "Secure chain or rope once anchored"
+      ],
+      "expected_outcome": "Anchor successfully deployed electrically",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Drum Operation",
+      "preconditions": [
+        "Anchor and rope/chain secured to bitt"
+      ],
+      "steps": [
+        "Release clutch with handle (minimum 2 turns anticlockwise)",
+        "Remove handle from gypsy cover bush",
+        "Wrap rope around drum (minimum 3 turns)",
+        "Activate windlass control while maintaining rope tension",
+        "Adjust tension to modify winding speed",
+        "Tighten clutch clockwise after completion",
+        "Secure rope to bitt"
+      ],
+      "expected_outcome": "Successful drum operation",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Manual Anchor Weighing",
+      "preconditions": [
+        "Not applicable for DB version"
+      ],
+      "steps": [
+        "Secure chain with clamp",
+        "Disconnect windlass power supply",
+        "Engage lock lever of gypsy",
+        "Unscrew bush minimum 2 turns with lever",
+        "Unlock chain",
+        "Fit lever into gypsy cover seat",
+        "Take up chain by moving lever anticlockwise",
+        "Remove lever",
+        "Screw up bush",
+        "Release gypsy using lock lever control",
+        "Reconnect windlass power supply"
+      ],
+      "expected_outcome": "Anchor manually raised",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Gypsy Replacement Procedure",
+      "preconditions": [
+        "Power off",
+        "Ensure proper tools available"
+      ],
+      "steps": [
+        "Remove gypsy cover (part #20)",
+        "Remove top clutch cone (part #19)",
+        "Remove existing gypsy (part #18A or #18B)",
+        "Install new gypsy (8mm/5/16\" or 10mm as needed)",
+        "Reinstall top clutch cone",
+        "Secure gypsy cover"
+      ],
+      "expected_outcome": "Properly installed and secured gypsy",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pressure Lever Assembly",
+      "preconditions": [
+        "Ensure all parts available",
+        "Clean work surface"
+      ],
+      "steps": [
+        "Install pressure lever (part #23)",
+        "Attach spring for pressure lever (part #24)",
+        "Secure with pressure lever screw (part #25)"
+      ],
+      "expected_outcome": "Functional pressure lever assembly",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Motor Installation",
+      "preconditions": [
+        "Power disconnected",
+        "Proper voltage motor selected"
+      ],
+      "steps": [
+        "Select appropriate motor (parts #52A-52F based on voltage/power requirements)",
+        "Install key (part #53)",
+        "Connect red motor cable (part #55)",
+        "Connect black motor cable (part #56)",
+        "Connect control cable (part #57)",
+        "Secure motor using copper brackets (parts #58, #59)"
+      ],
+      "expected_outcome": "Properly installed and connected motor",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Clutch Assembly Installation",
+      "preconditions": [
+        "Clean components",
+        "Proper tools available"
+      ],
+      "steps": [
+        "Install bottom clutch cone (part #17)",
+        "Install gypsy",
+        "Install top clutch cone (part #19)",
+        "Verify proper operation"
+      ],
+      "expected_outcome": "Functional clutch assembly",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Horizontal Windlass Model Identification",
+            "preconditions": [
+              "Must have HC3 series windlass"
+            ],
+            "steps": [
+              "Locate model number on windlass",
+              "First digits (7/10/15) indicate power rating in hundreds of watts",
+              "Second digits (12/24) indicate voltage",
+              "Suffix D indicates dual direction",
+              "Suffix DB indicates dual direction with bronze gypsy"
+            ],
+            "expected_outcome": "Correct identification of windlass model and specifications",
+            "models": [
+              "HC3 712",
+              "HC3 712 D",
+              "HC3 712 DB",
+              "HC3 724",
+              "HC3 724 D",
+              "HC3 724 DB",
+              "HC3 1012",
+              "HC3 1012 D",
+              "HC3 1012 DB",
+              "HC3 1024",
+              "HC3 1024 D",
+              "HC3 1024 DB",
+              "HC3 1512",
+              "HC3 1512 D",
+              "HC3 1512 DB",
+              "HC3 1524",
+              "HC3 1524 D",
+              "HC3 1524 DB"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power Rating Identification",
+            "preconditions": [
+              "Must have HC3 series windlass"
+            ],
+            "steps": [
+              "Identify power rating from model number",
+              "700W models start with 7",
+              "1000W models start with 10",
+              "1500W models start with 15"
+            ],
+            "expected_outcome": "Correct identification of windlass power rating",
+            "models": [
+              "All HC3 Series"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "procedures": [
+          {
+            "title": "Windlass Installation",
+            "preconditions": [
+              "Deck thickness must match specifications",
+              "Upper and lower deck surfaces should be parallel",
+              "No obstacles under deck for cable/rope/chain passage",
+              "Sufficient peak depth to prevent jamming"
+            ],
+            "steps": [
+              "Establish ideal position with gypsy aligned with bow roller",
+              "Use drilling template to drill four holes",
+              "Remove excess material from chain through hole",
+              "Apply medium grade locking product to thread of stud bolts",
+              "Screw stud bolts (short threaded end) onto base",
+              "Lower windlass from above deck",
+              "Fix windlass by screwing nuts onto fixing studs",
+              "Apply silicone around outside edge of base for watertight seal",
+              "Connect supply cables from windlass to battery"
+            ],
+            "expected_outcome": "Properly mounted and sealed windlass installation",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pre-Navigation Safety Procedure",
+            "preconditions": [
+              "Windlass installed",
+              "Anchor system operational"
+            ],
+            "steps": [
+              "Secure chain with additional device before navigation",
+              "Isolate windlass from power system (switch circuit breaker off)",
+              "Lock chain to fixed point on boat",
+              "Verify anchor is properly secured"
+            ],
+            "expected_outcome": "Safely secured anchor system during navigation",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Post-Anchoring Security Procedure",
+            "preconditions": [
+              "Anchor has been deployed"
+            ],
+            "steps": [
+              "Complete anchorage operation",
+              "Secure chain or rope to fixed points",
+              "Use chain stopper or bollard as securing point",
+              "Verify anchor is properly secured"
+            ],
+            "expected_outcome": "Safely secured anchor at anchorage",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "How to Identify Windlass Model Code",
+            "preconditions": [
+              "Have windlass model code available"
+            ],
+            "steps": [
+              "Identify the line name (HC3)",
+              "Identify motor output (7=700W, 10=1000W, 15=1500W)",
+              "Identify voltage (12=12V, 24=24V)",
+              "Identify carter type (A=aluminum case, -=composite case)",
+              "Identify gypsy/drum configuration (-=gypsy DX, D=drum SX/gypsy DX, DB=gypsy and drum DX)"
+            ],
+            "expected_outcome": "Correct identification of windlass model specifications",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Cable Size Selection",
+            "preconditions": [
+              "Know total cable length needed",
+              "Know windlass model"
+            ],
+            "steps": [
+              "For lengths under 20m, use minimum cable size:",
+              "700W 12V: use 25mm\u00b2 (AWG3)",
+              "700W 24V: use 10mm\u00b2 (AWG7)",
+              "1000W 12V: use 35mm\u00b2 (AWG2)",
+              "1000W 24V: use 16mm\u00b2 (AWG5)",
+              "1500W 12V: use 50mm\u00b2 (AWG0)",
+              "1500W 24V: use 25mm\u00b2 (AWG3)",
+              "For lengths over 20m, increase cable size accordingly"
+            ],
+            "expected_outcome": "Correct cable size selected for installation",
+            "models": [
+              "All HECTOR models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Circuit Breaker Selection",
+            "preconditions": [
+              "Know windlass model and voltage"
+            ],
+            "steps": [
+              "For 700W 12V: install 60A breaker",
+              "For 700W 24V: install 40A breaker",
+              "For 1000W 12V: install 80A breaker",
+              "For 1000W 24V: install 50A breaker",
+              "For 1500W 12V: install 100A breaker",
+              "For 1500W 24V: install 50A breaker",
+              "Ensure breaker is rated for DC current",
+              "Verify breaker has delayed-action (thermal-magnetic or hydraulic-magnetic)"
+            ],
+            "expected_outcome": "Correct circuit breaker installed for protection",
+            "models": [
+              "All HECTOR models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Electrical Connection Setup",
+            "preconditions": [
+              "Power must be off",
+              "Components must be within cable length reach",
+              "Proper tools available"
+            ],
+            "steps": [
+              "Connect white wire from chain counter sensor cable",
+              "Connect green wire from chain counter sensor cable",
+              "Connect black wire from chain counter sensor cable",
+              "Connect L1 blue wire to circuit breaker",
+              "Connect L2 and L3 wires according to diagram",
+              "Install hydraulic-magnetic circuit breaker (refer to table on page 10)",
+              "Install fuse: 4A for 12V systems or 2A for 24V systems",
+              "Connect battery ensuring L = L1 + L2 + L3"
+            ],
+            "expected_outcome": "Properly wired windlass system with all accessories connected",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Remote Control System Installation",
+            "preconditions": [
+              "Main power disconnected",
+              "Access to mounting location"
+            ],
+            "steps": [
+              "Mount watertight hand held windlass control",
+              "Install chain counter control board",
+              "Mount watertight panel",
+              "Connect chain counter",
+              "Install radio receiver for remote controls",
+              "Pair radio pocket handheld transmitter",
+              "Install foot switches model 900U and 900D"
+            ],
+            "expected_outcome": "Fully functional remote control system for windlass operation",
+            "models": [
+              "HRC 1002"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "procedures": [
+          {
+            "title": "Annual Gypsy Disassembly",
+            "preconditions": [
+              "Ensure electrical power to motor is switched off",
+              "Remove chain/rope from gypsy",
+              "Tools required: handle"
+            ],
+            "steps": [
+              "Using handle (22) remove the bush (2)",
+              "Loosen the screws (21)",
+              "Remove the gypsy cover (20)",
+              "Remove the top clutch cone (19)",
+              "Loosen the fixing screws (30) of the rope/chain stripper (29)",
+              "Remove the rope/chain stripper (29)",
+              "Leave pin, spring and handle in place",
+              "Pull off the gypsy (18)"
+            ],
+            "expected_outcome": "Gypsy side completely disassembled for maintenance",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Annual Drum Disassembly",
+            "preconditions": [
+              "Ensure electrical power to motor is switched off",
+              "Tools required: handle"
+            ],
+            "steps": [
+              "Use handle (22) to release the bush (2)",
+              "Pull off the drum (3)"
+            ],
+            "expected_outcome": "Drum side completely disassembled for maintenance",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Post-Disassembly Maintenance",
+            "preconditions": [
+              "Gypsy and drum parts disassembled",
+              "Marine grease available"
+            ],
+            "steps": [
+              "Clean all removed parts to prevent corrosion",
+              "Apply marine grease to shaft thread (14, 15 or 16)",
+              "Apply marine grease to gypsy (18) where clutch cones rest (17 and 19)"
+            ],
+            "expected_outcome": "Components cleaned and properly lubricated",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Regular Salt Deposit Removal",
+            "preconditions": [
+              "Access to fresh water",
+              "Windlass accessible for cleaning"
+            ],
+            "steps": [
+              "Identify areas with salt deposits",
+              "Wash thoroughly with fresh water",
+              "Ensure all salt deposits are removed"
+            ],
+            "expected_outcome": "Windlass free from corrosive salt deposits",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "procedures": [
+          {
+            "title": "Safety Warnings",
+            "preconditions": [
+              "Windlass system installed"
+            ],
+            "steps": [
+              "Stay clear of chains, ropes and gypsy",
+              "Ensure electric motor is off during manual operation",
+              "Secure chain before navigation",
+              "Do not operate windlass electrically when handle is inserted",
+              "Install appropriate circuit breaker/fuse for motor protection"
+            ],
+            "expected_outcome": "Safe operation of windlass system",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Clutch Operation",
+            "preconditions": [
+              "Windlass system installed"
+            ],
+            "steps": [
+              "Insert handle (22) into bush (2) of gypsy cover (20)",
+              "Turn counter-clockwise to disengage clutch",
+              "Turn clockwise to engage clutch"
+            ],
+            "expected_outcome": "Successful clutch engagement/disengagement",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Weighing Anchor - Electric Operation",
+            "preconditions": [
+              "Engine running",
+              "Clutch engaged",
+              "Handle removed"
+            ],
+            "steps": [
+              "Press UP button on control",
+              "If windlass stops, wait few seconds before retrying",
+              "If circuit breaker trips, reset and wait few minutes",
+              "If blocked, move boat to release anchor",
+              "Monitor chain movement for last few meters"
+            ],
+            "expected_outcome": "Anchor successfully raised",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Casting Anchor - Manual Operation",
+            "preconditions": [
+              "Windlass system operational"
+            ],
+            "steps": [
+              "Disengage clutch",
+              "Allow gypsy to revolve",
+              "Let rope/chain fall into water",
+              "Turn handle clockwise to slow chain descent",
+              "Secure chain or rope once anchored"
+            ],
+            "expected_outcome": "Anchor successfully deployed manually",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Casting Anchor - Electric Operation",
+            "preconditions": [
+              "Windlass system operational"
+            ],
+            "steps": [
+              "Press DOWN button on control",
+              "Monitor chain/rope unwinding",
+              "Secure chain or rope once anchored"
+            ],
+            "expected_outcome": "Anchor successfully deployed electrically",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Drum Operation",
+            "preconditions": [
+              "Anchor and rope/chain secured to bitt"
+            ],
+            "steps": [
+              "Release clutch with handle (minimum 2 turns anticlockwise)",
+              "Remove handle from gypsy cover bush",
+              "Wrap rope around drum (minimum 3 turns)",
+              "Activate windlass control while maintaining rope tension",
+              "Adjust tension to modify winding speed",
+              "Tighten clutch clockwise after completion",
+              "Secure rope to bitt"
+            ],
+            "expected_outcome": "Successful drum operation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Manual Anchor Weighing",
+            "preconditions": [
+              "Not applicable for DB version"
+            ],
+            "steps": [
+              "Secure chain with clamp",
+              "Disconnect windlass power supply",
+              "Engage lock lever of gypsy",
+              "Unscrew bush minimum 2 turns with lever",
+              "Unlock chain",
+              "Fit lever into gypsy cover seat",
+              "Take up chain by moving lever anticlockwise",
+              "Remove lever",
+              "Screw up bush",
+              "Release gypsy using lock lever control",
+              "Reconnect windlass power supply"
+            ],
+            "expected_outcome": "Anchor manually raised",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "procedures": [
+          {
+            "title": "Gypsy Replacement Procedure",
+            "preconditions": [
+              "Power off",
+              "Ensure proper tools available"
+            ],
+            "steps": [
+              "Remove gypsy cover (part #20)",
+              "Remove top clutch cone (part #19)",
+              "Remove existing gypsy (part #18A or #18B)",
+              "Install new gypsy (8mm/5/16\" or 10mm as needed)",
+              "Reinstall top clutch cone",
+              "Secure gypsy cover"
+            ],
+            "expected_outcome": "Properly installed and secured gypsy",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pressure Lever Assembly",
+            "preconditions": [
+              "Ensure all parts available",
+              "Clean work surface"
+            ],
+            "steps": [
+              "Install pressure lever (part #23)",
+              "Attach spring for pressure lever (part #24)",
+              "Secure with pressure lever screw (part #25)"
+            ],
+            "expected_outcome": "Functional pressure lever assembly",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Motor Installation",
+            "preconditions": [
+              "Power disconnected",
+              "Proper voltage motor selected"
+            ],
+            "steps": [
+              "Select appropriate motor (parts #52A-52F based on voltage/power requirements)",
+              "Install key (part #53)",
+              "Connect red motor cable (part #55)",
+              "Connect black motor cable (part #56)",
+              "Connect control cable (part #57)",
+              "Secure motor using copper brackets (parts #58, #59)"
+            ],
+            "expected_outcome": "Properly installed and connected motor",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Clutch Assembly Installation",
+            "preconditions": [
+              "Clean components",
+              "Proper tools available"
+            ],
+            "steps": [
+              "Install bottom clutch cone (part #17)",
+              "Install gypsy",
+              "Install top clutch cone (part #19)",
+              "Verify proper operation"
+            ],
+            "expected_outcome": "Functional clutch assembly",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

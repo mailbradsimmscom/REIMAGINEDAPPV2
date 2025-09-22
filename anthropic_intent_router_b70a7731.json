@@ -1,0 +1,798 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 23,
+  "unique_intent_routes": 20,
+  "question_type_breakdown": {
+    "What": 16,
+    "Where": 1,
+    "How": 3
+  },
+  "intent_routes": [
+    {
+      "question": "What is the maximum power consumption in ECO mode?",
+      "question_variations": [
+        "How much power does it use in ECO mode?",
+        "What's the power usage when running on ECO?",
+        "How many watts does it consume in economy mode?"
+      ],
+      "answer": "The maximum input power consumption in ECO mode is 150-200 watts",
+      "question_type": "What",
+      "models": [
+        "New Generation Inverter BLDC"
+      ],
+      "references": [
+        "Technical Specifications Section"
+      ]
+    },
+    {
+      "question": "What is the peak current at startup?",
+      "question_variations": [
+        "How many amps does it draw at startup?",
+        "What's the initial current draw?",
+        "How much startup amperage does it need?"
+      ],
+      "answer": "The maximum peak current at startup is only 2 amps",
+      "question_type": "What",
+      "models": [
+        "New Generation Inverter BLDC"
+      ],
+      "references": [
+        "Technical Specifications Section"
+      ]
+    },
+    {
+      "question": "Where is this unit manufactured?",
+      "question_variations": [
+        "Which country makes this unit?",
+        "What is the country of origin?",
+        "Where is it made?"
+      ],
+      "answer": "The unit is designed and manufactured in Italy",
+      "question_type": "Where",
+      "models": [
+        "New Generation Inverter BLDC"
+      ],
+      "references": [
+        "Product Information Section"
+      ]
+    },
+    {
+      "question": "How does the energy efficiency compare to ON/OFF units?",
+      "question_variations": [
+        "Is it more efficient than ON/OFF models?",
+        "What's the efficiency improvement over ON/OFF?",
+        "How much more efficient is it than standard units?"
+      ],
+      "answer": "It is 50% more energy efficient compared to ON/OFF units",
+      "question_type": "How",
+      "models": [
+        "New Generation Inverter BLDC"
+      ],
+      "references": [
+        "Advantages Section"
+      ]
+    },
+    {
+      "question": "What accessories are available?",
+      "question_variations": [
+        "Which add-ons can I get?",
+        "What optional features are offered?",
+        "What extra components are available?"
+      ],
+      "answer": "Available accessories include a Wi-Fi module with control app and a UVA/C LED air sterilizer kit",
+      "question_type": "What",
+      "models": [
+        "New Generation Inverter BLDC"
+      ],
+      "references": [
+        "Accessories Section"
+      ]
+    },
+    {
+      "question": "How does the BLDC inverter technology work?",
+      "question_variations": [
+        "What is BLDC inverter technology?",
+        "How does the variable frequency drive work?",
+        "What makes the BLDC inverter different?"
+      ],
+      "answer": "The BLDC inverter uses VFD technology to accurately control compressor speed from 20-100 Hz, delivering needed capacity based on environmental conditions. Unlike traditional on/off compressors, it varies speed continuously for optimal performance.",
+      "question_type": "How",
+      "models": [
+        "BLDC Inverter Marine AC"
+      ],
+      "references": [
+        "Technical Specifications Section"
+      ]
+    },
+    {
+      "question": "What are the energy savings with this system?",
+      "question_variations": [
+        "How much energy does it save?",
+        "Is it energy efficient?",
+        "What's the power consumption reduction?"
+      ],
+      "answer": "The system provides 50% average reduction in electrical energy consumption compared to traditional air conditioners, achieved through low-speed starts (20 Hz) and smooth acceleration to max frequency (100 Hz).",
+      "question_type": "What",
+      "models": [
+        "BLDC Inverter Marine AC"
+      ],
+      "references": [
+        "Energy Saving Section"
+      ]
+    },
+    {
+      "question": "How does the starting system work?",
+      "question_variations": [
+        "What is the starting current?",
+        "How does the smooth start function work?",
+        "What's the peak current at start?"
+      ],
+      "answer": "The system starts at low frequency (20 Hz) with maximum starting current of 2A, compared to 20-30A for traditional units. This provides smooth starting with low torque and no peak current surge.",
+      "question_type": "How",
+      "models": [
+        "BLDC Inverter Marine AC"
+      ],
+      "references": [
+        "Smooth Starting Section"
+      ]
+    },
+    {
+      "question": "What temperature ranges can the unit handle?",
+      "question_variations": [
+        "What are the operating temperature limits?",
+        "How cold/hot can the seawater be?",
+        "What's the temperature range?"
+      ],
+      "answer": "The unit operates in seawater temperatures from 5\u00b0C/41\u00b0F (winter) up to 45\u00b0C/113\u00b0F (summer).",
+      "question_type": "What",
+      "models": [
+        "BLDC Inverter Marine AC"
+      ],
+      "references": [
+        "Reliable Section"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the SCU07VFD and SCU10VFD units?",
+      "question_variations": [
+        "How big is the SCU07VFD?",
+        "What's the size of the SCU10VFD?",
+        "What are the unit measurements?"
+      ],
+      "answer": "The units measure 433mm (17in) width x 282mm (11.1in) height x 260mm (10.2in) depth",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "question": "What is the maximum cooling capacity?",
+      "question_variations": [
+        "How many BTUs can it cool?",
+        "What's the cooling power?",
+        "Maximum BTU rating?"
+      ],
+      "answer": "SCU07VFD models: 7,000 BTU/h, SCU10VFD models: 10,000 BTU/h",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Performance specifications"
+      ]
+    },
+    {
+      "question": "How much does the unit weigh?",
+      "question_variations": [
+        "What is the weight including electrical box?",
+        "How heavy is the system?",
+        "Unit weight with components?"
+      ],
+      "answer": "22 kg (48.6 lb) including the electrical box",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Weight specifications"
+      ]
+    },
+    {
+      "question": "What are the voltage requirements?",
+      "question_variations": [
+        "What power supply is needed?",
+        "Electrical requirements?",
+        "What voltage does it run on?"
+      ],
+      "answer": "Models vary: 230V/1ph/50-60Hz for -E versions, 115V/1ph/50-60Hz for -A versions",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Electrical specifications"
+      ]
+    },
+    {
+      "question": "What is the maximum power consumption?",
+      "question_variations": [
+        "How many watts does it use?",
+        "What's the power draw?",
+        "Maximum power input?"
+      ],
+      "answer": "SCU07VFD-E: 430W, SCU07VFD-A: 470W, SCU10VFD-E: 680W, SCU10VFD-A: 730W",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Power specifications"
+      ]
+    },
+    {
+      "question": "What type of refrigerant does it use?",
+      "question_variations": [
+        "Refrigerant specifications?",
+        "How much refrigerant is needed?",
+        "What's the refrigerant charge?"
+      ],
+      "answer": "Uses R410A refrigerant, 0.350 kg (0.78 lb)",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Refrigerant specifications"
+      ]
+    },
+    {
+      "question": "What is the air duct diameter?",
+      "question_variations": [
+        "What size is the air exit duct?",
+        "Duct size requirements?",
+        "Air outlet dimensions?"
+      ],
+      "answer": "120 mm (5 in) diameter",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "Air duct specifications"
+      ]
+    },
+    {
+      "question": "What is the cooling capacity in ECO mode?",
+      "question_variations": [
+        "How many BTUs in ECO mode?",
+        "Minimum cooling capacity?",
+        "ECO mode performance?"
+      ],
+      "answer": "3,000 BTU/h with 150W input power",
+      "question_type": "What",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "references": [
+        "ECO mode specifications"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the SCU12VFD and SCU16VFD units?",
+      "question_variations": [
+        "How big is the SCU12VFD?",
+        "What's the size of the SCU16VFD?",
+        "What are the unit measurements?"
+      ],
+      "answer": "The units measure 500mm (19.7in) width x 336mm (13.2in) height x 290mm (11.4in) depth",
+      "question_type": "What",
+      "models": [
+        "SCU12VFD",
+        "SCU16VFD"
+      ],
+      "references": [
+        "Dimensions section"
+      ]
+    },
+    {
+      "question": "What is the unit weight?",
+      "question_variations": [
+        "How heavy is the unit?",
+        "What's the weight including electrical box?",
+        "How many kilos does it weigh?"
+      ],
+      "answer": "27 kg (59.5 lb) including electrical box",
+      "question_type": "What",
+      "models": [
+        "SCU12VFD",
+        "SCU16VFD"
+      ],
+      "references": [
+        "Specifications table"
+      ]
+    },
+    {
+      "question": "What voltage does it operate on?",
+      "question_variations": [
+        "What's the power requirement?",
+        "What electrical specs are needed?",
+        "What's the voltage rating?"
+      ],
+      "answer": "Models are available in 230V/1ph/50-60Hz or 115V/1ph/50-60Hz versions",
+      "question_type": "What",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A",
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "references": [
+        "Specifications table"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the maximum power consumption in ECO mode?",
+            "question_variations": [
+              "How much power does it use in ECO mode?",
+              "What's the power usage when running on ECO?",
+              "How many watts does it consume in economy mode?"
+            ],
+            "answer": "The maximum input power consumption in ECO mode is 150-200 watts",
+            "question_type": "What",
+            "models": [
+              "New Generation Inverter BLDC"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the peak current at startup?",
+            "question_variations": [
+              "How many amps does it draw at startup?",
+              "What's the initial current draw?",
+              "How much startup amperage does it need?"
+            ],
+            "answer": "The maximum peak current at startup is only 2 amps",
+            "question_type": "What",
+            "models": [
+              "New Generation Inverter BLDC"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "Where is this unit manufactured?",
+            "question_variations": [
+              "Which country makes this unit?",
+              "What is the country of origin?",
+              "Where is it made?"
+            ],
+            "answer": "The unit is designed and manufactured in Italy",
+            "question_type": "Where",
+            "models": [
+              "New Generation Inverter BLDC"
+            ],
+            "references": [
+              "Product Information Section"
+            ]
+          },
+          {
+            "question": "How does the energy efficiency compare to ON/OFF units?",
+            "question_variations": [
+              "Is it more efficient than ON/OFF models?",
+              "What's the efficiency improvement over ON/OFF?",
+              "How much more efficient is it than standard units?"
+            ],
+            "answer": "It is 50% more energy efficient compared to ON/OFF units",
+            "question_type": "How",
+            "models": [
+              "New Generation Inverter BLDC"
+            ],
+            "references": [
+              "Advantages Section"
+            ]
+          },
+          {
+            "question": "What accessories are available?",
+            "question_variations": [
+              "Which add-ons can I get?",
+              "What optional features are offered?",
+              "What extra components are available?"
+            ],
+            "answer": "Available accessories include a Wi-Fi module with control app and a UVA/C LED air sterilizer kit",
+            "question_type": "What",
+            "models": [
+              "New Generation Inverter BLDC"
+            ],
+            "references": [
+              "Accessories Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How does the BLDC inverter technology work?",
+            "question_variations": [
+              "What is BLDC inverter technology?",
+              "How does the variable frequency drive work?",
+              "What makes the BLDC inverter different?"
+            ],
+            "answer": "The BLDC inverter uses VFD technology to accurately control compressor speed from 20-100 Hz, delivering needed capacity based on environmental conditions. Unlike traditional on/off compressors, it varies speed continuously for optimal performance.",
+            "question_type": "How",
+            "models": [
+              "BLDC Inverter Marine AC"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What are the energy savings with this system?",
+            "question_variations": [
+              "How much energy does it save?",
+              "Is it energy efficient?",
+              "What's the power consumption reduction?"
+            ],
+            "answer": "The system provides 50% average reduction in electrical energy consumption compared to traditional air conditioners, achieved through low-speed starts (20 Hz) and smooth acceleration to max frequency (100 Hz).",
+            "question_type": "What",
+            "models": [
+              "BLDC Inverter Marine AC"
+            ],
+            "references": [
+              "Energy Saving Section"
+            ]
+          },
+          {
+            "question": "How does the starting system work?",
+            "question_variations": [
+              "What is the starting current?",
+              "How does the smooth start function work?",
+              "What's the peak current at start?"
+            ],
+            "answer": "The system starts at low frequency (20 Hz) with maximum starting current of 2A, compared to 20-30A for traditional units. This provides smooth starting with low torque and no peak current surge.",
+            "question_type": "How",
+            "models": [
+              "BLDC Inverter Marine AC"
+            ],
+            "references": [
+              "Smooth Starting Section"
+            ]
+          },
+          {
+            "question": "What temperature ranges can the unit handle?",
+            "question_variations": [
+              "What are the operating temperature limits?",
+              "How cold/hot can the seawater be?",
+              "What's the temperature range?"
+            ],
+            "answer": "The unit operates in seawater temperatures from 5\u00b0C/41\u00b0F (winter) up to 45\u00b0C/113\u00b0F (summer).",
+            "question_type": "What",
+            "models": [
+              "BLDC Inverter Marine AC"
+            ],
+            "references": [
+              "Reliable Section"
+            ]
+          },
+          {
+            "question": "What accessories are available?",
+            "question_variations": [
+              "What optional add-ons can I get?",
+              "What extra components are available?",
+              "What additional parts can be ordered?"
+            ],
+            "answer": "Available accessories include air exit adapters (square to round, round to oval), stainless steel fixing brackets for wall mounting the electric box, WI-FI module, and Air UVA/C sterilizer kit.",
+            "question_type": "What",
+            "models": [
+              "BLDC Inverter Marine AC"
+            ],
+            "references": [
+              "Accessories Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the SCU07VFD and SCU10VFD units?",
+            "question_variations": [
+              "How big is the SCU07VFD?",
+              "What's the size of the SCU10VFD?",
+              "What are the unit measurements?"
+            ],
+            "answer": "The units measure 433mm (17in) width x 282mm (11.1in) height x 260mm (10.2in) depth",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "question": "What is the maximum cooling capacity?",
+            "question_variations": [
+              "How many BTUs can it cool?",
+              "What's the cooling power?",
+              "Maximum BTU rating?"
+            ],
+            "answer": "SCU07VFD models: 7,000 BTU/h, SCU10VFD models: 10,000 BTU/h",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Performance specifications"
+            ]
+          },
+          {
+            "question": "How much does the unit weigh?",
+            "question_variations": [
+              "What is the weight including electrical box?",
+              "How heavy is the system?",
+              "Unit weight with components?"
+            ],
+            "answer": "22 kg (48.6 lb) including the electrical box",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Weight specifications"
+            ]
+          },
+          {
+            "question": "What are the voltage requirements?",
+            "question_variations": [
+              "What power supply is needed?",
+              "Electrical requirements?",
+              "What voltage does it run on?"
+            ],
+            "answer": "Models vary: 230V/1ph/50-60Hz for -E versions, 115V/1ph/50-60Hz for -A versions",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Electrical specifications"
+            ]
+          },
+          {
+            "question": "What is the maximum power consumption?",
+            "question_variations": [
+              "How many watts does it use?",
+              "What's the power draw?",
+              "Maximum power input?"
+            ],
+            "answer": "SCU07VFD-E: 430W, SCU07VFD-A: 470W, SCU10VFD-E: 680W, SCU10VFD-A: 730W",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Power specifications"
+            ]
+          },
+          {
+            "question": "What type of refrigerant does it use?",
+            "question_variations": [
+              "Refrigerant specifications?",
+              "How much refrigerant is needed?",
+              "What's the refrigerant charge?"
+            ],
+            "answer": "Uses R410A refrigerant, 0.350 kg (0.78 lb)",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Refrigerant specifications"
+            ]
+          },
+          {
+            "question": "What is the air duct diameter?",
+            "question_variations": [
+              "What size is the air exit duct?",
+              "Duct size requirements?",
+              "Air outlet dimensions?"
+            ],
+            "answer": "120 mm (5 in) diameter",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "Air duct specifications"
+            ]
+          },
+          {
+            "question": "What is the cooling capacity in ECO mode?",
+            "question_variations": [
+              "How many BTUs in ECO mode?",
+              "Minimum cooling capacity?",
+              "ECO mode performance?"
+            ],
+            "answer": "3,000 BTU/h with 150W input power",
+            "question_type": "What",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "references": [
+              "ECO mode specifications"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the SCU12VFD and SCU16VFD units?",
+            "question_variations": [
+              "How big is the SCU12VFD?",
+              "What's the size of the SCU16VFD?",
+              "What are the unit measurements?"
+            ],
+            "answer": "The units measure 500mm (19.7in) width x 336mm (13.2in) height x 290mm (11.4in) depth",
+            "question_type": "What",
+            "models": [
+              "SCU12VFD",
+              "SCU16VFD"
+            ],
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "question": "What is the maximum cooling capacity?",
+            "question_variations": [
+              "How many BTUs can it cool?",
+              "What's the cooling power?",
+              "Maximum BTU rating?"
+            ],
+            "answer": "SCU12VFD models: 12,000 BTU/h, SCU16VFD models: 16,000 BTU/h",
+            "question_type": "What",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "references": [
+              "Specifications table"
+            ]
+          },
+          {
+            "question": "What is the unit weight?",
+            "question_variations": [
+              "How heavy is the unit?",
+              "What's the weight including electrical box?",
+              "How many kilos does it weigh?"
+            ],
+            "answer": "27 kg (59.5 lb) including electrical box",
+            "question_type": "What",
+            "models": [
+              "SCU12VFD",
+              "SCU16VFD"
+            ],
+            "references": [
+              "Specifications table"
+            ]
+          },
+          {
+            "question": "What voltage does it operate on?",
+            "question_variations": [
+              "What's the power requirement?",
+              "What electrical specs are needed?",
+              "What's the voltage rating?"
+            ],
+            "answer": "Models are available in 230V/1ph/50-60Hz or 115V/1ph/50-60Hz versions",
+            "question_type": "What",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "references": [
+              "Specifications table"
+            ]
+          },
+          {
+            "question": "What type of refrigerant does it use?",
+            "question_variations": [
+              "Which refrigerant is required?",
+              "How much refrigerant does it need?",
+              "What's the refrigerant charge?"
+            ],
+            "answer": "Uses R410A refrigerant, 0.450 kg (0.99 lb)",
+            "question_type": "What",
+            "models": [
+              "SCU12VFD",
+              "SCU16VFD"
+            ],
+            "references": [
+              "Specifications table"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,976 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 40,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "Voltage input check for 12V models",
+      "expected_value": "10.5V - 15.5V DC",
+      "test_method": "Measure input voltage at terminals with voltmeter",
+      "failure_indication": "Outside voltage range may damage unit or cause malfunction",
+      "models": [
+        "HC3 712",
+        "HC3 1012",
+        "HC3 1512"
+      ],
+      "related_procedures": [
+        "Power system verification",
+        "Installation checks"
+      ]
+    },
+    {
+      "query": "Voltage input check for 24V models",
+      "expected_value": "21V - 31V DC",
+      "test_method": "Measure input voltage at terminals with voltmeter",
+      "failure_indication": "Outside voltage range may damage unit or cause malfunction",
+      "models": [
+        "HC3 724",
+        "HC3 1024",
+        "HC3 1524"
+      ],
+      "related_procedures": [
+        "Power system verification",
+        "Installation checks"
+      ]
+    },
+    {
+      "query": "Maximum continuous operation time",
+      "expected_value": "4 minutes",
+      "test_method": "Time operation duration with stopwatch",
+      "failure_indication": "Exceeding time limit risks motor overheating",
+      "models": [
+        "All HC3 Series"
+      ],
+      "related_procedures": [
+        "Operating guidelines",
+        "Safety procedures"
+      ]
+    },
+    {
+      "query": "Minimum chain gypsy engagement",
+      "expected_value": "3 chain links minimum",
+      "test_method": "Visual inspection of chain engagement",
+      "failure_indication": "Less engagement may cause slipping or chain jump",
+      "models": [
+        "All HC3 Series"
+      ],
+      "related_procedures": [
+        "Chain installation",
+        "Safety checks"
+      ]
+    },
+    {
+      "query": "Waterproof rating verification",
+      "expected_value": "IP66 protection level",
+      "test_method": "Verify seal integrity and housing condition",
+      "failure_indication": "Compromised sealing may lead to water ingress",
+      "models": [
+        "All HC3 Series"
+      ],
+      "related_procedures": [
+        "Maintenance inspection",
+        "Installation verification"
+      ]
+    },
+    {
+      "query": "What is the maximum working load for 1500W 24V model?",
+      "expected_value": "550 kg (1212.2 lb)",
+      "test_method": "Load cell measurement under controlled conditions",
+      "failure_indication": "Windlass unable to safely handle specified load",
+      "models": [
+        "HC3 15 24"
+      ],
+      "related_procedures": [
+        "Load testing",
+        "Safety inspection"
+      ]
+    },
+    {
+      "query": "What is the current draw at working load for 1000W 12V?",
+      "expected_value": "140 A",
+      "test_method": "Ammeter measurement during normal operation",
+      "failure_indication": "Excessive current draw indicates mechanical problem or motor fault",
+      "models": [
+        "HC3 10 12"
+      ],
+      "related_procedures": [
+        "Electrical testing",
+        "Motor diagnostics"
+      ]
+    },
+    {
+      "query": "What is the required circuit breaker rating for 700W 24V?",
+      "expected_value": "40 A",
+      "test_method": "Verify circuit breaker rating matches specification",
+      "failure_indication": "Incorrect breaker may cause nuisance trips or fail to protect",
+      "models": [
+        "HC3 7 24"
+      ],
+      "related_procedures": [
+        "Electrical installation",
+        "Protection verification"
+      ]
+    },
+    {
+      "query": "What is the acceptable deck thickness range?",
+      "expected_value": "20-60 mm",
+      "test_method": "Physical measurement of deck thickness",
+      "failure_indication": "Installation not possible if outside range",
+      "models": [
+        "All HC3 models"
+      ],
+      "related_procedures": [
+        "Installation verification",
+        "Mounting procedures"
+      ]
+    },
+    {
+      "query": "What is the minimum motor cable size for 1500W 12V?",
+      "expected_value": "50 mm\u00b2 (AWG0)",
+      "test_method": "Physical verification of installed cable gauge",
+      "failure_indication": "Undersized cable causes voltage drop and overheating",
+      "models": [
+        "HC3 15 12"
+      ],
+      "related_procedures": [
+        "Cable sizing",
+        "Electrical installation"
+      ]
+    },
+    {
+      "query": "What is maximum chain speed for 1000W 24V?",
+      "expected_value": "40.9 m/min",
+      "test_method": "Timed chain retrieval test under no load",
+      "failure_indication": "Speed below spec indicates mechanical or electrical issues",
+      "models": [
+        "HC3 10 24"
+      ],
+      "related_procedures": [
+        "Performance testing",
+        "Speed verification"
+      ]
+    },
+    {
+      "query": "Is windlass properly aligned with bow roller?",
+      "expected_value": "Gypsy must be in perfect alignment with bow roller",
+      "test_method": "Visual inspection and measurement of alignment",
+      "failure_indication": "Loss of motor power and improper chain operation",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "related_procedures": [
+        "Installation positioning",
+        "Power efficiency check"
+      ]
+    },
+    {
+      "query": "Are deck surfaces parallel where windlass mounts?",
+      "expected_value": "Upper and lower deck surfaces must be parallel",
+      "test_method": "Measure deck thickness at all mounting points",
+      "failure_indication": "Loss of motor power due to misalignment",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "related_procedures": [
+        "Deck preparation",
+        "Installation mounting"
+      ]
+    },
+    {
+      "query": "Is chain path clear below deck?",
+      "expected_value": "No obstacles in cable, rope and chain path",
+      "test_method": "Visual inspection of chain locker and path",
+      "failure_indication": "Chain jamming during operation",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "related_procedures": [
+        "Below deck clearance check",
+        "Chain path verification"
+      ]
+    },
+    {
+      "query": "Are mounting stud bolts properly secured?",
+      "expected_value": "Stud bolts installed with medium grade locking compound",
+      "test_method": "Visual inspection of thread compound application",
+      "failure_indication": "Loose mounting hardware, unstable operation",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "related_procedures": [
+        "Hardware installation",
+        "Mounting security check"
+      ]
+    },
+    {
+      "query": "Is base edge properly sealed?",
+      "expected_value": "Silicone sealant applied around entire base edge",
+      "test_method": "Visual inspection of sealant application",
+      "failure_indication": "Water intrusion below deck",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "related_procedures": [
+        "Waterproofing",
+        "Installation sealing"
+      ]
+    },
+    {
+      "query": "Is power isolated during navigation?",
+      "expected_value": "Circuit breaker switched off and chain secured",
+      "test_method": "Verify circuit breaker position and chain securing",
+      "failure_indication": "Risk of accidental activation during navigation",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "related_procedures": [
+        "Safety protocol",
+        "Navigation preparation"
+      ]
+    },
+    {
+      "query": "Is circuit breaker properly rated for voltage?",
+      "expected_value": "4A for 12V systems, 2A for 24V systems",
+      "test_method": "Check circuit breaker rating against system voltage",
+      "failure_indication": "Incorrect breaker rating could cause nuisance trips or inadequate protection",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500W"
+      ],
+      "related_procedures": [
+        "Circuit breaker installation",
+        "System voltage verification"
+      ]
+    },
+    {
+      "query": "Are chain counter sensor cables correctly color-coded?",
+      "expected_value": "White, Green, and Black wires present and properly connected",
+      "test_method": "Visual inspection of chain counter sensor cable connections",
+      "failure_indication": "Counter may not function or give incorrect readings",
+      "models": [
+        "All models with chain counter"
+      ],
+      "related_procedures": [
+        "Chain counter installation",
+        "Sensor calibration"
+      ]
+    },
+    {
+      "query": "Is total cable length within specification?",
+      "expected_value": "L = L1 + L2 + L3 must not exceed maximum specified length",
+      "test_method": "Measure and sum individual cable segments",
+      "failure_indication": "Voltage drop may affect performance if too long",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500W"
+      ],
+      "related_procedures": [
+        "Cable installation guidelines"
+      ]
+    },
+    {
+      "query": "Are watertight remote connections sealed?",
+      "expected_value": "All remote control connections must be watertight",
+      "test_method": "Visual inspection of seals and connection points",
+      "failure_indication": "Water ingress could cause electrical failures",
+      "models": [
+        "HRC 1002"
+      ],
+      "related_procedures": [
+        "Waterproof connection verification"
+      ]
+    },
+    {
+      "query": "Is foot switch wiring properly connected?",
+      "expected_value": "Model 900U and 900D correctly wired to control board",
+      "test_method": "Verify wire connections match diagram",
+      "failure_indication": "Foot switches may not function or operate incorrectly",
+      "models": [
+        "900U",
+        "900D"
+      ],
+      "related_procedures": [
+        "Foot switch installation"
+      ]
+    },
+    {
+      "query": "Is electrical power disconnected before maintenance?",
+      "expected_value": "Power completely off to motor",
+      "test_method": "Verify power disconnect and test for residual voltage",
+      "failure_indication": "Risk of injury and equipment damage",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "related_procedures": [
+        "Power isolation procedure",
+        "Safety lockout"
+      ]
+    },
+    {
+      "query": "Is chain/rope removed from gypsy/drum before maintenance?",
+      "expected_value": "No chain or rope present on mechanisms",
+      "test_method": "Visual inspection of gypsy and drum",
+      "failure_indication": "Risk of entanglement during maintenance",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "related_procedures": [
+        "Chain removal",
+        "Rope removal"
+      ]
+    },
+    {
+      "query": "Are salt deposits present on exterior surfaces?",
+      "expected_value": "No visible salt deposits",
+      "test_method": "Visual inspection of external surfaces",
+      "failure_indication": "Risk of corrosion and equipment damage",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "related_procedures": [
+        "Cleaning procedure",
+        "Corrosion prevention"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Voltage input check for 12V models",
+            "expected_value": "10.5V - 15.5V DC",
+            "test_method": "Measure input voltage at terminals with voltmeter",
+            "failure_indication": "Outside voltage range may damage unit or cause malfunction",
+            "models": [
+              "HC3 712",
+              "HC3 1012",
+              "HC3 1512"
+            ],
+            "related_procedures": [
+              "Power system verification",
+              "Installation checks"
+            ]
+          },
+          {
+            "query": "Voltage input check for 24V models",
+            "expected_value": "21V - 31V DC",
+            "test_method": "Measure input voltage at terminals with voltmeter",
+            "failure_indication": "Outside voltage range may damage unit or cause malfunction",
+            "models": [
+              "HC3 724",
+              "HC3 1024",
+              "HC3 1524"
+            ],
+            "related_procedures": [
+              "Power system verification",
+              "Installation checks"
+            ]
+          },
+          {
+            "query": "Maximum continuous operation time",
+            "expected_value": "4 minutes",
+            "test_method": "Time operation duration with stopwatch",
+            "failure_indication": "Exceeding time limit risks motor overheating",
+            "models": [
+              "All HC3 Series"
+            ],
+            "related_procedures": [
+              "Operating guidelines",
+              "Safety procedures"
+            ]
+          },
+          {
+            "query": "Minimum chain gypsy engagement",
+            "expected_value": "3 chain links minimum",
+            "test_method": "Visual inspection of chain engagement",
+            "failure_indication": "Less engagement may cause slipping or chain jump",
+            "models": [
+              "All HC3 Series"
+            ],
+            "related_procedures": [
+              "Chain installation",
+              "Safety checks"
+            ]
+          },
+          {
+            "query": "Waterproof rating verification",
+            "expected_value": "IP66 protection level",
+            "test_method": "Verify seal integrity and housing condition",
+            "failure_indication": "Compromised sealing may lead to water ingress",
+            "models": [
+              "All HC3 Series"
+            ],
+            "related_procedures": [
+              "Maintenance inspection",
+              "Installation verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the maximum working load for 1500W 24V model?",
+            "expected_value": "550 kg (1212.2 lb)",
+            "test_method": "Load cell measurement under controlled conditions",
+            "failure_indication": "Windlass unable to safely handle specified load",
+            "models": [
+              "HC3 15 24"
+            ],
+            "related_procedures": [
+              "Load testing",
+              "Safety inspection"
+            ]
+          },
+          {
+            "query": "What is the current draw at working load for 1000W 12V?",
+            "expected_value": "140 A",
+            "test_method": "Ammeter measurement during normal operation",
+            "failure_indication": "Excessive current draw indicates mechanical problem or motor fault",
+            "models": [
+              "HC3 10 12"
+            ],
+            "related_procedures": [
+              "Electrical testing",
+              "Motor diagnostics"
+            ]
+          },
+          {
+            "query": "What is the required circuit breaker rating for 700W 24V?",
+            "expected_value": "40 A",
+            "test_method": "Verify circuit breaker rating matches specification",
+            "failure_indication": "Incorrect breaker may cause nuisance trips or fail to protect",
+            "models": [
+              "HC3 7 24"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Protection verification"
+            ]
+          },
+          {
+            "query": "What is the acceptable deck thickness range?",
+            "expected_value": "20-60 mm",
+            "test_method": "Physical measurement of deck thickness",
+            "failure_indication": "Installation not possible if outside range",
+            "models": [
+              "All HC3 models"
+            ],
+            "related_procedures": [
+              "Installation verification",
+              "Mounting procedures"
+            ]
+          },
+          {
+            "query": "What is the minimum motor cable size for 1500W 12V?",
+            "expected_value": "50 mm\u00b2 (AWG0)",
+            "test_method": "Physical verification of installed cable gauge",
+            "failure_indication": "Undersized cable causes voltage drop and overheating",
+            "models": [
+              "HC3 15 12"
+            ],
+            "related_procedures": [
+              "Cable sizing",
+              "Electrical installation"
+            ]
+          },
+          {
+            "query": "What is maximum chain speed for 1000W 24V?",
+            "expected_value": "40.9 m/min",
+            "test_method": "Timed chain retrieval test under no load",
+            "failure_indication": "Speed below spec indicates mechanical or electrical issues",
+            "models": [
+              "HC3 10 24"
+            ],
+            "related_procedures": [
+              "Performance testing",
+              "Speed verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is windlass properly aligned with bow roller?",
+            "expected_value": "Gypsy must be in perfect alignment with bow roller",
+            "test_method": "Visual inspection and measurement of alignment",
+            "failure_indication": "Loss of motor power and improper chain operation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Installation positioning",
+              "Power efficiency check"
+            ]
+          },
+          {
+            "query": "Are deck surfaces parallel where windlass mounts?",
+            "expected_value": "Upper and lower deck surfaces must be parallel",
+            "test_method": "Measure deck thickness at all mounting points",
+            "failure_indication": "Loss of motor power due to misalignment",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Deck preparation",
+              "Installation mounting"
+            ]
+          },
+          {
+            "query": "Is chain path clear below deck?",
+            "expected_value": "No obstacles in cable, rope and chain path",
+            "test_method": "Visual inspection of chain locker and path",
+            "failure_indication": "Chain jamming during operation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Below deck clearance check",
+              "Chain path verification"
+            ]
+          },
+          {
+            "query": "Are mounting stud bolts properly secured?",
+            "expected_value": "Stud bolts installed with medium grade locking compound",
+            "test_method": "Visual inspection of thread compound application",
+            "failure_indication": "Loose mounting hardware, unstable operation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Hardware installation",
+              "Mounting security check"
+            ]
+          },
+          {
+            "query": "Is base edge properly sealed?",
+            "expected_value": "Silicone sealant applied around entire base edge",
+            "test_method": "Visual inspection of sealant application",
+            "failure_indication": "Water intrusion below deck",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Waterproofing",
+              "Installation sealing"
+            ]
+          },
+          {
+            "query": "Is power isolated during navigation?",
+            "expected_value": "Circuit breaker switched off and chain secured",
+            "test_method": "Verify circuit breaker position and chain securing",
+            "failure_indication": "Risk of accidental activation during navigation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Safety protocol",
+              "Navigation preparation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is circuit breaker properly rated for voltage?",
+            "expected_value": "4A for 12V systems, 2A for 24V systems",
+            "test_method": "Check circuit breaker rating against system voltage",
+            "failure_indication": "Incorrect breaker rating could cause nuisance trips or inadequate protection",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Circuit breaker installation",
+              "System voltage verification"
+            ]
+          },
+          {
+            "query": "Are chain counter sensor cables correctly color-coded?",
+            "expected_value": "White, Green, and Black wires present and properly connected",
+            "test_method": "Visual inspection of chain counter sensor cable connections",
+            "failure_indication": "Counter may not function or give incorrect readings",
+            "models": [
+              "All models with chain counter"
+            ],
+            "related_procedures": [
+              "Chain counter installation",
+              "Sensor calibration"
+            ]
+          },
+          {
+            "query": "Is total cable length within specification?",
+            "expected_value": "L = L1 + L2 + L3 must not exceed maximum specified length",
+            "test_method": "Measure and sum individual cable segments",
+            "failure_indication": "Voltage drop may affect performance if too long",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Cable installation guidelines"
+            ]
+          },
+          {
+            "query": "Are watertight remote connections sealed?",
+            "expected_value": "All remote control connections must be watertight",
+            "test_method": "Visual inspection of seals and connection points",
+            "failure_indication": "Water ingress could cause electrical failures",
+            "models": [
+              "HRC 1002"
+            ],
+            "related_procedures": [
+              "Waterproof connection verification"
+            ]
+          },
+          {
+            "query": "Is foot switch wiring properly connected?",
+            "expected_value": "Model 900U and 900D correctly wired to control board",
+            "test_method": "Verify wire connections match diagram",
+            "failure_indication": "Foot switches may not function or operate incorrectly",
+            "models": [
+              "900U",
+              "900D"
+            ],
+            "related_procedures": [
+              "Foot switch installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is electrical power disconnected before maintenance?",
+            "expected_value": "Power completely off to motor",
+            "test_method": "Verify power disconnect and test for residual voltage",
+            "failure_indication": "Risk of injury and equipment damage",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Power isolation procedure",
+              "Safety lockout"
+            ]
+          },
+          {
+            "query": "Is chain/rope removed from gypsy/drum before maintenance?",
+            "expected_value": "No chain or rope present on mechanisms",
+            "test_method": "Visual inspection of gypsy and drum",
+            "failure_indication": "Risk of entanglement during maintenance",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Chain removal",
+              "Rope removal"
+            ]
+          },
+          {
+            "query": "Are salt deposits present on exterior surfaces?",
+            "expected_value": "No visible salt deposits",
+            "test_method": "Visual inspection of external surfaces",
+            "failure_indication": "Risk of corrosion and equipment damage",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Cleaning procedure",
+              "Corrosion prevention"
+            ]
+          },
+          {
+            "query": "Has annual gypsy/drum disassembly been performed?",
+            "expected_value": "Complete disassembly and inspection performed within last 12 months",
+            "test_method": "Maintenance records review and component inspection",
+            "failure_indication": "Overdue maintenance may lead to wear issues",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Annual maintenance",
+              "Component inspection"
+            ]
+          },
+          {
+            "query": "Is marine grease applied to shaft thread and gypsy clutch cone contact points?",
+            "expected_value": "Fresh marine grease present on all specified surfaces",
+            "test_method": "Visual inspection of grease application",
+            "failure_indication": "Increased wear and friction on components",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "related_procedures": [
+              "Lubrication procedure",
+              "Assembly procedure"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is area around chains, ropes and gypsy clear of personnel?",
+            "expected_value": "No personnel in proximity to moving parts",
+            "test_method": "Visual inspection before operation",
+            "failure_indication": "Safety hazard - risk of entanglement",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Windlass Operation"
+            ]
+          },
+          {
+            "query": "Is electric motor off during manual operation?",
+            "expected_value": "Motor power disconnected",
+            "test_method": "Verify power disconnect before manual operation",
+            "failure_indication": "Risk of accidental activation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Manual Operation"
+            ]
+          },
+          {
+            "query": "Is chain secured before navigation?",
+            "expected_value": "Chain properly fastened",
+            "test_method": "Visual inspection of chain securing device",
+            "failure_indication": "Risk of anchor deployment during navigation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Pre-Navigation Check"
+            ]
+          },
+          {
+            "query": "Is handle removed during electrical operation?",
+            "expected_value": "No handle inserted in drum or gypsy cover",
+            "test_method": "Visual check before electrical operation",
+            "failure_indication": "Safety hazard - handle interference",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Electrical Operation"
+            ]
+          },
+          {
+            "query": "Is appropriate circuit protection installed?",
+            "expected_value": "Proper fuse/circuit breaker installed matching motor power",
+            "test_method": "Verify protection device rating",
+            "failure_indication": "Risk of motor damage from overheating/short circuit",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Installation"
+            ]
+          },
+          {
+            "query": "Is clutch properly engaged for anchor weighing?",
+            "expected_value": "Clutch fully engaged, handle removed",
+            "test_method": "Turn clockwise to engage, verify handle removal",
+            "failure_indication": "Improper anchor weighing operation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Anchor Weighing"
+            ]
+          },
+          {
+            "query": "For drum operation, is anchor secured to strong point?",
+            "expected_value": "Anchor and chain/rope fixed to bitt or strong point",
+            "test_method": "Visual inspection of anchor securing",
+            "failure_indication": "Risk of anchor loss during warping",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Drum Operation"
+            ]
+          },
+          {
+            "query": "For manual weighing, is power disconnected?",
+            "expected_value": "Windlass power supply disconnected",
+            "test_method": "Verify power disconnection",
+            "failure_indication": "Risk of accidental activation during manual operation",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "related_procedures": [
+              "Manual Anchor Weighing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is bearing 6008 properly installed?",
+            "expected_value": "Bearing rotates smoothly with no play",
+            "test_method": "Manual rotation test of shaft",
+            "failure_indication": "Rough rotation or excessive play indicates bearing wear or improper installation",
+            "models": [
+              "HC 700W",
+              "HC 1000W",
+              "HC 1500W"
+            ],
+            "related_procedures": [
+              "Bearing replacement",
+              "Shaft assembly"
+            ]
+          },
+          {
+            "query": "Is motor voltage correct for installation?",
+            "expected_value": "Motor voltage matches system voltage (12V or 24V)",
+            "test_method": "Verify voltage rating on motor label",
+            "failure_indication": "Incorrect voltage can damage motor or cause poor performance",
+            "models": [
+              "700W 12V/24V",
+              "1000W 12V/24V",
+              "1500W 12V/24V"
+            ],
+            "related_procedures": [
+              "Motor installation",
+              "Electrical connection"
+            ]
+          },
+          {
+            "query": "Is gypsy lock lever functioning?",
+            "expected_value": "Lever moves freely and locks securely",
+            "test_method": "Operate lock lever through full range of motion",
+            "failure_indication": "Loose or binding movement indicates spring or mechanism failure",
+            "models": [
+              "All HC series"
+            ],
+            "related_procedures": [
+              "Lock mechanism maintenance",
+              "Safety checks"
+            ]
+          },
+          {
+            "query": "Are clutch cones properly seated?",
+            "expected_value": "Top and bottom cones align and engage fully",
+            "test_method": "Visual inspection and manual operation test",
+            "failure_indication": "Poor engagement or slipping indicates wear or misalignment",
+            "models": [
+              "All HC series"
+            ],
+            "related_procedures": [
+              "Clutch assembly",
+              "Cone replacement"
+            ]
+          },
+          {
+            "query": "Is cover gasket seal intact?",
+            "expected_value": "Gasket shows no damage and seals completely",
+            "test_method": "Visual inspection of gasket condition",
+            "failure_indication": "Damaged gasket can allow water intrusion",
+            "models": [
+              "All HC series"
+            ],
+            "related_procedures": [
+              "Gasket replacement",
+              "Waterproof testing"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

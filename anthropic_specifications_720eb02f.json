@@ -1,0 +1,2138 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 40,
+  "unique_specifications": 30,
+  "category_breakdown": {
+    "Power": 7,
+    "Electrical": 7,
+    "Installation": 8,
+    "Performance": 3,
+    "Physical": 1,
+    "Operation": 2,
+    "Maintenance": 1,
+    "Environmental": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Power Rating",
+      "normalized_parameter": "power_rating",
+      "parameter_aliases": [
+        "wattage",
+        "rated power",
+        "power output"
+      ],
+      "value": "700/1000/1500",
+      "range": "700-1500",
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "700-1500",
+      "models": [
+        "HC3 Series"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power",
+        "wattage",
+        "watts",
+        "power consumption",
+        "power rating",
+        "electrical power"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "REV 008"
+      ]
+    },
+    {
+      "parameter": "Voltage 12V Models",
+      "normalized_parameter": "operating_voltage_12v",
+      "parameter_aliases": [
+        "voltage rating",
+        "DC voltage",
+        "power supply"
+      ],
+      "value": "12",
+      "range": null,
+      "units": "V DC",
+      "normalized_units": "volts_dc",
+      "converted_value": "12",
+      "models": [
+        "HC3 712",
+        "HC3 712 D",
+        "HC3 712 DB",
+        "HC3 1012",
+        "HC3 1012 D",
+        "HC3 1012 DB",
+        "HC3 1512",
+        "HC3 1512 D",
+        "HC3 1512 DB"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "12V",
+        "power supply",
+        "DC voltage",
+        "electrical requirements"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "REV 008"
+      ]
+    },
+    {
+      "parameter": "Voltage 24V Models",
+      "normalized_parameter": "operating_voltage_24v",
+      "parameter_aliases": [
+        "voltage rating",
+        "DC voltage",
+        "power supply"
+      ],
+      "value": "24",
+      "range": null,
+      "units": "V DC",
+      "normalized_units": "volts_dc",
+      "converted_value": "24",
+      "models": [
+        "HC3 724",
+        "HC3 724 D",
+        "HC3 724 DB",
+        "HC3 1024",
+        "HC3 1024 D",
+        "HC3 1024 DB",
+        "HC3 1524",
+        "HC3 1524 D",
+        "HC3 1524 DB"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "24V",
+        "power supply",
+        "DC voltage",
+        "electrical requirements"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "REV 008"
+      ]
+    },
+    {
+      "parameter": "Equipment Type",
+      "normalized_parameter": "equipment_type",
+      "parameter_aliases": [
+        "device type",
+        "product category",
+        "machinery type"
+      ],
+      "value": "Horizontal Windlass",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "HC3 Series"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "windlass",
+        "anchor windlass",
+        "horizontal windlass",
+        "anchor winch",
+        "equipment type"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "REV 008"
+      ]
+    },
+    {
+      "parameter": "Maximum Deck Thickness",
+      "normalized_parameter": "deck_thickness_max",
+      "parameter_aliases": [
+        "deck thickness",
+        "mounting thickness",
+        "installation thickness"
+      ],
+      "value": "5",
+      "range": "0-5",
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "5",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "deck thickness",
+        "mounting thickness",
+        "installation requirements",
+        "deck mount",
+        "mounting specifications"
+      ],
+      "concept_group": "mounting_requirements",
+      "references": [
+        "Installation Requirements Section"
+      ]
+    },
+    {
+      "parameter": "Chain Hole Clearance",
+      "normalized_parameter": "chain_hole_clearance",
+      "parameter_aliases": [
+        "chain passage",
+        "rope clearance"
+      ],
+      "value": "40",
+      "range": null,
+      "units": "cm",
+      "normalized_units": "centimeters",
+      "converted_value": "40",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "chain clearance",
+        "rope passage",
+        "installation clearance",
+        "below deck clearance"
+      ],
+      "concept_group": "mounting_requirements",
+      "references": [
+        "Installation Requirements Section"
+      ]
+    },
+    {
+      "parameter": "Drill Hole Size 1",
+      "normalized_parameter": "drill_hole_diameter_1",
+      "parameter_aliases": [
+        "mounting hole",
+        "installation hole"
+      ],
+      "value": "11",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "11",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "drill size",
+        "hole diameter",
+        "mounting holes",
+        "installation holes"
+      ],
+      "concept_group": "installation_holes",
+      "references": [
+        "Tools Required Section"
+      ]
+    },
+    {
+      "parameter": "Drill Hole Size 2",
+      "normalized_parameter": "drill_hole_diameter_2",
+      "parameter_aliases": [
+        "mounting hole",
+        "installation hole"
+      ],
+      "value": "24",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "24",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "drill size",
+        "hole diameter",
+        "mounting holes",
+        "installation holes"
+      ],
+      "concept_group": "installation_holes",
+      "references": [
+        "Tools Required Section"
+      ]
+    },
+    {
+      "parameter": "Hollow Mill Size",
+      "normalized_parameter": "hollow_mill_diameter",
+      "parameter_aliases": [
+        "mill size",
+        "cutting tool size"
+      ],
+      "value": "43",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "43",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "mill size",
+        "hollow mill",
+        "cutting tool",
+        "installation tools"
+      ],
+      "concept_group": "installation_tools",
+      "references": [
+        "Tools Required Section"
+      ]
+    },
+    {
+      "parameter": "Power Rating Model 1",
+      "normalized_parameter": "power_rating_1",
+      "parameter_aliases": [
+        "motor power",
+        "electrical power"
+      ],
+      "value": "700",
+      "range": null,
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "700",
+      "models": [
+        "HECTOR 700"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power rating",
+        "wattage",
+        "motor power",
+        "electrical specifications"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Model Number"
+      ]
+    },
+    {
+      "parameter": "Power Rating Model 2",
+      "normalized_parameter": "power_rating_2",
+      "parameter_aliases": [
+        "motor power",
+        "electrical power"
+      ],
+      "value": "1000",
+      "range": null,
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "1000",
+      "models": [
+        "HECTOR 1000"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power rating",
+        "wattage",
+        "motor power",
+        "electrical specifications"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Model Number"
+      ]
+    },
+    {
+      "parameter": "Power Rating Model 3",
+      "normalized_parameter": "power_rating_3",
+      "parameter_aliases": [
+        "motor power",
+        "electrical power"
+      ],
+      "value": "1500",
+      "range": null,
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "1500",
+      "models": [
+        "HECTOR 1500"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power rating",
+        "wattage",
+        "motor power",
+        "electrical specifications"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Model Number"
+      ]
+    },
+    {
+      "parameter": "Motor Output",
+      "normalized_parameter": "motor_power",
+      "parameter_aliases": [
+        "power output",
+        "rated power",
+        "motor power"
+      ],
+      "value": "700W/1000W/1500W",
+      "range": "700-1500",
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "700/1000/1500",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "motor power",
+        "wattage",
+        "power rating",
+        "output power"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Motor Supply Voltage",
+      "normalized_parameter": "supply_voltage",
+      "parameter_aliases": [
+        "voltage",
+        "power supply",
+        "operating voltage"
+      ],
+      "value": "12V/24V",
+      "range": "12-24",
+      "units": "V",
+      "normalized_units": "volts",
+      "converted_value": "12/24",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power supply",
+        "electrical requirements"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Maximum Pull",
+      "normalized_parameter": "max_pull_force",
+      "parameter_aliases": [
+        "max pull",
+        "pulling force",
+        "maximum force"
+      ],
+      "value": "1100/1300/1500",
+      "range": "1100-1500",
+      "units": "Kg",
+      "normalized_units": "kilograms",
+      "converted_value": "1100/1300/1500",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "maximum pull",
+        "pulling capacity",
+        "force"
+      ],
+      "concept_group": "performance_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Maximum Working Load",
+      "normalized_parameter": "max_working_load",
+      "parameter_aliases": [
+        "working load limit",
+        "WLL",
+        "max load"
+      ],
+      "value": "300-550",
+      "range": "300-550",
+      "units": "Kg",
+      "normalized_units": "kilograms",
+      "converted_value": "300-550",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "working load",
+        "load capacity",
+        "safe working load"
+      ],
+      "concept_group": "performance_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Current Absorption",
+      "normalized_parameter": "current_draw",
+      "parameter_aliases": [
+        "current consumption",
+        "amperage",
+        "power draw"
+      ],
+      "value": "50-150",
+      "range": "50-150",
+      "units": "A",
+      "normalized_units": "amperes",
+      "converted_value": "50-150",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "current",
+        "amperage",
+        "power consumption"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Maximum Chain Speed",
+      "normalized_parameter": "max_chain_speed",
+      "parameter_aliases": [
+        "chain speed",
+        "retrieval speed",
+        "lifting speed"
+      ],
+      "value": "27.4-40.9",
+      "range": "27.4-40.9",
+      "units": "m/min",
+      "normalized_units": "meters_per_minute",
+      "converted_value": "27.4-40.9",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "chain speed",
+        "retrieval rate",
+        "lifting speed"
+      ],
+      "concept_group": "performance_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Deck Thickness",
+      "normalized_parameter": "deck_thickness",
+      "parameter_aliases": [
+        "mounting thickness",
+        "installation thickness"
+      ],
+      "value": "20-60",
+      "range": "20-60",
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "20-60",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "deck thickness",
+        "mounting requirements",
+        "installation specs"
+      ],
+      "concept_group": "installation_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Weight HC3",
+      "normalized_parameter": "base_weight",
+      "parameter_aliases": [
+        "mass",
+        "unit weight",
+        "product weight"
+      ],
+      "value": "22.6-28.1",
+      "range": "22.6-28.1",
+      "units": "kg",
+      "normalized_units": "kilograms",
+      "converted_value": "22.6-28.1",
+      "models": [
+        "HC3",
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "weight",
+        "mass",
+        "product weight"
+      ],
+      "concept_group": "physical_specifications",
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "operating_voltage",
+      "parameter_aliases": [
+        "voltage",
+        "power supply",
+        "battery voltage"
+      ],
+      "value": "12/24",
+      "range": "12V or 24V",
+      "units": "V",
+      "normalized_units": "volts",
+      "converted_value": "12/24",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage requirement",
+        "power supply",
+        "battery voltage",
+        "operating voltage",
+        "electrical requirements"
+      ],
+      "concept_group": "power_requirements",
+      "references": [
+        "page 10"
+      ]
+    },
+    {
+      "parameter": "Fuse Rating 12V",
+      "normalized_parameter": "fuse_rating_12v",
+      "parameter_aliases": [
+        "fuse size",
+        "fuse requirement"
+      ],
+      "value": "4",
+      "range": null,
+      "units": "A",
+      "normalized_units": "amperes",
+      "converted_value": "4",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "fuse size",
+        "fuse rating",
+        "electrical protection",
+        "12V fuse"
+      ],
+      "concept_group": "circuit_protection",
+      "references": [
+        "connection diagram"
+      ]
+    },
+    {
+      "parameter": "Fuse Rating 24V",
+      "normalized_parameter": "fuse_rating_24v",
+      "parameter_aliases": [
+        "fuse size",
+        "fuse requirement"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "A",
+      "normalized_units": "amperes",
+      "converted_value": "2",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "fuse size",
+        "fuse rating",
+        "electrical protection",
+        "24V fuse"
+      ],
+      "concept_group": "circuit_protection",
+      "references": [
+        "connection diagram"
+      ]
+    },
+    {
+      "parameter": "Power Rating Range",
+      "normalized_parameter": "power_rating",
+      "parameter_aliases": [
+        "wattage",
+        "motor power",
+        "electrical power"
+      ],
+      "value": "700-1500",
+      "range": "700W - 1500W",
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "700-1500",
+      "models": [
+        "Hector 700",
+        "Hector 1000",
+        "Hector 1500"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power rating",
+        "wattage",
+        "motor power",
+        "electrical power",
+        "watts"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "title"
+      ]
+    },
+    {
+      "parameter": "Clutch Rotation Direction - Disengage",
+      "normalized_parameter": "clutch_disengage_direction",
+      "parameter_aliases": [
+        "clutch release",
+        "disengage direction"
+      ],
+      "value": "counter-clockwise",
+      "range": null,
+      "units": "direction",
+      "normalized_units": "rotation",
+      "converted_value": "counter-clockwise",
+      "models": [
+        "all"
+      ],
+      "category": "Operation",
+      "search_terms": [
+        "clutch direction",
+        "disengage clutch",
+        "release clutch",
+        "clutch operation"
+      ],
+      "concept_group": "mechanical_operation",
+      "references": [
+        "Clutch Use section"
+      ]
+    },
+    {
+      "parameter": "Minimum Drum Rope Wraps",
+      "normalized_parameter": "min_drum_wraps",
+      "parameter_aliases": [
+        "rope turns",
+        "minimum wraps"
+      ],
+      "value": "3",
+      "range": "\u22653",
+      "units": "turns",
+      "normalized_units": "turns",
+      "converted_value": "3",
+      "models": [
+        "all"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "drum wraps",
+        "rope turns",
+        "minimum wraps",
+        "rope wrapping"
+      ],
+      "concept_group": "operation_requirements",
+      "references": [
+        "Drum Use section"
+      ]
+    },
+    {
+      "parameter": "Clutch Bush Disengagement",
+      "normalized_parameter": "clutch_bush_turns",
+      "parameter_aliases": [
+        "bush turns",
+        "disengagement turns"
+      ],
+      "value": "2",
+      "range": "\u22652",
+      "units": "turns",
+      "normalized_units": "turns",
+      "converted_value": "2",
+      "models": [
+        "all"
+      ],
+      "category": "Operation",
+      "search_terms": [
+        "bush turns",
+        "clutch disengagement",
+        "manual operation"
+      ],
+      "concept_group": "mechanical_operation",
+      "references": [
+        "Manual Anchor Weighing section"
+      ]
+    },
+    {
+      "parameter": "Power Type",
+      "normalized_parameter": "power_type",
+      "parameter_aliases": [
+        "electrical power",
+        "motor power",
+        "power supply"
+      ],
+      "value": "Electric",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500W"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "power type",
+        "electrical specifications",
+        "motor type",
+        "power requirements"
+      ],
+      "concept_group": "electrical_system",
+      "references": [
+        "p.14"
+      ]
+    },
+    {
+      "parameter": "Maintenance Interval",
+      "normalized_parameter": "maintenance_interval",
+      "parameter_aliases": [
+        "service interval",
+        "inspection period"
+      ],
+      "value": "1",
+      "range": null,
+      "units": "year",
+      "normalized_units": "years",
+      "converted_value": null,
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500W"
+      ],
+      "category": "Maintenance",
+      "search_terms": [
+        "maintenance schedule",
+        "service interval",
+        "yearly maintenance",
+        "maintenance period"
+      ],
+      "concept_group": "maintenance_requirements",
+      "references": [
+        "p.14"
+      ]
+    },
+    {
+      "parameter": "Environmental Protection",
+      "normalized_parameter": "corrosion_resistance",
+      "parameter_aliases": [
+        "marine resistance",
+        "salt protection"
+      ],
+      "value": "Marine environment resistant",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500W"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "corrosion resistance",
+        "marine grade",
+        "salt resistance",
+        "environmental protection"
+      ],
+      "concept_group": "environmental_specifications",
+      "references": [
+        "p.14"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Rating",
+            "normalized_parameter": "power_rating",
+            "parameter_aliases": [
+              "wattage",
+              "rated power",
+              "power output"
+            ],
+            "value": "700/1000/1500",
+            "range": "700-1500",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700-1500",
+            "models": [
+              "HC3 Series"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power",
+              "wattage",
+              "watts",
+              "power consumption",
+              "power rating",
+              "electrical power"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "REV 008"
+            ]
+          },
+          {
+            "parameter": "Voltage 12V Models",
+            "normalized_parameter": "operating_voltage_12v",
+            "parameter_aliases": [
+              "voltage rating",
+              "DC voltage",
+              "power supply"
+            ],
+            "value": "12",
+            "range": null,
+            "units": "V DC",
+            "normalized_units": "volts_dc",
+            "converted_value": "12",
+            "models": [
+              "HC3 712",
+              "HC3 712 D",
+              "HC3 712 DB",
+              "HC3 1012",
+              "HC3 1012 D",
+              "HC3 1012 DB",
+              "HC3 1512",
+              "HC3 1512 D",
+              "HC3 1512 DB"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "12V",
+              "power supply",
+              "DC voltage",
+              "electrical requirements"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "REV 008"
+            ]
+          },
+          {
+            "parameter": "Voltage 24V Models",
+            "normalized_parameter": "operating_voltage_24v",
+            "parameter_aliases": [
+              "voltage rating",
+              "DC voltage",
+              "power supply"
+            ],
+            "value": "24",
+            "range": null,
+            "units": "V DC",
+            "normalized_units": "volts_dc",
+            "converted_value": "24",
+            "models": [
+              "HC3 724",
+              "HC3 724 D",
+              "HC3 724 DB",
+              "HC3 1024",
+              "HC3 1024 D",
+              "HC3 1024 DB",
+              "HC3 1524",
+              "HC3 1524 D",
+              "HC3 1524 DB"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "24V",
+              "power supply",
+              "DC voltage",
+              "electrical requirements"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "REV 008"
+            ]
+          },
+          {
+            "parameter": "Equipment Type",
+            "normalized_parameter": "equipment_type",
+            "parameter_aliases": [
+              "device type",
+              "product category",
+              "machinery type"
+            ],
+            "value": "Horizontal Windlass",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "HC3 Series"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "windlass",
+              "anchor windlass",
+              "horizontal windlass",
+              "anchor winch",
+              "equipment type"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "REV 008"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Deck Thickness",
+            "normalized_parameter": "deck_thickness_max",
+            "parameter_aliases": [
+              "deck thickness",
+              "mounting thickness",
+              "installation thickness"
+            ],
+            "value": "5",
+            "range": "0-5",
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "5",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "deck thickness",
+              "mounting thickness",
+              "installation requirements",
+              "deck mount",
+              "mounting specifications"
+            ],
+            "concept_group": "mounting_requirements",
+            "references": [
+              "Installation Requirements Section"
+            ]
+          },
+          {
+            "parameter": "Chain Hole Clearance",
+            "normalized_parameter": "chain_hole_clearance",
+            "parameter_aliases": [
+              "chain passage",
+              "rope clearance"
+            ],
+            "value": "40",
+            "range": null,
+            "units": "cm",
+            "normalized_units": "centimeters",
+            "converted_value": "40",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "chain clearance",
+              "rope passage",
+              "installation clearance",
+              "below deck clearance"
+            ],
+            "concept_group": "mounting_requirements",
+            "references": [
+              "Installation Requirements Section"
+            ]
+          },
+          {
+            "parameter": "Drill Hole Size 1",
+            "normalized_parameter": "drill_hole_diameter_1",
+            "parameter_aliases": [
+              "mounting hole",
+              "installation hole"
+            ],
+            "value": "11",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "11",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drill size",
+              "hole diameter",
+              "mounting holes",
+              "installation holes"
+            ],
+            "concept_group": "installation_holes",
+            "references": [
+              "Tools Required Section"
+            ]
+          },
+          {
+            "parameter": "Drill Hole Size 2",
+            "normalized_parameter": "drill_hole_diameter_2",
+            "parameter_aliases": [
+              "mounting hole",
+              "installation hole"
+            ],
+            "value": "24",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "24",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drill size",
+              "hole diameter",
+              "mounting holes",
+              "installation holes"
+            ],
+            "concept_group": "installation_holes",
+            "references": [
+              "Tools Required Section"
+            ]
+          },
+          {
+            "parameter": "Hollow Mill Size",
+            "normalized_parameter": "hollow_mill_diameter",
+            "parameter_aliases": [
+              "mill size",
+              "cutting tool size"
+            ],
+            "value": "43",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "43",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "mill size",
+              "hollow mill",
+              "cutting tool",
+              "installation tools"
+            ],
+            "concept_group": "installation_tools",
+            "references": [
+              "Tools Required Section"
+            ]
+          },
+          {
+            "parameter": "Power Rating Model 1",
+            "normalized_parameter": "power_rating_1",
+            "parameter_aliases": [
+              "motor power",
+              "electrical power"
+            ],
+            "value": "700",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700",
+            "models": [
+              "HECTOR 700"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power rating",
+              "wattage",
+              "motor power",
+              "electrical specifications"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Model Number"
+            ]
+          },
+          {
+            "parameter": "Power Rating Model 2",
+            "normalized_parameter": "power_rating_2",
+            "parameter_aliases": [
+              "motor power",
+              "electrical power"
+            ],
+            "value": "1000",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1000",
+            "models": [
+              "HECTOR 1000"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power rating",
+              "wattage",
+              "motor power",
+              "electrical specifications"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Model Number"
+            ]
+          },
+          {
+            "parameter": "Power Rating Model 3",
+            "normalized_parameter": "power_rating_3",
+            "parameter_aliases": [
+              "motor power",
+              "electrical power"
+            ],
+            "value": "1500",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1500",
+            "models": [
+              "HECTOR 1500"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power rating",
+              "wattage",
+              "motor power",
+              "electrical specifications"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Model Number"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Motor Output",
+            "normalized_parameter": "motor_power",
+            "parameter_aliases": [
+              "power output",
+              "rated power",
+              "motor power"
+            ],
+            "value": "700W/1000W/1500W",
+            "range": "700-1500",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700/1000/1500",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "motor power",
+              "wattage",
+              "power rating",
+              "output power"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Motor Supply Voltage",
+            "normalized_parameter": "supply_voltage",
+            "parameter_aliases": [
+              "voltage",
+              "power supply",
+              "operating voltage"
+            ],
+            "value": "12V/24V",
+            "range": "12-24",
+            "units": "V",
+            "normalized_units": "volts",
+            "converted_value": "12/24",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power supply",
+              "electrical requirements"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Maximum Pull",
+            "normalized_parameter": "max_pull_force",
+            "parameter_aliases": [
+              "max pull",
+              "pulling force",
+              "maximum force"
+            ],
+            "value": "1100/1300/1500",
+            "range": "1100-1500",
+            "units": "Kg",
+            "normalized_units": "kilograms",
+            "converted_value": "1100/1300/1500",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "maximum pull",
+              "pulling capacity",
+              "force"
+            ],
+            "concept_group": "performance_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Maximum Working Load",
+            "normalized_parameter": "max_working_load",
+            "parameter_aliases": [
+              "working load limit",
+              "WLL",
+              "max load"
+            ],
+            "value": "300-550",
+            "range": "300-550",
+            "units": "Kg",
+            "normalized_units": "kilograms",
+            "converted_value": "300-550",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "working load",
+              "load capacity",
+              "safe working load"
+            ],
+            "concept_group": "performance_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Current Absorption",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "current consumption",
+              "amperage",
+              "power draw"
+            ],
+            "value": "50-150",
+            "range": "50-150",
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "50-150",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "amperage",
+              "power consumption"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Maximum Chain Speed",
+            "normalized_parameter": "max_chain_speed",
+            "parameter_aliases": [
+              "chain speed",
+              "retrieval speed",
+              "lifting speed"
+            ],
+            "value": "27.4-40.9",
+            "range": "27.4-40.9",
+            "units": "m/min",
+            "normalized_units": "meters_per_minute",
+            "converted_value": "27.4-40.9",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "chain speed",
+              "retrieval rate",
+              "lifting speed"
+            ],
+            "concept_group": "performance_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Deck Thickness",
+            "normalized_parameter": "deck_thickness",
+            "parameter_aliases": [
+              "mounting thickness",
+              "installation thickness"
+            ],
+            "value": "20-60",
+            "range": "20-60",
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "20-60",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "deck thickness",
+              "mounting requirements",
+              "installation specs"
+            ],
+            "concept_group": "installation_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "parameter": "Weight HC3",
+            "normalized_parameter": "base_weight",
+            "parameter_aliases": [
+              "mass",
+              "unit weight",
+              "product weight"
+            ],
+            "value": "22.6-28.1",
+            "range": "22.6-28.1",
+            "units": "kg",
+            "normalized_units": "kilograms",
+            "converted_value": "22.6-28.1",
+            "models": [
+              "HC3",
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "product weight"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Technical Data Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "voltage",
+              "power supply",
+              "battery voltage"
+            ],
+            "value": "12/24",
+            "range": "12V or 24V",
+            "units": "V",
+            "normalized_units": "volts",
+            "converted_value": "12/24",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage requirement",
+              "power supply",
+              "battery voltage",
+              "operating voltage",
+              "electrical requirements"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "page 10"
+            ]
+          },
+          {
+            "parameter": "Power Rating",
+            "normalized_parameter": "power_rating",
+            "parameter_aliases": [
+              "wattage",
+              "power consumption"
+            ],
+            "value": "700/1000/1500",
+            "range": "700W - 1500W",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700/1000/1500",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power rating",
+              "wattage",
+              "power consumption",
+              "electrical power"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "page 12"
+            ]
+          },
+          {
+            "parameter": "Fuse Rating 12V",
+            "normalized_parameter": "fuse_rating_12v",
+            "parameter_aliases": [
+              "fuse size",
+              "fuse requirement"
+            ],
+            "value": "4",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "4",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "fuse size",
+              "fuse rating",
+              "electrical protection",
+              "12V fuse"
+            ],
+            "concept_group": "circuit_protection",
+            "references": [
+              "connection diagram"
+            ]
+          },
+          {
+            "parameter": "Fuse Rating 24V",
+            "normalized_parameter": "fuse_rating_24v",
+            "parameter_aliases": [
+              "fuse size",
+              "fuse requirement"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "2",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "fuse size",
+              "fuse rating",
+              "electrical protection",
+              "24V fuse"
+            ],
+            "concept_group": "circuit_protection",
+            "references": [
+              "connection diagram"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Rating Range",
+            "normalized_parameter": "power_rating",
+            "parameter_aliases": [
+              "wattage",
+              "motor power",
+              "electrical power"
+            ],
+            "value": "700-1500",
+            "range": "700W - 1500W",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700-1500",
+            "models": [
+              "Hector 700",
+              "Hector 1000",
+              "Hector 1500"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power rating",
+              "wattage",
+              "motor power",
+              "electrical power",
+              "watts"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "title"
+            ]
+          },
+          {
+            "parameter": "Clutch Rotation Direction - Disengage",
+            "normalized_parameter": "clutch_disengage_direction",
+            "parameter_aliases": [
+              "clutch release",
+              "disengage direction"
+            ],
+            "value": "counter-clockwise",
+            "range": null,
+            "units": "direction",
+            "normalized_units": "rotation",
+            "converted_value": "counter-clockwise",
+            "models": [
+              "all"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "clutch direction",
+              "disengage clutch",
+              "release clutch",
+              "clutch operation"
+            ],
+            "concept_group": "mechanical_operation",
+            "references": [
+              "Clutch Use section"
+            ]
+          },
+          {
+            "parameter": "Minimum Drum Rope Wraps",
+            "normalized_parameter": "min_drum_wraps",
+            "parameter_aliases": [
+              "rope turns",
+              "minimum wraps"
+            ],
+            "value": "3",
+            "range": "\u22653",
+            "units": "turns",
+            "normalized_units": "turns",
+            "converted_value": "3",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drum wraps",
+              "rope turns",
+              "minimum wraps",
+              "rope wrapping"
+            ],
+            "concept_group": "operation_requirements",
+            "references": [
+              "Drum Use section"
+            ]
+          },
+          {
+            "parameter": "Clutch Bush Disengagement",
+            "normalized_parameter": "clutch_bush_turns",
+            "parameter_aliases": [
+              "bush turns",
+              "disengagement turns"
+            ],
+            "value": "2",
+            "range": "\u22652",
+            "units": "turns",
+            "normalized_units": "turns",
+            "converted_value": "2",
+            "models": [
+              "all"
+            ],
+            "category": "Operation",
+            "search_terms": [
+              "bush turns",
+              "clutch disengagement",
+              "manual operation"
+            ],
+            "concept_group": "mechanical_operation",
+            "references": [
+              "Manual Anchor Weighing section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Type",
+            "normalized_parameter": "power_type",
+            "parameter_aliases": [
+              "electrical power",
+              "motor power",
+              "power supply"
+            ],
+            "value": "Electric",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500W"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power type",
+              "electrical specifications",
+              "motor type",
+              "power requirements"
+            ],
+            "concept_group": "electrical_system",
+            "references": [
+              "p.14"
+            ]
+          },
+          {
+            "parameter": "Power Rating",
+            "normalized_parameter": "power_rating",
+            "parameter_aliases": [
+              "wattage",
+              "motor power",
+              "rated power"
+            ],
+            "value": "700/1000/1500",
+            "range": "700-1500",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": null,
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500W"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power rating",
+              "wattage",
+              "motor power",
+              "power consumption"
+            ],
+            "concept_group": "electrical_system",
+            "references": [
+              "p.14"
+            ]
+          },
+          {
+            "parameter": "Maintenance Interval",
+            "normalized_parameter": "maintenance_interval",
+            "parameter_aliases": [
+              "service interval",
+              "inspection period"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "year",
+            "normalized_units": "years",
+            "converted_value": null,
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500W"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "maintenance schedule",
+              "service interval",
+              "yearly maintenance",
+              "maintenance period"
+            ],
+            "concept_group": "maintenance_requirements",
+            "references": [
+              "p.14"
+            ]
+          },
+          {
+            "parameter": "Environmental Protection",
+            "normalized_parameter": "corrosion_resistance",
+            "parameter_aliases": [
+              "marine resistance",
+              "salt protection"
+            ],
+            "value": "Marine environment resistant",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500W"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "corrosion resistance",
+              "marine grade",
+              "salt resistance",
+              "environmental protection"
+            ],
+            "concept_group": "environmental_specifications",
+            "references": [
+              "p.14"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Electric Motor Power 700W 12V",
+            "normalized_parameter": "motor_power_12v_700",
+            "parameter_aliases": [
+              "motor rating",
+              "power rating",
+              "motor power"
+            ],
+            "value": "700",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700",
+            "models": [
+              "HECTOR 700W 12V"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "700W motor",
+              "12V motor specs",
+              "motor power rating",
+              "700 watt"
+            ],
+            "concept_group": "electric_motor",
+            "references": [
+              "52A"
+            ]
+          },
+          {
+            "parameter": "Electric Motor Power 700W 24V",
+            "normalized_parameter": "motor_power_24v_700",
+            "parameter_aliases": [
+              "motor rating",
+              "power rating",
+              "motor power"
+            ],
+            "value": "700",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "700",
+            "models": [
+              "HECTOR 700W 24V"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "700W motor",
+              "24V motor specs",
+              "motor power rating",
+              "700 watt"
+            ],
+            "concept_group": "electric_motor",
+            "references": [
+              "52B"
+            ]
+          },
+          {
+            "parameter": "Electric Motor Power 1000W 12V",
+            "normalized_parameter": "motor_power_12v_1000",
+            "parameter_aliases": [
+              "motor rating",
+              "power rating",
+              "motor power"
+            ],
+            "value": "1000",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1000",
+            "models": [
+              "HECTOR 1000W 12V"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "1000W motor",
+              "12V motor specs",
+              "motor power rating",
+              "1 kilowatt"
+            ],
+            "concept_group": "electric_motor",
+            "references": [
+              "52C"
+            ]
+          },
+          {
+            "parameter": "Electric Motor Power 1000W 24V",
+            "normalized_parameter": "motor_power_24v_1000",
+            "parameter_aliases": [
+              "motor rating",
+              "power rating",
+              "motor power"
+            ],
+            "value": "1000",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1000",
+            "models": [
+              "HECTOR 1000W 24V"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "1000W motor",
+              "24V motor specs",
+              "motor power rating",
+              "1 kilowatt"
+            ],
+            "concept_group": "electric_motor",
+            "references": [
+              "52D"
+            ]
+          },
+          {
+            "parameter": "Electric Motor Power 1500W 12V",
+            "normalized_parameter": "motor_power_12v_1500",
+            "parameter_aliases": [
+              "motor rating",
+              "power rating",
+              "motor power"
+            ],
+            "value": "1500",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1500",
+            "models": [
+              "HECTOR 1500W 12V"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "1500W motor",
+              "12V motor specs",
+              "motor power rating",
+              "1.5 kilowatt"
+            ],
+            "concept_group": "electric_motor",
+            "references": [
+              "52E"
+            ]
+          },
+          {
+            "parameter": "Electric Motor Power 1500W 24V",
+            "normalized_parameter": "motor_power_24v_1500",
+            "parameter_aliases": [
+              "motor rating",
+              "power rating",
+              "motor power"
+            ],
+            "value": "1500",
+            "range": null,
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "1500",
+            "models": [
+              "HECTOR 1500W 24V"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "1500W motor",
+              "24V motor specs",
+              "motor power rating",
+              "1.5 kilowatt"
+            ],
+            "concept_group": "electric_motor",
+            "references": [
+              "52F"
+            ]
+          },
+          {
+            "parameter": "Gypsy Chain Size 8mm",
+            "normalized_parameter": "chain_size_8mm",
+            "parameter_aliases": [
+              "chain diameter",
+              "chain spec",
+              "gypsy size"
+            ],
+            "value": "8",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "8",
+            "models": [
+              "HECTOR"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "8mm chain",
+              "5/16 inch chain",
+              "gypsy specifications",
+              "chain compatibility"
+            ],
+            "concept_group": "chain_compatibility",
+            "references": [
+              "18A"
+            ]
+          },
+          {
+            "parameter": "Gypsy Chain Size 10mm",
+            "normalized_parameter": "chain_size_10mm",
+            "parameter_aliases": [
+              "chain diameter",
+              "chain spec",
+              "gypsy size"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "10",
+            "models": [
+              "HECTOR"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "10mm chain",
+              "3/8 inch chain",
+              "gypsy specifications",
+              "chain compatibility"
+            ],
+            "concept_group": "chain_compatibility",
+            "references": [
+              "18B"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

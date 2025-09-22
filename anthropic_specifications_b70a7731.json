@@ -1,0 +1,1628 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 29,
+  "unique_specifications": 29,
+  "category_breakdown": {
+    "Performance": 4,
+    "Electrical": 11,
+    "Installation": 4,
+    "Environmental": 2,
+    "Dimensions": 8
+  },
+  "specifications": [
+    {
+      "parameter": "Energy Efficiency Improvement",
+      "normalized_parameter": "energy_efficiency_increase",
+      "parameter_aliases": [
+        "efficiency gain",
+        "energy savings",
+        "performance improvement"
+      ],
+      "value": "50",
+      "range": null,
+      "units": "%",
+      "normalized_units": "percent",
+      "converted_value": "50",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "efficiency",
+        "energy savings",
+        "power savings",
+        "performance improvement",
+        "efficiency increase"
+      ],
+      "concept_group": "energy_efficiency",
+      "references": [
+        "Advantage of Use section"
+      ]
+    },
+    {
+      "parameter": "Maximum Input Power ECO Mode",
+      "normalized_parameter": "max_power_consumption_eco",
+      "parameter_aliases": [
+        "eco mode power",
+        "minimum power consumption",
+        "eco power draw"
+      ],
+      "value": "150-200",
+      "range": "150-200",
+      "units": "W",
+      "normalized_units": "watts",
+      "converted_value": "150-200",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power consumption",
+        "eco mode",
+        "energy usage",
+        "wattage",
+        "power draw"
+      ],
+      "concept_group": "power_consumption",
+      "references": [
+        "Advantage of Use section"
+      ]
+    },
+    {
+      "parameter": "Maximum Start-up Current",
+      "normalized_parameter": "max_startup_current",
+      "parameter_aliases": [
+        "inrush current",
+        "starting amperage",
+        "peak current"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "A",
+      "normalized_units": "amperes",
+      "converted_value": "2",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "startup current",
+        "peak amperage",
+        "inrush current",
+        "starting current",
+        "max current"
+      ],
+      "concept_group": "electrical_characteristics",
+      "references": [
+        "Advantage of Use section"
+      ]
+    },
+    {
+      "parameter": "Air Outlet Adjustment Range",
+      "normalized_parameter": "air_outlet_angle",
+      "parameter_aliases": [
+        "air flow direction",
+        "outlet adjustment",
+        "air direction range"
+      ],
+      "value": "135",
+      "range": "0-135",
+      "units": "\u00b0",
+      "normalized_units": "degrees",
+      "converted_value": "135",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "air outlet",
+        "adjustable outlet",
+        "air flow direction",
+        "air angle",
+        "outlet rotation"
+      ],
+      "concept_group": "air_distribution",
+      "references": [
+        "Product Features section"
+      ]
+    },
+    {
+      "parameter": "Starting Frequency",
+      "normalized_parameter": "starting_frequency",
+      "parameter_aliases": [
+        "initial frequency",
+        "startup frequency",
+        "min frequency"
+      ],
+      "value": "20",
+      "range": "20-100",
+      "units": "Hz",
+      "normalized_units": "Hz",
+      "converted_value": "20",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "starting frequency",
+        "minimum frequency",
+        "startup Hz",
+        "initial operating frequency"
+      ],
+      "concept_group": "operating_parameters",
+      "references": [
+        "Starting ramp section"
+      ]
+    },
+    {
+      "parameter": "Maximum Frequency",
+      "normalized_parameter": "max_frequency",
+      "parameter_aliases": [
+        "peak frequency",
+        "top frequency"
+      ],
+      "value": "100",
+      "range": "20-100",
+      "units": "Hz",
+      "normalized_units": "Hz",
+      "converted_value": "100",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "maximum frequency",
+        "peak Hz",
+        "top frequency",
+        "highest frequency"
+      ],
+      "concept_group": "operating_parameters",
+      "references": [
+        "Energy Saving section"
+      ]
+    },
+    {
+      "parameter": "Maximum Starting Current",
+      "normalized_parameter": "max_starting_current",
+      "parameter_aliases": [
+        "startup current",
+        "initial current draw"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "A",
+      "normalized_units": "amperes",
+      "converted_value": "2",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "starting current",
+        "startup amperage",
+        "initial current",
+        "max current at start"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Smooth Starting section"
+      ]
+    },
+    {
+      "parameter": "Motor Efficiency",
+      "normalized_parameter": "motor_efficiency",
+      "parameter_aliases": [
+        "BLDC efficiency",
+        "energy efficiency"
+      ],
+      "value": "98",
+      "range": null,
+      "units": "%",
+      "normalized_units": "percent",
+      "converted_value": "98",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "motor efficiency",
+        "energy efficiency",
+        "BLDC efficiency",
+        "power efficiency"
+      ],
+      "concept_group": "efficiency_metrics",
+      "references": [
+        "Energy Saving section"
+      ]
+    },
+    {
+      "parameter": "Minimum Seawater Temperature",
+      "normalized_parameter": "min_seawater_temp",
+      "parameter_aliases": [
+        "lowest water temp",
+        "minimum water temperature"
+      ],
+      "value": "5",
+      "range": "5-45",
+      "units": "\u00b0C",
+      "normalized_units": "celsius",
+      "converted_value": "5",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "minimum water temperature",
+        "lowest operating temperature",
+        "cold water limit"
+      ],
+      "concept_group": "operating_conditions",
+      "references": [
+        "Reliable section"
+      ]
+    },
+    {
+      "parameter": "Maximum Seawater Temperature",
+      "normalized_parameter": "max_seawater_temp",
+      "parameter_aliases": [
+        "highest water temp",
+        "maximum water temperature"
+      ],
+      "value": "45",
+      "range": "5-45",
+      "units": "\u00b0C",
+      "normalized_units": "celsius",
+      "converted_value": "45",
+      "models": [
+        "BLDC Inverter"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "maximum water temperature",
+        "highest operating temperature",
+        "hot water limit"
+      ],
+      "concept_group": "operating_conditions",
+      "references": [
+        "Reliable section"
+      ]
+    },
+    {
+      "parameter": "Max Cooling/Heating capacity",
+      "normalized_parameter": "max_cooling_heating_capacity",
+      "parameter_aliases": [
+        "cooling power",
+        "heating power",
+        "thermal capacity"
+      ],
+      "value": "7000-10000",
+      "range": "7000-10000",
+      "units": "BTU/h",
+      "normalized_units": "BTU/h",
+      "converted_value": "7000-10000",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "cooling capacity",
+        "heating capacity",
+        "BTU",
+        "power output"
+      ],
+      "concept_group": "thermal_performance",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Width",
+      "normalized_parameter": "width",
+      "parameter_aliases": [
+        "breadth",
+        "horizontal dimension"
+      ],
+      "value": "433",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "433",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "width",
+        "size",
+        "dimensions",
+        "how wide"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "dimensions section"
+      ]
+    },
+    {
+      "parameter": "Height",
+      "normalized_parameter": "height",
+      "parameter_aliases": [
+        "vertical dimension"
+      ],
+      "value": "282",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "282",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "height",
+        "size",
+        "dimensions",
+        "how tall"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "dimensions section"
+      ]
+    },
+    {
+      "parameter": "Depth",
+      "normalized_parameter": "depth",
+      "parameter_aliases": [
+        "thickness",
+        "front to back"
+      ],
+      "value": "260",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "260",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "depth",
+        "size",
+        "dimensions",
+        "how deep"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "dimensions section"
+      ]
+    },
+    {
+      "parameter": "Weight",
+      "normalized_parameter": "weight",
+      "parameter_aliases": [
+        "mass",
+        "unit weight"
+      ],
+      "value": "22",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "22",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "weight",
+        "mass",
+        "how heavy"
+      ],
+      "concept_group": "physical_properties",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Voltage",
+      "normalized_parameter": "voltage",
+      "parameter_aliases": [
+        "electrical potential",
+        "power supply"
+      ],
+      "value": "115/230",
+      "range": "115-230",
+      "units": "V",
+      "normalized_units": "V",
+      "converted_value": "115/230",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "electrical specs"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Max input power",
+      "normalized_parameter": "max_input_power",
+      "parameter_aliases": [
+        "power consumption",
+        "power draw"
+      ],
+      "value": "430-730",
+      "range": "430-730",
+      "units": "W",
+      "normalized_units": "W",
+      "converted_value": "430-730",
+      "models": [
+        "all models"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power consumption",
+        "wattage",
+        "power draw"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Max Current",
+      "normalized_parameter": "max_current",
+      "parameter_aliases": [
+        "amperage",
+        "current draw"
+      ],
+      "value": "1.9-6.5",
+      "range": "1.9-6.5",
+      "units": "A",
+      "normalized_units": "A",
+      "converted_value": "1.9-6.5",
+      "models": [
+        "all models"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "current",
+        "amperage",
+        "amps"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Refrigerant charge",
+      "normalized_parameter": "refrigerant_charge",
+      "parameter_aliases": [
+        "R410A charge",
+        "coolant amount"
+      ],
+      "value": "0.350",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "0.350",
+      "models": [
+        "all models"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "refrigerant",
+        "R410A",
+        "coolant"
+      ],
+      "concept_group": "refrigeration_system",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Air exit duct diameter",
+      "normalized_parameter": "air_duct_diameter",
+      "parameter_aliases": [
+        "duct size",
+        "air outlet"
+      ],
+      "value": "120",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "120",
+      "models": [
+        "all models"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "duct size",
+        "air outlet",
+        "ventilation"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Max Cooling/Heating capacity",
+      "normalized_parameter": "max_cooling_heating_capacity",
+      "parameter_aliases": [
+        "cooling power",
+        "heating power",
+        "thermal capacity"
+      ],
+      "value": "12000-16000",
+      "range": "12000-16000",
+      "units": "BTU/h",
+      "normalized_units": "BTU/h",
+      "converted_value": "12000-16000",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A",
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "cooling capacity",
+        "heating capacity",
+        "BTU",
+        "power output"
+      ],
+      "concept_group": "thermal_performance",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Width",
+      "normalized_parameter": "width",
+      "parameter_aliases": [
+        "breadth",
+        "horizontal dimension"
+      ],
+      "value": "500",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "500",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "width",
+        "size",
+        "dimensions",
+        "how wide"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "dimensions section"
+      ]
+    },
+    {
+      "parameter": "Height",
+      "normalized_parameter": "height",
+      "parameter_aliases": [
+        "vertical dimension"
+      ],
+      "value": "336",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "336",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "height",
+        "size",
+        "dimensions",
+        "how tall"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "dimensions section"
+      ]
+    },
+    {
+      "parameter": "Depth",
+      "normalized_parameter": "depth",
+      "parameter_aliases": [
+        "thickness",
+        "front to back"
+      ],
+      "value": "290",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "290",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "depth",
+        "size",
+        "dimensions",
+        "how deep"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "dimensions section"
+      ]
+    },
+    {
+      "parameter": "Weight",
+      "normalized_parameter": "weight",
+      "parameter_aliases": [
+        "mass",
+        "unit weight"
+      ],
+      "value": "27",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "27",
+      "models": [
+        "all models"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "weight",
+        "mass",
+        "how heavy"
+      ],
+      "concept_group": "physical_properties",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Voltage",
+      "normalized_parameter": "voltage",
+      "parameter_aliases": [
+        "electrical potential",
+        "power supply"
+      ],
+      "value": "230/115",
+      "range": null,
+      "units": "V",
+      "normalized_units": "V",
+      "converted_value": "230/115",
+      "models": [
+        "SCU12VFD-E/A",
+        "SCU16VFD-E/A"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "electrical specs"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Max input power",
+      "normalized_parameter": "max_input_power",
+      "parameter_aliases": [
+        "power consumption",
+        "electrical power"
+      ],
+      "value": "710-1090",
+      "range": "710-1090",
+      "units": "W",
+      "normalized_units": "W",
+      "converted_value": "710-1090",
+      "models": [
+        "all models"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power consumption",
+        "wattage",
+        "electrical power"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Max Current",
+      "normalized_parameter": "max_current",
+      "parameter_aliases": [
+        "amperage",
+        "current draw"
+      ],
+      "value": "3.2-10.0",
+      "range": "3.2-10.0",
+      "units": "A",
+      "normalized_units": "A",
+      "converted_value": "3.2-10.0",
+      "models": [
+        "all models"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "current",
+        "amperage",
+        "amps"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "specifications table"
+      ]
+    },
+    {
+      "parameter": "Refrigerant charge",
+      "normalized_parameter": "refrigerant_charge",
+      "parameter_aliases": [
+        "refrigerant amount",
+        "R410A charge"
+      ],
+      "value": "0.450",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "0.450",
+      "models": [
+        "all models"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "refrigerant",
+        "R410A",
+        "charge amount"
+      ],
+      "concept_group": "installation_specifications",
+      "references": [
+        "specifications table"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Energy Efficiency Improvement",
+            "normalized_parameter": "energy_efficiency_increase",
+            "parameter_aliases": [
+              "efficiency gain",
+              "energy savings",
+              "performance improvement"
+            ],
+            "value": "50",
+            "range": null,
+            "units": "%",
+            "normalized_units": "percent",
+            "converted_value": "50",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "efficiency",
+              "energy savings",
+              "power savings",
+              "performance improvement",
+              "efficiency increase"
+            ],
+            "concept_group": "energy_efficiency",
+            "references": [
+              "Advantage of Use section"
+            ]
+          },
+          {
+            "parameter": "Maximum Input Power ECO Mode",
+            "normalized_parameter": "max_power_consumption_eco",
+            "parameter_aliases": [
+              "eco mode power",
+              "minimum power consumption",
+              "eco power draw"
+            ],
+            "value": "150-200",
+            "range": "150-200",
+            "units": "W",
+            "normalized_units": "watts",
+            "converted_value": "150-200",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power consumption",
+              "eco mode",
+              "energy usage",
+              "wattage",
+              "power draw"
+            ],
+            "concept_group": "power_consumption",
+            "references": [
+              "Advantage of Use section"
+            ]
+          },
+          {
+            "parameter": "Maximum Start-up Current",
+            "normalized_parameter": "max_startup_current",
+            "parameter_aliases": [
+              "inrush current",
+              "starting amperage",
+              "peak current"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "2",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "startup current",
+              "peak amperage",
+              "inrush current",
+              "starting current",
+              "max current"
+            ],
+            "concept_group": "electrical_characteristics",
+            "references": [
+              "Advantage of Use section"
+            ]
+          },
+          {
+            "parameter": "Air Outlet Adjustment Range",
+            "normalized_parameter": "air_outlet_angle",
+            "parameter_aliases": [
+              "air flow direction",
+              "outlet adjustment",
+              "air direction range"
+            ],
+            "value": "135",
+            "range": "0-135",
+            "units": "\u00b0",
+            "normalized_units": "degrees",
+            "converted_value": "135",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "air outlet",
+              "adjustable outlet",
+              "air flow direction",
+              "air angle",
+              "outlet rotation"
+            ],
+            "concept_group": "air_distribution",
+            "references": [
+              "Product Features section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Starting Frequency",
+            "normalized_parameter": "starting_frequency",
+            "parameter_aliases": [
+              "initial frequency",
+              "startup frequency",
+              "min frequency"
+            ],
+            "value": "20",
+            "range": "20-100",
+            "units": "Hz",
+            "normalized_units": "Hz",
+            "converted_value": "20",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "starting frequency",
+              "minimum frequency",
+              "startup Hz",
+              "initial operating frequency"
+            ],
+            "concept_group": "operating_parameters",
+            "references": [
+              "Starting ramp section"
+            ]
+          },
+          {
+            "parameter": "Maximum Frequency",
+            "normalized_parameter": "max_frequency",
+            "parameter_aliases": [
+              "peak frequency",
+              "top frequency"
+            ],
+            "value": "100",
+            "range": "20-100",
+            "units": "Hz",
+            "normalized_units": "Hz",
+            "converted_value": "100",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "maximum frequency",
+              "peak Hz",
+              "top frequency",
+              "highest frequency"
+            ],
+            "concept_group": "operating_parameters",
+            "references": [
+              "Energy Saving section"
+            ]
+          },
+          {
+            "parameter": "Maximum Starting Current",
+            "normalized_parameter": "max_starting_current",
+            "parameter_aliases": [
+              "startup current",
+              "initial current draw"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "2",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "starting current",
+              "startup amperage",
+              "initial current",
+              "max current at start"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Smooth Starting section"
+            ]
+          },
+          {
+            "parameter": "Motor Efficiency",
+            "normalized_parameter": "motor_efficiency",
+            "parameter_aliases": [
+              "BLDC efficiency",
+              "energy efficiency"
+            ],
+            "value": "98",
+            "range": null,
+            "units": "%",
+            "normalized_units": "percent",
+            "converted_value": "98",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "motor efficiency",
+              "energy efficiency",
+              "BLDC efficiency",
+              "power efficiency"
+            ],
+            "concept_group": "efficiency_metrics",
+            "references": [
+              "Energy Saving section"
+            ]
+          },
+          {
+            "parameter": "Minimum Seawater Temperature",
+            "normalized_parameter": "min_seawater_temp",
+            "parameter_aliases": [
+              "lowest water temp",
+              "minimum water temperature"
+            ],
+            "value": "5",
+            "range": "5-45",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "5",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "minimum water temperature",
+              "lowest operating temperature",
+              "cold water limit"
+            ],
+            "concept_group": "operating_conditions",
+            "references": [
+              "Reliable section"
+            ]
+          },
+          {
+            "parameter": "Maximum Seawater Temperature",
+            "normalized_parameter": "max_seawater_temp",
+            "parameter_aliases": [
+              "highest water temp",
+              "maximum water temperature"
+            ],
+            "value": "45",
+            "range": "5-45",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "45",
+            "models": [
+              "BLDC Inverter"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "maximum water temperature",
+              "highest operating temperature",
+              "hot water limit"
+            ],
+            "concept_group": "operating_conditions",
+            "references": [
+              "Reliable section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Max Cooling/Heating capacity",
+            "normalized_parameter": "max_cooling_heating_capacity",
+            "parameter_aliases": [
+              "cooling power",
+              "heating power",
+              "thermal capacity"
+            ],
+            "value": "7000-10000",
+            "range": "7000-10000",
+            "units": "BTU/h",
+            "normalized_units": "BTU/h",
+            "converted_value": "7000-10000",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "cooling capacity",
+              "heating capacity",
+              "BTU",
+              "power output"
+            ],
+            "concept_group": "thermal_performance",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "breadth",
+              "horizontal dimension"
+            ],
+            "value": "433",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "433",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions",
+              "how wide"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "dimensions section"
+            ]
+          },
+          {
+            "parameter": "Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "vertical dimension"
+            ],
+            "value": "282",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "282",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions",
+              "how tall"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "dimensions section"
+            ]
+          },
+          {
+            "parameter": "Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "thickness",
+              "front to back"
+            ],
+            "value": "260",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "260",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "size",
+              "dimensions",
+              "how deep"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "dimensions section"
+            ]
+          },
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "mass",
+              "unit weight"
+            ],
+            "value": "22",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "22",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "weight",
+              "mass",
+              "how heavy"
+            ],
+            "concept_group": "physical_properties",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Voltage",
+            "normalized_parameter": "voltage",
+            "parameter_aliases": [
+              "electrical potential",
+              "power supply"
+            ],
+            "value": "115/230",
+            "range": "115-230",
+            "units": "V",
+            "normalized_units": "V",
+            "converted_value": "115/230",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "electrical specs"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Max input power",
+            "normalized_parameter": "max_input_power",
+            "parameter_aliases": [
+              "power consumption",
+              "power draw"
+            ],
+            "value": "430-730",
+            "range": "430-730",
+            "units": "W",
+            "normalized_units": "W",
+            "converted_value": "430-730",
+            "models": [
+              "all models"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power consumption",
+              "wattage",
+              "power draw"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Max Current",
+            "normalized_parameter": "max_current",
+            "parameter_aliases": [
+              "amperage",
+              "current draw"
+            ],
+            "value": "1.9-6.5",
+            "range": "1.9-6.5",
+            "units": "A",
+            "normalized_units": "A",
+            "converted_value": "1.9-6.5",
+            "models": [
+              "all models"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "amperage",
+              "amps"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Refrigerant charge",
+            "normalized_parameter": "refrigerant_charge",
+            "parameter_aliases": [
+              "R410A charge",
+              "coolant amount"
+            ],
+            "value": "0.350",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "0.350",
+            "models": [
+              "all models"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "refrigerant",
+              "R410A",
+              "coolant"
+            ],
+            "concept_group": "refrigeration_system",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Air exit duct diameter",
+            "normalized_parameter": "air_duct_diameter",
+            "parameter_aliases": [
+              "duct size",
+              "air outlet"
+            ],
+            "value": "120",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "120",
+            "models": [
+              "all models"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "duct size",
+              "air outlet",
+              "ventilation"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "specifications table"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Max Cooling/Heating capacity",
+            "normalized_parameter": "max_cooling_heating_capacity",
+            "parameter_aliases": [
+              "cooling power",
+              "heating power",
+              "thermal capacity"
+            ],
+            "value": "12000-16000",
+            "range": "12000-16000",
+            "units": "BTU/h",
+            "normalized_units": "BTU/h",
+            "converted_value": "12000-16000",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "cooling capacity",
+              "heating capacity",
+              "BTU",
+              "power output"
+            ],
+            "concept_group": "thermal_performance",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "breadth",
+              "horizontal dimension"
+            ],
+            "value": "500",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "500",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions",
+              "how wide"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "dimensions section"
+            ]
+          },
+          {
+            "parameter": "Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "vertical dimension"
+            ],
+            "value": "336",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "336",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions",
+              "how tall"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "dimensions section"
+            ]
+          },
+          {
+            "parameter": "Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "thickness",
+              "front to back"
+            ],
+            "value": "290",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "290",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "size",
+              "dimensions",
+              "how deep"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "dimensions section"
+            ]
+          },
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "mass",
+              "unit weight"
+            ],
+            "value": "27",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "27",
+            "models": [
+              "all models"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "weight",
+              "mass",
+              "how heavy"
+            ],
+            "concept_group": "physical_properties",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Voltage",
+            "normalized_parameter": "voltage",
+            "parameter_aliases": [
+              "electrical potential",
+              "power supply"
+            ],
+            "value": "230/115",
+            "range": null,
+            "units": "V",
+            "normalized_units": "V",
+            "converted_value": "230/115",
+            "models": [
+              "SCU12VFD-E/A",
+              "SCU16VFD-E/A"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "electrical specs"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Max input power",
+            "normalized_parameter": "max_input_power",
+            "parameter_aliases": [
+              "power consumption",
+              "electrical power"
+            ],
+            "value": "710-1090",
+            "range": "710-1090",
+            "units": "W",
+            "normalized_units": "W",
+            "converted_value": "710-1090",
+            "models": [
+              "all models"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power consumption",
+              "wattage",
+              "electrical power"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Max Current",
+            "normalized_parameter": "max_current",
+            "parameter_aliases": [
+              "amperage",
+              "current draw"
+            ],
+            "value": "3.2-10.0",
+            "range": "3.2-10.0",
+            "units": "A",
+            "normalized_units": "A",
+            "converted_value": "3.2-10.0",
+            "models": [
+              "all models"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "amperage",
+              "amps"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "specifications table"
+            ]
+          },
+          {
+            "parameter": "Refrigerant charge",
+            "normalized_parameter": "refrigerant_charge",
+            "parameter_aliases": [
+              "refrigerant amount",
+              "R410A charge"
+            ],
+            "value": "0.450",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "0.450",
+            "models": [
+              "all models"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "refrigerant",
+              "R410A",
+              "charge amount"
+            ],
+            "concept_group": "installation_specifications",
+            "references": [
+              "specifications table"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

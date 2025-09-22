@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Upload Form */
+        .upload-form {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            margin-right: var(--spacing-md);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-select, .form-input {
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .form-select:disabled {
+            background: var(--background-color);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .auto-populated {
+            background: rgba(0, 122, 255, 0.05);
+            border-color: rgba(0, 122, 255, 0.2);
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.02);
+        }
+
+        .file-upload.dragover {
+            border-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 48px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .file-upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .file-upload-subtext {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .file-upload-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            padding: var(--spacing-md) var(--spacing-lg);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-upload-button:hover {
+            background: #0056CC;
+            transform: translateY(-1px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Selected File */
+        .selected-file {
+            background: rgba(52, 199, 89, 0.1);
+            border: 2px solid var(--success-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+            display: none;
+        }
+
+        .selected-file.show {
+            display: block;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-icon {
+            font-size: 24px;
+            margin-right: var(--spacing-md);
+            color: var(--success-color);
+        }
+
+        .file-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .file-size {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-left: var(--spacing-sm);
+        }
+
+        .file-remove {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-remove:hover {
+            background: #CC2D1F;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-top: var(--spacing-xl);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-small);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056CC;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-secondary);
+            background: var(--background-color);
+        }
+
+        /* Document List */
+        .document-list {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .document-list h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+        }
+
+        .document-list h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--success-color);
+            border-radius: 2px;
+            margin-right: var(--spacing-md);
+        }
+
+        .document-item {
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .document-item:hover {
+            box-shadow: var(--shadow-light);
+            border-color: var(--primary-color);
+        }
+
+        .document-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .document-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .document-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .document-status {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-small);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .document-status.uploading {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .document-status.completed {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+        }
+
+        .document-status.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+        }
+
+        .document-progress {
+            margin-top: var(--spacing-sm);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-indeterminate {
+            animation: progress-indeterminate 2s infinite linear;
+        }
+
+        @keyframes progress-indeterminate {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+
+        .upload-progress {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-small);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error States */
+        .error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin: var(--spacing-md) 0;
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        /* Empty States */
+        .empty {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .document-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Document Upload</h1>
+            <p>Upload technical documents for processing and analysis</p>
+        </div>
+
+        <form class="upload-form" id="uploadForm">
+            <!-- Equipment Selection -->
+            <div class="form-section">
+                <h3>Equipment Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="manufacturer">Manufacturer</label>
+                        <select class="form-select" id="manufacturer" name="manufacturer" required>
+                            <option value="">Select Manufacturer</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="model">Model</label>
+                        <select class="form-select" id="model" name="model" required disabled>
+                            <option value="">Select Model</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Upload -->
+            <div class="form-section">
+                <h3>Document Upload</h3>
+                <div class="file-upload" id="fileUpload">
+                    <div class="file-upload-icon">📄</div>
+                    <div class="file-upload-text">Drop your document here</div>
+                    <div class="file-upload-subtext">or click to browse files</div>
+                    <button type="button" class="file-upload-button">Choose File</button>
+                    <input type="file" class="file-input" id="fileInput" accept=".pdf,.doc,.docx" />
+                </div>
+                
+                <div class="selected-file" id="selectedFile">
+                    <div class="file-info">
+                        <div class="file-details">
+                            <div class="file-icon">📄</div>
+                            <div>
+                                <div class="file-name" id="fileName">-</div>
+                                <div class="file-size" id="fileSize">-</div>
+                            </div>
+                        </div>
+                        <button type="button" class="file-remove" id="removeFile">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                <button type="submit" class="btn btn-primary" id="uploadBtn" disabled>Upload Document</button>
+            </div>
+        </form>
+
+        <!-- Document List -->
+        <div class="document-list">
+            <h3>Uploaded Documents</h3>
+            <div id="documentListContent">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Loading documents...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class DocumentUpload {
+            constructor() {
+                this.selectedFile = null;
+                this.manufacturers = [];
+                this.models = [];
+                this.documents = [];
+                this.init();
+            }
+
+            async init() {
+                this.setupEventListeners();
+                await this.loadManufacturers();
+                await this.loadDocuments();
+            }
+
+            setupEventListeners() {
+                // Manufacturer change
+                document.getElementById('manufacturer').addEventListener('change', (e) => {
+                    this.onManufacturerChange(e.target.value);
+                });
+
+                // Model change
+                document.getElementById('model').addEventListener('change', (e) => {
+                    this.onModelChange(e.target.value);
+                });
+
+                // File upload
+                const fileUpload = document.getElementById('fileUpload');
+                const fileInput = document.getElementById('fileInput');
+                
+                fileUpload.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', (e) => this.onFileSelect(e));
+                
+                // Drag and drop
+                fileUpload.addEventListener('dragover', (e) => this.onDragOver(e));
+                fileUpload.addEventListener('dragleave', (e) => this.onDragLeave(e));
+                fileUpload.addEventListener('drop', (e) => this.onDrop(e));
+
+                // Remove file
+                document.getElementById('removeFile').addEventListener('click', () => {
+                    this.removeFile();
+                });
+
+                // Clear form
+                document.getElementById('clearForm').addEventListener('click', () => {
+                    this.clearForm();
+                });
+
+                // Form submit
+                document.getElementById('uploadForm').addEventListener('submit', (e) => {
+                    this.onUpload(e);
+                });
+            }
+
+            async loadManufacturers() {
+                try {
+                    const response = await fetch('/admin/api/manufacturers', {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const result = await response.json();
+                    this.manufacturers = result.data.manufacturers.map(name => ({
+                        id: name.toLowerCase().replace(/\s+/g, '_'),
+                        name: name,
+                        normalized: name.toLowerCase().replace(/\s+/g, '_')
+                    }));
+
+                    const manufacturerSelect = document.getElementById('manufacturer');
+                    manufacturerSelect.innerHTML = '<option value="">Select Manufacturer</option>';
+                    
+                    this.manufacturers.forEach(manufacturer => {
+                        const option = document.createElement('option');
+                        option.value = manufacturer.id;
+                        option.textContent = manufacturer.name;
+                        manufacturerSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Failed to load manufacturers:', error);
+                    // Fallback to empty dropdown
+                    const manufacturerSelect = document.getElementById('manufacturer');
+                    manufacturerSelect.innerHTML = '<option value="">Failed to load manufacturers</option>';
+                }
+            }
+
+            async loadModels(manufacturerId) {
+                try {
+                    // Get the manufacturer name from the ID
+                    const manufacturer = this.manufacturers.find(m => m.id === manufacturerId);
+                    if (!manufacturer) {
+                        console.error('Manufacturer not found:', manufacturerId);
+                        return;
+                    }
+
+                    const response = await fetch(`/admin/api/models?manufacturer=${encodeURIComponent(manufacturer.name)}`, {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const result = await response.json();
+                    
+                    // Format models for dropdown
+                    this.models = result.data.models.map(model => ({
+                        id: model.model_norm,
+                        name: model.model_norm.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                        normalized: model.model_norm
+                    }));
+                    
+                    const modelSelect = document.getElementById('model');
+                    modelSelect.innerHTML = '<option value="">Select Model</option>';
+                    modelSelect.disabled = false;
+                    
+                    this.models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model.id;
+                        option.textContent = model.name;
+                        modelSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Failed to load models:', error);
+                    // Fallback to empty dropdown
+                    const modelSelect = document.getElementById('model');
+                    modelSelect.innerHTML = '<option value="">Failed to load models</option>';
+                    modelSelect.disabled = false;
+                }
+            }
+
+            async loadDocuments() {
+                try {
+                    const response = await fetch('/admin/api/upload/documents', {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const result = await response.json();
+                    
+                    // Format documents for display
+                    this.documents = result.data.documents.map(doc => ({
+                        id: doc.id,
+                        name: doc.title || doc.filename || 'Unknown Document',
+                        manufacturer: doc.manufacturer || 'Unknown',
+                        model: doc.model || 'Unknown',
+                        size: this.formatFileSize(doc.size),
+                        status: this.getStatusDisplay(doc.status),
+                        uploadedAt: this.formatDate(doc.created_at),
+                        progress: doc.status === 'processing' ? 50 : null
+                    }));
+
+                    this.renderDocumentList();
+                } catch (error) {
+                    console.error('Failed to load documents:', error);
+                    // Fallback to empty list
+                    this.documents = [];
+                    this.renderDocumentList();
+                }
+            }
+
+            onManufacturerChange(manufacturerId) {
+                if (!manufacturerId) {
+                    document.getElementById('model').disabled = true;
+                    document.getElementById('model').innerHTML = '<option value="">Select Model</option>';
+                    return;
+                }
+
+                this.loadModels(manufacturerId);
+            }
+
+            onModelChange(modelId) {
+                // Model selected - no additional action needed
+            }
+
+            onFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.setSelectedFile(file);
+                }
+            }
+
+            onDragOver(event) {
+                event.preventDefault();
+                event.currentTarget.classList.add('dragover');
+            }
+
+            onDragLeave(event) {
+                event.preventDefault();
+                event.currentTarget.classList.remove('dragover');
+            }
+
+            onDrop(event) {
+                event.preventDefault();
+                event.currentTarget.classList.remove('dragover');
+                
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    this.setSelectedFile(files[0]);
+                }
+            }
+
+            setSelectedFile(file) {
+                this.selectedFile = file;
+                
+                // Update UI
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = this.formatFileSize(file.size);
+                document.getElementById('selectedFile').classList.add('show');
+                
+                // Enable upload button
+                document.getElementById('uploadBtn').disabled = false;
+            }
+
+            removeFile() {
+                this.selectedFile = null;
+                document.getElementById('fileInput').value = '';
+                document.getElementById('selectedFile').classList.remove('show');
+                document.getElementById('uploadBtn').disabled = true;
+            }
+
+            clearForm() {
+                // Reset form
+                document.getElementById('uploadForm').reset();
+                document.getElementById('model').disabled = true;
+                document.getElementById('model').innerHTML = '<option value="">Select Model</option>';
+                
+                // Clear file
+                this.removeFile();
+            }
+
+            formatFileSize(bytes) {
+                if (!bytes) return 'Unknown';
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(1024));
+                return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+            }
+
+            getStatusDisplay(status) {
+                const statusMap = {
+                    'pending': 'Pending',
+                    'processing': 'Processing',
+                    'completed': 'Completed',
+                    'failed': 'Failed',
+                    'uploading': 'Uploading'
+                };
+                return statusMap[status] || status || 'Unknown';
+            }
+
+            formatDate(dateString) {
+                if (!dateString) return 'Unknown';
+                const date = new Date(dateString);
+                return date.toLocaleString();
+            }
+
+            async onUpload(event) {
+                event.preventDefault();
+                
+                if (!this.selectedFile) {
+                    alert('Please select a file to upload');
+                    return;
+                }
+
+                const manufacturer = document.getElementById('manufacturer').value;
+                const model = document.getElementById('model').value;
+                
+                if (!manufacturer || !model) {
+                    alert('Please select both manufacturer and model');
+                    return;
+                }
+
+                // Show upload progress
+                this.showUploadProgress();
+
+                try {
+                    // Create FormData for multipart upload
+                    const formData = new FormData();
+                    formData.append('file', this.selectedFile);
+                    
+                    // Create metadata object exactly like the old admin dashboard
+                    const metadata = {
+                        // Normalized fields (what server expects)
+                        manufacturer_norm: manufacturer,
+                        model_norm: model,
+                        
+                        // Regular fields (for backward compatibility)
+                        manufacturer: manufacturer,
+                        model: model,
+                        
+                        // Additional required fields
+                        language: 'en',
+                        revision_date: new Date().toISOString().split('T')[0], // Today's date
+                        ocr: true
+                    };
+                    formData.append('metadata', JSON.stringify(metadata));
+
+                    // Upload to the document ingest endpoint (same as old admin dashboard)
+                    const response = await fetch('/document/ingest', {
+                        method: 'POST',
+                        headers: {
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        },
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Upload successful
+                        this.hideUploadProgress();
+                        
+                        // Show progress popup with job ID
+                        if (result.data && result.data.job_id) {
+                            this.showProgressPopup(result.data.job_id);
+                        } else {
+                            alert('Document uploaded successfully!');
+                        }
+                        
+                        // Clear the form
+                        this.clearForm();
+                        
+                        // Refresh the document list
+                        await this.loadDocuments();
+                    } else {
+                        throw new Error(result.error?.message || 'Upload failed');
+                    }
+
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    this.hideUploadProgress();
+                    alert(`Upload failed: ${error.message}`);
+                }
+            }
+
+            showUploadProgress() {
+                const uploadBtn = document.getElementById('uploadBtn');
+                uploadBtn.disabled = true;
+                uploadBtn.textContent = 'Uploading...';
+                
+                // Show progress indicator
+                const progressIndicator = document.createElement('div');
+                progressIndicator.id = 'uploadProgress';
+                progressIndicator.innerHTML = `
+                    <div class="upload-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-indeterminate"></div>
+                        </div>
+                        <div class="progress-text">Uploading document...</div>
+                    </div>
+                `;
+                
+                const form = document.getElementById('uploadForm');
+                form.appendChild(progressIndicator);
+            }
+
+            hideUploadProgress() {
+                const uploadBtn = document.getElementById('uploadBtn');
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload Document';
+                
+                const progressIndicator = document.getElementById('uploadProgress');
+                if (progressIndicator) {
+                    progressIndicator.remove();
+                }
+            }
+
+            // Progress tracking functionality (ported from testing-progress.html)
+            showProgressPopup(jobId) {
+                // Create popup overlay
+                const overlay = document.createElement('div');
+                overlay.id = 'progress-popup-overlay';
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 10000;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                `;
+
+                // Create progress card
+                const progressCard = document.createElement('div');
+                progressCard.id = 'progress-popup-card';
+                progressCard.innerHTML = `
+                    <div class="progress-card">
+                        <div class="card-header">
+                            <div class="manufacturer" id="popup-manufacturer">Loading...</div>
+                            <div class="system" id="popup-system">Loading...</div>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <svg class="progress-ring" viewBox="0 0 200 200">
+                                <circle class="progress-ring-circle progress-ring-background" cx="100" cy="100" r="90"></circle>
+                                <circle class="progress-ring-circle progress-ring-fill" cx="100" cy="100" r="90" id="popup-progress-circle"></circle>
+                            </svg>
+                            
+                            <div class="progress-stage">
+                                <div id="popup-current-stage">Loading...</div>
+                                <div class="progress-percentage" id="popup-progress-percentage">0%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="status-indicator" id="popup-status-indicator">
+                            <div class="loading-spinner"></div>
+                            <span>Processing</span>
+                        </div>
+                        
+                        <div id="popup-error-message" class="error-message" style="display: none;"></div>
+                        
+                        <button class="close-button" onclick="closeProgressPopup()">Close</button>
+                    </div>
+                `;
+
+                // Add CSS styles
+                const style = document.createElement('style');
+                style.textContent = `
+                    .progress-card {
+                        background: #FFFFFF;
+                        border-radius: 12px;
+                        padding: 32px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                        border: 1px solid #C6C6C8;
+                        width: 300px;
+                        text-align: center;
+                        transition: all 0.3s ease;
+                    }
+
+                    .card-header {
+                        margin-bottom: 24px;
+                    }
+
+                    .manufacturer {
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #8E8E93;
+                        margin-bottom: 4px;
+                    }
+
+                    .system {
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: #000000;
+                        margin-bottom: 8px;
+                    }
+
+                    .progress-container {
+                        position: relative;
+                        width: 200px;
+                        height: 200px;
+                        margin: 0 auto 24px;
+                    }
+
+                    .progress-ring {
+                        width: 100%;
+                        height: 100%;
+                        transform: rotate(-90deg);
+                    }
+
+                    .progress-ring-circle {
+                        fill: none;
+                        stroke-width: 12;
+                        stroke-linecap: round;
+                        transition: stroke-dashoffset 0.5s ease-in-out;
+                    }
+
+                    .progress-ring-background {
+                        stroke: #C6C6C8;
+                    }
+
+                    .progress-ring-fill {
+                        stroke-dasharray: 565.48;
+                        stroke-dashoffset: 565.48;
+                    }
+
+                    .progress-stage {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: #000000;
+                        text-align: center;
+                        line-height: 1.2;
+                    }
+
+                    .progress-percentage {
+                        font-size: 14px;
+                        color: #8E8E93;
+                        margin-top: 4px;
+                    }
+
+                    .status-indicator {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                        padding: 4px 8px;
+                        border-radius: 8px;
+                        font-size: 12px;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .status-indicator.active {
+                        background: #007AFF;
+                        color: white;
+                    }
+
+                    .status-indicator.completed {
+                        background: #34C759;
+                        color: white;
+                    }
+
+                    .status-indicator.error {
+                        background: #FF3B30;
+                        color: white;
+                    }
+
+                    .loading-spinner {
+                        display: inline-block;
+                        width: 16px;
+                        height: 16px;
+                        border: 2px solid #C6C6C8;
+                        border-radius: 50%;
+                        border-top-color: #007AFF;
+                        animation: spin 1s ease-in-out infinite;
+                    }
+
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+
+                    .error-message {
+                        color: #FF3B30;
+                        font-size: 14px;
+                        margin-top: 16px;
+                        padding: 8px;
+                        background: rgba(255, 59, 48, 0.1);
+                        border-radius: 8px;
+                        border: 1px solid rgba(255, 59, 48, 0.2);
+                    }
+
+                    .close-button {
+                        background: #007AFF;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 16px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        margin-top: 16px;
+                    }
+
+                    .close-button:hover {
+                        background: #0056CC;
+                        transform: translateY(-1px);
+                    }
+                `;
+
+                document.head.appendChild(style);
+                overlay.appendChild(progressCard);
+                document.body.appendChild(overlay);
+
+                // Start progress tracking
+                this.startProgressTracking(jobId);
+            }
+
+            closeProgressPopup() {
+                const overlay = document.getElementById('progress-popup-overlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+                // Clear any intervals
+                if (window.progressInterval) {
+                    clearInterval(window.progressInterval);
+                    window.progressInterval = null;
+                }
+            }
+
+            // Processing stages configuration
+            STAGES = [
+                { name: 'upload_complete', label: 'Upload Complete', color: '#007AFF', progress: 0 },
+                { name: 'parsing', label: 'Parsing', color: '#007AFF', progress: 16.67 },
+                { name: 'pinecone_upsert', label: 'Processing', color: '#FF9500', progress: 50 },
+                { name: 'extraction', label: 'Extraction', color: '#FF9500', progress: 66.67 },
+                { name: 'ingestion', label: 'Ingestion', color: '#5AC8FA', progress: 83.33 },
+                { name: 'completed', label: 'Completed', color: '#34C759', progress: 100 }
+            ];
+
+            getProgressForStage(stage) {
+                const stageConfig = this.STAGES.find(s => s.name === stage);
+                return stageConfig ? stageConfig.progress : 0;
+            }
+
+            getColorForStage(stage) {
+                const stageConfig = this.STAGES.find(s => s.name === stage);
+                return stageConfig ? stageConfig.color : '#007AFF';
+            }
+
+            getLabelForStage(stage) {
+                const stageConfig = this.STAGES.find(s => s.name === stage);
+                return stageConfig ? stageConfig.label : stage;
+            }
+
+            updateProgressRing(progress, color) {
+                const circle = document.getElementById('popup-progress-circle');
+                if (!circle) return;
+                
+                const circumference = 2 * Math.PI * 90; // radius = 90
+                const offset = circumference - (progress / 100) * circumference;
+                
+                circle.style.strokeDashoffset = offset;
+                circle.style.stroke = color;
+            }
+
+            updateProgressUI(jobData) {
+                // Update header
+                const manufacturer = jobData.manufacturer_norm || 
+                                   jobData.params?.manufacturer || 
+                                   jobData.manufacturer || 
+                                   'Unknown Manufacturer';
+                const system = jobData.model_norm || 
+                              jobData.params?.model || 
+                              jobData.model || 
+                              jobData.doc_id || 
+                              'Unknown System';
+                
+                const manufacturerEl = document.getElementById('popup-manufacturer');
+                const systemEl = document.getElementById('popup-system');
+                if (manufacturerEl) manufacturerEl.textContent = manufacturer;
+                if (systemEl) systemEl.textContent = system;
+                
+                // Update progress
+                const stage = jobData.status_v2 || 'upload_complete';
+                const progress = this.getProgressForStage(stage);
+                const color = this.getColorForStage(stage);
+                const label = this.getLabelForStage(stage);
+                
+                const stageEl = document.getElementById('popup-current-stage');
+                const percentageEl = document.getElementById('popup-progress-percentage');
+                if (stageEl) stageEl.textContent = label;
+                if (percentageEl) percentageEl.textContent = `${Math.round(progress)}%`;
+                
+                // Update progress ring
+                this.updateProgressRing(progress, color);
+                
+                // Update status indicator
+                const statusIndicator = document.getElementById('popup-status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.className = 'status-indicator';
+                    
+                    if (stage === 'completed') {
+                        statusIndicator.classList.add('completed');
+                        statusIndicator.innerHTML = '<span>✓ Completed</span>';
+                    } else if (jobData.status === 'failed') {
+                        statusIndicator.classList.add('error');
+                        statusIndicator.innerHTML = '<span>✗ Failed</span>';
+                    } else {
+                        statusIndicator.classList.add('active');
+                        statusIndicator.innerHTML = '<div class="loading-spinner"></div><span>Processing</span>';
+                    }
+                }
+                
+                // Hide error message if job is processing successfully
+                const errorEl = document.getElementById('popup-error-message');
+                if (errorEl && jobData.status !== 'failed') {
+                    errorEl.style.display = 'none';
+                }
+            }
+
+            async fetchJobStatus(jobId) {
+                try {
+                    const response = await fetch(`/admin/api/jobs/${jobId}`, {
+                        headers: {
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error?.message || 'Failed to fetch job status');
+                    }
+
+                    this.updateProgressUI(result.data);
+                    
+                    // Stop refreshing if job is completed or failed
+                    if (result.data.status === 'completed' || result.data.status === 'failed') {
+                        if (window.progressInterval) {
+                            clearInterval(window.progressInterval);
+                            window.progressInterval = null;
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching job status:', error);
+                    const errorEl = document.getElementById('popup-error-message');
+                    if (errorEl) {
+                        errorEl.textContent = `Error: ${error.message}`;
+                        errorEl.style.display = 'block';
+                    }
+                }
+            }
+
+            startProgressTracking(jobId) {
+                // Clear any existing interval
+                if (window.progressInterval) {
+                    clearInterval(window.progressInterval);
+                }
+                
+                // Fetch immediately
+                this.fetchJobStatus(jobId);
+                
+                // Then fetch every 2 seconds
+                window.progressInterval = setInterval(() => {
+                    this.fetchJobStatus(jobId);
+                }, 2000);
+            }
+
+            renderDocumentList() {
+                const content = document.getElementById('documentListContent');
+                
+                if (this.documents.length === 0) {
+                    content.innerHTML = `
+                        <div class="empty">
+                            <div class="empty-icon">📄</div>
+                            <div>No documents uploaded yet</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const documentsHtml = this.documents.map(doc => `
+                    <div class="document-item">
+                        <div class="document-header">
+                            <div>
+                                <div class="document-name">${doc.manufacturer} ${doc.model} • ${doc.size}</div>
+                                <div class="document-meta">
+                                    ${doc.name}
+                                </div>
+                            </div>
+                        </div>
+                        ${doc.status === 'uploading' && doc.progress !== undefined ? `
+                            <div class="document-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${doc.progress}%"></div>
+                                </div>
+                                <div class="progress-text">${doc.progress}% uploaded</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+
+                content.innerHTML = documentsHtml;
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        }
+
+        // Initialize the upload page when the DOM loads
+        // Make closeProgressPopup available globally for the close button
+        window.closeProgressPopup = function() {
+            const overlay = document.getElementById('progress-popup-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+            // Clear any intervals
+            if (window.progressInterval) {
+                clearInterval(window.progressInterval);
+                window.progressInterval = null;
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new DocumentUpload();
+        });
+    </script>
+</body>
+</html>

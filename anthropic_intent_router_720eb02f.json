@@ -1,0 +1,1087 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 34,
+  "unique_intent_routes": 25,
+  "question_type_breakdown": {
+    "What": 14,
+    "How": 9,
+    "Where": 1,
+    "When": 1
+  },
+  "intent_routes": [
+    {
+      "question": "What models are in the HC3 Hector series?",
+      "question_variations": [
+        "Which HC3 models are available?",
+        "What are the different HC3 Hector variants?",
+        "Can you list the HC3 model numbers?"
+      ],
+      "answer": "The HC3 Hector series includes models HC3 712, 712 D, 712 DB, 724, 724 D, 724 DB, 1012, 1012 D, 1012 DB, 1024, 1024 D, 1024 DB, 1512, 1512 D, 1512 DB, 1524, 1524 D, and 1524 DB",
+      "question_type": "What",
+      "models": [
+        "All HC3 Series"
+      ],
+      "references": [
+        "REV 008 Cover Page"
+      ]
+    },
+    {
+      "question": "What power ratings are available for the HC3 series?",
+      "question_variations": [
+        "How much power do HC3 windlasses have?",
+        "What are the wattage options for HC3 models?"
+      ],
+      "answer": "The HC3 series is available in three power ratings: 700W, 1000W, and 1500W",
+      "question_type": "What",
+      "models": [
+        "All HC3 Series"
+      ],
+      "references": [
+        "REV 008 Cover Page"
+      ]
+    },
+    {
+      "question": "What languages is the manual available in?",
+      "question_variations": [
+        "Which language versions exist for the manual?",
+        "Can I get the manual in different languages?"
+      ],
+      "answer": "The manual is available in Italian (IT), English (GB), French (FR), German (DE), and Spanish (ES)",
+      "question_type": "What",
+      "models": [
+        "All HC3 Series"
+      ],
+      "references": [
+        "REV 008 Cover Page"
+      ]
+    },
+    {
+      "question": "What type of windlass is the HC3 series?",
+      "question_variations": [
+        "Is the HC3 a vertical or horizontal windlass?",
+        "How is the HC3 windlass oriented?"
+      ],
+      "answer": "The HC3 series consists of horizontal windlasses (horizontal anchor windlasses)",
+      "question_type": "What",
+      "models": [
+        "All HC3 Series"
+      ],
+      "references": [
+        "REV 008 Cover Page"
+      ]
+    },
+    {
+      "question": "What is the main purpose of Quick\u00ae windlasses?",
+      "question_variations": [
+        "What are Quick windlasses designed for?",
+        "What is the intended use of the windlass?",
+        "Can I use the windlass for other purposes?"
+      ],
+      "answer": "Quick\u00ae windlasses are designed specifically to weigh the anchor. They should not be used for any other purposes.",
+      "question_type": "What",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "references": [
+        "Installation Manual p.11"
+      ]
+    },
+    {
+      "question": "How should the windlass be positioned during installation?",
+      "question_variations": [
+        "What is the correct positioning for windlass installation?",
+        "Where should I place the windlass?",
+        "How do I align the windlass properly?"
+      ],
+      "answer": "The windlass must be positioned with the gypsy aligned with the bow roller. The upper and lower surfaces of the deck should be as parallel as possible to prevent loss of motor power.",
+      "question_type": "How",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "references": [
+        "Installation Requirements Section"
+      ]
+    },
+    {
+      "question": "What tools are required for windlass installation?",
+      "question_variations": [
+        "Which tools do I need to install the windlass?",
+        "What equipment is needed for windlass installation?",
+        "What size tools are required for installation?"
+      ],
+      "answer": "Required tools include a drill with bits of \u00d8 11 mm (7/16\"), \u00d8 24 mm (15/16\") and \u00d8 43 (1\" 11/16) hollow mill, and hexagonal wrenches of 13 mm and 17 mm.",
+      "question_type": "What",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "references": [
+        "Tools Required Section"
+      ]
+    },
+    {
+      "question": "How should the windlass be secured during navigation?",
+      "question_variations": [
+        "What safety measures are needed while sailing?",
+        "How do I secure the windlass when not in use?",
+        "What precautions should I take during navigation?"
+      ],
+      "answer": "During navigation, isolate the windlass from the power system by switching the circuit breaker off and lock the chain by securing it to a fixed point of the boat. The windlass should not be used as the only securing device.",
+      "question_type": "How",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "references": [
+        "Safety Instructions Section"
+      ]
+    },
+    {
+      "question": "What items are included in the windlass package?",
+      "question_variations": [
+        "What comes with the windlass?",
+        "What's included in the box?",
+        "What accessories come standard with the windlass?"
+      ],
+      "answer": "The package contains the windlass, handle, bolts and screws for assembly, drill template, user's manual, and conditions of warranty.",
+      "question_type": "What",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "references": [
+        "Package Contents Section"
+      ]
+    },
+    {
+      "question": "What are the different motor output options for the Hector windlass?",
+      "question_variations": [
+        "What power options are available for the Hector?",
+        "How many watts can the Hector motor output?",
+        "What are the available motor sizes for the Hector windlass?"
+      ],
+      "answer": "The Hector windlass is available in three motor output options: 700W, 1000W, and 1500W",
+      "question_type": "What",
+      "models": [
+        "HECTOR",
+        "HECTOR D",
+        "HECTOR DB"
+      ],
+      "references": [
+        "Technical Data Section"
+      ]
+    },
+    {
+      "question": "How do I decode the Hector windlass model number?",
+      "question_variations": [
+        "What do the numbers in the Hector model code mean?",
+        "How can I identify my Hector windlass model?",
+        "What is the meaning of the Hector model code?"
+      ],
+      "answer": "The code follows format HC3 XX YY Z where HC3 is the product line, XX is motor output (07/10/15 for 700/1000/1500W), YY is voltage (12/24V), and Z indicates case material (A=aluminum, -=composite) and configuration (D=drum, DB=gypsy and drum)",
+      "question_type": "How",
+      "models": [
+        "All HC3 Models"
+      ],
+      "references": [
+        "Model Identification Section"
+      ]
+    },
+    {
+      "question": "What is the maximum working load for the 1500W 24V model?",
+      "question_variations": [
+        "How much weight can the 1500W 24V Hector lift?",
+        "What is the safe working load for the 1500W 24V version?",
+        "What load capacity does the 1500W 24V have?"
+      ],
+      "answer": "The 1500W 24V model has a maximum working load of 550 kg (1212.2 lb)",
+      "question_type": "What",
+      "models": [
+        "HC3 15 24"
+      ],
+      "references": [
+        "Technical Data Table"
+      ]
+    },
+    {
+      "question": "What chain sizes are compatible with the Hector windlass?",
+      "question_variations": [
+        "Which chain types work with the Hector?",
+        "What size chain should I use with my Hector windlass?",
+        "What are the compatible chain dimensions?"
+      ],
+      "answer": "The Hector is compatible with 8mm (5/16\") and 10mm (3/8\") chain sizes in DIN 766, ISO G4, and BBB ISO (P. 30) G4 standards",
+      "question_type": "What",
+      "models": [
+        "All Models"
+      ],
+      "references": [
+        "Gypsy Specifications Table"
+      ]
+    },
+    {
+      "question": "What is the required deck thickness for installation?",
+      "question_variations": [
+        "How thick should the deck be to mount the Hector?",
+        "What deck thickness is needed for the windlass?",
+        "What are the deck mounting requirements?"
+      ],
+      "answer": "The standard deck thickness range is 20-60mm (25/32\" - 2\" 11/32). Special studs can be supplied for greater deck thicknesses upon request",
+      "question_type": "What",
+      "models": [
+        "All Models"
+      ],
+      "references": [
+        "Technical Data Table, Note 5"
+      ]
+    },
+    {
+      "question": "How do I connect the chain counter sensor?",
+      "question_variations": [
+        "What are the chain counter sensor wire colors?",
+        "How is the chain counter sensor wired?",
+        "What's the wiring diagram for chain counter installation?"
+      ],
+      "answer": "The chain counter sensor connects using three wires: White, Green, and Black cables. These connect directly to the chain counter control board.",
+      "question_type": "How",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "references": [
+        "Page 12",
+        "GB Connection Diagram"
+      ]
+    },
+    {
+      "question": "What fuse size is needed for the system?",
+      "question_variations": [
+        "Which fuse should I use?",
+        "What's the correct fuse rating?",
+        "What amp fuse does the system require?"
+      ],
+      "answer": "Use a 4A fuse for 12V systems or 2A fuse for 24V systems",
+      "question_type": "What",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "references": [
+        "Page 12",
+        "GB Connection Diagram"
+      ]
+    },
+    {
+      "question": "What remote control options are available?",
+      "question_variations": [
+        "What types of remotes can I use?",
+        "Which remote controls work with this system?",
+        "How can I control the windlass remotely?"
+      ],
+      "answer": "Available remote options include: Watertight hand-held remote control, Radio pocket handheld transmitters (Model HRC 1002), Foot switches (Model 900U and 900D), and Watertight panel control",
+      "question_type": "What",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "references": [
+        "Page 12",
+        "GB Connection Diagram"
+      ]
+    },
+    {
+      "question": "Where do I find the circuit breaker specifications?",
+      "question_variations": [
+        "What size circuit breaker do I need?",
+        "Which circuit breaker should I use?",
+        "Where are the circuit breaker ratings listed?"
+      ],
+      "answer": "Circuit breaker specifications can be found in the table on page 10 of the manual. A hydraulic-magnetic circuit breaker is required.",
+      "question_type": "Where",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "references": [
+        "Page 10",
+        "Circuit Breaker Table"
+      ]
+    },
+    {
+      "question": "How is the total cable length calculated?",
+      "question_variations": [
+        "What is the formula for total cable length?",
+        "How do I determine the total cable run?",
+        "What's the cable length calculation?"
+      ],
+      "answer": "Total cable length (L) is calculated by adding three sections: L = L1 + L2 + L3, where L1 is marked blue on the diagram",
+      "question_type": "How",
+      "models": [
+        "HECTOR 700",
+        "HECTOR 1000",
+        "HECTOR 1500"
+      ],
+      "references": [
+        "Page 12",
+        "GB Connection Diagram"
+      ]
+    },
+    {
+      "question": "How do I safely perform maintenance on the windlass?",
+      "question_variations": [
+        "What safety precautions should I take when servicing the windlass?",
+        "What should I do before working on the windlass?"
+      ],
+      "answer": "Switch off electrical power to the motor and carefully remove the chain/rope from the gypsy or rope from the drum before performing any maintenance work.",
+      "question_type": "How",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "references": [
+        "Page 14, Safety Warning Section"
+      ]
+    },
+    {
+      "question": "How often should I clean salt deposits from the windlass?",
+      "question_variations": [
+        "What is the cleaning schedule for the windlass?",
+        "When should I wash the windlass?"
+      ],
+      "answer": "Salt deposits must be removed periodically. Wash thoroughly with fresh water any parts where salt may have built up.",
+      "question_type": "When",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "references": [
+        "Page 14, Maintenance Section"
+      ]
+    },
+    {
+      "question": "How do I disassemble the gypsy side for maintenance?",
+      "question_variations": [
+        "What are the steps to remove the gypsy?",
+        "How do I take apart the gypsy side?"
+      ],
+      "answer": "1. Use handle (22) to remove bush (2) 2. Loosen screws (21) 3. Remove gypsy cover (20) 4. Remove top clutch cone (19) 5. Loosen fixing screws (30) of rope/chain stripper (29) and remove it 6. Pull off gypsy (18)",
+      "question_type": "How",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "references": [
+        "Page 14, Gypsy Side Maintenance"
+      ]
+    },
+    {
+      "question": "How do I disassemble the drum side for maintenance?",
+      "question_variations": [
+        "What are the steps to remove the drum?",
+        "How do I take apart the drum side?"
+      ],
+      "answer": "1. Use handle (22) to release bush (2) 2. Pull off drum (3)",
+      "question_type": "How",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "references": [
+        "Page 14, Drum Side Maintenance"
+      ]
+    },
+    {
+      "question": "What maintenance is required annually?",
+      "question_variations": [
+        "What yearly maintenance should I perform?",
+        "What are the annual service requirements?"
+      ],
+      "answer": "The drum and gypsy must be taken apart annually. After disassembly, clean all removed parts to prevent corrosion and grease the shaft thread (14, 15 or 16) and gypsy (18) where the clutch cones rest (17 and 19) using marine grease.",
+      "question_type": "What",
+      "models": [
+        "HECTOR 700W",
+        "HECTOR 1000W",
+        "HECTOR 1500W"
+      ],
+      "references": [
+        "Page 14, Annual Maintenance Section"
+      ]
+    },
+    {
+      "question": "How do I use the clutch on the windlass?",
+      "question_variations": [
+        "How does the clutch work?",
+        "What's the process for engaging the clutch?",
+        "How do I engage and disengage the clutch?"
+      ],
+      "answer": "To disengage the clutch, insert the handle into the bush of the gypsy cover and turn counter-clockwise. To re-engage, turn the handle clockwise. The clutch connects the gypsy to the main shaft when engaged.",
+      "question_type": "How",
+      "models": [
+        "Hector 700W",
+        "Hector 1000W",
+        "Hector 1500W"
+      ],
+      "references": [
+        "Clutch Use Section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What models are in the HC3 Hector series?",
+            "question_variations": [
+              "Which HC3 models are available?",
+              "What are the different HC3 Hector variants?",
+              "Can you list the HC3 model numbers?"
+            ],
+            "answer": "The HC3 Hector series includes models HC3 712, 712 D, 712 DB, 724, 724 D, 724 DB, 1012, 1012 D, 1012 DB, 1024, 1024 D, 1024 DB, 1512, 1512 D, 1512 DB, 1524, 1524 D, and 1524 DB",
+            "question_type": "What",
+            "models": [
+              "All HC3 Series"
+            ],
+            "references": [
+              "REV 008 Cover Page"
+            ]
+          },
+          {
+            "question": "What power ratings are available for the HC3 series?",
+            "question_variations": [
+              "How much power do HC3 windlasses have?",
+              "What are the wattage options for HC3 models?"
+            ],
+            "answer": "The HC3 series is available in three power ratings: 700W, 1000W, and 1500W",
+            "question_type": "What",
+            "models": [
+              "All HC3 Series"
+            ],
+            "references": [
+              "REV 008 Cover Page"
+            ]
+          },
+          {
+            "question": "What languages is the manual available in?",
+            "question_variations": [
+              "Which language versions exist for the manual?",
+              "Can I get the manual in different languages?"
+            ],
+            "answer": "The manual is available in Italian (IT), English (GB), French (FR), German (DE), and Spanish (ES)",
+            "question_type": "What",
+            "models": [
+              "All HC3 Series"
+            ],
+            "references": [
+              "REV 008 Cover Page"
+            ]
+          },
+          {
+            "question": "What type of windlass is the HC3 series?",
+            "question_variations": [
+              "Is the HC3 a vertical or horizontal windlass?",
+              "How is the HC3 windlass oriented?"
+            ],
+            "answer": "The HC3 series consists of horizontal windlasses (horizontal anchor windlasses)",
+            "question_type": "What",
+            "models": [
+              "All HC3 Series"
+            ],
+            "references": [
+              "REV 008 Cover Page"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the main purpose of Quick\u00ae windlasses?",
+            "question_variations": [
+              "What are Quick windlasses designed for?",
+              "What is the intended use of the windlass?",
+              "Can I use the windlass for other purposes?"
+            ],
+            "answer": "Quick\u00ae windlasses are designed specifically to weigh the anchor. They should not be used for any other purposes.",
+            "question_type": "What",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Installation Manual p.11"
+            ]
+          },
+          {
+            "question": "How should the windlass be positioned during installation?",
+            "question_variations": [
+              "What is the correct positioning for windlass installation?",
+              "Where should I place the windlass?",
+              "How do I align the windlass properly?"
+            ],
+            "answer": "The windlass must be positioned with the gypsy aligned with the bow roller. The upper and lower surfaces of the deck should be as parallel as possible to prevent loss of motor power.",
+            "question_type": "How",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Installation Requirements Section"
+            ]
+          },
+          {
+            "question": "What tools are required for windlass installation?",
+            "question_variations": [
+              "Which tools do I need to install the windlass?",
+              "What equipment is needed for windlass installation?",
+              "What size tools are required for installation?"
+            ],
+            "answer": "Required tools include a drill with bits of \u00d8 11 mm (7/16\"), \u00d8 24 mm (15/16\") and \u00d8 43 (1\" 11/16) hollow mill, and hexagonal wrenches of 13 mm and 17 mm.",
+            "question_type": "What",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Tools Required Section"
+            ]
+          },
+          {
+            "question": "How should the windlass be secured during navigation?",
+            "question_variations": [
+              "What safety measures are needed while sailing?",
+              "How do I secure the windlass when not in use?",
+              "What precautions should I take during navigation?"
+            ],
+            "answer": "During navigation, isolate the windlass from the power system by switching the circuit breaker off and lock the chain by securing it to a fixed point of the boat. The windlass should not be used as the only securing device.",
+            "question_type": "How",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Safety Instructions Section"
+            ]
+          },
+          {
+            "question": "What items are included in the windlass package?",
+            "question_variations": [
+              "What comes with the windlass?",
+              "What's included in the box?",
+              "What accessories come standard with the windlass?"
+            ],
+            "answer": "The package contains the windlass, handle, bolts and screws for assembly, drill template, user's manual, and conditions of warranty.",
+            "question_type": "What",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Package Contents Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the different motor output options for the Hector windlass?",
+            "question_variations": [
+              "What power options are available for the Hector?",
+              "How many watts can the Hector motor output?",
+              "What are the available motor sizes for the Hector windlass?"
+            ],
+            "answer": "The Hector windlass is available in three motor output options: 700W, 1000W, and 1500W",
+            "question_type": "What",
+            "models": [
+              "HECTOR",
+              "HECTOR D",
+              "HECTOR DB"
+            ],
+            "references": [
+              "Technical Data Section"
+            ]
+          },
+          {
+            "question": "How do I decode the Hector windlass model number?",
+            "question_variations": [
+              "What do the numbers in the Hector model code mean?",
+              "How can I identify my Hector windlass model?",
+              "What is the meaning of the Hector model code?"
+            ],
+            "answer": "The code follows format HC3 XX YY Z where HC3 is the product line, XX is motor output (07/10/15 for 700/1000/1500W), YY is voltage (12/24V), and Z indicates case material (A=aluminum, -=composite) and configuration (D=drum, DB=gypsy and drum)",
+            "question_type": "How",
+            "models": [
+              "All HC3 Models"
+            ],
+            "references": [
+              "Model Identification Section"
+            ]
+          },
+          {
+            "question": "What is the maximum working load for the 1500W 24V model?",
+            "question_variations": [
+              "How much weight can the 1500W 24V Hector lift?",
+              "What is the safe working load for the 1500W 24V version?",
+              "What load capacity does the 1500W 24V have?"
+            ],
+            "answer": "The 1500W 24V model has a maximum working load of 550 kg (1212.2 lb)",
+            "question_type": "What",
+            "models": [
+              "HC3 15 24"
+            ],
+            "references": [
+              "Technical Data Table"
+            ]
+          },
+          {
+            "question": "What chain sizes are compatible with the Hector windlass?",
+            "question_variations": [
+              "Which chain types work with the Hector?",
+              "What size chain should I use with my Hector windlass?",
+              "What are the compatible chain dimensions?"
+            ],
+            "answer": "The Hector is compatible with 8mm (5/16\") and 10mm (3/8\") chain sizes in DIN 766, ISO G4, and BBB ISO (P. 30) G4 standards",
+            "question_type": "What",
+            "models": [
+              "All Models"
+            ],
+            "references": [
+              "Gypsy Specifications Table"
+            ]
+          },
+          {
+            "question": "What is the required deck thickness for installation?",
+            "question_variations": [
+              "How thick should the deck be to mount the Hector?",
+              "What deck thickness is needed for the windlass?",
+              "What are the deck mounting requirements?"
+            ],
+            "answer": "The standard deck thickness range is 20-60mm (25/32\" - 2\" 11/32). Special studs can be supplied for greater deck thicknesses upon request",
+            "question_type": "What",
+            "models": [
+              "All Models"
+            ],
+            "references": [
+              "Technical Data Table, Note 5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I connect the chain counter sensor?",
+            "question_variations": [
+              "What are the chain counter sensor wire colors?",
+              "How is the chain counter sensor wired?",
+              "What's the wiring diagram for chain counter installation?"
+            ],
+            "answer": "The chain counter sensor connects using three wires: White, Green, and Black cables. These connect directly to the chain counter control board.",
+            "question_type": "How",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "references": [
+              "Page 12",
+              "GB Connection Diagram"
+            ]
+          },
+          {
+            "question": "What fuse size is needed for the system?",
+            "question_variations": [
+              "Which fuse should I use?",
+              "What's the correct fuse rating?",
+              "What amp fuse does the system require?"
+            ],
+            "answer": "Use a 4A fuse for 12V systems or 2A fuse for 24V systems",
+            "question_type": "What",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "references": [
+              "Page 12",
+              "GB Connection Diagram"
+            ]
+          },
+          {
+            "question": "What remote control options are available?",
+            "question_variations": [
+              "What types of remotes can I use?",
+              "Which remote controls work with this system?",
+              "How can I control the windlass remotely?"
+            ],
+            "answer": "Available remote options include: Watertight hand-held remote control, Radio pocket handheld transmitters (Model HRC 1002), Foot switches (Model 900U and 900D), and Watertight panel control",
+            "question_type": "What",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "references": [
+              "Page 12",
+              "GB Connection Diagram"
+            ]
+          },
+          {
+            "question": "Where do I find the circuit breaker specifications?",
+            "question_variations": [
+              "What size circuit breaker do I need?",
+              "Which circuit breaker should I use?",
+              "Where are the circuit breaker ratings listed?"
+            ],
+            "answer": "Circuit breaker specifications can be found in the table on page 10 of the manual. A hydraulic-magnetic circuit breaker is required.",
+            "question_type": "Where",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "references": [
+              "Page 10",
+              "Circuit Breaker Table"
+            ]
+          },
+          {
+            "question": "How is the total cable length calculated?",
+            "question_variations": [
+              "What is the formula for total cable length?",
+              "How do I determine the total cable run?",
+              "What's the cable length calculation?"
+            ],
+            "answer": "Total cable length (L) is calculated by adding three sections: L = L1 + L2 + L3, where L1 is marked blue on the diagram",
+            "question_type": "How",
+            "models": [
+              "HECTOR 700",
+              "HECTOR 1000",
+              "HECTOR 1500"
+            ],
+            "references": [
+              "Page 12",
+              "GB Connection Diagram"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I safely perform maintenance on the windlass?",
+            "question_variations": [
+              "What safety precautions should I take when servicing the windlass?",
+              "What should I do before working on the windlass?"
+            ],
+            "answer": "Switch off electrical power to the motor and carefully remove the chain/rope from the gypsy or rope from the drum before performing any maintenance work.",
+            "question_type": "How",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "references": [
+              "Page 14, Safety Warning Section"
+            ]
+          },
+          {
+            "question": "How often should I clean salt deposits from the windlass?",
+            "question_variations": [
+              "What is the cleaning schedule for the windlass?",
+              "When should I wash the windlass?"
+            ],
+            "answer": "Salt deposits must be removed periodically. Wash thoroughly with fresh water any parts where salt may have built up.",
+            "question_type": "When",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "references": [
+              "Page 14, Maintenance Section"
+            ]
+          },
+          {
+            "question": "How do I disassemble the gypsy side for maintenance?",
+            "question_variations": [
+              "What are the steps to remove the gypsy?",
+              "How do I take apart the gypsy side?"
+            ],
+            "answer": "1. Use handle (22) to remove bush (2) 2. Loosen screws (21) 3. Remove gypsy cover (20) 4. Remove top clutch cone (19) 5. Loosen fixing screws (30) of rope/chain stripper (29) and remove it 6. Pull off gypsy (18)",
+            "question_type": "How",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "references": [
+              "Page 14, Gypsy Side Maintenance"
+            ]
+          },
+          {
+            "question": "How do I disassemble the drum side for maintenance?",
+            "question_variations": [
+              "What are the steps to remove the drum?",
+              "How do I take apart the drum side?"
+            ],
+            "answer": "1. Use handle (22) to release bush (2) 2. Pull off drum (3)",
+            "question_type": "How",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "references": [
+              "Page 14, Drum Side Maintenance"
+            ]
+          },
+          {
+            "question": "What maintenance is required annually?",
+            "question_variations": [
+              "What yearly maintenance should I perform?",
+              "What are the annual service requirements?"
+            ],
+            "answer": "The drum and gypsy must be taken apart annually. After disassembly, clean all removed parts to prevent corrosion and grease the shaft thread (14, 15 or 16) and gypsy (18) where the clutch cones rest (17 and 19) using marine grease.",
+            "question_type": "What",
+            "models": [
+              "HECTOR 700W",
+              "HECTOR 1000W",
+              "HECTOR 1500W"
+            ],
+            "references": [
+              "Page 14, Annual Maintenance Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I use the clutch on the windlass?",
+            "question_variations": [
+              "How does the clutch work?",
+              "What's the process for engaging the clutch?",
+              "How do I engage and disengage the clutch?"
+            ],
+            "answer": "To disengage the clutch, insert the handle into the bush of the gypsy cover and turn counter-clockwise. To re-engage, turn the handle clockwise. The clutch connects the gypsy to the main shaft when engaged.",
+            "question_type": "How",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Clutch Use Section"
+            ]
+          },
+          {
+            "question": "What's the proper way to weigh anchor?",
+            "question_variations": [
+              "How do I lift the anchor?",
+              "What's the process for raising the anchor?",
+              "How do I retrieve the anchor?"
+            ],
+            "answer": "First turn on the engine, ensure clutch is engaged and remove handle. Press the UP button on the control. If windlass stops, wait a few seconds and try again. Don't hold button continuously. If hydraulic magnetic switch trips, reset and wait several minutes before retrying.",
+            "question_type": "How",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Weighing the Anchor Section"
+            ]
+          },
+          {
+            "question": "How do I cast the anchor?",
+            "question_variations": [
+              "What's the procedure for dropping anchor?",
+              "How do I lower the anchor?",
+              "What's the proper way to deploy the anchor?"
+            ],
+            "answer": "You can cast anchor either electrically or manually. For manual operation, disengage the clutch to let the rope/chain fall. Control speed by turning handle clockwise. For electrical operation, press the DOWN button on the control for controlled descent. After anchoring, secure the chain with a rope.",
+            "question_type": "How",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Casting the Anchor Section"
+            ]
+          },
+          {
+            "question": "What safety precautions should I take when using the windlass?",
+            "question_variations": [
+              "What are the safety warnings for windlass operation?",
+              "How do I safely operate the windlass?",
+              "What should I avoid when using the windlass?"
+            ],
+            "answer": "Stay clear of chains, ropes and gypsy. Turn off electric motor for manual operation. Never operate electrically when handle is inserted. Use appropriate circuit breaker protection. Secure chain before navigation. Keep safe distance between hands and drum during operation.",
+            "question_type": "What",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Warning Usage GB Section"
+            ]
+          },
+          {
+            "question": "How do I manually weigh anchor?",
+            "question_variations": [
+              "What's the process for manual anchor retrieval?",
+              "How do I raise the anchor without power?",
+              "What steps do I take to manually lift the anchor?"
+            ],
+            "answer": "Secure chain with clamp, disconnect power supply. Engage lock lever control of gypsy. Unscrew bush with lever for 2+ turns, unlock chain, fit lever into gypsy cover seat. Take up chain by moving lever anticlockwise. After completion, remove lever, screw up bush, release gypsy, and reconnect power.",
+            "question_type": "How",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Manual Anchor Weighing Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What motor options are available for the Hector windlass?",
+            "question_variations": [
+              "What are the different motor sizes for Hector?",
+              "Which motor power ratings can I choose from?",
+              "What voltage options does the Hector motor come in?"
+            ],
+            "answer": "The Hector windlass is available with 6 motor options: 700W in 12V or 24V, 1000W in 12V or 24V, and 1500W in 12V or 24V",
+            "question_type": "What",
+            "models": [
+              "Hector 700W",
+              "Hector 1000W",
+              "Hector 1500W"
+            ],
+            "references": [
+              "Parts 52A-52F"
+            ]
+          },
+          {
+            "question": "What gypsy sizes are available?",
+            "question_variations": [
+              "Which chain sizes can I use?",
+              "What are the gypsy options?",
+              "What chain diameters are supported?"
+            ],
+            "answer": "The Hector windlass offers two gypsy sizes: 8mm/5/16 inch and 10mm",
+            "question_type": "What",
+            "models": [
+              "Hector 1000W"
+            ],
+            "references": [
+              "Parts 18A, 18B"
+            ]
+          },
+          {
+            "question": "What type of casing options are available?",
+            "question_variations": [
+              "What materials is the casing made of?",
+              "Can I get different housing materials?",
+              "What are the casing choices?"
+            ],
+            "answer": "The Hector windlass is available with either a plastic casing or aluminum casing",
+            "question_type": "What",
+            "models": [
+              "All Hector models"
+            ],
+            "references": [
+              "Parts 41A, 41B"
+            ]
+          },
+          {
+            "question": "Where is the chain stripper located?",
+            "question_variations": [
+              "How do I find the rope/chain stripper?",
+              "What part number is the chain stripper?"
+            ],
+            "answer": "The rope/chain stripper is part #29 and is located near the gypsy lock lever",
+            "question_type": "Where",
+            "models": [
+              "All Hector models"
+            ],
+            "references": [
+              "Part 29"
+            ]
+          },
+          {
+            "question": "What bearings are used in the Hector windlass?",
+            "question_variations": [
+              "Which bearing types does it use?",
+              "What are the bearing specifications?"
+            ],
+            "answer": "The Hector windlass uses three types of bearings: bearing 6008, bearing 7205, and bearing 6204",
+            "question_type": "What",
+            "models": [
+              "All Hector models"
+            ],
+            "references": [
+              "Parts 10, 45, 47"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

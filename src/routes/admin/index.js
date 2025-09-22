@@ -18,6 +18,7 @@ import documentRouter from '../document/index.js';
 import chunksRouter from './chunks.route.js';
 import playbooksRouter from './playbooks.route.js';
 import goldenTestsRouter from './golden-tests.route.js';
+import uploadRouter from './upload.route.js';
 
 const router = express.Router();
 
@@ -49,6 +50,7 @@ router.use('/docs', documentRouter);
 router.use('/chunks', chunksRouter);
 router.use('/playbooks', playbooksRouter);
 router.use('/golden-tests', goldenTestsRouter);
+router.use('/upload', uploadRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin

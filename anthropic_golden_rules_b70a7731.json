@@ -1,0 +1,675 @@
+{
+  "total_chunks_processed": 4,
+  "successful_chunks": 4,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 23,
+  "unique_golden_rules": 22,
+  "golden_rules": [
+    {
+      "query": "Starting current check",
+      "expected_value": "Maximum 2A during startup",
+      "test_method": "Measure current draw during unit startup",
+      "failure_indication": "Starting current exceeds 2A indicating potential inverter malfunction",
+      "models": [
+        "BLDC Inverter Series"
+      ],
+      "related_procedures": [
+        "Startup sequence verification",
+        "Current measurement protocol"
+      ]
+    },
+    {
+      "query": "Operating frequency range",
+      "expected_value": "20-100 Hz variable frequency",
+      "test_method": "Monitor frequency output during operation",
+      "failure_indication": "Operation outside frequency range indicates inverter control issues",
+      "models": [
+        "BLDC Inverter Series"
+      ],
+      "related_procedures": [
+        "Frequency monitoring",
+        "Speed control verification"
+      ]
+    },
+    {
+      "query": "Seawater temperature operating range",
+      "expected_value": "5\u00b0C to 45\u00b0C (41\u00b0F to 113\u00b0F)",
+      "test_method": "Measure seawater temperature at intake",
+      "failure_indication": "Operation outside temperature range risks system damage",
+      "models": [
+        "BLDC Inverter Series"
+      ],
+      "related_procedures": [
+        "Temperature monitoring",
+        "Safety shutdown verification"
+      ]
+    },
+    {
+      "query": "EMC compliance",
+      "expected_value": "Meets Directive 2004/108/EC requirements",
+      "test_method": "EMC testing according to directive specifications",
+      "failure_indication": "EMC interference detected indicates compliance failure",
+      "models": [
+        "BLDC Inverter Series"
+      ],
+      "related_procedures": [
+        "EMC testing protocol",
+        "Interference measurement"
+      ]
+    },
+    {
+      "query": "Startup frequency",
+      "expected_value": "20 Hz initial frequency",
+      "test_method": "Measure frequency at startup",
+      "failure_indication": "Incorrect startup frequency indicates control system fault",
+      "models": [
+        "BLDC Inverter Series"
+      ],
+      "related_procedures": [
+        "Startup sequence verification",
+        "Frequency measurement"
+      ]
+    },
+    {
+      "query": "What is the maximum power consumption in ECO mode?",
+      "expected_value": "150-200W",
+      "test_method": "Measure power draw using ammeter during ECO mode operation",
+      "failure_indication": "Power consumption exceeding 200W indicates inefficient operation or malfunction",
+      "models": [
+        "BLDC Inverter Self-Contained Unit"
+      ],
+      "related_procedures": [
+        "Power consumption testing",
+        "ECO mode verification"
+      ]
+    },
+    {
+      "query": "What is the maximum startup current?",
+      "expected_value": "2A maximum",
+      "test_method": "Measure inrush current during startup with current clamp",
+      "failure_indication": "Current spike above 2A indicates potential starter or controller issue",
+      "models": [
+        "BLDC Inverter Self-Contained Unit"
+      ],
+      "related_procedures": [
+        "Startup sequence testing",
+        "Current measurement"
+      ]
+    },
+    {
+      "query": "What is the adjustable air outlet range?",
+      "expected_value": "135 degrees of adjustment",
+      "test_method": "Verify full range of motion of adjustable air outlet",
+      "failure_indication": "Limited range indicates mechanical obstruction or damage",
+      "models": [
+        "BLDC Inverter Self-Contained Unit"
+      ],
+      "related_procedures": [
+        "Air outlet adjustment",
+        "Installation verification"
+      ]
+    },
+    {
+      "query": "Is the electrical panel properly separated?",
+      "expected_value": "Electrical panel should be fully separated from main unit",
+      "test_method": "Visual inspection of panel isolation",
+      "failure_indication": "Improper separation creates safety hazard and non-compliance",
+      "models": [
+        "BLDC Inverter Self-Contained Unit"
+      ],
+      "related_procedures": [
+        "Safety inspection",
+        "Installation guidelines"
+      ]
+    },
+    {
+      "query": "What is the energy efficiency compared to ON/OFF units?",
+      "expected_value": "50% higher efficiency than ON/OFF units",
+      "test_method": "Compare power consumption measurements with equivalent ON/OFF unit",
+      "failure_indication": "Less than 50% improvement indicates performance issues",
+      "models": [
+        "BLDC Inverter Self-Contained Unit"
+      ],
+      "related_procedures": [
+        "Efficiency testing",
+        "Performance comparison"
+      ]
+    },
+    {
+      "query": "Check voltage input for SCU07VFD-E",
+      "expected_value": "230V single phase 50-60Hz",
+      "test_method": "Use multimeter to measure input voltage",
+      "failure_indication": "Unit may not operate or operate incorrectly if voltage is incorrect",
+      "models": [
+        "SCU07VFD-E"
+      ],
+      "related_procedures": [
+        "Power installation",
+        "Electrical safety checks"
+      ]
+    },
+    {
+      "query": "Verify maximum current draw SCU10VFD-A",
+      "expected_value": "6.5A",
+      "test_method": "Measure current draw during peak operation",
+      "failure_indication": "Overcurrent indicates possible component failure or blockage",
+      "models": [
+        "SCU10VFD-A"
+      ],
+      "related_procedures": [
+        "Current measurement",
+        "Circuit protection sizing"
+      ]
+    },
+    {
+      "query": "Check minimum seawater flow rate",
+      "expected_value": "0.8 m3/h",
+      "test_method": "Measure water flow rate at inlet",
+      "failure_indication": "Insufficient cooling and possible system damage if flow is too low",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "related_procedures": [
+        "Water flow verification",
+        "Pump operation check"
+      ]
+    },
+    {
+      "query": "Verify refrigerant charge",
+      "expected_value": "0.350 kg R410A",
+      "test_method": "Weigh refrigerant during charging",
+      "failure_indication": "Incorrect cooling performance and possible system damage",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "related_procedures": [
+        "Refrigerant charging",
+        "Leak testing"
+      ]
+    },
+    {
+      "query": "Check ECO mode power consumption",
+      "expected_value": "150W",
+      "test_method": "Measure power draw in ECO mode",
+      "failure_indication": "Higher power consumption indicates inefficient operation",
+      "models": [
+        "SCU07VFD-E",
+        "SCU07VFD-A",
+        "SCU10VFD-E",
+        "SCU10VFD-A"
+      ],
+      "related_procedures": [
+        "Energy efficiency testing",
+        "Performance verification"
+      ]
+    },
+    {
+      "query": "Check unit dimensions",
+      "expected_value": "500mm x 290mm x 336mm",
+      "test_method": "Physical measurement of width, depth, height",
+      "failure_indication": "Unit does not match specified dimensions, may affect installation fit",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A",
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "related_procedures": [
+        "Installation clearance check",
+        "Mounting procedure"
+      ]
+    },
+    {
+      "query": "Verify maximum cooling capacity SCU12VFD",
+      "expected_value": "12,000 BTU/h",
+      "test_method": "Performance test at 100% frequency",
+      "failure_indication": "Unit not achieving rated cooling capacity",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A"
+      ],
+      "related_procedures": [
+        "Cooling performance test",
+        "Refrigerant charge check"
+      ]
+    },
+    {
+      "query": "Verify maximum cooling capacity SCU16VFD",
+      "expected_value": "16,000 BTU/h",
+      "test_method": "Performance test at 100% frequency",
+      "failure_indication": "Unit not achieving rated cooling capacity",
+      "models": [
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "related_procedures": [
+        "Cooling performance test",
+        "Refrigerant charge check"
+      ]
+    },
+    {
+      "query": "Check ECO mode cooling capacity",
+      "expected_value": "3,900 BTU/h",
+      "test_method": "Performance test at minimum fan speed",
+      "failure_indication": "ECO mode not operating at specified capacity",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A",
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "related_procedures": [
+        "ECO mode testing",
+        "Fan speed verification"
+      ]
+    },
+    {
+      "query": "Check maximum seawater flow SCU12VFD",
+      "expected_value": "1.3 m3/h",
+      "test_method": "Flow meter measurement",
+      "failure_indication": "Improper water flow affecting heat exchange",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A"
+      ],
+      "related_procedures": [
+        "Water flow adjustment",
+        "Pump sizing verification"
+      ]
+    },
+    {
+      "query": "Check maximum seawater flow SCU16VFD",
+      "expected_value": "1.4 m3/h",
+      "test_method": "Flow meter measurement",
+      "failure_indication": "Improper water flow affecting heat exchange",
+      "models": [
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "related_procedures": [
+        "Water flow adjustment",
+        "Pump sizing verification"
+      ]
+    },
+    {
+      "query": "Verify air duct diameter",
+      "expected_value": "150 mm",
+      "test_method": "Physical measurement of duct opening",
+      "failure_indication": "Incorrect duct size affecting airflow",
+      "models": [
+        "SCU12VFD-E",
+        "SCU12VFD-A",
+        "SCU16VFD-E",
+        "SCU16VFD-A"
+      ],
+      "related_procedures": [
+        "Duct installation",
+        "Airflow verification"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Starting current check",
+            "expected_value": "Maximum 2A during startup",
+            "test_method": "Measure current draw during unit startup",
+            "failure_indication": "Starting current exceeds 2A indicating potential inverter malfunction",
+            "models": [
+              "BLDC Inverter Series"
+            ],
+            "related_procedures": [
+              "Startup sequence verification",
+              "Current measurement protocol"
+            ]
+          },
+          {
+            "query": "Operating frequency range",
+            "expected_value": "20-100 Hz variable frequency",
+            "test_method": "Monitor frequency output during operation",
+            "failure_indication": "Operation outside frequency range indicates inverter control issues",
+            "models": [
+              "BLDC Inverter Series"
+            ],
+            "related_procedures": [
+              "Frequency monitoring",
+              "Speed control verification"
+            ]
+          },
+          {
+            "query": "Seawater temperature operating range",
+            "expected_value": "5\u00b0C to 45\u00b0C (41\u00b0F to 113\u00b0F)",
+            "test_method": "Measure seawater temperature at intake",
+            "failure_indication": "Operation outside temperature range risks system damage",
+            "models": [
+              "BLDC Inverter Series"
+            ],
+            "related_procedures": [
+              "Temperature monitoring",
+              "Safety shutdown verification"
+            ]
+          },
+          {
+            "query": "EMC compliance",
+            "expected_value": "Meets Directive 2004/108/EC requirements",
+            "test_method": "EMC testing according to directive specifications",
+            "failure_indication": "EMC interference detected indicates compliance failure",
+            "models": [
+              "BLDC Inverter Series"
+            ],
+            "related_procedures": [
+              "EMC testing protocol",
+              "Interference measurement"
+            ]
+          },
+          {
+            "query": "Startup frequency",
+            "expected_value": "20 Hz initial frequency",
+            "test_method": "Measure frequency at startup",
+            "failure_indication": "Incorrect startup frequency indicates control system fault",
+            "models": [
+              "BLDC Inverter Series"
+            ],
+            "related_procedures": [
+              "Startup sequence verification",
+              "Frequency measurement"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the maximum power consumption in ECO mode?",
+            "expected_value": "150-200W",
+            "test_method": "Measure power draw using ammeter during ECO mode operation",
+            "failure_indication": "Power consumption exceeding 200W indicates inefficient operation or malfunction",
+            "models": [
+              "BLDC Inverter Self-Contained Unit"
+            ],
+            "related_procedures": [
+              "Power consumption testing",
+              "ECO mode verification"
+            ]
+          },
+          {
+            "query": "What is the maximum startup current?",
+            "expected_value": "2A maximum",
+            "test_method": "Measure inrush current during startup with current clamp",
+            "failure_indication": "Current spike above 2A indicates potential starter or controller issue",
+            "models": [
+              "BLDC Inverter Self-Contained Unit"
+            ],
+            "related_procedures": [
+              "Startup sequence testing",
+              "Current measurement"
+            ]
+          },
+          {
+            "query": "What is the adjustable air outlet range?",
+            "expected_value": "135 degrees of adjustment",
+            "test_method": "Verify full range of motion of adjustable air outlet",
+            "failure_indication": "Limited range indicates mechanical obstruction or damage",
+            "models": [
+              "BLDC Inverter Self-Contained Unit"
+            ],
+            "related_procedures": [
+              "Air outlet adjustment",
+              "Installation verification"
+            ]
+          },
+          {
+            "query": "Is the electrical panel properly separated?",
+            "expected_value": "Electrical panel should be fully separated from main unit",
+            "test_method": "Visual inspection of panel isolation",
+            "failure_indication": "Improper separation creates safety hazard and non-compliance",
+            "models": [
+              "BLDC Inverter Self-Contained Unit"
+            ],
+            "related_procedures": [
+              "Safety inspection",
+              "Installation guidelines"
+            ]
+          },
+          {
+            "query": "What is the energy efficiency compared to ON/OFF units?",
+            "expected_value": "50% higher efficiency than ON/OFF units",
+            "test_method": "Compare power consumption measurements with equivalent ON/OFF unit",
+            "failure_indication": "Less than 50% improvement indicates performance issues",
+            "models": [
+              "BLDC Inverter Self-Contained Unit"
+            ],
+            "related_procedures": [
+              "Efficiency testing",
+              "Performance comparison"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Check voltage input for SCU07VFD-E",
+            "expected_value": "230V single phase 50-60Hz",
+            "test_method": "Use multimeter to measure input voltage",
+            "failure_indication": "Unit may not operate or operate incorrectly if voltage is incorrect",
+            "models": [
+              "SCU07VFD-E"
+            ],
+            "related_procedures": [
+              "Power installation",
+              "Electrical safety checks"
+            ]
+          },
+          {
+            "query": "Verify maximum current draw SCU10VFD-A",
+            "expected_value": "6.5A",
+            "test_method": "Measure current draw during peak operation",
+            "failure_indication": "Overcurrent indicates possible component failure or blockage",
+            "models": [
+              "SCU10VFD-A"
+            ],
+            "related_procedures": [
+              "Current measurement",
+              "Circuit protection sizing"
+            ]
+          },
+          {
+            "query": "Check minimum seawater flow rate",
+            "expected_value": "0.8 m3/h",
+            "test_method": "Measure water flow rate at inlet",
+            "failure_indication": "Insufficient cooling and possible system damage if flow is too low",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "related_procedures": [
+              "Water flow verification",
+              "Pump operation check"
+            ]
+          },
+          {
+            "query": "Verify refrigerant charge",
+            "expected_value": "0.350 kg R410A",
+            "test_method": "Weigh refrigerant during charging",
+            "failure_indication": "Incorrect cooling performance and possible system damage",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "related_procedures": [
+              "Refrigerant charging",
+              "Leak testing"
+            ]
+          },
+          {
+            "query": "Check ECO mode power consumption",
+            "expected_value": "150W",
+            "test_method": "Measure power draw in ECO mode",
+            "failure_indication": "Higher power consumption indicates inefficient operation",
+            "models": [
+              "SCU07VFD-E",
+              "SCU07VFD-A",
+              "SCU10VFD-E",
+              "SCU10VFD-A"
+            ],
+            "related_procedures": [
+              "Energy efficiency testing",
+              "Performance verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Check unit dimensions",
+            "expected_value": "500mm x 290mm x 336mm",
+            "test_method": "Physical measurement of width, depth, height",
+            "failure_indication": "Unit does not match specified dimensions, may affect installation fit",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "related_procedures": [
+              "Installation clearance check",
+              "Mounting procedure"
+            ]
+          },
+          {
+            "query": "Verify maximum cooling capacity SCU12VFD",
+            "expected_value": "12,000 BTU/h",
+            "test_method": "Performance test at 100% frequency",
+            "failure_indication": "Unit not achieving rated cooling capacity",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A"
+            ],
+            "related_procedures": [
+              "Cooling performance test",
+              "Refrigerant charge check"
+            ]
+          },
+          {
+            "query": "Verify maximum cooling capacity SCU16VFD",
+            "expected_value": "16,000 BTU/h",
+            "test_method": "Performance test at 100% frequency",
+            "failure_indication": "Unit not achieving rated cooling capacity",
+            "models": [
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "related_procedures": [
+              "Cooling performance test",
+              "Refrigerant charge check"
+            ]
+          },
+          {
+            "query": "Check ECO mode cooling capacity",
+            "expected_value": "3,900 BTU/h",
+            "test_method": "Performance test at minimum fan speed",
+            "failure_indication": "ECO mode not operating at specified capacity",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "related_procedures": [
+              "ECO mode testing",
+              "Fan speed verification"
+            ]
+          },
+          {
+            "query": "Verify refrigerant charge",
+            "expected_value": "0.450 kg R410A",
+            "test_method": "Weigh refrigerant during charging",
+            "failure_indication": "Incorrect refrigerant charge affecting performance",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "related_procedures": [
+              "Refrigerant charging procedure",
+              "Leak testing"
+            ]
+          },
+          {
+            "query": "Check maximum seawater flow SCU12VFD",
+            "expected_value": "1.3 m3/h",
+            "test_method": "Flow meter measurement",
+            "failure_indication": "Improper water flow affecting heat exchange",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A"
+            ],
+            "related_procedures": [
+              "Water flow adjustment",
+              "Pump sizing verification"
+            ]
+          },
+          {
+            "query": "Check maximum seawater flow SCU16VFD",
+            "expected_value": "1.4 m3/h",
+            "test_method": "Flow meter measurement",
+            "failure_indication": "Improper water flow affecting heat exchange",
+            "models": [
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "related_procedures": [
+              "Water flow adjustment",
+              "Pump sizing verification"
+            ]
+          },
+          {
+            "query": "Verify air duct diameter",
+            "expected_value": "150 mm",
+            "test_method": "Physical measurement of duct opening",
+            "failure_indication": "Incorrect duct size affecting airflow",
+            "models": [
+              "SCU12VFD-E",
+              "SCU12VFD-A",
+              "SCU16VFD-E",
+              "SCU16VFD-A"
+            ],
+            "related_procedures": [
+              "Duct installation",
+              "Airflow verification"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
