@@ -1,0 +1,2096 @@
+{
+  "total_chunks_processed": 23,
+  "successful_chunks": 23,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 95,
+  "unique_intent_routes": 25,
+  "question_type_breakdown": {
+    "How": 8,
+    "What": 13,
+    "Where": 2,
+    "Which": 1,
+    "Who": 1
+  },
+  "intent_routes": [
+    {
+      "question": "How do I install the Touch 7 display?",
+      "question_variations": [
+        "What's the installation process for Touch 7?",
+        "Can you explain Touch 7 mounting steps?",
+        "How to mount the Touch 7 display?"
+      ],
+      "answer": "Mount the Touch 7 display using the included bracket, ensuring 4 inches clearance on all sides. Connect power to 12V DC source, attach network cable, and secure all connections before powering on.",
+      "question_type": "How",
+      "models": [
+        "Touch 7"
+      ],
+      "references": [
+        "Installation Guide, Section 1"
+      ]
+    },
+    {
+      "question": "What are the power requirements for Touch 7?",
+      "question_variations": [
+        "How much power does Touch 7 need?",
+        "What voltage does Touch 7 use?",
+        "What's the power input for Touch 7?"
+      ],
+      "answer": "Touch 7 requires 12V DC power supply with 2A minimum current rating. Input voltage range is 10-14V DC.",
+      "question_type": "What",
+      "models": [
+        "Touch 7"
+      ],
+      "references": [
+        "Technical Specifications, Page 2"
+      ]
+    },
+    {
+      "question": "Where should I mount the Touch 7 display?",
+      "question_variations": [
+        "What's the best location for Touch 7?",
+        "Where do I position the Touch 7 screen?",
+        "Touch 7 mounting location guidelines?"
+      ],
+      "answer": "Mount Touch 7 in a dry, protected location with good visibility and easy access. Ensure 4 inches clearance around all sides for ventilation. Avoid direct sunlight and heat sources.",
+      "question_type": "Where",
+      "models": [
+        "Touch 7"
+      ],
+      "references": [
+        "Installation Guide, Section 1.2"
+      ]
+    },
+    {
+      "question": "What are the copyright terms for the CZone Touch 7 manual?",
+      "question_variations": [
+        "Can I copy the CZone manual?",
+        "What are the reproduction rights for CZone documentation?",
+        "Is the CZone manual copyrighted?"
+      ],
+      "answer": "The manual is copyrighted 2020 under Creative Commons. You can research and reproduce elements for non-commercial use if you credit Power Products as the source. Electronic redistribution is restricted to maintain quality control.",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Page 2, Copyright Section"
+      ]
+    },
+    {
+      "question": "Which language version is considered official?",
+      "question_variations": [
+        "What is the official language of the manual?",
+        "Are translations official?",
+        "Which manual version should I trust if translations differ?"
+      ],
+      "answer": "The English version is considered the official version when there are differences between translations.",
+      "question_type": "Which",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Page 2, Translations Section"
+      ]
+    },
+    {
+      "question": "Who is responsible for safe installation and operation?",
+      "question_variations": [
+        "Who is liable for device accidents?",
+        "What are the owner's responsibilities?",
+        "Who is accountable for proper device operation?"
+      ],
+      "answer": "It is the owner's sole responsibility to install and operate the device in a manner that will not cause accidents, personal injury or property damage.",
+      "question_type": "Who",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Page 2, Important Section"
+      ]
+    },
+    {
+      "question": "Can Power Products change product features without notice?",
+      "question_variations": [
+        "Will I be notified of product changes?",
+        "Does Power Products have to announce specification changes?",
+        "Can features be modified without warning?"
+      ],
+      "answer": "Yes, Power Products reserves the right to change features and specifications of products and associated documentation without notice.",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Page 2, Important Section"
+      ]
+    },
+    {
+      "question": "How do I mount the CZone Touch 7 display?",
+      "question_variations": [
+        "What are the mounting instructions for CZone Touch 7?",
+        "Where should I install the Touch 7 display?"
+      ],
+      "answer": "Choose a flat mounting location that is protected from water and has adequate ventilation. Follow mounting instructions on page 12 including cutting the mounting hole and securing with supplied mounting hardware.",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 3.3, Page 12"
+      ]
+    },
+    {
+      "question": "What connections are required for the CZone Touch 7?",
+      "question_variations": [
+        "How do I wire the Touch 7?",
+        "What cables need to be connected?"
+      ],
+      "answer": "Three main connections are required: 1. DC Power connection, 2. Ethernet connection to router (optional), 3. NMEA 2000 network connection",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 3.5, Page 14-15"
+      ]
+    },
+    {
+      "question": "How do I update the software on the Touch 7?",
+      "question_variations": [
+        "What's the process for updating Touch 7 firmware?",
+        "Can I update Touch 7 using USB?"
+      ],
+      "answer": "Software can be updated via USB flash drive. Check current version under Settings menu, then follow the USB update procedure detailed in section 4.2.2",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 4.2, Page 17"
+      ]
+    },
+    {
+      "question": "What are the network configuration options?",
+      "question_variations": [
+        "How can I configure the network on Touch 7?",
+        "What networking modes does Touch 7 support?"
+      ],
+      "answer": "The Touch 7 supports three network configurations: 1. Access Point mode, 2. Client Mode (Wireless), 3. Client Mode (Wired via Ethernet)",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2.5, Pages 8-9"
+      ]
+    },
+    {
+      "question": "How do I calibrate the touch screen?",
+      "question_variations": [
+        "Touch screen needs calibration - what do I do?",
+        "What's the process for touch screen calibration?"
+      ],
+      "answer": "Touch screen calibration can be performed through the Settings menu following the procedure in section 4.4",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 4.4, Page 20"
+      ]
+    },
+    {
+      "question": "What model is covered in this manual?",
+      "question_variations": [
+        "Which Touch 7 model does this manual apply to?",
+        "What's the part number for the CZone Touch 7?"
+      ],
+      "answer": "The manual covers the CZONE TOUCH 7 model with part number 80-911-0200-00",
+      "question_type": "What",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Section 1 - General Information"
+      ]
+    },
+    {
+      "question": "How long is the warranty period for the Touch 7?",
+      "question_variations": [
+        "What's the warranty duration?",
+        "Is the Touch 7 under warranty?"
+      ],
+      "answer": "The CZone Touch 7 has a two-year warranty from the purchase date, provided it's installed and used according to manual instructions. The warranty covers repair/replacement costs but not labor or shipping.",
+      "question_type": "How",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "question": "Where is the identification label located?",
+      "question_variations": [
+        "How can I find the identification label?",
+        "What's the location of the ID label?"
+      ],
+      "answer": "The identification label is located on the back of the Touch 7",
+      "question_type": "Where",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Identification Label Section"
+      ]
+    },
+    {
+      "question": "What voids the warranty?",
+      "question_variations": [
+        "How can I void my warranty?",
+        "What actions will invalidate my warranty?"
+      ],
+      "answer": "The warranty becomes void if: 1) The product is not installed and used according to manual instructions, or 2) The identification label is removed",
+      "question_type": "What",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Warranty Section",
+        "Identification Label Section"
+      ]
+    },
+    {
+      "question": "What does the warranty cover?",
+      "question_variations": [
+        "What's included in the warranty?",
+        "What warranty coverage do I get?"
+      ],
+      "answer": "The warranty covers the cost of repair and/or replacement of the product only. It does not cover labor costs or shipping expenses.",
+      "question_type": "What",
+      "models": [
+        "CZONE TOUCH 7"
+      ],
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "question": "What are the parts included with the Touch 7?",
+      "question_variations": [
+        "What comes in the Touch 7 box?",
+        "What components are supplied with Touch 7?",
+        "What's included with the Touch 7 package?"
+      ],
+      "answer": "The Touch 7 comes with mounting hardware and connection components as shown in Figure 3 of the manual",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Figure 3, Page 7"
+      ]
+    },
+    {
+      "question": "How do I mount the Touch 7 display?",
+      "question_variations": [
+        "What's the installation process for Touch 7?",
+        "How to install the Touch 7 screen?",
+        "What are the mounting steps for Touch 7?"
+      ],
+      "answer": "Follow the mounting steps shown in Figure 9, which provides an exploded view of the mounting assembly and step-by-step installation instructions",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Figure 8, Page 12",
+        "Figure 9, Page 12"
+      ]
+    },
+    {
+      "question": "How do I remove the Touch 7 display?",
+      "question_variations": [
+        "What's the process to uninstall Touch 7?",
+        "How can I take out the Touch 7?",
+        "Touch 7 removal instructions?"
+      ],
+      "answer": "Follow the removal steps detailed in Figure 10 of the manual for proper display removal procedure",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Figure 10, Page 13"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the Touch 7?",
+      "question_variations": [
+        "How big is the Touch 7?",
+        "What's the size of the Touch 7 display?",
+        "What are the Touch 7 measurements?"
+      ],
+      "answer": "The Touch 7 dimensions are detailed in Figure 13 of the manual",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Figure 13, Page 21"
+      ]
+    },
+    {
+      "question": "What are the connection options for Touch 7?",
+      "question_variations": [
+        "How can I connect the Touch 7?",
+        "What ports does the Touch 7 have?",
+        "What are the Touch 7 connectivity options?"
+      ],
+      "answer": "The Touch 7 connections are shown in Figure 2 and detailed connection information is provided in Figure 11, including DC connector pinout in Figure 12",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Figure 2, Page 7",
+        "Figure 11, Page 14",
+        "Figure 12, Page 15"
+      ]
+    },
+    {
+      "question": "What is the screen size of the CZone Touch 7?",
+      "question_variations": [
+        "How big is the CZone Touch 7 display?",
+        "What are the display dimensions of the Touch 7?"
+      ],
+      "answer": "The CZone Touch 7 features a 7-inch IPS LCD display",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Overview"
+      ]
+    },
+    {
+      "question": "What is the screen resolution of the Touch 7?",
+      "question_variations": [
+        "How many pixels does the Touch 7 have?",
+        "What's the display resolution?"
+      ],
+      "answer": "The Touch 7 has a resolution of 1024 x 600 pixels",
+      "question_type": "What",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    },
+    {
+      "question": "How bright is the Touch 7 display?",
+      "question_variations": [
+        "What is the brightness level of the Touch 7?",
+        "Is the Touch 7 display dimmable?"
+      ],
+      "answer": "The Touch 7 has 500 nit brightness and is dimmable for night time viewing",
+      "question_type": "How",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "references": [
+        "Section 2 Features"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I install the Touch 7 display?",
+            "question_variations": [
+              "What's the installation process for Touch 7?",
+              "Can you explain Touch 7 mounting steps?",
+              "How to mount the Touch 7 display?"
+            ],
+            "answer": "Mount the Touch 7 display using the included bracket, ensuring 4 inches clearance on all sides. Connect power to 12V DC source, attach network cable, and secure all connections before powering on.",
+            "question_type": "How",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Installation Guide, Section 1"
+            ]
+          },
+          {
+            "question": "What are the power requirements for Touch 7?",
+            "question_variations": [
+              "How much power does Touch 7 need?",
+              "What voltage does Touch 7 use?",
+              "What's the power input for Touch 7?"
+            ],
+            "answer": "Touch 7 requires 12V DC power supply with 2A minimum current rating. Input voltage range is 10-14V DC.",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications, Page 2"
+            ]
+          },
+          {
+            "question": "Where should I mount the Touch 7 display?",
+            "question_variations": [
+              "What's the best location for Touch 7?",
+              "Where do I position the Touch 7 screen?",
+              "Touch 7 mounting location guidelines?"
+            ],
+            "answer": "Mount Touch 7 in a dry, protected location with good visibility and easy access. Ensure 4 inches clearance around all sides for ventilation. Avoid direct sunlight and heat sources.",
+            "question_type": "Where",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Installation Guide, Section 1.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the copyright terms for the CZone Touch 7 manual?",
+            "question_variations": [
+              "Can I copy the CZone manual?",
+              "What are the reproduction rights for CZone documentation?",
+              "Is the CZone manual copyrighted?"
+            ],
+            "answer": "The manual is copyrighted 2020 under Creative Commons. You can research and reproduce elements for non-commercial use if you credit Power Products as the source. Electronic redistribution is restricted to maintain quality control.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 2, Copyright Section"
+            ]
+          },
+          {
+            "question": "Which language version is considered official?",
+            "question_variations": [
+              "What is the official language of the manual?",
+              "Are translations official?",
+              "Which manual version should I trust if translations differ?"
+            ],
+            "answer": "The English version is considered the official version when there are differences between translations.",
+            "question_type": "Which",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 2, Translations Section"
+            ]
+          },
+          {
+            "question": "Who is responsible for safe installation and operation?",
+            "question_variations": [
+              "Who is liable for device accidents?",
+              "What are the owner's responsibilities?",
+              "Who is accountable for proper device operation?"
+            ],
+            "answer": "It is the owner's sole responsibility to install and operate the device in a manner that will not cause accidents, personal injury or property damage.",
+            "question_type": "Who",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 2, Important Section"
+            ]
+          },
+          {
+            "question": "Can Power Products change product features without notice?",
+            "question_variations": [
+              "Will I be notified of product changes?",
+              "Does Power Products have to announce specification changes?",
+              "Can features be modified without warning?"
+            ],
+            "answer": "Yes, Power Products reserves the right to change features and specifications of products and associated documentation without notice.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 2, Important Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I mount the CZone Touch 7 display?",
+            "question_variations": [
+              "What are the mounting instructions for CZone Touch 7?",
+              "Where should I install the Touch 7 display?"
+            ],
+            "answer": "Choose a flat mounting location that is protected from water and has adequate ventilation. Follow mounting instructions on page 12 including cutting the mounting hole and securing with supplied mounting hardware.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3.3, Page 12"
+            ]
+          },
+          {
+            "question": "What connections are required for the CZone Touch 7?",
+            "question_variations": [
+              "How do I wire the Touch 7?",
+              "What cables need to be connected?"
+            ],
+            "answer": "Three main connections are required: 1. DC Power connection, 2. Ethernet connection to router (optional), 3. NMEA 2000 network connection",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3.5, Page 14-15"
+            ]
+          },
+          {
+            "question": "How do I update the software on the Touch 7?",
+            "question_variations": [
+              "What's the process for updating Touch 7 firmware?",
+              "Can I update Touch 7 using USB?"
+            ],
+            "answer": "Software can be updated via USB flash drive. Check current version under Settings menu, then follow the USB update procedure detailed in section 4.2.2",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4.2, Page 17"
+            ]
+          },
+          {
+            "question": "What are the network configuration options?",
+            "question_variations": [
+              "How can I configure the network on Touch 7?",
+              "What networking modes does Touch 7 support?"
+            ],
+            "answer": "The Touch 7 supports three network configurations: 1. Access Point mode, 2. Client Mode (Wireless), 3. Client Mode (Wired via Ethernet)",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5, Pages 8-9"
+            ]
+          },
+          {
+            "question": "How do I calibrate the touch screen?",
+            "question_variations": [
+              "Touch screen needs calibration - what do I do?",
+              "What's the process for touch screen calibration?"
+            ],
+            "answer": "Touch screen calibration can be performed through the Settings menu following the procedure in section 4.4",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4.4, Page 20"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What model is covered in this manual?",
+            "question_variations": [
+              "Which Touch 7 model does this manual apply to?",
+              "What's the part number for the CZone Touch 7?"
+            ],
+            "answer": "The manual covers the CZONE TOUCH 7 model with part number 80-911-0200-00",
+            "question_type": "What",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Section 1 - General Information"
+            ]
+          },
+          {
+            "question": "How long is the warranty period for the Touch 7?",
+            "question_variations": [
+              "What's the warranty duration?",
+              "Is the Touch 7 under warranty?"
+            ],
+            "answer": "The CZone Touch 7 has a two-year warranty from the purchase date, provided it's installed and used according to manual instructions. The warranty covers repair/replacement costs but not labor or shipping.",
+            "question_type": "How",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Warranty Section"
+            ]
+          },
+          {
+            "question": "Where is the identification label located?",
+            "question_variations": [
+              "How can I find the identification label?",
+              "What's the location of the ID label?"
+            ],
+            "answer": "The identification label is located on the back of the Touch 7",
+            "question_type": "Where",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Identification Label Section"
+            ]
+          },
+          {
+            "question": "What voids the warranty?",
+            "question_variations": [
+              "How can I void my warranty?",
+              "What actions will invalidate my warranty?"
+            ],
+            "answer": "The warranty becomes void if: 1) The product is not installed and used according to manual instructions, or 2) The identification label is removed",
+            "question_type": "What",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Warranty Section",
+              "Identification Label Section"
+            ]
+          },
+          {
+            "question": "What does the warranty cover?",
+            "question_variations": [
+              "What's included in the warranty?",
+              "What warranty coverage do I get?"
+            ],
+            "answer": "The warranty covers the cost of repair and/or replacement of the product only. It does not cover labor costs or shipping expenses.",
+            "question_type": "What",
+            "models": [
+              "CZONE TOUCH 7"
+            ],
+            "references": [
+              "Warranty Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the parts included with the Touch 7?",
+            "question_variations": [
+              "What comes in the Touch 7 box?",
+              "What components are supplied with Touch 7?",
+              "What's included with the Touch 7 package?"
+            ],
+            "answer": "The Touch 7 comes with mounting hardware and connection components as shown in Figure 3 of the manual",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 3, Page 7"
+            ]
+          },
+          {
+            "question": "How do I mount the Touch 7 display?",
+            "question_variations": [
+              "What's the installation process for Touch 7?",
+              "How to install the Touch 7 screen?",
+              "What are the mounting steps for Touch 7?"
+            ],
+            "answer": "Follow the mounting steps shown in Figure 9, which provides an exploded view of the mounting assembly and step-by-step installation instructions",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 8, Page 12",
+              "Figure 9, Page 12"
+            ]
+          },
+          {
+            "question": "How do I remove the Touch 7 display?",
+            "question_variations": [
+              "What's the process to uninstall Touch 7?",
+              "How can I take out the Touch 7?",
+              "Touch 7 removal instructions?"
+            ],
+            "answer": "Follow the removal steps detailed in Figure 10 of the manual for proper display removal procedure",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 10, Page 13"
+            ]
+          },
+          {
+            "question": "What are the dimensions of the Touch 7?",
+            "question_variations": [
+              "How big is the Touch 7?",
+              "What's the size of the Touch 7 display?",
+              "What are the Touch 7 measurements?"
+            ],
+            "answer": "The Touch 7 dimensions are detailed in Figure 13 of the manual",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 13, Page 21"
+            ]
+          },
+          {
+            "question": "What are the connection options for Touch 7?",
+            "question_variations": [
+              "How can I connect the Touch 7?",
+              "What ports does the Touch 7 have?",
+              "What are the Touch 7 connectivity options?"
+            ],
+            "answer": "The Touch 7 connections are shown in Figure 2 and detailed connection information is provided in Figure 11, including DC connector pinout in Figure 12",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 2, Page 7",
+              "Figure 11, Page 14",
+              "Figure 12, Page 15"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the screen size of the CZone Touch 7?",
+            "question_variations": [
+              "How big is the CZone Touch 7 display?",
+              "What are the display dimensions of the Touch 7?"
+            ],
+            "answer": "The CZone Touch 7 features a 7-inch IPS LCD display",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Overview"
+            ]
+          },
+          {
+            "question": "What is the screen resolution of the Touch 7?",
+            "question_variations": [
+              "How many pixels does the Touch 7 have?",
+              "What's the display resolution?"
+            ],
+            "answer": "The Touch 7 has a resolution of 1024 x 600 pixels",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "How bright is the Touch 7 display?",
+            "question_variations": [
+              "What is the brightness level of the Touch 7?",
+              "Is the Touch 7 display dimmable?"
+            ],
+            "answer": "The Touch 7 has 500 nit brightness and is dimmable for night time viewing",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "What is the mounting depth required for the Touch 7?",
+            "question_variations": [
+              "How deep does the Touch 7 need to be mounted?",
+              "What's the installation depth including cables?"
+            ],
+            "answer": "The Touch 7 requires a shallow 35mm mounting depth including cables",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "What is the voltage range for the Touch 7?",
+            "question_variations": [
+              "What power supply does the Touch 7 need?",
+              "What voltage does the Touch 7 operate on?"
+            ],
+            "answer": "The Touch 7 operates on a wide 8-32V DC voltage range",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "How is the Touch 7 installed?",
+            "question_variations": [
+              "What's the installation method for the Touch 7?",
+              "How do you mount the Touch 7?"
+            ],
+            "answer": "The Touch 7 features easy front mount installation with screwless rear access",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          },
+          {
+            "question": "What connectivity options does the Touch 7 have?",
+            "question_variations": [
+              "How can I connect devices to the Touch 7?",
+              "Does the Touch 7 have WiFi?"
+            ],
+            "answer": "The Touch 7 has built-in Wi-Fi and ethernet for tablet connectivity",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2 Features"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What power supply does the CZone Touch 7 require?",
+            "question_variations": [
+              "What voltage does the Touch 7 need?",
+              "What are the power requirements for CZone Touch 7?",
+              "How many volts does the CZone Touch 7 use?"
+            ],
+            "answer": "The CZone Touch 7 requires 8-32VDC power supply",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 7, Power Specifications"
+            ]
+          },
+          {
+            "question": "What connection ports are available on the CZone Touch 7?",
+            "question_variations": [
+              "What interfaces does the Touch 7 have?",
+              "Which ports are on the CZone Touch 7?",
+              "What can I connect to the Touch 7?"
+            ],
+            "answer": "The CZone Touch 7 features USB, Ethernet, and NMEA2000 connection ports",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 7, Connection Specifications"
+            ]
+          },
+          {
+            "question": "What parts come with the CZone Touch 7?",
+            "question_variations": [
+              "What's included in the CZone Touch 7 package?",
+              "What accessories come with the Touch 7?",
+              "What items are supplied with the CZone Touch 7?"
+            ],
+            "answer": "The CZone Touch 7 comes with: 1. Display unit, 2. Mounting bracket, 3. Four mounting screws, 4. NMEA2000 Drop Cable, 5. DC Power Connector",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 7, Supplied Parts"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the WiFi configuration options for the Touch 7?",
+            "question_variations": [
+              "How can I configure WiFi on the Touch 7?",
+              "What network modes does Touch 7 support?",
+              "What are the networking options for Touch 7?"
+            ],
+            "answer": "The Touch 7 has 3 different WiFi configurations: Access Point mode and Client Mode (Wireless). The configuration type is set directly on the display.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5"
+            ]
+          },
+          {
+            "question": "When should I use Access Point mode on Touch 7?",
+            "question_variations": [
+              "What is Access Point mode used for?",
+              "Should I configure Touch 7 as an Access Point?",
+              "Is Access Point mode right for my setup?"
+            ],
+            "answer": "Use Access Point mode when the Touch 7 is the only wireless device onboard the vessel or when you want to keep wireless devices separate with iPad and PC communicating directly to the Touch 7.",
+            "question_type": "When",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5.1"
+            ]
+          },
+          {
+            "question": "When should I use Client Mode on Touch 7?",
+            "question_variations": [
+              "What is Client Mode used for?",
+              "Should I configure Touch 7 in Client Mode?",
+              "Why would I use Client Mode?"
+            ],
+            "answer": "Use Client Mode when you plan to use another Wireless Network onboard the vessel as the access point, with the Touch 7 connected via WiFi. This simplifies the system as you won't need to keep changing between wireless networks when using the CZone App.",
+            "question_type": "When",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5.2"
+            ]
+          },
+          {
+            "question": "How do I control CZone wirelessly?",
+            "question_variations": [
+              "Can I control CZone from an iPad?",
+              "What devices can control CZone wirelessly?",
+              "Is wireless control possible with Touch 7?"
+            ],
+            "answer": "The Touch 7's internal WiFi allows wireless control of the CZone system using an iPad and enables writing favorites packages wirelessly from a PC.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is client mode wired on CZone Touch 7?",
+            "question_variations": [
+              "How does client mode wired work on Touch 7?",
+              "Can you explain CZone Touch 7 client mode?",
+              "What does wired client mode mean for Touch 7?"
+            ],
+            "answer": "Client mode wired is when the Touch 7 connects to an existing onboard wireless network through its Ethernet port, rather than acting as its own access point. This configuration simplifies system use since you don't need to switch between wireless networks when using the CZone App. WiFi is disabled on the Touch 7 in this mode.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5.3",
+              "Page 9"
+            ]
+          },
+          {
+            "question": "Is WiFi enabled in client mode wired?",
+            "question_variations": [
+              "Does WiFi work in client mode wired?",
+              "Can I use WiFi in wired client mode?",
+              "What happens to WiFi in client mode wired?"
+            ],
+            "answer": "No, WiFi is disabled on the Touch 7 when operating in client mode wired.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5.3",
+              "Page 9"
+            ]
+          },
+          {
+            "question": "How do I connect devices in client mode wired?",
+            "question_variations": [
+              "What's the connection setup for client mode wired?",
+              "How are devices linked in wired client mode?",
+              "What's the network configuration for client mode wired?"
+            ],
+            "answer": "In client mode wired, the Touch 7 connects via Ethernet to a router, which can then connect to other devices like iPads and laptops on the CZone network.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5.3",
+              "Page 9",
+              "Figure 6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What components are shown in the CZone Touch 7 system diagram?",
+            "question_variations": [
+              "What parts are in the CZone Touch 7 setup?",
+              "Can you list the components in Figure 7?",
+              "What makes up a CZone Touch 7 system?"
+            ],
+            "answer": "The CZone Touch 7 system diagram shows: Touch 7 Control unit, Analog inputs, Digital inputs, Output interfaces, Keypad, Network connection, HVAC, and 3rd Party integration",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 7, Page 10"
+            ]
+          },
+          {
+            "question": "How are inputs connected to the CZone Touch 7?",
+            "question_variations": [
+              "What types of inputs does the CZone Touch 7 accept?",
+              "How do I connect inputs to my CZone system?",
+              "What input options are available for CZone Touch 7?"
+            ],
+            "answer": "The CZone Touch 7 accepts both analog and digital inputs through dedicated input interfaces shown in the system diagram",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 7, Page 10"
+            ]
+          },
+          {
+            "question": "Where is the keypad located in the CZone system?",
+            "question_variations": [
+              "How is the keypad connected in the setup?",
+              "What position should the keypad be installed?",
+              "Where does the keypad connect in Figure 7?"
+            ],
+            "answer": "The keypad is shown as a separate component connected to the network backbone of the CZone Touch 7 system",
+            "question_type": "Where",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Figure 7, Page 10"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I mount the CZone Touch 7 display?",
+            "question_variations": [
+              "What are the steps to install the Touch 7?",
+              "Can you explain the Touch 7 mounting process?",
+              "What's the installation procedure for CZone Touch 7?"
+            ],
+            "answer": "Mount the CZone Touch 7 in 4 steps: 1) Cut mounting hole using supplied template, 2) Insert mounting bracket and secure with 4 self-tapping screws, 3) Slide display onto 2 mounting bracket hooks ensuring bottom edge touches surface, 4) Push top of display until it clips securely in place.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 12",
+              "Mounting Instructions Section",
+              "Figure 8",
+              "Figure 9"
+            ]
+          },
+          {
+            "question": "What parts are needed to mount the Touch 7?",
+            "question_variations": [
+              "What mounting hardware is included?",
+              "What components are required for Touch 7 installation?",
+              "What comes in the Touch 7 mounting kit?"
+            ],
+            "answer": "The mounting components include: mounting surface, mounting bracket, mounting screws (4x self-tapping), mounting template, and the display unit itself.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 12",
+              "Figure 8 Mounting Exploded View"
+            ]
+          },
+          {
+            "question": "How do I ensure proper seating of the Touch 7 display?",
+            "question_variations": [
+              "What's important for correct Touch 7 mounting?",
+              "How do I know if the Touch 7 is mounted correctly?",
+              "What should I check when installing the Touch 7?"
+            ],
+            "answer": "The bottom edge of the unit must touch the mounting surface for proper seating on the hooks. After sliding onto the mounting bracket hooks, the bottom should be flush with the mounting surface before pushing the top to clip in place.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 12",
+              "Mounting Instructions Note"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What do I need to install the CZone Touch 7 display?",
+            "question_variations": [
+              "What are the required materials for Touch 7 installation?",
+              "What tools and parts are needed for CZone Touch 7 setup?",
+              "What comes in the CZone Touch 7 installation kit?"
+            ],
+            "answer": "You need: Touch 7 Display, mounting bracket (supplied), 4 self tapping mounting screws (supplied), DC Power connector (supplied), NMEA2000 drop cable (supplied) and t-connector, 3A fuse, screwdriver and drill bits, and electrical tools.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3 Installation - Things You Need"
+            ]
+          },
+          {
+            "question": "Where should I mount the CZone Touch 7 display?",
+            "question_variations": [
+              "What's the best location to install the Touch 7?",
+              "How do I choose a mounting location for the display?",
+              "Where can I install my CZone Touch 7?"
+            ],
+            "answer": "Mount the display in a location with adequate airflow, minimal vibration, easy operator access and clear screen visibility. Ensure sufficient space for cable routing and connector access, away from interference sources like motors and radio transmitters. Install out of direct sunlight for best visibility, though the screen is sunlight-viewable. Ensure mounting compartment size is suitable and there's clearance for release tabs.",
+            "question_type": "Where",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3 Installation - Mounting Location"
+            ]
+          },
+          {
+            "question": "What are the operating temperature limits for the CZone Touch 7?",
+            "question_variations": [
+              "How hot can the Touch 7 display get?",
+              "What temperature range can the CZone Touch 7 handle?",
+              "When is it too hot for the Touch 7 to operate?"
+            ],
+            "answer": "The CZone Touch 7 is designed to operate in temperatures from -20\u00b0 C to +70\u00b0 C (-4\u00b0 F to +158\u00b0 F). Adequate ventilation is required to prevent overheating.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3 Installation - Warning Note"
+            ]
+          },
+          {
+            "question": "How do I ensure proper cable management for the Touch 7?",
+            "question_variations": [
+              "What are the cable routing requirements for CZone Touch 7?",
+              "How should I handle the cables when installing Touch 7?",
+              "What's needed for Touch 7 cable installation?"
+            ],
+            "answer": "Ensure cables have adequate strain relief to prevent connector stress. Provide proper routing and support for all cables. Ensure sufficient clearance for cable connections and verify the mounting location allows for proper cable routing and connection access.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3 Installation - Mounting Location"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I remove a CZone Touch 7 display?",
+            "question_variations": [
+              "What's the process to take off a Touch 7 display?",
+              "Can you explain Touch 7 display removal?",
+              "How to uninstall CZone Touch 7?"
+            ],
+            "answer": "To remove the Touch 7 display: 1) Locate the 2 release tabs on top sides of display 2) Use a flat head screwdriver to push one release tab in 5mm until it unclips 3) Repeat on other side until top is unclipped 4) Pull display up and away from bracket (disconnect all wires first if connected)",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 13, Display Removal Section"
+            ]
+          },
+          {
+            "question": "What tools do I need to remove a Touch 7 display?",
+            "question_variations": [
+              "Which tools are required for Touch 7 removal?",
+              "Do I need special tools to uninstall Touch 7?"
+            ],
+            "answer": "You need an appropriately sized flat head screwdriver or similar tool to remove the Touch 7 display",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 13, Display Removal Section"
+            ]
+          },
+          {
+            "question": "Where are the release tabs on a Touch 7 display?",
+            "question_variations": [
+              "What is the location of Touch 7 release tabs?",
+              "How do I find the release tabs on Touch 7?"
+            ],
+            "answer": "The release tabs are located at the top sides of the display, with one tab on each side",
+            "question_type": "Where",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 13, Display Removal Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I connect the CZone Touch 7 to power?",
+            "question_variations": [
+              "What are the power connection requirements for CZone Touch 7?",
+              "How do I wire up the CZone Touch 7?",
+              "What's the proper way to connect power to the Touch 7?"
+            ],
+            "answer": "Before connecting power, ensure the unit is compatible with your power supply voltage. Connect the positive wire to the + battery terminal and negative wire to the - battery terminal. Power must be turned off during installation to prevent fire or electrical shock.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 14, Connections Section"
+            ]
+          },
+          {
+            "question": "What networks can the CZone Touch 7 connect to?",
+            "question_variations": [
+              "Which network connections are available on the Touch 7?",
+              "Can I connect the CZone Touch 7 to NMEA2000?",
+              "Does the Touch 7 support router connections?"
+            ],
+            "answer": "The CZone Touch 7 can connect to NMEA2000 networks and optionally to a network router.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 14, Connections Section, Figure 11"
+            ]
+          },
+          {
+            "question": "What safety precautions are required when installing the CZone Touch 7?",
+            "question_variations": [
+              "Is it safe to install the Touch 7 with power on?",
+              "What are the safety warnings for Touch 7 installation?",
+              "Do I need to disconnect power when installing?"
+            ],
+            "answer": "Power must be completely turned off before starting installation. Installing with power on can result in fire, electrical shock, or other serious injury.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 14, Connections Section, Warning Notice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I power up the CZone Touch 7 for the first time?",
+            "question_variations": [
+              "What are the steps to start up a Touch 7?",
+              "How do I initialize my CZone Touch 7?",
+              "What's the first time setup process for Touch 7?"
+            ],
+            "answer": "1. Turn on the circuit breaker/switch powering the Touch 7. 2. Wait about 1 minute for splash screen and network configuration claim. 3. Enter the display dipswitch when prompted. 4. Wait for Control or Modes page to appear. 5. Device is then ready for use.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4 - Operation, Page 16"
+            ]
+          },
+          {
+            "question": "What is required before connecting Touch 7 to an existing CZone network?",
+            "question_variations": [
+              "How do I prepare Touch 7 for network connection?",
+              "What do I need to set up before adding Touch 7 to network?",
+              "What are the network prerequisites for Touch 7?"
+            ],
+            "answer": "The display must be added to the CZone configuration and assigned a unique dipswitch. Every device on the network requires a unique dipswitch to operate correctly. This process should be done using the CZone Configuration Tool.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4 - Operation, Page 16"
+            ]
+          },
+          {
+            "question": "How long does the CZone splash screen appear during startup?",
+            "question_variations": [
+              "What's the splash screen duration on Touch 7?",
+              "How many minutes does initial Touch 7 boot take?",
+              "What's the wait time for Touch 7 startup?"
+            ],
+            "answer": "The CZone splash screen appears for about 1 minute before the display attempts to claim a configuration from the network.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4 - Operation, Page 16"
+            ]
+          },
+          {
+            "question": "Where can I find detailed operation instructions for the Touch 7?",
+            "question_variations": [
+              "What manual has full Touch 7 instructions?",
+              "How do I get complete operating instructions for Touch 7?",
+              "Which guide shows detailed Touch 7 operation?"
+            ],
+            "answer": "Detailed operation instructions can be found in the CZone 2.0 User Interface Manual.",
+            "question_type": "Where",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4 - Operation, Page 16"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I connect DC power to the CZone Touch 7?",
+            "question_variations": [
+              "What are the power connection steps for Touch 7?",
+              "How to wire DC power for CZone Touch 7?",
+              "What's the process for connecting power to Touch 7?"
+            ],
+            "answer": "Connect DC power in 4 steps: 1) Connect negative wire from power connector to battery negative terminal 2) Connect positive wire from connector to battery positive through a 3A fuse 3) Optionally connect shield to chassis ground if interference occurs 4) With power off, insert connector into Touch 7 power socket and tighten locking screws",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 1: Connect DC Power, Page 15"
+            ]
+          },
+          {
+            "question": "What size fuse is needed for the CZone Touch 7 power connection?",
+            "question_variations": [
+              "Which fuse should I use for Touch 7?",
+              "What amp fuse for CZone Touch 7?"
+            ],
+            "answer": "A 3A fuse must be used in the positive wire connection between the power connector and battery positive terminal",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 1: Connect DC Power, Page 15"
+            ]
+          },
+          {
+            "question": "When should I connect the shield wire on the Touch 7?",
+            "question_variations": [
+              "Do I need to connect the shield connection?",
+              "Is the shield wire connection required?",
+              "Under what conditions should I use the shield connection?"
+            ],
+            "answer": "Connect the shield wire to the vessel/vehicle chassis ground ONLY if touch screen interference is observed. First try recalibrating the screen via Settings page; if performance doesn't improve, then connect the shield cable to chassis ground",
+            "question_type": "When",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 1: Connect DC Power, Page 15"
+            ]
+          },
+          {
+            "question": "How do I connect the Touch 7 to Ethernet?",
+            "question_variations": [
+              "What's the ethernet connection process for Touch 7?",
+              "How to setup network connection on CZone Touch 7?"
+            ],
+            "answer": "Run an ethernet cable from the Touch 7's Ethernet port to a router port, but only if configuring the Touch 7 in Client Mode Wired. Refer to section 2.5 for supported network configurations",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2: Connect Ethernet to Router, Page 15"
+            ]
+          },
+          {
+            "question": "How do I connect NMEA 2000 to the Touch 7?",
+            "question_variations": [
+              "What's the NMEA 2000 connection process?",
+              "How to connect Touch 7 to NMEA network?"
+            ],
+            "answer": "Run the supplied NMEA2000 1M Drop cable from the NMEA2000 port on the Touch 7 to the NMEA2000 backbone",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 3: Connect NMEA 2000 Network, Page 15"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I update the CZone Touch 7 software?",
+            "question_variations": [
+              "What's the process to update Touch 7 firmware?",
+              "Can I update my Touch 7 display?",
+              "What are the steps to upgrade Touch 7 software?"
+            ],
+            "answer": "Update via USB by copying the .swu firmware file to a USB drive's root directory, insert into Touch 7 USB port, go to Settings > About, press Update Software button, confirm with Yes. Wait for installation to complete and system reboot.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4.2.2"
+            ]
+          },
+          {
+            "question": "Where can I download Touch 7 software updates?",
+            "question_variations": [
+              "How do I get the latest Touch 7 firmware?",
+              "What website has Touch 7 updates?"
+            ],
+            "answer": "Download Touch 7 software updates from https://downloads.czone.net/",
+            "question_type": "Where",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4.2"
+            ]
+          },
+          {
+            "question": "How do I check my Touch 7's current software version?",
+            "question_variations": [
+              "What version of software is on my Touch 7?",
+              "Where can I see Touch 7 firmware version?"
+            ],
+            "answer": "Go to Settings > About. The current software version is listed at the top of the page.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4.2.1"
+            ]
+          },
+          {
+            "question": "Should I update other CZone components when updating Touch 7?",
+            "question_variations": [
+              "Do I need to update the whole system?",
+              "Is it recommended to update just the Touch 7?"
+            ],
+            "answer": "Yes, it is recommended to update the entire CZone system when updating the Touch 7 to ensure the system operates correctly.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7",
+              "CZone System"
+            ],
+            "references": [
+              "Section 4.2"
+            ]
+          },
+          {
+            "question": "How long does the Touch 7 software update take?",
+            "question_variations": [
+              "What's the update installation time for Touch 7?",
+              "How many minutes for Touch 7 update?"
+            ],
+            "answer": "The software installation process may take a few minutes to complete.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 4.2.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I enable the Wireless Server on CZone Touch 7?",
+            "question_variations": [
+              "What are the steps to turn on wireless server?",
+              "How to activate WiFi server on Touch 7?",
+              "How can I enable wireless connectivity on CZone?"
+            ],
+            "answer": "Go to Settings > Advanced > Wireless Server, then enter the unique dipswitch assigned in the CZone configuration and press Save. The dipswitch must be different from the Touch 7 Display Interface dipswitch.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 18, Setting Up Wireless Server section"
+            ]
+          },
+          {
+            "question": "What is required for wireless communication between CZone and iPad?",
+            "question_variations": [
+              "How do I connect my iPad to CZone?",
+              "What do I need for iPad-CZone wireless setup?",
+              "What are the requirements for CZone wireless connectivity?"
+            ],
+            "answer": "The CZone configuration must include two devices with unique dipswitches: the Display Interface and Wireless Interface. The Wireless Server must be enabled and will appear as a separate Wireless Interface on the CZone network.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 18, Setting Up Wireless Server section"
+            ]
+          },
+          {
+            "question": "What is the default wireless server status on Touch 7?",
+            "question_variations": [
+              "Is WiFi enabled by default on CZone Touch 7?",
+              "Does Touch 7 come with wireless server enabled?",
+              "What's the factory wireless setting on Touch 7?"
+            ],
+            "answer": "By default, the WiFi is disabled on the CZone Touch 7.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 18, Setting Up Wireless Server section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I calibrate the CZone Touch 7 screen?",
+            "question_variations": [
+              "What are the steps to calibrate Touch 7 display?",
+              "How can I fix touch screen issues on CZone Touch 7?",
+              "What's the process for Touch 7 screen calibration?",
+              "My Touch 7 screen isn't responding well, how do I fix it?"
+            ],
+            "answer": "1. Navigate to Settings > System > Screen Calibration page. 2. Press the 'Calibrate' button. 3. Wait approximately 10 seconds for calibration to complete. 4. Test the touch performance after calibration.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 20, Screen Calibration Section"
+            ]
+          },
+          {
+            "question": "What should I do if screen calibration doesn't fix touch issues?",
+            "question_variations": [
+              "Touch screen still not working after calibration, what next?",
+              "How to fix persistent touch screen problems on Touch 7?",
+              "Additional troubleshooting for Touch 7 screen issues?"
+            ],
+            "answer": "If touch performance doesn't improve after calibration, run a cable from the shield position on the Touch 7 power connector to chassis/ground.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 20, Screen Calibration Section"
+            ]
+          },
+          {
+            "question": "What causes touch screen interference on CZone Touch 7?",
+            "question_variations": [
+              "Why is my Touch 7 screen not responding correctly?",
+              "What interferes with Touch 7 screen performance?",
+              "Source of touch screen problems on CZone Touch 7?"
+            ],
+            "answer": "Frequencies emitted from some electrical equipment can cause interference with the display's touch screen performance.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 20, Screen Calibration Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I configure WiFi on CZone Touch 7?",
+            "question_variations": [
+              "What are the steps to set up WiFi on Touch 7?",
+              "How to enable wireless on CZone Touch 7?",
+              "What's the WiFi setup process for Touch 7?"
+            ],
+            "answer": "After setting the Dipswitch, select your desired WiFi Mode. To use Wired Client Mode, select 'Disabled' which will turn off WiFi. For Access Point mode, the system will display the WiFi SSID and password that you'll need to connect devices.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 2.5",
+              "Page 19"
+            ]
+          },
+          {
+            "question": "What credentials do I need to connect to Touch 7 wirelessly?",
+            "question_variations": [
+              "How do I find the WiFi password for Touch 7?",
+              "Where can I see the Touch 7 WiFi SSID?",
+              "What login info do I need for Touch 7 wireless connection?"
+            ],
+            "answer": "When Access Point is enabled, the Touch 7 will display both the WiFi SSID and password on screen. These credentials are needed to connect an iPad or laptop for sending favorites configuration files wirelessly.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 19"
+            ]
+          },
+          {
+            "question": "How do I send favorites configuration files to Touch 7?",
+            "question_variations": [
+              "Can I transfer .cfp files wirelessly to Touch 7?",
+              "What's the process for sending favorites to Touch 7?",
+              "How to configure favorites wirelessly on Touch 7?"
+            ],
+            "answer": "You can send favorites configuration files (.cfp) wirelessly using the Favorites Tool. First enable Access Point mode, then connect your iPad or laptop to the Touch 7 using the displayed WiFi credentials. Use the Favorites Tool to transfer the files.",
+            "question_type": "How",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 19"
+            ]
+          },
+          {
+            "question": "What is Wired Client Mode on Touch 7?",
+            "question_variations": [
+              "How do I enable Wired Client Mode?",
+              "What happens when I disable WiFi on Touch 7?",
+              "Can I use Touch 7 without WiFi?"
+            ],
+            "answer": "Wired Client Mode is activated by selecting 'Disabled' in the WiFi Mode settings. This turns off all WiFi functionality and configures the device to operate in wired mode only.",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 19",
+              "Section 2.5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What certifications does the CZone Touch 7 have?",
+            "question_variations": [
+              "Is the CZone Touch 7 EC certified?",
+              "What compliance standards does CZone Touch 7 meet?",
+              "Does CZone Touch 7 have European certification?"
+            ],
+            "answer": "The CZone Touch 7 has EC Declaration of Conformity certification, confirming it meets European compliance standards",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 7",
+              "Page 23"
+            ]
+          },
+          {
+            "question": "Where can I find the compliance documentation for CZone Touch 7?",
+            "question_variations": [
+              "How do I get the certification documents for CZone Touch 7?",
+              "Where is the EC Declaration of Conformity located?",
+              "What page shows CZone Touch 7 certification info?"
+            ],
+            "answer": "The EC Declaration of Conformity documentation can be found in Section 7 on page 23 of the CZone Touch 7 User & Installation Manual",
+            "question_type": "Where",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Section 7",
+              "Page 23"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is included in the CZone Touch 7 Kit?",
+            "question_variations": [
+              "What comes with the CZone Touch 7?",
+              "What parts are in the basic Touch 7 package?",
+              "What accessories come standard with Touch 7?"
+            ],
+            "answer": "The CZone Touch 7 Kit (part number 80-911-0200-00) includes the mounting bracket, 1M NMEA2000 drop cable, and power connector",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 22, Ordering Information section"
+            ]
+          },
+          {
+            "question": "What is the part number for the Touch 7 mounting bracket?",
+            "question_variations": [
+              "How do I order a replacement mounting bracket?",
+              "What's the spare bracket part number?",
+              "Where can I find the mounting bracket part number?"
+            ],
+            "answer": "The CZone Touch 7 mounting bracket kit spare part number is 80-911-0201-00",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 22, Ordering Information section"
+            ]
+          },
+          {
+            "question": "What is the part number for the NMEA 2000 drop cable?",
+            "question_variations": [
+              "How do I order a NMEA 2000 cable?",
+              "What's the drop cable part number?",
+              "Which cable do I need for NMEA 2000?"
+            ],
+            "answer": "The CZone Touch 7 1M NMEA 2000 drop cable part number is 80-911-0202-00",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 22, Ordering Information section"
+            ]
+          },
+          {
+            "question": "What is the part number for a spare power connector?",
+            "question_variations": [
+              "How do I order a replacement power connector?",
+              "What's the power connector part number?",
+              "Where can I find the power connector part number?"
+            ],
+            "answer": "The CZone Touch 7 power connector spare part number is 80-911-0203-00",
+            "question_type": "What",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "references": [
+              "Page 22, Ordering Information section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the display size of the CZone Touch 7?",
+            "question_variations": [
+              "How big is the CZone Touch 7 screen?",
+              "What screen size does the Touch 7 have?"
+            ],
+            "answer": "The CZone Touch 7 has a 7.0 inch display",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the operating voltage range for the Touch 7?",
+            "question_variations": [
+              "What voltage does the Touch 7 need?",
+              "What power requirements does the CZone Touch 7 have?"
+            ],
+            "answer": "The CZone Touch 7 operates on 8-32V DC",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the current draw during operation?",
+            "question_variations": [
+              "How much power does it use when running?",
+              "What is the operating current consumption?"
+            ],
+            "answer": "The operating current draw is 430mA @ 12V with backlight at 100%",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What temperature range can the Touch 7 operate in?",
+            "question_variations": [
+              "What are the operating temperature limits?",
+              "How hot can the Touch 7 get while operating?"
+            ],
+            "answer": "The operating temperature range is -20\u00b0C to 70\u00b0C (-4\u00b0F to 158\u00b0F)",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What interfaces does the Touch 7 have?",
+            "question_variations": [
+              "What connections are available on the Touch 7?",
+              "What ports does the CZone Touch 7 support?"
+            ],
+            "answer": "The Touch 7 has USB2.0, Ethernet, NMEA2000, and WiFi interfaces",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "How much does the Touch 7 weigh?",
+            "question_variations": [
+              "What is the weight of the CZone Touch 7?",
+              "How heavy is the Touch 7 unit?"
+            ],
+            "answer": "The Touch 7 weighs 695 grams (1.53 lbs) excluding mounting hardware",
+            "question_type": "How",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the warranty period?",
+            "question_variations": [
+              "How long is the Touch 7 warranty?",
+              "What warranty coverage comes with the Touch 7?"
+            ],
+            "answer": "The warranty period is 2 years",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What certifications does the Touch 7 have?",
+            "question_variations": [
+              "Is the Touch 7 certified?",
+              "What compliance certifications are included?"
+            ],
+            "answer": "The Touch 7 has CE, FCC, and RCM certification",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the screen resolution?",
+            "question_variations": [
+              "How many pixels does the display have?",
+              "What is the Touch 7 display resolution?"
+            ],
+            "answer": "The screen resolution is 1024 x 600 pixels",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          },
+          {
+            "question": "What is the model number for the Touch 7?",
+            "question_variations": [
+              "What is the article number for the Touch 7?",
+              "What is the product code for the Touch 7?"
+            ],
+            "answer": "The article number is 80-911-0200-00",
+            "question_type": "What",
+            "models": [
+              "Touch 7"
+            ],
+            "references": [
+              "Technical Specifications Section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

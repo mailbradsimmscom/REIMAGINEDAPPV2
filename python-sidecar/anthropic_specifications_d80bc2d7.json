@@ -1,0 +1,3452 @@
+{
+  "total_chunks_processed": 23,
+  "successful_chunks": 23,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 86,
+  "unique_specifications": 30,
+  "category_breakdown": {
+    "Product": 1,
+    "Documentation": 3,
+    "Product Information": 1,
+    "Dimensions": 2,
+    "Network": 11,
+    "Installation": 5,
+    "Electrical": 2,
+    "Performance": 4,
+    "Power": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Touch 7",
+      "normalized_parameter": "model_name",
+      "parameter_aliases": [
+        "touch7",
+        "touch_7",
+        "touch_panel"
+      ],
+      "value": "Touch 7",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Touch 7"
+      ],
+      "category": "Product",
+      "search_terms": [
+        "touch 7",
+        "model",
+        "product name",
+        "touch panel"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "title page"
+      ]
+    },
+    {
+      "parameter": "Manual Version",
+      "normalized_parameter": "documentation_version",
+      "parameter_aliases": [
+        "version",
+        "doc_version",
+        "manual_revision"
+      ],
+      "value": "1.0",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Touch 7"
+      ],
+      "category": "Documentation",
+      "search_terms": [
+        "version",
+        "manual version",
+        "documentation version",
+        "revision"
+      ],
+      "concept_group": "documentation",
+      "references": [
+        "title page"
+      ]
+    },
+    {
+      "parameter": "Document Version",
+      "normalized_parameter": "document_version",
+      "parameter_aliases": [
+        "manual version",
+        "documentation revision"
+      ],
+      "value": "2",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Documentation",
+      "search_terms": [
+        "version",
+        "revision",
+        "document version",
+        "manual version",
+        "documentation version"
+      ],
+      "concept_group": "documentation_control",
+      "references": [
+        "page 2"
+      ]
+    },
+    {
+      "parameter": "Copyright Year",
+      "normalized_parameter": "copyright_year",
+      "parameter_aliases": [
+        "publication date",
+        "document date"
+      ],
+      "value": "2020",
+      "range": null,
+      "units": "year",
+      "normalized_units": "year",
+      "converted_value": "2020",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Documentation",
+      "search_terms": [
+        "copyright",
+        "publication date",
+        "release date",
+        "year published"
+      ],
+      "concept_group": "legal_information",
+      "references": [
+        "page 2"
+      ]
+    },
+    {
+      "parameter": "Product Name",
+      "normalized_parameter": "product_name",
+      "parameter_aliases": [
+        "device name",
+        "model name"
+      ],
+      "value": "CZone Touch 7",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Product Information",
+      "search_terms": [
+        "product name",
+        "model",
+        "device name",
+        "touch 7",
+        "czone"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "page 2"
+      ]
+    },
+    {
+      "parameter": "Display Size",
+      "normalized_parameter": "display_diagonal",
+      "parameter_aliases": [
+        "screen size",
+        "monitor size"
+      ],
+      "value": "7",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "inches",
+      "converted_value": "7",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "display size",
+        "screen dimensions",
+        "monitor size",
+        "how big is the screen"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "title page"
+      ]
+    },
+    {
+      "parameter": "Network Protocol",
+      "normalized_parameter": "network_protocol",
+      "parameter_aliases": [
+        "communication protocol",
+        "data protocol"
+      ],
+      "value": "NMEA 2000",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "network type",
+        "protocol",
+        "NMEA",
+        "communications standard"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "section 3.5"
+      ]
+    },
+    {
+      "parameter": "Network Modes",
+      "normalized_parameter": "network_modes",
+      "parameter_aliases": [
+        "connection modes",
+        "networking options"
+      ],
+      "value": "Access Point, Client Mode (Wireless), Client Mode (Wired)",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "network configuration",
+        "connection types",
+        "wireless modes",
+        "networking setup"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "section 2.5"
+      ]
+    },
+    {
+      "parameter": "Software Update Method",
+      "normalized_parameter": "software_update_interface",
+      "parameter_aliases": [
+        "firmware update",
+        "software upgrade"
+      ],
+      "value": "USB Flash Drive",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how to update",
+        "software update",
+        "firmware upgrade",
+        "USB update"
+      ],
+      "concept_group": "maintenance",
+      "references": [
+        "section 4.2.2"
+      ]
+    },
+    {
+      "parameter": "DC Power Connection",
+      "normalized_parameter": "dc_power_connector",
+      "parameter_aliases": [
+        "power input",
+        "DC connector",
+        "power connection"
+      ],
+      "value": "4-pin",
+      "range": "",
+      "units": "pins",
+      "normalized_units": "pins",
+      "converted_value": "4",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power connector type",
+        "DC connector pins",
+        "power input connection"
+      ],
+      "concept_group": "power_connections",
+      "references": [
+        "Figure 12"
+      ]
+    },
+    {
+      "parameter": "Network Modes",
+      "normalized_parameter": "network_connectivity_modes",
+      "parameter_aliases": [
+        "connection modes",
+        "network configuration"
+      ],
+      "value": "Access Point, Client Mode Wireless, Client Mode Wired",
+      "range": "",
+      "units": "",
+      "normalized_units": "",
+      "converted_value": "",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "network modes",
+        "connection types",
+        "wireless modes",
+        "networking options"
+      ],
+      "concept_group": "network_specifications",
+      "references": [
+        "Figure 4",
+        "Figure 5",
+        "Figure 6"
+      ]
+    },
+    {
+      "parameter": "Model Name",
+      "normalized_parameter": "model_name",
+      "parameter_aliases": [
+        "product name",
+        "device model",
+        "unit model"
+      ],
+      "value": "CZone Touch 7",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "80-911-0200-00"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "czone touch 7",
+        "touch 7 model",
+        "touch 7 device",
+        "model number"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "Section 1"
+      ]
+    },
+    {
+      "parameter": "Part Number",
+      "normalized_parameter": "part_number",
+      "parameter_aliases": [
+        "model number",
+        "product code",
+        "item number"
+      ],
+      "value": "80-911-0200-00",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "part number",
+        "model code",
+        "product number",
+        "reference number"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "Section 1"
+      ]
+    },
+    {
+      "parameter": "Warranty Period",
+      "normalized_parameter": "warranty_duration",
+      "parameter_aliases": [
+        "guarantee period",
+        "warranty coverage"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "years",
+      "normalized_units": "years",
+      "converted_value": "2",
+      "models": [
+        "80-911-0200-00"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "warranty",
+        "guarantee",
+        "warranty period",
+        "warranty duration"
+      ],
+      "concept_group": "warranty_information",
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "parameter": "Screen Resolution",
+      "normalized_parameter": "display_resolution",
+      "parameter_aliases": [
+        "pixel resolution",
+        "display pixels"
+      ],
+      "value": "1024 x 600",
+      "range": null,
+      "units": "pixels",
+      "normalized_units": "pixels",
+      "converted_value": "1024 x 600",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "resolution",
+        "screen quality",
+        "display clarity",
+        "pixel count"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Display Brightness",
+      "normalized_parameter": "screen_brightness",
+      "parameter_aliases": [
+        "luminance",
+        "screen intensity"
+      ],
+      "value": "500",
+      "range": "0-500",
+      "units": "nit",
+      "normalized_units": "nit",
+      "converted_value": "500",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how bright",
+        "screen brightness",
+        "display intensity",
+        "nits"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Mounting Depth",
+      "normalized_parameter": "installation_depth",
+      "parameter_aliases": [
+        "install depth",
+        "depth requirement"
+      ],
+      "value": "35",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "35",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how deep",
+        "mounting depth",
+        "installation space",
+        "depth needed"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "voltage_range",
+      "parameter_aliases": [
+        "voltage input",
+        "power requirement"
+      ],
+      "value": "8-32",
+      "range": "8-32",
+      "units": "V DC",
+      "normalized_units": "volts_dc",
+      "converted_value": "8-32",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "electrical specs",
+        "DC voltage"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Color Depth",
+      "normalized_parameter": "color_depth",
+      "parameter_aliases": [
+        "color bits",
+        "color range"
+      ],
+      "value": "24",
+      "range": null,
+      "units": "bit",
+      "normalized_units": "bits",
+      "converted_value": "24",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "color depth",
+        "color quality",
+        "bit depth",
+        "color accuracy"
+      ],
+      "concept_group": "display_specifications",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "WiFi Network Mode",
+      "normalized_parameter": "wifi_network_mode",
+      "parameter_aliases": [
+        "wireless mode",
+        "network configuration",
+        "wifi configuration"
+      ],
+      "value": "Access Point or Client Mode",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "wifi mode",
+        "wireless setup",
+        "network type",
+        "access point",
+        "client mode",
+        "wifi configuration",
+        "network mode"
+      ],
+      "concept_group": "network_connectivity",
+      "references": [
+        "Section 2.5"
+      ]
+    },
+    {
+      "parameter": "Wireless Device Support",
+      "normalized_parameter": "wireless_device_support",
+      "parameter_aliases": [
+        "compatible devices",
+        "wireless compatibility"
+      ],
+      "value": "iPad and PC",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "supported devices",
+        "compatible devices",
+        "wireless devices",
+        "ipad support",
+        "pc support"
+      ],
+      "concept_group": "device_compatibility",
+      "references": [
+        "Section 2.5"
+      ]
+    },
+    {
+      "parameter": "Network Configurations",
+      "normalized_parameter": "network_configurations",
+      "parameter_aliases": [
+        "network setup options",
+        "configuration types"
+      ],
+      "value": "3",
+      "range": "N/A",
+      "units": "configurations",
+      "normalized_units": "configurations",
+      "converted_value": "3",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "network options",
+        "configuration types",
+        "setup options",
+        "network modes",
+        "connection types"
+      ],
+      "concept_group": "network_connectivity",
+      "references": [
+        "Section 2.5"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "input_voltage",
+      "parameter_aliases": [
+        "supply voltage",
+        "power input",
+        "DC voltage"
+      ],
+      "value": "8-32",
+      "range": "8-32",
+      "units": "VDC",
+      "normalized_units": "volts_dc",
+      "converted_value": "8-32",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Power",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "DC power",
+        "voltage range",
+        "power specs"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Figure 2"
+      ]
+    },
+    {
+      "parameter": "Network Interface Type 1",
+      "normalized_parameter": "network_interface",
+      "parameter_aliases": [
+        "connectivity",
+        "network port"
+      ],
+      "value": "USB",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "USB",
+        "USB port",
+        "connectivity",
+        "interface",
+        "connection type"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "Figure 2"
+      ]
+    },
+    {
+      "parameter": "Network Interface Type 2",
+      "normalized_parameter": "network_interface",
+      "parameter_aliases": [
+        "connectivity",
+        "network port"
+      ],
+      "value": "Ethernet",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "ethernet",
+        "network",
+        "LAN",
+        "connectivity",
+        "network connection"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "Figure 2"
+      ]
+    },
+    {
+      "parameter": "Marine Network Protocol",
+      "normalized_parameter": "marine_network_protocol",
+      "parameter_aliases": [
+        "marine network",
+        "boat network"
+      ],
+      "value": "NMEA2000",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "NMEA",
+        "NMEA2000",
+        "marine protocol",
+        "boat network",
+        "N2K"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "Figure 2"
+      ]
+    },
+    {
+      "parameter": "Display Size",
+      "normalized_parameter": "screen_size",
+      "parameter_aliases": [
+        "screen size",
+        "display diagonal"
+      ],
+      "value": "7",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "inches",
+      "converted_value": "7",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "screen size",
+        "display size",
+        "monitor size",
+        "inch display"
+      ],
+      "concept_group": "physical_specifications",
+      "references": [
+        "Figure 1"
+      ]
+    },
+    {
+      "parameter": "Network Mode",
+      "normalized_parameter": "network_mode",
+      "parameter_aliases": [
+        "connection_mode",
+        "networking_mode",
+        "connectivity_mode"
+      ],
+      "value": "Client Mode Wired",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "client mode",
+        "wired mode",
+        "network configuration",
+        "connection type",
+        "ethernet mode"
+      ],
+      "concept_group": "network_configuration",
+      "references": [
+        "Section 2.5.3"
+      ]
+    },
+    {
+      "parameter": "WiFi Status",
+      "normalized_parameter": "wifi_status",
+      "parameter_aliases": [
+        "wireless_state",
+        "wifi_mode",
+        "wireless_capability"
+      ],
+      "value": "Disabled",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "wifi disabled",
+        "wireless status",
+        "wifi capability",
+        "wireless disabled",
+        "wifi mode"
+      ],
+      "concept_group": "wireless_configuration",
+      "references": [
+        "Section 2.5.3"
+      ]
+    },
+    {
+      "parameter": "Network Interface",
+      "normalized_parameter": "network_interface",
+      "parameter_aliases": [
+        "network connection",
+        "connectivity",
+        "interface"
+      ],
+      "value": "CZone",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "CZone Touch 7"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "network type",
+        "connection type",
+        "interface protocol",
+        "CZone network",
+        "connectivity options"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "p.10"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Touch 7",
+            "normalized_parameter": "model_name",
+            "parameter_aliases": [
+              "touch7",
+              "touch_7",
+              "touch_panel"
+            ],
+            "value": "Touch 7",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Product",
+            "search_terms": [
+              "touch 7",
+              "model",
+              "product name",
+              "touch panel"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "title page"
+            ]
+          },
+          {
+            "parameter": "Manual Version",
+            "normalized_parameter": "documentation_version",
+            "parameter_aliases": [
+              "version",
+              "doc_version",
+              "manual_revision"
+            ],
+            "value": "1.0",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Documentation",
+            "search_terms": [
+              "version",
+              "manual version",
+              "documentation version",
+              "revision"
+            ],
+            "concept_group": "documentation",
+            "references": [
+              "title page"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Document Version",
+            "normalized_parameter": "document_version",
+            "parameter_aliases": [
+              "manual version",
+              "documentation revision"
+            ],
+            "value": "2",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Documentation",
+            "search_terms": [
+              "version",
+              "revision",
+              "document version",
+              "manual version",
+              "documentation version"
+            ],
+            "concept_group": "documentation_control",
+            "references": [
+              "page 2"
+            ]
+          },
+          {
+            "parameter": "Copyright Year",
+            "normalized_parameter": "copyright_year",
+            "parameter_aliases": [
+              "publication date",
+              "document date"
+            ],
+            "value": "2020",
+            "range": null,
+            "units": "year",
+            "normalized_units": "year",
+            "converted_value": "2020",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Documentation",
+            "search_terms": [
+              "copyright",
+              "publication date",
+              "release date",
+              "year published"
+            ],
+            "concept_group": "legal_information",
+            "references": [
+              "page 2"
+            ]
+          },
+          {
+            "parameter": "Product Name",
+            "normalized_parameter": "product_name",
+            "parameter_aliases": [
+              "device name",
+              "model name"
+            ],
+            "value": "CZone Touch 7",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Product Information",
+            "search_terms": [
+              "product name",
+              "model",
+              "device name",
+              "touch 7",
+              "czone"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "page 2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "display_diagonal",
+            "parameter_aliases": [
+              "screen size",
+              "monitor size"
+            ],
+            "value": "7",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "display size",
+              "screen dimensions",
+              "monitor size",
+              "how big is the screen"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "title page"
+            ]
+          },
+          {
+            "parameter": "Network Protocol",
+            "normalized_parameter": "network_protocol",
+            "parameter_aliases": [
+              "communication protocol",
+              "data protocol"
+            ],
+            "value": "NMEA 2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "network type",
+              "protocol",
+              "NMEA",
+              "communications standard"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "section 3.5"
+            ]
+          },
+          {
+            "parameter": "Network Modes",
+            "normalized_parameter": "network_modes",
+            "parameter_aliases": [
+              "connection modes",
+              "networking options"
+            ],
+            "value": "Access Point, Client Mode (Wireless), Client Mode (Wired)",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "network configuration",
+              "connection types",
+              "wireless modes",
+              "networking setup"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "section 2.5"
+            ]
+          },
+          {
+            "parameter": "Software Update Method",
+            "normalized_parameter": "software_update_interface",
+            "parameter_aliases": [
+              "firmware update",
+              "software upgrade"
+            ],
+            "value": "USB Flash Drive",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how to update",
+              "software update",
+              "firmware upgrade",
+              "USB update"
+            ],
+            "concept_group": "maintenance",
+            "references": [
+              "section 4.2.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "display_diagonal",
+            "parameter_aliases": [
+              "screen size",
+              "monitor size",
+              "display dimensions"
+            ],
+            "value": "7",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "how big is the screen",
+              "display size",
+              "screen dimensions",
+              "touch screen size"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Figure 1"
+            ]
+          },
+          {
+            "parameter": "DC Power Connection",
+            "normalized_parameter": "dc_power_connector",
+            "parameter_aliases": [
+              "power input",
+              "DC connector",
+              "power connection"
+            ],
+            "value": "4-pin",
+            "range": "",
+            "units": "pins",
+            "normalized_units": "pins",
+            "converted_value": "4",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power connector type",
+              "DC connector pins",
+              "power input connection"
+            ],
+            "concept_group": "power_connections",
+            "references": [
+              "Figure 12"
+            ]
+          },
+          {
+            "parameter": "Network Modes",
+            "normalized_parameter": "network_connectivity_modes",
+            "parameter_aliases": [
+              "connection modes",
+              "network configuration"
+            ],
+            "value": "Access Point, Client Mode Wireless, Client Mode Wired",
+            "range": "",
+            "units": "",
+            "normalized_units": "",
+            "converted_value": "",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "network modes",
+              "connection types",
+              "wireless modes",
+              "networking options"
+            ],
+            "concept_group": "network_specifications",
+            "references": [
+              "Figure 4",
+              "Figure 5",
+              "Figure 6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Model Name",
+            "normalized_parameter": "model_name",
+            "parameter_aliases": [
+              "product name",
+              "device model",
+              "unit model"
+            ],
+            "value": "CZone Touch 7",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "80-911-0200-00"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "czone touch 7",
+              "touch 7 model",
+              "touch 7 device",
+              "model number"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "Section 1"
+            ]
+          },
+          {
+            "parameter": "Part Number",
+            "normalized_parameter": "part_number",
+            "parameter_aliases": [
+              "model number",
+              "product code",
+              "item number"
+            ],
+            "value": "80-911-0200-00",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "part number",
+              "model code",
+              "product number",
+              "reference number"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "Section 1"
+            ]
+          },
+          {
+            "parameter": "Warranty Period",
+            "normalized_parameter": "warranty_duration",
+            "parameter_aliases": [
+              "guarantee period",
+              "warranty coverage"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "years",
+            "normalized_units": "years",
+            "converted_value": "2",
+            "models": [
+              "80-911-0200-00"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "warranty",
+              "guarantee",
+              "warranty period",
+              "warranty duration"
+            ],
+            "concept_group": "warranty_information",
+            "references": [
+              "Warranty Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "display_diagonal",
+            "parameter_aliases": [
+              "screen size",
+              "display diagonal",
+              "screen diagonal"
+            ],
+            "value": "7",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "how big is the screen",
+              "display size",
+              "screen dimensions",
+              "monitor size"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Overview section"
+            ]
+          },
+          {
+            "parameter": "Screen Resolution",
+            "normalized_parameter": "display_resolution",
+            "parameter_aliases": [
+              "pixel resolution",
+              "display pixels"
+            ],
+            "value": "1024 x 600",
+            "range": null,
+            "units": "pixels",
+            "normalized_units": "pixels",
+            "converted_value": "1024 x 600",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "resolution",
+              "screen quality",
+              "display clarity",
+              "pixel count"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Display Brightness",
+            "normalized_parameter": "screen_brightness",
+            "parameter_aliases": [
+              "luminance",
+              "screen intensity"
+            ],
+            "value": "500",
+            "range": "0-500",
+            "units": "nit",
+            "normalized_units": "nit",
+            "converted_value": "500",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how bright",
+              "screen brightness",
+              "display intensity",
+              "nits"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Mounting Depth",
+            "normalized_parameter": "installation_depth",
+            "parameter_aliases": [
+              "install depth",
+              "depth requirement"
+            ],
+            "value": "35",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "35",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how deep",
+              "mounting depth",
+              "installation space",
+              "depth needed"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "voltage_range",
+            "parameter_aliases": [
+              "voltage input",
+              "power requirement"
+            ],
+            "value": "8-32",
+            "range": "8-32",
+            "units": "V DC",
+            "normalized_units": "volts_dc",
+            "converted_value": "8-32",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "electrical specs",
+              "DC voltage"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Color Depth",
+            "normalized_parameter": "color_depth",
+            "parameter_aliases": [
+              "color bits",
+              "color range"
+            ],
+            "value": "24",
+            "range": null,
+            "units": "bit",
+            "normalized_units": "bits",
+            "converted_value": "24",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "color depth",
+              "color quality",
+              "bit depth",
+              "color accuracy"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Features section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "WiFi Network Mode",
+            "normalized_parameter": "wifi_network_mode",
+            "parameter_aliases": [
+              "wireless mode",
+              "network configuration",
+              "wifi configuration"
+            ],
+            "value": "Access Point or Client Mode",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "wifi mode",
+              "wireless setup",
+              "network type",
+              "access point",
+              "client mode",
+              "wifi configuration",
+              "network mode"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Section 2.5"
+            ]
+          },
+          {
+            "parameter": "Wireless Device Support",
+            "normalized_parameter": "wireless_device_support",
+            "parameter_aliases": [
+              "compatible devices",
+              "wireless compatibility"
+            ],
+            "value": "iPad and PC",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "supported devices",
+              "compatible devices",
+              "wireless devices",
+              "ipad support",
+              "pc support"
+            ],
+            "concept_group": "device_compatibility",
+            "references": [
+              "Section 2.5"
+            ]
+          },
+          {
+            "parameter": "Network Configurations",
+            "normalized_parameter": "network_configurations",
+            "parameter_aliases": [
+              "network setup options",
+              "configuration types"
+            ],
+            "value": "3",
+            "range": "N/A",
+            "units": "configurations",
+            "normalized_units": "configurations",
+            "converted_value": "3",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "network options",
+              "configuration types",
+              "setup options",
+              "network modes",
+              "connection types"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Section 2.5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "input_voltage",
+            "parameter_aliases": [
+              "supply voltage",
+              "power input",
+              "DC voltage"
+            ],
+            "value": "8-32",
+            "range": "8-32",
+            "units": "VDC",
+            "normalized_units": "volts_dc",
+            "converted_value": "8-32",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "DC power",
+              "voltage range",
+              "power specs"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Figure 2"
+            ]
+          },
+          {
+            "parameter": "Network Interface Type 1",
+            "normalized_parameter": "network_interface",
+            "parameter_aliases": [
+              "connectivity",
+              "network port"
+            ],
+            "value": "USB",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "USB",
+              "USB port",
+              "connectivity",
+              "interface",
+              "connection type"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Figure 2"
+            ]
+          },
+          {
+            "parameter": "Network Interface Type 2",
+            "normalized_parameter": "network_interface",
+            "parameter_aliases": [
+              "connectivity",
+              "network port"
+            ],
+            "value": "Ethernet",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "ethernet",
+              "network",
+              "LAN",
+              "connectivity",
+              "network connection"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Figure 2"
+            ]
+          },
+          {
+            "parameter": "Marine Network Protocol",
+            "normalized_parameter": "marine_network_protocol",
+            "parameter_aliases": [
+              "marine network",
+              "boat network"
+            ],
+            "value": "NMEA2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "NMEA",
+              "NMEA2000",
+              "marine protocol",
+              "boat network",
+              "N2K"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Figure 2"
+            ]
+          },
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "screen_size",
+            "parameter_aliases": [
+              "screen size",
+              "display diagonal"
+            ],
+            "value": "7",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "screen size",
+              "display size",
+              "monitor size",
+              "inch display"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Figure 1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Network Mode",
+            "normalized_parameter": "network_mode",
+            "parameter_aliases": [
+              "connection_mode",
+              "networking_mode",
+              "connectivity_mode"
+            ],
+            "value": "Client Mode Wired",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "client mode",
+              "wired mode",
+              "network configuration",
+              "connection type",
+              "ethernet mode"
+            ],
+            "concept_group": "network_configuration",
+            "references": [
+              "Section 2.5.3"
+            ]
+          },
+          {
+            "parameter": "Network Interface",
+            "normalized_parameter": "network_interface",
+            "parameter_aliases": [
+              "connection_type",
+              "port_type",
+              "physical_interface"
+            ],
+            "value": "Ethernet",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "ethernet port",
+              "network port",
+              "wired connection",
+              "ethernet interface",
+              "network connection"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Section 2.5.3"
+            ]
+          },
+          {
+            "parameter": "WiFi Status",
+            "normalized_parameter": "wifi_status",
+            "parameter_aliases": [
+              "wireless_state",
+              "wifi_mode",
+              "wireless_capability"
+            ],
+            "value": "Disabled",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "wifi disabled",
+              "wireless status",
+              "wifi capability",
+              "wireless disabled",
+              "wifi mode"
+            ],
+            "concept_group": "wireless_configuration",
+            "references": [
+              "Section 2.5.3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Network Interface",
+            "normalized_parameter": "network_interface",
+            "parameter_aliases": [
+              "network connection",
+              "connectivity",
+              "interface"
+            ],
+            "value": "CZone",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "network type",
+              "connection type",
+              "interface protocol",
+              "CZone network",
+              "connectivity options"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "p.10"
+            ]
+          },
+          {
+            "parameter": "Touch Display Size",
+            "normalized_parameter": "display_size",
+            "parameter_aliases": [
+              "screen size",
+              "display diagonal",
+              "monitor size"
+            ],
+            "value": "7",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "screen size",
+              "display dimensions",
+              "touch screen size",
+              "monitor size",
+              "display diagonal"
+            ],
+            "concept_group": "display",
+            "references": [
+              "p.10"
+            ]
+          },
+          {
+            "parameter": "Analog Inputs",
+            "normalized_parameter": "analog_inputs",
+            "parameter_aliases": [
+              "input channels",
+              "analog channels"
+            ],
+            "value": "8",
+            "range": null,
+            "units": "channels",
+            "normalized_units": "channels",
+            "converted_value": "8",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "analog inputs",
+              "input channels",
+              "analog channels",
+              "sensor inputs"
+            ],
+            "concept_group": "inputs_outputs",
+            "references": [
+              "p.10"
+            ]
+          },
+          {
+            "parameter": "Control Outputs",
+            "normalized_parameter": "control_outputs",
+            "parameter_aliases": [
+              "output channels",
+              "control channels"
+            ],
+            "value": "12",
+            "range": null,
+            "units": "channels",
+            "normalized_units": "channels",
+            "converted_value": "12",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "control outputs",
+              "output channels",
+              "control channels",
+              "output ports"
+            ],
+            "concept_group": "inputs_outputs",
+            "references": [
+              "p.10"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Temperature Range",
+            "normalized_parameter": "operating_temperature_range",
+            "parameter_aliases": [
+              "temperature range",
+              "operating temp",
+              "thermal limits"
+            ],
+            "value": "-20\u00b0C to +70\u00b0C",
+            "range": "-20\u00b0C to +70\u00b0C",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "-4\u00b0F to +158\u00b0F",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature",
+              "operating temperature",
+              "thermal range",
+              "heat limits",
+              "cold limits",
+              "temperature specs"
+            ],
+            "concept_group": "environmental_limits",
+            "references": [
+              "Installation Section"
+            ]
+          },
+          {
+            "parameter": "Power Fuse Rating",
+            "normalized_parameter": "fuse_rating",
+            "parameter_aliases": [
+              "fuse requirement",
+              "electrical protection"
+            ],
+            "value": "3",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "3",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "fuse",
+              "fuse size",
+              "electrical protection",
+              "amperage protection",
+              "power protection"
+            ],
+            "concept_group": "electrical_protection",
+            "references": [
+              "Things You Need Section"
+            ]
+          },
+          {
+            "parameter": "Mounting Screws",
+            "normalized_parameter": "mounting_hardware",
+            "parameter_aliases": [
+              "installation hardware",
+              "fasteners"
+            ],
+            "value": "4",
+            "range": null,
+            "units": "pieces",
+            "normalized_units": "count",
+            "converted_value": "4",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "screws",
+              "mounting hardware",
+              "installation materials",
+              "fasteners"
+            ],
+            "concept_group": "mounting_requirements",
+            "references": [
+              "Things You Need Section"
+            ]
+          },
+          {
+            "parameter": "Network Protocol",
+            "normalized_parameter": "network_protocol",
+            "parameter_aliases": [
+              "communication protocol",
+              "data interface"
+            ],
+            "value": "NMEA2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "NMEA",
+              "NMEA2000",
+              "network",
+              "protocol",
+              "communication",
+              "interface"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Things You Need Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Mount Type",
+            "normalized_parameter": "mount_type",
+            "parameter_aliases": [
+              "mounting_method",
+              "installation_type",
+              "attachment_method"
+            ],
+            "value": "Bracket mount with hooks",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how to mount",
+              "mounting instructions",
+              "installation method",
+              "bracket mounting",
+              "display mounting"
+            ],
+            "concept_group": "mechanical_installation",
+            "references": [
+              "Page 12",
+              "Mounting Instructions"
+            ]
+          },
+          {
+            "parameter": "Mounting Screws Quantity",
+            "normalized_parameter": "mounting_screw_count",
+            "parameter_aliases": [
+              "screw_quantity",
+              "fastener_count"
+            ],
+            "value": "4",
+            "range": null,
+            "units": "pieces",
+            "normalized_units": "count",
+            "converted_value": "4",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how many screws",
+              "screw count",
+              "number of screws",
+              "mounting hardware"
+            ],
+            "concept_group": "mechanical_installation",
+            "references": [
+              "Page 12",
+              "Mounting Instructions"
+            ]
+          },
+          {
+            "parameter": "Mounting Screw Type",
+            "normalized_parameter": "screw_type",
+            "parameter_aliases": [
+              "fastener_type",
+              "screw_specification"
+            ],
+            "value": "Self-tapping",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "what type of screws",
+              "screw type",
+              "mounting hardware type",
+              "self tapping screws"
+            ],
+            "concept_group": "mechanical_installation",
+            "references": [
+              "Page 12",
+              "Mounting Instructions"
+            ]
+          },
+          {
+            "parameter": "Mounting Bracket Hook Count",
+            "normalized_parameter": "bracket_hook_count",
+            "parameter_aliases": [
+              "hook_quantity",
+              "mounting_points"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "pieces",
+            "normalized_units": "count",
+            "converted_value": "2",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how many hooks",
+              "mounting hooks",
+              "bracket hooks",
+              "number of hooks"
+            ],
+            "concept_group": "mechanical_installation",
+            "references": [
+              "Page 12",
+              "Mounting Instructions"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Release Tab Depth",
+            "normalized_parameter": "release_tab_engagement_depth",
+            "parameter_aliases": [
+              "tab insertion depth",
+              "unclip depth",
+              "release depth"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "5",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how deep to push release tabs",
+              "tab depth",
+              "unclip distance",
+              "release mechanism depth",
+              "removal depth"
+            ],
+            "concept_group": "mounting_system",
+            "references": [
+              "Page 13",
+              "Display Removal Section"
+            ]
+          },
+          {
+            "parameter": "Release Tab Count",
+            "normalized_parameter": "release_tab_quantity",
+            "parameter_aliases": [
+              "number of tabs",
+              "mounting clips",
+              "release points"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "count",
+            "normalized_units": "count",
+            "converted_value": "2",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how many release tabs",
+              "number of mounting clips",
+              "release points",
+              "unclip locations"
+            ],
+            "concept_group": "mounting_system",
+            "references": [
+              "Page 13",
+              "Display Removal Section"
+            ]
+          },
+          {
+            "parameter": "Release Tab Location",
+            "normalized_parameter": "release_tab_position",
+            "parameter_aliases": [
+              "tab placement",
+              "clip position",
+              "release point location"
+            ],
+            "value": "top sides",
+            "range": null,
+            "units": "position",
+            "normalized_units": "position",
+            "converted_value": "top sides",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "where are release tabs",
+              "tab location",
+              "release point position",
+              "clip placement"
+            ],
+            "concept_group": "mounting_system",
+            "references": [
+              "Page 13",
+              "Display Removal Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Network Protocol",
+            "normalized_parameter": "network_protocol",
+            "parameter_aliases": [
+              "communication protocol",
+              "data network",
+              "connectivity standard"
+            ],
+            "value": "NMEA2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network/Communication",
+            "search_terms": [
+              "NMEA 2000",
+              "NMEA2000 connection",
+              "network compatibility",
+              "marine network",
+              "boat network protocol"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "p.14",
+              "Connections section"
+            ]
+          },
+          {
+            "parameter": "Power Supply Polarity",
+            "normalized_parameter": "power_polarity",
+            "parameter_aliases": [
+              "battery connection",
+              "power connection",
+              "electrical polarity"
+            ],
+            "value": "Positive and Negative terminals required",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Power/Electrical",
+            "search_terms": [
+              "battery connection",
+              "power terminals",
+              "positive negative",
+              "power polarity",
+              "electrical connection"
+            ],
+            "concept_group": "power",
+            "references": [
+              "p.14",
+              "Connections section"
+            ]
+          },
+          {
+            "parameter": "Network Router Connection",
+            "normalized_parameter": "router_connectivity",
+            "parameter_aliases": [
+              "router interface",
+              "network interface"
+            ],
+            "value": "Optional",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network/Communication",
+            "search_terms": [
+              "router connection",
+              "network router",
+              "optional router",
+              "network setup",
+              "internet connection"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "p.14",
+              "Connections section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Supply Fuse Rating",
+            "normalized_parameter": "dc_fuse_rating",
+            "parameter_aliases": [
+              "fuse size",
+              "fuse rating",
+              "power fuse"
+            ],
+            "value": "3",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "3",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "fuse size",
+              "power protection",
+              "dc fuse",
+              "electrical protection",
+              "amp rating"
+            ],
+            "concept_group": "power_protection",
+            "references": [
+              "Section 1"
+            ]
+          },
+          {
+            "parameter": "Network Drop Cable Length",
+            "normalized_parameter": "nmea_drop_cable_length",
+            "parameter_aliases": [
+              "cable length",
+              "NMEA2000 cable"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "M",
+            "normalized_units": "meters",
+            "converted_value": "1",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "drop cable",
+              "NMEA cable length",
+              "network cable",
+              "connection length"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Section 3"
+            ]
+          },
+          {
+            "parameter": "Network Protocol",
+            "normalized_parameter": "network_protocol",
+            "parameter_aliases": [
+              "communication protocol",
+              "data protocol"
+            ],
+            "value": "NMEA 2000",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "NMEA",
+              "network type",
+              "protocol",
+              "communication standard",
+              "marine network"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Section 3"
+            ]
+          },
+          {
+            "parameter": "Network Connection Type",
+            "normalized_parameter": "ethernet_connection",
+            "parameter_aliases": [
+              "network connection",
+              "internet connection"
+            ],
+            "value": "Client Mode Wired",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "ethernet",
+              "network mode",
+              "client mode",
+              "connection type",
+              "network setup"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Section 2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Type",
+            "normalized_parameter": "display_type",
+            "parameter_aliases": [
+              "screen",
+              "monitor",
+              "display model"
+            ],
+            "value": "Touch 7",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "touch screen",
+              "display",
+              "Touch 7",
+              "screen type",
+              "monitor model"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "p.16"
+            ]
+          },
+          {
+            "parameter": "Boot Time",
+            "normalized_parameter": "boot_time",
+            "parameter_aliases": [
+              "startup time",
+              "initialization time"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "minute",
+            "normalized_units": "seconds",
+            "converted_value": "60",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "boot up time",
+              "startup duration",
+              "initialization period",
+              "splash screen time"
+            ],
+            "concept_group": "startup_specifications",
+            "references": [
+              "p.16"
+            ]
+          },
+          {
+            "parameter": "Network Protocol",
+            "normalized_parameter": "network_protocol",
+            "parameter_aliases": [
+              "communication protocol",
+              "network type"
+            ],
+            "value": "CZone",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "network type",
+              "protocol",
+              "communication system",
+              "CZone network"
+            ],
+            "concept_group": "network_specifications",
+            "references": [
+              "p.16"
+            ]
+          },
+          {
+            "parameter": "Network Addressing",
+            "normalized_parameter": "network_addressing",
+            "parameter_aliases": [
+              "device address",
+              "network ID"
+            ],
+            "value": "dipswitch",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "dipswitch",
+              "network address",
+              "device ID",
+              "configuration address"
+            ],
+            "concept_group": "network_specifications",
+            "references": [
+              "p.16"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "USB Port Type",
+            "normalized_parameter": "usb_port",
+            "parameter_aliases": [
+              "usb_connection",
+              "usb_interface",
+              "data_port"
+            ],
+            "value": "Standard USB",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "usb port",
+              "usb connection",
+              "firmware update port",
+              "update interface",
+              "data connection"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Section 4.2.2"
+            ]
+          },
+          {
+            "parameter": "Firmware File Extension",
+            "normalized_parameter": "firmware_extension",
+            "parameter_aliases": [
+              "software_extension",
+              "update_file_type"
+            ],
+            "value": ".swu",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "firmware extension",
+              "software file type",
+              "update file extension",
+              "swu file",
+              "firmware format"
+            ],
+            "concept_group": "software",
+            "references": [
+              "Section 4.2.2"
+            ]
+          },
+          {
+            "parameter": "Update Installation Time",
+            "normalized_parameter": "software_update_duration",
+            "parameter_aliases": [
+              "installation_time",
+              "update_time"
+            ],
+            "value": "few minutes",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "minutes",
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "update time",
+              "installation duration",
+              "how long to update",
+              "software update time",
+              "firmware update duration"
+            ],
+            "concept_group": "software",
+            "references": [
+              "Section 4.2.2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Wireless Server Interface",
+            "normalized_parameter": "wireless_server_interface",
+            "parameter_aliases": [
+              "wifi server",
+              "wireless interface",
+              "network interface"
+            ],
+            "value": "Enabled/Disabled",
+            "range": "N/A",
+            "units": "binary",
+            "normalized_units": "boolean",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "wireless server",
+              "wifi setup",
+              "wireless interface",
+              "network configuration",
+              "wireless settings"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Page 18",
+              "Settings > Advanced > Wireless Server"
+            ]
+          },
+          {
+            "parameter": "Default WiFi State",
+            "normalized_parameter": "default_wifi_state",
+            "parameter_aliases": [
+              "initial wifi status",
+              "wifi default setting"
+            ],
+            "value": "Disabled",
+            "range": "N/A",
+            "units": "binary",
+            "normalized_units": "boolean",
+            "converted_value": "false",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "wifi default",
+              "initial wifi",
+              "wireless default state",
+              "wifi disabled"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Page 18"
+            ]
+          },
+          {
+            "parameter": "Dipswitch Configuration",
+            "normalized_parameter": "dipswitch_config",
+            "parameter_aliases": [
+              "network address",
+              "device address",
+              "interface identifier"
+            ],
+            "value": "Unique per device",
+            "range": "N/A",
+            "units": "address",
+            "normalized_units": "address",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7",
+              "CZone Wireless Interface"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "dipswitch",
+              "network address",
+              "device configuration",
+              "interface setup",
+              "unique address"
+            ],
+            "concept_group": "device_addressing",
+            "references": [
+              "Page 18",
+              "Settings > Advanced > Wireless Server"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "WiFi Mode",
+            "normalized_parameter": "wifi_mode",
+            "parameter_aliases": [
+              "wireless_mode",
+              "network_mode",
+              "connectivity_mode"
+            ],
+            "value": "Multiple options",
+            "range": "Access Point, Disabled, Wired Client Mode",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "wifi",
+              "wireless",
+              "network mode",
+              "connection type",
+              "access point",
+              "wired client"
+            ],
+            "concept_group": "network_connectivity",
+            "references": [
+              "Section 2.5"
+            ]
+          },
+          {
+            "parameter": "WiFi SSID",
+            "normalized_parameter": "wifi_ssid",
+            "parameter_aliases": [
+              "network_name",
+              "wireless_network_name"
+            ],
+            "value": "Device specific",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "ssid",
+              "network name",
+              "wifi name",
+              "wireless network",
+              "connection name"
+            ],
+            "concept_group": "network_credentials",
+            "references": [
+              "Page 19"
+            ]
+          },
+          {
+            "parameter": "WiFi Password",
+            "normalized_parameter": "wifi_password",
+            "parameter_aliases": [
+              "network_password",
+              "wireless_password",
+              "security_key"
+            ],
+            "value": "Device specific",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "password",
+              "wifi password",
+              "network key",
+              "security key",
+              "wireless password"
+            ],
+            "concept_group": "network_credentials",
+            "references": [
+              "Page 19"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Screen Calibration Time",
+            "normalized_parameter": "calibration_duration",
+            "parameter_aliases": [
+              "calibration time",
+              "screen setup time",
+              "touch calibration duration"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "s",
+            "converted_value": "10",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how long does calibration take",
+              "screen calibration time",
+              "touch calibration duration",
+              "setup time",
+              "calibration process length"
+            ],
+            "concept_group": "display_calibration",
+            "references": [
+              "Settings > System > Screen Calibration page"
+            ]
+          },
+          {
+            "parameter": "EMI Shielding Connection",
+            "normalized_parameter": "shield_grounding",
+            "parameter_aliases": [
+              "shield connection",
+              "ground connection",
+              "EMI protection"
+            ],
+            "value": "shield to chassis/ground",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "shield connection",
+              "ground wire",
+              "EMI protection",
+              "interference shield",
+              "chassis ground",
+              "touch screen interference",
+              "electrical interference"
+            ],
+            "concept_group": "electrical_protection",
+            "references": [
+              "power connector specifications"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "display_diagonal",
+            "parameter_aliases": [
+              "screen size",
+              "display diagonal",
+              "screen diagonal"
+            ],
+            "value": "7",
+            "range": "",
+            "units": "inches",
+            "normalized_units": "inches",
+            "converted_value": "7",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "how big is the screen",
+              "display dimensions",
+              "screen size",
+              "monitor size"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "p23"
+            ]
+          },
+          {
+            "parameter": "Product Name",
+            "normalized_parameter": "model_name",
+            "parameter_aliases": [
+              "device name",
+              "product model"
+            ],
+            "value": "CZone Touch 7",
+            "range": "",
+            "units": "",
+            "normalized_units": "",
+            "converted_value": "",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Product",
+            "search_terms": [
+              "what model",
+              "product name",
+              "device model",
+              "which CZone"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "p23"
+            ]
+          },
+          {
+            "parameter": "Regulatory Compliance",
+            "normalized_parameter": "compliance_certification",
+            "parameter_aliases": [
+              "certifications",
+              "approvals"
+            ],
+            "value": "EC Declaration of Conformity",
+            "range": "",
+            "units": "",
+            "normalized_units": "",
+            "converted_value": "",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Certification",
+            "search_terms": [
+              "is it CE certified",
+              "regulatory approval",
+              "EC compliance",
+              "European certification"
+            ],
+            "concept_group": "regulatory_compliance",
+            "references": [
+              "p23"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Part Number - Complete Kit",
+            "normalized_parameter": "kit_part_number",
+            "parameter_aliases": [
+              "kit number",
+              "complete kit",
+              "full package"
+            ],
+            "value": "80-911-0200-00",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "part number",
+              "kit",
+              "ordering",
+              "complete package",
+              "model number",
+              "80-911-0200-00"
+            ],
+            "concept_group": "ordering_information",
+            "references": [
+              "page 22"
+            ]
+          },
+          {
+            "parameter": "Mounting Bracket Kit Part Number",
+            "normalized_parameter": "bracket_part_number",
+            "parameter_aliases": [
+              "bracket kit",
+              "mount kit"
+            ],
+            "value": "80-911-0201-00",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "bracket",
+              "mounting kit",
+              "spare parts",
+              "80-911-0201-00"
+            ],
+            "concept_group": "mounting_hardware",
+            "references": [
+              "page 22"
+            ]
+          },
+          {
+            "parameter": "NMEA2000 Cable Part Number",
+            "normalized_parameter": "cable_part_number",
+            "parameter_aliases": [
+              "drop cable",
+              "network cable"
+            ],
+            "value": "80-911-0202-00",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cable",
+              "NMEA",
+              "network",
+              "drop cable",
+              "80-911-0202-00"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "page 22"
+            ]
+          },
+          {
+            "parameter": "Power Connector Part Number",
+            "normalized_parameter": "power_connector_part_number",
+            "parameter_aliases": [
+              "power plug",
+              "power connection"
+            ],
+            "value": "80-911-0203-00",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power connector",
+              "spare connector",
+              "power plug",
+              "80-911-0203-00"
+            ],
+            "concept_group": "power_connection",
+            "references": [
+              "page 22"
+            ]
+          },
+          {
+            "parameter": "NMEA2000 Cable Length",
+            "normalized_parameter": "cable_length",
+            "parameter_aliases": [
+              "drop cable length",
+              "network cable length"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "M",
+            "normalized_units": "meters",
+            "converted_value": "1",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "cable length",
+              "NMEA cable",
+              "drop cable",
+              "network cable length"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "page 22"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Display Size",
+            "normalized_parameter": "display_diagonal",
+            "parameter_aliases": [
+              "screen size",
+              "display diagonal",
+              "screen diagonal"
+            ],
+            "value": "7.0",
+            "range": "",
+            "units": "Inch",
+            "normalized_units": "inches",
+            "converted_value": "7.0",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "screen size",
+              "how big is the display",
+              "display dimensions",
+              "screen dimensions"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Resolution",
+            "normalized_parameter": "display_resolution",
+            "parameter_aliases": [
+              "screen resolution",
+              "pixel resolution"
+            ],
+            "value": "1024 x 600",
+            "range": "",
+            "units": "pixels",
+            "normalized_units": "pixels",
+            "converted_value": "1024 x 600",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "screen resolution",
+              "display pixels",
+              "pixel count"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Brightness",
+            "normalized_parameter": "display_brightness",
+            "parameter_aliases": [
+              "luminance",
+              "screen brightness"
+            ],
+            "value": "550",
+            "range": "",
+            "units": "cd/m\u00b2",
+            "normalized_units": "cd/m\u00b2",
+            "converted_value": "550",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "screen brightness",
+              "display brightness",
+              "luminance",
+              "nits"
+            ],
+            "concept_group": "display_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "voltage range",
+              "power supply voltage"
+            ],
+            "value": "",
+            "range": "8-32V DC",
+            "units": "V DC",
+            "normalized_units": "volts_dc",
+            "converted_value": "8-32",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "DC voltage",
+              "supply voltage"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Current Draw Operating",
+            "normalized_parameter": "operating_current",
+            "parameter_aliases": [
+              "current consumption",
+              "power consumption"
+            ],
+            "value": "430",
+            "range": "",
+            "units": "mA @ 12V",
+            "normalized_units": "milliamps",
+            "converted_value": "430",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current draw",
+              "power consumption",
+              "operating current"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Operating Temperature",
+            "normalized_parameter": "operating_temperature",
+            "parameter_aliases": [
+              "operating temp",
+              "temperature range"
+            ],
+            "value": "",
+            "range": "-20\u00b0C to 70\u00b0C (-4\u00b0F to 158\u00b0F)",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "-20 to 70",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature range",
+              "operating temp",
+              "temperature limits"
+            ],
+            "concept_group": "environmental_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "mass",
+              "unit weight"
+            ],
+            "value": "695",
+            "range": "",
+            "units": "grams",
+            "normalized_units": "grams",
+            "converted_value": "695",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "weight",
+              "how heavy",
+              "mass",
+              "unit weight"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Ingress Protection",
+            "normalized_parameter": "ip_rating",
+            "parameter_aliases": [
+              "water resistance",
+              "dust protection"
+            ],
+            "value": "IPX0",
+            "range": "",
+            "units": "",
+            "normalized_units": "",
+            "converted_value": "",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "waterproof rating",
+              "IP rating",
+              "water resistance"
+            ],
+            "concept_group": "environmental_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Warranty Period",
+            "normalized_parameter": "warranty_duration",
+            "parameter_aliases": [
+              "guarantee period",
+              "warranty coverage"
+            ],
+            "value": "2",
+            "range": "",
+            "units": "Years",
+            "normalized_units": "years",
+            "converted_value": "2",
+            "models": [
+              "Touch 7"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "warranty",
+              "guarantee",
+              "warranty period",
+              "warranty length"
+            ],
+            "concept_group": "warranty_specifications",
+            "references": [
+              "Technical Specifications"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

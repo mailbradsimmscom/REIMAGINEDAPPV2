@@ -21,7 +21,7 @@ export async function ingestDipOutputsToDb({ docId, paths = null, systemMetadata
 
   logger.info('Starting DIP JSON ingestion to database', { docId });
 
-  // Build storage paths if not provided
+  // Build storage paths if not provided (relative to documents bucket)
   const storagePaths = paths || {
     spec_suggestions: `manuals/${docId}/DIP/${docId}_spec_suggestions_an.json`,
     playbook_hints: `manuals/${docId}/DIP/${docId}_playbook_hints_an.json`,

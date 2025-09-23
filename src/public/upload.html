@@ -298,7 +298,11 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: none;
-            min-width: 120px;
+            min-width: 140px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-primary {
@@ -1315,10 +1319,18 @@
                 const color = this.getColorForStage(stage);
                 const label = this.getLabelForStage(stage);
                 
+                // Build progress text with chunk info if available
+                let progressText = `${Math.round(progress)}%`;
+                if (jobData.counters && jobData.counters.chunks_total > 0) {
+                    const current = jobData.counters.chunks_processed || 0;
+                    const total = jobData.counters.chunks_total;
+                    progressText = `${Math.round(progress)}% (chunk ${current}/${total})`;
+                }
+                
                 const stageEl = document.getElementById('popup-current-stage');
                 const percentageEl = document.getElementById('popup-progress-percentage');
                 if (stageEl) stageEl.textContent = label;
-                if (percentageEl) percentageEl.textContent = `${Math.round(progress)}%`;
+                if (percentageEl) percentageEl.textContent = progressText;
                 
                 // Update progress ring
                 this.updateProgressRing(progress, color);

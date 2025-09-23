@@ -164,7 +164,7 @@ class DIPProcessor:
             self.anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-3-5-sonnet-latest')
             self.anthropic_max_tokens = int(os.getenv('ANTHROPIC_MAX_TOKENS', '8000'))
             self.anthropic_temperature = float(os.getenv('ANTHROPIC_TEMPERATURE', '0') or '0')
-            self.anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
+            self.anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '1.2'))
             
             logger.info(f"Anthropic client initialized with model: {self.anthropic_model}")
         else:
@@ -400,7 +400,7 @@ class DIPProcessor:
             return []
         
         try:
-            logger.info(f"Starting Anthropic parallel playbook extraction for document {doc_id}")
+            logger.info(f"Starting Anthropic sequential playbook extraction for document {doc_id}")
             
             # Fetch chunks from database instead of using passed chunks parameter
             chunks_data = await self._fetch_chunks_from_database(doc_id)
@@ -408,9 +408,9 @@ class DIPProcessor:
                 logger.warning(f"No chunks found in database for document {doc_id}")
                 return []
             
-            logger.info(f"Found {len(chunks_data)} chunks in database for parallel processing")
+            logger.info(f"Found {len(chunks_data)} chunks in database for sequential processing")
             
-            # Process chunks in parallel
+            # Process chunks sequentially to respect rate limits
             all_procedures, chunk_results = await self._process_chunks_parallel_anthropic(chunks_data)
             
             # Remove duplicates and cap at 25 procedures
@@ -498,7 +498,7 @@ class DIPProcessor:
             logger.error(f"Error fetching chunks from database: {e}")
             return []
     
-    async def _process_chunks_parallel_anthropic(self, chunks_data: List[Dict], max_workers: int = 3) -> tuple:
+    async def _process_chunks_parallel_anthropic(self, chunks_data: List[Dict], max_workers: int = 1) -> tuple:
         """Process chunks in parallel using Anthropic"""
         
         def process_single_chunk(chunk_info):
@@ -514,7 +514,7 @@ class DIPProcessor:
         chunk_results = []
         completed_count = 0
         
-        logger.info(f"Processing {len(chunks_data)} chunks with {max_workers} parallel workers...")
+        logger.info(f"Processing {len(chunks_data)} chunks with {max_workers} workers (sequential to respect rate limits)...")
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit all tasks
@@ -1004,87 +1004,8 @@ RULES:
             storage_results['spec_suggestions'] = ''
             logger.error(f"Error uploading spec_suggestions.json: {e}")
         
-        # 2. Insert playbook_hints directly into staging table
-        playbook_hints = dip_data['dip'].get('playbook_hints', [])
-        
-        try:
-            if playbook_hints:
-                # First, get system metadata and storage path from documents table
-                doc_response = requests.get(
-                    f"{url}/rest/v1/documents",
-                    headers=headers,
-                    params={"doc_id": f"eq.{doc_id}", "select": "asset_uid,manufacturer_norm,model_norm,system_norm,subsystem_norm,storage_path"}
-                )
-                
-                system_data = {}
-                storage_path = None
-                if doc_response.status_code == 200:
-                    doc_data = doc_response.json()
-                    if doc_data and len(doc_data) > 0:
-                        doc_info = doc_data[0]
-                        system_data = {
-                            'asset_uid': doc_info.get('asset_uid'),
-                            'manufacturer_norm': doc_info.get('manufacturer_norm'),
-                            'model_norm': doc_info.get('model_norm'),
-                            'system_norm': doc_info.get('system_norm'),
-                            'subsystem_norm': doc_info.get('subsystem_norm')
-                        }
-                        storage_path = doc_info.get('storage_path')
-                        logger.info(f"Retrieved system data for doc {doc_id}: {system_data}")
-                        logger.info(f"Storage path for doc {doc_id}: {storage_path}")
-                    else:
-                        logger.warning(f"No document found for doc_id {doc_id}")
-                else:
-                    logger.warning(f"Failed to retrieve document data: {doc_response.status_code}")
-                
-                # Insert each playbook hint into the staging table
-                for hint in playbook_hints:
-                    # Prepare the data for the playbook_hints table (using new schema)
-                    insert_data = {
-                        'doc_id': doc_id,
-                        'title': hint.get('title', ''),
-                        'description': hint.get('description', ''),  # Models as comma-separated string
-                        'steps': hint.get('steps', []),  # Steps array
-                        'expected_outcome': hint.get('expected_outcome', ''),
-                        'preconditions': hint.get('preconditions', []),
-                        'error_codes': hint.get('error_codes', []),
-                        'category': hint.get('category', 'operation'),
-                        'page': 1,  # Default page since we don't have specific page info
-                        'confidence': hint.get('confidence', 0.9),
-                        'bbox': None,  # No bounding box for AI-generated content
-                        'system_norm': system_data.get('system_norm', ''),
-                        'subsystem_norm': system_data.get('subsystem_norm', ''),
-                        'manufacturer_norm': system_data.get('manufacturer_norm', ''),
-                        'model_norm': system_data.get('model_norm', ''),
-                        'asset_uid': system_data.get('asset_uid', ''),
-                        'status': 'pending'
-                    }
-                    
-                    # Insert into playbook_hints table
-                    response = requests.post(
-                        f"{url}/rest/v1/playbook_hints",
-                        headers={
-                            **headers,
-                            "Content-Type": "application/json",
-                            "Prefer": "resolution=merge-duplicates"
-                        },
-                        json=insert_data
-                    )
-                    
-                    if response.status_code in [200, 201]:
-                        logger.info(f"Successfully inserted playbook hint '{hint.get('title', '')}' into staging table")
-                    else:
-                        logger.warning(f"Failed to insert playbook hint: {response.status_code} {response.text}")
-                
-                storage_results['playbook_hints'] = f"inserted_{len(playbook_hints)}_records_to_staging_table"
-                logger.info(f"Successfully inserted {len(playbook_hints)} playbook hints into staging table")
-            else:
-                storage_results['playbook_hints'] = 'no_playbook_hints_extracted'
-                logger.info("No playbook hints extracted for this document")
-                
-        except Exception as e:
-            storage_results['playbook_hints'] = ''
-            logger.error(f"Error inserting playbook hints into staging table: {e}")
+        # 2. Create playbook_hints.json (handled by new storage client)
+        storage_results['playbook_hints'] = 'handled_by_storage_client'
         
         # 3. Create intent_router.json
         intent_router = []

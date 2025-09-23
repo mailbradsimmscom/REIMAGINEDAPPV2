@@ -647,8 +647,9 @@ async def run_dip_packet(request: DIPPacketRequest):
         # Generate DIP using existing processor
         dip_result = await dip_processor.process_chunks(doc_id, chunks)
         
-        # Write DIP files using new 4-file storage method
-        artifacts = dip_processor.save_dip_files(dip_result, '/tmp')
+        # Write DIP files using new Supabase client method
+        from .supabase_storage import supabase_storage
+        artifacts = supabase_storage.upload_dip_data(doc_id, dip_result)
         
         return DIPPacketResponse(
             success=True,

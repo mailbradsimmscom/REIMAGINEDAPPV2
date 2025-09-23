@@ -24,6 +24,7 @@ const EnvSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE: z.string().optional(),
   SERVICE_ROLE_KEY: z.string().optional(),
+  PY_SUPABASE_SERVICE_KEY: z.string().optional(),
   ADMIN_TOKEN: z.string().optional(),
   PYTHON_SIDECAR_URL: z.string().optional(),
   APP_VERSION: z.string().optional(),
@@ -36,8 +37,8 @@ const EnvSchema = z.object({
   // Optional column names if your schema differs
   DOC_CHUNKS_PAGE_COL: z.string().optional().default('page_start'),
   DOC_CHUNKS_TEXT_COL: z.string().optional().default('content'),
-  // Anthropic API delay for rate limiting
-  ANTHROPIC_API_DELAY: z.string().optional().default('2')
+  // Anthropic API delay for rate limiting (seconds)
+  ANTHROPIC_API_DELAY: z.string().optional().default('1.2')
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

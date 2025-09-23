@@ -1,0 +1,1822 @@
+{
+  "total_chunks_processed": 23,
+  "successful_chunks": 23,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 103,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "Is the touch screen responsive to finger input?",
+      "expected_value": "Screen registers touch input within 100ms",
+      "test_method": "Tap screen in multiple locations and verify response",
+      "failure_indication": "Screen unresponsive or delayed response indicates digitizer failure",
+      "models": [
+        "Touch 7"
+      ],
+      "related_procedures": [
+        "Screen Calibration",
+        "Digitizer Test"
+      ]
+    },
+    {
+      "query": "Does screen display correct colors at startup?",
+      "expected_value": "Screen shows manufacturer logo in full color",
+      "test_method": "Power on device and observe boot sequence",
+      "failure_indication": "Distorted colors or missing elements indicate display failure",
+      "models": [
+        "Touch 7"
+      ],
+      "related_procedures": [
+        "Display Test Pattern",
+        "Color Calibration"
+      ]
+    },
+    {
+      "query": "Is device operating within temperature range?",
+      "expected_value": "Internal temperature between 0-60\u00b0C",
+      "test_method": "Check temperature reading in system diagnostics",
+      "failure_indication": "Device will auto-shutdown if outside safe range",
+      "models": [
+        "Touch 7"
+      ],
+      "related_procedures": [
+        "Temperature Monitoring",
+        "Thermal Management"
+      ]
+    },
+    {
+      "query": "Is mounting location protected from direct water exposure?",
+      "expected_value": "Yes, mounted in protected location",
+      "test_method": "Visual inspection of mounting location",
+      "failure_indication": "Risk of water damage to unit",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Mounting Instructions"
+      ]
+    },
+    {
+      "query": "Is DC power connection polarity correct?",
+      "expected_value": "Positive to + terminal, Negative to - terminal",
+      "test_method": "Verify wire connections with multimeter",
+      "failure_indication": "Unit will not power on or may be damaged",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "DC Power Connection"
+      ]
+    },
+    {
+      "query": "Is NMEA 2000 network properly terminated?",
+      "expected_value": "Two 120 Ohm terminators installed at network ends",
+      "test_method": "Measure resistance between CAN-H and CAN-L",
+      "failure_indication": "Network communication errors",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "NMEA 2000 Network Connection"
+      ]
+    },
+    {
+      "query": "Does touch screen respond accurately after calibration?",
+      "expected_value": "Touch input matches displayed position",
+      "test_method": "Perform touch calibration procedure and test response",
+      "failure_indication": "Inaccurate touch response",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Touch Screen Calibration"
+      ]
+    },
+    {
+      "query": "Is software version current?",
+      "expected_value": "Latest available version installed",
+      "test_method": "Check software version in system settings",
+      "failure_indication": "Missing latest features or fixes",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Software Update"
+      ]
+    },
+    {
+      "query": "Is documentation version control maintained?",
+      "expected_value": "Electronic redistribution of manual is restricted",
+      "test_method": "Check document distribution policies and controls",
+      "failure_indication": "Risk of outdated or incorrect documentation in circulation",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Document Control",
+        "Version Management"
+      ]
+    },
+    {
+      "query": "Which manual version takes precedence?",
+      "expected_value": "English version is the official version",
+      "test_method": "Compare English manual against translated versions",
+      "failure_indication": "Potential translation discrepancies or errors",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Translation Verification",
+        "Documentation Control"
+      ]
+    },
+    {
+      "query": "Is proper attribution maintained when reproducing content?",
+      "expected_value": "Power Products credited as source for non-commercial reproduction",
+      "test_method": "Review reproduction permissions and citations",
+      "failure_indication": "Copyright violation or improper attribution",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Copyright Compliance",
+        "Content Usage Guidelines"
+      ]
+    },
+    {
+      "query": "Are safety responsibilities clearly defined?",
+      "expected_value": "Owner is solely responsible for safe installation and operation",
+      "test_method": "Verify presence of safety responsibility statement in documentation",
+      "failure_indication": "Unclear liability and safety accountability",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Safety Guidelines",
+        "Installation Requirements"
+      ]
+    },
+    {
+      "query": "Is identification label present on device?",
+      "expected_value": "Label must be present and legible on back of Touch 7",
+      "test_method": "Visual inspection of back panel",
+      "failure_indication": "Warranty void if label missing or removed",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Warranty validation",
+        "Service identification"
+      ]
+    },
+    {
+      "query": "Is product installed according to manual instructions?",
+      "expected_value": "Installation follows all procedures in user manual",
+      "test_method": "Installation audit against manual checklist",
+      "failure_indication": "Warranty void, potential underperformance or failure",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Installation procedure",
+        "Warranty validation"
+      ]
+    },
+    {
+      "query": "Is product within warranty period?",
+      "expected_value": "Less than 2 years from purchase date",
+      "test_method": "Check purchase documentation against current date",
+      "failure_indication": "Product no longer under warranty coverage",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Warranty claims",
+        "Service eligibility"
+      ]
+    },
+    {
+      "query": "Is product being used for intended purpose?",
+      "expected_value": "Usage matches product specifications and intended applications",
+      "test_method": "Review of installation and usage patterns",
+      "failure_indication": "Warranty void, manufacturer liability waived",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "related_procedures": [
+        "Application validation",
+        "Warranty validation"
+      ]
+    },
+    {
+      "query": "Is display brightness within operational range?",
+      "expected_value": "500 nits maximum, dimmable to night viewing levels",
+      "test_method": "Use luminance meter at screen center",
+      "failure_indication": "Display too dim or bright for conditions",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Display brightness adjustment",
+        "Night mode setup"
+      ]
+    },
+    {
+      "query": "Is operating voltage within specification?",
+      "expected_value": "8-32V DC",
+      "test_method": "Measure input voltage with multimeter",
+      "failure_indication": "Device may not power on or operate erratically",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Power supply verification",
+        "Installation checklist"
+      ]
+    },
+    {
+      "query": "Is screen resolution displaying correctly?",
+      "expected_value": "1024 x 600 pixels",
+      "test_method": "Check display settings and test pattern",
+      "failure_indication": "Blurry or incorrect image scaling",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Display configuration",
+        "Screen calibration"
+      ]
+    },
+    {
+      "query": "Does mounting depth meet requirements?",
+      "expected_value": "35mm or less including cables",
+      "test_method": "Measure depth from mounting surface",
+      "failure_indication": "Installation clearance issues",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Installation guide",
+        "Mounting specifications"
+      ]
+    },
+    {
+      "query": "Are WiFi and ethernet connections functional?",
+      "expected_value": "Both connections active and able to pair with tablets",
+      "test_method": "Test connectivity with tablet device",
+      "failure_indication": "Remote control functionality unavailable",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Network setup",
+        "Tablet pairing guide"
+      ]
+    },
+    {
+      "query": "Is Touch 7 display properly mounted?",
+      "expected_value": "Display securely attached to mounting bracket with all 4 corners locked",
+      "test_method": "Visual inspection of mounting points and physical check of stability",
+      "failure_indication": "Display loose or not fully seated in mounting bracket",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Mounting Steps",
+        "Figure 8",
+        "Figure 9"
+      ]
+    },
+    {
+      "query": "Can Touch 7 be safely removed from mount?",
+      "expected_value": "Display releases smoothly when removal tabs are pressed",
+      "test_method": "Press removal tabs and check display detachment",
+      "failure_indication": "Display stuck or requiring excessive force to remove",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Removal Steps",
+        "Figure 10"
+      ]
+    },
+    {
+      "query": "Are all connections properly made?",
+      "expected_value": "All cables securely connected per connection diagram",
+      "test_method": "Visual inspection of all connection points against Figure 11",
+      "failure_indication": "Loose, missing or incorrect connections",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Figure 11",
+        "Figure 12"
+      ]
+    },
+    {
+      "query": "Is wireless network properly configured?",
+      "expected_value": "Device connected either as Access Point or Client Mode",
+      "test_method": "Verify network connectivity using Figure 4 or Figure 5 configuration",
+      "failure_indication": "No network connection or incorrect mode",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Figure 4",
+        "Figure 5",
+        "Figure 6"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the touch screen responsive to finger input?",
+            "expected_value": "Screen registers touch input within 100ms",
+            "test_method": "Tap screen in multiple locations and verify response",
+            "failure_indication": "Screen unresponsive or delayed response indicates digitizer failure",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Screen Calibration",
+              "Digitizer Test"
+            ]
+          },
+          {
+            "query": "Does screen display correct colors at startup?",
+            "expected_value": "Screen shows manufacturer logo in full color",
+            "test_method": "Power on device and observe boot sequence",
+            "failure_indication": "Distorted colors or missing elements indicate display failure",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Display Test Pattern",
+              "Color Calibration"
+            ]
+          },
+          {
+            "query": "Is device operating within temperature range?",
+            "expected_value": "Internal temperature between 0-60\u00b0C",
+            "test_method": "Check temperature reading in system diagnostics",
+            "failure_indication": "Device will auto-shutdown if outside safe range",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Temperature Monitoring",
+              "Thermal Management"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is mounting location protected from direct water exposure?",
+            "expected_value": "Yes, mounted in protected location",
+            "test_method": "Visual inspection of mounting location",
+            "failure_indication": "Risk of water damage to unit",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Mounting Instructions"
+            ]
+          },
+          {
+            "query": "Is DC power connection polarity correct?",
+            "expected_value": "Positive to + terminal, Negative to - terminal",
+            "test_method": "Verify wire connections with multimeter",
+            "failure_indication": "Unit will not power on or may be damaged",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "DC Power Connection"
+            ]
+          },
+          {
+            "query": "Is NMEA 2000 network properly terminated?",
+            "expected_value": "Two 120 Ohm terminators installed at network ends",
+            "test_method": "Measure resistance between CAN-H and CAN-L",
+            "failure_indication": "Network communication errors",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "NMEA 2000 Network Connection"
+            ]
+          },
+          {
+            "query": "Does touch screen respond accurately after calibration?",
+            "expected_value": "Touch input matches displayed position",
+            "test_method": "Perform touch calibration procedure and test response",
+            "failure_indication": "Inaccurate touch response",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Touch Screen Calibration"
+            ]
+          },
+          {
+            "query": "Is software version current?",
+            "expected_value": "Latest available version installed",
+            "test_method": "Check software version in system settings",
+            "failure_indication": "Missing latest features or fixes",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Software Update"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is documentation version control maintained?",
+            "expected_value": "Electronic redistribution of manual is restricted",
+            "test_method": "Check document distribution policies and controls",
+            "failure_indication": "Risk of outdated or incorrect documentation in circulation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Document Control",
+              "Version Management"
+            ]
+          },
+          {
+            "query": "Which manual version takes precedence?",
+            "expected_value": "English version is the official version",
+            "test_method": "Compare English manual against translated versions",
+            "failure_indication": "Potential translation discrepancies or errors",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Translation Verification",
+              "Documentation Control"
+            ]
+          },
+          {
+            "query": "Is proper attribution maintained when reproducing content?",
+            "expected_value": "Power Products credited as source for non-commercial reproduction",
+            "test_method": "Review reproduction permissions and citations",
+            "failure_indication": "Copyright violation or improper attribution",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Copyright Compliance",
+              "Content Usage Guidelines"
+            ]
+          },
+          {
+            "query": "Are safety responsibilities clearly defined?",
+            "expected_value": "Owner is solely responsible for safe installation and operation",
+            "test_method": "Verify presence of safety responsibility statement in documentation",
+            "failure_indication": "Unclear liability and safety accountability",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Safety Guidelines",
+              "Installation Requirements"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is identification label present on device?",
+            "expected_value": "Label must be present and legible on back of Touch 7",
+            "test_method": "Visual inspection of back panel",
+            "failure_indication": "Warranty void if label missing or removed",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Warranty validation",
+              "Service identification"
+            ]
+          },
+          {
+            "query": "Is product installed according to manual instructions?",
+            "expected_value": "Installation follows all procedures in user manual",
+            "test_method": "Installation audit against manual checklist",
+            "failure_indication": "Warranty void, potential underperformance or failure",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Installation procedure",
+              "Warranty validation"
+            ]
+          },
+          {
+            "query": "Is product within warranty period?",
+            "expected_value": "Less than 2 years from purchase date",
+            "test_method": "Check purchase documentation against current date",
+            "failure_indication": "Product no longer under warranty coverage",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Warranty claims",
+              "Service eligibility"
+            ]
+          },
+          {
+            "query": "Is product being used for intended purpose?",
+            "expected_value": "Usage matches product specifications and intended applications",
+            "test_method": "Review of installation and usage patterns",
+            "failure_indication": "Warranty void, manufacturer liability waived",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "related_procedures": [
+              "Application validation",
+              "Warranty validation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is display brightness within operational range?",
+            "expected_value": "500 nits maximum, dimmable to night viewing levels",
+            "test_method": "Use luminance meter at screen center",
+            "failure_indication": "Display too dim or bright for conditions",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display brightness adjustment",
+              "Night mode setup"
+            ]
+          },
+          {
+            "query": "Is operating voltage within specification?",
+            "expected_value": "8-32V DC",
+            "test_method": "Measure input voltage with multimeter",
+            "failure_indication": "Device may not power on or operate erratically",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power supply verification",
+              "Installation checklist"
+            ]
+          },
+          {
+            "query": "Is screen resolution displaying correctly?",
+            "expected_value": "1024 x 600 pixels",
+            "test_method": "Check display settings and test pattern",
+            "failure_indication": "Blurry or incorrect image scaling",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display configuration",
+              "Screen calibration"
+            ]
+          },
+          {
+            "query": "Does mounting depth meet requirements?",
+            "expected_value": "35mm or less including cables",
+            "test_method": "Measure depth from mounting surface",
+            "failure_indication": "Installation clearance issues",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Installation guide",
+              "Mounting specifications"
+            ]
+          },
+          {
+            "query": "Are WiFi and ethernet connections functional?",
+            "expected_value": "Both connections active and able to pair with tablets",
+            "test_method": "Test connectivity with tablet device",
+            "failure_indication": "Remote control functionality unavailable",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network setup",
+              "Tablet pairing guide"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is Touch 7 display properly mounted?",
+            "expected_value": "Display securely attached to mounting bracket with all 4 corners locked",
+            "test_method": "Visual inspection of mounting points and physical check of stability",
+            "failure_indication": "Display loose or not fully seated in mounting bracket",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Mounting Steps",
+              "Figure 8",
+              "Figure 9"
+            ]
+          },
+          {
+            "query": "Can Touch 7 be safely removed from mount?",
+            "expected_value": "Display releases smoothly when removal tabs are pressed",
+            "test_method": "Press removal tabs and check display detachment",
+            "failure_indication": "Display stuck or requiring excessive force to remove",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Removal Steps",
+              "Figure 10"
+            ]
+          },
+          {
+            "query": "Are all connections properly made?",
+            "expected_value": "All cables securely connected per connection diagram",
+            "test_method": "Visual inspection of all connection points against Figure 11",
+            "failure_indication": "Loose, missing or incorrect connections",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Figure 11",
+              "Figure 12"
+            ]
+          },
+          {
+            "query": "Is wireless network properly configured?",
+            "expected_value": "Device connected either as Access Point or Client Mode",
+            "test_method": "Verify network connectivity using Figure 4 or Figure 5 configuration",
+            "failure_indication": "No network connection or incorrect mode",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Figure 4",
+              "Figure 5",
+              "Figure 6"
+            ]
+          },
+          {
+            "query": "Does system integration match example layout?",
+            "expected_value": "System components connected according to system example diagram",
+            "test_method": "Compare actual installation to Figure 7 system example",
+            "failure_indication": "Incorrect system topology or missing components",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Figure 7",
+              "System Example"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is WiFi enabled in Client Mode Wired?",
+            "expected_value": "WiFi should be disabled",
+            "test_method": "Check WiFi settings in Touch 7 interface",
+            "failure_indication": "WiFi still active when in Client Mode indicates incorrect configuration",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Client Mode Network Setup"
+            ]
+          },
+          {
+            "query": "Is Touch 7 connected via Ethernet port?",
+            "expected_value": "Active Ethernet connection present",
+            "test_method": "Verify physical Ethernet connection and network status",
+            "failure_indication": "No Ethernet connectivity indicates improper Client Mode setup",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network Cable Installation",
+              "Client Mode Configuration"
+            ]
+          },
+          {
+            "query": "Can CZone App connect to Touch 7?",
+            "expected_value": "Successful connection through vessel's wireless network",
+            "test_method": "Attempt to connect CZone App to Touch 7 through onboard router",
+            "failure_indication": "Connection failure indicates network configuration issue",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "CZone App Setup",
+              "Network Troubleshooting"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is Touch 7 WiFi network visible when in Access Point mode?",
+            "expected_value": "Touch 7 network appears in available WiFi networks list",
+            "test_method": "Check WiFi networks list on iPad/laptop",
+            "failure_indication": "Touch 7 WiFi radio may be malfunctioning or not configured correctly",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "WiFi Network Setup",
+              "Access Point Configuration"
+            ]
+          },
+          {
+            "query": "Can Touch 7 connect to existing vessel WiFi network in Client Mode?",
+            "expected_value": "Touch 7 successfully connects to vessel's WiFi network",
+            "test_method": "Configure Client Mode and verify connection status",
+            "failure_indication": "Network configuration error or WiFi signal issues",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Client Mode Setup",
+              "Network Troubleshooting"
+            ]
+          },
+          {
+            "query": "Can iPad/PC communicate with Touch 7 in Access Point mode?",
+            "expected_value": "Direct wireless communication established between devices",
+            "test_method": "Connect devices to Touch 7 WiFi and test CZone app connection",
+            "failure_indication": "Network configuration or app communication error",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Device Pairing",
+              "App Configuration"
+            ]
+          },
+          {
+            "query": "Does CZone app maintain connection when using Client Mode?",
+            "expected_value": "Stable connection maintained through vessel's WiFi network",
+            "test_method": "Monitor app connection status while using system",
+            "failure_indication": "Network instability or configuration issues",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network Stability Testing",
+              "Connection Monitoring"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the valid input voltage range for Touch 7 display?",
+            "expected_value": "8-32 VDC",
+            "test_method": "Measure input voltage at DC power connector with multimeter",
+            "failure_indication": "Display will not power on or may be damaged if voltage outside range",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power Installation",
+              "Voltage Testing"
+            ]
+          },
+          {
+            "query": "Is NMEA2000 drop cable properly connected?",
+            "expected_value": "Cable securely attached between display and NMEA2000 backbone",
+            "test_method": "Visual inspection and physical connection test",
+            "failure_indication": "No NMEA2000 network communication",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "NMEA2000 Network Installation"
+            ]
+          },
+          {
+            "query": "Is mounting bracket properly secured?",
+            "expected_value": "All 4 mounting screws installed and tight",
+            "test_method": "Visual inspection and physical check of screw tightness",
+            "failure_indication": "Display mount unstable or at risk of falling",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display Mounting",
+              "Hardware Installation"
+            ]
+          },
+          {
+            "query": "Is Ethernet connection available?",
+            "expected_value": "Ethernet port accessible and functional",
+            "test_method": "Connect Ethernet cable and verify network connection",
+            "failure_indication": "No network connectivity via Ethernet",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network Configuration"
+            ]
+          },
+          {
+            "query": "Is USB port functional?",
+            "expected_value": "USB port accessible and powered",
+            "test_method": "Connect USB device and verify connection",
+            "failure_indication": "No USB device recognition",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "USB Interface Testing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is CZone Touch 7 properly connected to network backbone?",
+            "expected_value": "Device visible on network with valid dipswitch address",
+            "test_method": "Check network status page on Touch 7 display",
+            "failure_indication": "Device not appearing in network list or showing offline status",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network Configuration",
+              "Dipswitch Setting"
+            ]
+          },
+          {
+            "query": "Are analog inputs properly configured?",
+            "expected_value": "8 analog inputs showing correct voltage/resistance readings",
+            "test_method": "Monitor analog input status screen",
+            "failure_indication": "Missing or incorrect analog readings",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Analog Input Configuration",
+              "Sensor Calibration"
+            ]
+          },
+          {
+            "query": "Is keypad interface operational?",
+            "expected_value": "Keypad responds to input and updates display",
+            "test_method": "Press each key and verify response",
+            "failure_indication": "Non-responsive keys or incorrect display feedback",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Interface Testing",
+              "Display Calibration"
+            ]
+          },
+          {
+            "query": "Are digital outputs functioning?",
+            "expected_value": "12 digital outputs switching as commanded",
+            "test_method": "Toggle outputs via touch interface",
+            "failure_indication": "Outputs not switching or incorrect state feedback",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Output Testing",
+              "Load Configuration"
+            ]
+          },
+          {
+            "query": "Is HVAC control system responding?",
+            "expected_value": "HVAC system accepts and executes commands",
+            "test_method": "Send temperature adjustment commands",
+            "failure_indication": "HVAC system unresponsive or executing incorrect commands",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "HVAC Integration",
+              "Climate Control Setup"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is mounting hole cut to correct dimensions?",
+            "expected_value": "Hole matches supplied mounting template dimensions exactly",
+            "test_method": "Compare cut hole to mounting template",
+            "failure_indication": "Display unit will not fit properly or seal correctly",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Surface preparation",
+              "Template usage"
+            ]
+          },
+          {
+            "query": "Are all mounting bracket screws installed?",
+            "expected_value": "4 self-tapping screws securing bracket to wall",
+            "test_method": "Visual inspection of all 4 screw positions",
+            "failure_indication": "Unstable mounting, risk of unit falling",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Bracket installation"
+            ]
+          },
+          {
+            "query": "Is display bottom edge touching mounting surface?",
+            "expected_value": "Bottom edge makes full contact with mounting surface",
+            "test_method": "Visual and physical inspection of bottom edge contact",
+            "failure_indication": "Display will not properly seat on mounting hooks",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display mounting"
+            ]
+          },
+          {
+            "query": "Is display properly seated on mounting hooks?",
+            "expected_value": "Display fully engaged on both mounting bracket hooks",
+            "test_method": "Verify display slides down completely on both hooks",
+            "failure_indication": "Unstable mounting, risk of unit falling",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display mounting",
+              "Security verification"
+            ]
+          },
+          {
+            "query": "Is top of display securely clipped in place?",
+            "expected_value": "Top clip fully engaged with audible click",
+            "test_method": "Push top until click heard, verify no movement",
+            "failure_indication": "Display not securely mounted, may fall forward",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Final mounting verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is there adequate ventilation space around display?",
+            "expected_value": "Sufficient airflow in mounting compartment",
+            "test_method": "Visual inspection of mounting space and clearance",
+            "failure_indication": "Risk of overheating and damage to unit",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Mounting Installation"
+            ]
+          },
+          {
+            "query": "Is operating temperature within acceptable range?",
+            "expected_value": "-20\u00b0C to +70\u00b0C (-4\u00b0F to +158\u00b0F)",
+            "test_method": "Temperature measurement in mounting location",
+            "failure_indication": "Unit may overheat or malfunction outside temperature range",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Environmental Verification"
+            ]
+          },
+          {
+            "query": "Is display mounted away from interference sources?",
+            "expected_value": "Sufficient distance from motors, generators, radio equipment",
+            "test_method": "Measure distance from potential interference sources",
+            "failure_indication": "Display may experience operational interference",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Location Selection"
+            ]
+          },
+          {
+            "query": "Are cables properly strain relieved?",
+            "expected_value": "Cables supported with no stress on connectors",
+            "test_method": "Visual and physical inspection of cable routing",
+            "failure_indication": "Risk of connection failure or cable damage",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Cable Installation"
+            ]
+          },
+          {
+            "query": "Is there sufficient clearance for release tabs?",
+            "expected_value": "Clear access to release tabs on both sides",
+            "test_method": "Physical verification of tab accessibility",
+            "failure_indication": "Unable to remove display for service",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Mounting Installation"
+            ]
+          },
+          {
+            "query": "Is 3A fuse installed?",
+            "expected_value": "3A fuse present in power circuit",
+            "test_method": "Visual inspection of fuse installation",
+            "failure_indication": "No circuit protection for display",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power Connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Are release tabs accessible on display sides?",
+            "expected_value": "Two release tabs visible at top sides",
+            "test_method": "Visual inspection of top sides of Touch 7 display",
+            "failure_indication": "Tabs missing or damaged, improper installation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display Installation",
+              "Mounting Bracket Installation"
+            ]
+          },
+          {
+            "query": "Do release tabs depress properly?",
+            "expected_value": "Tab depresses 5mm and unclips from bracket",
+            "test_method": "Push tab with flat head screwdriver until release",
+            "failure_indication": "Tab stuck, broken, or won't release at 5mm",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display Removal",
+              "Display Maintenance"
+            ]
+          },
+          {
+            "query": "Are all connectors disconnected before removal?",
+            "expected_value": "All wiring connectors detached from display",
+            "test_method": "Visual inspection of connection points before lifting display",
+            "failure_indication": "Connected wires could be damaged during removal",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Wire Harness Management",
+              "Display Removal"
+            ]
+          },
+          {
+            "query": "Does display lift smoothly from bracket?",
+            "expected_value": "Display lifts up and away without resistance after tabs released",
+            "test_method": "Gentle upward pull after releasing both tabs",
+            "failure_indication": "Display stuck or binding indicates mounting problem",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display Removal",
+              "Bracket Inspection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is power completely disconnected before installation?",
+            "expected_value": "No voltage present at terminals",
+            "test_method": "Use voltage meter to verify power is off at all connection points",
+            "failure_indication": "Risk of fire, electrical shock or injury if power present during installation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power disconnection",
+              "Installation safety checks"
+            ]
+          },
+          {
+            "query": "Is power supply voltage compatible with unit specifications?",
+            "expected_value": "Power supply voltage matches unit's rated voltage",
+            "test_method": "Compare power supply specifications with unit requirements",
+            "failure_indication": "Risk of device damage or malfunction if voltage mismatch",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Voltage verification",
+              "Power supply compatibility check"
+            ]
+          },
+          {
+            "query": "Is NMEA2000 network connection properly made?",
+            "expected_value": "Secure connection to NMEA2000 network port",
+            "test_method": "Visual inspection of connection and network communication test",
+            "failure_indication": "No NMEA2000 network communication",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "NMEA2000 network setup",
+              "Network connectivity verification"
+            ]
+          },
+          {
+            "query": "Is battery polarity correct?",
+            "expected_value": "Positive to + terminal, Negative to - terminal",
+            "test_method": "Visual inspection of battery connections",
+            "failure_indication": "Device damage or failure to power up if reversed",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Battery connection",
+              "Power system verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is DC negative wire properly connected and secured?",
+            "expected_value": "Negative wire connected from power connector - to battery negative, screw tight",
+            "test_method": "Visual inspection and physical pull test of connection",
+            "failure_indication": "Loose connection or improper terminal placement",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "DC Power Connection"
+            ]
+          },
+          {
+            "query": "Is DC positive wire properly fused and secured?",
+            "expected_value": "Positive wire connected through 3A fuse from power connector + to battery positive, screw tight",
+            "test_method": "Visual inspection of fuse and connection security",
+            "failure_indication": "Missing/wrong fuse or loose connection",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "DC Power Connection",
+              "Fuse Installation"
+            ]
+          },
+          {
+            "query": "Is shield connection needed for touch screen performance?",
+            "expected_value": "No interference observed in touch screen operation",
+            "test_method": "Test touch screen responsiveness, check for interference",
+            "failure_indication": "Touch screen interference or erratic behavior",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Screen Calibration",
+              "Shield Connection"
+            ]
+          },
+          {
+            "query": "Is power connector properly inserted and locked?",
+            "expected_value": "Connector fully inserted and locking screws tightened",
+            "test_method": "Visual inspection and physical verification of connector lock",
+            "failure_indication": "Loose connector or unlocked position",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power Connection"
+            ]
+          },
+          {
+            "query": "Is Ethernet connection properly configured for Client Mode Wired?",
+            "expected_value": "Ethernet cable connected between Touch 7 and router port",
+            "test_method": "Visual verification of connection and network detection",
+            "failure_indication": "No network connection in Client Mode Wired",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network Configuration"
+            ]
+          },
+          {
+            "query": "Is NMEA 2000 connection properly made?",
+            "expected_value": "1M Drop cable connected between Touch 7 NMEA2000 port and backbone",
+            "test_method": "Visual inspection of NMEA2000 connection",
+            "failure_indication": "No NMEA2000 network detection",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "NMEA2000 Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is device added to CZone configuration with unique dipswitch?",
+            "expected_value": "Device present in configuration with assigned unique dipswitch",
+            "test_method": "Check CZone Configuration Tool device list",
+            "failure_indication": "Device cannot join network or will conflict with other devices",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "CZone Configuration Tool setup",
+              "Network device configuration"
+            ]
+          },
+          {
+            "query": "Does splash screen appear on initial power up?",
+            "expected_value": "CZone splash screen displays for approximately 1 minute",
+            "test_method": "Observe display after power application",
+            "failure_indication": "Display hardware or software initialization failure",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "First power up sequence",
+              "Display initialization"
+            ]
+          },
+          {
+            "query": "Does device claim network configuration?",
+            "expected_value": "Configuration successfully claimed from network",
+            "test_method": "Monitor device startup sequence",
+            "failure_indication": "Network connectivity issue or configuration mismatch",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network configuration",
+              "Device initialization"
+            ]
+          },
+          {
+            "query": "Can dipswitch be set from configured devices list?",
+            "expected_value": "Dipswitch selection available and configurable",
+            "test_method": "Attempt to select dipswitch from list or set manually",
+            "failure_indication": "Configuration incomplete or interface malfunction",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Dipswitch configuration",
+              "Device setup"
+            ]
+          },
+          {
+            "query": "Does Control or Modes page appear after configuration?",
+            "expected_value": "Main interface page displays after successful setup",
+            "test_method": "Complete setup sequence and observe final screen",
+            "failure_indication": "Configuration incomplete or interface initialization failure",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Interface initialization",
+              "Configuration verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is Touch 7 software version current?",
+            "expected_value": "Latest version from downloads.czone.net installed",
+            "test_method": "Navigate to Settings > About and check version number",
+            "failure_indication": "Software version shown is older than latest available",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Software Update Process"
+            ]
+          },
+          {
+            "query": "Is firmware file correctly placed on USB drive?",
+            "expected_value": ".swu file present in root directory",
+            "test_method": "Check USB drive root folder for .swu extension file",
+            "failure_indication": "File missing or not in root directory",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "USB Update Preparation"
+            ]
+          },
+          {
+            "query": "Does USB port recognize flash drive?",
+            "expected_value": "USB drive detected when inserted",
+            "test_method": "Insert USB drive and check for update option availability",
+            "failure_indication": "Update option remains unavailable after USB insertion",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Hardware Connectivity Check"
+            ]
+          },
+          {
+            "query": "Does update process complete successfully?",
+            "expected_value": "Display reboots to main screen after update",
+            "test_method": "Monitor update process until completion",
+            "failure_indication": "Update fails or device doesn't reboot properly",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Software Installation Verification"
+            ]
+          },
+          {
+            "query": "Is new version verified after update?",
+            "expected_value": "New version number shown in Settings > About",
+            "test_method": "Check Settings > About after reboot",
+            "failure_indication": "Version number unchanged or incorrect",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Post-Update Verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is Wireless Server enabled and visible on CZone network?",
+            "expected_value": "Wireless Server appears as separate Wireless Interface on network",
+            "test_method": "Check network devices list in CZone configuration",
+            "failure_indication": "Wireless Server not visible or not properly initialized",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Wireless Server Setup",
+              "Network Configuration"
+            ]
+          },
+          {
+            "query": "Are Display Interface and Wireless Interface dipswitches unique?",
+            "expected_value": "Each interface must have different dipswitch settings",
+            "test_method": "Compare dipswitch settings in CZone configuration",
+            "failure_indication": "Communication conflicts between interfaces",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Dipswitch Configuration",
+              "Interface Setup"
+            ]
+          },
+          {
+            "query": "Is WiFi initially disabled on Touch 7?",
+            "expected_value": "WiFi should be disabled by default",
+            "test_method": "Check initial wireless settings status",
+            "failure_indication": "WiFi enabled without configuration",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Initial Setup",
+              "Wireless Configuration"
+            ]
+          },
+          {
+            "query": "Can iPad communicate with CZone system?",
+            "expected_value": "iPad successfully connects and communicates with CZone network",
+            "test_method": "Attempt connection from iPad to CZone system",
+            "failure_indication": "iPad unable to connect or communicate",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "iPad Integration",
+              "Wireless Server Setup"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is touch screen calibration needed?",
+            "expected_value": "Touch screen responds accurately to finger touches",
+            "test_method": "Navigate to Settings > System > Screen Calibration and run calibration process",
+            "failure_indication": "Touch screen not responding accurately or experiencing interference",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power connector shield grounding"
+            ]
+          },
+          {
+            "query": "What is the calibration process duration?",
+            "expected_value": "Approximately 10 seconds",
+            "test_method": "Time the calibration process from start to completion",
+            "failure_indication": "Process taking significantly longer or shorter than 10 seconds",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Screen Calibration"
+            ]
+          },
+          {
+            "query": "Is additional grounding required?",
+            "expected_value": "No additional grounding needed if calibration resolves issue",
+            "test_method": "Test touch performance after calibration, if still poor, connect shield to ground",
+            "failure_indication": "Touch performance remains poor after calibration",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Shield to chassis ground connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is dipswitch configuration completed before WiFi mode selection?",
+            "expected_value": "Yes, dipswitch must be set before WiFi mode selection",
+            "test_method": "Verify sequence of configuration steps",
+            "failure_indication": "WiFi mode settings may not apply correctly if dipswitch not configured first",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "WiFi Configuration",
+              "Dipswitch Setup"
+            ]
+          },
+          {
+            "query": "What happens when 'Disabled' WiFi mode is selected?",
+            "expected_value": "Device operates in Wired Client Mode with WiFi disabled",
+            "test_method": "Select Disabled mode and verify no WiFi connectivity",
+            "failure_indication": "WiFi still active when should be disabled",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "WiFi Mode Selection",
+              "Wired Client Mode Setup"
+            ]
+          },
+          {
+            "query": "Are WiFi credentials displayed when Access Point is enabled?",
+            "expected_value": "SSID and password are displayed on screen",
+            "test_method": "Enable Access Point mode and check display for credentials",
+            "failure_indication": "Credentials not shown when AP mode enabled",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Access Point Configuration",
+              "WiFi Setup"
+            ]
+          },
+          {
+            "query": "Can iPad connect to Touch 7 using displayed credentials?",
+            "expected_value": "Successful wireless connection established",
+            "test_method": "Attempt iPad connection using displayed SSID/password",
+            "failure_indication": "Unable to establish wireless connection",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Wireless Configuration",
+              "Favorites Tool Setup"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is operating voltage within acceptable range?",
+            "expected_value": "8-32V DC",
+            "test_method": "Measure input voltage with multimeter",
+            "failure_indication": "Device may not power on or operate erratically if voltage outside range",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Power installation",
+              "Voltage testing"
+            ]
+          },
+          {
+            "query": "Is current draw at full brightness within spec?",
+            "expected_value": "430mA @ 12V with backlight 100%",
+            "test_method": "Measure current draw with ammeter at full brightness",
+            "failure_indication": "Excessive current draw indicates potential hardware fault",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Power consumption testing",
+              "Backlight verification"
+            ]
+          },
+          {
+            "query": "Is standby current draw within spec?",
+            "expected_value": "130mA @ 12V with backlight off",
+            "test_method": "Measure current draw with ammeter in standby mode",
+            "failure_indication": "Higher standby current indicates potential power management issue",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Power consumption testing",
+              "Standby mode verification"
+            ]
+          },
+          {
+            "query": "Is operating temperature within acceptable range?",
+            "expected_value": "-20\u00b0C to 70\u00b0C (-4\u00b0F to 158\u00b0F)",
+            "test_method": "Monitor ambient temperature during operation",
+            "failure_indication": "Operation outside temperature range may cause damage or malfunction",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Environmental testing",
+              "Temperature monitoring"
+            ]
+          },
+          {
+            "query": "Is storage temperature within acceptable range?",
+            "expected_value": "-40\u00b0C to 85\u00b0C (-40\u00b0F to 185\u00b0F)",
+            "test_method": "Monitor storage environment temperature",
+            "failure_indication": "Storage outside temperature range may cause damage",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Storage guidelines",
+              "Temperature monitoring"
+            ]
+          },
+          {
+            "query": "Is display brightness meeting specification?",
+            "expected_value": "550 cd/m\u00b2",
+            "test_method": "Measure brightness with luminance meter",
+            "failure_indication": "Lower brightness indicates display degradation or failure",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Display testing",
+              "Brightness calibration"
+            ]
+          },
+          {
+            "query": "Is screen resolution correct?",
+            "expected_value": "1024 x 600 pixels",
+            "test_method": "Verify display resolution in system settings",
+            "failure_indication": "Incorrect resolution indicates display or graphics processing issue",
+            "models": [
+              "Touch 7"
+            ],
+            "related_procedures": [
+              "Display configuration",
+              "Resolution testing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is NMEA2000 connector properly wired?",
+            "expected_value": "Pins match standard NMEA2000 pinout configuration",
+            "test_method": "Visual inspection of rear connector pins",
+            "failure_indication": "Device will not communicate on NMEA2000 network",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "NMEA2000 network installation"
+            ]
+          },
+          {
+            "query": "Is complete installation kit present?",
+            "expected_value": "Kit includes mounting bracket, 1M NMEA2000 drop cable, and power connector",
+            "test_method": "Verify contents against part number 80-911-0200-00 specifications",
+            "failure_indication": "Missing components will prevent proper installation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Initial unpacking",
+              "Installation verification"
+            ]
+          },
+          {
+            "query": "Is NMEA2000 drop cable correct length?",
+            "expected_value": "Cable length is 1 meter",
+            "test_method": "Measure cable length of part 80-911-0202-00",
+            "failure_indication": "Incorrect cable length may cause network issues",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "NMEA2000 network installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Operating temperature range compliance",
+            "expected_value": "-20\u00b0C to +60\u00b0C",
+            "test_method": "Temperature stress test across operating range",
+            "failure_indication": "Device fails to operate or display malfunctions outside temperature range",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Environmental testing protocol"
+            ]
+          },
+          {
+            "query": "EMC emissions standards compliance",
+            "expected_value": "Meets EN 60945 requirements",
+            "test_method": "EMC testing in certified lab",
+            "failure_indication": "Device emits electromagnetic interference above permitted levels",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "EMC certification testing"
+            ]
+          },
+          {
+            "query": "IP rating verification",
+            "expected_value": "IP67 rating maintained",
+            "test_method": "Water immersion test at 1m for 30 minutes",
+            "failure_indication": "Water ingress detected inside housing",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "IP rating validation test"
+            ]
+          },
+          {
+            "query": "CE marking presence",
+            "expected_value": "CE mark clearly visible on device",
+            "test_method": "Visual inspection of product labeling",
+            "failure_indication": "Missing or illegible CE marking",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Product labeling verification"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

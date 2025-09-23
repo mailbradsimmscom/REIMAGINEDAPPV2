@@ -243,6 +243,8 @@ class DocumentService {
           pages_ocr: 0,
           tables: 0,
           chunks: 0,
+          chunks_processed: 0,
+          chunks_total: 0,
           upserted: 0,
           skipped_duplicates: 0
         }
@@ -418,12 +420,14 @@ class DocumentService {
       // Update processing stage after DIP ingestion
       await documentRepository.updateJobStatusV2(jobId, 'ingestion');
 
-      // Update job with results
+      // Update job with results including chunk progress
       await documentRepository.updateJobProgress(jobId, {
         pages_total: processingResult.pages_total || 0,
         pages_ocr: processingResult.pages_ocr || 0,
         tables: processingResult.tables_found || 0,
         vectors_upserted: processingResult.vectors_upserted || 0,
+        chunks_processed: processingResult.chunks_processed || 0,
+        chunks_total: processingResult.chunks_processed || 0, // Total = processed for completed jobs
         processing_time: processingResult.processing_time || 0,
         dip_success: true,
         extraction_results: {
@@ -599,6 +603,13 @@ class DocumentService {
         chunksProcessed: result.chunks_processed,
         vectorsUpserted: result.vectors_upserted,
         namespace: result.namespace
+      });
+
+      // Update job with chunk progress after Python processing
+      await documentRepository.updateJobProgress(jobId, {
+        chunks_total: result.chunks_processed || 0,
+        chunks_processed: result.chunks_processed || 0,
+        vectors_upserted: result.vectors_upserted || 0
       });
 
       return result;

@@ -12,6 +12,7 @@ async function getSupabaseConfig() {
   return {
     url: env.SUPABASE_URL,
     key:
+      env.PY_SUPABASE_SERVICE_KEY ||  // Use same key as Python first
       env.SUPABASE_SERVICE_KEY ||
       env.SUPABASE_SERVICE_ROLE_KEY ||
       env.SUPABASE_SERVICE_ROLE ||
@@ -39,9 +40,11 @@ export async function getSupabaseClient() {
 
   // Log once on first real init
   if (!hasLoggedConfig) {
-    logger.info('Supabase client initialized', {
+    logger.info('🔑 Supabase client initialized', {
       supabaseUrlPrefix: url.split('//')[1]?.split('.')[0],
       hasServiceKey: !!key,
+      keyPrefix: key?.substring(0, 20) + '...',
+      keyType: key?.startsWith('eyJ') ? 'JWT' : key?.startsWith('sb_') ? 'SERVICE' : 'OTHER'
     });
     hasLoggedConfig = true;
   }

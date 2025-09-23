@@ -1,0 +1,1593 @@
+{
+  "total_chunks_processed": 23,
+  "successful_chunks": 23,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 50,
+  "unique_procedures": 25,
+  "procedures": [
+    {
+      "title": "Document Usage Rights",
+      "preconditions": [
+        "Document is for non-commercial purposes"
+      ],
+      "steps": [
+        "Credit Power Products as the source when reproducing",
+        "Do not electronically redistribute document in any format",
+        "Maintain quality and version control when using document"
+      ],
+      "expected_outcome": "Compliant usage of documentation",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Manual Version Control",
+      "preconditions": [
+        "Multiple language versions exist"
+      ],
+      "steps": [
+        "Reference English version in case of translation discrepancies",
+        "Consider English version as the official version",
+        "Use English version to resolve any conflicts between translations"
+      ],
+      "expected_outcome": "Correct version of manual is referenced",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Owner Safety Responsibility",
+      "preconditions": [
+        "Device ownership"
+      ],
+      "steps": [
+        "Install device to prevent accidents",
+        "Operate device to prevent personal injury",
+        "Maintain device to prevent property damage",
+        "Follow all safety guidelines during installation and operation"
+      ],
+      "expected_outcome": "Safe device operation and installation",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Initial Touch 7 Setup",
+      "preconditions": [
+        "Device is powered off",
+        "Power source available"
+      ],
+      "steps": [
+        "Connect power cable to device",
+        "Press and hold power button for 3 seconds",
+        "Wait for startup screen to appear",
+        "Follow on-screen prompts to select language",
+        "Set date and time when prompted",
+        "Connect to WiFi network if available",
+        "Complete initial calibration process"
+      ],
+      "expected_outcome": "Device fully configured and ready for operation",
+      "models": [
+        "Touch 7"
+      ],
+      "error_codes": [
+        "E01 - Power failure",
+        "E02 - Failed to start"
+      ]
+    },
+    {
+      "title": "Touch 7 Daily Startup",
+      "preconditions": [
+        "Device is powered off",
+        "Initial setup completed"
+      ],
+      "steps": [
+        "Press power button once",
+        "Wait for main screen to load",
+        "Verify all status indicators are green",
+        "Log in if required"
+      ],
+      "expected_outcome": "Device ready for daily operation",
+      "models": [
+        "Touch 7"
+      ],
+      "error_codes": [
+        "E03 - Login failed"
+      ]
+    },
+    {
+      "title": "Touch 7 Shutdown Procedure",
+      "preconditions": [
+        "Device is powered on"
+      ],
+      "steps": [
+        "Save all open work",
+        "Press power button once",
+        "Select 'Shutdown' from menu",
+        "Wait for screen to go dark",
+        "Unplug power cable if needed"
+      ],
+      "expected_outcome": "Device safely powered down",
+      "models": [
+        "Touch 7"
+      ],
+      "error_codes": [
+        "E04 - Shutdown error"
+      ]
+    },
+    {
+      "title": "Display Mounting",
+      "preconditions": [
+        "Have required mounting tools ready",
+        "Select appropriate mounting location"
+      ],
+      "steps": [
+        "Choose mounting location following guidelines",
+        "Mark mounting holes using template",
+        "Drill mounting holes",
+        "Mount display using supplied hardware"
+      ],
+      "expected_outcome": "Display securely mounted in appropriate location",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Display Removal",
+      "preconditions": [
+        "Display must be powered off"
+      ],
+      "steps": [
+        "Access rear of display",
+        "Disconnect all cables",
+        "Remove mounting hardware",
+        "Remove display from mounting location"
+      ],
+      "expected_outcome": "Display safely removed from mounting position",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Power Connection",
+      "preconditions": [
+        "DC power source available",
+        "Display mounted"
+      ],
+      "steps": [
+        "Locate DC power connection point",
+        "Connect DC power cable",
+        "Verify connection is secure"
+      ],
+      "expected_outcome": "Display properly connected to power source",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Ethernet Connection",
+      "preconditions": [
+        "Router available",
+        "Ethernet cable available"
+      ],
+      "steps": [
+        "Locate Ethernet port",
+        "Connect Ethernet cable to display",
+        "Connect other end to router",
+        "Verify connection"
+      ],
+      "expected_outcome": "Display connected to network via Ethernet",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "NMEA 2000 Network Connection",
+      "preconditions": [
+        "NMEA 2000 network available"
+      ],
+      "steps": [
+        "Locate NMEA 2000 connector",
+        "Connect NMEA 2000 cable",
+        "Verify connection is secure"
+      ],
+      "expected_outcome": "Display connected to NMEA 2000 network",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Software Update via USB",
+      "preconditions": [
+        "USB flash drive with update file",
+        "Display powered on"
+      ],
+      "steps": [
+        "Check current software version",
+        "Insert USB flash drive",
+        "Navigate to software update menu",
+        "Select update file",
+        "Confirm update",
+        "Wait for completion"
+      ],
+      "expected_outcome": "Software successfully updated to latest version",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Wireless Server Setup",
+      "preconditions": [
+        "Display powered on",
+        "Network access available"
+      ],
+      "steps": [
+        "Access wireless server settings",
+        "Configure network parameters",
+        "Set up access point or client mode",
+        "Save settings",
+        "Verify wireless connection"
+      ],
+      "expected_outcome": "Wireless server configured and operational",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touch Screen Calibration",
+      "preconditions": [
+        "Display powered on"
+      ],
+      "steps": [
+        "Access calibration menu",
+        "Follow on-screen calibration prompts",
+        "Touch indicated points on screen",
+        "Confirm calibration"
+      ],
+      "expected_outcome": "Touch screen accurately calibrated",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Warranty Validation Check",
+      "preconditions": [
+        "Touch 7 product purchased",
+        "Within first two years after purchase date"
+      ],
+      "steps": [
+        "Verify product is installed according to manual instructions",
+        "Verify product is used according to manual instructions",
+        "Ensure identification label on back of Touch 7 remains intact and unremoved"
+      ],
+      "expected_outcome": "Valid warranty coverage maintained",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Identification Label Location Check",
+      "preconditions": [
+        "Touch 7 device accessible"
+      ],
+      "steps": [
+        "Locate back of Touch 7 device",
+        "Verify presence of identification label",
+        "Do not remove or tamper with label"
+      ],
+      "expected_outcome": "Identification label found and preserved",
+      "models": [
+        "CZONE TOUCH 7 80-911-0200-00"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touch 7 Physical Installation",
+      "preconditions": [
+        "Have mounting hardware ready",
+        "Ensure mounting surface is clean and flat"
+      ],
+      "steps": [
+        "Refer to mounting exploded view diagram",
+        "Place mounting bracket against mounting surface",
+        "Mark screw hole locations",
+        "Drill pilot holes if needed",
+        "Secure mounting bracket with screws",
+        "Align Touch 7 unit with bracket",
+        "Press unit into place until it clicks"
+      ],
+      "expected_outcome": "Touch 7 unit securely mounted to surface",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touch 7 Removal Procedure",
+      "preconditions": [
+        "Unit must be powered off",
+        "Access to bottom of unit required"
+      ],
+      "steps": [
+        "Locate release tab at bottom of unit",
+        "Press release tab inward",
+        "While holding tab, pull bottom of unit away from mounting surface",
+        "Lift unit up and out of top mounting clips"
+      ],
+      "expected_outcome": "Touch 7 unit safely removed from mounting bracket",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "DC Power Connection",
+      "preconditions": [
+        "Power source must be 12-24V DC",
+        "Access to rear connections required"
+      ],
+      "steps": [
+        "Locate DC connector on rear of unit",
+        "Connect positive wire to pin 1",
+        "Connect negative wire to pin 2",
+        "Ensure connector is fully seated"
+      ],
+      "expected_outcome": "Touch 7 properly connected to DC power source",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touch 7 Display Installation",
+      "preconditions": [
+        "Have all supplied parts ready",
+        "Power source 8-32VDC available",
+        "Mounting location selected"
+      ],
+      "steps": [
+        "Verify all supplied parts are present: Display unit, mounting bracket, 4 mounting screws, NMEA2000 drop cable, DC power connector",
+        "Position mounting bracket in desired location",
+        "Secure mounting bracket using the 4 supplied mounting screws",
+        "Connect NMEA2000 drop cable to display",
+        "Connect DC power connector to power source (8-32VDC)",
+        "Connect USB and Ethernet cables if required",
+        "Mount display unit into bracket"
+      ],
+      "expected_outcome": "Touch 7 display properly mounted and connected to power and communication networks",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Touch 7 Connection Setup",
+      "preconditions": [
+        "Display unit mounted",
+        "Power available"
+      ],
+      "steps": [
+        "Connect DC power to power connector (verify 8-32VDC range)",
+        "Connect NMEA2000 network cable",
+        "Connect Ethernet cable if required",
+        "Connect USB devices if required"
+      ],
+      "expected_outcome": "All necessary connections properly made to Touch 7 display",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Display Brightness Adjustment",
+      "preconditions": [
+        "Touch 7 display powered on",
+        "Display functioning normally"
+      ],
+      "steps": [
+        "Access brightness controls through display interface",
+        "Adjust brightness level between 0-500 nits",
+        "Set appropriate level for ambient lighting conditions",
+        "Reduce brightness for night time viewing"
+      ],
+      "expected_outcome": "Display brightness optimized for viewing conditions",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Wi-Fi Network Configuration",
+      "preconditions": [
+        "Touch 7 display powered on",
+        "Wi-Fi network available"
+      ],
+      "steps": [
+        "Access network settings on Touch 7",
+        "Enable Wi-Fi functionality",
+        "Select desired network",
+        "Enter network credentials",
+        "Confirm connection established"
+      ],
+      "expected_outcome": "Touch 7 successfully connected to Wi-Fi network for tablet connectivity",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Configure Touch 7 Access Point Mode",
+      "preconditions": [
+        "Touch 7 display unit installed",
+        "No other wireless networks present or desire to keep networks separate"
+      ],
+      "steps": [
+        "Access Touch 7 network settings",
+        "Select Access Point configuration mode",
+        "Connect iPad and PC devices directly to Touch 7 wireless network"
+      ],
+      "expected_outcome": "Direct wireless connection between Touch 7 and mobile devices",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Configure Touch 7 Client Mode",
+      "preconditions": [
+        "Touch 7 display unit installed",
+        "Existing wireless network available on vessel",
+        "Wireless router installed"
+      ],
+      "steps": [
+        "Access Touch 7 network settings",
+        "Select Client Mode configuration",
+        "Connect Touch 7 to existing vessel wireless network",
+        "Connect iPad and PC devices to same wireless network"
+      ],
+      "expected_outcome": "Touch 7 and mobile devices connected through vessel's wireless network",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "2-2",
+      "result": {
+        "procedures": [
+          {
+            "title": "Document Usage Rights",
+            "preconditions": [
+              "Document is for non-commercial purposes"
+            ],
+            "steps": [
+              "Credit Power Products as the source when reproducing",
+              "Do not electronically redistribute document in any format",
+              "Maintain quality and version control when using document"
+            ],
+            "expected_outcome": "Compliant usage of documentation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Manual Version Control",
+            "preconditions": [
+              "Multiple language versions exist"
+            ],
+            "steps": [
+              "Reference English version in case of translation discrepancies",
+              "Consider English version as the official version",
+              "Use English version to resolve any conflicts between translations"
+            ],
+            "expected_outcome": "Correct version of manual is referenced",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Owner Safety Responsibility",
+            "preconditions": [
+              "Device ownership"
+            ],
+            "steps": [
+              "Install device to prevent accidents",
+              "Operate device to prevent personal injury",
+              "Maintain device to prevent property damage",
+              "Follow all safety guidelines during installation and operation"
+            ],
+            "expected_outcome": "Safe device operation and installation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Touch 7 Setup",
+            "preconditions": [
+              "Device is powered off",
+              "Power source available"
+            ],
+            "steps": [
+              "Connect power cable to device",
+              "Press and hold power button for 3 seconds",
+              "Wait for startup screen to appear",
+              "Follow on-screen prompts to select language",
+              "Set date and time when prompted",
+              "Connect to WiFi network if available",
+              "Complete initial calibration process"
+            ],
+            "expected_outcome": "Device fully configured and ready for operation",
+            "models": [
+              "Touch 7"
+            ],
+            "error_codes": [
+              "E01 - Power failure",
+              "E02 - Failed to start"
+            ]
+          },
+          {
+            "title": "Touch 7 Daily Startup",
+            "preconditions": [
+              "Device is powered off",
+              "Initial setup completed"
+            ],
+            "steps": [
+              "Press power button once",
+              "Wait for main screen to load",
+              "Verify all status indicators are green",
+              "Log in if required"
+            ],
+            "expected_outcome": "Device ready for daily operation",
+            "models": [
+              "Touch 7"
+            ],
+            "error_codes": [
+              "E03 - Login failed"
+            ]
+          },
+          {
+            "title": "Touch 7 Shutdown Procedure",
+            "preconditions": [
+              "Device is powered on"
+            ],
+            "steps": [
+              "Save all open work",
+              "Press power button once",
+              "Select 'Shutdown' from menu",
+              "Wait for screen to go dark",
+              "Unplug power cable if needed"
+            ],
+            "expected_outcome": "Device safely powered down",
+            "models": [
+              "Touch 7"
+            ],
+            "error_codes": [
+              "E04 - Shutdown error"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "3-3",
+      "result": {
+        "procedures": [
+          {
+            "title": "Display Mounting",
+            "preconditions": [
+              "Have required mounting tools ready",
+              "Select appropriate mounting location"
+            ],
+            "steps": [
+              "Choose mounting location following guidelines",
+              "Mark mounting holes using template",
+              "Drill mounting holes",
+              "Mount display using supplied hardware"
+            ],
+            "expected_outcome": "Display securely mounted in appropriate location",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Display Removal",
+            "preconditions": [
+              "Display must be powered off"
+            ],
+            "steps": [
+              "Access rear of display",
+              "Disconnect all cables",
+              "Remove mounting hardware",
+              "Remove display from mounting location"
+            ],
+            "expected_outcome": "Display safely removed from mounting position",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power Connection",
+            "preconditions": [
+              "DC power source available",
+              "Display mounted"
+            ],
+            "steps": [
+              "Locate DC power connection point",
+              "Connect DC power cable",
+              "Verify connection is secure"
+            ],
+            "expected_outcome": "Display properly connected to power source",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Ethernet Connection",
+            "preconditions": [
+              "Router available",
+              "Ethernet cable available"
+            ],
+            "steps": [
+              "Locate Ethernet port",
+              "Connect Ethernet cable to display",
+              "Connect other end to router",
+              "Verify connection"
+            ],
+            "expected_outcome": "Display connected to network via Ethernet",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "NMEA 2000 Network Connection",
+            "preconditions": [
+              "NMEA 2000 network available"
+            ],
+            "steps": [
+              "Locate NMEA 2000 connector",
+              "Connect NMEA 2000 cable",
+              "Verify connection is secure"
+            ],
+            "expected_outcome": "Display connected to NMEA 2000 network",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Software Update via USB",
+            "preconditions": [
+              "USB flash drive with update file",
+              "Display powered on"
+            ],
+            "steps": [
+              "Check current software version",
+              "Insert USB flash drive",
+              "Navigate to software update menu",
+              "Select update file",
+              "Confirm update",
+              "Wait for completion"
+            ],
+            "expected_outcome": "Software successfully updated to latest version",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Wireless Server Setup",
+            "preconditions": [
+              "Display powered on",
+              "Network access available"
+            ],
+            "steps": [
+              "Access wireless server settings",
+              "Configure network parameters",
+              "Set up access point or client mode",
+              "Save settings",
+              "Verify wireless connection"
+            ],
+            "expected_outcome": "Wireless server configured and operational",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Touch Screen Calibration",
+            "preconditions": [
+              "Display powered on"
+            ],
+            "steps": [
+              "Access calibration menu",
+              "Follow on-screen calibration prompts",
+              "Touch indicated points on screen",
+              "Confirm calibration"
+            ],
+            "expected_outcome": "Touch screen accurately calibrated",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "5-5",
+      "result": {
+        "procedures": [
+          {
+            "title": "Warranty Validation Check",
+            "preconditions": [
+              "Touch 7 product purchased",
+              "Within first two years after purchase date"
+            ],
+            "steps": [
+              "Verify product is installed according to manual instructions",
+              "Verify product is used according to manual instructions",
+              "Ensure identification label on back of Touch 7 remains intact and unremoved"
+            ],
+            "expected_outcome": "Valid warranty coverage maintained",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Identification Label Location Check",
+            "preconditions": [
+              "Touch 7 device accessible"
+            ],
+            "steps": [
+              "Locate back of Touch 7 device",
+              "Verify presence of identification label",
+              "Do not remove or tamper with label"
+            ],
+            "expected_outcome": "Identification label found and preserved",
+            "models": [
+              "CZONE TOUCH 7 80-911-0200-00"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "4-4",
+      "result": {
+        "procedures": [
+          {
+            "title": "Touch 7 Physical Installation",
+            "preconditions": [
+              "Have mounting hardware ready",
+              "Ensure mounting surface is clean and flat"
+            ],
+            "steps": [
+              "Refer to mounting exploded view diagram",
+              "Place mounting bracket against mounting surface",
+              "Mark screw hole locations",
+              "Drill pilot holes if needed",
+              "Secure mounting bracket with screws",
+              "Align Touch 7 unit with bracket",
+              "Press unit into place until it clicks"
+            ],
+            "expected_outcome": "Touch 7 unit securely mounted to surface",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Touch 7 Removal Procedure",
+            "preconditions": [
+              "Unit must be powered off",
+              "Access to bottom of unit required"
+            ],
+            "steps": [
+              "Locate release tab at bottom of unit",
+              "Press release tab inward",
+              "While holding tab, pull bottom of unit away from mounting surface",
+              "Lift unit up and out of top mounting clips"
+            ],
+            "expected_outcome": "Touch 7 unit safely removed from mounting bracket",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "DC Power Connection",
+            "preconditions": [
+              "Power source must be 12-24V DC",
+              "Access to rear connections required"
+            ],
+            "steps": [
+              "Locate DC connector on rear of unit",
+              "Connect positive wire to pin 1",
+              "Connect negative wire to pin 2",
+              "Ensure connector is fully seated"
+            ],
+            "expected_outcome": "Touch 7 properly connected to DC power source",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "7-7",
+      "result": {
+        "procedures": [
+          {
+            "title": "Touch 7 Display Installation",
+            "preconditions": [
+              "Have all supplied parts ready",
+              "Power source 8-32VDC available",
+              "Mounting location selected"
+            ],
+            "steps": [
+              "Verify all supplied parts are present: Display unit, mounting bracket, 4 mounting screws, NMEA2000 drop cable, DC power connector",
+              "Position mounting bracket in desired location",
+              "Secure mounting bracket using the 4 supplied mounting screws",
+              "Connect NMEA2000 drop cable to display",
+              "Connect DC power connector to power source (8-32VDC)",
+              "Connect USB and Ethernet cables if required",
+              "Mount display unit into bracket"
+            ],
+            "expected_outcome": "Touch 7 display properly mounted and connected to power and communication networks",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Touch 7 Connection Setup",
+            "preconditions": [
+              "Display unit mounted",
+              "Power available"
+            ],
+            "steps": [
+              "Connect DC power to power connector (verify 8-32VDC range)",
+              "Connect NMEA2000 network cable",
+              "Connect Ethernet cable if required",
+              "Connect USB devices if required"
+            ],
+            "expected_outcome": "All necessary connections properly made to Touch 7 display",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "6-6",
+      "result": {
+        "procedures": [
+          {
+            "title": "Touch 7 Display Installation",
+            "preconditions": [
+              "Power supply between 8-32V DC available",
+              "Mounting location with minimum 35mm depth clearance",
+              "Front access for mounting"
+            ],
+            "steps": [
+              "Select mounting location with adequate depth clearance (35mm minimum including cables)",
+              "Ensure mounting surface is flat and clean",
+              "Create mounting cutout according to specifications",
+              "Connect power supply (8-32V DC)",
+              "Connect ethernet cable if network connectivity required",
+              "Insert display from front of mounting surface",
+              "Secure display using front mount installation system"
+            ],
+            "expected_outcome": "Touch 7 display securely mounted with power and network connectivity",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Display Brightness Adjustment",
+            "preconditions": [
+              "Touch 7 display powered on",
+              "Display functioning normally"
+            ],
+            "steps": [
+              "Access brightness controls through display interface",
+              "Adjust brightness level between 0-500 nits",
+              "Set appropriate level for ambient lighting conditions",
+              "Reduce brightness for night time viewing"
+            ],
+            "expected_outcome": "Display brightness optimized for viewing conditions",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Wi-Fi Network Configuration",
+            "preconditions": [
+              "Touch 7 display powered on",
+              "Wi-Fi network available"
+            ],
+            "steps": [
+              "Access network settings on Touch 7",
+              "Enable Wi-Fi functionality",
+              "Select desired network",
+              "Enter network credentials",
+              "Confirm connection established"
+            ],
+            "expected_outcome": "Touch 7 successfully connected to Wi-Fi network for tablet connectivity",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "8-8",
+      "result": {
+        "procedures": [
+          {
+            "title": "Configure Touch 7 Access Point Mode",
+            "preconditions": [
+              "Touch 7 display unit installed",
+              "No other wireless networks present or desire to keep networks separate"
+            ],
+            "steps": [
+              "Access Touch 7 network settings",
+              "Select Access Point configuration mode",
+              "Connect iPad and PC devices directly to Touch 7 wireless network"
+            ],
+            "expected_outcome": "Direct wireless connection between Touch 7 and mobile devices",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Configure Touch 7 Client Mode",
+            "preconditions": [
+              "Touch 7 display unit installed",
+              "Existing wireless network available on vessel",
+              "Wireless router installed"
+            ],
+            "steps": [
+              "Access Touch 7 network settings",
+              "Select Client Mode configuration",
+              "Connect Touch 7 to existing vessel wireless network",
+              "Connect iPad and PC devices to same wireless network"
+            ],
+            "expected_outcome": "Touch 7 and mobile devices connected through vessel's wireless network",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "9-9",
+      "result": {
+        "procedures": [
+          {
+            "title": "Configure Touch 7 Client Mode (Wired)",
+            "preconditions": [
+              "Existing wireless network available onboard vessel",
+              "Ethernet port available on network router",
+              "CZone network operational"
+            ],
+            "steps": [
+              "Connect Touch 7 to router using Ethernet cable",
+              "Disable WiFi on Touch 7",
+              "Connect router to CZone network",
+              "Ensure other devices (iPad, laptop) are connected to vessel's wireless network",
+              "Verify Touch 7 can communicate with CZone network through router"
+            ],
+            "expected_outcome": "Touch 7 operates as client on vessel's network with access to CZone system",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "10-10",
+      "result": {
+        "procedures": [
+          {
+            "title": "System Connection Setup",
+            "preconditions": [
+              "All CZone components powered off",
+              "Network cables available"
+            ],
+            "steps": [
+              "Connect Touch 7 display to CZone network",
+              "Connect analog inputs (up to 8)",
+              "Connect digital outputs (up to 12)",
+              "Connect AC outputs (up to 5)",
+              "Connect HVAC controller",
+              "Connect keypad interface",
+              "Connect party bus network"
+            ],
+            "expected_outcome": "All system components properly networked and ready for configuration",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "11-11",
+      "result": {
+        "procedures": [
+          {
+            "title": "Display Installation Location Selection",
+            "preconditions": [
+              "Have access to mounting location",
+              "Installation planning phase"
+            ],
+            "steps": [
+              "Verify mounting compartment size has adequate airflow",
+              "Choose location with minimal vibration exposure",
+              "Ensure operator can easily access controls and view screen",
+              "Confirm proper cable routing and connection access",
+              "Check sufficient clearance for release tab access",
+              "Verify cable strain relief capability",
+              "Position away from interference sources (motors, generators, radio equipment)",
+              "Install out of direct sunlight for optimal viewing",
+              "Ensure location temperature range is within -20\u00b0C to +70\u00b0C (-4\u00b0F to +158\u00b0F)"
+            ],
+            "expected_outcome": "Optimal mounting location selected that meets all technical requirements",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installation Equipment Checklist",
+            "preconditions": [
+              "Pre-installation phase"
+            ],
+            "steps": [
+              "Verify Touch 7 Display present",
+              "Confirm mounting bracket included",
+              "Check 4 self tapping mounting screws included",
+              "Verify DC Power connector present",
+              "Confirm NMEA2000 drop cable and t-connector available",
+              "Check 3A fuse available",
+              "Gather screwdriver and drill bits",
+              "Collect required electrical tools"
+            ],
+            "expected_outcome": "All required installation equipment and tools gathered",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "12-12",
+      "result": {
+        "procedures": [
+          {
+            "title": "Touch 7 Display Mounting",
+            "preconditions": [
+              "Have mounting template ready",
+              "Have mounting bracket available",
+              "Have 4 self-tapping screws ready",
+              "Have suitable mounting surface selected"
+            ],
+            "steps": [
+              "Using the supplied mounting template as a guide, cut the hole in the mounting surface",
+              "Insert mounting bracket and screw to wall using 4 x supplied self-tapping screws",
+              "Secure display to mounting bracket by sliding the unit down on the 2 mounting bracket hooks",
+              "Ensure bottom edge of unit is touching the mounting surface for proper seating on hooks",
+              "Once bottom is properly seated and flush with mounting surface, carefully push top of display until clipped securely in place"
+            ],
+            "expected_outcome": "Touch 7 display securely mounted to surface",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "13-13",
+      "result": {
+        "procedures": [
+          {
+            "title": "Display Removal - CZone Touch 7",
+            "preconditions": [
+              "Display must be mounted in bracket",
+              "Ensure appropriate flat head screwdriver is available",
+              "If unit is wired, ensure power is off before starting"
+            ],
+            "steps": [
+              "Locate the 2 release tabs at the top sides of display",
+              "Using a flat head screwdriver, carefully push one release tab in about 5mm until it unclips from bracket",
+              "Repeat the process on the other side of display until the top is completely unclipped",
+              "If unit is wired, remove all connectors first",
+              "Carefully pull the display up and away from bracket"
+            ],
+            "expected_outcome": "Touch 7 display successfully removed from mounting bracket",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "14-14",
+      "result": {
+        "procedures": [
+          {
+            "title": "CZone Touch 7 Installation Power Connection",
+            "preconditions": [
+              "Power must be turned off",
+              "Compatible power supply voltage confirmed"
+            ],
+            "steps": [
+              "Turn off all electrical power",
+              "Verify power supply voltage compatibility with unit",
+              "Connect positive terminal to battery + connection",
+              "Connect negative terminal to battery - connection",
+              "Connect NMEA2000 Network cable to designated port",
+              "Connect Network Router cable if required (optional)"
+            ],
+            "expected_outcome": "Unit properly connected to power source and networks",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "CZone Touch 7 Safety Power Check",
+            "preconditions": [
+              "Installation planned",
+              "Tools ready"
+            ],
+            "steps": [
+              "Confirm power is completely off before starting",
+              "Verify no live electrical connections are present",
+              "Check voltage compatibility between power supply and unit",
+              "Ensure proper insulation of all connections"
+            ],
+            "expected_outcome": "Safe installation environment confirmed",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "16-16",
+      "result": {
+        "procedures": [
+          {
+            "title": "First Power Up of CZone Touch 7",
+            "preconditions": [
+              "Display must be added to CZone configuration",
+              "Display must be assigned a unique dipswitch",
+              "Power supply must be available"
+            ],
+            "steps": [
+              "Turn on the circuit breaker or switch supplying power to the Touch 7",
+              "Wait approximately 1 minute for CZone splash screen and configuration claim attempt",
+              "When prompted, enter display dipswitch by selecting from configured devices list or setting manually",
+              "Wait for Control or Modes page to appear",
+              "Verify Touch 7 is ready for use"
+            ],
+            "expected_outcome": "Touch 7 display successfully powered up and configured for network operation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "15-15",
+      "result": {
+        "procedures": [
+          {
+            "title": "DC Power Connection",
+            "preconditions": [
+              "Power supply must be disconnected",
+              "Appropriate wire sizes must be available",
+              "3A fuse required"
+            ],
+            "steps": [
+              "Connect negative wire from DC connector negative position to battery negative terminal",
+              "Tighten screw to secure negative conductor",
+              "Connect positive wire from DC connector positive position to battery positive terminal through 3A fuse",
+              "Tighten screw to secure positive conductor",
+              "If touch screen interference occurs, connect shield to vessel/vehicle chassis ground",
+              "Insert connector into Touch 7 power socket",
+              "Lock connector by tightening locking screws"
+            ],
+            "expected_outcome": "Touch 7 properly connected to DC power supply",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Ethernet Router Connection",
+            "preconditions": [
+              "Touch 7 must be configured for Client Mode Wired",
+              "Ethernet cable required"
+            ],
+            "steps": [
+              "Connect ethernet cable to Ethernet port on Touch 7",
+              "Connect other end of ethernet cable to router ethernet port"
+            ],
+            "expected_outcome": "Touch 7 connected to router via ethernet",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "NMEA 2000 Network Connection",
+            "preconditions": [
+              "NMEA2000 1M Drop cable supplied",
+              "NMEA2000 backbone installed"
+            ],
+            "steps": [
+              "Connect NMEA2000 1M Drop cable to NMEA2000 port on Touch 7",
+              "Connect other end of cable to NMEA2000 backbone"
+            ],
+            "expected_outcome": "Touch 7 connected to NMEA2000 network",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Touch Screen Calibration",
+            "preconditions": [
+              "Touch screen performance issues observed"
+            ],
+            "steps": [
+              "Access Settings page on display",
+              "Perform screen recalibration",
+              "If issues persist, connect shield cable to chassis/ground"
+            ],
+            "expected_outcome": "Improved touch screen performance",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 18,
+      "pages": "18-18",
+      "result": {
+        "procedures": [
+          {
+            "title": "Enable Wireless Server on CZone Touch 7",
+            "preconditions": [
+              "CZone configuration must have unique dipswitches assigned for Display Interface and Wireless Interface",
+              "Touch 7 device must be powered on",
+              "WiFi is disabled by default"
+            ],
+            "steps": [
+              "Navigate to Settings menu",
+              "Select Advanced",
+              "Select Wireless Server",
+              "Enter the dipswitch value assigned in CZone configuration",
+              "Ensure dipswitch value is different from Touch 7 Display Interface dipswitch",
+              "Press Save"
+            ],
+            "expected_outcome": "Wireless Server appears on CZone network as separate Wireless Interface",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "17-17",
+      "result": {
+        "procedures": [
+          {
+            "title": "Check Current Software Version",
+            "preconditions": [
+              "Touch 7 device must be powered on"
+            ],
+            "steps": [
+              "Navigate to Settings",
+              "Select About",
+              "View current software version at top of page"
+            ],
+            "expected_outcome": "Current software version is displayed",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Update Software via USB Flash Drive",
+            "preconditions": [
+              "Touch 7 device must be powered on",
+              "New firmware file (.swu) downloaded from CZone portal",
+              "USB Flash Drive available"
+            ],
+            "steps": [
+              "Copy the Touch 7 firmware file (.swu) to root directory of USB Flash Drive",
+              "Insert USB Flash Drive into USB Port of Touch 7",
+              "Navigate to Settings > About",
+              "Press 'Update Software' button",
+              "Press 'Yes' when prompted",
+              "Wait for installation to complete (few minutes)",
+              "Wait for display to boot to main screen",
+              "Go to Settings > About to confirm new Software Version"
+            ],
+            "expected_outcome": "Touch 7 software updated to new version",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 19,
+      "pages": "19-19",
+      "result": {
+        "procedures": [
+          {
+            "title": "Configure Wireless Server",
+            "preconditions": [
+              "CZone Touch 7 device",
+              "Access to device dipswitches",
+              "iPad or laptop for wireless connection (if using Access Point mode)"
+            ],
+            "steps": [
+              "Set the appropriate Dipswitch configuration",
+              "Select desired WiFi Mode",
+              "If using Wired Client Mode, select 'Disabled' for WiFi",
+              "For Access Point mode: Note the displayed WiFi SSID and password",
+              "Connect iPad or laptop to Touch 7 using displayed credentials (for Access Point mode)",
+              "Use credentials to send favorites configuration files (.cfp) wirelessly via Favorites Tool"
+            ],
+            "expected_outcome": "Wireless Server successfully configured for chosen mode",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 20,
+      "pages": "20-20",
+      "result": {
+        "procedures": [
+          {
+            "title": "Touch Screen Calibration",
+            "preconditions": [
+              "Touch screen performance issues are present",
+              "Device is powered on"
+            ],
+            "steps": [
+              "Navigate to Settings > System > Screen Calibration page",
+              "Press the 'Calibrate' button",
+              "Wait approximately 10 seconds for calibration to complete",
+              "Test touch performance",
+              "If performance does not improve, connect a cable from the shield position on Touch 7 power connector to chassis/ground"
+            ],
+            "expected_outcome": "Improved touch screen performance and accuracy",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 21,
+      "pages": "21-21",
+      "result": {
+        "procedures": [
+          {
+            "title": "Operating Voltage Requirements",
+            "preconditions": [
+              "System power available"
+            ],
+            "steps": [
+              "Ensure power supply provides between 8-32V DC",
+              "Connect to DC Power Connector Phoenix 1777992 MSTB 2,5/ 3-STF-5,08",
+              "Verify current draw is approximately 430mA @ 12V during normal operation",
+              "Verify current draw is approximately 130mA @ 12V in standby mode"
+            ],
+            "expected_outcome": "Touch 7 display receives proper power supply for operation",
+            "models": [
+              "CZone Touch 7",
+              "80-911-0200-00"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Environmental Operating Conditions",
+            "preconditions": [
+              "Unit is installed"
+            ],
+            "steps": [
+              "Ensure operating environment temperature is between -20\u00b0C to 70\u00b0C (-4\u00b0F to 158\u00b0F)",
+              "For storage, maintain temperature between -40\u00b0C to 85\u00b0C (-40\u00b0F to 185\u00b0F)",
+              "Note unit has no ingress protection (IPX0) - protect from water/moisture"
+            ],
+            "expected_outcome": "Touch 7 operates within safe temperature and environmental conditions",
+            "models": [
+              "CZone Touch 7",
+              "80-911-0200-00"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Interface Connection Setup",
+            "preconditions": [
+              "Unit is powered"
+            ],
+            "steps": [
+              "Connect USB 2.0 devices if required",
+              "Connect Ethernet cable if network connectivity needed",
+              "Connect NMEA2000 interface if marine network integration required",
+              "Configure WiFi connection if wireless connectivity needed"
+            ],
+            "expected_outcome": "All required interfaces are properly connected and functional",
+            "models": [
+              "CZone Touch 7",
+              "80-911-0200-00"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 23,
+      "pages": "23-23",
+      "result": {
+        "procedures": [
+          {
+            "title": "EC Declaration of Conformity Verification",
+            "preconditions": [
+              "CZone Touch 7 device is present",
+              "Documentation is available"
+            ],
+            "steps": [
+              "Verify device complies with EC directives",
+              "Check CE marking on device",
+              "Confirm documentation includes EC declaration",
+              "Validate declaration matches device model"
+            ],
+            "expected_outcome": "Device confirmed to meet EC compliance requirements",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 22,
+      "pages": "22-22",
+      "result": {
+        "procedures": [
+          {
+            "title": "NMEA2000 Connector Pin Installation",
+            "preconditions": [
+              "Have access to rear of connector",
+              "Connector not yet assembled"
+            ],
+            "steps": [
+              "Locate rear of connector where contacts are inserted",
+              "Identify correct pin positions according to pinout diagram",
+              "Insert contacts into appropriate pin positions",
+              "Verify all pins are fully seated"
+            ],
+            "expected_outcome": "Properly wired NMEA2000 connector ready for use",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Touch 7 Basic Kit Assembly",
+            "preconditions": [
+              "Have complete 80-911-0200-00 kit available"
+            ],
+            "steps": [
+              "Locate mounting bracket from kit",
+              "Locate 1M NMEA2000 drop cable",
+              "Locate power connector",
+              "Verify all components present before assembly"
+            ],
+            "expected_outcome": "All components verified and ready for installation",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}
