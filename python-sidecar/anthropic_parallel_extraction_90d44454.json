@@ -14,9 +14,9 @@
       "steps": [
         "Verify installation was done according to manual instructions",
         "Verify product usage follows manual instructions",
-        "Confirm identification label is intact on back of Touch 7"
+        "Ensure identification label on back of Touch 7 is intact and not removed"
       ],
-      "expected_outcome": "Valid warranty coverage confirmed",
+      "expected_outcome": "Valid warranty coverage maintained",
       "models": [
         "CZONE TOUCH 7 80-911-0200-00"
       ],
@@ -25,14 +25,14 @@
     {
       "title": "Identification Label Preservation",
       "preconditions": [
-        "Touch 7 device with identification label"
+        "Touch 7 device with identification label on back"
       ],
       "steps": [
         "Locate identification label on back of Touch 7",
         "Ensure label remains attached and undamaged",
-        "Do not remove or tamper with label"
+        "Do not attempt to remove or alter the label"
       ],
-      "expected_outcome": "Identification label remains intact and warranty valid",
+      "expected_outcome": "Maintained warranty validity and preserved service/maintenance information",
       "models": [
         "CZONE TOUCH 7 80-911-0200-00"
       ],
@@ -50,7 +50,7 @@
         "Ensure front access is available for mounting",
         "Connect power supply (8-32V DC)",
         "Mount display from front of panel",
-        "Secure display without rear screws"
+        "Secure mounting without rear screws"
       ],
       "expected_outcome": "Touch 7 display securely mounted with power connection",
       "models": [
@@ -80,15 +80,15 @@
       "title": "Network Connectivity Setup",
       "preconditions": [
         "Touch 7 display powered on",
-        "Wi-Fi network or ethernet connection available"
+        "Wi-Fi network available or ethernet connection ready"
       ],
       "steps": [
-        "Access network settings menu",
+        "Access network settings on Touch 7",
         "Select either Wi-Fi or ethernet connection method",
         "Configure network parameters",
         "Establish connection for tablet pairing"
       ],
-      "expected_outcome": "Touch 7 successfully connected to network for tablet connectivity",
+      "expected_outcome": "Touch 7 connected to network for tablet connectivity",
       "models": [
         "CZone Touch 7"
       ],
@@ -110,9 +110,9 @@
             "steps": [
               "Verify installation was done according to manual instructions",
               "Verify product usage follows manual instructions",
-              "Confirm identification label is intact on back of Touch 7"
+              "Ensure identification label on back of Touch 7 is intact and not removed"
             ],
-            "expected_outcome": "Valid warranty coverage confirmed",
+            "expected_outcome": "Valid warranty coverage maintained",
             "models": [
               "CZONE TOUCH 7 80-911-0200-00"
             ],
@@ -121,14 +121,14 @@
           {
             "title": "Identification Label Preservation",
             "preconditions": [
-              "Touch 7 device with identification label"
+              "Touch 7 device with identification label on back"
             ],
             "steps": [
               "Locate identification label on back of Touch 7",
               "Ensure label remains attached and undamaged",
-              "Do not remove or tamper with label"
+              "Do not attempt to remove or alter the label"
             ],
-            "expected_outcome": "Identification label remains intact and warranty valid",
+            "expected_outcome": "Maintained warranty validity and preserved service/maintenance information",
             "models": [
               "CZONE TOUCH 7 80-911-0200-00"
             ],
@@ -154,7 +154,7 @@
               "Ensure front access is available for mounting",
               "Connect power supply (8-32V DC)",
               "Mount display from front of panel",
-              "Secure display without rear screws"
+              "Secure mounting without rear screws"
             ],
             "expected_outcome": "Touch 7 display securely mounted with power connection",
             "models": [
@@ -184,15 +184,15 @@
             "title": "Network Connectivity Setup",
             "preconditions": [
               "Touch 7 display powered on",
-              "Wi-Fi network or ethernet connection available"
+              "Wi-Fi network available or ethernet connection ready"
             ],
             "steps": [
-              "Access network settings menu",
+              "Access network settings on Touch 7",
               "Select either Wi-Fi or ethernet connection method",
               "Configure network parameters",
               "Establish connection for tablet pairing"
             ],
-            "expected_outcome": "Touch 7 successfully connected to network for tablet connectivity",
+            "expected_outcome": "Touch 7 connected to network for tablet connectivity",
             "models": [
               "CZone Touch 7"
             ],

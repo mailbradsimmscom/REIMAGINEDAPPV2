@@ -211,7 +211,7 @@ def store_to_supabase_storage(doc_id, specifications):
         
         # Supabase configuration
         url = os.getenv('SUPABASE_URL')
-        key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_SERVICE_KEY')
         
         print("DEBUG: Line 260 - Supabase credentials retrieved")
         

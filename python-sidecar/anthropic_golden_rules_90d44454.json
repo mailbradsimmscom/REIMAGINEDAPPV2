@@ -1,9 +1,9 @@
 {
   "total_chunks_processed": 2,
-  "successful_chunks": 1,
-  "failed_chunks": 1,
-  "total_golden_rules_extracted": 4,
-  "unique_golden_rules": 4,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 9,
+  "unique_golden_rules": 9,
   "golden_rules": [
     {
       "query": "Is identification label present on device?",
@@ -34,7 +34,7 @@
     {
       "query": "Was product installed according to manual instructions?",
       "expected_value": "Installation follows all manual specifications",
-      "test_method": "Installation audit against manual requirements",
+      "test_method": "Review installation against manual requirements",
       "failure_indication": "Non-compliant installation may void warranty",
       "models": [
         "CZONE TOUCH 7 80-911-0200-00"
@@ -47,7 +47,7 @@
     {
       "query": "Is product being used as intended?",
       "expected_value": "Usage matches product's intended purpose",
-      "test_method": "Review of application and usage patterns",
+      "test_method": "Compare actual usage to manual specifications",
       "failure_indication": "Improper use may void warranty and cause damage",
       "models": [
         "CZONE TOUCH 7 80-911-0200-00"
@@ -55,6 +55,71 @@
       "related_procedures": [
         "Usage verification",
         "Warranty validation"
+      ]
+    },
+    {
+      "query": "Is display brightness within operational range?",
+      "expected_value": "500 nits maximum, dimmable to night viewing levels",
+      "test_method": "Use luminance meter at screen center",
+      "failure_indication": "Display too dim or bright for conditions",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Display brightness adjustment",
+        "Night mode setup"
+      ]
+    },
+    {
+      "query": "Is operating voltage within specification?",
+      "expected_value": "8-32V DC",
+      "test_method": "Measure input voltage with multimeter",
+      "failure_indication": "Device may not power on or operate erratically",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Power supply verification",
+        "Installation checklist"
+      ]
+    },
+    {
+      "query": "Is screen resolution displaying correctly?",
+      "expected_value": "1024 x 600 pixels",
+      "test_method": "Check display settings and test pattern",
+      "failure_indication": "Blurry or incorrect image scaling",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Display configuration",
+        "Screen calibration"
+      ]
+    },
+    {
+      "query": "Is mounting depth sufficient?",
+      "expected_value": "35mm minimum including cables",
+      "test_method": "Measure available mounting depth",
+      "failure_indication": "Installation stress on cables or improper fit",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Installation guidelines",
+        "Mounting specifications"
+      ]
+    },
+    {
+      "query": "Are WiFi and ethernet connections functional?",
+      "expected_value": "Both connections active and able to pair with tablets",
+      "test_method": "Test connectivity with tablet device",
+      "failure_indication": "Remote control and monitoring unavailable",
+      "models": [
+        "CZone Touch 7"
+      ],
+      "related_procedures": [
+        "Network setup",
+        "Tablet pairing process"
       ]
     }
   ],
@@ -93,7 +158,7 @@
           {
             "query": "Was product installed according to manual instructions?",
             "expected_value": "Installation follows all manual specifications",
-            "test_method": "Installation audit against manual requirements",
+            "test_method": "Review installation against manual requirements",
             "failure_indication": "Non-compliant installation may void warranty",
             "models": [
               "CZONE TOUCH 7 80-911-0200-00"
@@ -106,7 +171,7 @@
           {
             "query": "Is product being used as intended?",
             "expected_value": "Usage matches product's intended purpose",
-            "test_method": "Review of application and usage patterns",
+            "test_method": "Compare actual usage to manual specifications",
             "failure_indication": "Improper use may void warranty and cause damage",
             "models": [
               "CZONE TOUCH 7 80-911-0200-00"
@@ -123,8 +188,73 @@
       "chunk_num": 2,
       "pages": "2-2",
       "result": {
-        "golden_rules": [],
-        "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': None}"
+        "golden_rules": [
+          {
+            "query": "Is display brightness within operational range?",
+            "expected_value": "500 nits maximum, dimmable to night viewing levels",
+            "test_method": "Use luminance meter at screen center",
+            "failure_indication": "Display too dim or bright for conditions",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display brightness adjustment",
+              "Night mode setup"
+            ]
+          },
+          {
+            "query": "Is operating voltage within specification?",
+            "expected_value": "8-32V DC",
+            "test_method": "Measure input voltage with multimeter",
+            "failure_indication": "Device may not power on or operate erratically",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Power supply verification",
+              "Installation checklist"
+            ]
+          },
+          {
+            "query": "Is screen resolution displaying correctly?",
+            "expected_value": "1024 x 600 pixels",
+            "test_method": "Check display settings and test pattern",
+            "failure_indication": "Blurry or incorrect image scaling",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Display configuration",
+              "Screen calibration"
+            ]
+          },
+          {
+            "query": "Is mounting depth sufficient?",
+            "expected_value": "35mm minimum including cables",
+            "test_method": "Measure available mounting depth",
+            "failure_indication": "Installation stress on cables or improper fit",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Installation guidelines",
+              "Mounting specifications"
+            ]
+          },
+          {
+            "query": "Are WiFi and ethernet connections functional?",
+            "expected_value": "Both connections active and able to pair with tablets",
+            "test_method": "Test connectivity with tablet device",
+            "failure_indication": "Remote control and monitoring unavailable",
+            "models": [
+              "CZone Touch 7"
+            ],
+            "related_procedures": [
+              "Network setup",
+              "Tablet pairing process"
+            ]
+          }
+        ]
       }
     }
   ]

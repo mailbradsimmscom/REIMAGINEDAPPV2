@@ -183,7 +183,7 @@ def store_to_supabase_storage(doc_id, procedures):
         
         # Supabase configuration
         url = os.getenv('SUPABASE_URL')
-        key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_SERVICE_KEY')
         
         if not url or not key:
             print("❌ Supabase credentials not found")

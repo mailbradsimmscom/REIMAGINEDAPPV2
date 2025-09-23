@@ -6,7 +6,7 @@
   "unique_specifications": 9,
   "category_breakdown": {
     "Installation": 4,
-    "Dimensions": 1,
+    "Physical": 1,
     "Performance": 3,
     "Electrical": 1
   },
@@ -87,8 +87,7 @@
         "warranty",
         "guarantee",
         "warranty period",
-        "warranty duration",
-        "warranty coverage"
+        "warranty duration"
       ],
       "concept_group": "warranty_information",
       "references": [
@@ -111,12 +110,12 @@
       "models": [
         "CZone Touch 7"
       ],
-      "category": "Dimensions",
+      "category": "Physical",
       "search_terms": [
-        "how big is the screen",
-        "display size",
-        "screen dimensions",
-        "monitor size"
+        "screen size",
+        "how big is the display",
+        "display dimensions",
+        "screen dimensions"
       ],
       "concept_group": "display_specifications",
       "references": [
@@ -142,7 +141,7 @@
       "search_terms": [
         "resolution",
         "screen quality",
-        "display clarity",
+        "display resolution",
         "pixel count"
       ],
       "concept_group": "display_specifications",
@@ -155,22 +154,23 @@
       "normalized_parameter": "screen_brightness",
       "parameter_aliases": [
         "luminance",
-        "screen intensity"
+        "screen brightness",
+        "nits"
       ],
       "value": "500",
       "range": "0-500",
-      "units": "nit",
-      "normalized_units": "nit",
+      "units": "nits",
+      "normalized_units": "nits",
       "converted_value": "500",
       "models": [
         "CZone Touch 7"
       ],
       "category": "Performance",
       "search_terms": [
-        "how bright",
+        "brightness",
         "screen brightness",
-        "display intensity",
-        "nits"
+        "display brightness",
+        "night visibility"
       ],
       "concept_group": "display_specifications",
       "references": [
@@ -194,10 +194,10 @@
       ],
       "category": "Installation",
       "search_terms": [
-        "how deep",
         "mounting depth",
-        "installation space",
-        "depth needed"
+        "installation depth",
+        "how deep",
+        "depth clearance"
       ],
       "concept_group": "installation_requirements",
       "references": [
@@ -208,7 +208,7 @@
       "parameter": "Operating Voltage",
       "normalized_parameter": "voltage_range",
       "parameter_aliases": [
-        "voltage input",
+        "voltage",
         "power requirement"
       ],
       "value": "8-32",
@@ -236,7 +236,7 @@
       "normalized_parameter": "color_depth",
       "parameter_aliases": [
         "color bits",
-        "color range"
+        "color accuracy"
       ],
       "value": "24",
       "range": null,
@@ -249,9 +249,9 @@
       "category": "Performance",
       "search_terms": [
         "color depth",
-        "color quality",
-        "bit depth",
-        "color accuracy"
+        "color accuracy",
+        "display colors",
+        "bit depth"
       ],
       "concept_group": "display_specifications",
       "references": [
@@ -341,8 +341,7 @@
               "warranty",
               "guarantee",
               "warranty period",
-              "warranty duration",
-              "warranty coverage"
+              "warranty duration"
             ],
             "concept_group": "warranty_information",
             "references": [
@@ -373,12 +372,12 @@
             "models": [
               "CZone Touch 7"
             ],
-            "category": "Dimensions",
+            "category": "Physical",
             "search_terms": [
-              "how big is the screen",
-              "display size",
-              "screen dimensions",
-              "monitor size"
+              "screen size",
+              "how big is the display",
+              "display dimensions",
+              "screen dimensions"
             ],
             "concept_group": "display_specifications",
             "references": [
@@ -404,7 +403,7 @@
             "search_terms": [
               "resolution",
               "screen quality",
-              "display clarity",
+              "display resolution",
               "pixel count"
             ],
             "concept_group": "display_specifications",
@@ -417,22 +416,23 @@
             "normalized_parameter": "screen_brightness",
             "parameter_aliases": [
               "luminance",
-              "screen intensity"
+              "screen brightness",
+              "nits"
             ],
             "value": "500",
             "range": "0-500",
-            "units": "nit",
-            "normalized_units": "nit",
+            "units": "nits",
+            "normalized_units": "nits",
             "converted_value": "500",
             "models": [
               "CZone Touch 7"
             ],
             "category": "Performance",
             "search_terms": [
-              "how bright",
+              "brightness",
               "screen brightness",
-              "display intensity",
-              "nits"
+              "display brightness",
+              "night visibility"
             ],
             "concept_group": "display_specifications",
             "references": [
@@ -456,10 +456,10 @@
             ],
             "category": "Installation",
             "search_terms": [
-              "how deep",
               "mounting depth",
-              "installation space",
-              "depth needed"
+              "installation depth",
+              "how deep",
+              "depth clearance"
             ],
             "concept_group": "installation_requirements",
             "references": [
@@ -470,7 +470,7 @@
             "parameter": "Operating Voltage",
             "normalized_parameter": "voltage_range",
             "parameter_aliases": [
-              "voltage input",
+              "voltage",
               "power requirement"
             ],
             "value": "8-32",
@@ -498,7 +498,7 @@
             "normalized_parameter": "color_depth",
             "parameter_aliases": [
               "color bits",
-              "color range"
+              "color accuracy"
             ],
             "value": "24",
             "range": null,
@@ -511,9 +511,9 @@
             "category": "Performance",
             "search_terms": [
               "color depth",
-              "color quality",
-              "bit depth",
-              "color accuracy"
+              "color accuracy",
+              "display colors",
+              "bit depth"
             ],
             "concept_group": "display_specifications",
             "references": [
