@@ -11,11 +11,14 @@ import metricsRouter from './metrics.route.js';
 import suggestionsRouter from './suggestions.route.js';
 import testingRouter from './testing.route.js';
 import systemsMinimalRoute from "./systems-minimal.route.js";
-import snapshotsRouter from './snapshots.route.js';
-import textExtractionRouter from './text-extraction.route.js';
+// UNUSED: No log hits, no frontend calls
+// import snapshotsRouter from './snapshots.route.js';
+// UNUSED: No log hits, no frontend calls
+// import textExtractionRouter from './text-extraction.route.js';
 import jobsRouter from './jobs.route.js';
 import documentRouter from '../document/index.js';
-import chunksRouter from './chunks.route.js';
+// UNUSED: No log hits, no frontend calls
+// import chunksRouter from './chunks.route.js';
 import playbooksRouter from './playbooks.route.js';
 import goldenTestsRouter from './golden-tests.route.js';
 import uploadRouter from './upload.route.js';
@@ -40,14 +43,17 @@ router.use('/manufacturers', manufacturersRouter);
 router.use('/models', modelsRouter);
 router.use('/pinecone', pineconeRouter);
 router.use('/metrics', metricsRouter);
-router.use('/snapshots', snapshotsRouter);
+// UNUSED: No log hits, no frontend calls
+// router.use('/snapshots', snapshotsRouter);
 router.use('/suggestions', suggestionsRouter);
 router.use('/testing', testingRouter);
 router.use("/systems/minimal", systemsMinimalRoute);
-router.use('/text-extraction', textExtractionRouter);
+// UNUSED: No log hits, no frontend calls
+// router.use('/text-extraction', textExtractionRouter);
 router.use('/jobs', jobsRouter);
 router.use('/docs', documentRouter);
-router.use('/chunks', chunksRouter);
+// UNUSED: No log hits, no frontend calls
+// router.use('/chunks', chunksRouter);
 router.use('/playbooks', playbooksRouter);
 router.use('/golden-tests', goldenTestsRouter);
 router.use('/upload', uploadRouter);
