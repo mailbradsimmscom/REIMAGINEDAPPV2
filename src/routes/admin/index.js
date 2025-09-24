@@ -13,8 +13,7 @@ import testingRouter from './testing.route.js';
 import systemsMinimalRoute from "./systems-minimal.route.js";
 // UNUSED: No log hits, no frontend calls
 // import snapshotsRouter from './snapshots.route.js';
-// UNUSED: No log hits, no frontend calls
-// import textExtractionRouter from './text-extraction.route.js';
+import textExtractionRouter from './text-extraction.route.js';
 import jobsRouter from './jobs.route.js';
 import documentRouter from '../document/index.js';
 // UNUSED: No log hits, no frontend calls
@@ -48,8 +47,7 @@ router.use('/metrics', metricsRouter);
 router.use('/suggestions', suggestionsRouter);
 router.use('/testing', testingRouter);
 router.use("/systems/minimal", systemsMinimalRoute);
-// UNUSED: No log hits, no frontend calls
-// router.use('/text-extraction', textExtractionRouter);
+router.use('/text-extraction', textExtractionRouter);
 router.use('/jobs', jobsRouter);
 router.use('/docs', documentRouter);
 // UNUSED: No log hits, no frontend calls
