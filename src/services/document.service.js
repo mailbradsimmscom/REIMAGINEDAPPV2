@@ -606,7 +606,7 @@ class DocumentService {
       });
 
       // Update job with chunk progress after Python processing
-      await documentRepository.updateJobProgress(jobId, {
+      await documentRepository.updateJobProgress(job.job_id, {
         chunks_total: result.chunks_processed || 0,
         chunks_processed: result.chunks_processed || 0,
         vectors_upserted: result.vectors_upserted || 0
