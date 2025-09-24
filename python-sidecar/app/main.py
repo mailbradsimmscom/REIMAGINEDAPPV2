@@ -591,9 +591,9 @@ async def run_dip_packet(request: DIPPacketRequest):
         
         logger.info(f"Running DIP packet processing for document {doc_id}")
         
-        # Get Supabase credentials
+        # Get Supabase credentials (use Python-specific key)
         supabase_url = os.getenv('SUPABASE_URL')
-        supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        supabase_key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
         
         if not supabase_url or not supabase_key:
             raise HTTPException(status_code=500, detail="Supabase configuration missing")

@@ -10,7 +10,7 @@ import { getEnv } from '../config/env.js';
 import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
 import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
 import { ingestDipOutputsToDb } from './dip.ingest.service.js';
-import { anthropicExtractionService } from './anthropic.extraction.service.js';
+import dipService from './dip.service.js';
 import { buildIntentSuggestions } from './suggestions/intent.suggestions.js';
 
 class DocumentService {
@@ -369,47 +369,33 @@ class DocumentService {
 
       const fileBuffer = await fileData.arrayBuffer();
 
-      // Step 29: Process document with Python sidecar (PDF → chunks → embeddings → Pinecone)
-      this.requestLogger.info('Starting document processing', { 
+      // Step 2: Run integrated DIP packet processing (PDF → chunks → Anthropic → JSON upload)  
+      this.requestLogger.info('Starting integrated DIP packet processing', { 
         jobId, 
         docId: job.doc_id,
-        fileName
-      });
-
-      const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
-
-      // Update processing stage after Python sidecar (chunking, embedding, pinecone_upsert)
-      await documentRepository.updateJobStatusV2(jobId, 'pinecone_upsert');
-
-      // Step 3: Run Anthropic extraction
-      this.requestLogger.info('Starting Anthropic extraction', { 
-        jobId, 
-        docId: job.doc_id,
+        fileName,
         storagePath: job.storage_path
       });
 
-      const extractionResult = await anthropicExtractionService.runAnthropicExtraction(
-        job.doc_id, 
-        job.storage_path, 
-        {
-          job_id: job.job_id,
-          manufacturer: document.manufacturer,
-          model: document.model
-        }
+      const dipResult = await dipService.runDIPPacket(
+        job.doc_id,
+        job.storage_path,
+        '/tmp'
       );
 
-      // Update processing stage after Anthropic extraction
+      // Update processing stage after integrated DIP processing
       await documentRepository.updateJobStatusV2(jobId, 'extraction');
 
-      // Step 4: Ingest DIP JSON outputs into database
+      // Step 3: Ingest DIP JSON outputs into database using paths from integrated DIP processing
       this.requestLogger.info('Starting DIP JSON ingestion to database', { 
         jobId, 
-        docId: job.doc_id
+        docId: job.doc_id,
+        dipOutputFiles: dipResult.output_files
       });
 
       const ingestionResult = await ingestDipOutputsToDb({ 
         docId: job.doc_id,
-        paths: null,
+        paths: dipResult.output_files,
         systemMetadata: {
           manufacturer_norm: document.manufacturer_norm,
           model_norm: document.model_norm,
@@ -420,21 +406,21 @@ class DocumentService {
       // Update processing stage after DIP ingestion
       await documentRepository.updateJobStatusV2(jobId, 'ingestion');
 
-      // Update job with results including chunk progress
+      // Update job with results from integrated DIP processing
       await documentRepository.updateJobProgress(jobId, {
-        pages_total: processingResult.pages_total || 0,
-        pages_ocr: processingResult.pages_ocr || 0,
-        tables: processingResult.tables_found || 0,
-        vectors_upserted: processingResult.vectors_upserted || 0,
-        chunks_processed: processingResult.chunks_processed || 0,
-        chunks_total: processingResult.chunks_processed || 0, // Total = processed for completed jobs
-        processing_time: processingResult.processing_time || 0,
+        pages_total: 0, // Will be updated by integrated DIP
+        pages_ocr: 0,
+        tables: 0,
+        vectors_upserted: 0,
+        chunks_processed: 0,
+        chunks_total: 0,
+        processing_time: dipResult.processing_time || 0,
         dip_success: true,
         extraction_results: {
-          spec_suggestions: extractionResult.storageResults.spec_suggestions?.success || false,
-          golden_rules: extractionResult.storageResults.golden_rules?.success || false,
-          intent_router: extractionResult.storageResults.intent_router?.success || false,
-          playbook_hints: extractionResult.storageResults.playbook_hints?.success || false
+          spec_suggestions: !!dipResult.output_files?.spec_suggestions,
+          golden_rules: !!dipResult.output_files?.golden_tests,
+          intent_router: !!dipResult.output_files?.intent_router,
+          playbook_hints: !!dipResult.output_files?.playbook_hints
         },
         dip_results: {
           spec_suggestions: ingestionResult.inserted.spec_suggestions,
@@ -453,6 +439,7 @@ class DocumentService {
       this.requestLogger.info('Job processing completed successfully', { 
         jobId,
         docId: job.doc_id,
+        dipResult,
         ingestionResult
       });
 
@@ -460,8 +447,7 @@ class DocumentService {
         success: true,
         jobId,
         docId: job.doc_id,
-        processingResult,
-        extractionResult,
+        dipResult,
         ingestionResult
       };
 
@@ -550,77 +536,6 @@ class DocumentService {
     }
   }
 
-  // Call Python sidecar for document processing
-  async callPythonSidecar(fileBuffer, job, document, fileName) {
-    try {
-      // Check sidecar availability before calling
-      this.checkSidecarAvailability();
-
-      const formData = new FormData();
-      
-      // Add file
-      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-      formData.append('file', blob, fileName);
-      
-      // Add metadata
-      const metadata = {
-        doc_id: job.doc_id,
-        manufacturer: document.manufacturer,
-        model: document.model,
-        revision_date: document.revision_date,
-        language: document.language,
-        job_id: job.job_id,
-        file_name: fileName
-      };
-      formData.append('doc_metadata', JSON.stringify(metadata));
-      
-      // Add processing options
-      formData.append('extract_tables', 'true');
-      formData.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
-
-      // Call Python sidecar
-      const { getEnv } = await import('../config/env.js');
-      const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
-      const response = await fetch(`${sidecarUrl}/v1/process-document`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Python sidecar error: ${response.status} ${errorText}`);
-      }
-
-      const result = await response.json();
-      
-      if (!result.success) {
-        throw new Error(`Processing failed: ${result.error || 'Unknown error'}`);
-      }
-
-      this.requestLogger.info('Python sidecar processing completed', {
-        jobId: job.job_id,
-        filename: result.filename,
-        chunksProcessed: result.chunks_processed,
-        vectorsUpserted: result.vectors_upserted,
-        namespace: result.namespace
-      });
-
-      // Update job with chunk progress after Python processing
-      await documentRepository.updateJobProgress(job.job_id, {
-        chunks_total: result.chunks_processed || 0,
-        chunks_processed: result.chunks_processed || 0,
-        vectors_upserted: result.vectors_upserted || 0
-      });
-
-      return result;
-    } catch (error) {
-      this.requestLogger.error('Failed to call Python sidecar', {
-        error: error.message,
-        jobId: job.job_id
-      });
-      throw error;
-    }
-  }
 }
 
 export default new DocumentService();
