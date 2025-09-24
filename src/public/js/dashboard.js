@@ -66,18 +66,33 @@ class Dashboard {
 
     async fetchDatabaseStatus() {
         try {
-            const response = await fetch(`${API_BASE}/database/status`, {
+            // Try connectivity endpoint for database status
+            const response = await fetch(`${API_BASE}/health/connectivity`, {
                 headers: this.getHeaders()
             });
             const data = await response.json();
 
             if (data.success) {
-                const status = data.data;
-                this.updateMetric('supabase-status', status?.connected ? 'Connected' : 'Disconnected',
-                    status?.connected ? 'success' : 'error');
-                this.updateMetric('documents-count', status?.documents || 0);
-                this.updateMetric('jobs-count', status?.jobs || 0);
-                this.updateMetric('total-systems', status?.systems || 0);
+                const dbStatus = data.data?.database?.status === 'ok';
+                this.updateMetric('supabase-status', dbStatus ? 'Connected' : 'Disconnected',
+                    dbStatus ? 'success' : 'error');
+
+                // Try jobs status for counts
+                try {
+                    const jobsResponse = await fetch(`${API_BASE}/jobs/status`, {
+                        headers: this.getHeaders()
+                    });
+                    const jobsData = await jobsResponse.json();
+                    if (jobsData.success) {
+                        this.updateMetric('jobs-count', jobsData.data?.total || 0);
+                    }
+                } catch {
+                    this.updateMetric('jobs-count', '-');
+                }
+
+                // Set placeholder values for now
+                this.updateMetric('documents-count', '-');
+                this.updateMetric('total-systems', '-');
             }
         } catch (error) {
             this.updateMetric('supabase-status', 'Error', 'error');
@@ -89,19 +104,18 @@ class Dashboard {
 
     async fetchVectorStatus() {
         try {
-            const response = await fetch(`${API_BASE}/vector/status`, {
+            // Try pinecone stats endpoint
+            const response = await fetch(`${API_BASE}/pinecone/stats`, {
                 headers: this.getHeaders()
             });
             const data = await response.json();
 
             if (data.success) {
-                const status = data.data;
-                this.updateMetric('pinecone-status', status?.pinecone?.connected ? 'Connected' : 'Disconnected',
-                    status?.pinecone?.connected ? 'success' : 'error');
-                this.updateMetric('sidecar-status', status?.sidecar?.connected ? 'Connected' : 'Disconnected',
-                    status?.sidecar?.connected ? 'success' : 'error');
-                this.updateMetric('pinecone-vectors', this.formatNumber(status?.pinecone?.vectorCount || 0));
-                this.updateMetric('pinecone-fullness', `${status?.pinecone?.fullness || 0}%`);
+                this.updateMetric('pinecone-status', 'Connected', 'success');
+                this.updateMetric('sidecar-status', data.data?.sidecar ? 'Connected' : 'Unknown',
+                    data.data?.sidecar ? 'success' : '');
+                this.updateMetric('pinecone-vectors', this.formatNumber(data.data?.totalVectorCount || 0));
+                this.updateMetric('pinecone-fullness', `${data.data?.indexFullness || 0}%`);
             }
         } catch (error) {
             this.updateMetric('pinecone-status', 'Error', 'error');
@@ -113,16 +127,17 @@ class Dashboard {
 
     async fetchPerformance() {
         try {
-            const response = await fetch(`${API_BASE}/performance`, {
+            // Try metrics endpoint
+            const response = await fetch(`${API_BASE}/metrics`, {
                 headers: this.getHeaders()
             });
             const data = await response.json();
 
-            if (data.success) {
-                const perf = data.data;
-                this.updateMetric('active-sessions', perf?.activeSessions || 0);
-                this.updateMetric('avg-response', `${perf?.avgResponseTime || 0}ms`);
-                const errorRate = perf?.errorRate || 0;
+            if (data.success && data.data) {
+                // Use available metrics data
+                this.updateMetric('active-sessions', data.data?.activeSessions || 0);
+                this.updateMetric('avg-response', data.data?.avgResponseTime ? `${data.data.avgResponseTime}ms` : '-');
+                const errorRate = data.data?.errorRate || 0;
                 this.updateMetric('error-rate', `${errorRate}%`,
                     errorRate > 5 ? 'error' : errorRate > 1 ? 'warning' : 'success');
             }
@@ -135,7 +150,7 @@ class Dashboard {
 
     async refreshLogs() {
         try {
-            const response = await fetch(`${API_BASE}/logs/recent`, {
+            const response = await fetch(`${API_BASE}/logs`, {
                 headers: this.getHeaders()
             });
             const data = await response.json();
