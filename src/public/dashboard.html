@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.active { background-color: var(--success-color); }
+        .status-dot.warning { background-color: var(--warning-color); }
+        .status-dot.error { background-color: var(--error-color); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .metric-card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .metric-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--background-color);
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .metric-value.success { color: var(--success-color); }
+        .metric-value.warning { color: var(--warning-color); }
+        .metric-value.error { color: var(--error-color); }
+
+        .logs-section {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            max-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logs-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius-small);
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn.secondary {
+            background: var(--text-secondary);
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: var(--border-radius-small);
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #logs-container {
+            flex: 1;
+            overflow-y: auto;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .log-entry.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+        }
+
+        .log-entry.warning {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .log-entry.info {
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>System Dashboard</h1>
+            <div class="header-info">
+                <div class="status-indicator">
+                    <span class="status-dot active" id="main-status"></span>
+                    <span id="last-update">Initializing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>System Health</h3>
+                <div class="metric-item">
+                    <span class="metric-label">Uptime</span>
+                    <span class="metric-value" id="uptime"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Memory Usage</span>
+                    <span class="metric-value" id="memory"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Environment</span>
+                    <span class="metric-value" id="environment"><span class="loading"></span></span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3>Database Status</h3>
+                <div class="metric-item">
+                    <span class="metric-label">Supabase</span>
+                    <span class="metric-value" id="supabase-status"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Documents</span>
+                    <span class="metric-value" id="documents-count"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Jobs</span>
+                    <span class="metric-value" id="jobs-count"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Total Systems</span>
+                    <span class="metric-value" id="total-systems"><span class="loading"></span></span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3>Vector Database</h3>
+                <div class="metric-item">
+                    <span class="metric-label">Pinecone Status</span>
+                    <span class="metric-value" id="pinecone-status"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Sidecar Status</span>
+                    <span class="metric-value" id="sidecar-status"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Vector Count</span>
+                    <span class="metric-value" id="pinecone-vectors"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Index Fullness</span>
+                    <span class="metric-value" id="pinecone-fullness"><span class="loading"></span></span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3>Performance</h3>
+                <div class="metric-item">
+                    <span class="metric-label">Active Sessions</span>
+                    <span class="metric-value" id="active-sessions"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Avg Response Time</span>
+                    <span class="metric-value" id="avg-response"><span class="loading"></span></span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Error Rate</span>
+                    <span class="metric-value" id="error-rate"><span class="loading"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="logs-section">
+            <div class="logs-header">
+                <h3>System Logs</h3>
+                <div class="logs-controls">
+                    <select id="log-level-filter">
+                        <option value="all">All Levels</option>
+                        <option value="error">Errors Only</option>
+                        <option value="warning">Warnings Only</option>
+                        <option value="info">Info Only</option>
+                    </select>
+                    <button class="btn" onclick="window.dashboard.refreshLogs()">Refresh</button>
+                    <button class="btn secondary" onclick="window.dashboard.clearLogs()">Clear</button>
+                </div>
+            </div>
+            <div id="logs-container">
+                <div class="empty-state">
+                    <p>No logs available yet.</p>
+                    <p>Logs will appear here when the system generates them.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/public/js/dashboard.js"></script>
+</body>
+</html>
