@@ -240,60 +240,65 @@ class AnthropicExtractionService {
    * Store extraction results as JSON files in Supabase Storage
    * Note: The Python scripts already store the files directly to Supabase Storage
    * This method just verifies the files were created successfully
+   *
+   * FIXED: Returns natural object format with storage_path and metadata instead of
+   * artificial string paths. The ingestion service handles path extraction.
+   * This maintains proper separation of concerns and architectural cleanliness.
+   *
    * @param {string} docId - Document ID
    * @param {Object} extractionResults - Results from extractions
-   * @returns {Promise<Object>} Storage results
+   * @returns {Promise<Object>} Storage results with object format
    */
   async storeExtractionResults(docId, extractionResults) {
-    const storageResults = {};
-
     try {
-      // Verify that the Python scripts created the files successfully
-      // The files should already be in Supabase Storage
-      
+      // Return the natural object format with storage paths and metadata
+      // The Python scripts already store the files directly to Supabase Storage
+
+      const storageResults = {};
+
       if (extractionResults.spec_suggestions) {
         storageResults.spec_suggestions = {
           success: true,
-          fileName: `${docId}_spec_suggestions_an.json`,
-          message: 'File created by Python script'
+          storage_path: `manuals/${docId}/DIP/${docId}_spec_suggestions_an.json`,
+          metadata: extractionResults.spec_suggestions
         };
       }
 
       if (extractionResults.golden_rules) {
         storageResults.golden_rules = {
           success: true,
-          fileName: `${docId}_golden_rules_an.json`,
-          message: 'File created by Python script'
+          storage_path: `manuals/${docId}/DIP/${docId}_golden_rules_an.json`,
+          metadata: extractionResults.golden_rules
         };
       }
 
       if (extractionResults.intent_router) {
         storageResults.intent_router = {
           success: true,
-          fileName: `${docId}_intent_router_an.json`,
-          message: 'File created by Python script'
+          storage_path: `manuals/${docId}/DIP/${docId}_intent_router_an.json`,
+          metadata: extractionResults.intent_router
         };
       }
 
       if (extractionResults.playbook_hints) {
         storageResults.playbook_hints = {
           success: true,
-          fileName: `${docId}_playbook_hints_an.json`,
-          message: 'File created by Python script'
+          storage_path: `manuals/${docId}/DIP/${docId}_playbook_hints_an.json`,
+          metadata: extractionResults.playbook_hints
         };
       }
 
-      this.requestLogger.info('Extraction results verified', { 
-        docId, 
-        storageResults 
+      this.requestLogger.info('Storage results prepared with metadata', {
+        docId,
+        storageResults
       });
 
       return storageResults;
 
     } catch (error) {
-      this.requestLogger.error('Failed to verify extraction results', { 
-        docId, 
-        error: error.message 
+      this.requestLogger.error('Failed to prepare storage results', {
+        docId,
+        error: error.message
       });
       throw error;
     }

@@ -8,9 +8,15 @@ import { logger } from '../utils/logger.js';
 
 /**
  * Ingest DIP JSON outputs into database tables
+ *
+ * FIXED: Enhanced to handle both object format (from anthropic service) and
+ * simple string paths. Extracts storage_path from objects when present,
+ * maintaining compatibility while supporting proper service architecture.
+ * Also handles golden_rules/golden_tests field name discrepancy.
+ *
  * @param {Object} params - Parameters
  * @param {string} params.docId - Document ID
- * @param {Object} [params.paths] - Optional storage paths from Step 29
+ * @param {Object} [params.paths] - Optional storage paths (objects or strings)
  * @returns {Promise<Object>} Summary of insertions
  */
 export async function ingestDipOutputsToDb({ docId, paths = null, systemMetadata = null }) {
@@ -21,13 +27,50 @@ export async function ingestDipOutputsToDb({ docId, paths = null, systemMetadata
 
   logger.info('Starting DIP JSON ingestion to database', { docId });
 
-  // Build storage paths if not provided (relative to documents bucket)
-  const storagePaths = paths || {
-    spec_suggestions: `manuals/${docId}/DIP/${docId}_spec_suggestions_an.json`,
-    playbook_hints: `manuals/${docId}/DIP/${docId}_playbook_hints_an.json`,
-    intent_router: `manuals/${docId}/DIP/${docId}_intent_router_an.json`,
-    golden_tests: `manuals/${docId}/DIP/${docId}_golden_rules_an.json`
-  };
+  // Extract storage paths from object format or use simple string paths or build defaults
+  let storagePaths;
+
+  if (paths) {
+    // Check if paths contain objects with storage_path property (from anthropic service)
+    storagePaths = {};
+
+    if (paths.spec_suggestions) {
+      storagePaths.spec_suggestions = typeof paths.spec_suggestions === 'object' && paths.spec_suggestions.storage_path
+        ? paths.spec_suggestions.storage_path
+        : paths.spec_suggestions;
+    }
+
+    if (paths.playbook_hints) {
+      storagePaths.playbook_hints = typeof paths.playbook_hints === 'object' && paths.playbook_hints.storage_path
+        ? paths.playbook_hints.storage_path
+        : paths.playbook_hints;
+    }
+
+    if (paths.intent_router) {
+      storagePaths.intent_router = typeof paths.intent_router === 'object' && paths.intent_router.storage_path
+        ? paths.intent_router.storage_path
+        : paths.intent_router;
+    }
+
+    // Handle golden_rules/golden_tests field name discrepancy
+    if (paths.golden_tests) {
+      storagePaths.golden_tests = typeof paths.golden_tests === 'object' && paths.golden_tests.storage_path
+        ? paths.golden_tests.storage_path
+        : paths.golden_tests;
+    } else if (paths.golden_rules) {
+      storagePaths.golden_tests = typeof paths.golden_rules === 'object' && paths.golden_rules.storage_path
+        ? paths.golden_rules.storage_path
+        : paths.golden_rules;
+    }
+  } else {
+    // Build default storage paths if not provided (relative to documents bucket)
+    storagePaths = {
+      spec_suggestions: `manuals/${docId}/DIP/${docId}_spec_suggestions_an.json`,
+      playbook_hints: `manuals/${docId}/DIP/${docId}_playbook_hints_an.json`,
+      intent_router: `manuals/${docId}/DIP/${docId}_intent_router_an.json`,
+      golden_tests: `manuals/${docId}/DIP/${docId}_golden_rules_an.json`
+    };
+  }
 
   const results = {
     doc_id: docId,
