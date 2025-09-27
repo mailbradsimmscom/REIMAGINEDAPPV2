@@ -58,7 +58,23 @@ workflow_result = await workflow.process_chat(
 3. **Missing LangGraph Connection:** FIXED - chat-proxy updated to use /v1/chat/process endpoint
 
 ## Latest Session Updates (2025-09-27)
-### Problem Discovered:
+### Problem 1: Systems Search Failing with Natural Language Queries
+- **Issue:** `search_systems('tell me about my fortress anchor')` returned 0 results
+- **Root Cause:** RPC function expects keywords, not conversational queries
+- **Evidence:** `"fortress"` → 1 result, `"tell me about my fortress anchor"` → 0 results
+- **Solution:** Extract keywords before calling search_systems (chat-proxy.service.js:6-14)
+  - Remove stop words: tell, me, about, my, the, etc.
+  - "tell me about my fortress anchor" → "fortress anchor"
+
+### Problem 2: Follow-up Queries Losing Equipment Context
+- **Issue:** "WHAT IS IT MADE OF?" returns 0 results after initial "tell me about my fortress anchor"
+- **Root Cause:** Follow-up query has no equipment keywords to search for
+- **Solution:** Retrieve equipment context from recent messages (chat-proxy.service.js:17-34)
+  - Check last 5 messages in thread for systems_context
+  - Reuse equipment from previous messages if current search returns 0 results
+  - Store systems_context in result for message metadata persistence
+
+### Previous Problem (RESOLVED):
 - **Issue:** `/chat/dip` was calling basic DIP implementation instead of full LangGraph workflow
 - **Root Cause:** chat-proxy.service.js was calling wrong Python-sidecar endpoint
 - **Evidence:** Response showed `"chat_module":"basic_implementation"` instead of LangGraph metadata
