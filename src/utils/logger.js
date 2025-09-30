@@ -31,7 +31,8 @@ class Logger {
       level: level.toUpperCase(),
       message,
       correlationId: meta.correlationId || randomUUID(),
-      service: 'reimagined-app',
+      service: 'node-web',  // Service identifier
+      module: meta.module || 'unknown',  // Module/component identifier
       version: env.APP_VERSION || '1.0.0',
       environment: env.NODE_ENV || 'development',
       ...meta
@@ -42,11 +43,11 @@ class Logger {
 
     try {
       await fs.appendFile(logFile, logLine);
-      
+
       // Also write to level-specific file
       const levelFile = join(this.logsDir, `${level.toLowerCase()}.log`);
       await fs.appendFile(levelFile, logLine);
-      
+
       // Check if we need to rotate logs
       await this.checkLogRotation(logFile);
     } catch (error) {
@@ -160,13 +161,26 @@ class Logger {
   }
 
   // Request-scoped logging
-  createRequestLogger(correlationId = randomUUID()) {
+  createRequestLogger(correlationId = randomUUID(), module = 'unknown') {
     return {
-      error: (message, meta = {}) => this.error(message, { correlationId, ...meta }),
-      warn: (message, meta = {}) => this.warn(message, { correlationId, ...meta }),
-      info: (message, meta = {}) => this.info(message, { correlationId, ...meta }),
-      debug: (message, meta = {}) => this.debug(message, { correlationId, ...meta }),
-      performance: (operation, duration, meta = {}) => this.performance(operation, duration, { correlationId, ...meta })
+      requestId: correlationId,  // Expose for passing to other services
+      error: (message, meta = {}) => this.error(message, { correlationId, module, ...meta }),
+      warn: (message, meta = {}) => this.warn(message, { correlationId, module, ...meta }),
+      info: (message, meta = {}) => this.info(message, { correlationId, module, ...meta }),
+      debug: (message, meta = {}) => this.debug(message, { correlationId, module, ...meta }),
+      performance: (operation, duration, meta = {}) => this.performance(operation, duration, { correlationId, module, ...meta })
+    };
+  }
+
+  // Module-scoped logging (for services, repositories, etc.)
+  createModuleLogger(module) {
+    return {
+      error: (message, meta = {}) => this.error(message, { module, ...meta }),
+      warn: (message, meta = {}) => this.warn(message, { module, ...meta }),
+      info: (message, meta = {}) => this.info(message, { module, ...meta }),
+      debug: (message, meta = {}) => this.debug(message, { module, ...meta }),
+      performance: (operation, duration, meta = {}) => this.performance(operation, duration, { module, ...meta }),
+      createRequestLogger: (correlationId) => this.createRequestLogger(correlationId, module)
     };
   }
 }

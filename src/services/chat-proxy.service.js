@@ -244,7 +244,8 @@ export async function processChatMessage({ query, threadId }) {
     const sidecarResponse = await fetch(`${env.PYTHON_SIDECAR_URL}/v1/chat/process`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Correlation-ID': requestLogger.requestId  // Pass correlation ID to Python
       },
       body: JSON.stringify({
         query,

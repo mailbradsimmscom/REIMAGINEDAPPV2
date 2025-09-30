@@ -33,8 +33,16 @@ from .models import (
 from .pinecone_client import pinecone_client
 from .dip_processor import DIPProcessor
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging with file rotation and structured output
+from .logging_config import setup_logging, get_log_level_from_env, is_development
+
+# Setup logging infrastructure
+setup_logging(
+    service_name="python-sidecar",
+    level=get_log_level_from_env(),
+    enable_console=True,  # Always enable console for debugging
+    enable_files=True  # Enable file logging
+)
 logger = logging.getLogger(__name__)
 
 # Create FastAPI app
