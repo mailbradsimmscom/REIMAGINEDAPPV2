@@ -201,7 +201,7 @@ class ChatWorkflow:
                     state["primary_equipment"] = sorted_equipment[0] if sorted_equipment else None
                     state["secondary_equipment"] = sorted_equipment[1:] if len(sorted_equipment) > 1 else []
 
-            logger.info(f"Query classified: {classification.get('intent', 'unknown')}")
+            logger.debug(f"Query classified: {classification.get('intent', 'unknown')}")
 
         except Exception as e:
             logger.error(f"Query classification failed: {e}")
@@ -240,7 +240,7 @@ class ChatWorkflow:
                     keywords = state["classification"].get("search_keywords", [])
                     if keywords:
                         search_query = " ".join(keywords)
-                        logger.info(f"Using extracted keywords for DIP search: {search_query}")
+                        logger.debug(f"Using extracted keywords for DIP search: {search_query}")
 
                 # Query DIP tables
                 if hasattr(self.dip_retriever, 'query_production_dip_tables'):
@@ -270,7 +270,7 @@ class ChatWorkflow:
             )
             state["pinecone_results"] = pinecone_results
 
-            logger.info(f"Retrieved data from {len(all_dip_results)} DIP table(s)")
+            logger.debug(f"Retrieved data from {len(all_dip_results)} DIP table(s)")
 
         except Exception as e:
             logger.error(f"Data retrieval failed: {e}")
@@ -295,7 +295,7 @@ class ChatWorkflow:
 
             state["final_response"] = response
 
-            logger.info("Response synthesized successfully")
+            logger.debug("Response synthesized successfully")
 
         except Exception as e:
             logger.error(f"Response synthesis failed: {e}")
@@ -320,7 +320,7 @@ class ChatWorkflow:
 
             state["response_score"] = score
 
-            logger.info(f"Response scored: {score.get('confidence', 'unknown')} confidence")
+            logger.debug(f"Response scored: {score.get('confidence', 'unknown')} confidence")
 
         except Exception as e:
             logger.error(f"Response scoring failed: {e}")
@@ -445,7 +445,7 @@ class ChatWorkflow:
                 equipment_emphasis = " ".join([name for name in equipment_names for _ in range(3)])
                 enhanced_query = f"{equipment_emphasis} {query} {equipment_emphasis}"
 
-            logger.info(f"Querying Pinecone with enhanced query: {enhanced_query}")
+            logger.debug(f"Querying Pinecone with enhanced query: {enhanced_query}")
 
             # Search Pinecone for relevant documents
             top_k = int(os.getenv('PINECONE_TOP_K', '10'))
@@ -458,7 +458,7 @@ class ChatWorkflow:
 
             if search_result.get("success"):
                 matches = search_result.get("matches", [])
-                logger.info(f"Pinecone returned {len(matches)} document matches")
+                logger.debug(f"Pinecone returned {len(matches)} document matches")
 
                 return {
                     "success": True,

@@ -85,7 +85,7 @@ router.get('/dashboard', adminOnly, async (req, res) => {
       golden_tests: processTableData(goldenTests.data, 'golden_tests')
     };
 
-    logger.info('Fetched staging dashboard data', {
+    logger.debug('Fetched staging dashboard data', {
       specifications: dashboardData.specifications.total,
       playbook_hints: dashboardData.playbook_hints.total,
       intent_router: dashboardData.intent_router.total,
@@ -158,7 +158,7 @@ router.get('/:table', adminOnly, async (req, res) => {
       });
     }
 
-    logger.info(`Fetched ${table} data`, { 
+    logger.debug(`Fetched ${table} data`, {
       count: data?.length || 0,
       total: count,
       page,
@@ -166,9 +166,9 @@ router.get('/:table', adminOnly, async (req, res) => {
     });
 
     // Debug: Log actual data structure
-    logger.info('API response data sample', { 
-      sampleItem: data?.[0], 
-      modelNormValues: data?.map(item => item.model_norm) 
+    logger.debug('API response data sample', {
+      sampleItem: data?.[0],
+      modelNormValues: data?.map(item => item.model_norm)
     });
 
     res.json({

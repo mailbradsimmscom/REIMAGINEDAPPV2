@@ -117,7 +117,7 @@ async function processSpecSuggestions(supabase, docId, storagePath, results, sys
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
     if (!jsonData || !jsonData.specifications || !Array.isArray(jsonData.specifications) || jsonData.specifications.length === 0) {
-      logger.info('No spec_suggestions data to process', { docId });
+      logger.debug('No spec_suggestions data to process', { docId });
       return;
     }
 
@@ -186,7 +186,7 @@ async function processSpecSuggestions(supabase, docId, storagePath, results, sys
     }
 
     results.inserted.spec_suggestions = insertData.length;
-    logger.info('Spec suggestions processed', { docId, count: insertData.length });
+    logger.debug('Spec suggestions processed', { docId, count: insertData.length });
 
   } catch (error) {
     logger.error('Failed to process spec_suggestions', { docId, error: error.message });
@@ -202,7 +202,7 @@ async function processPlaybookHints(supabase, docId, storagePath, results, syste
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
     if (!jsonData || !jsonData.playbook_hints || !Array.isArray(jsonData.playbook_hints) || jsonData.playbook_hints.length === 0) {
-      logger.info('No playbook_hints data to process', { docId });
+      logger.debug('No playbook_hints data to process', { docId });
       return;
     }
 
@@ -255,7 +255,7 @@ async function processPlaybookHints(supabase, docId, storagePath, results, syste
     }
 
     results.inserted.playbook_hints = insertData.length;
-    logger.info('Playbook hints processed', { docId, count: insertData.length });
+    logger.debug('Playbook hints processed', { docId, count: insertData.length });
 
   } catch (error) {
     logger.error('Failed to process playbook_hints', { docId, error: error.message });
@@ -271,7 +271,7 @@ async function processIntentRouter(supabase, docId, storagePath, results, system
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
     if (!jsonData || !jsonData.intent_routes || !Array.isArray(jsonData.intent_routes) || jsonData.intent_routes.length === 0) {
-      logger.info('No intent_routes data to process', { docId });
+      logger.debug('No intent_routes data to process', { docId });
       return;
     }
 
@@ -321,7 +321,7 @@ async function processIntentRouter(supabase, docId, storagePath, results, system
     }
 
     results.inserted.intent_router = insertData.length;
-    logger.info('Intent router processed', { docId, count: insertData.length });
+    logger.debug('Intent router processed', { docId, count: insertData.length });
 
   } catch (error) {
     logger.error('Failed to process intent_router', { docId, error: error.message });
@@ -337,7 +337,7 @@ async function processGoldenTests(supabase, docId, storagePath, results, systemM
     // Fetch JSON from Supabase Storage
     const jsonData = await fetchJsonFromStorage(supabase, storagePath);
     if (!jsonData || !jsonData.golden_rules || !Array.isArray(jsonData.golden_rules) || jsonData.golden_rules.length === 0) {
-      logger.info('No golden_rules data to process', { docId });
+      logger.debug('No golden_rules data to process', { docId });
       return;
     }
 
@@ -386,7 +386,7 @@ async function processGoldenTests(supabase, docId, storagePath, results, systemM
     }
 
     results.inserted.golden_tests = insertData.length;
-    logger.info('Golden tests processed', { docId, count: insertData.length });
+    logger.debug('Golden tests processed', { docId, count: insertData.length });
 
   } catch (error) {
     logger.error('Failed to process golden_tests', { docId, error: error.message });
@@ -412,7 +412,7 @@ async function fetchJsonFromStorage(supabase, storagePath, maxRetries = 3, retry
       if (error) {
         if (error.message.includes('404') || error.message.includes('not found')) {
           if (attempt < maxRetries) {
-            logger.info(`JSON file not found, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`, { storagePath });
+            logger.debug(`JSON file not found, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`, { storagePath });
             await new Promise(resolve => setTimeout(resolve, retryDelay));
             continue;
           }
@@ -424,7 +424,7 @@ async function fetchJsonFromStorage(supabase, storagePath, maxRetries = 3, retry
 
       if (!data) {
         if (attempt < maxRetries) {
-          logger.info(`No data returned, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`, { storagePath });
+          logger.debug(`No data returned, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`, { storagePath });
           await new Promise(resolve => setTimeout(resolve, retryDelay));
           continue;
         }
@@ -436,13 +436,13 @@ async function fetchJsonFromStorage(supabase, storagePath, maxRetries = 3, retry
       const jsonData = JSON.parse(text);
 
       // Anthropic JSON files are objects with arrays inside, not arrays directly
-      logger.info('JSON file fetched successfully', { storagePath, attempt });
+      logger.debug('JSON file fetched successfully', { storagePath, attempt });
       return jsonData;
 
     } catch (error) {
       if (error.message.includes('404') || error.message.includes('not found')) {
         if (attempt < maxRetries) {
-          logger.info(`JSON file not found, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`, { storagePath });
+          logger.debug(`JSON file not found, retrying in ${retryDelay}ms (attempt ${attempt}/${maxRetries})`, { storagePath });
           await new Promise(resolve => setTimeout(resolve, retryDelay));
           continue;
         }

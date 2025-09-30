@@ -140,11 +140,11 @@ export async function normalizeUnitToken(token, options = {}) {
         fuzzy: false 
       });
       
-      requestLogger.info('Unit exact match found', { 
-        token, 
-        canonical, 
+      requestLogger.debug('Unit exact match found', {
+        token,
+        canonical,
         category,
-        fuzzy: false 
+        fuzzy: false
       });
       
       metrics.endTimer('units_normalization');
@@ -169,12 +169,12 @@ export async function normalizeUnitToken(token, options = {}) {
           fuzzy: false 
         });
         
-        requestLogger.info('Unit disambiguated with context', { 
-          token, 
-          canonical: disambiguated, 
+        requestLogger.debug('Unit disambiguated with context', {
+          token,
+          canonical: disambiguated,
           category,
           hint: hint.substring(0, 50),
-          fuzzy: false 
+          fuzzy: false
         });
         
         metrics.endTimer('units_normalization');
@@ -210,13 +210,13 @@ export async function normalizeUnitToken(token, options = {}) {
           type: 'typo_correction'
         });
         
-        requestLogger.info('Unit fuzzy match found', { 
-          token, 
-          canonical, 
+        requestLogger.debug('Unit fuzzy match found', {
+          token,
+          canonical,
           category,
           confidence: fuzzyMatch.confidence,
           matched: fuzzyMatch.original,
-          fuzzy: true 
+          fuzzy: true
         });
         
         metrics.endTimer('units_normalization');
@@ -240,9 +240,9 @@ export async function normalizeUnitToken(token, options = {}) {
       input_length: normalizedToken.length
     });
     
-    requestLogger.info('Unit normalization failed', { 
-      token, 
-      fuzzy, 
+    requestLogger.debug('Unit normalization failed', {
+      token,
+      fuzzy,
       hint: hint ? 'provided' : 'none',
       inputLength: normalizedToken.length
     });

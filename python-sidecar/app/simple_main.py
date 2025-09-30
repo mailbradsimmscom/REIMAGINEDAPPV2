@@ -57,7 +57,7 @@ async def parse_pdf(
 ):
     """Parse PDF and extract text, tables, and metadata"""
     try:
-        logger.info(f"Parsing PDF: {file.filename}")
+        logger.debug(f"Parsing PDF: {file.filename}")
         
         # Read file content
         content = await file.read()
@@ -68,8 +68,8 @@ async def parse_pdf(
             extract_tables=extract_tables,
             ocr_enabled=ocr_enabled
         )
-        
-        logger.info(f"PDF parsed successfully: {file.filename}")
+
+        logger.debug(f"PDF parsed successfully: {file.filename}")
         return result
         
     except Exception as e:
@@ -85,7 +85,7 @@ async def process_document_for_pinecone(
 ):
     """Parse PDF and simulate Pinecone storage"""
     try:
-        logger.info(f"Processing document for Pinecone: {file.filename}")
+        logger.debug(f"Processing document for Pinecone: {file.filename}")
         
         # Parse metadata
         metadata = json.loads(doc_metadata)
@@ -112,9 +112,9 @@ async def process_document_for_pinecone(
                 "type": element.element_type,
                 "page": element.page
             })
-        
+
         # Simulate Pinecone processing
-        logger.info(f"Simulating Pinecone storage for {len(chunks)} chunks")
+        logger.debug(f"Simulating Pinecone storage for {len(chunks)} chunks")
         
         return {
             "success": True,

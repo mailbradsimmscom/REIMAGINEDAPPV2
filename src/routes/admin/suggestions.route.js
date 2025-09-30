@@ -142,7 +142,7 @@ router.get('/pending', adminOnly, async (req, res) => {
     // Sort by creation date
     suggestions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    logger.info('Fetched suggestions', { 
+    logger.debug('Fetched suggestions', {
       total: suggestions.length,
       spec_suggestions: specSuggestions.data.length,
       playbook_hints: playbookHints.data.length,

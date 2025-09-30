@@ -18,11 +18,11 @@ const router = express.Router();
 // DEBUG: Add process route tracing
 router.use((req, res, next) => {
   const requestLogger = logger.createRequestLogger();
-  requestLogger.info('🔍 [PROCESS] ROUTE', { 
-    method: req.method, 
-    originalUrl: req.originalUrl, 
-    url: req.url, 
-    path: req.path 
+  requestLogger.debug('🔍 [PROCESS] ROUTE', {
+    method: req.method,
+    originalUrl: req.originalUrl,
+    url: req.url,
+    path: req.path
   });
   next();
 });
@@ -39,7 +39,7 @@ router.post(
     const requestLogger = logger.createRequestLogger();
 
     try {
-      logger.info('🔍 [PROCESS] Request body received', {
+      logger.debug('🔍 [PROCESS] Request body received', {
         body: JSON.stringify(req.body),
         hasMessage: !!req.body.message,
         hasQuery: !!req.body.query

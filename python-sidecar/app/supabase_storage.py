@@ -74,8 +74,8 @@ class SupabaseStorageClient:
             if result.get('error'):
                 logger.error(f"Failed to upload {filename}: {result['error']}")
                 return False
-            
-            logger.info(f"Successfully uploaded DIP file: {storage_path}")
+
+            logger.debug(f"Successfully uploaded DIP file: {storage_path}")
             return True
             
         except Exception as e:
@@ -148,7 +148,7 @@ class SupabaseStorageClient:
         spec_filename = f"{doc_id}_spec_suggestions_an.json"
         if self.upload_dip_file(doc_id, spec_filename, spec_suggestions_content):
             storage_results['spec_suggestions'] = f"manuals/{doc_id}/DIP/{spec_filename}"
-            logger.info(f"Successfully uploaded spec_suggestions.json")
+            logger.debug(f"Successfully uploaded spec_suggestions.json")
         else:
             storage_results['spec_suggestions'] = ''
             logger.warning(f"Failed to upload spec_suggestions.json")
@@ -172,7 +172,7 @@ class SupabaseStorageClient:
         playbook_filename = f"{doc_id}_playbook_hints_an.json"
         if self.upload_dip_file(doc_id, playbook_filename, playbook_content):
             storage_results['playbook_hints'] = f"manuals/{doc_id}/DIP/{playbook_filename}"
-            logger.info(f"Successfully uploaded playbook_hints.json")
+            logger.debug(f"Successfully uploaded playbook_hints.json")
         else:
             storage_results['playbook_hints'] = ''
             logger.warning(f"Failed to upload playbook_hints.json")
@@ -192,7 +192,7 @@ class SupabaseStorageClient:
         intent_filename = f"{doc_id}_intent_router_an.json"
         if self.upload_dip_file(doc_id, intent_filename, intent_router_content):
             storage_results['intent_router'] = f"manuals/{doc_id}/DIP/{intent_filename}"
-            logger.info(f"Successfully uploaded intent_router.json")
+            logger.debug(f"Successfully uploaded intent_router.json")
         else:
             storage_results['intent_router'] = ''
             logger.warning(f"Failed to upload intent_router.json")
@@ -213,7 +213,7 @@ class SupabaseStorageClient:
         golden_filename = f"{doc_id}_golden_rules_an.json"
         if self.upload_dip_file(doc_id, golden_filename, golden_tests_content):
             storage_results['golden_tests'] = f"manuals/{doc_id}/DIP/{golden_filename}"
-            logger.info(f"Successfully uploaded golden_tests.json")
+            logger.debug(f"Successfully uploaded golden_tests.json")
         else:
             storage_results['golden_tests'] = ''
             logger.warning(f"Failed to upload golden_tests.json")

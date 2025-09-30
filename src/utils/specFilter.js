@@ -99,7 +99,7 @@ async function checkMaintenanceContent(text, lexicon) {
           matched: fuzzyMatch.original
         });
         
-        requestLogger.info('Fuzzy maintenance match found', {
+        requestLogger.debug('Fuzzy maintenance match found', {
           original: term,
           matched: fuzzyMatch.original,
           confidence: fuzzyMatch.confidence
@@ -192,7 +192,7 @@ export async function filterSpecLike(chunks) {
       maintenance_count: maintenanceCount
     });
     
-    requestLogger.info('Enhanced specFilter completed', {
+    requestLogger.debug('Enhanced specFilter completed', {
       input: chunks.length,
       output: filtered.length,
       specsCount,

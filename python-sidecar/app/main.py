@@ -103,15 +103,15 @@ async def get_version():
 async def get_pinecone_stats():
     """Get Pinecone index statistics"""
     try:
-        logger.info("Getting Pinecone index statistics")
+        logger.debug("Getting Pinecone index statistics")
         
         # Get stats from Pinecone client
         stats = pinecone_client.get_index_stats()
         
         if not stats["success"]:
             raise HTTPException(status_code=500, detail=stats["error"])
-        
-        logger.info(f"Retrieved Pinecone stats: {stats['total_vector_count']} total vectors")
+
+        logger.debug(f"Retrieved Pinecone stats: {stats['total_vector_count']} total vectors")
         return JSONResponse(content=stats)
         
     except Exception as e:
@@ -122,7 +122,7 @@ async def get_pinecone_stats():
 async def search_pinecone(request: dict):
     """Search Pinecone vectors"""
     try:
-        logger.info("Searching Pinecone vectors")
+        logger.debug("Searching Pinecone vectors")
         
         # Parse request body properly
         query = request.get("query", "")
@@ -131,8 +131,8 @@ async def search_pinecone(request: dict):
         filter_dict = request.get("filter", {})
         include_metadata = request.get("includeMetadata", True)
         include_values = request.get("includeValues", False)
-        
-        logger.info(f"Search params: query='{query}', top_k={top_k}, namespace='{namespace}'")
+
+        logger.debug(f"Search params: query='{query}', top_k={top_k}, namespace='{namespace}'")
         
         if not query:
             raise HTTPException(status_code=400, detail="Query is required")
@@ -149,8 +149,8 @@ async def search_pinecone(request: dict):
         
         if not search_results["success"]:
             raise HTTPException(status_code=500, detail=search_results["error"])
-        
-        logger.info(f"Search completed: {len(search_results['matches'])} results")
+
+        logger.debug(f"Search completed: {len(search_results['matches'])} results")
         return JSONResponse(content=search_results)
         
     except Exception as e:
@@ -165,7 +165,7 @@ async def parse_pdf(
 ):
     """Parse PDF and extract text, tables, and metadata"""
     try:
-        logger.info(f"Parsing PDF: {file.filename}")
+        logger.debug(f"Parsing PDF: {file.filename}")
         
         # Read file content
         content = await file.read()
@@ -176,8 +176,8 @@ async def parse_pdf(
             extract_tables=extract_tables,
             ocr_enabled=ocr_enabled
         )
-        
-        logger.info(f"PDF parsed successfully: {file.filename}")
+
+        logger.debug(f"PDF parsed successfully: {file.filename}")
         return result
         
     except Exception as e:
@@ -190,7 +190,7 @@ async def parse_pdf_from_url(
 ):
     """Parse PDF from URL"""
     try:
-        logger.info(f"Parsing PDF from URL: {request.file_url}")
+        logger.debug(f"Parsing PDF from URL: {request.file_url}")
         
         # Parse the PDF from URL
         result = await parser.parse_pdf_from_url(
@@ -198,8 +198,8 @@ async def parse_pdf_from_url(
             extract_tables=request.extract_tables,
             ocr_enabled=request.ocr_enabled
         )
-        
-        logger.info(f"PDF parsed successfully from URL")
+
+        logger.debug(f"PDF parsed successfully from URL")
         return result
         
     except Exception as e:
@@ -210,7 +210,7 @@ async def parse_pdf_from_url(
 async def generate_embedding(request: EmbeddingRequest):
     """Generate embedding for text"""
     try:
-        logger.info("Generating embedding for text")
+        logger.debug("Generating embedding for text")
         
         result = pinecone_client.generate_embedding(
             text=request.text,
@@ -236,7 +236,7 @@ async def generate_embedding(request: EmbeddingRequest):
 async def upsert_vectors(request: PineconeUpsertRequest):
     """Upsert vectors to Pinecone"""
     try:
-        logger.info(f"Upserting {len(request.vectors)} vectors to Pinecone")
+        logger.debug(f"Upserting {len(request.vectors)} vectors to Pinecone")
         
         result = pinecone_client.upsert_vectors(request.vectors)
         
@@ -343,10 +343,10 @@ async def process_document_for_pinecone(
                         headers=upsert_headers,
                         json=db_chunks
                     )
-                    
+
                     if response.status_code in [200, 201]:
                         chunks_written_db = len(db_chunks)
-                        logger.info(f"Inserted {chunks_written_db} chunks into database")
+                        logger.debug(f"Inserted {chunks_written_db} chunks into database")
                     else:
                         logger.warning(f"Failed to insert chunks: {response.status_code} {response.text}")
                 
@@ -376,8 +376,8 @@ async def process_document_for_pinecone(
                     except Exception as e:
                         logger.warning(f"Failed to upload chunk to storage: {e}")
                         continue
-                
-                logger.info(f"Uploaded {chunks_written_storage} chunk files to storage")
+
+                logger.debug(f"Uploaded {chunks_written_storage} chunk files to storage")
                 
             except Exception as e:
                 logger.error(f"Failed to persist chunks to Supabase: {e}")
@@ -559,8 +559,8 @@ async def _write_dip_artifacts(url, headers, doc_id, dip_result):
             },
             data=json.dumps(dip_data, indent=2)
         )
-        
-        logger.info(f"DIP storage response: {dip_response.status_code} - {dip_response.text}")
+
+        logger.debug(f"DIP storage response: {dip_response.status_code} - {dip_response.text}")
         if dip_response.status_code in [200, 201]:
             artifacts["dip"] = dip_path
         else:
@@ -578,8 +578,8 @@ async def _write_dip_artifacts(url, headers, doc_id, dip_result):
             },
             data=json.dumps(suggestions_data, indent=2)
         )
-        
-        logger.info(f"Suggestions storage response: {suggestions_response.status_code} - {suggestions_response.text}")
+
+        logger.debug(f"Suggestions storage response: {suggestions_response.status_code} - {suggestions_response.text}")
         if suggestions_response.status_code in [200, 201]:
             artifacts["suggestions"] = suggestions_path
         else:

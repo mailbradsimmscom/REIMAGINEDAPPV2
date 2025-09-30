@@ -46,7 +46,7 @@ export async function extractTextPreview(docId, options = {}) {
       const cached = getFromCache(docId);
       if (cached) {
         metrics.cacheHits++;
-        requestLogger.info('text_extraction.cache_hit', { docId, cachedAt: cached.timestamp });
+        requestLogger.debug('text_extraction.cache_hit', { docId, cachedAt: cached.timestamp });
         return {
           text: cached.text,
           source: 'cache',
@@ -57,8 +57,8 @@ export async function extractTextPreview(docId, options = {}) {
         };
       }
     }
-    
-    requestLogger.info('text_extraction.start', { docId, maxPages });
+
+    requestLogger.debug('text_extraction.start', { docId, maxPages });
     
     // 2. Try database chunks (primary source)
     const dbResult = await extractFromDatabase(docId, maxPages, requestLogger);
@@ -77,11 +77,11 @@ export async function extractTextPreview(docId, options = {}) {
       if (useCache) {
         setCache(docId, result);
       }
-      
-      requestLogger.info('text_extraction.db_success', { 
-        docId, 
+
+      requestLogger.debug('text_extraction.db_success', {
+        docId,
         textLength: result.text.length,
-        chunksUsed: dbResult.chunksUsed 
+        chunksUsed: dbResult.chunksUsed
       });
       
       return result;
@@ -104,10 +104,10 @@ export async function extractTextPreview(docId, options = {}) {
       if (useCache) {
         setCache(docId, result);
       }
-      
-      requestLogger.info('text_extraction.storage_success', { 
-        docId, 
-        textLength: result.text.length 
+
+      requestLogger.debug('text_extraction.storage_success', {
+        docId,
+        textLength: result.text.length
       });
       
       return result;
@@ -153,9 +153,9 @@ export async function extractTextPreview(docId, options = {}) {
     // Update performance metrics
     const duration = Date.now() - startTime;
     metrics.avgResponseTime = (metrics.avgResponseTime + duration) / 2;
-    
-    requestLogger.info('text_extraction.complete', { 
-      docId, 
+
+    requestLogger.debug('text_extraction.complete', {
+      docId,
       duration,
       source: 'unknown' // Will be set by the calling code
     });
@@ -171,13 +171,13 @@ export async function extractTextPreview(docId, options = {}) {
  */
 async function extractFromDatabase(docId, maxPages, requestLogger) {
   try {
-    requestLogger.info('text_extraction.db_attempt', { docId, maxPages });
+    requestLogger.debug('text_extraction.db_attempt', { docId, maxPages });
     
     // Get chunks from database
     const chunks = await documentRepository.getChunksByDocId(docId);
     
     if (!chunks || chunks.length === 0) {
-      requestLogger.info('text_extraction.db_no_chunks', { docId });
+      requestLogger.debug('text_extraction.db_no_chunks', { docId });
       return { success: false, text: '', chunksUsed: 0 };
     }
     
@@ -193,17 +193,17 @@ async function extractFromDatabase(docId, maxPages, requestLogger) {
       .filter(text => text.length > 0);
     
     if (textParts.length === 0) {
-      requestLogger.info('text_extraction.db_no_text', { docId, totalChunks: chunks.length });
+      requestLogger.debug('text_extraction.db_no_text', { docId, totalChunks: chunks.length });
       return { success: false, text: '', chunksUsed: chunks.length };
     }
-    
+
     const combinedText = textParts.join('\n\n');
-    
-    requestLogger.info('text_extraction.db_success', { 
-      docId, 
+
+    requestLogger.debug('text_extraction.db_success', {
+      docId,
       chunksUsed: textParts.length,
       totalChunks: chunks.length,
-      textLength: combinedText.length 
+      textLength: combinedText.length
     });
     
     return { 
@@ -230,7 +230,7 @@ async function extractFromDatabase(docId, maxPages, requestLogger) {
  */
 async function extractFromStorage(docId, maxPages, requestLogger) {
   try {
-    requestLogger.info('text_extraction.storage_attempt', { docId, maxPages });
+    requestLogger.debug('text_extraction.storage_attempt', { docId, maxPages });
     
     const storage = getSupabaseStorageClient();
     if (!storage) {
@@ -249,9 +249,9 @@ async function extractFromStorage(docId, maxPages, requestLogger) {
       if (!download.error && download.data) {
         const text = await download.data.text();
         if (text?.trim()) {
-          requestLogger.info('text_extraction.storage_preview_success', { 
-            docId, 
-            textLength: text.length 
+          requestLogger.debug('text_extraction.storage_preview_success', {
+            docId,
+            textLength: text.length
           });
           return { 
             success: true, 
@@ -293,10 +293,10 @@ async function extractFromStorage(docId, maxPages, requestLogger) {
     
     if (pageTexts.length > 0) {
       const combinedText = pageTexts.join('\n\n');
-      requestLogger.info('text_extraction.storage_pages_success', { 
-        docId, 
+      requestLogger.debug('text_extraction.storage_pages_success', {
+        docId,
         pagesFound: pageTexts.length,
-        textLength: combinedText.length 
+        textLength: combinedText.length
       });
       return { 
         success: true, 
@@ -305,8 +305,8 @@ async function extractFromStorage(docId, maxPages, requestLogger) {
         tablesOk: null 
       };
     }
-    
-    requestLogger.info('text_extraction.storage_no_files', { docId });
+
+    requestLogger.debug('text_extraction.storage_no_files', { docId });
     return { success: false, text: '', error: 'No text files found' };
     
   } catch (error) {

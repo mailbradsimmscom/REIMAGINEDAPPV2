@@ -57,21 +57,21 @@ class PDFParser:
                 
                 # Process each page
                 for page_num, page in enumerate(pdf.pages, 1):
-                    logger.info(f"Processing page {page_num}/{pages_total}")
+                    logger.debug(f"Processing page {page_num}/{pages_total}")
                     
                     # Check if page has text layer using proper detection
                     has_text_layer = bool(page.chars)
-                    
-                    logger.info(f"Processing page {page_num}/{pages_total} has_text_layer={has_text_layer}")
+
+                    logger.debug(f"Processing page {page_num}/{pages_total} has_text_layer={has_text_layer}")
                     
                     if has_text_layer:
                         # Extract text elements
                         text_elements = self._extract_text_elements(page, page_num)
                         elements.extend(text_elements)
-                        
+
                         # If text extraction failed (no elements), fall back to OCR
                         if not text_elements and ocr_enabled:
-                            logger.info(f"Text extraction failed on page {page_num}, falling back to OCR")
+                            logger.debug(f"Text extraction failed on page {page_num}, falling back to OCR")
                             ocr_elements = await self._extract_ocr_elements(page, page_num)
                             elements.extend(ocr_elements)
                             pages_ocr += 1
@@ -168,7 +168,7 @@ class PDFParser:
                 ocr_used=False
             )
             elements.append(element)
-            logger.info(f"Text layer extracted {len(text)} characters from page {page_num}")
+            logger.debug(f"Text layer extracted {len(text)} characters from page {page_num}")
         
         return elements
     
@@ -255,8 +255,8 @@ class PDFParser:
                 confidence=0.8  # Default confidence
             )
             elements.append(element)
-            
-            logger.info(f"OCR completed for page {page_num}: {len(ocr_text)} characters")
+
+            logger.debug(f"OCR completed for page {page_num}: {len(ocr_text)} characters")
             
         except Exception as e:
             logger.error(f"OCR failed for page {page_num}: {e}")

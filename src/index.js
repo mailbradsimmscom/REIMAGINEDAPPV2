@@ -33,9 +33,9 @@ ensureLexicons().catch(err => {
 
 // Safe mount function to identify failing routers
 function safeMount(base, router) {
-  try { 
-    app.use(base, router); 
-    logger.info('mounted', { base }); 
+  try {
+    app.use(base, router);
+    logger.debug('mounted', { base }); 
   }
   catch (e) { 
     logger.error('MOUNT_FAILED', { base, error: e.message }); 

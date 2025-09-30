@@ -47,7 +47,7 @@ class PineconeRepository {
       
       const stats = await response.json();
       
-      this.requestLogger.info('Pinecone index stats retrieved', {
+      this.requestLogger.debug('Pinecone index stats retrieved', {
         totalVectors: stats.total_vector_count,
         dimension: stats.dimension
       });
@@ -95,7 +95,7 @@ class PineconeRepository {
 
       const results = await response.json();
       
-      this.requestLogger.info('Pinecone search completed', {
+      this.requestLogger.debug('Pinecone search completed', {
         query: query.substring(0, 100),
         topK,
         namespace,
@@ -136,7 +136,7 @@ class PineconeRepository {
 
       const result = await response.json();
       
-      this.requestLogger.info('Vector fetched by ID', { vectorId, namespace: targetNamespace });
+      this.requestLogger.debug('Vector fetched by ID', { vectorId, namespace: targetNamespace });
       
       return result;
     } catch (error) {

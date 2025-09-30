@@ -108,7 +108,7 @@ class ProductionDIPRetriever(BaseService):
                         'results': table_results,
                         'count': len(table_results)
                     })
-                    logger.info(f"Retrieved {len(table_results)} results from production table {table_name}")
+                    logger.debug(f"Retrieved {len(table_results)} results from production table {table_name}")
 
             except Exception as e:
                 logger.error(f"Failed to query production table {table_name}: {e}")

@@ -407,8 +407,8 @@ class DIPProcessor:
             if not chunks_data:
                 logger.warning(f"No chunks found in database for document {doc_id}")
                 return []
-            
-            logger.info(f"Found {len(chunks_data)} chunks in database for sequential processing")
+
+            logger.debug(f"Found {len(chunks_data)} chunks in database for sequential processing")
             
             # Process chunks sequentially to respect rate limits
             all_procedures, chunk_results = await self._process_chunks_parallel_anthropic(chunks_data)
@@ -489,9 +489,9 @@ class DIPProcessor:
             if response.status_code != 200:
                 logger.error(f"Failed to fetch chunks: {response.status_code} - {response.text}")
                 return []
-            
+
             chunks_data = response.json()
-            logger.info(f"Fetched {len(chunks_data)} chunks from database for document {doc_id}")
+            logger.debug(f"Fetched {len(chunks_data)} chunks from database for document {doc_id}")
             return chunks_data
             
         except Exception as e:
@@ -513,8 +513,8 @@ class DIPProcessor:
         all_procedures = []
         chunk_results = []
         completed_count = 0
-        
-        logger.info(f"Processing {len(chunks_data)} chunks with {max_workers} workers (sequential to respect rate limits)...")
+
+        logger.debug(f"Processing {len(chunks_data)} chunks with {max_workers} workers (sequential to respect rate limits)...")
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit all tasks
@@ -537,8 +537,8 @@ class DIPProcessor:
                     
                     if 'procedures' in result:
                         all_procedures.extend(result['procedures'])
-                        
-                    logger.info(f"Completed chunk {chunk_num} ({completed_count}/{len(chunks_data)})")
+
+                    logger.debug(f"Completed chunk {chunk_num} ({completed_count}/{len(chunks_data)})")
                     
                 except Exception as e:
                     logger.error(f"Chunk {chunk_num} failed: {e}")
@@ -554,8 +554,8 @@ class DIPProcessor:
         """Process a single text chunk with Anthropic API"""
         pages = f"{chunk_data.get('page_start', '?')}-{chunk_data.get('page_end', '?')}"
         text_content = chunk_data.get('text', '')
-        
-        logger.info(f"Processing chunk {chunk_num}/{total_chunks} (Pages {pages}, {len(text_content)} chars)")
+
+        logger.debug(f"Processing chunk {chunk_num}/{total_chunks} (Pages {pages}, {len(text_content)} chars)")
         
         user_prompt = f"Extract all actionable procedures from this section of the technical manual:\n\n{text_content}"
         
@@ -585,9 +585,9 @@ RULES:
 - No explanatory text after JSON
 - No markdown code blocks
 - No 'Here is the JSON:' or similar phrases"""
-        
+
         try:
-            logger.info(f"  Making Anthropic API call for chunk {chunk_num}...")
+            logger.debug(f"  Making Anthropic API call for chunk {chunk_num}...")
             
             response = self.anthropic_client.messages.create(
                 model=self.anthropic_model,
@@ -605,8 +605,8 @@ RULES:
             
             # Add delay between API calls to avoid rate limits
             time.sleep(self.anthropic_api_delay)
-            
-            logger.info(f"  API call successful for chunk {chunk_num}")
+
+            logger.debug(f"  API call successful for chunk {chunk_num}")
             
             if response.content and len(response.content) > 0:
                 response_content = response.content[0].text
@@ -615,7 +615,7 @@ RULES:
                 try:
                     parsed_response = json.loads(response_content)
                     procedures = parsed_response.get('procedures', [])
-                    logger.info(f"  Extracted {len(procedures)} procedures from chunk {chunk_num}")
+                    logger.debug(f"  Extracted {len(procedures)} procedures from chunk {chunk_num}")
                     return parsed_response
                 except json.JSONDecodeError as e:
                     logger.error(f"  JSON parse error in chunk {chunk_num}: {e}")
@@ -661,7 +661,7 @@ RULES:
 """
 
             # Download PDF from Supabase storage and upload to OpenAI
-            logger.info(f"Downloading PDF from Supabase storage for document {doc_id}")
+            logger.debug(f"Downloading PDF from Supabase storage for document {doc_id}")
             
             # Get Supabase credentials
             supabase_url = os.getenv('SUPABASE_URL')
@@ -690,7 +690,7 @@ RULES:
                 doc_data = doc_response.json()
                 if doc_data and len(doc_data) > 0:
                     storage_path = doc_data[0].get('storage_path')
-                    logger.info(f"Retrieved storage path for doc {doc_id}: {storage_path}")
+                    logger.debug(f"Retrieved storage path for doc {doc_id}: {storage_path}")
                 else:
                     logger.warning(f"No document found for doc_id {doc_id}")
             else:
@@ -711,9 +711,9 @@ RULES:
             if pdf_response.status_code != 200:
                 logger.error(f"Failed to download PDF from storage: {pdf_response.status_code}")
                 return []
-            
+
             # Upload PDF to OpenAI - wrap bytes in file-like object
-            logger.info(f"Uploading PDF file to OpenAI for document {doc_id}")
+            logger.debug(f"Uploading PDF file to OpenAI for document {doc_id}")
             pdf_file = io.BytesIO(pdf_response.content)
             pdf_file.name = f"{doc_id}.pdf"  # OpenAI needs a filename
             
@@ -721,7 +721,7 @@ RULES:
                 file=pdf_file,  # ✅ Now it's a file-like object
                 purpose="assistants"
             )
-            logger.info(f"File uploaded with ID: {uploaded_file.id}")
+            logger.debug(f"File uploaded with ID: {uploaded_file.id}")
 
             user_prompt = "Extract all actionable procedures from this technical manual."
             
@@ -753,16 +753,16 @@ RULES:
             else:
                 logger.error("Empty response from OpenAI API")
                 return []
-            
-            logger.info(f"OpenAI response received for document {doc_id}")
-            logger.info(f"Raw response length: {len(response_content)} characters")
-            logger.info("=" * 80)
-            logger.info("COMPLETE OPENAI RESPONSE - NO LIMITS:")
-            logger.info("=" * 80)
-            logger.info(response_content)
-            logger.info("=" * 80)
-            logger.info("END OF COMPLETE OPENAI RESPONSE")
-            logger.info("=" * 80)
+
+            logger.debug(f"OpenAI response received for document {doc_id}")
+            logger.debug(f"Raw response length: {len(response_content)} characters")
+            logger.debug("=" * 80)
+            logger.debug("COMPLETE OPENAI RESPONSE - NO LIMITS:")
+            logger.debug("=" * 80)
+            logger.debug(response_content)
+            logger.debug("=" * 80)
+            logger.debug("END OF COMPLETE OPENAI RESPONSE")
+            logger.debug("=" * 80)
             
             # Parse JSON response
             try:
@@ -861,8 +861,8 @@ RULES:
     def process_document(self, elements: List[PageElement], doc_id: str) -> Dict[str, Any]:
         """Process document and extract all DIP components"""
         start_time = time.time()
-        
-        logger.info(f"Processing DIP for document {doc_id}")
+
+        logger.debug(f"Processing DIP for document {doc_id}")
         
         # Extract all components
         entities = self.extract_entities(elements)
@@ -890,8 +890,8 @@ RULES:
     async def process_chunks(self, doc_id: str, chunks: List[Dict]) -> Dict[str, Any]:
         """Process document chunks and extract all DIP components"""
         start_time = time.time()
-        
-        logger.info(f"Processing DIP from chunks for document {doc_id}")
+
+        logger.debug(f"Processing DIP from chunks for document {doc_id}")
         
         # Convert chunks to PageElement format for existing methods
         elements = []
@@ -993,10 +993,10 @@ RULES:
                 },
                 data=spec_suggestions_content.encode('utf-8')
             )
-            
+
             if response.status_code in [200, 201]:
                 storage_results['spec_suggestions'] = spec_suggestions_path
-                logger.info(f"Successfully uploaded spec_suggestions.json to Supabase Storage")
+                logger.debug(f"Successfully uploaded spec_suggestions.json to Supabase Storage")
             else:
                 storage_results['spec_suggestions'] = ''
                 logger.warning(f"Failed to upload spec_suggestions.json: {response.status_code} {response.text}")
@@ -1031,10 +1031,10 @@ RULES:
                 },
                 data=intent_router_content.encode('utf-8')
             )
-            
+
             if response.status_code in [200, 201]:
                 storage_results['intent_router'] = intent_router_path
-                logger.info(f"Successfully uploaded intent_router.json to Supabase Storage")
+                logger.debug(f"Successfully uploaded intent_router.json to Supabase Storage")
             else:
                 storage_results['intent_router'] = ''
                 logger.warning(f"Failed to upload intent_router.json: {response.status_code} {response.text}")
@@ -1066,10 +1066,10 @@ RULES:
                 },
                 data=golden_tests_content.encode('utf-8')
             )
-            
+
             if response.status_code in [200, 201]:
                 storage_results['golden_tests'] = golden_tests_path
-                logger.info(f"Successfully uploaded golden_tests.json to Supabase Storage")
+                logger.debug(f"Successfully uploaded golden_tests.json to Supabase Storage")
             else:
                 storage_results['golden_tests'] = ''
                 logger.warning(f"Failed to upload golden_tests.json: {response.status_code} {response.text}")
