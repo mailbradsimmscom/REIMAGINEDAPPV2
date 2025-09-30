@@ -1,9 +1,10 @@
 import express from 'express';
-import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { getChatThread, getChatSession, getChatMessages } from '../../repositories/chat.repository.js';
+import { getWeightedConversationContext } from '../../services/conversation-context.service.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { ChatContextEnvelope } from '../../schemas/chat.schema.js';
-import { 
+import {
   chatContextQuerySchema
 } from '../../schemas/chat.schema.js';
 
@@ -12,14 +13,23 @@ const router = express.Router();
 // Apply response validation to all routes in this file
 router.use(validateResponse(ChatContextEnvelope));
 
-// GET /chat/enhanced/context - Get chat context
-router.get('/', 
+// GET /chat/context - Get chat context with conversation memory
+router.get('/',
   validate(chatContextQuerySchema, 'query'),
   async (req, res, next) => {
     try {
       const { threadId } = req.query;
-      
-      const context = await enhancedChatService.getChatContext(threadId);
+
+      // Get thread, messages, and weighted context
+      const thread = await getChatThread(threadId);
+      const messages = await getChatMessages(threadId, { limit: 50 });
+      const conversationContext = await getWeightedConversationContext(threadId);
+
+      const context = {
+        thread,
+        messages,
+        context: conversationContext
+      };
       
       // Transform the data to match the schema
       const transformedSession = {

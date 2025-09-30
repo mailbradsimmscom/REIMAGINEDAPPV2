@@ -1,30 +1,32 @@
 // src/services/enhanced-chat.service.js
-// Legacy wrapper that delegates to the new chat orchestrator service
-// This maintains backward compatibility while using the new architecture
+// DEPRECATED - This service has been replaced by Python-sidecar LangGraph workflow
+// All chat processing now routes through chat-proxy.service.js -> Python LangGraph
 
-import { processUserMessage as orchestrateUserMessage } from './chat-orchestrator.service.js';
-import { retrieveWithSpecBias as orchestrateRetrieveWithSpecBias } from './pinecone-retrieval.service.js';
-
-/**
- * Legacy processUserMessage function - delegates to new orchestrator
- * @param {string} userQuery - User's query
- * @param {Object} options - Processing options
- * @returns {Promise<Object>} - Complete chat response
- */
 export async function processUserMessage(userQuery, options = {}) {
-  return await orchestrateUserMessage(userQuery, options);
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
 }
 
-/**
- * Legacy retrieveWithSpecBias function - delegates to new service
- * @param {Object} params - Retrieval parameters
- * @returns {Promise<Object>} - Retrieval results
- */
 export async function retrieveWithSpecBias(params) {
-  return await orchestrateRetrieveWithSpecBias(params);
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
 }
 
-// Re-export other functions that might be used elsewhere
-export { 
-  processUserMessage as handleUserQuery 
-} from './chat-orchestrator.service.js';
+export async function listUserChats({ limit = 10, cursor } = {}) {
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+}
+
+export async function getChatHistory(threadId, options = {}) {
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+}
+
+export async function deleteChatSession(sessionId) {
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+}
+
+export async function getChatContext(threadId) {
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+}
+
+// Throw error for any import attempts
+export const handleUserQuery = () => {
+  throw new Error('DEPRECATED: enhanced-chat.service has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+};

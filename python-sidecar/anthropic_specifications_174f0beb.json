@@ -1,0 +1,447 @@
+{
+  "total_chunks_processed": 1,
+  "successful_chunks": 1,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 8,
+  "unique_specifications": 8,
+  "category_breakdown": {
+    "Dimensions": 4,
+    "Installation": 1,
+    "Performance": 2,
+    "Physical": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Shank length A",
+      "normalized_parameter": "shank_length",
+      "parameter_aliases": [
+        "anchor_shank_length",
+        "shaft_length"
+      ],
+      "value": "1016",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "1016",
+      "models": [
+        "FX37"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "shank length",
+        "anchor shaft length",
+        "shank size",
+        "length A"
+      ],
+      "concept_group": "anchor_dimensions",
+      "references": [
+        "Technical data"
+      ]
+    },
+    {
+      "parameter": "Fluke length B",
+      "normalized_parameter": "fluke_length",
+      "parameter_aliases": [
+        "blade_length",
+        "anchor_fluke_length"
+      ],
+      "value": "610",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "610",
+      "models": [
+        "FX37"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "fluke length",
+        "blade length",
+        "length B",
+        "anchor blade size"
+      ],
+      "concept_group": "anchor_dimensions",
+      "references": [
+        "Technical data"
+      ]
+    },
+    {
+      "parameter": "Stock length C",
+      "normalized_parameter": "stock_length",
+      "parameter_aliases": [
+        "crossbar_length",
+        "anchor_stock_length"
+      ],
+      "value": "813",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "813",
+      "models": [
+        "FX37"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "stock length",
+        "crossbar length",
+        "length C"
+      ],
+      "concept_group": "anchor_dimensions",
+      "references": [
+        "Technical data"
+      ]
+    },
+    {
+      "parameter": "Boat size range",
+      "normalized_parameter": "suitable_boat_length",
+      "parameter_aliases": [
+        "vessel_size",
+        "boat_length_range"
+      ],
+      "value": null,
+      "range": "14 to 15",
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "14-15",
+      "models": [
+        "FX37"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "boat size",
+        "suitable for",
+        "vessel length",
+        "recommended boat size"
+      ],
+      "concept_group": "application_specs",
+      "references": [
+        "Technical data"
+      ]
+    },
+    {
+      "parameter": "Shackle diameter",
+      "normalized_parameter": "shackle_diameter",
+      "parameter_aliases": [
+        "shackle_size"
+      ],
+      "value": "12",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "12",
+      "models": [
+        "FX37"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "shackle size",
+        "shackle diameter",
+        "connecting shackle"
+      ],
+      "concept_group": "connection_specs",
+      "references": [
+        "Technical information"
+      ]
+    },
+    {
+      "parameter": "Working load",
+      "normalized_parameter": "working_load",
+      "parameter_aliases": [
+        "safe_working_load",
+        "WL"
+      ],
+      "value": "1350",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kilograms",
+      "converted_value": "1350",
+      "models": [
+        "FX37"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "working load",
+        "WL",
+        "safe load",
+        "load capacity"
+      ],
+      "concept_group": "load_specifications",
+      "references": [
+        "Technical information"
+      ]
+    },
+    {
+      "parameter": "Weight",
+      "normalized_parameter": "weight",
+      "parameter_aliases": [
+        "anchor_weight",
+        "mass"
+      ],
+      "value": "10",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kilograms",
+      "converted_value": "10",
+      "models": [
+        "FX37"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "weight",
+        "mass",
+        "anchor weight",
+        "how heavy"
+      ],
+      "concept_group": "physical_specs",
+      "references": [
+        "Technical information"
+      ]
+    },
+    {
+      "parameter": "Fluke angle adjustment",
+      "normalized_parameter": "fluke_angle_range",
+      "parameter_aliases": [
+        "adjustable_fluke_angle"
+      ],
+      "value": null,
+      "range": "32 to 45",
+      "units": "degrees",
+      "normalized_units": "degrees",
+      "converted_value": "32-45",
+      "models": [
+        "FX37"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "fluke angle",
+        "adjustment range",
+        "angle adjustment"
+      ],
+      "concept_group": "performance_specs",
+      "references": [
+        "Description"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Shank length A",
+            "normalized_parameter": "shank_length",
+            "parameter_aliases": [
+              "anchor_shank_length",
+              "shaft_length"
+            ],
+            "value": "1016",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "1016",
+            "models": [
+              "FX37"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "shank length",
+              "anchor shaft length",
+              "shank size",
+              "length A"
+            ],
+            "concept_group": "anchor_dimensions",
+            "references": [
+              "Technical data"
+            ]
+          },
+          {
+            "parameter": "Fluke length B",
+            "normalized_parameter": "fluke_length",
+            "parameter_aliases": [
+              "blade_length",
+              "anchor_fluke_length"
+            ],
+            "value": "610",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "610",
+            "models": [
+              "FX37"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "fluke length",
+              "blade length",
+              "length B",
+              "anchor blade size"
+            ],
+            "concept_group": "anchor_dimensions",
+            "references": [
+              "Technical data"
+            ]
+          },
+          {
+            "parameter": "Stock length C",
+            "normalized_parameter": "stock_length",
+            "parameter_aliases": [
+              "crossbar_length",
+              "anchor_stock_length"
+            ],
+            "value": "813",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "813",
+            "models": [
+              "FX37"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "stock length",
+              "crossbar length",
+              "length C"
+            ],
+            "concept_group": "anchor_dimensions",
+            "references": [
+              "Technical data"
+            ]
+          },
+          {
+            "parameter": "Boat size range",
+            "normalized_parameter": "suitable_boat_length",
+            "parameter_aliases": [
+              "vessel_size",
+              "boat_length_range"
+            ],
+            "value": null,
+            "range": "14 to 15",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "14-15",
+            "models": [
+              "FX37"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "boat size",
+              "suitable for",
+              "vessel length",
+              "recommended boat size"
+            ],
+            "concept_group": "application_specs",
+            "references": [
+              "Technical data"
+            ]
+          },
+          {
+            "parameter": "Shackle diameter",
+            "normalized_parameter": "shackle_diameter",
+            "parameter_aliases": [
+              "shackle_size"
+            ],
+            "value": "12",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "12",
+            "models": [
+              "FX37"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "shackle size",
+              "shackle diameter",
+              "connecting shackle"
+            ],
+            "concept_group": "connection_specs",
+            "references": [
+              "Technical information"
+            ]
+          },
+          {
+            "parameter": "Working load",
+            "normalized_parameter": "working_load",
+            "parameter_aliases": [
+              "safe_working_load",
+              "WL"
+            ],
+            "value": "1350",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kilograms",
+            "converted_value": "1350",
+            "models": [
+              "FX37"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "working load",
+              "WL",
+              "safe load",
+              "load capacity"
+            ],
+            "concept_group": "load_specifications",
+            "references": [
+              "Technical information"
+            ]
+          },
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "anchor_weight",
+              "mass"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kilograms",
+            "converted_value": "10",
+            "models": [
+              "FX37"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "anchor weight",
+              "how heavy"
+            ],
+            "concept_group": "physical_specs",
+            "references": [
+              "Technical information"
+            ]
+          },
+          {
+            "parameter": "Fluke angle adjustment",
+            "normalized_parameter": "fluke_angle_range",
+            "parameter_aliases": [
+              "adjustable_fluke_angle"
+            ],
+            "value": null,
+            "range": "32 to 45",
+            "units": "degrees",
+            "normalized_units": "degrees",
+            "converted_value": "32-45",
+            "models": [
+              "FX37"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "fluke angle",
+              "adjustment range",
+              "angle adjustment"
+            ],
+            "concept_group": "performance_specs",
+            "references": [
+              "Description"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

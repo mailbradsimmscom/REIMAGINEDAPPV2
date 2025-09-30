@@ -1,0 +1,42 @@
+import express from 'express';
+import { processChatMessage } from '../../services/chat-proxy.service.js';
+import { logger } from '../../utils/logger.js';
+
+const router = express.Router();
+
+router.post('/', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { query, session_id, thread_id } = req.body;
+
+    if (!query) {
+      return res.status(400).json({
+        error: 'Missing required field: query'
+      });
+    }
+
+    requestLogger.info('📨 DIP chat request received', {
+      query: query.substring(0, 100),
+      session_id,
+      thread_id
+    });
+
+    const response = await processChatMessage({
+      query,
+      sessionId: session_id,
+      threadId: thread_id
+    });
+
+    res.json(response);
+
+  } catch (error) {
+    requestLogger.error('❌ DIP chat request failed', {
+      error: error.message,
+      stack: error.stack
+    });
+    next(error);
+  }
+});
+
+export default router;

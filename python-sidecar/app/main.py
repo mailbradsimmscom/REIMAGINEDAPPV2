@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import json
 import logging
@@ -41,6 +42,15 @@ app = FastAPI(
     title="PDF Parser Sidecar",
     description="PDF parsing and OCR service for document processing pipeline",
     version="1.0.0"
+)
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Initialize parser and DIP processor
@@ -668,6 +678,136 @@ async def _write_dip_artifacts(url, headers, doc_id, dip_result):
 #     except Exception as e:
 #         logger.error(f"DIP generation failed: {e}")
 #         raise HTTPException(status_code=500, detail=str(e))
+
+# ============================================================================
+# CHAT ENDPOINTS - LangGraph Integration with DIP Tables
+# ============================================================================
+
+# Chat imports - only import if chat functionality is enabled
+chat_enabled = os.getenv('CHAT_MODULE_ENABLED', 'false').lower() == 'true'
+
+if chat_enabled:
+    try:
+        from .chat.chat_models import ChatRequest, ChatResponse, HealthResponse as ChatHealthResponse
+        from .chat.services.dip_retriever import DIPRetriever
+        from .chat.services.production_dip_retriever import ProductionDIPRetriever
+        from .chat.compatibility import get_langgraph_imports
+        from datetime import datetime
+
+        # Environment-based DIP connector selection
+        dip_environment = os.getenv('DIP_ENVIRONMENT', 'staging').lower()
+
+        if dip_environment == 'production':
+            chat_dip_retriever = ProductionDIPRetriever()
+            logger.info("🚀 Production DIP connector initialized")
+        else:
+            chat_dip_retriever = DIPRetriever()
+            logger.info("🧪 Staging DIP connector initialized (default)")
+
+        logger.info(f"DIP Environment: {dip_environment}")
+
+        logger.info("✅ Chat module enabled and initialized - endpoints registered")
+
+        @app.post("/v1/chat/process", response_model=ChatResponse)
+        async def process_chat(request: ChatRequest):
+            """
+            Process chat query using LangGraph workflow with DIP integration
+            """
+            start_time = datetime.now()
+
+            try:
+                # Initialize LangGraph workflow with LLM service
+                from .chat.services.llm_service import LLMService
+                from .chat.workflows.chat_workflow import ChatWorkflow
+
+                llm_service = LLMService()
+                workflow = ChatWorkflow(llm_service, chat_dip_retriever, pinecone_client)
+
+                # Process through LangGraph workflow with conversation memory
+                workflow_result = await workflow.process_chat(
+                    user_query=request.query,
+                    systems_context=request.systems_context or [],
+                    thread_id=request.thread_id,
+                    conversation_summary=request.conversation_summary,
+                    memory_context=request.memory_context
+                )
+
+                thread_id = request.thread_id
+
+                # Normalize classification to match schema
+                classification = workflow_result.get("classification", {})
+                if classification and "intent" in classification:
+                    normalized_classification = {
+                        "primary": classification.get("intent", "unknown"),
+                        "confidence": classification.get("confidence", 0.0),
+                        "table_types": classification.get("table_types", []),
+                        "equipment_context": classification.get("equipment_context"),
+                        "reasoning": classification.get("reasoning")
+                    }
+                else:
+                    normalized_classification = classification
+
+                return ChatResponse(
+                    response=workflow_result["response"],
+                    thread_id=thread_id,
+                    sources=workflow_result.get("sources", []),
+                    score=workflow_result.get("score"),
+                    classification=normalized_classification,
+                    processing_time_ms=workflow_result.get("processing_time_ms", 0),
+                    metadata=workflow_result.get("metadata", {})
+                )
+
+            except Exception as e:
+                logger.error(f"Chat processing failed: {e}")
+                raise HTTPException(status_code=500, detail=f"Chat processing failed: {str(e)}")
+
+        @app.get("/v1/chat/health")
+        async def chat_health():
+            """Chat module health check"""
+            try:
+                # Test LangGraph imports
+                imports = get_langgraph_imports()
+
+                # Test DIP retriever
+                dip_health = chat_dip_retriever.health_check()
+
+                # Include environment and connector information
+                connector_type = "production" if isinstance(chat_dip_retriever, ProductionDIPRetriever) else "staging"
+
+                return {
+                    "status": "healthy",
+                    "timestamp": datetime.now().isoformat(),
+                    "environment": {
+                        "dip_environment": dip_environment,
+                        "connector_type": connector_type
+                    },
+                    "services": {
+                        "langgraph": f"available ({imports['api_version']} API)",
+                        "dip_retriever": dip_health['status'],
+                        "dip_connector": f"{connector_type} ({dip_health.get('service', 'Unknown')})",
+                        "chat_module": "enabled"
+                    }
+                }
+            except Exception as e:
+                return {
+                    "status": "unhealthy",
+                    "timestamp": datetime.now().isoformat(),
+                    "error": str(e)
+                }
+
+    except ImportError as e:
+        logger.warning(f"Chat dependencies not available: {e}")
+
+        @app.get("/v1/chat/health")
+        async def chat_health_unavailable():
+            return {
+                "status": "unavailable",
+                "timestamp": datetime.now().isoformat(),
+                "error": "Chat dependencies not installed",
+                "services": {"chat_module": "disabled"}
+            }
+else:
+    logger.info("Chat module disabled (set CHAT_MODULE_ENABLED=true to enable)")
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,11 +1,11 @@
 import express from 'express';
-import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { listThreadsWithSummaries } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
-import { 
+import {
   ChatListEnvelope,
   chatListQuerySchema,
-  chatListResponseSchema 
+  chatListResponseSchema
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
@@ -13,31 +13,32 @@ const router = express.Router();
 // Apply response validation to all routes in this file
 router.use(validateResponse(ChatListEnvelope));
 
-// GET /chat/enhanced/list - List chat sessions
-router.get('/', 
+// GET /chat/list - List chat threads with summaries
+router.get('/',
   validate(chatListQuerySchema, 'query'),
   async (req, res, next) => {
     try {
       const { limit, cursor } = req.query;
-      
-      const chats = await enhancedChatService.listUserChats({ limit, cursor });
-      
-      // Transform the data to match the schema
-      const transformedChats = chats.map(chat => ({
-        id: chat.id,
-        name: chat.name,
-        description: chat.description || '',
-        createdAt: chat.created_at,
-        updatedAt: chat.updated_at,
-        latestThread: chat.latestThread ? {
-          id: chat.latestThread.id,
-          name: chat.latestThread.name,
-          createdAt: chat.latestThread.created_at,
-          updatedAt: chat.latestThread.updated_at,
-          metadata: chat.latestThread.metadata || {}
-        } : undefined
+
+      const threads = await listThreadsWithSummaries({ limit: parseInt(limit) || 25, cursor });
+
+      // Transform the data to match the schema (using threads as chats)
+      const transformedChats = threads.map(thread => ({
+        id: thread.id,
+        name: thread.summary || 'New Thread', // Use summary as name, fallback to 'New Thread'
+        description: '', // Remove duplicate description
+        createdAt: thread.created_at,
+        updatedAt: thread.updated_at,
+        messageCount: thread.message_count,
+        latestThread: {
+          id: thread.id,
+          name: thread.summary || 'New Thread', // Use summary as name, fallback to 'New Thread'
+          createdAt: thread.created_at,
+          updatedAt: thread.updated_at,
+          metadata: thread.metadata || {}
+        }
       }));
-      
+
       const envelope = {
         success: true,
         data: {

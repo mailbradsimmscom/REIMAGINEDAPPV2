@@ -11,6 +11,7 @@ This workflow implements:
 from typing import Dict, Any, List, Optional, TypedDict
 from datetime import datetime
 import logging
+import os
 
 # LangGraph imports with compatibility check
 from ..compatibility import get_langgraph_imports
@@ -21,9 +22,12 @@ class WorkflowState(TypedDict):
     """Extended state for LangGraph workflow"""
     # Input data
     user_query: str
-    session_id: Optional[str]
     thread_id: Optional[str]
     systems_context: List[Dict[str, Any]]  # Equipment found by Node.js
+
+    # NEW: Conversation memory
+    conversation_summary: Optional[str]
+    memory_context: Optional[Dict[str, Any]]
 
     # Classification results
     classification: Optional[Dict[str, Any]]
@@ -100,31 +104,34 @@ class ChatWorkflow:
     async def process_chat(self,
                           user_query: str,
                           systems_context: List[Dict[str, Any]],
-                          session_id: Optional[str] = None,
-                          thread_id: Optional[str] = None) -> Dict[str, Any]:
+                          thread_id: Optional[str] = None,
+                          conversation_summary: Optional[str] = None,
+                          memory_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Process chat query through LangGraph workflow
+        Process chat query through LangGraph workflow with conversation memory
 
         Args:
             user_query: User's conversational query
             systems_context: Equipment found by Node.js systems search
-            session_id: Optional session ID
             thread_id: Optional thread ID
+            conversation_summary: Weighted conversation summary from Node.js
+            memory_context: Memory context with weights and equipment transitions
 
         Returns:
             Dict with response, sources, metadata, etc.
         """
         if not self.graph:
             # Fallback to simple processing if LangGraph not available
-            return await self._fallback_processing(user_query, systems_context, session_id, thread_id)
+            return await self._fallback_processing(user_query, systems_context, thread_id)
 
         try:
-            # Initialize state
+            # Initialize state with conversation memory
             initial_state: WorkflowState = {
                 "user_query": user_query,
-                "session_id": session_id,
                 "thread_id": thread_id,
                 "systems_context": systems_context,
+                "conversation_summary": conversation_summary,
+                "memory_context": memory_context,
                 "classification": None,
                 "primary_equipment": None,
                 "secondary_equipment": [],
@@ -160,7 +167,7 @@ class ChatWorkflow:
 
         except Exception as e:
             logger.error(f"LangGraph workflow failed: {e}")
-            return await self._fallback_processing(user_query, systems_context, session_id, thread_id)
+            return await self._fallback_processing(user_query, systems_context, thread_id)
 
     async def _classify_query_node(self, state: WorkflowState) -> WorkflowState:
         """Node 1: Classify user query and analyze equipment context"""
@@ -282,7 +289,8 @@ class ChatWorkflow:
                 systems_context=state["systems_context"],
                 classification=state["classification"],
                 dip_results=state["dip_results"],
-                pinecone_results=state["pinecone_results"]
+                pinecone_results=state["pinecone_results"],
+                conversation_summary=state.get("conversation_summary")
             )
 
             state["final_response"] = response
@@ -350,7 +358,7 @@ class ChatWorkflow:
             return f"I couldn't find specific information for '{state['user_query']}' in the available data sources."
 
     async def _fallback_processing(self, user_query: str, systems_context: List[Dict[str, Any]],
-                                 session_id: Optional[str], thread_id: Optional[str]) -> Dict[str, Any]:
+                                 thread_id: Optional[str]) -> Dict[str, Any]:
         """Fallback processing when LangGraph is not available"""
         logger.warning("Using fallback processing - LangGraph workflow not available")
 
@@ -440,9 +448,10 @@ class ChatWorkflow:
             logger.info(f"Querying Pinecone with enhanced query: {enhanced_query}")
 
             # Search Pinecone for relevant documents
+            top_k = int(os.getenv('PINECONE_TOP_K', '10'))
             search_result = self.pinecone_client.search_vectors(
                 query=enhanced_query,
-                top_k=5,  # Get top 5 most relevant documents
+                top_k=top_k,
                 include_metadata=True,
                 include_values=False
             )

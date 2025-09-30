@@ -1,9 +1,9 @@
 import express from 'express';
-import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { getChatMessages } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { ChatHistoryEnvelope } from '../../schemas/chat.schema.js';
-import { 
+import {
   chatHistoryQuerySchema
 } from '../../schemas/chat.schema.js';
 
@@ -12,14 +12,14 @@ const router = express.Router();
 // Apply response validation to all routes in this file
 router.use(validateResponse(ChatHistoryEnvelope));
 
-// GET /chat/enhanced/history - Get chat history
-router.get('/', 
+// GET /chat/history - Get chat history
+router.get('/',
   validate(chatHistoryQuerySchema, 'query'),
   async (req, res, next) => {
     try {
       const { threadId, limit } = req.query;
-      
-      const messages = await enhancedChatService.getChatHistory(threadId, { limit });
+
+      const messages = await getChatMessages(threadId, { limit: parseInt(limit) || 50 });
       
       // Transform the data to match the schema
       const transformedMessages = messages.map(message => ({

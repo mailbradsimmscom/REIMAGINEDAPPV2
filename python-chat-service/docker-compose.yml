@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  python-chat-service:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SUPABASE_URL=https://eriquneakfcfmeecqyof.supabase.co
+      - SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjY1ODE0NywiZXhwIjoyMDcyMjM0MTQ3fQ.wXS2MlxRBqc7aH7KBIpgDh7MxtseLALetoyy1xF_oHU
+      - DATABASE_URL=postgresql://postgres.eriquneakfcfmeecqyof:KaZyZqcSDxjh0bYS@aws-0-us-west-1.pooler.supabase.com:6543/postgres
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./logs:/app/logs
+      - ./scripts:/app/scripts  # For any future utility scripts
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

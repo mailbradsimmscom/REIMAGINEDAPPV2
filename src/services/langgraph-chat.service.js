@@ -1,0 +1,13 @@
+// src/services/langgraph-chat.service.js
+// DEPRECATED - This Node.js LangGraph POC has been replaced by Python-sidecar LangGraph workflow
+// All chat processing now routes through chat-proxy.service.js -> Python LangGraph
+
+export const processUserMessage = () => {
+  throw new Error('DEPRECATED: Node.js LangGraph POC has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+};
+
+export default {
+  processUserMessage: () => {
+    throw new Error('DEPRECATED: Node.js LangGraph POC has been replaced by Python-sidecar LangGraph. Use chat-proxy.service.js instead.');
+  }
+};

@@ -1,0 +1,234 @@
+{
+  "total_chunks_processed": 1,
+  "successful_chunks": 1,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 7,
+  "unique_intent_routes": 7,
+  "question_type_breakdown": {
+    "What": 5,
+    "How": 1,
+    "Where": 1
+  },
+  "intent_routes": [
+    {
+      "question": "What is the weight of the FX37 Fortress anchor?",
+      "question_variations": [
+        "How heavy is the FX37 anchor?",
+        "What's the mass of the Fortress FX37?"
+      ],
+      "answer": "The FX37 Fortress anchor weighs 10 kg",
+      "question_type": "What",
+      "models": [
+        "FX37"
+      ],
+      "references": [
+        "Technical Information section"
+      ]
+    },
+    {
+      "question": "What size boat is the FX37 Fortress anchor designed for?",
+      "question_variations": [
+        "What length boats can use the FX37?",
+        "Is the FX37 suitable for my 14m boat?"
+      ],
+      "answer": "The FX37 Fortress anchor is designed for boats from 14 to 15 meters in length",
+      "question_type": "What",
+      "models": [
+        "FX37"
+      ],
+      "references": [
+        "Description section"
+      ]
+    },
+    {
+      "question": "What is the working load of the FX37 anchor?",
+      "question_variations": [
+        "How much load can the FX37 handle?",
+        "What's the maximum working load for the FX37?"
+      ],
+      "answer": "The working load is 1350 kg for nautical applications",
+      "question_type": "What",
+      "models": [
+        "FX37"
+      ],
+      "references": [
+        "Technical Information section"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the FX37 Fortress anchor?",
+      "question_variations": [
+        "How long is the FX37 anchor?",
+        "What's the size of the FX37?"
+      ],
+      "answer": "The anchor dimensions are: Shank length (A): 1016mm, Fluke length (B): 610mm, Stock length (C): 813mm",
+      "question_type": "What",
+      "models": [
+        "FX37"
+      ],
+      "references": [
+        "Technical Data section"
+      ]
+    },
+    {
+      "question": "How adjustable are the flukes on the Fortress anchor?",
+      "question_variations": [
+        "What angle can the flukes be adjusted to?",
+        "How do the adjustable flukes work?"
+      ],
+      "answer": "The flukes are adjustable from 32\u00b0 to 45\u00b0, which increases holding power in soft mud bottoms by 400%",
+      "question_type": "How",
+      "models": [
+        "FX37"
+      ],
+      "references": [
+        "Description section"
+      ]
+    },
+    {
+      "question": "What is the shackle diameter for the FX37?",
+      "question_variations": [
+        "What size shackle do I need for the FX37?",
+        "What's the required shackle diameter?"
+      ],
+      "answer": "The shackle diameter is 12mm",
+      "question_type": "What",
+      "models": [
+        "FX37"
+      ],
+      "references": [
+        "Technical Information section"
+      ]
+    },
+    {
+      "question": "Where is Wichard located?",
+      "question_variations": [
+        "What is Wichard's address?",
+        "How do I contact Wichard?"
+      ],
+      "answer": "Wichard is located at 1 ZI de Felet, CS 50085, 63307 Thiers, France. They can be contacted at +33 (0)4 73 51 65 00 or marine@wichard.com",
+      "question_type": "Where",
+      "models": [
+        "All"
+      ],
+      "references": [
+        "Header contact information"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the weight of the FX37 Fortress anchor?",
+            "question_variations": [
+              "How heavy is the FX37 anchor?",
+              "What's the mass of the Fortress FX37?"
+            ],
+            "answer": "The FX37 Fortress anchor weighs 10 kg",
+            "question_type": "What",
+            "models": [
+              "FX37"
+            ],
+            "references": [
+              "Technical Information section"
+            ]
+          },
+          {
+            "question": "What size boat is the FX37 Fortress anchor designed for?",
+            "question_variations": [
+              "What length boats can use the FX37?",
+              "Is the FX37 suitable for my 14m boat?"
+            ],
+            "answer": "The FX37 Fortress anchor is designed for boats from 14 to 15 meters in length",
+            "question_type": "What",
+            "models": [
+              "FX37"
+            ],
+            "references": [
+              "Description section"
+            ]
+          },
+          {
+            "question": "What is the working load of the FX37 anchor?",
+            "question_variations": [
+              "How much load can the FX37 handle?",
+              "What's the maximum working load for the FX37?"
+            ],
+            "answer": "The working load is 1350 kg for nautical applications",
+            "question_type": "What",
+            "models": [
+              "FX37"
+            ],
+            "references": [
+              "Technical Information section"
+            ]
+          },
+          {
+            "question": "What are the dimensions of the FX37 Fortress anchor?",
+            "question_variations": [
+              "How long is the FX37 anchor?",
+              "What's the size of the FX37?"
+            ],
+            "answer": "The anchor dimensions are: Shank length (A): 1016mm, Fluke length (B): 610mm, Stock length (C): 813mm",
+            "question_type": "What",
+            "models": [
+              "FX37"
+            ],
+            "references": [
+              "Technical Data section"
+            ]
+          },
+          {
+            "question": "How adjustable are the flukes on the Fortress anchor?",
+            "question_variations": [
+              "What angle can the flukes be adjusted to?",
+              "How do the adjustable flukes work?"
+            ],
+            "answer": "The flukes are adjustable from 32\u00b0 to 45\u00b0, which increases holding power in soft mud bottoms by 400%",
+            "question_type": "How",
+            "models": [
+              "FX37"
+            ],
+            "references": [
+              "Description section"
+            ]
+          },
+          {
+            "question": "What is the shackle diameter for the FX37?",
+            "question_variations": [
+              "What size shackle do I need for the FX37?",
+              "What's the required shackle diameter?"
+            ],
+            "answer": "The shackle diameter is 12mm",
+            "question_type": "What",
+            "models": [
+              "FX37"
+            ],
+            "references": [
+              "Technical Information section"
+            ]
+          },
+          {
+            "question": "Where is Wichard located?",
+            "question_variations": [
+              "What is Wichard's address?",
+              "How do I contact Wichard?"
+            ],
+            "answer": "Wichard is located at 1 ZI de Felet, CS 50085, 63307 Thiers, France. They can be contacted at +33 (0)4 73 51 65 00 or marine@wichard.com",
+            "question_type": "Where",
+            "models": [
+              "All"
+            ],
+            "references": [
+              "Header contact information"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -64,9 +64,13 @@ export const chatListQuerySchema = z.object({
 
 // Chat process request schema
 export const chatProcessRequestSchema = z.object({
-  message: z.string().min(1, 'Message cannot be empty'),
+  message: z.string().min(1, 'Message cannot be empty').optional(),
+  query: z.string().min(1, 'Query cannot be empty').optional(),
   sessionId: z.string().optional(),
-  threadId: z.string().optional()
+  threadId: z.string().optional(),
+  thread_id: z.string().optional()
+}).refine(data => data.message || data.query, {
+  message: 'Either message or query is required'
 });
 
 // Chat process success response schema

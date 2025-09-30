@@ -1,9 +1,9 @@
 import express from 'express';
-import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { deleteChatSession } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { methodNotAllowed } from '../../utils/methodNotAllowed.js';
-import { 
+import {
   ChatDeleteEnvelope,
   chatDeletePathSchema
 } from '../../schemas/chat.schema.js';
@@ -18,8 +18,8 @@ router.delete(
   async (req, res, next) => {
     try {
       const { sessionId } = req.params;
-      
-      await enhancedChatService.deleteChatSession(sessionId);
+
+      await deleteChatSession(sessionId);
       
       const envelope = {
         success: true,

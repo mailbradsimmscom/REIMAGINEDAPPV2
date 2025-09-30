@@ -1,0 +1,25 @@
+# LangGraph ecosystem - pinned to stable versions
+langgraph==0.0.65
+langchain==0.1.20
+langchain-core==0.1.52
+langchain-openai==0.1.8
+langchain-community==0.0.38
+
+# Web scraping stack
+playwright==1.40.0
+trafilatura==1.6.3
+beautifulsoup4==4.12.2
+
+# Data processing
+pydantic==2.5.0
+typing-extensions==4.8.0
+
+# Already in main requirements (ensure compatibility)
+fastapi>=0.104.0
+uvicorn>=0.24.0
+supabase>=2.0.0
+requests>=2.32.3
+python-dotenv>=1.0.0
+
+# Database client
+psycopg2-binary==2.9.7

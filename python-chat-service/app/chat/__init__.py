@@ -1,0 +1,1 @@
+# Standalone chat service with LangGraph and LangChain integration

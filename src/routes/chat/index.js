@@ -8,13 +8,18 @@ import contextRouter from './context.route.js';
 import deleteRouter from './delete.route.js';
 import sessionDeleteRouter from './session-delete.route.js';
 import threadBySessionRouter from './thread-by-session.route.js';
+import sessionsRouter from './sessions.route.js';
+import threadsRouter from './threads.route.js';
+import messagesRouter from './messages.route.js';
 
 const router = express.Router();
 
-// Apply response validation to all chat routes
-router.use(validateResponse(EnvelopeSchema)); // gate all /chat/*
+router.use(sessionsRouter);
+router.use(threadsRouter);
+router.use(messagesRouter);
 
-// Mount individual route modules
+router.use(validateResponse(EnvelopeSchema));
+
 router.use('/process', processRouter);
 router.use('/history', historyRouter);
 router.use('/list', listRouter);

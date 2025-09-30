@@ -8,9 +8,13 @@ from pydantic import BaseModel, Field
 class ChatState(BaseModel):
     """LangGraph state for chat processing"""
     user_query: str
-    session_id: Optional[str] = None
     thread_id: Optional[str] = None
     systems_context: Optional[List[Dict[str, Any]]] = []
+
+    # NEW: Conversation memory state
+    conversation_summary: Optional[str] = None
+    memory_context: Optional[Dict[str, Any]] = None
+    accumulated_equipment: List[Dict[str, Any]] = []
 
     # Processing state
     classification: Optional[Dict[str, Any]] = None
@@ -47,14 +51,18 @@ class ResponseScore(BaseModel):
 class ChatRequest(BaseModel):
     """Incoming chat request"""
     query: str
-    session_id: Optional[str] = None
     thread_id: Optional[str] = None
     systems_context: Optional[List[Dict[str, Any]]] = []
+
+    # NEW: Conversation memory from Node.js
+    conversation_summary: Optional[str] = None
+    memory_context: Optional[Dict[str, Any]] = None
+    equipment_inference: Optional[Dict[str, Any]] = None
+    table_types: Optional[List[str]] = None
 
 class ChatResponse(BaseModel):
     """Chat response"""
     response: str
-    session_id: str
     thread_id: str
     sources: List[Dict[str, Any]] = []
     score: Optional[ResponseScore] = None

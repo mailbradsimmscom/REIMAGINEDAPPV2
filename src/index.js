@@ -19,6 +19,7 @@ import documentRouter from './routes/document/index.js';
 import pineconeRouter from './routes/pinecone.router.js';
 import adminRouter from './routes/admin/index.js';
 import testNormalizerRouter from './routes/test-normalizer.route.js';
+// import langGraphTestRouter from './routes/langgraph-test.route.js'; // Temporarily disabled
 
 import pineconeRepository from './repositories/pinecone.repository.js';
 import { attachConfigInspector } from './debug/config.js';
@@ -63,6 +64,7 @@ safeMount('/pinecone', pineconeRouter);
 safeMount('/admin/docs', documentRouter);  // mount BEFORE /admin to avoid conflicts
 safeMount('/admin/api', adminRouter);
 safeMount('/test-normalizer', testNormalizerRouter);
+// safeMount('/langgraph', langGraphTestRouter); // Temporarily disabled
 
 // Mount route debugger (dev only) - AFTER routers are mounted
 attachRouteDebugger(app);

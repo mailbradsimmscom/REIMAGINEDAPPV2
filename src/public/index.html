@@ -4,23 +4,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Enterprise Chat System</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/public/chat-styles.css" />
   </head>
   <body>
     <div class="app">
       <header class="header">
-        <div class="status-dot" aria-hidden="true"></div>
-        <div>
-          <div class="title">Enterprise Chat System</div>
-          <div class="subtitle">Connected to Systems Database</div>
+        <div class="header-content">
+          <div class="status-dot" aria-hidden="true"></div>
+          <div>
+            <div class="title">Enterprise Chat System</div>
+            <div class="subtitle">Connected to Systems Database</div>
+          </div>
         </div>
       </header>
 
       <main class="layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
           <div class="sidebar-header">
             <div class="sidebar-title">Chat Sessions</div>
-            <button class="new-chat" id="newChatBtn">+ New Chat</button>
+            <button class="new-chat" id="newChatBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              New Chat
+            </button>
           </div>
           <div class="chat-list" id="chatList">
             <!-- Chat sessions will be loaded here dynamically -->
@@ -29,30 +37,34 @@
 
         <section class="chat">
           <div class="chat-header">
-            <h2 id="currentChatName">Start a New Conversation</h2>
-            <p id="currentChatDescription">Ask questions about your systems and get intelligent responses</p>
+            <h2 id="currentChatName">Welcome to Enterprise Chat</h2>
+            <p id="currentChatDescription">Ask questions about your systems, equipment, and documentation</p>
           </div>
-          
+
           <div class="messages" id="messages">
-            <!-- Messages will be rendered here dynamically -->
+            <div class="empty-state">
+              <div class="empty-state-icon">💬</div>
+              <div class="empty-state-title">Start a conversation</div>
+              <div class="empty-state-subtitle">Type a message below to begin</div>
+            </div>
           </div>
         </section>
       </main>
 
       <footer class="composer">
         <div class="input-container">
-          <input 
-            id="messageInput" 
-            type="text" 
-            placeholder="Type your message..." 
+          <input
+            id="messageInput"
+            type="text"
+            placeholder="Ask about systems, equipment, or documentation..."
             autocomplete="off"
           />
+          <button id="sendBtn" aria-label="Send message">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </button>
         </div>
-        <button id="sendBtn" aria-label="Send message">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-          </svg>
-        </button>
       </footer>
     </div>
 

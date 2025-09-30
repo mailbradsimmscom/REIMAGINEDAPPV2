@@ -6,40 +6,58 @@ const chatList = document.getElementById('chatList');
 const currentChatName = document.getElementById('currentChatName');
 const currentChatDescription = document.getElementById('currentChatDescription');
 
-let currentSessionId = null;
 let currentThreadId = null;
+let currentMessageSequence = 0;
 
-// Initialize chat
+// Debug: expose to window for console access
+window.debugThreadId = () => currentThreadId;
+
+function generateThreadId() {
+  return crypto.randomUUID();
+}
+
+function getThreadIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('thread');
+}
+
+function updateURL(threadId) {
+  const url = new URL(window.location);
+  if (threadId) {
+    url.searchParams.set('thread', threadId);
+  } else {
+    url.searchParams.delete('thread');
+  }
+  window.history.replaceState({}, '', url);
+}
+
 async function initializeChat() {
   try {
-    // Load existing chat sessions
-    await loadChatSessions();
-    
-    // Try to get the most recent chat session
-    const response = await fetch('/chat/enhanced/list?limit=1');
-    if (response.ok) {
-      const data = await response.json();
-      if (data.data.chats.length > 0) {
-        const latestChat = data.data.chats[0];
-        currentSessionId = latestChat.id;
-        if (latestChat.latestThread) {
-          currentThreadId = latestChat.latestThread.id;
-          // Load chat history
-          await loadChatHistory();
-          // Update UI to show current session
-          updateChatHeader(latestChat.latestThread.name || 'Active Conversation');
-        }
-      }
+    const urlThreadId = getThreadIdFromURL();
+
+    if (urlThreadId) {
+      currentThreadId = urlThreadId;
+      console.log('🔵 Loaded thread from URL:', currentThreadId);
+
+      const thread = await fetch(`/chat/threads/${currentThreadId}`).then(r => r.json());
+      currentMessageSequence = thread.thread?.message_count || 0;
+      await loadChatHistory();
+      updateChatHeader(thread.thread?.name || 'Active Conversation');
+    } else {
+      console.log('🔵 No thread in URL, starting fresh');
+      // Start fresh with no thread loaded
+      await loadChatSessions();
+      updateChatHeader('New Thread');
     }
   } catch (error) {
-    // Failed to initialize chat
+    console.error('🔴 initializeChat error:', error);
   }
 }
 
 // Load chat sessions for sidebar
 async function loadChatSessions() {
   try {
-    const response = await fetch('/chat/enhanced/list?limit=10');
+    const response = await fetch('/chat/list?limit=10');
     if (response.ok) {
       const data = await response.json();
       renderChatSessions(data.data.chats);
@@ -56,24 +74,24 @@ function renderChatSessions(chats) {
   if (!chatList) {
     return;
   }
-  
+
   chatList.innerHTML = '';
-  
+
   chats.forEach((chat, index) => {
     const chatItem = document.createElement('div');
     chatItem.className = 'chat-item';
-    if (chat.id === currentSessionId) {
+    chatItem.setAttribute('data-chat-id', chat.id);
+    if (chat.id === currentThreadId) {
       chatItem.classList.add('active');
     }
     
-    const chatName = chat.latestThread?.name || 'Untitled Chat';
-    const lastMessage = chat.latestThread?.updated_at ? 
-      new Date(chat.latestThread.updated_at).toLocaleDateString() : 'No messages';
+    const chatName = chat.name || 'New Thread';
+    const chatSummary = chat.description || '';
     
     chatItem.innerHTML = `
       <div class="chat-content">
         <div class="chat-name">${chatName}</div>
-        <div class="chat-sub">${lastMessage}</div>
+        <div class="chat-sub">${chatSummary}</div>
       </div>
       <button class="delete-chat-btn" aria-label="Delete chat">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -82,10 +100,16 @@ function renderChatSessions(chats) {
       </button>
     `;
     
-    // Add click handler for selecting chat
-    const chatContent = chatItem.querySelector('.chat-content');
-    chatContent.addEventListener('click', () => {
-      selectChatSession(chat);
+    // Click handler for chat selection
+    chatItem.addEventListener('click', (e) => {
+      // Don't trigger if clicking delete button
+      if (e.target.classList.contains('delete-chat-btn') || e.target.closest('.delete-chat-btn')) {
+        return;
+      }
+
+      if (chat.latestThread?.id) {
+        loadChatThread(chat.latestThread.id, chat.name);
+      }
     });
     
     // Add click handler for delete button
@@ -99,23 +123,26 @@ function renderChatSessions(chats) {
   });
 }
 
-// Select a chat session
-async function selectChatSession(chat) {
+// Load a chat thread by ID
+async function loadChatThread(threadId, threadName) {
   try {
-    currentSessionId = chat.id;
-    if (chat.latestThread) {
-      currentThreadId = chat.latestThread.id;
-      await loadChatHistory();
-      updateChatHeader(chat.latestThread.name || 'Active Conversation');
-    }
-    
+
+    currentThreadId = threadId;
+    updateURL(threadId);
+    await loadChatHistory();
+    updateChatHeader(threadName || 'Chat Thread');
+
     // Update active state in sidebar
     document.querySelectorAll('.chat-item').forEach(item => {
       item.classList.remove('active');
     });
-    event.target.closest('.chat-item').classList.add('active');
+
+    const clickedItem = document.querySelector(`[data-chat-id*="${threadId}"]`);
+    if (clickedItem) {
+      clickedItem.classList.add('active');
+    }
   } catch (error) {
-    // Failed to select chat session
+    console.error('Failed to load chat thread:', error);
   }
 }
 
@@ -173,7 +200,7 @@ async function loadChatHistory() {
         messagesContainer.innerHTML = '';
         // Add messages to chat
         data.data.messages.forEach(msg => {
-          addMessage(msg.content, msg.role === 'user' ? 'outbound' : 'inbound');
+          addMessage(msg.content, msg.role === 'user' ? 'outbound' : 'inbound', msg.metadata || {});
         });
       }
     }
@@ -182,12 +209,11 @@ async function loadChatHistory() {
   }
 }
 
-// Create new chat session
 async function createNewChat() {
   try {
-    // Clear current session
-    currentSessionId = null;
     currentThreadId = null;
+    currentMessageSequence = 0;
+    updateURL(null);
     
     // Clear the chat display
     const messagesContainer = document.getElementById('messages');
@@ -226,47 +252,160 @@ function updateChatHeader(title, description = '') {
   if (currentChatDescription) currentChatDescription.textContent = description;
 }
 
+// Format message content (handle markdown-like formatting)
+function formatMessageContent(text) {
+  // Escape HTML
+  let formatted = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+  // Convert line breaks to <br>
+  formatted = formatted.replace(/\n/g, '<br>');
+
+  // Convert **bold** to <strong>
+  formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // Convert *italic* to <em>
+  formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  // Convert `code` to <code>
+  formatted = formatted.replace(/`(.+?)`/g, '<code>$1</code>');
+
+  return formatted;
+}
+
 // Add message to chat
-function addMessage(text, type) {
+function addMessage(text, type, metadata = {}) {
   const messagesContainer = document.getElementById('messages');
   if (!messagesContainer) return;
-  
-  const wrapper = document.createElement('div');
-  wrapper.className = `message ${type}`;
-  
-  if (type === 'outbound') {
-    wrapper.innerHTML = `
-      <div class="bubble">
-        <div class="content">${text}</div>
-        <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-      </div>
-    `;
-  } else {
-    wrapper.innerHTML = `
-      <div class="bubble">
-        <div class="content">${text}</div>
-        <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-      </div>
-    `;
+
+  // Clear empty state if it exists
+  const emptyState = messagesContainer.querySelector('.empty-state');
+  if (emptyState) {
+    emptyState.remove();
   }
-  
+
+  const wrapper = document.createElement('div');
+  wrapper.className = `message ${type === 'outbound' ? 'user' : 'assistant'}`;
+
+  // Format message content with proper HTML
+  const formattedContent = formatMessageContent(text);
+
+  // Create message bubble
+  const bubble = document.createElement('div');
+  bubble.className = 'message-bubble';
+  bubble.innerHTML = `
+    <div class="message-content">${formattedContent}</div>
+    ${metadata.sources && metadata.sources.length > 0 ? `
+      <div class="message-meta">
+        <div class="message-sources">
+          ${metadata.sources.map(s => `<span class="source-badge">${s.title || 'Source'}</span>`).join('')}
+        </div>
+      </div>
+    ` : ''}
+  `;
+
+  wrapper.appendChild(bubble);
+
   messagesContainer.appendChild(wrapper);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Simple markdown parser for chat messages
+function parseMarkdown(text) {
+  if (!text) return '';
+
+  // Escape HTML first
+  let html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Bold: **text** or __text__
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+  // Italic: *text* or _text_
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+
+  // Headers
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+  // Line breaks - convert double newlines to paragraphs
+  const paragraphs = html.split(/\n\n+/);
+  html = paragraphs.map(p => {
+    // Don't wrap if already a heading
+    if (p.trim().startsWith('<h')) return p;
+
+    // Handle lists (numbered or bulleted)
+    const lines = p.split('\n');
+    let inList = false;
+    let listType = null;
+    let result = [];
+
+    for (let line of lines) {
+      const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
+      const bulletMatch = line.match(/^[-*]\s+(.+)$/);
+
+      if (numberedMatch) {
+        if (!inList || listType !== 'ol') {
+          if (inList) result.push(`</${listType}>`);
+          result.push('<ol>');
+          listType = 'ol';
+          inList = true;
+        }
+        result.push(`<li>${numberedMatch[2]}</li>`);
+      } else if (bulletMatch) {
+        if (!inList || listType !== 'ul') {
+          if (inList) result.push(`</${listType}>`);
+          result.push('<ul>');
+          listType = 'ul';
+          inList = true;
+        }
+        result.push(`<li>${bulletMatch[1]}</li>`);
+      } else {
+        if (inList) {
+          result.push(`</${listType}>`);
+          inList = false;
+          listType = null;
+        }
+        if (line.trim()) result.push(line);
+      }
+    }
+
+    if (inList) result.push(`</${listType}>`);
+
+    return result.length ? result.join('\n') : `<p>${p}</p>`;
+  }).join('\n');
+
+  // Single line breaks become <br>
+  html = html.replace(/\n/g, '<br>');
+
+  return html;
 }
 
 // Add enhanced message with source bubbles
 function addEnhancedMessage(text, sources = []) {
   const messagesContainer = document.getElementById('messages');
   if (!messagesContainer) return;
-  
+
   const wrapper = document.createElement('div');
   wrapper.className = 'message inbound';
-  
+
   // Parse the response to remove the "## Detailed Documentation" section
   const mainContent = parseMainContent(text);
-  
+
+  // Parse markdown to HTML
+  const htmlContent = parseMarkdown(mainContent);
+
   // Create main content
-  let content = `<div class="bubble"><div class="content">${mainContent}</div>`;
+  let content = `<div class="bubble"><div class="content">${htmlContent}</div>`;
   
   // Add source bubbles if sources exist
   if (sources.length > 0) {
@@ -400,19 +539,27 @@ function showSourceDetails(source, sourceNumber) {
 function addLoadingAnimation() {
   const messagesContainer = document.getElementById('messages');
   if (!messagesContainer) return;
-  
+
+  // Clear empty state if it exists
+  const emptyState = messagesContainer.querySelector('.empty-state');
+  if (emptyState) {
+    emptyState.remove();
+  }
+
   const loadingWrapper = document.createElement('div');
-  loadingWrapper.className = 'loading-message';
+  loadingWrapper.className = 'message assistant';
   loadingWrapper.id = 'loading-animation';
-  
+
   loadingWrapper.innerHTML = `
-    <div class="loading-bubble">
-      <div class="loading-dot"></div>
-      <div class="loading-dot"></div>
-      <div class="loading-dot"></div>
+    <div class="message-bubble">
+      <div class="typing-indicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
     </div>
   `;
-  
+
   messagesContainer.appendChild(loadingWrapper);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
   return loadingWrapper;
@@ -426,53 +573,140 @@ function removeLoadingAnimation() {
   }
 }
 
-// Process user message
+async function saveUserMessage(threadId, message, sequenceNumber) {
+  const response = await fetch('/chat/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      threadId,
+      role: 'user',
+      content: message,
+      sequenceNumber,
+      metadata: { timestamp: new Date().toISOString() }
+    })
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to save user message: ${response.status}`);
+  }
+  return await response.json();
+}
+
+async function saveAssistantMessage(threadId, message, sequenceNumber, metadata = {}) {
+  const response = await fetch('/chat/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      threadId,
+      role: 'assistant',
+      content: message,
+      sequenceNumber,
+      metadata
+    })
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to save assistant message: ${response.status}`);
+  }
+  return await response.json();
+}
+
 async function processMessage(message) {
+  let userSequence = null;
+  let assistantSequence = null;
+
   try {
-    // Add user message to chat
+    if (!currentThreadId) {
+      currentThreadId = generateThreadId();
+      currentMessageSequence = 0;
+
+      const threadResponse = await fetch('/chat/threads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: currentThreadId,
+          name: 'New Thread',
+          metadata: { created_at: new Date().toISOString() }
+        })
+      });
+      if (!threadResponse.ok) {
+        throw new Error('Failed to create thread');
+      }
+
+      updateURL(currentThreadId);
+    }
+
     addMessage(message, 'outbound');
-    
-    // Add loading animation
+
+    userSequence = ++currentMessageSequence;
+    await saveUserMessage(currentThreadId, message, userSequence);
+
     addLoadingAnimation();
-    
-    // Send to chat API
-    const requestBody = { message };
-    if (currentSessionId) requestBody.sessionId = currentSessionId;
-    if (currentThreadId) requestBody.threadId = currentThreadId;
-    
-    const response = await fetch('/chat/enhanced/process', {
+
+    const response = await fetch('/chat/process', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: message,
+        thread_id: currentThreadId
+      })
     });
-    
-    // Remove loading animation
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Chat request failed: ${response.status} ${errorText}`);
+    }
+
     removeLoadingAnimation();
-    
-    if (response.ok) {
-      const data = await response.json();
-      
-      // Update session and thread IDs
-      if (data.data.sessionId) currentSessionId = data.data.sessionId;
-      if (data.data.threadId) currentThreadId = data.data.threadId;
-      
-      // Add assistant response to chat with enhanced source display
-      addEnhancedMessage(data.data.assistantMessage.content, data.data.sources || []);
-      
-      // Reload chat sessions to show new session
+    const data = await response.json();
+
+    if (data.success && data.data) {
+      const responseData = data.data;
+      const assistantMessage = responseData.assistantMessage.content || 'No response generated';
+      const sources = responseData.sources || [];
+
+      assistantSequence = ++currentMessageSequence;
+      await saveAssistantMessage(currentThreadId, assistantMessage, assistantSequence, {
+        sources: sources,
+        processing_time_ms: responseData.telemetry?.processing_time_ms
+      });
+
+      const formattedSources = sources.map(source => ({
+        type: source.type,
+        content: source.data,
+        count: source.count,
+        icon: getSourceIcon(source.type)
+      }));
+
+      addEnhancedMessage(assistantMessage, formattedSources);
+
+      if (responseData.telemetry && responseData.telemetry.score) {
+        const score = responseData.telemetry.score;
+        const scoreIndicator = document.createElement('div');
+        scoreIndicator.className = 'python-service-indicator';
+        scoreIndicator.innerHTML = `
+          <div style="font-size: 12px; color: #666; margin-top: 8px;">
+            🐍 Python Service ${score.confidence_emoji} Score: ${score.total_score}/100
+            (${responseData.telemetry.processing_time_ms}ms)
+          </div>
+        `;
+        document.querySelector('.messages').appendChild(scoreIndicator);
+      }
+
       await loadChatSessions();
-      
     } else {
-      const errorData = await response.json();
-      const errorMessage = errorData.error?.message || errorData.error || 'Unknown error';
-      addMessage(`Error: ${errorMessage}`, 'inbound');
+      addMessage(`Error: ${data.error || 'Unknown error'}`, 'inbound');
     }
   } catch (error) {
-    // Remove loading animation on error
     removeLoadingAnimation();
     addMessage(`Error: ${error.message}`, 'inbound');
+
+    if (assistantSequence) {
+      await fetch(`/chat/messages/${currentThreadId}/${assistantSequence}`, { method: 'DELETE' });
+      currentMessageSequence--;
+    }
+    if (userSequence && !assistantSequence) {
+      await fetch(`/chat/messages/${currentThreadId}/${userSequence}`, { method: 'DELETE' });
+      currentMessageSequence--;
+    }
   }
 }
 
@@ -491,6 +725,20 @@ newChatBtn.addEventListener('click', createNewChat);
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleSend();
 });
+
+// Helper function to get source icons for DIP tables
+function getSourceIcon(sourceType) {
+  const iconMap = {
+    'spec_suggestions': '📋',
+    'playbook_hints': '📖',
+    'intent_router': '🎯',
+    'golden_tests': '🧪',
+    'pinecone': '🔍',
+    'web': '🌐',
+    'default': '📄'
+  };
+  return iconMap[sourceType] || iconMap.default;
+}
 
 // Initialize chat on page load
 document.addEventListener('DOMContentLoaded', initializeChat);

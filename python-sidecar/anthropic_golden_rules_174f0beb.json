@@ -1,0 +1,145 @@
+{
+  "total_chunks_processed": 1,
+  "successful_chunks": 1,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 5,
+  "unique_golden_rules": 5,
+  "golden_rules": [
+    {
+      "query": "Is shackle diameter within specification?",
+      "expected_value": "12mm",
+      "test_method": "Measure shackle diameter with caliper",
+      "failure_indication": "Incorrect shackle size could compromise anchor security",
+      "models": [
+        "FX37 Fortress"
+      ],
+      "related_procedures": [
+        "Anchor Installation",
+        "Shackle Inspection"
+      ]
+    },
+    {
+      "query": "Is working load within limits?",
+      "expected_value": "1350 kg or less",
+      "test_method": "Check load measurement against specification",
+      "failure_indication": "Exceeding working load risks anchor failure",
+      "models": [
+        "FX37 Fortress"
+      ],
+      "related_procedures": [
+        "Load Testing",
+        "Safety Inspection"
+      ]
+    },
+    {
+      "query": "Is anchor weight correct?",
+      "expected_value": "10 kg",
+      "test_method": "Weigh anchor on calibrated scale",
+      "failure_indication": "Incorrect weight indicates potential counterfeit or wrong model",
+      "models": [
+        "FX37 Fortress"
+      ],
+      "related_procedures": [
+        "Product Verification"
+      ]
+    },
+    {
+      "query": "Are fluke angles adjustable within range?",
+      "expected_value": "32\u00b0 to 45\u00b0",
+      "test_method": "Measure fluke angles with protractor",
+      "failure_indication": "Limited angle adjustment indicates damage or defect",
+      "models": [
+        "FX37 Fortress"
+      ],
+      "related_procedures": [
+        "Fluke Adjustment",
+        "Performance Testing"
+      ]
+    },
+    {
+      "query": "Are key dimensions correct?",
+      "expected_value": "Shank 1016mm, Fluke 610mm, Stock 813mm",
+      "test_method": "Measure all dimensions with tape measure",
+      "failure_indication": "Incorrect dimensions indicate wrong model or manufacturing defect",
+      "models": [
+        "FX37 Fortress"
+      ],
+      "related_procedures": [
+        "Dimensional Inspection"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is shackle diameter within specification?",
+            "expected_value": "12mm",
+            "test_method": "Measure shackle diameter with caliper",
+            "failure_indication": "Incorrect shackle size could compromise anchor security",
+            "models": [
+              "FX37 Fortress"
+            ],
+            "related_procedures": [
+              "Anchor Installation",
+              "Shackle Inspection"
+            ]
+          },
+          {
+            "query": "Is working load within limits?",
+            "expected_value": "1350 kg or less",
+            "test_method": "Check load measurement against specification",
+            "failure_indication": "Exceeding working load risks anchor failure",
+            "models": [
+              "FX37 Fortress"
+            ],
+            "related_procedures": [
+              "Load Testing",
+              "Safety Inspection"
+            ]
+          },
+          {
+            "query": "Is anchor weight correct?",
+            "expected_value": "10 kg",
+            "test_method": "Weigh anchor on calibrated scale",
+            "failure_indication": "Incorrect weight indicates potential counterfeit or wrong model",
+            "models": [
+              "FX37 Fortress"
+            ],
+            "related_procedures": [
+              "Product Verification"
+            ]
+          },
+          {
+            "query": "Are fluke angles adjustable within range?",
+            "expected_value": "32\u00b0 to 45\u00b0",
+            "test_method": "Measure fluke angles with protractor",
+            "failure_indication": "Limited angle adjustment indicates damage or defect",
+            "models": [
+              "FX37 Fortress"
+            ],
+            "related_procedures": [
+              "Fluke Adjustment",
+              "Performance Testing"
+            ]
+          },
+          {
+            "query": "Are key dimensions correct?",
+            "expected_value": "Shank 1016mm, Fluke 610mm, Stock 813mm",
+            "test_method": "Measure all dimensions with tape measure",
+            "failure_indication": "Incorrect dimensions indicate wrong model or manufacturing defect",
+            "models": [
+              "FX37 Fortress"
+            ],
+            "related_procedures": [
+              "Dimensional Inspection"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

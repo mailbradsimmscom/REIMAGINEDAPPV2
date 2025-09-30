@@ -1,0 +1,40 @@
+import { Router } from 'express';
+import { processChatMessage } from '../services/chat-proxy.service.js';
+import { logger } from '../utils/logger.js';
+
+const router = Router();
+
+router.post('/chat', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { query, thread_id } = req.body;
+
+    if (!query) {
+      return res.status(400).json({
+        error: 'Missing required field: query'
+      });
+    }
+
+    requestLogger.info('📨 Chat request received', {
+      query: query.substring(0, 100),
+      thread_id
+    });
+
+    const response = await processChatMessage({
+      query,
+      threadId: thread_id
+    });
+
+    res.json(response);
+
+  } catch (error) {
+    requestLogger.error('❌ Chat request failed', {
+      error: error.message,
+      stack: error.stack
+    });
+    next(error);
+  }
+});
+
+export default router;

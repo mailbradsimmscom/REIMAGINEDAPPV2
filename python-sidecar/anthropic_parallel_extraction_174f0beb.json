@@ -1,0 +1,127 @@
+{
+  "total_chunks_processed": 1,
+  "successful_chunks": 1,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 3,
+  "unique_procedures": 3,
+  "procedures": [
+    {
+      "title": "Fortress Anchor Fluke Adjustment",
+      "preconditions": [
+        "Anchor must be on deck or stable surface",
+        "Boat must be 14-15m in length"
+      ],
+      "steps": [
+        "Access the fluke adjustment mechanism",
+        "Select desired angle between 32\u00b0 and 45\u00b0 based on bottom conditions",
+        "Adjust flukes to chosen angle",
+        "Secure adjustment mechanism"
+      ],
+      "expected_outcome": "Anchor flukes set at optimal angle for bottom conditions with up to 400% increased holding power in soft mud",
+      "models": [
+        "FX37"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Anchor Dismantling Procedure",
+      "preconditions": [
+        "Anchor must be clean and dry",
+        "Boat must be stationary"
+      ],
+      "steps": [
+        "Remove shackle if attached",
+        "Separate stock from shank",
+        "Remove flukes from assembly",
+        "Store components securely"
+      ],
+      "expected_outcome": "Anchor disassembled into compact storage configuration",
+      "models": [
+        "FX37"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Shackle Installation",
+      "preconditions": [
+        "12mm shackle diameter required",
+        "Working load must not exceed 1350kg"
+      ],
+      "steps": [
+        "Verify shackle diameter is 12mm",
+        "Check shackle working load rating",
+        "Attach shackle to anchor shank",
+        "Secure shackle pin"
+      ],
+      "expected_outcome": "Shackle properly secured to anchor within working load limits",
+      "models": [
+        "FX37"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "1-1",
+      "result": {
+        "procedures": [
+          {
+            "title": "Fortress Anchor Fluke Adjustment",
+            "preconditions": [
+              "Anchor must be on deck or stable surface",
+              "Boat must be 14-15m in length"
+            ],
+            "steps": [
+              "Access the fluke adjustment mechanism",
+              "Select desired angle between 32\u00b0 and 45\u00b0 based on bottom conditions",
+              "Adjust flukes to chosen angle",
+              "Secure adjustment mechanism"
+            ],
+            "expected_outcome": "Anchor flukes set at optimal angle for bottom conditions with up to 400% increased holding power in soft mud",
+            "models": [
+              "FX37"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Anchor Dismantling Procedure",
+            "preconditions": [
+              "Anchor must be clean and dry",
+              "Boat must be stationary"
+            ],
+            "steps": [
+              "Remove shackle if attached",
+              "Separate stock from shank",
+              "Remove flukes from assembly",
+              "Store components securely"
+            ],
+            "expected_outcome": "Anchor disassembled into compact storage configuration",
+            "models": [
+              "FX37"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Shackle Installation",
+            "preconditions": [
+              "12mm shackle diameter required",
+              "Working load must not exceed 1350kg"
+            ],
+            "steps": [
+              "Verify shackle diameter is 12mm",
+              "Check shackle working load rating",
+              "Attach shackle to anchor shank",
+              "Secure shackle pin"
+            ],
+            "expected_outcome": "Shackle properly secured to anchor within working load limits",
+            "models": [
+              "FX37"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -33,7 +33,7 @@ export async function oaiJson({ system, user, schema, model, maxOutputTokens, se
       { role: 'system', content: system },
       { role: 'user', content: user }
     ],
-    max_tokens: maxTokens,
+    max_completion_tokens: maxTokens,
     temperature,
     seed: seed || 11,
     response_format: { type: "json_object" }
@@ -78,7 +78,7 @@ export async function oaiText({ system, user, model, maxOutputTokens, seed, styl
       { role: 'system', content: system },
       { role: 'user', content: user }
     ],
-    max_tokens: maxTokens,
+    max_completion_tokens: maxTokens,
     temperature,
     seed: seed || 11
   };

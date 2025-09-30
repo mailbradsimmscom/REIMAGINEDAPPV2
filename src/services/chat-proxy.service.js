@@ -1,9 +1,16 @@
 import { searchSystems } from '../repositories/systems.repository.js';
-import { getChatMessages } from '../repositories/chat.repository.js';
+import { getSystemSvc } from './systems.service.js';
+import { getWeightedConversationContext, getEquipmentRelationshipContext } from './conversation-context.service.js';
+import { inferEquipmentRelationships, quickReferenceCheck } from './equipment-relationship-inference.service.js';
+import { updateChatThread } from '../repositories/chat.repository.js';
 import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
 function extractKeywords(query) {
+  if (!query || typeof query !== 'string') {
+    return '';
+  }
+
   const stopWords = new Set(['tell', 'me', 'about', 'my', 'the', 'a', 'an', 'is', 'are', 'what', 'how', 'when', 'where', 'why', 'which', 'who', 'can', 'could', 'would', 'should', 'will', 'do', 'does', 'did', 'has', 'have', 'had', 'be', 'been', 'being', 'to', 'of', 'in', 'for', 'on', 'with', 'at', 'from', 'by', 'it', 'its', 'this', 'that', 'these', 'those']);
 
   const words = query.toLowerCase()
@@ -14,68 +21,223 @@ function extractKeywords(query) {
   return words.join(' ');
 }
 
-async function getConversationContext(threadId) {
-  if (!threadId) return null;
 
-  try {
-    const messages = await getChatMessages(threadId, { limit: 5 });
-
-    for (let i = messages.length - 1; i >= 0; i--) {
-      const msg = messages[i];
-      if (msg.metadata?.systems_context && msg.metadata.systems_context.length > 0) {
-        return msg.metadata.systems_context;
-      }
-    }
-  } catch (error) {
-    return null;
-  }
-
-  return null;
-}
-
-export async function processChatMessage({ query, sessionId, threadId }) {
+export async function processChatMessage({ query, threadId }) {
   const requestLogger = logger.createRequestLogger();
   const env = getEnv();
 
   try {
-    const searchQuery = extractKeywords(query) || query;
-    let matchingSystems = [];
+    // STEP 1: Get conversation context (always, for memory) and thread equipment blob
+    const conversationContext = await getWeightedConversationContext(threadId, query);
 
-    if (searchQuery && searchQuery !== query) {
-      requestLogger.info('🔍 Searching systems table for matching equipment', {
-        originalQuery: query.substring(0, 100),
-        searchQuery: searchQuery.substring(0, 100)
+    // Get thread with equipment_context blob
+    const { getChatThread } = await import('../repositories/chat.repository.js');
+    let threadData = null;
+    let existingEquipmentContext = [];
+
+    try {
+      threadData = await getChatThread(threadId);
+      existingEquipmentContext = threadData?.equipment_context || [];
+
+      requestLogger.info('📦 Retrieved thread equipment context', {
+        threadId,
+        existingEquipmentCount: existingEquipmentContext.length
       });
-
-      matchingSystems = await searchSystems(searchQuery, { limit: 10 });
+    } catch (error) {
+      requestLogger.warn('Failed to retrieve thread equipment context', {
+        threadId,
+        error: error.message
+      });
     }
 
-    if (matchingSystems.length === 0 && threadId) {
-      requestLogger.info('⏮️  No equipment found via search, checking conversation history');
-      const contextSystems = await getConversationContext(threadId);
+    requestLogger.info('📚 Retrieved conversation context', {
+      threadId,
+      totalExchanges: conversationContext.total_exchanges,
+      accumulatedEquipment: conversationContext.accumulated_equipment.length,
+      hasConversationSummary: !!conversationContext.conversation_summary
+    });
 
-      if (contextSystems && contextSystems.length > 0) {
-        requestLogger.info('✅ Found equipment context from previous messages', {
-          count: contextSystems.length
+    // STEP 2: Quick reference check and equipment relationship inference
+    const previousEquipment = conversationContext.accumulated_equipment;
+    const referenceCheck = quickReferenceCheck(query, previousEquipment);
+
+    requestLogger.info('🔍 Analyzing query for equipment references', {
+      query: query.substring(0, 100),
+      likelyReference: referenceCheck.likely_reference,
+      mentionsEquipmentType: referenceCheck.mentions_equipment_type,
+      hasPreviousContext: referenceCheck.has_previous_context,
+      shouldInfer: referenceCheck.should_infer
+    });
+
+    // STEP 3: Search for new equipment or use relationship inference
+    let currentEquipmentSearch = [];
+    let equipmentInference = null;
+
+    if (referenceCheck.should_infer) {
+      // Use LLM to infer equipment relationships, passing existing equipment context
+      const inferenceResult = await inferEquipmentRelationships(
+        threadId,
+        query,
+        [], // Start with empty current search for inference
+        existingEquipmentContext // Pass equipment_context blob instead of fetching messages
+      );
+
+      equipmentInference = inferenceResult.inference;
+      currentEquipmentSearch = inferenceResult.expanded_equipment;
+
+      requestLogger.info('🔗 Equipment relationship inference completed', {
+        hasInference: !!equipmentInference,
+        inferredEquipmentCount: currentEquipmentSearch.length,
+        shouldSearchRelated: inferenceResult.should_search_related
+      });
+
+    } else {
+      // Traditional keyword-based equipment search
+      const searchQuery = extractKeywords(query) || query;
+
+      if (searchQuery && searchQuery !== query) {
+        requestLogger.info('🔍 Searching systems table for new equipment', {
+          originalQuery: query.substring(0, 100),
+          searchQuery: searchQuery.substring(0, 100)
         });
-        matchingSystems = contextSystems;
+
+        currentEquipmentSearch = await searchSystems(searchQuery, { limit: 10 });
+      }
+
+      // IMPORTANT: If no equipment found but we have equipment in blob, use blob as fallback
+      if (currentEquipmentSearch.length === 0 && existingEquipmentContext.length > 0) {
+        requestLogger.info('📦 No new equipment found, using existing equipment from blob', {
+          existingEquipmentCount: existingEquipmentContext.length
+        });
+        currentEquipmentSearch = existingEquipmentContext.map(eq => ({
+          ...eq,
+          source: 'cached_fallback'
+        }));
       }
     }
 
-    requestLogger.info('✅ Found matching systems', {
-      count: matchingSystems.length,
-      assetUids: matchingSystems.map(s => s.asset_uid)
+    // STEP 4: Get enhanced equipment context (current + conversation history)
+    const rawEquipmentContext = await getEquipmentRelationshipContext(threadId, currentEquipmentSearch);
+
+    requestLogger.info('🔗 Built equipment relationship context', {
+      currentEquipmentFound: currentEquipmentSearch.length,
+      totalEquipmentContext: rawEquipmentContext.length,
+      equipmentSources: rawEquipmentContext.map(eq => ({
+        manufacturer: eq.manufacturer,
+        model: eq.model,
+        source: eq.source || 'current'
+      }))
     });
 
-    const systemsContext = matchingSystems.map(system => ({
-      asset_uid: system.asset_uid,
-      manufacturer: system.manufacturer,
-      model: system.model,
-      description: system.description
-    }));
+    // STEP 5: Fetch full system details for all equipment in context
+    // Build map of existing equipment for deduplication
+    const existingEquipmentMap = new Map();
+    for (const eq of existingEquipmentContext) {
+      existingEquipmentMap.set(eq.asset_uid, eq);
+    }
 
-    requestLogger.info('📞 Calling python-sidecar with systems context', {
+    const systemsContext = [];
+    const newEquipmentFound = [];
+
+    for (let i = 0; i < rawEquipmentContext.length; i++) {
+      const equipment = rawEquipmentContext[i];
+      try {
+        let fullSystem;
+
+        // Check if equipment exists in blob - avoid re-fetch
+        if (existingEquipmentMap.has(equipment.asset_uid)) {
+          fullSystem = existingEquipmentMap.get(equipment.asset_uid);
+
+          requestLogger.info('♻️  Using cached equipment from blob', {
+            assetUid: equipment.asset_uid,
+            manufacturer: fullSystem.manufacturer,
+            model: fullSystem.model
+          });
+        } else if (equipment.manufacturer && equipment.model && equipment.description) {
+          // If equipment is from conversation history, it might already have full details
+          fullSystem = equipment;
+        } else {
+          // Fetch full details from systems API for NEW equipment
+          fullSystem = await getSystemSvc(equipment.asset_uid);
+          newEquipmentFound.push(fullSystem);
+
+          requestLogger.info('🆕 Fetched NEW equipment details', {
+            assetUid: fullSystem.asset_uid,
+            manufacturer: fullSystem.manufacturer,
+            model: fullSystem.model
+          });
+        }
+
+        systemsContext.push({
+          asset_uid: fullSystem.asset_uid,
+          manufacturer: fullSystem.manufacturer_norm || fullSystem.manufacturer,
+          model: fullSystem.model_norm || fullSystem.model,
+          description: fullSystem.description,
+          synonyms_fts: fullSystem.synonyms_fts,
+          synonyms_human: fullSystem.synonyms_human,
+          rank: equipment.rank || equipment.weight || 1.0,
+          source: equipment.source || 'current',
+          conversation_weight: equipment.conversation_weight || null,
+          // Add inference metadata if available
+          // First equipment from current query gets 'main' relationship type
+          relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null),
+          inference_confidence: equipment.inference_confidence || null,
+          inference_reasoning: equipment.inference_reasoning || null
+        });
+      } catch (error) {
+        requestLogger.warn('Failed to fetch full system details', {
+          asset_uid: equipment.asset_uid,
+          error: error.message
+        });
+        // Fallback to basic data
+        systemsContext.push({
+          asset_uid: equipment.asset_uid,
+          manufacturer: equipment.manufacturer || 'Unknown',
+          model: equipment.model || 'Unknown',
+          description: equipment.description || 'Equipment details unavailable',
+          rank: equipment.rank || equipment.weight || 0.5,
+          source: equipment.source || 'current',
+          relationship_type: equipment.relationship_type || null,
+          inference_confidence: equipment.inference_confidence || null
+        });
+      }
+    }
+
+    // STEP 6: Update equipment context blob if NEW equipment found
+    if (newEquipmentFound.length > 0) {
+      try {
+        await updateChatThread(threadId, {
+          equipment_context: systemsContext
+        });
+
+        requestLogger.info('💾 Updated equipment context with NEW equipment', {
+          threadId,
+          totalEquipment: systemsContext.length,
+          newEquipmentCount: newEquipmentFound.length,
+          newEquipment: newEquipmentFound.map(eq => ({
+            manufacturer: eq.manufacturer,
+            model: eq.model
+          }))
+        });
+      } catch (error) {
+        requestLogger.warn('Failed to update equipment context', {
+          threadId,
+          error: error.message
+        });
+        // Don't block request if save fails
+      }
+    } else {
+      requestLogger.info('✅ Using existing equipment context (no new equipment)', {
+        threadId,
+        equipmentCount: systemsContext.length
+      });
+    }
+
+    requestLogger.info('📞 Calling python-sidecar with enhanced context', {
       systemsCount: systemsContext.length,
+      hasConversationMemory: !!conversationContext.conversation_summary,
+      conversationExchanges: conversationContext.total_exchanges,
+      hasEquipmentInference: !!equipmentInference,
       sidecarUrl: `${env.PYTHON_SIDECAR_URL}/v1/chat/process`
     });
 
@@ -86,9 +248,11 @@ export async function processChatMessage({ query, sessionId, threadId }) {
       },
       body: JSON.stringify({
         query,
-        session_id: sessionId,
         thread_id: threadId,
         systems_context: systemsContext,
+        conversation_summary: conversationContext.conversation_summary,
+        memory_context: conversationContext.memory_context,
+        equipment_inference: equipmentInference,
         table_types: ['spec', 'procedure', 'troubleshooting', 'routing']
       })
     });
@@ -110,9 +274,20 @@ export async function processChatMessage({ query, sessionId, threadId }) {
     return result;
 
   } catch (error) {
+    // Enhanced error logging with full context
     requestLogger.error('❌ Chat proxy error', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
+      threadId,
+      query: query.substring(0, 200),
+      equipmentContextCount: systemsContext?.length || 0,
+      equipmentDetails: systemsContext?.slice(0, 3).map(eq => ({
+        manufacturer: eq.manufacturer,
+        model: eq.model,
+        source: eq.source
+      })),
+      hadConversationContext: !!conversationContext?.conversation_summary,
+      conversationExchanges: conversationContext?.total_exchanges
     });
     throw error;
   }
