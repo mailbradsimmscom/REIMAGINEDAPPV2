@@ -143,7 +143,7 @@ export class AdminService {
         };
       }
 
-      this.requestLogger.info('Systems retrieved', { count: data?.length || 0 });
+      this.requestLogger.debug('Systems retrieved', { count: data?.length || 0 });
 
       return {
         total: data?.length || 0,

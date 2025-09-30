@@ -57,8 +57,8 @@ export function adminGate(req, res, next) {
     });
   }
 
-  // success — don't log the raw token
-  logger.info('Admin auth: ok', { supplied_sha: tokenHash(supplied) });
+  // success — don't log the raw token (debug level to reduce noise)
+  logger.debug('Admin auth: ok', { supplied_sha: tokenHash(supplied) });
   return next();
 }
 

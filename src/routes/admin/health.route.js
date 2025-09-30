@@ -82,7 +82,7 @@ router.get('/connectivity',
     const allHealthy = Object.values(checks).every(check => check.status === 'healthy');
     const overallStatus = allHealthy ? 'healthy' : 'degraded';
 
-    requestLogger.info('Connectivity check completed', { 
+    requestLogger.debug('Connectivity check completed', {
       status: overallStatus,
       checks: Object.keys(checks).reduce((acc, key) => {
         acc[key] = checks[key].status;

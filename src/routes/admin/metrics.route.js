@@ -128,8 +128,8 @@ router.get('/',
       dataSource: requestMetrics.dataSource
     };
     
-    requestLogger.info('Metrics retrieved', { 
-      timeframe, 
+    requestLogger.debug('Metrics retrieved', {
+      timeframe,
       totalRequests: requestMetrics.totalRequests,
       errorCount: requestMetrics.errorCount,
       dataSource: requestMetrics.dataSource

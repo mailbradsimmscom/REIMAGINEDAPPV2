@@ -58,7 +58,7 @@ router.get('/',
     
     if (statsResponse.ok) {
       statsData = await statsResponse.json();
-      requestLogger.info('Pinecone stats retrieved', { 
+      requestLogger.debug('Pinecone stats retrieved', {
         totalVectors: statsData?.total_vector_count,
         dimension: statsData?.dimension
       });

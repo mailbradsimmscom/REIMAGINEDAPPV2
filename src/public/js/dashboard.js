@@ -1,6 +1,6 @@
 // Dashboard module for system monitoring
 const POLL_INTERVAL = 20000; // 20 seconds
-const API_BASE = '/admin';
+const API_BASE = '/admin/api';
 
 class Dashboard {
     constructor() {
@@ -73,26 +73,27 @@ class Dashboard {
             const data = await response.json();
 
             if (data.success) {
-                const dbStatus = data.data?.database?.status === 'ok';
+                const dbStatus = data.data?.checks?.database?.status === 'healthy';
                 this.updateMetric('supabase-status', dbStatus ? 'Connected' : 'Disconnected',
                     dbStatus ? 'success' : 'error');
 
-                // Try jobs status for counts
+                // The /admin/api/systems endpoint returns all counts we need
                 try {
-                    const jobsResponse = await fetch(`${API_BASE}/jobs/status`, {
+                    const systemsResponse = await fetch(`${API_BASE}/systems`, {
                         headers: this.getHeaders()
                     });
-                    const jobsData = await jobsResponse.json();
-                    if (jobsData.success) {
-                        this.updateMetric('jobs-count', jobsData.data?.total || 0);
+                    const systemsData = await systemsResponse.json();
+                    if (systemsData.success) {
+                        // Systems endpoint returns totalSystems, documentsCount, and jobsCount
+                        this.updateMetric('total-systems', systemsData.data?.totalSystems || 0);
+                        this.updateMetric('documents-count', systemsData.data?.documentsCount || 0);
+                        this.updateMetric('jobs-count', systemsData.data?.jobsCount || 0);
                     }
                 } catch {
+                    this.updateMetric('total-systems', '-');
+                    this.updateMetric('documents-count', '-');
                     this.updateMetric('jobs-count', '-');
                 }
-
-                // Set placeholder values for now
-                this.updateMetric('documents-count', '-');
-                this.updateMetric('total-systems', '-');
             }
         } catch (error) {
             this.updateMetric('supabase-status', 'Error', 'error');
@@ -104,18 +105,19 @@ class Dashboard {
 
     async fetchVectorStatus() {
         try {
-            // Try pinecone stats endpoint
-            const response = await fetch(`${API_BASE}/pinecone/stats`, {
+            // Try pinecone endpoint
+            const response = await fetch(`${API_BASE}/pinecone`, {
                 headers: this.getHeaders()
             });
             const data = await response.json();
 
             if (data.success) {
-                this.updateMetric('pinecone-status', 'Connected', 'success');
-                this.updateMetric('sidecar-status', data.data?.sidecar ? 'Connected' : 'Unknown',
-                    data.data?.sidecar ? 'success' : '');
-                this.updateMetric('pinecone-vectors', this.formatNumber(data.data?.totalVectorCount || 0));
-                this.updateMetric('pinecone-fullness', `${data.data?.indexFullness || 0}%`);
+                this.updateMetric('pinecone-status', data.data?.status || 'Unknown',
+                    data.data?.status === 'Connected' ? 'success' : '');
+                this.updateMetric('sidecar-status', data.data?.sidecarHealth?.status || 'Unknown',
+                    data.data?.sidecarHealth?.status === 'healthy' ? 'success' : '');
+                this.updateMetric('pinecone-vectors', this.formatNumber(data.data?.totalVectors || 0));
+                this.updateMetric('pinecone-fullness', data.data?.indexFullness || '0.0%');
             }
         } catch (error) {
             this.updateMetric('pinecone-status', 'Error', 'error');
@@ -134,11 +136,14 @@ class Dashboard {
             const data = await response.json();
 
             if (data.success && data.data) {
-                // Use available metrics data
-                this.updateMetric('active-sessions', data.data?.activeSessions || 0);
-                this.updateMetric('avg-response', data.data?.avgResponseTime ? `${data.data.avgResponseTime}ms` : '-');
-                const errorRate = data.data?.errorRate || 0;
-                this.updateMetric('error-rate', `${errorRate}%`,
+                // Map chatHealth metrics to dashboard display
+                const totalRequests = data.data?.chatHealth?.totalRequests || 0;
+                const errorRate = data.data?.chatHealth?.errorRate || 0;
+                const p95Latency = data.data?.chatHealth?.p95Latency || 0;
+
+                this.updateMetric('active-sessions', totalRequests);
+                this.updateMetric('avg-response', p95Latency ? `${p95Latency}ms` : '-');
+                this.updateMetric('error-rate', `${errorRate.toFixed(1)}%`,
                     errorRate > 5 ? 'error' : errorRate > 1 ? 'warning' : 'success');
             }
         } catch (error) {
