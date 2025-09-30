@@ -9,19 +9,25 @@ export function errorHandler(err, req, res, next) {
   
   // Handle Zod validation errors
   if (err instanceof z.ZodError) {
-    requestLogger.warn('Validation error', { 
-      url: req.url, 
+    // Enhanced context logging for validation errors
+    const context = {
+      url: req.url,
       method: req.method,
-      issues: err.issues 
-    });
-    
+      issues: err.issues,
+      requestBody: req.body ? JSON.stringify(req.body).substring(0, 500) : null,
+      queryParams: req.query,
+      userAgent: req.get('user-agent')
+    };
+
+    requestLogger.warn('Validation error', context);
+
     return res.status(400).json({
       success: false,
       data: null,
-      error: { 
-        code: ERR.BAD_REQUEST, 
+      error: {
+        code: ERR.BAD_REQUEST,
         message: 'Validation failed',
-        details: err.issues 
+        details: err.issues
       },
       requestId: res.locals?.requestId ?? null,
     });
@@ -58,12 +64,28 @@ export function errorHandler(err, req, res, next) {
   const message = err.message || (status === 400 ? 'Validation failed' : 'Unexpected error');
 
   if (status >= 500) {
-    requestLogger.error('Server error', { 
-      error: err.message, 
+    // Enhanced error context logging
+    const errorContext = {
+      error: err.message,
       stack: err.stack,
       url: req.url,
-      method: req.method
-    });
+      method: req.method,
+      userAgent: req.get('user-agent'),
+      requestId: res.locals?.requestId,
+      // Add request details (truncated for large payloads)
+      requestBody: req.body ? JSON.stringify(req.body).substring(0, 1000) : null,
+      queryParams: req.query,
+      // Add equipment/document context if available
+      equipmentContext: req.body?.systems_context?.map(s => ({
+        manufacturer: s.manufacturer,
+        model: s.model,
+        asset_uid: s.asset_uid
+      })),
+      threadId: req.body?.threadId || req.body?.thread_id,
+      documentId: req.params?.documentId || req.body?.documentId
+    };
+
+    requestLogger.error('Server error', errorContext);
   }
 
   return res.status(status).json({

@@ -126,9 +126,10 @@ class LLMService:
                                 systems_context: List[Dict[str, Any]],
                                 classification: Optional[Dict[str, Any]],
                                 dip_results: List[Dict[str, Any]],
-                                pinecone_results: Optional[Dict[str, Any]] = None) -> str:
+                                pinecone_results: Optional[Dict[str, Any]] = None,
+                                conversation_summary: Optional[str] = None) -> str:
         """
-        Synthesize natural language response from structured data
+        Synthesize natural language response from structured data with conversation memory
 
         Args:
             user_query: Original user query
@@ -136,6 +137,7 @@ class LLMService:
             classification: Query classification results
             dip_results: Results from DIP table queries
             pinecone_results: Results from Pinecone search (optional)
+            conversation_summary: Weighted conversation history (optional)
 
         Returns:
             Natural language response
@@ -151,12 +153,19 @@ class LLMService:
             personality_traits=PERSONALITY_TRAITS,
             user_query=user_query,
             equipment_context=equipment_context,
+            conversation_summary=conversation_summary or "No previous conversation context.",
             dip_context=dip_context,
             pinecone_context=pinecone_context,
             intent=intent,
             format_rules=RESPONSE_FORMAT_RULES,
             synthesis_instructions=SYNTHESIS_INSTRUCTIONS
         )
+
+        # Log the context being sent to LLM (full content for troubleshooting)
+        logger.info("📦 LLM Synthesis Context:")
+        logger.info(f"  Equipment: {equipment_context}")
+        logger.info(f"  DIP Context: {dip_context}")
+        logger.info(f"  Pinecone Context: {pinecone_context}")
 
         try:
             response = await self._call_llm(prompt)
@@ -218,7 +227,8 @@ class LLMService:
             return self._fallback_scoring(total_results, equipment_count)
 
     async def _call_llm(self, prompt: str) -> str:
-        """Call LLM with fallback between Anthropic and OpenAI"""
+        """Call LLM with fallback between Anthropic and OpenAI with usage tracking"""
+        start_time = datetime.now()
 
         # Try Anthropic first (Claude)
         if self.anthropic_client:
@@ -231,6 +241,30 @@ class LLMService:
                         "content": prompt
                     }]
                 )
+
+                # Log LLM usage metrics
+                duration_ms = (datetime.now() - start_time).total_seconds() * 1000
+                usage = message.usage
+                input_tokens = usage.input_tokens
+                output_tokens = usage.output_tokens
+
+                # Anthropic Claude Haiku pricing (as of 2025)
+                # Input: $0.25 per 1M tokens, Output: $1.25 per 1M tokens
+                input_cost = (input_tokens / 1_000_000) * 0.25
+                output_cost = (output_tokens / 1_000_000) * 1.25
+                total_cost = input_cost + output_cost
+
+                logger.info("💰 LLM Usage (Anthropic Claude Haiku)", {
+                    "model": "claude-3-haiku-20240307",
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "total_tokens": input_tokens + output_tokens,
+                    "duration_ms": round(duration_ms, 2),
+                    "estimated_cost_usd": round(total_cost, 6),
+                    "input_cost_usd": round(input_cost, 6),
+                    "output_cost_usd": round(output_cost, 6)
+                })
+
                 return message.content[0].text
 
             except Exception as e:
@@ -247,6 +281,31 @@ class LLMService:
                     }],
                     max_tokens=2000
                 )
+
+                # Log LLM usage metrics
+                duration_ms = (datetime.now() - start_time).total_seconds() * 1000
+                usage = response.usage
+                input_tokens = usage.prompt_tokens
+                output_tokens = usage.completion_tokens
+                total_tokens = usage.total_tokens
+
+                # GPT-3.5-turbo pricing (as of 2025)
+                # Input: $0.50 per 1M tokens, Output: $1.50 per 1M tokens
+                input_cost = (input_tokens / 1_000_000) * 0.50
+                output_cost = (output_tokens / 1_000_000) * 1.50
+                total_cost = input_cost + output_cost
+
+                logger.info("💰 LLM Usage (OpenAI GPT-3.5-turbo)", {
+                    "model": "gpt-3.5-turbo",
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "total_tokens": total_tokens,
+                    "duration_ms": round(duration_ms, 2),
+                    "estimated_cost_usd": round(total_cost, 6),
+                    "input_cost_usd": round(input_cost, 6),
+                    "output_cost_usd": round(output_cost, 6)
+                })
+
                 return response.choices[0].message.content
 
             except Exception as e:
@@ -414,11 +473,8 @@ class LLMService:
             lines.append(f"\n{i+1}. {doc_title} (relevance: {score:.2f})")
             lines.append(f"   Type: {doc_type}")
 
-            # Include excerpt of content (first 200 chars)
+            # Include full content for LLM synthesis
             if doc_content:
-                excerpt = doc_content[:200].strip()
-                if len(doc_content) > 200:
-                    excerpt += "..."
-                lines.append(f"   Content: {excerpt}")
+                lines.append(f"   Content: {doc_content.strip()}")
 
         return "\n".join(lines)
