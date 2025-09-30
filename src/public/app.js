@@ -291,8 +291,8 @@ function addMessage(text, type, metadata = {}) {
   const wrapper = document.createElement('div');
   wrapper.className = `message ${type === 'outbound' ? 'user' : 'assistant'}`;
 
-  // Format message content with proper HTML
-  const formattedContent = formatMessageContent(text);
+  // Use parseMarkdown for consistent formatting (same as addEnhancedMessage)
+  const formattedContent = type === 'outbound' ? formatMessageContent(text) : parseMarkdown(text);
 
   // Create message bubble
   const bubble = document.createElement('div');

@@ -1,50 +1,56 @@
 import express from 'express';
-import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { AdminLogsEnvelope, adminLogsQuerySchema } from '../../schemas/admin.schema.js';
+import { getLogs, getLogMetadata } from '../../services/logs.service.js';
 
 const router = express.Router();
-
-// Apply admin gate middleware
-router.use(adminGate);
 
 // Apply response validation to all routes in this file
 router.use(validateResponse(AdminLogsEnvelope));
 
 // GET /admin/logs - Get log files
-router.get('/', 
+router.get('/',
   validate(adminLogsQuerySchema, 'query'),
   async (req, res, next) => {
   try {
-    const { level, limit, correlationId } = req.query;
-    
-    // Build query parameters object
-    const queryParams = {};
-    if (level !== undefined) queryParams.level = level;
-    if (limit !== undefined) queryParams.limit = limit;
-    if (correlationId !== undefined) queryParams.correlationId = correlationId;
+    const { level, service, module, correlationId, limit, search } = req.query;
 
-    // Validate query parameters
-    const validationResult = adminLogsQuerySchema.safeParse(queryParams);
-    
-    if (!validationResult.success) {
-      const error = new Error('Invalid query parameters');
-      error.name = 'ZodError';
-      error.errors = validationResult.error.errors;
-      throw error;
-    }
+    // Get logs with filters
+    const result = await getLogs({
+      level,
+      service,
+      module,
+      correlationId,
+      limit: limit ? parseInt(limit) : 100,
+      search
+    });
 
-    // TODO: Implement actual log retrieval
     const logsData = {
-      logs: [],
-      count: 0,
+      logs: result.logs,
+      count: result.returned,
       timestamp: new Date().toISOString()
     };
 
     const envelope = {
       success: true,
       data: logsData
+    };
+
+    return res.json(envelope);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /admin/logs/metadata - Get available services, modules, levels
+router.get('/metadata', async (req, res, next) => {
+  try {
+    const metadata = await getLogMetadata();
+
+    const envelope = {
+      success: true,
+      data: metadata
     };
 
     return res.json(envelope);

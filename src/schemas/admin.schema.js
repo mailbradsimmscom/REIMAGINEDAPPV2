@@ -227,8 +227,9 @@ const AdminLogsData = z.object({
     level: z.string(),
     message: z.string(),
     correlationId: z.string().optional(),
-    metadata: z.record(z.any()).optional()
-  })),
+    service: z.string().optional(),
+    module: z.string().optional()
+  }).passthrough()), // Allow additional fields
   count: z.number(),
   timestamp: z.string()
 });

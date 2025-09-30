@@ -236,11 +236,18 @@ class ChatWorkflow:
 
                 # Extract search keywords from classification or fall back to raw query
                 search_query = state["user_query"]
+                used_keywords = False
                 if "classification" in state and state["classification"]:
                     keywords = state["classification"].get("search_keywords", [])
                     if keywords:
                         search_query = " ".join(keywords)
-                        logger.debug(f"Using extracted keywords for DIP search: {search_query}")
+                        used_keywords = True
+
+                equipment_name = f"{equipment.get('manufacturer', '')} {equipment.get('model', '')}".strip()
+                logger.info(
+                    f"🔍 DIP Search Query: '{search_query}' "
+                    f"(keywords={used_keywords}, equipment={equipment_name}, original='{state['user_query']}')"
+                )
 
                 # Query DIP tables
                 if hasattr(self.dip_retriever, 'query_production_dip_tables'):
@@ -256,6 +263,11 @@ class ChatWorkflow:
                         systems_context=focused_context
                     )
 
+                # Log DIP results for this equipment
+                logger.info(f"📊 DIP Results for {equipment_name}: {len(equipment_results)} results")
+                for idx, result in enumerate(equipment_results):
+                    logger.info(f"  DIP Result {idx+1}: type={result.get('type')}, content_preview={str(result.get('content', ''))[:200]}")
+
                 # Add equipment context to results
                 for result in equipment_results:
                     result["equipment"] = equipment
@@ -264,9 +276,17 @@ class ChatWorkflow:
             state["dip_results"] = all_dip_results
 
             # Add Pinecone semantic search for equipment-specific documents
+            # Use same query strategy as DIP: prefer extracted keywords over raw query
+            pinecone_query = state["user_query"]
+            if "classification" in state and state["classification"]:
+                keywords = state["classification"].get("search_keywords", [])
+                if keywords:
+                    pinecone_query = " ".join(keywords)
+
             pinecone_results = await self._query_pinecone_for_equipment(
-                query=state["user_query"],
-                equipment_context=state["systems_context"]
+                query=pinecone_query,
+                equipment_context=state["systems_context"],
+                original_query=state["user_query"]
             )
             state["pinecone_results"] = pinecone_results
 
@@ -409,13 +429,14 @@ class ChatWorkflow:
                 "metadata": {"workflow": "error"}
             }
 
-    async def _query_pinecone_for_equipment(self, query: str, equipment_context: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    async def _query_pinecone_for_equipment(self, query: str, equipment_context: List[Dict[str, Any]], original_query: str = None) -> Optional[Dict[str, Any]]:
         """
         Query Pinecone for equipment-specific documents using semantic search
 
         Args:
-            query: User's natural language query
+            query: Search query (extracted keywords or user query)
             equipment_context: List of equipment from systems table
+            original_query: Original user query for logging
 
         Returns:
             Dict with Pinecone search results or None if not available
@@ -425,8 +446,10 @@ class ChatWorkflow:
             return None
 
         try:
-            # Build equipment-aware search query
+            # Build equipment-aware search query and metadata filter
             equipment_names = []
+            metadata_filter = None
+
             for eq in equipment_context:
                 manufacturer = eq.get('manufacturer', '')
                 model = eq.get('model', '')
@@ -437,6 +460,20 @@ class ChatWorkflow:
                 elif model:
                     equipment_names.append(model)
 
+            # Build metadata filter for first equipment (most relevant)
+            if equipment_context:
+                eq = equipment_context[0]
+                manufacturer = eq.get('manufacturer', '').strip()
+                model = eq.get('model', '').strip()
+
+                if manufacturer or model:
+                    metadata_filter = {}
+                    if manufacturer:
+                        metadata_filter['manufacturer'] = manufacturer
+                    if model:
+                        metadata_filter['model'] = model
+                    logger.info(f"🔍 Pinecone Metadata Filter: {metadata_filter}")
+
             # Enhance query with equipment context for better semantic matching
             # Heavily weight the specific equipment model since manuals often cover multiple models
             enhanced_query = query
@@ -445,27 +482,64 @@ class ChatWorkflow:
                 equipment_emphasis = " ".join([name for name in equipment_names for _ in range(3)])
                 enhanced_query = f"{equipment_emphasis} {query} {equipment_emphasis}"
 
-            logger.debug(f"Querying Pinecone with enhanced query: {enhanced_query}")
+            # Log Pinecone query with details (similar to DIP logging)
+            used_keywords = original_query is not None and query != original_query
+            equipment_name = equipment_names[0] if equipment_names else "none"
+            logger.info(
+                f"🔍 Pinecone Search Query: '{query}' "
+                f"(keywords={used_keywords}, equipment={equipment_name}, original='{original_query or query}')"
+            )
 
             # Search Pinecone for relevant documents
-            top_k = int(os.getenv('PINECONE_TOP_K', '10'))
+            # Use much higher top_k when metadata filter is applied since we've already
+            # narrowed the search space to specific equipment
+            if metadata_filter:
+                top_k = int(os.getenv('PINECONE_TOP_K_FILTERED', '100'))
+            else:
+                top_k = int(os.getenv('PINECONE_TOP_K', '30'))
+
             search_result = self.pinecone_client.search_vectors(
                 query=enhanced_query,
                 top_k=top_k,
                 include_metadata=True,
-                include_values=False
+                include_values=False,
+                filter_dict=metadata_filter
             )
 
             if search_result.get("success"):
                 matches = search_result.get("matches", [])
-                logger.debug(f"Pinecone returned {len(matches)} document matches")
+
+                # Apply score threshold based on whether metadata filter is used
+                # Lower threshold (0.35) when filtering by equipment since we have higher confidence
+                # Default threshold (0.5) for unfiltered searches
+                threshold = 0.35 if metadata_filter else 0.5
+                filtered_matches = [m for m in matches if m.get('score', 0) >= threshold]
+
+                logger.info(
+                    f"🔍 Pinecone Results: {len(matches)} total, {len(filtered_matches)} above threshold {threshold} "
+                    f"(metadata_filter={'applied' if metadata_filter else 'none'})"
+                )
+
+                # Log each match with full details
+                for idx, match in enumerate(filtered_matches):
+                    match_metadata = match.get('metadata', {})
+                    content_preview = str(match_metadata.get('content', ''))[:300]
+                    logger.info(
+                        f"  Pinecone Match {idx+1}: id={match.get('id')}, score={match.get('score'):.4f}, "
+                        f"manufacturer={match_metadata.get('manufacturer')}, model={match_metadata.get('model')}, "
+                        f"page={match_metadata.get('page')}, chunk_id={match_metadata.get('chunk_id')}, "
+                        f"content_preview={content_preview}"
+                    )
 
                 return {
                     "success": True,
-                    "matches": matches,
+                    "matches": filtered_matches,
                     "enhanced_query": enhanced_query,
                     "equipment_context": equipment_names,
-                    "match_count": len(matches)
+                    "match_count": len(filtered_matches),
+                    "metadata_filter": metadata_filter,
+                    "threshold": threshold,
+                    "total_matches": len(matches)
                 }
             else:
                 logger.warning(f"Pinecone search failed: {search_result.get('error', 'Unknown error')}")

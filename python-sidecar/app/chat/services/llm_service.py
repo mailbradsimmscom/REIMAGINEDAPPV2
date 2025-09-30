@@ -461,7 +461,7 @@ class LLMService:
         lines = []
         lines.append(f"Found {len(matches)} relevant documents:")
 
-        for i, match in enumerate(matches[:3]):  # Limit to top 3 documents
+        for i, match in enumerate(matches):  # Send ALL matches to LLM
             score = match.get("score", 0)
             metadata = match.get("metadata", {})
 
@@ -473,8 +473,8 @@ class LLMService:
             lines.append(f"\n{i+1}. {doc_title} (relevance: {score:.2f})")
             lines.append(f"   Type: {doc_type}")
 
-            # Include full content for LLM synthesis
+            # Include FULL content - no character limits, let LLM extract what's needed
             if doc_content:
-                lines.append(f"   Content: {doc_content.strip()}")
+                lines.append(f"   Content: {doc_content}")
 
         return "\n".join(lines)

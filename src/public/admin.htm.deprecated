@@ -30,16 +30,16 @@
             
             <!-- Chunks Section -->
             <section id="section-chunks" data-route="chunks" data-include="/public/partials/sections/chunks.html"></section>
-            
+
             <!-- Metrics Section -->
             <section id="section-metrics" data-route="metrics" data-include="/public/partials/sections/metrics.html"></section>
-            
+
             <!-- Health Section -->
             <section id="section-health" data-route="health" data-include="/public/partials/sections/health.html"></section>
-            
+
             <!-- Systems Section -->
             <section id="section-systems" data-route="systems" data-include="/public/partials/sections/systems.html"></section>
-            
+
             <!-- Suggestions Section -->
             <section id="section-suggestions" data-route="suggestions" data-include="/public/partials/sections/suggestions.html"></section>
         </main>

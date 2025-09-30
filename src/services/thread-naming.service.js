@@ -45,9 +45,8 @@ export async function shouldNameThread(threadId) {
     const messages = await getChatMessages(threadId, { limit: 10 });
     const messageCount = messages.length;
 
-    // Should name after 1st user message + 1st assistant response (2-4 messages)
-    // Allow flexibility for retries/duplicates but prevent repeated naming on long threads
-    return messageCount >= 2 && messageCount <= 4;
+    // Should name after 1st user message + 1st assistant response (exactly 2 messages)
+    return messageCount === 2;
 
   } catch (error) {
     logger.warn('Failed to check if thread needs naming', {
