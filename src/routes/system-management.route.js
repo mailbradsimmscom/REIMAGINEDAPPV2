@@ -1,0 +1,364 @@
+import { Router } from 'express';
+import * as service from '../services/system-management.service.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * System Management Routes
+ *
+ * HTTP endpoints for system management feature.
+ * Follows cursor rules: Thin routes, no I/O or business logic.
+ * All responses follow standard format: { success, data?, error?, requestId? }
+ */
+
+const router = Router();
+
+/**
+ * GET /api/system-management/manufacturers
+ * Returns list of all manufacturers
+ */
+router.get('/manufacturers', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await service.getManufacturersList();
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      manufacturers: result.manufacturers,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching manufacturers', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/system-management/models?manufacturer=Fortress
+ * Returns models for specified manufacturer
+ */
+router.get('/models', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { manufacturer } = req.query;
+
+  if (!manufacturer) {
+    return res.status(400).json({
+      success: false,
+      error: 'manufacturer query parameter is required',
+      requestId: requestLogger.requestId
+    });
+  }
+
+  try {
+    const result = await service.getModelsForManufacturer(manufacturer);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      models: result.models,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching models', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/system-management/search?manufacturer=Fortress&model=FX-7
+ * Search for system by manufacturer and model
+ */
+router.get('/search', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { manufacturer, model } = req.query;
+
+  if (!manufacturer || !model) {
+    return res.status(400).json({
+      success: false,
+      error: 'manufacturer and model query parameters are required',
+      requestId: requestLogger.requestId
+    });
+  }
+
+  try {
+    const result = await service.searchSystem(manufacturer, model);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      systems: result.systems,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error searching systems', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/system-management/:assetUid
+ * Get full system details with instances
+ */
+router.get('/:assetUid', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { assetUid } = req.params;
+
+  try {
+    const result = await service.getSystemWithInstances(assetUid);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      system: result.system,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching system details', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * POST /api/system-management/systems
+ * Create a new system
+ */
+router.post('/systems', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await service.createSystem(req.body);
+
+    if (!result.success) {
+      const statusCode = result.validationErrors ? 400 : 500;
+      return res.status(statusCode).json({
+        success: false,
+        error: result.error,
+        validationErrors: result.validationErrors,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error creating system', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * PUT /api/system-management/systems/:assetUid
+ * Update an existing system
+ */
+router.put('/systems/:assetUid', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { assetUid } = req.params;
+
+  try {
+    const result = await service.updateSystem(assetUid, req.body);
+
+    if (!result.success) {
+      const statusCode = result.validationErrors ? 400 : 500;
+      return res.status(statusCode).json({
+        success: false,
+        error: result.error,
+        validationErrors: result.validationErrors,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error updating system', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * DELETE /api/system-management/systems/:assetUid
+ * Delete a system and archive its instances
+ */
+router.delete('/systems/:assetUid', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { assetUid } = req.params;
+
+  try {
+    const result = await service.deleteSystem(assetUid);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error deleting system', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * POST /api/system-management/instances
+ * Create a new instance
+ */
+router.post('/instances', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await service.createInstance(req.body);
+
+    if (!result.success) {
+      const statusCode = result.validationErrors ? 400 : 500;
+      return res.status(statusCode).json({
+        success: false,
+        error: result.error,
+        validationErrors: result.validationErrors,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error creating instance', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * PUT /api/system-management/instances/:instanceUid
+ * Update an existing instance
+ */
+router.put('/instances/:instanceUid', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { instanceUid } = req.params;
+
+  try {
+    const result = await service.updateInstance(instanceUid, req.body);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error updating instance', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * DELETE /api/system-management/instances/:instanceUid
+ * Delete (archive) an instance
+ */
+router.delete('/instances/:instanceUid', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { instanceUid } = req.params;
+
+  try {
+    const result = await service.deleteInstance(instanceUid);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error deleting instance', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+export default router;

@@ -196,17 +196,55 @@ class PineconeClient:
                 "processing_time": time.time() - start_time
             }
     
+    def delete_vectors(self, ids: List[str], namespace: str = None) -> Dict[str, Any]:
+        """Delete vectors from Pinecone by IDs"""
+        start_time = time.time()
+
+        if not self.index:
+            logger.warning("Pinecone not initialized, simulating delete")
+            return {
+                "success": True,
+                "deleted_count": len(ids),
+                "namespace": namespace or self.namespace,
+                "processing_time": time.time() - start_time,
+                "simulated": True
+            }
+
+        try:
+            # Delete vectors from Pinecone
+            self.index.delete(
+                ids=ids,
+                namespace=namespace or self.namespace
+            )
+
+            processing_time = time.time() - start_time
+
+            return {
+                "success": True,
+                "deleted_count": len(ids),
+                "namespace": namespace or self.namespace,
+                "processing_time": processing_time
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to delete vectors: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "processing_time": time.time() - start_time
+            }
+
     def process_document_chunks(self, chunks: List[Dict[str, Any]], doc_metadata: Dict[str, Any]) -> Dict[str, Any]:
         """Process document chunks and store in Pinecone"""
         start_time = time.time()
-        
+
         try:
             vectors = []
-            
+
             for i, chunk in enumerate(chunks):
                 # Clean metadata - remove null values for Pinecone compatibility
                 clean_doc_metadata = {k: v for k, v in doc_metadata.items() if v is not None}
-                
+
                 # Generate embedding for chunk text
                 embedding_result = self.generate_embedding(
                     text=chunk["content"],
@@ -219,19 +257,19 @@ class PineconeClient:
                         "content": chunk["content"]
                     }
                 )
-                
+
                 if embedding_result["success"]:
                     vectors.append({
                         "id": embedding_result["embedding_id"],
                         "vector": embedding_result["vector"],
                         "metadata": embedding_result["metadata"]
                     })
-            
+
             # Upsert all vectors
             upsert_result = self.upsert_vectors(vectors)
-            
+
             processing_time = time.time() - start_time
-            
+
             return {
                 "success": upsert_result["success"],
                 "chunks_processed": len(chunks),
@@ -240,7 +278,7 @@ class PineconeClient:
                 "processing_time": processing_time,
                 "error": upsert_result.get("error")
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to process document chunks: {e}")
             return {

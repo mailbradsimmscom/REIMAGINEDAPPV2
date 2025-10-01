@@ -14,10 +14,12 @@ import { trace404 } from './middleware/trace404.js';
 // Routers
 import healthRouter from './routes/health.router.js';
 import systemsRouter from './routes/systems.router.js';
+import systemManagementRouter from './routes/system-management.route.js';
 import chatRouter from './routes/chat/index.js';
 import documentRouter from './routes/document/index.js';
 import pineconeRouter from './routes/pinecone.router.js';
 import adminRouter from './routes/admin/index.js';
+import pineconeAdminRouter from './routes/admin/pinecone-admin.route.js';
 import testNormalizerRouter from './routes/test-normalizer.route.js';
 // import langGraphTestRouter from './routes/langgraph-test.route.js'; // Temporarily disabled
 
@@ -58,11 +60,13 @@ attachConfigInspector(app);
 // --- mount routers ---
 safeMount('/health', healthRouter);
 safeMount('/systems', systemsRouter);
+safeMount('/api/system-management', systemManagementRouter);
 safeMount('/chat', chatRouter);
 safeMount('/document', documentRouter);  // alias for backward compatibility
 safeMount('/pinecone', pineconeRouter);
 safeMount('/admin/docs', documentRouter);  // mount BEFORE /admin to avoid conflicts
 safeMount('/admin/api', adminRouter);
+safeMount('/admin/pinecone-admin', pineconeAdminRouter);
 safeMount('/test-normalizer', testNormalizerRouter);
 // safeMount('/langgraph', langGraphTestRouter); // Temporarily disabled
 

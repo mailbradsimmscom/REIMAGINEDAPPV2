@@ -160,9 +160,42 @@ async def search_pinecone(request: dict):
 
         logger.debug(f"Search completed: {len(search_results['matches'])} results")
         return JSONResponse(content=search_results)
-        
+
     except Exception as e:
         logger.error(f"Failed to search Pinecone: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/v1/pinecone/delete")
+async def delete_pinecone_vectors(request: dict):
+    """Delete vectors from Pinecone by IDs"""
+    try:
+        logger.debug("Deleting Pinecone vectors")
+
+        # Parse request body
+        ids = request.get("ids", [])
+        namespace = request.get("namespace", "REIMAGINEDDOCS")
+
+        if not ids or not isinstance(ids, list) or len(ids) == 0:
+            raise HTTPException(status_code=400, detail="ids array is required")
+
+        logger.debug(f"Delete params: {len(ids)} vectors, namespace='{namespace}'")
+
+        # Delete vectors
+        delete_results = pinecone_client.delete_vectors(
+            ids=ids,
+            namespace=namespace
+        )
+
+        if not delete_results["success"]:
+            raise HTTPException(status_code=500, detail=delete_results["error"])
+
+        logger.info(f"Deleted {delete_results['deleted_count']} vectors from namespace '{namespace}'")
+        return JSONResponse(content=delete_results)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to delete vectors: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/v1/parse", response_model=ParseResponse)

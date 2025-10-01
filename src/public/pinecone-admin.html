@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinecone Admin - Mantis</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header-content p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .delete-button {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-light);
+        }
+
+        .delete-button:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .delete-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Content card */
+        .content-card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Tree structure */
+        .tree {
+            list-style: none;
+        }
+
+        .tree-item {
+            margin: 0;
+            padding: 0;
+        }
+
+        .tree-node {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-xs);
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .tree-node:hover {
+            background: var(--background-color);
+        }
+
+        .tree-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: var(--spacing-md);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .tree-toggle {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-sm);
+            color: var(--text-secondary);
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .tree-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .tree-label {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .tree-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--background-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: var(--spacing-sm);
+        }
+
+        .tree-children {
+            list-style: none;
+            padding-left: var(--spacing-xl);
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+
+        .tree-children.visible {
+            display: block;
+        }
+
+        .tree-metadata {
+            padding: var(--spacing-md);
+            padding-left: calc(var(--spacing-xl) + var(--spacing-lg));
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-sm);
+            display: none;
+        }
+
+        .tree-metadata.visible {
+            display: block;
+        }
+
+        .metadata-row {
+            display: flex;
+            padding: var(--spacing-xs) 0;
+        }
+
+        .metadata-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--text-primary);
+        }
+
+        .metadata-value {
+            font-family: 'SF Mono', monospace;
+            word-break: break-all;
+        }
+
+        .content-preview {
+            padding: var(--spacing-md);
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            margin-top: var(--spacing-sm);
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            display: none;
+        }
+
+        .content-preview.visible {
+            display: block;
+        }
+
+        .content-toggle {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: var(--spacing-sm);
+            display: inline-block;
+        }
+
+        .content-toggle:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Messages */
+        .message {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-md);
+            display: none;
+        }
+
+        .message.visible {
+            display: block;
+        }
+
+        .message.success {
+            background: #d1f2d1;
+            color: #2d7a2d;
+            border: 1px solid var(--success-color);
+        }
+
+        .message.error {
+            background: #ffebeb;
+            color: #c62828;
+            border: 1px solid var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>Pinecone Admin</h1>
+                <p>Manage document chunks in Pinecone vector database</p>
+            </div>
+            <button class="delete-button" id="deleteBtn" onclick="deleteSelected()" disabled>
+                Delete Selected
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div class="message success" id="successMessage"></div>
+        <div class="message error" id="errorMessage"></div>
+
+        <!-- Content -->
+        <div class="content-card">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading models...</p>
+            </div>
+
+            <ul class="tree" id="treeRoot" style="display: none;">
+                <!-- Tree will be populated here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let modelsData = [];
+        let chunksCache = {}; // Cache chunks by model
+        let selectedVectorIds = new Set();
+        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
+
+        // Helper function to add admin token to fetch options
+        function withAdminToken(options = {}) {
+            return {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    'X-Admin-Token': ADMIN_TOKEN
+                }
+            };
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
+
+        async function init() {
+            await loadModels();
+        }
+
+        // Load all models with chunk counts
+        async function loadModels() {
+            try {
+                const response = await fetch('/admin/pinecone-admin/models', withAdminToken());
+                const data = await response.json();
+
+                if (!data.success) {
+                    showError('Failed to load models: ' + (data.error || 'Unknown error'));
+                    return;
+                }
+
+                modelsData = data.data;
+                renderTree();
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('treeRoot').style.display = 'block';
+
+            } catch (error) {
+                showError('Failed to load models: ' + error.message);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Render the tree structure
+        function renderTree() {
+            const treeRoot = document.getElementById('treeRoot');
+            treeRoot.innerHTML = '';
+
+            modelsData.forEach((modelData, index) => {
+                const li = document.createElement('li');
+                li.className = 'tree-item';
+                li.dataset.model = modelData.model;
+                
+                li.innerHTML = `
+                    <div class="tree-node" onclick="toggleModel(event, '${modelData.model}')">
+                        <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleModelCheckbox('${modelData.model}')" id="cb-model-${index}">
+                        <span class="tree-toggle" id="toggle-${modelData.model}">▶</span>
+                        <span class="tree-label">${modelData.manufacturer} - ${modelData.model}</span>
+                        <span class="tree-count">${modelData.chunkCount} chunks</span>
+                    </div>
+                    <ul class="tree-children" id="children-${modelData.model}">
+                        <!-- Chunks will be loaded here -->
+                    </ul>
+                `;
+
+                treeRoot.appendChild(li);
+            });
+        }
+
+        // Toggle model expansion
+        async function toggleModel(event, model) {
+            event.stopPropagation();
+            
+            const toggle = document.getElementById(`toggle-${model}`);
+            const children = document.getElementById(`children-${model}`);
+            
+            if (children.classList.contains('visible')) {
+                // Collapse
+                toggle.classList.remove('expanded');
+                children.classList.remove('visible');
+            } else {
+                // Expand
+                toggle.classList.add('expanded');
+                children.classList.add('visible');
+                
+                // Load chunks if not cached
+                if (!chunksCache[model]) {
+                    await loadChunks(model);
+                }
+            }
+        }
+
+        // Load chunks for a model
+        async function loadChunks(model) {
+            const children = document.getElementById(`children-${model}`);
+            children.innerHTML = '<li style="padding: var(--spacing-md); color: var(--text-secondary);">Loading chunks...</li>';
+
+            try {
+                const response = await fetch('/admin/pinecone-admin/chunks', withAdminToken({
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model })
+                }));
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    children.innerHTML = '<li style="padding: var(--spacing-md); color: var(--error-color);">Failed to load chunks</li>';
+                    return;
+                }
+
+                chunksCache[model] = data.data.chunks;
+                renderChunks(model, data.data.chunks);
+
+            } catch (error) {
+                children.innerHTML = '<li style="padding: var(--spacing-md); color: var(--error-color);">Error: ' + error.message + '</li>';
+            }
+        }
+
+        // Render chunks for a model
+        function renderChunks(model, chunks) {
+            const children = document.getElementById(`children-${model}`);
+            children.innerHTML = '';
+
+            chunks.forEach((chunk, index) => {
+                const li = document.createElement('li');
+                li.className = 'tree-item';
+                li.dataset.vectorId = chunk.id;
+                li.dataset.model = model;
+                
+                li.innerHTML = `
+                    <div class="tree-node" onclick="toggleChunk(event, '${chunk.id}')">
+                        <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleChunkCheckbox('${chunk.id}', '${model}')" id="cb-chunk-${chunk.id}">
+                        <span class="tree-toggle" id="toggle-chunk-${chunk.id}">▶</span>
+                        <span class="tree-label">${chunk.metadata.chunk_id || chunk.id.substring(0, 8)}</span>
+                        <span class="tree-count">Page ${chunk.metadata.page || 'N/A'}</span>
+                    </div>
+                    <div class="tree-metadata" id="metadata-${chunk.id}">
+                        <div class="metadata-row">
+                            <span class="metadata-label">Vector ID:</span>
+                            <span class="metadata-value">${chunk.id}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">File:</span>
+                            <span class="metadata-value">${chunk.metadata.file_name || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Page:</span>
+                            <span class="metadata-value">${chunk.metadata.page || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Chunk Index:</span>
+                            <span class="metadata-value">${chunk.metadata.chunk_index || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Chunk Type:</span>
+                            <span class="metadata-value">${chunk.metadata.chunk_type || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Manufacturer:</span>
+                            <span class="metadata-value">${chunk.metadata.manufacturer || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Model:</span>
+                            <span class="metadata-value">${chunk.metadata.model || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Revision Date:</span>
+                            <span class="metadata-value">${chunk.metadata.revision_date || 'N/A'}</span>
+                        </div>
+                        ${chunk.metadata.content ? `
+                            <div class="metadata-row" style="flex-direction: column; align-items: flex-start;">
+                                <span class="content-toggle" onclick="toggleContent('${chunk.id}')">▶ Show Content</span>
+                                <div class="content-preview" id="content-${chunk.id}">${chunk.metadata.content}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                children.appendChild(li);
+            });
+        }
+
+        // Toggle chunk metadata
+        function toggleChunk(event, chunkId) {
+            event.stopPropagation();
+            
+            const toggle = document.getElementById(`toggle-chunk-${chunkId}`);
+            const metadata = document.getElementById(`metadata-${chunkId}`);
+            
+            if (metadata.classList.contains('visible')) {
+                toggle.classList.remove('expanded');
+                metadata.classList.remove('visible');
+            } else {
+                toggle.classList.add('expanded');
+                metadata.classList.add('visible');
+            }
+        }
+
+        // Toggle content visibility
+        function toggleContent(chunkId) {
+            const content = document.getElementById(`content-${chunkId}`);
+            const toggle = event.target;
+            
+            if (content.classList.contains('visible')) {
+                content.classList.remove('visible');
+                toggle.textContent = '▶ Show Content';
+            } else {
+                content.classList.add('visible');
+                toggle.textContent = '▼ Hide Content';
+            }
+        }
+
+        // Toggle model checkbox (select all chunks)
+        function toggleModelCheckbox(model) {
+            const checkbox = document.querySelector(`[data-model="${model}"] .tree-checkbox`);
+            const isChecked = checkbox.checked;
+            
+            if (isChecked) {
+                // Select all chunks for this model
+                if (chunksCache[model]) {
+                    chunksCache[model].forEach(chunk => {
+                        selectedVectorIds.add(chunk.id);
+                        const chunkCb = document.getElementById(`cb-chunk-${chunk.id}`);
+                        if (chunkCb) chunkCb.checked = true;
+                    });
+                }
+            } else {
+                // Deselect all chunks for this model
+                if (chunksCache[model]) {
+                    chunksCache[model].forEach(chunk => {
+                        selectedVectorIds.delete(chunk.id);
+                        const chunkCb = document.getElementById(`cb-chunk-${chunk.id}`);
+                        if (chunkCb) chunkCb.checked = false;
+                    });
+                }
+            }
+            
+            updateDeleteButton();
+        }
+
+        // Toggle chunk checkbox
+        function toggleChunkCheckbox(chunkId, model) {
+            const checkbox = document.getElementById(`cb-chunk-${chunkId}`);
+            const isChecked = checkbox.checked;
+            
+            if (isChecked) {
+                selectedVectorIds.add(chunkId);
+            } else {
+                selectedVectorIds.delete(chunkId);
+                
+                // Uncheck parent model checkbox
+                const modelCb = document.querySelector(`[data-model="${model}"] .tree-checkbox`);
+                if (modelCb) modelCb.checked = false;
+            }
+            
+            updateDeleteButton();
+        }
+
+        // Update delete button state
+        function updateDeleteButton() {
+            const deleteBtn = document.getElementById('deleteBtn');
+            deleteBtn.disabled = selectedVectorIds.size === 0;
+            
+            if (selectedVectorIds.size > 0) {
+                deleteBtn.textContent = `Delete Selected (${selectedVectorIds.size})`;
+            } else {
+                deleteBtn.textContent = 'Delete Selected';
+            }
+        }
+
+        // Delete selected chunks
+        async function deleteSelected() {
+            if (selectedVectorIds.size === 0) return;
+            
+            const count = selectedVectorIds.size;
+            const confirmed = confirm(`⚠️ WARNING: This will PERMANENTLY delete ${count} chunk${count > 1 ? 's' : ''} from Pinecone.\n\nThis action cannot be undone!\n\nAre you sure you want to continue?`);
+            
+            if (!confirmed) return;
+            
+            try {
+                const vectorIds = Array.from(selectedVectorIds);
+
+                const response = await fetch('/admin/pinecone-admin/chunks', withAdminToken({
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vectorIds })
+                }));
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    showError('Failed to delete chunks: ' + (data.error || 'Unknown error'));
+                    return;
+                }
+                
+                showSuccess(`Successfully deleted ${count} chunk${count > 1 ? 's' : ''}`);
+                
+                // Clear cache and reload
+                selectedVectorIds.clear();
+                chunksCache = {};
+                await loadModels();
+                
+            } catch (error) {
+                showError('Failed to delete chunks: ' + error.message);
+            }
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const el = document.getElementById('successMessage');
+            el.textContent = message;
+            el.classList.add('visible');
+            setTimeout(() => el.classList.remove('visible'), 5000);
+        }
+
+        // Show error message
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.classList.add('visible');
+            setTimeout(() => el.classList.remove('visible'), 10000);
+        }
+    </script>
+</body>
+</html>

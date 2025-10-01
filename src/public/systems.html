@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Management - Mantis</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Mode Selector */
+        .mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mode-button {
+            padding: var(--spacing-lg);
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .mode-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .mode-button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .mode-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--border-color);
+        }
+
+        /* Dropdown Section */
+        .dropdown-section {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .dropdown-section.visible {
+            display: grid;
+        }
+
+        .dropdown-group {
+            background: var(--surface-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+        }
+
+        .dropdown-group label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .dropdown-group select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .dropdown-group select:disabled {
+            background: var(--background-color);
+            cursor: not-allowed;
+        }
+
+        /* System Form */
+        .system-form {
+            display: none;
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+        }
+
+        .system-form.visible {
+            display: block;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-primary);
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-field {
+            position: relative;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .form-field.error input,
+        .form-field.error select,
+        .form-field.error textarea {
+            border-color: var(--error-color);
+        }
+
+        .error-indicator {
+            position: absolute;
+            right: 12px;
+            top: 40px;
+            color: var(--error-color);
+            font-weight: 700;
+            display: none;
+        }
+
+        .form-field.error .error-indicator {
+            display: block;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 13px;
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+
+        .form-field.error .error-message {
+            display: block;
+        }
+
+        .required {
+            color: var(--error-color);
+        }
+
+        /* Instances Section */
+        .instances-section {
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .instances-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .instances-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .add-instance-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .add-instance-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .instances-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .instance-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: var(--spacing-md);
+            background: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            align-items: center;
+        }
+
+        .instance-row input {
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+        }
+
+        .remove-instance-btn {
+            padding: var(--spacing-sm);
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            font-weight: 700;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-small);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-primary.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--background-color);
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        /* Messages */
+        .message {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-md);
+            display: none;
+        }
+
+        .message.visible {
+            display: block;
+        }
+
+        .message.success {
+            background: #d1f2d1;
+            color: #2d7a2d;
+            border: 1px solid var(--success-color);
+        }
+
+        .message.error {
+            background: #ffebeb;
+            color: #c62828;
+            border: 1px solid var(--error-color);
+        }
+
+        .uuid-display {
+            background: var(--background-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            font-family: 'SF Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>System Management</h1>
+            <p>Manage marine equipment systems and instances</p>
+        </div>
+
+        <!-- Messages -->
+        <div id="successMessage" class="message success"></div>
+        <div id="errorMessage" class="message error"></div>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-button" id="findEditBtn" onclick="setMode('edit')">
+                Find/Edit System
+            </button>
+            <button class="mode-button" id="newSystemBtn" onclick="setMode('new')">
+                New System
+            </button>
+        </div>
+
+        <!-- Dropdown Section -->
+        <div class="dropdown-section" id="dropdownSection">
+            <div class="dropdown-group">
+                <label for="manufacturerSelect">Manufacturer</label>
+                <select id="manufacturerSelect" onchange="loadModels()">
+                    <option value="">Select Manufacturer</option>
+                </select>
+            </div>
+            <div class="dropdown-group">
+                <label for="modelSelect">Model</label>
+                <select id="modelSelect" onchange="loadSystemData()" disabled>
+                    <option value="">Select Model</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- System Form -->
+        <div class="system-form" id="systemForm">
+            <h2 class="form-title" id="formTitle">System Details</h2>
+
+            <!-- Asset UUID (read-only, only shown in edit mode) -->
+            <div class="form-field" id="assetUuidField" style="display: none; margin-bottom: var(--spacing-lg);">
+                <label>Asset UUID</label>
+                <div class="uuid-display" id="assetUuidDisplay"></div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Manufacturer <span class="required">*</span></label>
+                    <input type="text" id="manufacturerNorm">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Model <span class="required">*</span></label>
+                    <input type="text" id="modelNorm">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>System <span class="required">*</span></label>
+                    <input type="text" id="systemNorm">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Subsystem <span class="required">*</span></label>
+                    <input type="text" id="subsystemNorm">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Canonical Model ID <span class="required">*</span></label>
+                    <input type="text" id="canonicalModelId">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field" style="grid-column: 1 / -1;">
+                    <label>Description</label>
+                    <textarea id="description" rows="3"></textarea>
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Manual URL</label>
+                    <input type="url" id="manualUrl" placeholder="https://...">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>OEM Page</label>
+                    <input type="url" id="oemPage" placeholder="https://...">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Spec Keywords</label>
+                    <input type="text" id="specKeywords">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Synonyms (FTS)</label>
+                    <input type="text" id="synonymsFts">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>Synonyms (Human)</label>
+                    <input type="text" id="synonymsHuman">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field" style="grid-column: 1 / -1;">
+                    <label>Spec Keywords (JSON)</label>
+                    <textarea id="specKeywordsJsonb" rows="3" placeholder='{"key": "value"}'></textarea>
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field" style="grid-column: 1 / -1;">
+                    <label>Synonyms (JSON)</label>
+                    <textarea id="synonymsJsonb" rows="3" placeholder='{"key": "value"}'></textarea>
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label>
+                        <input type="checkbox" id="manual" style="width: auto; margin-right: 8px;">
+                        Has Manual
+                    </label>
+                </div>
+            </div>
+
+            <!-- Instances Section -->
+            <div class="instances-section">
+                <div class="instances-header">
+                    <h3>Instances</h3>
+                    <button class="add-instance-btn" id="addInstanceBtn" onclick="addInstanceRow()">
+                        <span>+</span> Add Instance
+                    </button>
+                </div>
+                <div class="instances-list" id="instancesList">
+                    <!-- Instance rows will be added here -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+                <button class="btn btn-danger" id="deleteBtn" onclick="deleteSystem()" style="display: none;">
+                    Delete System
+                </button>
+                <button class="btn btn-primary" id="saveBtn" onclick="saveSystem()">
+                    Save System
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentMode = null;
+        let currentSystemData = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+
+        async function init() {
+            await loadManufacturers();
+        }
+
+        // Set mode (edit or new)
+        function setMode(mode) {
+            try {
+                console.log('setMode called with:', mode);
+                currentMode = mode;
+                currentSystemData = null;
+
+                // Update button states
+                const findEditBtn = document.getElementById('findEditBtn');
+                const newSystemBtn = document.getElementById('newSystemBtn');
+                const dropdownSection = document.getElementById('dropdownSection');
+                const systemForm = document.getElementById('systemForm');
+
+                console.log('Elements found:', {
+                    findEditBtn: !!findEditBtn,
+                    newSystemBtn: !!newSystemBtn,
+                    dropdownSection: !!dropdownSection,
+                    systemForm: !!systemForm
+                });
+
+                if (!findEditBtn || !newSystemBtn || !dropdownSection || !systemForm) {
+                    console.error('Missing elements!');
+                    return;
+                }
+
+                // Remove active class from both buttons
+                findEditBtn.classList.remove('active');
+                newSystemBtn.classList.remove('active');
+
+                if (mode === 'edit') {
+                    // Edit mode - show dropdowns
+                    console.log('Setting edit mode...');
+                    findEditBtn.classList.add('active');
+                    dropdownSection.classList.add('visible');
+                    systemForm.classList.remove('visible');
+                    document.getElementById('formTitle').textContent = 'System Details';
+                    console.log('Edit mode set');
+                } else if (mode === 'new') {
+                    // New mode - show form
+                    console.log('Setting new mode...');
+                    newSystemBtn.classList.add('active');
+                    dropdownSection.classList.remove('visible');
+                    clearForm();
+                    systemForm.classList.add('visible');
+                    document.getElementById('assetUuidField').style.display = 'none';
+                    document.getElementById('deleteBtn').style.display = 'none';
+                    document.getElementById('formTitle').textContent = 'New System';
+                    console.log('New mode set');
+                }
+
+                // Hide messages
+                hideMessages();
+            } catch (error) {
+                console.error('Error in setMode:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('manufacturerNorm').value = '';
+            document.getElementById('modelNorm').value = '';
+            document.getElementById('systemNorm').value = '';
+            document.getElementById('subsystemNorm').value = '';
+            document.getElementById('canonicalModelId').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('manualUrl').value = '';
+            document.getElementById('oemPage').value = '';
+            document.getElementById('specKeywords').value = '';
+            document.getElementById('synonymsFts').value = '';
+            document.getElementById('synonymsHuman').value = '';
+            document.getElementById('specKeywordsJsonb').value = '';
+            document.getElementById('synonymsJsonb').value = '';
+            document.getElementById('manual').checked = false;
+
+            // Clear instances
+            document.getElementById('instancesList').innerHTML = '';
+
+            // Clear validation errors
+            document.querySelectorAll('.form-field').forEach(field => {
+                field.classList.remove('error');
+            });
+        }
+
+        // Load manufacturers from API
+        async function loadManufacturers() {
+            try {
+                const response = await fetch('/api/system-management/manufacturers');
+                const data = await response.json();
+
+                if (data.success && data.manufacturers) {
+                    const select = document.getElementById('manufacturerSelect');
+                    select.innerHTML = '<option value="">Select Manufacturer</option>';
+
+                    data.manufacturers.forEach(mfr => {
+                        const option = document.createElement('option');
+                        option.value = mfr;
+                        option.textContent = mfr;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                showError('Failed to load manufacturers: ' + error.message);
+            }
+        }
+
+        // Load models for selected manufacturer
+        async function loadModels() {
+            const manufacturer = document.getElementById('manufacturerSelect').value;
+            const modelSelect = document.getElementById('modelSelect');
+
+            if (!manufacturer) {
+                modelSelect.disabled = true;
+                modelSelect.innerHTML = '<option value="">Select Model</option>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/system-management/models?manufacturer=${encodeURIComponent(manufacturer)}`);
+                const data = await response.json();
+
+                if (data.success && data.models) {
+                    modelSelect.disabled = false;
+                    modelSelect.innerHTML = '<option value="">Select Model</option>';
+
+                    data.models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model;
+                        option.textContent = model;
+                        modelSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                showError('Failed to load models: ' + error.message);
+            }
+        }
+
+        // Load system data
+        async function loadSystemData() {
+            const manufacturer = document.getElementById('manufacturerSelect').value;
+            const model = document.getElementById('modelSelect').value;
+
+            if (!manufacturer || !model) return;
+
+            try {
+                // Search for system
+                const searchResponse = await fetch(`/api/system-management/search?manufacturer=${encodeURIComponent(manufacturer)}&model=${encodeURIComponent(model)}`);
+                const searchData = await searchResponse.json();
+
+                if (!searchData.success || !searchData.systems || searchData.systems.length === 0) {
+                    showError('System not found');
+                    return;
+                }
+
+                const assetUid = searchData.systems[0].asset_uid;
+
+                // Get full system details
+                const response = await fetch(`/api/system-management/${assetUid}`);
+                const data = await response.json();
+
+                if (data.success && data.system) {
+                    currentSystemData = data.system;
+                    populateForm(data.system);
+                    document.getElementById('systemForm').classList.add('visible');
+                    document.getElementById('assetUuidField').style.display = 'block';
+                    document.getElementById('assetUuidDisplay').textContent = assetUid;
+                    document.getElementById('deleteBtn').style.display = 'inline-block';
+                }
+            } catch (error) {
+                showError('Failed to load system: ' + error.message);
+            }
+        }
+
+        // Populate form with system data
+        function populateForm(system) {
+            document.getElementById('manufacturerNorm').value = system.manufacturer_norm || '';
+            document.getElementById('modelNorm').value = system.model_norm || '';
+            document.getElementById('systemNorm').value = system.system_norm || '';
+            document.getElementById('subsystemNorm').value = system.subsystem_norm || '';
+            document.getElementById('canonicalModelId').value = system.canonical_model_id || '';
+            document.getElementById('description').value = system.description || '';
+            document.getElementById('manualUrl').value = system.manual_url || '';
+            document.getElementById('oemPage').value = system.oem_page || '';
+            document.getElementById('specKeywords').value = system.spec_keywords || '';
+            document.getElementById('synonymsFts').value = system.synonyms_fts || '';
+            document.getElementById('synonymsHuman').value = system.synonyms_human || '';
+
+            // Populate JSONB fields (stringify if object, handle empty objects)
+            const specKeywordsJsonb = system.spec_keywords_jsonb;
+            if (specKeywordsJsonb && typeof specKeywordsJsonb === 'object') {
+                // Only show non-empty objects
+                const jsonString = JSON.stringify(specKeywordsJsonb, null, 2);
+                document.getElementById('specKeywordsJsonb').value =
+                    jsonString === '{}' ? '' : jsonString;
+            } else {
+                document.getElementById('specKeywordsJsonb').value = specKeywordsJsonb || '';
+            }
+
+            const synonymsJsonb = system.synonyms_jsonb;
+            if (synonymsJsonb && typeof synonymsJsonb === 'object') {
+                // Only show non-empty objects
+                const jsonString = JSON.stringify(synonymsJsonb, null, 2);
+                document.getElementById('synonymsJsonb').value =
+                    jsonString === '{}' ? '' : jsonString;
+            } else {
+                document.getElementById('synonymsJsonb').value = synonymsJsonb || '';
+            }
+
+            // Populate boolean field
+            document.getElementById('manual').checked = system.manual || false;
+
+            // Load instances
+            loadInstances(system.instances || []);
+        }
+
+        // Load instances
+        function loadInstances(instances) {
+            const container = document.getElementById('instancesList');
+            container.innerHTML = '';
+
+            if (instances.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--spacing-md);">No instances found</p>';
+                return;
+            }
+
+            instances.forEach(instance => {
+                const row = document.createElement('div');
+                row.className = 'instance-row';
+                row.dataset.instanceUid = instance.instance_uid || '';
+                row.dataset.isNew = 'false';
+                row.innerHTML = `
+                    <input type="text" value="${instance.serial_number || ''}" placeholder="Serial Number" data-field="serial_number">
+                    <input type="text" value="${instance.location || ''}" placeholder="Location" data-field="location">
+                    <button class="remove-instance-btn" onclick="removeInstanceRow(this)">✕</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Add new instance row
+        function addInstanceRow() {
+            const container = document.getElementById('instancesList');
+
+            // Remove "no instances" message if present
+            const noInstancesMsg = container.querySelector('p');
+            if (noInstancesMsg) {
+                noInstancesMsg.remove();
+            }
+
+            const row = document.createElement('div');
+            row.className = 'instance-row';
+            row.dataset.instanceUid = '';
+            row.dataset.isNew = 'true';
+            row.innerHTML = `
+                <input type="text" placeholder="Serial Number" data-field="serial_number">
+                <input type="text" placeholder="Location" data-field="location">
+                <button class="remove-instance-btn" onclick="removeInstanceRow(this)">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Remove instance row
+        async function removeInstanceRow(button) {
+            const row = button.closest('.instance-row');
+            const instanceUid = row.dataset.instanceUid;
+            const isNew = row.dataset.isNew === 'true';
+
+            // If it's a new row (not saved yet), just remove from DOM
+            if (isNew || !instanceUid) {
+                row.remove();
+
+                // Show "no instances" message if no rows left
+                const container = document.getElementById('instancesList');
+                if (container.children.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--spacing-md);">No instances found</p>';
+                }
+                return;
+            }
+
+            // If it's an existing instance, delete from backend
+            if (confirm('Are you sure you want to delete this instance?')) {
+                try {
+                    const response = await fetch(`/api/system-management/instances/${instanceUid}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        row.remove();
+                        showSuccess('Instance deleted successfully');
+
+                        // Show "no instances" message if no rows left
+                        const container = document.getElementById('instancesList');
+                        if (container.children.length === 0) {
+                            container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--spacing-md);">No instances found</p>';
+                        }
+                    } else {
+                        showError('Failed to delete instance: ' + data.error);
+                    }
+                } catch (error) {
+                    showError('Failed to delete instance: ' + error.message);
+                }
+            }
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            document.getElementById('systemForm').classList.remove('visible');
+            document.getElementById('manufacturerSelect').value = '';
+            document.getElementById('modelSelect').value = '';
+            document.getElementById('modelSelect').disabled = true;
+            currentSystemData = null;
+            hideMessages();
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const el = document.getElementById('successMessage');
+            el.textContent = message;
+            el.classList.add('visible');
+            setTimeout(() => el.classList.remove('visible'), 5000);
+        }
+
+        // Show error message
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.classList.add('visible');
+            setTimeout(() => el.classList.remove('visible'), 5000);
+        }
+
+        // Save system
+        async function saveSystem() {
+            // Determine if creating or updating
+            const isUpdate = currentMode === 'edit' && currentSystemData;
+            const action = isUpdate ? 'update' : 'create';
+            const systemName = isUpdate && currentSystemData
+                ? `${currentSystemData.manufacturer_norm} ${currentSystemData.model_norm}`
+                : 'this new system';
+
+            // Confirm before saving
+            const confirmed = confirm(`Are you sure you want to ${action} ${systemName}?`);
+            if (!confirmed) {
+                return;
+            }
+
+            hideMessages();
+            clearValidationErrors();
+
+            // Collect form data
+            const systemData = {
+                manufacturer_norm: document.getElementById('manufacturerNorm').value.trim(),
+                model_norm: document.getElementById('modelNorm').value.trim(),
+                system_norm: document.getElementById('systemNorm').value.trim(),
+                subsystem_norm: document.getElementById('subsystemNorm').value.trim(),
+                canonical_model_id: document.getElementById('canonicalModelId').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                manual_url: document.getElementById('manualUrl').value.trim(),
+                oem_page: document.getElementById('oemPage').value.trim(),
+                spec_keywords: document.getElementById('specKeywords').value.trim(),
+                synonyms_fts: document.getElementById('synonymsFts').value.trim(),
+                synonyms_human: document.getElementById('synonymsHuman').value.trim(),
+                spec_keywords_jsonb: document.getElementById('specKeywordsJsonb').value.trim(),
+                synonyms_jsonb: document.getElementById('synonymsJsonb').value.trim(),
+                manual: document.getElementById('manual').checked
+            };
+
+            // Client-side validation
+            const validation = validateSystemData(systemData);
+            if (!validation.valid) {
+                displayValidationErrors(validation.errors);
+                showError('Please fix validation errors');
+                return;
+            }
+
+            // Determine URL and method (isUpdate already declared earlier)
+            const url = isUpdate
+                ? `/api/system-management/systems/${currentSystemData.asset_uid}`
+                : '/api/system-management/systems';
+            const method = isUpdate ? 'PUT' : 'POST';
+
+            try {
+                // Save system
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(systemData)
+                });
+                const data = await response.json();
+
+                if (!data.success) {
+                    if (data.validationErrors) {
+                        displayValidationErrors(data.validationErrors);
+                    }
+                    showError(data.error || 'Failed to save system');
+                    return;
+                }
+
+                const assetUid = data.data.asset_uid;
+                showSuccess(`System ${isUpdate ? 'updated' : 'created'} successfully`);
+
+                // Save instances
+                await saveInstances(assetUid);
+
+                // Reload system data
+                if (isUpdate) {
+                    await loadSystemById(assetUid);
+                } else {
+                    // For new systems, switch to edit mode
+                    currentMode = 'edit';
+                    await loadSystemById(assetUid);
+                }
+
+            } catch (error) {
+                showError('Failed to save system: ' + error.message);
+            }
+        }
+
+        // Save all instances
+        async function saveInstances(assetUid) {
+            const instanceRows = document.querySelectorAll('.instance-row');
+
+            for (const row of instanceRows) {
+                const instanceUid = row.dataset.instanceUid;
+                const isNew = row.dataset.isNew === 'true';
+                const serialNumber = row.querySelector('[data-field="serial_number"]').value.trim();
+                const location = row.querySelector('[data-field="location"]').value.trim();
+
+                if (isNew || !instanceUid) {
+                    // Create new instance
+                    const response = await fetch('/api/system-management/instances', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            asset_uid: assetUid,
+                            serial_number: serialNumber || null,
+                            location: location || null
+                        })
+                    });
+                    const data = await response.json();
+                    if (!data.success) {
+                        showError('Failed to save instance: ' + data.error);
+                    }
+                } else {
+                    // Update existing instance
+                    const response = await fetch(`/api/system-management/instances/${instanceUid}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            serial_number: serialNumber || null,
+                            location: location || null
+                        })
+                    });
+                    const data = await response.json();
+                    if (!data.success) {
+                        showError('Failed to update instance: ' + data.error);
+                    }
+                }
+            }
+        }
+
+        // Load system by ID
+        async function loadSystemById(assetUid) {
+            try {
+                const response = await fetch(`/api/system-management/${assetUid}`);
+                const data = await response.json();
+
+                if (data.success && data.system) {
+                    currentSystemData = data.system;
+                    populateForm(data.system);
+                    document.getElementById('systemForm').classList.add('visible');
+                    document.getElementById('assetUuidField').style.display = 'block';
+                    document.getElementById('assetUuidDisplay').textContent = assetUid;
+                    document.getElementById('formTitle').textContent = 'System Details';
+
+                    const deleteBtn = document.getElementById('deleteBtn');
+                    console.log('Delete button element:', deleteBtn);
+                    if (deleteBtn) {
+                        deleteBtn.style.display = 'inline-block';
+                        console.log('Delete button display set to inline-block');
+                    } else {
+                        console.error('Delete button not found!');
+                    }
+                }
+            } catch (error) {
+                showError('Failed to load system: ' + error.message);
+            }
+        }
+
+        // Client-side validation
+        function validateSystemData(data) {
+            const errors = {};
+
+            if (!data.manufacturer_norm) errors.manufacturerNorm = 'Manufacturer is required';
+            if (!data.model_norm) errors.modelNorm = 'Model is required';
+            if (!data.system_norm) errors.systemNorm = 'System is required';
+            if (!data.subsystem_norm) errors.subsystemNorm = 'Subsystem is required';
+            if (!data.canonical_model_id) errors.canonicalModelId = 'Canonical Model ID is required';
+
+            // URL validation
+            if (data.manual_url && !isValidUrl(data.manual_url)) {
+                errors.manualUrl = 'Invalid URL format';
+            }
+            if (data.oem_page && !isValidUrl(data.oem_page)) {
+                errors.oemPage = 'Invalid URL format';
+            }
+
+            // JSON validation
+            if (data.spec_keywords_jsonb && !isValidJson(data.spec_keywords_jsonb)) {
+                errors.specKeywordsJsonb = 'Invalid JSON format';
+            }
+            if (data.synonyms_jsonb && !isValidJson(data.synonyms_jsonb)) {
+                errors.synonymsJsonb = 'Invalid JSON format';
+            }
+
+            return {
+                valid: Object.keys(errors).length === 0,
+                errors
+            };
+        }
+
+        function isValidUrl(url) {
+            try {
+                new URL(url);
+                return url.startsWith('http://') || url.startsWith('https://');
+            } catch {
+                return false;
+            }
+        }
+
+        function isValidJson(jsonString) {
+            try {
+                JSON.parse(jsonString);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // Display validation errors
+        function displayValidationErrors(errors) {
+            for (const [fieldId, message] of Object.entries(errors)) {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    const formField = field.closest('.form-field');
+                    formField.classList.add('error');
+                    const errorMsg = formField.querySelector('.error-message');
+                    if (errorMsg) errorMsg.textContent = message;
+                }
+            }
+        }
+
+        // Clear validation errors
+        function clearValidationErrors() {
+            document.querySelectorAll('.form-field').forEach(field => {
+                field.classList.remove('error');
+                const errorMsg = field.querySelector('.error-message');
+                if (errorMsg) errorMsg.textContent = '';
+            });
+        }
+
+        // Hide messages
+        function hideMessages() {
+            document.getElementById('successMessage').classList.remove('visible');
+            document.getElementById('errorMessage').classList.remove('visible');
+        }
+
+        // Delete system (permanent)
+        async function deleteSystem() {
+            if (!currentSystemData || !currentSystemData.asset_uid) {
+                showError('No system selected to delete');
+                return;
+            }
+
+            const systemName = `${currentSystemData.manufacturer_norm} ${currentSystemData.model_norm}`;
+            const confirmed = confirm(`⚠️ WARNING: This will PERMANENTLY delete ${systemName} and archive all its instances.\n\nThis action cannot be undone!\n\nAre you sure you want to continue?`);
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/system-management/systems/${currentSystemData.asset_uid}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess(`System ${systemName} deleted successfully`);
+                    // Reset to initial state
+                    setTimeout(() => {
+                        setMode('edit');
+                        clearForm();
+                        document.getElementById('systemForm').classList.remove('visible');
+                    }, 1500);
+                } else {
+                    showError('Failed to delete system: ' + data.error);
+                }
+            } catch (error) {
+                showError('Failed to delete system: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
