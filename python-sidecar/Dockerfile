@@ -34,8 +34,10 @@ COPY --from=deps /usr/local/bin /usr/local/bin
 # Copy application code
 COPY app/ ./app/
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash app && chown -R app:app /app
+# Create non-root user and logs directory
+RUN useradd --create-home --shell /bin/bash app && \
+    mkdir -p /logs && \
+    chown -R app:app /app /logs
 USER app
 
 # Expose port

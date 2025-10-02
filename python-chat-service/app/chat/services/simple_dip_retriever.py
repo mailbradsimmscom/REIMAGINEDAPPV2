@@ -34,7 +34,7 @@ class SimpleDIPRetriever:
     async def search_spec_suggestions(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Search spec_suggestions table"""
         try:
-            result = self.supabase.from("spec_suggestions").select("*").limit(limit).execute()
+            result = self.supabase.table("spec_suggestions").select("*").limit(limit).execute()
             return result.data or []
         except Exception as e:
             logger.error(f"Error searching spec suggestions: {e}")
@@ -43,7 +43,7 @@ class SimpleDIPRetriever:
     async def search_playbook_hints(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Search playbook_hints table"""
         try:
-            result = self.supabase.from("playbook_hints").select("*").limit(limit).execute()
+            result = self.supabase.table("playbook_hints").select("*").limit(limit).execute()
             return result.data or []
         except Exception as e:
             logger.error(f"Error searching playbook hints: {e}")
@@ -52,7 +52,7 @@ class SimpleDIPRetriever:
     async def search_intent_router(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Search intent_router table"""
         try:
-            result = self.supabase.from("intent_router").select("*").limit(limit).execute()
+            result = self.supabase.table("intent_router").select("*").limit(limit).execute()
             return result.data or []
         except Exception as e:
             logger.error(f"Error searching intent router: {e}")
@@ -61,7 +61,7 @@ class SimpleDIPRetriever:
     async def search_golden_tests(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Search golden_tests table"""
         try:
-            result = self.supabase.from("golden_tests").select("*").limit(limit).execute()
+            result = self.supabase.table("golden_tests").select("*").limit(limit).execute()
             return result.data or []
         except Exception as e:
             logger.error(f"Error searching golden tests: {e}")

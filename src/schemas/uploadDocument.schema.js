@@ -18,16 +18,17 @@ export const flexibleUploadDocumentSchema = z.object({
   // Normalized fields (preferred)
   manufacturer_norm: z.string().trim().min(1).optional(),
   model_norm: z.string().trim().min(1).optional(),
-  
+
   // Raw fields (for backward compatibility)
   manufacturer: z.string().trim().optional(),
   model: z.string().trim().optional(),
-  
+
   // Other optional fields
   language: z.string().default('en'),
   doc_id: z.string().optional(),
   revision_date: z.string().optional(),
   ocr: z.boolean().optional(),
+  asset_uid: z.string().optional(),
 }).superRefine((val, ctx) => {
   // Ensure at least one manufacturer field is provided
   const manufacturer = val.manufacturer_norm || val.manufacturer;

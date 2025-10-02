@@ -126,6 +126,77 @@ class DocumentService {
     }
   }
 
+  // Verify file exists in storage with retry logic
+  async verifyFileInStorage(storagePath, jobId) {
+    const maxRetries = 20; // 20 retries * 3 seconds = 1 minute
+    const retryDelay = 3000; // 3 seconds between retries
+
+    this.requestLogger.info('Starting storage verification', { storagePath, jobId });
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const supabaseStorage = await this.getSupabaseStorage();
+        const { data: fileData, error: fileError } = await supabaseStorage.storage
+          .from('documents')
+          .download(storagePath);
+
+        if (!fileError && fileData && typeof fileData.arrayBuffer === 'function') {
+          this.requestLogger.info('Storage verification successful', {
+            storagePath,
+            jobId,
+            attempt
+          });
+
+          // Wait 5 seconds as safety buffer
+          await this.sleep(5000);
+
+          // Update job status to upload_complete
+          await documentRepository.updateJobStatus(jobId, 'upload_complete', {
+            storage_path: storagePath
+          });
+
+          this.requestLogger.info('Job status updated to upload_complete', { jobId });
+          return;
+        }
+
+        this.requestLogger.warn('Storage verification attempt failed', {
+          storagePath,
+          jobId,
+          attempt,
+          error: fileError?.message
+        });
+
+      } catch (error) {
+        this.requestLogger.warn('Storage verification error', {
+          storagePath,
+          jobId,
+          attempt,
+          error: error.message
+        });
+      }
+
+      // Wait before next attempt (except on last attempt)
+      if (attempt < maxRetries) {
+        await this.sleep(retryDelay);
+      }
+    }
+
+    // All retries failed
+    const errorMessage = 'Unable to validate storage path, job ended';
+    this.requestLogger.error('Storage verification failed after all retries', {
+      storagePath,
+      jobId,
+      maxRetries
+    });
+
+    throw new Error(errorMessage);
+  }
+
+  // Utility function to sleep
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   /**
    * Create an ingest job for document processing
    * @param {Buffer} fileBuffer - The PDF file buffer
@@ -156,7 +227,8 @@ class DocumentService {
         language = 'en',
         boat_system,
         standards,
-        source_url
+        source_url,
+        asset_uid
       } = metadata;
 
       // Generate doc_id if not provided
@@ -263,7 +335,7 @@ class DocumentService {
         doc_id: finalDocId,
         manufacturer_norm: manufacturerNorm,
         model_norm: modelNorm,
-        asset_uid: systemMetadata.asset_uid,
+        asset_uid: asset_uid || systemMetadata.asset_uid,  // Prefer user-provided asset_uid, fallback to system lookup
         system_norm: systemMetadata.system_norm,
         subsystem_norm: systemMetadata.subsystem_norm,
         // Keep legacy fields for backward compatibility
@@ -283,13 +355,13 @@ class DocumentService {
       try {
         const storagePath = await this.uploadFile(fileBuffer, metadata.fileName || 'document.pdf', finalDocId);
         this.requestLogger.info('Upload successful, storagePath', { storagePath });
-        
-      // Update job with storage path
-      await documentRepository.updateJobStatus(job.job_id, 'upload_complete', { storage_path: storagePath });
-      
-      // Update detailed processing stage
-      await documentRepository.updateJobStatusV2(job.job_id, 'upload_complete');
-        
+
+        // Update job with storage path and set to upload_success
+        await documentRepository.updateJobStatus(job.job_id, 'upload_success', { storage_path: storagePath });
+
+        // Verify file exists in storage with retry logic
+        await this.verifyFileInStorage(storagePath, job.job_id);
+
         // Update document with storage path
         await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
       } catch (uploadError) {
@@ -347,13 +419,20 @@ class DocumentService {
         throw new Error('Document not found');
       }
 
+      this.requestLogger.info('Document retrieved from DB', {
+        doc_id: document.doc_id,
+        asset_uid: document.asset_uid,
+        manufacturer: document.manufacturer,
+        model: document.model
+      });
+
       // Step 28: Download file from Supabase Storage
-      const fileName = job.storage_path ? job.storage_path.split('/').pop() : null;
-      if (!fileName) {
-        throw new Error('File name not found in job storage path');
+      if (!job.storage_path) {
+        throw new Error('Storage path not found in job');
       }
 
-      const filePath = `manuals/${job.doc_id}/${fileName}`;
+      const fileName = job.storage_path.split('/').pop();
+      const filePath = job.storage_path;
       const supabaseStorage = await this.getSupabaseStorage();
       const { data: fileData, error: fileError } = await supabaseStorage.storage
         .from('documents')
@@ -572,8 +651,15 @@ class DocumentService {
         revision_date: document.revision_date,
         language: document.language,
         job_id: job.job_id,
-        file_name: fileName
+        file_name: fileName,
+        asset_uid: document.asset_uid
       };
+
+      this.requestLogger.info('Sending metadata to Python sidecar', {
+        metadata: JSON.stringify(metadata, null, 2),
+        document_asset_uid: document.asset_uid
+      });
+
       formData.append('doc_metadata', JSON.stringify(metadata));
 
       // Add processing options

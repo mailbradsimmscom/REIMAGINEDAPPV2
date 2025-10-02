@@ -65,6 +65,23 @@ app.add_middleware(
 parser = PDFParser()
 dip_processor = DIPProcessor()
 
+# Feature flag for semantic chunking
+USE_SEMANTIC_CHUNKING = os.getenv('USE_SEMANTIC_CHUNKING', 'false').lower() == 'true'
+logger.info(f"Semantic chunking {'ENABLED' if USE_SEMANTIC_CHUNKING else 'DISABLED'}")
+
+# Initialize semantic chunking processor (lazy import to avoid errors if dependencies missing)
+semantic_processor = None
+if USE_SEMANTIC_CHUNKING:
+    try:
+        from .chunking import get_processor
+        semantic_processor = get_processor(
+            pinecone_client=pinecone_client
+        )
+        logger.info("Semantic chunking processor initialized")
+    except Exception as e:
+        logger.error(f"Failed to initialize semantic chunking: {e}")
+        USE_SEMANTIC_CHUNKING = False
+
 # Initialize Supabase client
 supabase_url = os.getenv('SUPABASE_URL')
 supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
@@ -304,137 +321,190 @@ async def process_document_for_pinecone(
 ):
     """Parse PDF and store chunks in Pinecone"""
     try:
-        logger.info(f"Processing document for Pinecone: {file.filename}")
-        
+        logger.info(f"Processing document for Pinecone: {file.filename} (semantic_chunking={USE_SEMANTIC_CHUNKING})")
+
         # Parse metadata
         metadata = json.loads(doc_metadata)
-        
-        # Read file content
-        content = await file.read()
-        
-        # Parse the PDF
-        parse_result = await parser.parse_pdf(
-            content,
-            extract_tables=extract_tables,
-            ocr_enabled=ocr_enabled
-        )
-        
-        if not parse_result.success:
-            raise HTTPException(status_code=500, detail="Failed to parse PDF")
-        
-        # Prepare chunks for Pinecone
-        chunks = []
-        for element in parse_result.elements:
-            chunks.append({
-                "id": f"{file.filename}_{element.page}_{len(chunks)}",
-                "content": element.content,
-                "type": element.element_type,
-                "page": element.page
-            })
-        
-        # Process chunks and store in Pinecone
-        pinecone_result = pinecone_client.process_document_chunks(chunks, metadata)
-        
-        # Extract doc_id from metadata for chunk persistence
-        doc_id = metadata.get('doc_id', file.filename.replace('.pdf', ''))
-        
-        # Persist chunks to Supabase DB and Storage
-        chunks_written_db = 0
-        chunks_written_storage = 0
-        
-        if supabase_url and supabase_key and pinecone_result["success"]:
+        logger.info(f"Received metadata: {json.dumps(metadata, indent=2)}")
+
+        # FEATURE FLAG: Use new semantic chunking or old page-based chunking
+        if USE_SEMANTIC_CHUNKING and semantic_processor:
+            # NEW SEMANTIC CHUNKING PATH
+            logger.info(f"Using SEMANTIC chunking for {file.filename}")
+
+            # Save uploaded file to temp location
+            import tempfile
+            with tempfile.NamedTemporaryFile(delete=False, suffix=Path(file.filename).suffix) as tmp_file:
+                content = await file.read()
+                tmp_file.write(content)
+                tmp_path = tmp_file.name
+
             try:
-                # Clean URL and setup headers
-                url = supabase_url.rstrip("/")
-                headers = {
-                    "apikey": supabase_key,
-                    "Authorization": f"Bearer {supabase_key}"
+                # Process with semantic chunker
+                result = await semantic_processor.process_document(
+                    file_path=tmp_path,
+                    filename=file.filename,
+                    metadata=metadata
+                )
+
+                # Clean up temp file
+                os.unlink(tmp_path)
+
+                if not result['success']:
+                    raise HTTPException(status_code=500, detail=result.get('error', 'Semantic chunking failed'))
+
+                # Return semantic chunking result
+                return {
+                    "success": True,
+                    "filename": file.filename,
+                    "chunks_processed": result['total_chunks'],
+                    "vectors_upserted": result.get('pinecone_result', {}).get('upserted_count', result['total_chunks']),
+                    "chunks_written_db": result.get('supabase_result', {}).get('stored_count', 0),
+                    "chunks_written_storage": 0,  # Not using storage bucket for semantic chunks
+                    "namespace": "REIMAGINEDDOCS",
+                    "processing_time": 0,
+                    "chunking_strategy": "semantic_v2",
+                    "statistics": result.get('statistics', {}),
+                    "document_id": result['document_id']
                 }
-                
-                # Prepare chunks for database insertion
-                db_chunks = []
-                for i, chunk in enumerate(chunks):
-                    chunk_id = f"{doc_id}-chunk-{chunk['page']}"
-                    chunk_text = chunk['content']
-                    checksum = hashlib.sha256(chunk_text.encode('utf-8')).hexdigest()
-                    
-                    db_chunk = {
-                        "chunk_id": chunk_id,
-                        "doc_id": doc_id,
-                        "content_type": "text",
-                        "page_start": chunk['page'],
-                        "page_end": chunk['page'],
-                        "chunk_index": i,
-                        "text": chunk_text,
-                        "checksum": checksum,
-                        "metadata": {}
-                    }
-                    db_chunks.append(db_chunk)
-                
-                # Insert chunks into database using requests
-                if db_chunks:
-                    upsert_headers = {
-                        **headers,
-                        "Content-Type": "application/json",
-                        "Prefer": "resolution=merge-duplicates"
-                    }
-                    
-                    response = requests.post(
-                        f"{url}/rest/v1/document_chunks",
-                        headers=upsert_headers,
-                        json=db_chunks
-                    )
 
-                    if response.status_code in [200, 201]:
-                        chunks_written_db = len(db_chunks)
-                        logger.debug(f"Inserted {chunks_written_db} chunks into database")
-                    else:
-                        logger.warning(f"Failed to insert chunks: {response.status_code} {response.text}")
-                
-                # Upload chunk text files to storage using requests
-                for chunk in chunks:
-                    try:
-                        storage_path = f"documents/manuals/{doc_id}/text/page-{chunk['page']}.txt"
-                        content = chunk['content'].encode('utf-8')
-                        
-                        storage_headers = {
-                            **headers,
-                            "Content-Type": "text/plain",
-                            "x-upsert": "true"
-                        }
-                        
-                        storage_response = requests.post(
-                            f"{url}/storage/v1/object/{storage_path}",
-                            headers=storage_headers,
-                            data=content
-                        )
-                        
-                        if storage_response.status_code in [200, 201]:
-                            chunks_written_storage += 1
-                        else:
-                            logger.warning(f"Failed to upload chunk to storage: {storage_response.status_code}")
-                            
-                    except Exception as e:
-                        logger.warning(f"Failed to upload chunk to storage: {e}")
-                        continue
-
-                logger.debug(f"Uploaded {chunks_written_storage} chunk files to storage")
-                
             except Exception as e:
-                logger.error(f"Failed to persist chunks to Supabase: {e}")
-                # Continue execution - don't fail the entire process
-        
-        return {
-            "success": pinecone_result["success"],
-            "filename": file.filename,
-            "chunks_processed": pinecone_result["chunks_processed"],
-            "vectors_upserted": pinecone_result["vectors_upserted"],
-            "chunks_written_db": chunks_written_db,
-            "chunks_written_storage": chunks_written_storage,
-            "namespace": pinecone_result["namespace"],
-            "processing_time": pinecone_result["processing_time"],
-            "error": pinecone_result.get("error")
-        }
+                # Clean up temp file on error
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+                raise
+
+        else:
+            # OLD PAGE-BASED CHUNKING PATH (existing code)
+            logger.info(f"Using LEGACY page-based chunking for {file.filename}")
+
+            # Read file content
+            content = await file.read()
+
+            # Parse the PDF
+            parse_result = await parser.parse_pdf(
+                content,
+                extract_tables=extract_tables,
+                ocr_enabled=ocr_enabled
+            )
+
+            if not parse_result.success:
+                raise HTTPException(status_code=500, detail="Failed to parse PDF")
+
+            # Prepare chunks for Pinecone
+            chunks = []
+            for element in parse_result.elements:
+                chunks.append({
+                    "id": f"{file.filename}_{element.page}_{len(chunks)}",
+                    "content": element.content,
+                    "type": element.element_type,
+                    "page": element.page
+                })
+
+            # Process chunks and store in Pinecone
+            pinecone_result = pinecone_client.process_document_chunks(chunks, metadata)
+
+            # Extract doc_id from metadata for chunk persistence
+            doc_id = metadata.get('doc_id', file.filename.replace('.pdf', ''))
+
+            # Persist chunks to Supabase DB and Storage
+            chunks_written_db = 0
+            chunks_written_storage = 0
+
+            if supabase_url and supabase_key and pinecone_result["success"]:
+                try:
+                    # Clean URL and setup headers
+                    url = supabase_url.rstrip("/")
+                    headers = {
+                        "apikey": supabase_key,
+                        "Authorization": f"Bearer {supabase_key}"
+                    }
+
+                    # Prepare chunks for database insertion
+                    db_chunks = []
+                    for i, chunk in enumerate(chunks):
+                        chunk_id = f"{doc_id}-chunk-{chunk['page']}"
+                        chunk_text = chunk['content']
+                        checksum = hashlib.sha256(chunk_text.encode('utf-8')).hexdigest()
+
+                        db_chunk = {
+                            "chunk_id": chunk_id,
+                            "doc_id": doc_id,
+                            "content_type": "text",
+                            "page_start": chunk['page'],
+                            "page_end": chunk['page'],
+                            "chunk_index": i,
+                            "text": chunk_text,
+                            "checksum": checksum,
+                            "metadata": {}
+                        }
+                        db_chunks.append(db_chunk)
+
+                    # Insert chunks into database using requests
+                    if db_chunks:
+                        upsert_headers = {
+                            **headers,
+                            "Content-Type": "application/json",
+                            "Prefer": "resolution=merge-duplicates"
+                        }
+
+                        response = requests.post(
+                            f"{url}/rest/v1/document_chunks",
+                            headers=upsert_headers,
+                            json=db_chunks
+                        )
+
+                        if response.status_code in [200, 201]:
+                            chunks_written_db = len(db_chunks)
+                            logger.debug(f"Inserted {chunks_written_db} chunks into database")
+                        else:
+                            logger.warning(f"Failed to insert chunks: {response.status_code} {response.text}")
+
+                    # Upload chunk text files to storage using requests
+                    for chunk in chunks:
+                        try:
+                            storage_path = f"documents/manuals/{doc_id}/text/page-{chunk['page']}.txt"
+                            content = chunk['content'].encode('utf-8')
+
+                            storage_headers = {
+                                **headers,
+                                "Content-Type": "text/plain",
+                                "x-upsert": "true"
+                            }
+
+                            storage_response = requests.post(
+                                f"{url}/storage/v1/object/{storage_path}",
+                                headers=storage_headers,
+                                data=content
+                            )
+
+                            if storage_response.status_code in [200, 201]:
+                                chunks_written_storage += 1
+                            else:
+                                logger.warning(f"Failed to upload chunk to storage: {storage_response.status_code}")
+
+                        except Exception as e:
+                            logger.warning(f"Failed to upload chunk to storage: {e}")
+                            continue
+
+                    logger.debug(f"Uploaded {chunks_written_storage} chunk files to storage")
+
+                except Exception as e:
+                    logger.error(f"Failed to persist chunks to Supabase: {e}")
+                    # Continue execution - don't fail the entire process
+
+            return {
+                "success": pinecone_result["success"],
+                "filename": file.filename,
+                "chunks_processed": pinecone_result["chunks_processed"],
+                "vectors_upserted": pinecone_result["vectors_upserted"],
+                "chunks_written_db": chunks_written_db,
+                "chunks_written_storage": chunks_written_storage,
+                "namespace": pinecone_result["namespace"],
+                "processing_time": pinecone_result["processing_time"],
+                "error": pinecone_result.get("error"),
+                "chunking_strategy": "legacy_page_based"
+            }
         
     except Exception as e:
         logger.error(f"Failed to process document for Pinecone: {e}")

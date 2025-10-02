@@ -167,20 +167,28 @@ class PineconeClient:
             # Prepare vectors for Pinecone
             pinecone_vectors = []
             for vector_data in vectors:
+                # Handle both old format (vector) and new format (values)
+                values = vector_data.get("values") or vector_data.get("vector")
                 pinecone_vectors.append({
                     "id": vector_data["id"],
-                    "values": vector_data["vector"],
+                    "values": values,
                     "metadata": vector_data["metadata"]
                 })
-            
+
+            # Log first vector's metadata for debugging
+            if pinecone_vectors:
+                logger.info(f"Upserting {len(pinecone_vectors)} vectors to Pinecone namespace={self.namespace}")
+                logger.info(f"Sample metadata (first vector): {pinecone_vectors[0]['metadata']}")
+
             # Upsert to Pinecone
             self.index.upsert(
                 vectors=pinecone_vectors,
                 namespace=self.namespace
             )
-            
+
             processing_time = time.time() - start_time
-            
+            logger.info(f"Successfully upserted {len(vectors)} vectors in {processing_time:.2f}s")
+
             return {
                 "success": True,
                 "upserted_count": len(vectors),

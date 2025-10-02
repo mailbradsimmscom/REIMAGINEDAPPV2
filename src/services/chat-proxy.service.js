@@ -25,10 +25,12 @@ function extractKeywords(query) {
 export async function processChatMessage({ query, threadId }) {
   const requestLogger = logger.createRequestLogger();
   const env = getEnv();
+  let systemsContext = [];
+  let conversationContext = null;
 
   try {
     // STEP 1: Get conversation context (always, for memory) and thread equipment blob
-    const conversationContext = await getWeightedConversationContext(threadId, query);
+    conversationContext = await getWeightedConversationContext(threadId, query);
 
     // Get thread with equipment_context blob
     const { getChatThread } = await import('../repositories/chat.repository.js');
@@ -136,7 +138,7 @@ export async function processChatMessage({ query, threadId }) {
       existingEquipmentMap.set(eq.asset_uid, eq);
     }
 
-    const systemsContext = [];
+    systemsContext = [];
     const newEquipmentFound = [];
 
     for (let i = 0; i < rawEquipmentContext.length; i++) {
@@ -233,15 +235,17 @@ export async function processChatMessage({ query, threadId }) {
       });
     }
 
-    requestLogger.info('📞 Calling python-sidecar with enhanced context', {
+    const chatServiceUrl = env.PYTHON_CHAT_SERVICE_URL || 'http://localhost:8001';
+
+    requestLogger.info('📞 Calling python chat service with enhanced context', {
       systemsCount: systemsContext.length,
       hasConversationMemory: !!conversationContext.conversation_summary,
       conversationExchanges: conversationContext.total_exchanges,
       hasEquipmentInference: !!equipmentInference,
-      sidecarUrl: `${env.PYTHON_SIDECAR_URL}/v1/chat/process`
+      chatServiceUrl: `${chatServiceUrl}/v1/chat/process`
     });
 
-    const sidecarResponse = await fetch(`${env.PYTHON_SIDECAR_URL}/v1/chat/process`, {
+    const sidecarResponse = await fetch(`${chatServiceUrl}/v1/chat/process`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

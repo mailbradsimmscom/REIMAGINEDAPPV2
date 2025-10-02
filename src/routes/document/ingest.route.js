@@ -93,7 +93,7 @@ router.post('/',
                 // Normalize the metadata to ensure downstream code has expected fields
                 const validatedMetadata = validationResult.data;
                 metadata = {
-                  ...validatedMetadata,
+                  ...validatedMetadata,  // Preserve ALL validated fields including asset_uid
                   manufacturer_norm: validatedMetadata.manufacturer_norm || validatedMetadata.manufacturer,
                   model_norm: validatedMetadata.model_norm || validatedMetadata.model,
                 };

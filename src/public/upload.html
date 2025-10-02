@@ -669,6 +669,7 @@
                 this.manufacturers = [];
                 this.models = [];
                 this.documents = [];
+                this.currentAssetUid = null;
                 this.init();
             }
 
@@ -950,20 +951,25 @@
                     formData.append('file', this.selectedFile);
                     
                     // Create metadata object exactly like the old admin dashboard
+                    console.log('🔍 currentAssetUid at upload time:', this.currentAssetUid);
                     const metadata = {
                         // Normalized fields (what server expects)
                         manufacturer_norm: manufacturer,
                         model_norm: model,
-                        
+
                         // Regular fields (for backward compatibility)
                         manufacturer: manufacturer,
                         model: model,
-                        
+
                         // Additional required fields
                         language: 'en',
                         revision_date: new Date().toISOString().split('T')[0], // Today's date
-                        ocr: true
+                        ocr: true,
+
+                        // Asset UID (CRITICAL for Pinecone metadata!)
+                        asset_uid: this.currentAssetUid
                     };
+                    console.log('📤 Metadata being sent:', JSON.stringify(metadata, null, 2));
                     formData.append('metadata', JSON.stringify(metadata));
 
                     // Upload to the document ingest endpoint (same as old admin dashboard)
@@ -1532,11 +1538,14 @@
                 const display = document.getElementById('assetUidDisplay');
                 const icon = document.getElementById('assetUidIcon');
                 const text = document.getElementById('assetUidText');
-                
+
                 display.style.display = 'block';
                 icon.textContent = '✅';
                 icon.className = 'asset-uid-icon success';
                 text.textContent = `Asset UID: ${assetUid}`;
+
+                // Store the asset_uid for use during upload
+                this.currentAssetUid = assetUid;
             }
 
             showAssetUidError() {
@@ -1553,6 +1562,7 @@
             hideAssetUidDisplay() {
                 const display = document.getElementById('assetUidDisplay');
                 display.style.display = 'none';
+                this.currentAssetUid = null;
             }
         }
 
