@@ -41,6 +41,11 @@ class Logger {
     const logLine = JSON.stringify(logEntry) + '\n';
     const logFile = join(this.logsDir, 'combined.log');
 
+    // ALWAYS log to console in development for visibility
+    if (level === 'error' || level === 'warn') {
+      console.log(logLine.trim());
+    }
+
     try {
       await fs.appendFile(logFile, logLine);
 

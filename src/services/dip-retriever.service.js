@@ -1,0 +1,251 @@
+// src/services/dip-retriever.service.js
+import { getSupabaseClient } from '../repositories/supabaseClient.js';
+import { isSupabaseConfigured } from './guards/index.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * DIP (Domain Intelligence Package) Retriever Service
+ * Queries DIP tables: spec_suggestions, playbook_hints, intent_router, golden_tests
+ *
+ * Port of: python-chat-service/app/chat/services/simple_dip_retriever.py
+ */
+
+/**
+ * Search spec_suggestions table
+ * @param {string} query - Search query (currently unused, returns all rows up to limit)
+ * @param {number} limit - Maximum number of results
+ * @returns {Promise<Array>} Array of spec suggestion records
+ */
+export async function searchSpecSuggestions(query, limit = 5) {
+  const requestLogger = logger.createRequestLogger();
+
+  if (!isSupabaseConfigured()) {
+    requestLogger.warn('Supabase not configured, skipping spec_suggestions search');
+    return [];
+  }
+
+  try {
+    const supabase = await getSupabaseClient();
+
+    const { data, error } = await supabase
+      .from('spec_suggestions')
+      .select('*')
+      .limit(limit);
+
+    if (error) throw error;
+
+    requestLogger.debug('Spec suggestions retrieved', {
+      query: query?.substring(0, 50),
+      resultsCount: data?.length || 0
+    });
+
+    return data || [];
+  } catch (error) {
+    requestLogger.error('Failed to search spec_suggestions', {
+      error: error.message,
+      query: query?.substring(0, 50)
+    });
+    return [];
+  }
+}
+
+/**
+ * Search playbook_hints table
+ * @param {string} query - Search query (currently unused, returns all rows up to limit)
+ * @param {number} limit - Maximum number of results
+ * @returns {Promise<Array>} Array of playbook hint records
+ */
+export async function searchPlaybookHints(query, limit = 5) {
+  const requestLogger = logger.createRequestLogger();
+
+  if (!isSupabaseConfigured()) {
+    requestLogger.warn('Supabase not configured, skipping playbook_hints search');
+    return [];
+  }
+
+  try {
+    const supabase = await getSupabaseClient();
+
+    const { data, error } = await supabase
+      .from('playbook_hints')
+      .select('*')
+      .limit(limit);
+
+    if (error) throw error;
+
+    requestLogger.debug('Playbook hints retrieved', {
+      query: query?.substring(0, 50),
+      resultsCount: data?.length || 0
+    });
+
+    return data || [];
+  } catch (error) {
+    requestLogger.error('Failed to search playbook_hints', {
+      error: error.message,
+      query: query?.substring(0, 50)
+    });
+    return [];
+  }
+}
+
+/**
+ * Search intent_router table
+ * @param {string} query - Search query (currently unused, returns all rows up to limit)
+ * @param {number} limit - Maximum number of results
+ * @returns {Promise<Array>} Array of intent router records
+ */
+export async function searchIntentRouter(query, limit = 5) {
+  const requestLogger = logger.createRequestLogger();
+
+  if (!isSupabaseConfigured()) {
+    requestLogger.warn('Supabase not configured, skipping intent_router search');
+    return [];
+  }
+
+  try {
+    const supabase = await getSupabaseClient();
+
+    const { data, error } = await supabase
+      .from('intent_router')
+      .select('*')
+      .limit(limit);
+
+    if (error) throw error;
+
+    requestLogger.debug('Intent router records retrieved', {
+      query: query?.substring(0, 50),
+      resultsCount: data?.length || 0
+    });
+
+    return data || [];
+  } catch (error) {
+    requestLogger.error('Failed to search intent_router', {
+      error: error.message,
+      query: query?.substring(0, 50)
+    });
+    return [];
+  }
+}
+
+/**
+ * Search golden_tests table
+ * @param {string} query - Search query (currently unused, returns all rows up to limit)
+ * @param {number} limit - Maximum number of results
+ * @returns {Promise<Array>} Array of golden test records
+ */
+export async function searchGoldenTests(query, limit = 5) {
+  const requestLogger = logger.createRequestLogger();
+
+  if (!isSupabaseConfigured()) {
+    requestLogger.warn('Supabase not configured, skipping golden_tests search');
+    return [];
+  }
+
+  try {
+    const supabase = await getSupabaseClient();
+
+    const { data, error } = await supabase
+      .from('golden_tests')
+      .select('*')
+      .limit(limit);
+
+    if (error) throw error;
+
+    requestLogger.debug('Golden tests retrieved', {
+      query: query?.substring(0, 50),
+      resultsCount: data?.length || 0
+    });
+
+    return data || [];
+  } catch (error) {
+    requestLogger.error('Failed to search golden_tests', {
+      error: error.message,
+      query: query?.substring(0, 50)
+    });
+    return [];
+  }
+}
+
+/**
+ * Search all DIP tables and return combined results
+ * @param {string} query - Search query
+ * @param {number} limit - Maximum number of results per table
+ * @returns {Promise<Array>} Array of objects with { table, count, results }
+ */
+export async function searchAllDIPTables(query, limit = 3) {
+  const requestLogger = logger.createRequestLogger();
+
+  if (!isSupabaseConfigured()) {
+    requestLogger.warn('Supabase not configured, skipping DIP search');
+    return [];
+  }
+
+  const results = [];
+
+  try {
+    // Search all tables in parallel
+    const [specResults, playbookResults, intentResults, testResults] = await Promise.all([
+      searchSpecSuggestions(query, limit),
+      searchPlaybookHints(query, limit),
+      searchIntentRouter(query, limit),
+      searchGoldenTests(query, limit)
+    ]);
+
+    // Add results for each table that has data
+    if (specResults.length > 0) {
+      results.push({
+        table: 'spec_suggestions',
+        count: specResults.length,
+        results: specResults
+      });
+    }
+
+    if (playbookResults.length > 0) {
+      results.push({
+        table: 'playbook_hints',
+        count: playbookResults.length,
+        results: playbookResults
+      });
+    }
+
+    if (intentResults.length > 0) {
+      results.push({
+        table: 'intent_router',
+        count: intentResults.length,
+        results: intentResults
+      });
+    }
+
+    if (testResults.length > 0) {
+      results.push({
+        table: 'golden_tests',
+        count: testResults.length,
+        results: testResults
+      });
+    }
+
+    const totalResults = results.reduce((sum, r) => sum + r.count, 0);
+
+    requestLogger.info('DIP tables searched', {
+      query: query?.substring(0, 100),
+      tablesWithResults: results.length,
+      totalResults
+    });
+
+    return results;
+  } catch (error) {
+    requestLogger.error('Failed to search DIP tables', {
+      error: error.message,
+      query: query?.substring(0, 100)
+    });
+    return [];
+  }
+}
+
+export default {
+  searchSpecSuggestions,
+  searchPlaybookHints,
+  searchIntentRouter,
+  searchGoldenTests,
+  searchAllDIPTables
+};

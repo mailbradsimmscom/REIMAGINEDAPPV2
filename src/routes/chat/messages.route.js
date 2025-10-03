@@ -75,13 +75,16 @@ router.post('/messages', async (req, res) => {
   } catch (error) {
     requestLogger.error('❌ Failed to create chat message', {
       error: error.message,
+      stack: error.stack,
       threadId: req.body.threadId,
-      sequenceNumber: req.body.sequenceNumber
+      sequenceNumber: req.body.sequenceNumber,
+      role: req.body.role
     });
 
     return res.status(500).json({
       error: 'Failed to create chat message',
-      details: error.message
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });

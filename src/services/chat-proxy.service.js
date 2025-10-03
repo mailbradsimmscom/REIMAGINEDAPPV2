@@ -235,46 +235,58 @@ export async function processChatMessage({ query, threadId }) {
       });
     }
 
-    const chatServiceUrl = env.PYTHON_CHAT_SERVICE_URL || 'http://localhost:8001';
+    // Import chat processing services
+    const { searchAllDIPTables } = await import('./dip-retriever.service.js');
+    const { searchDocuments } = await import('./pinecone-rag.service.js');
+    const { processChatCompletion } = await import('./chat-completion.service.js');
 
-    requestLogger.info('📞 Calling python chat service with enhanced context', {
-      systemsCount: systemsContext.length,
-      hasConversationMemory: !!conversationContext.conversation_summary,
-      conversationExchanges: conversationContext.total_exchanges,
-      hasEquipmentInference: !!equipmentInference,
-      chatServiceUrl: `${chatServiceUrl}/v1/chat/process`
+    // STEP 8: Search DIP tables for domain intelligence
+    const dipResults = await searchAllDIPTables(query, 3);
+
+    requestLogger.info('🔍 DIP search completed', {
+      tablesSearched: dipResults.length,
+      totalResults: dipResults.reduce((sum, r) => sum + r.count, 0)
     });
 
-    const sidecarResponse = await fetch(`${chatServiceUrl}/v1/chat/process`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Correlation-ID': requestLogger.requestId  // Pass correlation ID to Python
-      },
-      body: JSON.stringify({
-        query,
-        thread_id: threadId,
-        systems_context: systemsContext,
-        conversation_summary: conversationContext.conversation_summary,
-        memory_context: conversationContext.memory_context,
-        equipment_inference: equipmentInference,
-        table_types: ['spec', 'procedure', 'troubleshooting', 'routing']
-      })
+    // STEP 9: Search Pinecone for relevant document chunks
+    const documentChunks = await searchDocuments({
+      query,
+      equipmentContext: systemsContext,
+      namespace: env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS',
+      limit: 5
     });
 
-    if (!sidecarResponse.ok) {
-      const errorText = await sidecarResponse.text();
-      throw new Error(`Python sidecar error: ${sidecarResponse.status} ${errorText}`);
-    }
-
-    const result = await sidecarResponse.json();
-
-    requestLogger.info('✅ Python sidecar response received', {
-      hasResponse: !!result.response,
-      hasDipResults: !!result.dip_results
+    requestLogger.info('📚 Document search completed', {
+      chunksFound: documentChunks.length,
+      avgScore: documentChunks.length > 0
+        ? (documentChunks.reduce((sum, c) => sum + c.score, 0) / documentChunks.length).toFixed(3)
+        : 0
     });
 
-    result.systems_context = systemsContext;
+    // STEP 10: Process chat completion with all context
+    const chatResult = await processChatCompletion({
+      query,
+      threadId,
+      systemsContext,
+      dipResults,
+      documentChunks,
+      conversationSummary: conversationContext.conversation_summary,
+      equipmentInference
+    });
+
+    requestLogger.info('✅ Chat completion received', {
+      responseLength: chatResult.response?.length || 0,
+      tokensUsed: chatResult.usage?.total_tokens || 0
+    });
+
+    // Build result object matching previous format
+    const result = {
+      response: chatResult.response,
+      systems_context: systemsContext,
+      dip_results: dipResults,
+      document_chunks: documentChunks,
+      usage: chatResult.usage
+    };
 
     return result;
 
