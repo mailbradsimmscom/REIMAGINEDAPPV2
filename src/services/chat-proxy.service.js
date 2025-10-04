@@ -5,6 +5,8 @@ import { inferEquipmentRelationships, quickReferenceCheck } from './equipment-re
 import { updateChatThread } from '../repositories/chat.repository.js';
 import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { processChatWorkflow } from '../clients/python-sidecar.client.js';
+import { chatDebug } from '../utils/chat-debug-logger.js';
 
 function extractKeywords(query) {
   if (!query || typeof query !== 'string') {
@@ -59,6 +61,13 @@ export async function processChatMessage({ query, threadId }) {
       hasConversationSummary: !!conversationContext.conversation_summary
     });
 
+    chatDebug.step('CONVERSATION_CONTEXT_RETRIEVED', {
+      threadId,
+      totalExchanges: conversationContext.total_exchanges,
+      accumulatedEquipmentCount: conversationContext.accumulated_equipment.length,
+      hasSummary: !!conversationContext.conversation_summary
+    });
+
     // STEP 2: Quick reference check and equipment relationship inference
     const previousEquipment = conversationContext.accumulated_equipment;
     const referenceCheck = quickReferenceCheck(query, previousEquipment);
@@ -91,6 +100,12 @@ export async function processChatMessage({ query, threadId }) {
         hasInference: !!equipmentInference,
         inferredEquipmentCount: currentEquipmentSearch.length,
         shouldSearchRelated: inferenceResult.should_search_related
+      });
+
+      chatDebug.step('EQUIPMENT_INFERENCE_COMPLETED', {
+        inferredEquipmentCount: currentEquipmentSearch.length,
+        inferenceConfidence: equipmentInference?.confidence || null,
+        inferredRelationships: equipmentInference?.relationships?.length || 0
       });
 
     } else {
@@ -129,6 +144,12 @@ export async function processChatMessage({ query, threadId }) {
         model: eq.model,
         source: eq.source || 'current'
       }))
+    });
+
+    chatDebug.step('EQUIPMENT_CONTEXT_BUILT', {
+      currentEquipmentCount: currentEquipmentSearch.length,
+      totalEquipmentCount: rawEquipmentContext.length,
+      sources: [...new Set(rawEquipmentContext.map(eq => eq.source || 'current'))]
     });
 
     // STEP 5: Fetch full system details for all equipment in context
@@ -221,6 +242,12 @@ export async function processChatMessage({ query, threadId }) {
             model: eq.model
           }))
         });
+
+        chatDebug.step('EQUIPMENT_CONTEXT_UPDATED', {
+          threadId,
+          totalEquipment: systemsContext.length,
+          newEquipmentCount: newEquipmentFound.length
+        });
       } catch (error) {
         requestLogger.warn('Failed to update equipment context', {
           threadId,
@@ -235,63 +262,62 @@ export async function processChatMessage({ query, threadId }) {
       });
     }
 
-    // Import chat processing services
-    const { searchAllDIPTables } = await import('./dip-retriever.service.js');
-    const { searchDocuments } = await import('./pinecone-rag.service.js');
-    const { processChatCompletion } = await import('./chat-completion.service.js');
-
-    // STEP 8: Search DIP tables for domain intelligence
-    const dipResults = await searchAllDIPTables(query, 3);
-
-    requestLogger.info('🔍 DIP search completed', {
-      tablesSearched: dipResults.length,
-      totalResults: dipResults.reduce((sum, r) => sum + r.count, 0)
+    // STEP 7: Call Python sequential workflow (replaces DIP, Pinecone, OpenAI completion)
+    chatDebug.step('PYTHON_WORKFLOW_CALL', {
+      systemsContextCount: systemsContext.length,
+      hasConversationSummary: !!conversationContext.conversation_summary,
+      hasEquipmentInference: !!equipmentInference
     });
 
-    // STEP 9: Search Pinecone for relevant document chunks
-    const documentChunks = await searchDocuments({
+    const workflowStart = Date.now();
+    const pythonResult = await processChatWorkflow({
       query,
-      equipmentContext: systemsContext,
-      namespace: env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS',
-      limit: 5
-    });
-
-    requestLogger.info('📚 Document search completed', {
-      chunksFound: documentChunks.length,
-      avgScore: documentChunks.length > 0
-        ? (documentChunks.reduce((sum, c) => sum + c.score, 0) / documentChunks.length).toFixed(3)
-        : 0
-    });
-
-    // STEP 10: Process chat completion with all context
-    const chatResult = await processChatCompletion({
-      query,
-      threadId,
       systemsContext,
-      dipResults,
-      documentChunks,
+      threadId,
       conversationSummary: conversationContext.conversation_summary,
-      equipmentInference
+      memoryContext: {
+        accumulated_equipment: conversationContext.accumulated_equipment,
+        total_exchanges: conversationContext.total_exchanges,
+        equipment_inference: equipmentInference
+      }
+    });
+    const workflowDuration = Date.now() - workflowStart;
+
+    chatDebug.timing('PYTHON_WORKFLOW_COMPLETE', workflowDuration, {
+      hasResponse: !!pythonResult.response,
+      sourcesCount: pythonResult.sources?.length || 0,
+      classification: pythonResult.classification?.primary || 'unknown'
     });
 
-    requestLogger.info('✅ Chat completion received', {
-      responseLength: chatResult.response?.length || 0,
-      tokensUsed: chatResult.usage?.total_tokens || 0
+    requestLogger.info('✅ Python workflow completed', {
+      duration_ms: workflowDuration,
+      responseLength: pythonResult.response?.length || 0,
+      sourcesCount: pythonResult.sources?.length || 0,
+      classification: pythonResult.classification?.primary || 'unknown',
+      processingTimeMs: pythonResult.processing_time_ms || 0
     });
 
     // Build result object matching previous format
     const result = {
-      response: chatResult.response,
+      response: pythonResult.response,
       systems_context: systemsContext,
-      dip_results: dipResults,
-      document_chunks: documentChunks,
-      usage: chatResult.usage
+      sources: pythonResult.sources || [],
+      classification: pythonResult.classification,
+      score: pythonResult.score,
+      metadata: pythonResult.metadata || {},
+      processing_time_ms: pythonResult.processing_time_ms || 0
     };
 
     return result;
 
   } catch (error) {
     // Enhanced error logging with full context
+    chatDebug.error('CHAT_PROXY_ERROR', error, {
+      threadId,
+      query: query?.substring(0, 100),
+      systemsContextCount: systemsContext?.length || 0
+    });
+
     requestLogger.error('❌ Chat proxy error', {
       error: error.message,
       stack: error.stack,

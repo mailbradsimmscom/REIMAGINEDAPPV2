@@ -83,14 +83,15 @@ class ChatWorkflow:
             workflow.add_node("classify_query", self._classify_query_node)
             workflow.add_node("retrieve_data", self._retrieve_data_node)
             workflow.add_node("synthesize_response", self._synthesize_response_node)
-            workflow.add_node("score_response", self._score_response_node)
+            # workflow.add_node("score_response", self._score_response_node)  # DISABLED: Expensive, slow, self-grading not reliable
 
             # Define edges
             workflow.add_edge(START, "classify_query")
             workflow.add_edge("classify_query", "retrieve_data")
             workflow.add_edge("retrieve_data", "synthesize_response")
-            workflow.add_edge("synthesize_response", "score_response")
-            workflow.add_edge("score_response", END)
+            workflow.add_edge("synthesize_response", END)  # Skip scoring, go directly to end
+            # workflow.add_edge("synthesize_response", "score_response")  # DISABLED
+            # workflow.add_edge("score_response", END)  # DISABLED
 
             # Compile the graph
             self.graph = workflow.compile()
@@ -325,29 +326,30 @@ class ChatWorkflow:
 
         return state
 
-    async def _score_response_node(self, state: WorkflowState) -> WorkflowState:
-        """Node 4: Score response quality and confidence"""
-        try:
-            state["processing_steps"].append("response_scoring")
-
-            # Use LLM to score the response
-            score = await self.llm_service.score_response(
-                user_query=state["user_query"],
-                response=state["final_response"],
-                dip_results=state["dip_results"],
-                systems_context=state["systems_context"]
-            )
-
-            state["response_score"] = score
-
-            logger.debug(f"Response scored: {score.get('confidence', 'unknown')} confidence")
-
-        except Exception as e:
-            logger.error(f"Response scoring failed: {e}")
-            # Continue without scoring
-            pass
-
-        return state
+    # DISABLED: Self-scoring with GPT-5 is expensive, slow, and unreliable
+    # async def _score_response_node(self, state: WorkflowState) -> WorkflowState:
+    #     """Node 4: Score response quality and confidence"""
+    #     try:
+    #         state["processing_steps"].append("response_scoring")
+    #
+    #         # Use LLM to score the response
+    #         score = await self.llm_service.score_response(
+    #             user_query=state["user_query"],
+    #             response=state["final_response"],
+    #             dip_results=state["dip_results"],
+    #             systems_context=state["systems_context"]
+    #         )
+    #
+    #         state["response_score"] = score
+    #
+    #         logger.debug(f"Response scored: {score.get('confidence', 'unknown')} confidence")
+    #
+    #     except Exception as e:
+    #         logger.error(f"Response scoring failed: {e}")
+    #         # Continue without scoring
+    #         pass
+    #
+    #     return state
 
     def _format_sources(self, dip_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Format DIP results for API response"""

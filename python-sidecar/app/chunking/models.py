@@ -58,6 +58,7 @@ class ChunkMetadata:
     has_code: bool = False
 
     # Search optimization
+    text: str = ""  # Full chunk text for RAG retrieval
     content_snippet: str = ""  # First 200 chars for preview
     keywords: List[str] = field(default_factory=list)  # BM25 keywords
 

@@ -802,7 +802,6 @@ if chat_enabled:
         from .chat.chat_models import ChatRequest, ChatResponse, HealthResponse as ChatHealthResponse
         from .chat.services.dip_retriever import DIPRetriever
         from .chat.services.production_dip_retriever import ProductionDIPRetriever
-        from .chat.compatibility import get_langgraph_imports
         from datetime import datetime
 
         # Environment-based DIP connector selection
@@ -827,14 +826,29 @@ if chat_enabled:
             start_time = datetime.now()
 
             try:
-                # Initialize LangGraph workflow with LLM service
+                # Initialize sequential workflow (LangGraph removed)
                 from .chat.services.llm_service import LLMService
-                from .chat.workflows.chat_workflow import ChatWorkflow
+                from .chat.workflows.chat_workflow_sequential import ChatWorkflowSequential
+                from .chat.debug_logger import chat_debug
+
+                chat_debug.step('ENDPOINT_INIT', {
+                    'endpoint': '/v1/chat/process',
+                    'workflow_type': 'sequential',
+                    'query': request.query[:100]
+                })
 
                 llm_service = LLMService()
-                workflow = ChatWorkflow(llm_service, chat_dip_retriever, pinecone_client)
+                workflow = ChatWorkflowSequential(llm_service, chat_dip_retriever, pinecone_client)
 
-                # Process through LangGraph workflow with conversation memory
+                # Process through sequential workflow with conversation memory
+                chat_debug.step('WORKFLOW_START', {
+                    'systems_count': len(request.systems_context or []),
+                    'has_thread_id': bool(request.thread_id),
+                    'has_conversation_summary': bool(request.conversation_summary),
+                    'has_memory_context': bool(request.memory_context)
+                })
+
+                workflow_start = datetime.now()
                 workflow_result = await workflow.process_chat(
                     user_query=request.query,
                     systems_context=request.systems_context or [],
@@ -842,6 +856,13 @@ if chat_enabled:
                     conversation_summary=request.conversation_summary,
                     memory_context=request.memory_context
                 )
+                workflow_duration = (datetime.now() - workflow_start).total_seconds() * 1000
+
+                chat_debug.timing('WORKFLOW_COMPLETE', workflow_duration, {
+                    'has_response': bool(workflow_result.get("response")),
+                    'sources_count': len(workflow_result.get("sources", [])),
+                    'has_score': bool(workflow_result.get("score"))
+                })
 
                 thread_id = request.thread_id
 
@@ -869,6 +890,11 @@ if chat_enabled:
                 )
 
             except Exception as e:
+                from .chat.debug_logger import chat_debug
+                chat_debug.error('ENDPOINT_ERROR', e, {
+                    'query': request.query[:100],
+                    'systems_count': len(request.systems_context or [])
+                })
                 logger.error(f"Chat processing failed: {e}")
                 raise HTTPException(status_code=500, detail=f"Chat processing failed: {str(e)}")
 
@@ -876,9 +902,6 @@ if chat_enabled:
         async def chat_health():
             """Chat module health check"""
             try:
-                # Test LangGraph imports
-                imports = get_langgraph_imports()
-
                 # Test DIP retriever
                 dip_health = chat_dip_retriever.health_check()
 
@@ -893,7 +916,7 @@ if chat_enabled:
                         "connector_type": connector_type
                     },
                     "services": {
-                        "langgraph": f"available ({imports['api_version']} API)",
+                        "workflow": "sequential (LangGraph removed)",
                         "dip_retriever": dip_health['status'],
                         "dip_connector": f"{connector_type} ({dip_health.get('service', 'Unknown')})",
                         "chat_module": "enabled"

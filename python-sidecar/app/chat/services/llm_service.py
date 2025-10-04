@@ -33,6 +33,10 @@ class LLMService:
         self.anthropic_client = None
         self.openai_client = None
 
+        # Read configuration
+        self.chat_model_provider = os.getenv('CHAT_MODEL', 'ANTHROPIC').upper()
+        self.openai_model = os.getenv('OPENAI_MODEL', 'gpt-4o')
+
         # Initialize Anthropic if available
         try:
             import anthropic
@@ -51,7 +55,7 @@ class LLMService:
             openai_api_key = os.getenv('OPENAI_API_KEY')
             if openai_api_key:
                 self.openai_client = openai.AsyncOpenAI(api_key=openai_api_key)
-                logger.info("OpenAI async client initialized")
+                logger.info(f"OpenAI async client initialized (model: {self.openai_model})")
         except ImportError:
             logger.warning("OpenAI library not available")
         except Exception as e:
@@ -59,6 +63,8 @@ class LLMService:
 
         if not self.anthropic_client and not self.openai_client:
             logger.error("No LLM clients available - chat workflow will use fallback mode")
+
+        logger.info(f"Chat model provider: {self.chat_model_provider}")
 
 
     async def classify_query(self,
@@ -230,7 +236,71 @@ class LLMService:
         """Call LLM with fallback between Anthropic and OpenAI with usage tracking"""
         start_time = datetime.now()
 
-        # Try Anthropic first (Claude)
+        # Determine provider priority based on CHAT_MODEL env var
+        use_openai_first = self.chat_model_provider == 'OPENAI'
+
+        # Try OpenAI first if configured
+        if use_openai_first and self.openai_client:
+            try:
+                # Log full prompt (no character limits)
+                logger.info(f"📤 OpenAI Prompt ({self.openai_model}):")
+                logger.info(f"{prompt}")
+
+                response = await self.openai_client.chat.completions.create(
+                    model=self.openai_model,
+                    messages=[{
+                        "role": "user",
+                        "content": prompt
+                    }],
+                    max_completion_tokens=4000
+                )
+
+                # Log LLM usage metrics
+                duration_ms = (datetime.now() - start_time).total_seconds() * 1000
+                usage = response.usage
+                input_tokens = usage.prompt_tokens
+                output_tokens = usage.completion_tokens
+                total_tokens = usage.total_tokens
+
+                # Pricing varies by model - using GPT-4o as baseline
+                # Input: $2.50 per 1M tokens, Output: $10.00 per 1M tokens
+                input_cost = (input_tokens / 1_000_000) * 2.50
+                output_cost = (output_tokens / 1_000_000) * 10.00
+                total_cost = input_cost + output_cost
+
+                logger.info(f"💰 LLM Usage (OpenAI {self.openai_model})", {
+                    "model": self.openai_model,
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "total_tokens": total_tokens,
+                    "duration_ms": round(duration_ms, 2),
+                    "estimated_cost_usd": round(total_cost, 6),
+                    "input_cost_usd": round(input_cost, 6),
+                    "output_cost_usd": round(output_cost, 6)
+                })
+
+                # Debug: Log response content
+                message = response.choices[0].message
+                content = message.content
+                logger.info(f"🔍 OpenAI Response Content: type={type(content)}, is_none={content is None}, length={len(content) if content else 0}")
+                if content:
+                    logger.info(f"🔍 First 200 chars: {content[:200]}")
+
+                # Check for refusal
+                if hasattr(message, 'refusal') and message.refusal:
+                    logger.error(f"🚫 OpenAI Refusal: {message.refusal}")
+                    return ""
+
+                # Log full message object for debugging
+                logger.info(f"🔍 Message object: {message}")
+
+                return content
+
+            except Exception as e:
+                logger.warning(f"OpenAI call failed: {e}")
+                # Fall through to Anthropic
+
+        # Try Anthropic (Claude)
         if self.anthropic_client:
             try:
                 message = await self.anthropic_client.messages.create(
@@ -270,16 +340,20 @@ class LLMService:
             except Exception as e:
                 logger.warning(f"Anthropic call failed: {e}")
 
-        # Try OpenAI as fallback
-        if self.openai_client:
+        # Try OpenAI as fallback if not tried first
+        if not use_openai_first and self.openai_client:
             try:
+                # Log full prompt (no character limits)
+                logger.info(f"📤 OpenAI Prompt ({self.openai_model}):")
+                logger.info(f"{prompt}")
+
                 response = await self.openai_client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model=self.openai_model,
                     messages=[{
                         "role": "user",
                         "content": prompt
                     }],
-                    max_tokens=2000
+                    max_completion_tokens=4000
                 )
 
                 # Log LLM usage metrics
@@ -289,14 +363,14 @@ class LLMService:
                 output_tokens = usage.completion_tokens
                 total_tokens = usage.total_tokens
 
-                # GPT-3.5-turbo pricing (as of 2025)
-                # Input: $0.50 per 1M tokens, Output: $1.50 per 1M tokens
-                input_cost = (input_tokens / 1_000_000) * 0.50
-                output_cost = (output_tokens / 1_000_000) * 1.50
+                # Pricing varies by model - using GPT-4o as baseline
+                # Input: $2.50 per 1M tokens, Output: $10.00 per 1M tokens
+                input_cost = (input_tokens / 1_000_000) * 2.50
+                output_cost = (output_tokens / 1_000_000) * 10.00
                 total_cost = input_cost + output_cost
 
-                logger.info("💰 LLM Usage (OpenAI GPT-3.5-turbo)", {
-                    "model": "gpt-3.5-turbo",
+                logger.info(f"💰 LLM Usage (OpenAI {self.openai_model})", {
+                    "model": self.openai_model,
                     "input_tokens": input_tokens,
                     "output_tokens": output_tokens,
                     "total_tokens": total_tokens,

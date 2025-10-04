@@ -1,21 +1,20 @@
 """
-Semantic document chunking with RecursiveCharacterTextSplitter.
+Markdown-aware document chunking with strict token limits.
 
 Implements intelligent chunking that:
-- Respects document structure (sections, paragraphs, sentences)
-- Maintains optimal token counts (400-1200, target 800)
-- Preserves semantic coherence
-- Tracks hierarchical relationships
+- Preserves markdown headers (# through ####)
+- Maintains strict token limits (min 400, target 800, max 1200)
+- Adds 200-token overlap (~150 chars) for context continuity
+- Handles abbreviations, decimals, numbered lists in sentence splitting
 """
 
 import re
 import uuid
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from datetime import datetime
 
 import tiktoken
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from rank_bm25 import BM25Okapi
 
 from .models import Chunk, ChunkMetadata, DocumentChunks
@@ -25,13 +24,13 @@ logger = logging.getLogger(__name__)
 
 class SemanticChunker:
     """
-    Enterprise-grade semantic chunking with optimal sizing.
+    Markdown-aware chunker with guaranteed token limits.
 
-    Uses RecursiveCharacterTextSplitter to create chunks that:
-    - Respect markdown structure (headers, lists, code blocks)
-    - Stay within token limits (min 400, target 800, max 1200)
-    - Maintain 15% overlap for context continuity
-    - Build hierarchical metadata
+    Replaces langchain RecursiveCharacterTextSplitter with:
+    - Header-preserving splits (regex capture groups)
+    - Token-accurate counting (tiktoken)
+    - Strict max enforcement (no more 7KB blobs!)
+    - Smart sentence splitting (handles abbreviations, decimals, lists)
     """
 
     def __init__(
@@ -39,7 +38,7 @@ class SemanticChunker:
         target_tokens: int = 800,
         min_tokens: int = 400,
         max_tokens: int = 1200,
-        overlap_tokens: int = 100
+        overlap_tokens: int = 200  # ~150 chars (1 token ≈ 0.75 chars)
     ):
         """
         Initialize semantic chunker.
@@ -47,8 +46,8 @@ class SemanticChunker:
         Args:
             target_tokens: Ideal chunk size in tokens
             min_tokens: Minimum acceptable chunk size
-            max_tokens: Maximum acceptable chunk size
-            overlap_tokens: Overlap between chunks for context
+            max_tokens: Maximum acceptable chunk size (STRICTLY ENFORCED)
+            overlap_tokens: Overlap between chunks (~200 tokens = ~150 chars)
         """
         self.target_tokens = target_tokens
         self.min_tokens = min_tokens
@@ -58,25 +57,13 @@ class SemanticChunker:
         # Initialize tokenizer (same as OpenAI uses for embeddings)
         self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
-        # Configure RecursiveCharacterTextSplitter
-        # Separators ordered by structural importance
-        self.splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self._tokens_to_chars(target_tokens),
-            chunk_overlap=self._tokens_to_chars(overlap_tokens),
-            length_function=self._count_tokens,
-            separators=[
-                "\n\n# ",      # H1 headers (highest priority)
-                "\n\n## ",     # H2 headers
-                "\n\n### ",    # H3 headers
-                "\n\n#### ",   # H4 headers
-                "\n\n",        # Paragraph breaks
-                "\n",          # Line breaks
-                ". ",          # Sentences
-                " ",           # Words
-                ""             # Characters (last resort)
-            ],
-            is_separator_regex=False
-        )
+        # Common abbreviations that shouldn't trigger sentence breaks
+        self.abbreviations = {
+            'dr', 'mr', 'mrs', 'ms', 'prof', 'sr', 'jr',
+            'etc', 'vs', 'inc', 'ltd', 'corp', 'fig',
+            'vol', 'approx', 'est', 'dept', 'univ',
+            'max', 'min', 'no', 'nos', 'pg', 'pp'
+        }
 
         logger.info(
             f"Initialized SemanticChunker: "
@@ -108,21 +95,23 @@ class SemanticChunker:
         try:
             logger.info(f"Chunking document {filename}: {len(markdown)} chars")
 
-            # Split using RecursiveCharacterTextSplitter
-            raw_chunks = self.splitter.split_text(markdown)
+            # Split using new markdown-aware chunker
+            raw_chunks_with_tokens = self._chunk_markdown(markdown)
 
-            logger.info(f"Generated {len(raw_chunks)} raw chunks")
+            logger.info(
+                f"Generated {len(raw_chunks_with_tokens)} chunks, "
+                f"avg {sum(t for _, t in raw_chunks_with_tokens) / len(raw_chunks_with_tokens):.0f} tokens/chunk"
+            )
 
             # Build Chunk objects with full metadata
             chunks = []
             total_tokens = 0
 
-            for i, chunk_text in enumerate(raw_chunks):
+            for i, (chunk_text, token_count) in enumerate(raw_chunks_with_tokens):
                 # Find section hierarchy for this chunk
                 section_info = self._find_section(chunk_text, sections, markdown)
 
-                # Count tokens and chars
-                token_count = self._count_tokens(chunk_text)
+                # Count chars
                 char_count = len(chunk_text)
                 total_tokens += token_count
 
@@ -144,7 +133,7 @@ class SemanticChunker:
                     revision_date=metadata.get('revision_date'),
                     language=metadata.get('language'),
                     job_id=metadata.get('job_id'),
-                    doc_id=metadata.get('doc_id', document_id),  # Use doc_id if provided, else document_id
+                    doc_id=metadata.get('doc_id', document_id),
 
                     # Chunk identification
                     chunk_id=chunk_id,
@@ -155,10 +144,10 @@ class SemanticChunker:
                     section_title=section_info['title'],
                     section_level=section_info['level'],
 
-                    # Relationships (populated after all chunks created)
+                    # Relationships
                     parent_chunk_id=None,
                     previous_chunk_id=chunks[i-1].metadata.chunk_id if i > 0 else None,
-                    next_chunk_id=None,  # Will be set for previous chunk
+                    next_chunk_id=None,
 
                     # Metrics
                     token_count=token_count,
@@ -168,8 +157,9 @@ class SemanticChunker:
                     has_code=content_features['has_code'],
 
                     # Search optimization
+                    text=chunk_text,
                     content_snippet=chunk_text[:200],
-                    keywords=[],  # Will be populated with BM25
+                    keywords=[],
 
                     # Asset linking
                     linked_asset_uid=metadata.get('asset_uid'),
@@ -209,17 +199,194 @@ class SemanticChunker:
             logger.error(f"Failed to chunk document: {e}")
             raise
 
+    def _chunk_markdown(self, text: str) -> List[Tuple[str, int]]:
+        """
+        Chunk markdown text with overlap and strict token limits.
+
+        Returns:
+            List of (chunk_text, token_count) tuples
+        """
+
+        # Step 1: Split on headers (# through ####)
+        # Use capture groups to preserve headers
+        header_pattern = r'(\n#{1,4} [^\n]+)'
+        parts = re.split(header_pattern, text)
+
+        # Recombine: [content, header, content, header, ...]
+        sections = []
+        i = 0
+        while i < len(parts):
+            if i == 0:
+                # First part is content before any headers
+                if parts[i].strip():
+                    sections.append(parts[i].strip())
+                i += 1
+            elif i + 1 < len(parts):
+                # Combine header + content
+                header = parts[i].strip()
+                content = parts[i + 1].strip() if i + 1 < len(parts) else ''
+                combined = header + '\n' + content if content else header
+                sections.append(combined)
+                i += 2
+            else:
+                # Trailing header with no content
+                if parts[i].strip():
+                    sections.append(parts[i].strip())
+                i += 1
+
+        # Step 2: Merge small sections
+        merged = []
+        buffer = ""
+        buffer_tokens = 0
+
+        for section in sections:
+            section_tokens = self._count_tokens(section)
+
+            if section_tokens < self.min_tokens:
+                if buffer_tokens + section_tokens <= self.target_tokens:
+                    buffer = buffer + "\n\n" + section if buffer else section
+                    buffer_tokens = self._count_tokens(buffer)
+                else:
+                    if buffer:
+                        merged.append(buffer)
+                    buffer = section
+                    buffer_tokens = section_tokens
+            else:
+                if buffer:
+                    merged.append(buffer)
+                    buffer = ""
+                    buffer_tokens = 0
+                merged.append(section)
+
+        if buffer:
+            merged.append(buffer)
+
+        # Step 3: Split any chunks that exceed max_tokens
+        size_enforced = []
+        for chunk in merged:
+            chunk_tokens = self._count_tokens(chunk)
+
+            if chunk_tokens <= self.max_tokens:
+                size_enforced.append(chunk)
+            else:
+                # Split on sentences
+                splits = self._split_on_sentence(chunk, self.max_tokens)
+                size_enforced.extend(splits)
+
+        # Step 4: Add overlap between consecutive chunks
+        final_chunks = []
+
+        for i, chunk in enumerate(size_enforced):
+            if i == 0:
+                final_chunks.append(chunk)
+            else:
+                # Get overlap from previous chunk
+                prev_chunk = size_enforced[i-1]
+                prev_tokens = self.tokenizer.encode(prev_chunk)
+
+                if len(prev_tokens) > self.overlap_tokens:
+                    # Take last N tokens as overlap
+                    overlap_token_ids = prev_tokens[-self.overlap_tokens:]
+                    overlap_text = self.tokenizer.decode(overlap_token_ids)
+
+                    # Try to start overlap at sentence boundary
+                    sentence_end = max(
+                        overlap_text.rfind('. '),
+                        overlap_text.rfind('! '),
+                        overlap_text.rfind('? ')
+                    )
+
+                    if sentence_end > len(overlap_text) // 3:
+                        overlap_text = overlap_text[sentence_end + 2:]
+
+                    # Check if chunk already starts with this overlap
+                    overlap_hash = hash(overlap_text.strip()[:100])
+                    chunk_start_hash = hash(chunk.strip()[:100])
+
+                    if overlap_hash != chunk_start_hash:
+                        chunk = overlap_text + " " + chunk
+
+                # Validate final chunk doesn't exceed max
+                chunk_tokens = self._count_tokens(chunk)
+                if chunk_tokens > self.max_tokens:
+                    # Trim from the start
+                    chunk_token_ids = self.tokenizer.encode(chunk)
+                    trimmed_ids = chunk_token_ids[-self.max_tokens:]
+                    chunk = self.tokenizer.decode(trimmed_ids)
+
+                final_chunks.append(chunk)
+
+        # Return with token counts
+        return [(chunk, self._count_tokens(chunk)) for chunk in final_chunks]
+
+    def _split_on_sentence(self, text: str, max_tokens: int) -> List[str]:
+        """
+        Split text on sentence boundaries to stay under max_tokens.
+
+        Handles abbreviations, decimals, numbered lists.
+        """
+        sentences = []
+        current_sentence = ""
+
+        i = 0
+        while i < len(text):
+            char = text[i]
+            current_sentence += char
+
+            # Check for sentence boundary
+            if char in '.!?' and i + 1 < len(text):
+                next_char = text[i + 1] if i + 1 < len(text) else ''
+                next_next = text[i + 2] if i + 2 < len(text) else ''
+
+                # Get word before punctuation
+                words_before = current_sentence.rstrip('.!? ').split()
+                last_word = words_before[-1].lower() if words_before else ''
+
+                is_sentence_end = False
+
+                if next_char in ' \n\t':
+                    # Not an abbreviation
+                    if last_word not in self.abbreviations:
+                        # Not a decimal number
+                        prev_char = text[i - 1] if i > 0 else ''
+                        if not (prev_char.isdigit() and next_next.isdigit()):
+                            # Not a numbered list
+                            if not (current_sentence.strip()[-2:].replace('.', '').isdigit()):
+                                is_sentence_end = True
+
+                if is_sentence_end:
+                    sentences.append(current_sentence)
+                    current_sentence = ""
+
+            i += 1
+
+        if current_sentence:
+            sentences.append(current_sentence)
+
+        # Group sentences into chunks under max_tokens
+        chunks = []
+        current = []
+        current_tokens = 0
+
+        for sentence in sentences:
+            sent_tokens = self._count_tokens(sentence)
+
+            if current_tokens + sent_tokens > max_tokens and current:
+                chunks.append(''.join(current))
+                current = [sentence]
+                current_tokens = sent_tokens
+            else:
+                current.append(sentence)
+                current_tokens += sent_tokens
+
+        if current:
+            chunks.append(''.join(current))
+
+        return chunks
+
     def _count_tokens(self, text: str) -> int:
         """Count tokens using tiktoken (same as OpenAI)."""
         return len(self.tokenizer.encode(text))
-
-    def _tokens_to_chars(self, tokens: int) -> int:
-        """
-        Estimate character count for token count.
-
-        Average: 1 token ≈ 4 characters for English text.
-        """
-        return tokens * 4
 
     def _find_section(
         self,
@@ -235,13 +402,11 @@ class SemanticChunker:
         # Find chunk position in document
         chunk_start = full_markdown.find(chunk_text)
         if chunk_start == -1:
-            # Chunk not found exactly (likely due to splitting)
-            # Use first line to find approximate position
+            # Chunk not found exactly
             first_line = chunk_text.split('\n')[0][:50]
             chunk_start = full_markdown.find(first_line)
 
         if chunk_start == -1:
-            # Fallback: no section info
             return {
                 'hierarchy': ['Document'],
                 'title': 'Document',
@@ -264,18 +429,15 @@ class SemanticChunker:
         # Sort by level (deepest first)
         containing_sections.sort(key=lambda s: s['level'], reverse=True)
 
-        # Build hierarchy from top to bottom
+        # Build hierarchy
         hierarchy = []
-        current_level = 1
         for section in reversed(containing_sections):
-            if section['level'] <= 6:  # Only include h1-h6
+            if section['level'] <= 6:
                 hierarchy.append(section['title'])
-                current_level = section['level']
 
         if not hierarchy:
             hierarchy = ['Document']
 
-        # Immediate parent is last in hierarchy
         immediate_section = containing_sections[0] if containing_sections else None
 
         return {
@@ -290,9 +452,9 @@ class SemanticChunker:
 
         Detects tables, lists, code blocks for metadata.
         """
-        has_tables = bool(re.search(r'\|.*\|', text))  # Markdown tables
+        has_tables = bool(re.search(r'\|.*\|', text))
         has_lists = bool(re.search(r'^[\s]*[-*+\d]+\.?\s', text, re.MULTILINE))
-        has_code = bool(re.search(r'```', text))  # Code blocks
+        has_code = bool(re.search(r'```', text))
 
         return {
             'has_tables': has_tables,
@@ -310,7 +472,6 @@ class SemanticChunker:
             # Tokenize all chunk content
             tokenized_chunks = []
             for chunk in chunks:
-                # Simple tokenization: lowercase, split on non-alphanumeric
                 tokens = re.findall(r'\b\w+\b', chunk.content.lower())
                 tokenized_chunks.append(tokens)
 
@@ -320,19 +481,16 @@ class SemanticChunker:
             # For each chunk, get top keywords
             for i, chunk in enumerate(chunks):
                 tokens = tokenized_chunks[i]
-
-                # Score each token in this chunk
                 scores = bm25.get_scores(tokens)
 
                 # Get top 10 unique tokens
                 token_scores = list(zip(tokens, scores))
                 token_scores.sort(key=lambda x: x[1], reverse=True)
 
-                # Deduplicate while preserving order
                 seen = set()
                 top_keywords = []
                 for token, score in token_scores:
-                    if token not in seen and len(token) > 2:  # Skip short tokens
+                    if token not in seen and len(token) > 2:
                         seen.add(token)
                         top_keywords.append(token)
                         if len(top_keywords) >= 10:
@@ -344,7 +502,6 @@ class SemanticChunker:
 
         except Exception as e:
             logger.warning(f"Failed to extract keywords: {e}")
-            # Non-critical, continue without keywords
 
 
 # Global chunker instance
