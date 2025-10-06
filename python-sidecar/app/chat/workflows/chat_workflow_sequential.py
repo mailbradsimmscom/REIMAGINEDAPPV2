@@ -66,6 +66,11 @@ class ChatWorkflowSequential:
         """
         start_time = datetime.now()
 
+        logger.info("🚀 WORKFLOW ENTRY - ChatWorkflowSequential.process_chat() called")
+        logger.info(f"  - Query: {user_query[:100]}")
+        logger.info(f"  - Systems context count: {len(systems_context)}")
+        logger.info(f"  - Thread ID: {thread_id}")
+
         chat_debug.step('PROCESS_CHAT_START', {
             'user_query': user_query[:100],
             'thread_id': thread_id,
@@ -101,9 +106,12 @@ class ChatWorkflowSequential:
             })
 
             # ===== STEP 1: Query Classification =====
+            logger.info("📌 STEP 1: Starting Query Classification")
             step_start = datetime.now()
             state = await self._classify_query(state)
             step_duration = (datetime.now() - step_start).total_seconds() * 1000
+            state["classification_duration_ms"] = step_duration
+            logger.info(f"✅ STEP 1 Complete: Classification took {step_duration:.2f}ms")
             chat_debug.timing('classify_query', step_duration, {
                 'intent': state.get('classification', {}).get('intent', 'unknown'),
                 'confidence': state.get('classification', {}).get('confidence', 0)
@@ -116,9 +124,12 @@ class ChatWorkflowSequential:
                 return await self._fallback_processing(user_query, systems_context, thread_id)
 
             # ===== STEP 2: Data Retrieval =====
+            logger.info("📌 STEP 2: Starting Data Retrieval")
             step_start = datetime.now()
             state = await self._retrieve_data(state)
             step_duration = (datetime.now() - step_start).total_seconds() * 1000
+            state["pinecone_duration_ms"] = step_duration  # Store for metrics
+            logger.info(f"✅ STEP 2 Complete: Data retrieval took {step_duration:.2f}ms")
             chat_debug.timing('retrieve_data', step_duration, {
                 'dip_results_count': len(state.get('dip_results', [])),
                 'pinecone_success': state.get('pinecone_results', {}).get('success', False)
@@ -130,9 +141,12 @@ class ChatWorkflowSequential:
                 })
 
             # ===== STEP 3: Response Synthesis =====
+            logger.info("📌 STEP 3: Starting Response Synthesis")
             step_start = datetime.now()
             state = await self._synthesize_response(state)
             step_duration = (datetime.now() - step_start).total_seconds() * 1000
+            state["synthesis_duration_ms"] = step_duration  # Store for metrics
+            logger.info(f"✅ STEP 3 Complete: Synthesis took {step_duration:.2f}ms")
             chat_debug.timing('synthesize_response', step_duration, {
                 'response_length': len(state.get('final_response', ''))
             })
@@ -142,16 +156,91 @@ class ChatWorkflowSequential:
                     'query': user_query[:100]
                 })
 
-            # ===== STEP 4: Response Scoring =====
-            step_start = datetime.now()
-            state = await self._score_response(state)
-            step_duration = (datetime.now() - step_start).total_seconds() * 1000
-            chat_debug.timing('score_response', step_duration, {
-                'confidence': state.get('response_score', {}).get('confidence', 'unknown')
-            })
+            # ===== STEP 4: Response Scoring ===== DISABLED
+            # step_start = datetime.now()
+            # state = await self._score_response(state)
+            # step_duration = (datetime.now() - step_start).total_seconds() * 1000
+            # chat_debug.timing('score_response', step_duration, {
+            #     'confidence': state.get('response_score', {}).get('confidence', 'unknown')
+            # })
 
             # Format response
             processing_time = int((datetime.now() - state["start_time"]).total_seconds() * 1000)
+
+            # Debug: Log state before metrics collection
+            logger.info("🔍 DEBUG - State keys before metrics collection:")
+            logger.info(f"  - classification exists: {'classification' in state}")
+            logger.info(f"  - classification_duration_ms: {state.get('classification_duration_ms', 'MISSING')}")
+            logger.info(f"  - pinecone_results exists: {'pinecone_results' in state}")
+            logger.info(f"  - pinecone_duration_ms: {state.get('pinecone_duration_ms', 'MISSING')}")
+            logger.info(f"  - synthesis_duration_ms: {state.get('synthesis_duration_ms', 'MISSING')}")
+            logger.info(f"  - dip_results exists: {'dip_results' in state}")
+            logger.info(f"  - final_response exists: {'final_response' in state}")
+
+            # Log classification details if present
+            if 'classification' in state:
+                logger.info(f"  - classification content: {state['classification']}")
+
+            # Collect detailed metrics for stats panel
+            detailed_metrics = {
+                "classification": {
+                    "duration_ms": state.get("classification_duration_ms", 0),
+                    "intent": state["classification"].get("intent", "unknown"),
+                    "confidence": state["classification"].get("confidence", 0),
+                    "complexity_score": state["classification"].get("complexity_score", 0),
+                    "complexity": state["classification"].get("complexity", "unknown"),
+                    "table_types_needed": state["classification"].get("table_types_needed", []),
+                    "primary_equipment_index": state["classification"].get("primary_equipment_index")
+                },
+                "pinecone": {
+                    "duration_ms": state.get("pinecone_duration_ms", 0),
+                    "total_matches": state.get("pinecone_results", {}).get("total_matches", 0),
+                    "filtered_matches": state.get("pinecone_results", {}).get("filtered_matches", 0),
+                    "chunks": [],  # Will be populated below
+                    "metadata_filter_used": state.get("pinecone_results", {}).get("metadata_filter_used", False),
+                    "complexity_based_filtering": state.get("pinecone_complexity_filtering", {})
+                },
+                "synthesis": {
+                    "duration_ms": state.get("synthesis_duration_ms", 0),
+                    "reasoning_effort": state.get("reasoning_effort", "medium"),
+                    "dip_tables_sent": len(state["dip_results"]),
+                    "dip_entries_sent": sum(r.get('count', 0) for r in state["dip_results"]),
+                    "pinecone_chunks_sent": len(state.get("pinecone_results", {}).get("matches", [])),
+                    "equipment_context": [
+                        {
+                            "manufacturer": eq.get("manufacturer", ""),
+                            "model": eq.get("model", ""),
+                            "rank": eq.get("rank", 0)
+                        }
+                        for eq in systems_context[:3]  # Top 3 equipment
+                    ],
+                    "token_usage": state.get("synthesis_token_usage", {}),
+                    "model_used": state.get("synthesis_model", "unknown")
+                }
+            }
+
+            # Add Pinecone chunk details with relevance scores - show ALL matches
+            if state.get("pinecone_results", {}):
+                # Use all_matches if available (contains unfiltered results), otherwise fall back to matches
+                all_chunks = state["pinecone_results"].get("all_matches", state["pinecone_results"].get("matches", []))
+
+                # Add ALL chunks to show both used and unused
+                for match in all_chunks[:10]:  # Limit to top 10
+                    detailed_metrics["pinecone"]["chunks"].append({
+                        "score": match.get("score", 0),
+                        "content_preview": str(match.get("metadata", {}).get("text", ""))[:100],
+                        "doc_type": match.get("metadata", {}).get("doc_type", "unknown")
+                    })
+
+            # Debug: Log the detailed metrics
+            logger.info(f"📊 DETAILED METRICS BEING SENT: {detailed_metrics}")
+
+            # Additional debug - confirm metrics structure
+            logger.info("📊 METRICS STRUCTURE CHECK:")
+            logger.info(f"  - Classification duration: {detailed_metrics['classification']['duration_ms']}ms")
+            logger.info(f"  - Pinecone duration: {detailed_metrics['pinecone']['duration_ms']}ms")
+            logger.info(f"  - Synthesis duration: {detailed_metrics['synthesis']['duration_ms']}ms")
+            logger.info(f"  - Total chunks: {len(detailed_metrics['pinecone']['chunks'])}")
 
             result = {
                 "response": state["final_response"],
@@ -159,6 +248,7 @@ class ChatWorkflowSequential:
                 "sources": self._format_sources(state["dip_results"]),
                 "score": state["response_score"],
                 "processing_time_ms": processing_time,
+                "detailed_metrics": detailed_metrics,  # NEW: Comprehensive metrics
                 "metadata": {
                     "workflow": "sequential",  # Changed from "langgraph"
                     "processing_steps": state["processing_steps"],
@@ -174,6 +264,10 @@ class ChatWorkflowSequential:
                 'sources_count': len(result["sources"]),
                 'workflow': 'sequential'
             })
+
+            # Final debug log
+            logger.info(f"🎯 FINAL RESULT - Returning result with detailed_metrics: {bool(result.get('detailed_metrics'))}")
+            logger.info(f"  - Result keys: {list(result.keys())}")
 
             return result
 
@@ -219,6 +313,8 @@ class ChatWorkflowSequential:
                 }
             )
 
+            # Store timing for detailed metrics
+            state["classification_duration_ms"] = int(llm_duration)
             state["classification"] = classification
 
             # Determine primary and secondary equipment based on LLM analysis
@@ -353,12 +449,57 @@ class ChatWorkflowSequential:
             )
             pinecone_duration = (datetime.now() - pinecone_start).total_seconds() * 1000
 
+            # Store Pinecone timing for detailed metrics
+            state["pinecone_duration_ms"] = int(pinecone_duration)
             state["pinecone_results"] = pinecone_results
+
+            # Store metadata filter info for metrics
+            if pinecone_results:
+                state["pinecone_results"]["metadata_filter_used"] = bool(pinecone_results.get("metadata_filter"))
 
             chat_debug.timing('pinecone_search', pinecone_duration, {
                 'success': pinecone_results.get('success', False) if pinecone_results else False,
                 'matches_count': pinecone_results.get('match_count', 0) if pinecone_results else 0
             })
+
+            # Filter Pinecone chunks based on query complexity
+            if pinecone_results and pinecone_results.get('success') and pinecone_results.get('matches'):
+                complexity_score = state["classification"].get("complexity_score", 0.5)
+                original_count = len(pinecone_results['matches'])
+
+                ranking_start = datetime.now()
+
+                # Store ALL matches before filtering for metrics display
+                all_matches = pinecone_results['matches'].copy()
+
+                filtered_matches = await self.llm_service.rank_chunks(
+                    user_query=state["user_query"],
+                    chunks=pinecone_results['matches'],
+                    complexity_score=complexity_score
+                )
+                ranking_duration = (datetime.now() - ranking_start).total_seconds() * 1000
+
+                # Update pinecone_results with filtered chunks
+                pinecone_results['all_matches'] = all_matches  # Store original matches
+                pinecone_results['matches'] = filtered_matches
+                pinecone_results['match_count'] = len(filtered_matches)
+                pinecone_results['filtered_matches'] = len(filtered_matches)
+                pinecone_results['total_matches'] = len(all_matches)  # Update total count
+                state["pinecone_results"] = pinecone_results
+
+                # Store complexity filtering info for metrics
+                state["pinecone_complexity_filtering"] = {
+                    "original_count": original_count,
+                    "filtered_count": len(filtered_matches),
+                    "complexity_score": complexity_score,
+                    "ranking_duration_ms": int(ranking_duration)
+                }
+
+                chat_debug.timing('chunk_ranking', ranking_duration, {
+                    'original_count': original_count,
+                    'filtered_count': len(filtered_matches),
+                    'complexity_score': complexity_score
+                })
 
             logger.debug(f"Retrieved data from {len(all_dip_results)} DIP table(s)")
 
@@ -398,7 +539,13 @@ class ChatWorkflowSequential:
 
             llm_duration = (datetime.now() - llm_start).total_seconds() * 1000
 
+            # Store synthesis timing for detailed metrics
+            state["synthesis_duration_ms"] = int(llm_duration)
             state["final_response"] = response
+
+            # Determine reasoning effort based on complexity
+            complexity_score = state.get("classification", {}).get("complexity_score", 0.5)
+            state["reasoning_effort"] = "high" if complexity_score >= 0.7 else "medium"
 
             chat_debug.llm_call(
                 model='synthesis',
@@ -425,7 +572,11 @@ class ChatWorkflowSequential:
         """
         Score response quality and confidence
         INTELLIGENCE: LLM-powered quality metrics
+        DISABLED: Too slow for production use
         """
+        # SCORING DISABLED - skip entirely
+        return state
+
         try:
             state["processing_steps"].append("response_scoring")
 

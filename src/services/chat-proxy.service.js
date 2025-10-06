@@ -162,7 +162,7 @@ export async function processChatMessage({ query, threadId }) {
     systemsContext = [];
     const newEquipmentFound = [];
 
-    for (let i = 0; i < rawEquipmentContext.length; i++) {
+    for (let i = 0; i < Math.min(rawEquipmentContext.length, 2); i++) {
       const equipment = rawEquipmentContext[i];
       try {
         let fullSystem;
@@ -196,16 +196,10 @@ export async function processChatMessage({ query, threadId }) {
           manufacturer: fullSystem.manufacturer_norm || fullSystem.manufacturer,
           model: fullSystem.model_norm || fullSystem.model,
           description: fullSystem.description,
-          synonyms_fts: fullSystem.synonyms_fts,
-          synonyms_human: fullSystem.synonyms_human,
-          rank: equipment.rank || equipment.weight || 1.0,
           source: equipment.source || 'current',
-          conversation_weight: equipment.conversation_weight || null,
           // Add inference metadata if available
           // First equipment from current query gets 'main' relationship type
-          relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null),
-          inference_confidence: equipment.inference_confidence || null,
-          inference_reasoning: equipment.inference_reasoning || null
+          relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null)
         });
       } catch (error) {
         requestLogger.warn('Failed to fetch full system details', {
@@ -297,6 +291,18 @@ export async function processChatMessage({ query, threadId }) {
       processingTimeMs: pythonResult.processing_time_ms || 0
     });
 
+    // Debug: Log what we received from Python
+    requestLogger.info('🔍 Python result keys:', Object.keys(pythonResult));
+    if (pythonResult.detailed_metrics) {
+      requestLogger.info('📊 Detailed metrics received from Python:', {
+        hasClassification: !!pythonResult.detailed_metrics?.classification,
+        hasPinecone: !!pythonResult.detailed_metrics?.pinecone,
+        hasSynthesis: !!pythonResult.detailed_metrics?.synthesis
+      });
+    } else {
+      requestLogger.warn('⚠️ No detailed_metrics in Python response');
+    }
+
     // Build result object matching previous format
     const result = {
       response: pythonResult.response,
@@ -305,8 +311,12 @@ export async function processChatMessage({ query, threadId }) {
       classification: pythonResult.classification,
       score: pythonResult.score,
       metadata: pythonResult.metadata || {},
-      processing_time_ms: pythonResult.processing_time_ms || 0
+      processing_time_ms: pythonResult.processing_time_ms || 0,
+      detailed_metrics: pythonResult.detailed_metrics || null  // Pass through detailed metrics
     };
+
+    // Debug: Log what we're returning
+    requestLogger.info('🎯 Returning result with detailed_metrics:', !!result.detailed_metrics);
 
     return result;
 

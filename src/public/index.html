@@ -35,10 +35,13 @@
           </div>
         </aside>
 
-        <section class="chat">
+        <section class="chat" id="chatSection">
           <div class="chat-header">
             <h2 id="currentChatName">Welcome to Enterprise Chat</h2>
             <p id="currentChatDescription">Ask questions about your systems, equipment, and documentation</p>
+            <button id="toggleStatsBtn" class="toggle-stats-btn" title="Toggle LLM Stats">
+              📊
+            </button>
           </div>
 
           <div class="messages" id="messages">
@@ -46,6 +49,100 @@
               <div class="empty-state-icon">💬</div>
               <div class="empty-state-title">Start a conversation</div>
               <div class="empty-state-subtitle">Type a message below to begin</div>
+            </div>
+          </div>
+
+          <!-- Stats Panel -->
+          <div class="stats-panel" id="statsPanel">
+            <div class="stats-header">
+              <h3>LLM Processing Metrics</h3>
+              <button class="close-stats" id="closeStatsBtn">×</button>
+            </div>
+
+            <div class="stats-content">
+              <!-- Classification Section -->
+              <div class="stat-section">
+                <h4>📋 Classification</h4>
+                <div class="stat-grid">
+                  <div class="stat-item">
+                    <div class="stat-label">Intent</div>
+                    <div class="stat-value" id="stat-intent">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Confidence</div>
+                    <div class="stat-value" id="stat-confidence">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Complexity</div>
+                    <div class="stat-value" id="stat-complexity">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Duration</div>
+                    <div class="stat-value" id="stat-class-duration">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pinecone Section -->
+              <div class="stat-section">
+                <h4>🔍 Pinecone Search</h4>
+                <div class="stat-grid">
+                  <div class="stat-item">
+                    <div class="stat-label">Total Matches</div>
+                    <div class="stat-value" id="stat-total-matches">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Filtered</div>
+                    <div class="stat-value" id="stat-filtered-matches">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Duration</div>
+                    <div class="stat-value" id="stat-pinecone-duration">-</div>
+                  </div>
+                </div>
+                <div class="chunks-list" id="chunks-list">
+                  <!-- Chunks will be added here -->
+                </div>
+              </div>
+
+              <!-- Synthesis Section -->
+              <div class="stat-section">
+                <h4>🤖 Response Synthesis</h4>
+                <div class="stat-grid">
+                  <div class="stat-item">
+                    <div class="stat-label">Model</div>
+                    <div class="stat-value small" id="stat-model">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Reasoning</div>
+                    <div class="stat-value" id="stat-reasoning">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">DIP Tables</div>
+                    <div class="stat-value" id="stat-dip-tables">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">DIP Entries</div>
+                    <div class="stat-value" id="stat-dip-entries">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Chunks Sent</div>
+                    <div class="stat-value" id="stat-chunks-sent">-</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Duration</div>
+                    <div class="stat-value" id="stat-synth-duration">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Equipment Context -->
+              <div class="stat-section">
+                <h4>⚙️ Equipment Context</h4>
+                <div class="equipment-list" id="equipment-list">
+                  <!-- Equipment will be added here -->
+                </div>
+              </div>
             </div>
           </div>
         </section>

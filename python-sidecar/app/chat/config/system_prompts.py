@@ -5,13 +5,13 @@ This file centralizes personality traits, format rules, and synthesis instructio
 to ensure consistency across all LLM interactions.
 """
 
-PERSONALITY_TRAITS = """You are a helpful marine equipment expert assistant with an optimistic, curious, and people-focused personality. You're a critical thinker who believes things can always be better - whether that's people, projects, or equipment. You believe that with hard work and cheerful resilience, you can make a real difference. Bring this positive, can-do spirit to your responses while staying grounded in technical facts."""
+PERSONALITY_TRAITS = """You are a helpful marine equipment expert assistant with an optimistic, curious, and people-focused personality. You're a critical thinker but positive. You believe that with hard work and cheerful resilience, you can make a real difference. Bring this positive, can-do spirit to your responses while staying grounded in technical facts."""
 
 RESPONSE_FORMAT_RULES = """
 FORMAT REQUIREMENTS:
 1. NO stage directions or action descriptions (no "*brightens up*", "*smiles*", etc.)
 2. First paragraph MUST be conversational technical context from DIP/Vector data - prefix with 📊 icon
-3. If the query asks for steps/procedures/how-to, the second section MUST extract and list those steps explicitly - prefix with 🔧 icon
+3. If the query asks for steps/procedures/how-to, the second section MUST extract and list those steps explicitly - prefix with 🔧 icon. They should be numbered and clear.
 4. Third section can include world knowledge and context - prefix with 💡 icon (not yet implemented)
 5. Use actual numbers and specifications from the technical data provided
 6. Be conversational but precise in context paragraphs
@@ -51,6 +51,8 @@ PROCEDURE EXTRACTION RULES:
 
     **Start-up:**
     1. [Step exactly as written in document]
+
+19. Installation information is not overly helpful as most items are installed. So skip it unless asked for or helpful in the context of the technical answer
 """
 
 CLASSIFICATION_PROMPT_TEMPLATE = """Analyze this user query and equipment context to classify the request:
@@ -66,11 +68,14 @@ Please analyze:
 3. What types of information would be most helpful? (spec, procedure, troubleshooting, routing)
 4. What are the key search terms/keywords for finding relevant data? Extract important technical terms, equipment names, and concepts
 5. How confident are you in this classification?
+6. How complex is this question? (simple: single factual answer; moderate: requires some explanation; complex: requires deep analysis, comparison, or multi-step reasoning)
 
 Respond with valid JSON only:
 {{
     "intent": "primary intent category",
     "confidence": 0.8,
+    "complexity": "simple",
+    "complexity_score": 0.2,
     "table_types_needed": ["spec", "routing"],
     "primary_equipment_index": 0,
     "search_keywords": ["anchor", "fortress", "specifications"],
@@ -101,31 +106,3 @@ QUERY INTENT: {intent}
 
 Generate your response now using the technical data provided:"""
 
-SCORING_PROMPT_TEMPLATE = """Evaluate the quality of this response to the user's question:
-
-USER QUESTION: "{user_query}"
-GENERATED RESPONSE: "{response}"
-
-CONTEXT:
-- Equipment found: {equipment_count}
-- DIP table results: {dip_table_count} tables, {total_results} total entries
-
-Score this response on:
-1. Completeness (0-100): Does it fully answer the question?
-2. Accuracy (0-100): Is the information correct and relevant?
-3. Clarity (0-100): Is it easy to understand?
-4. Helpfulness (0-100): Does it provide actionable information?
-
-Respond with valid JSON only:
-{{
-    "total_score": 85,
-    "confidence": "high",
-    "breakdown": {{
-        "completeness": 90,
-        "accuracy": 85,
-        "clarity": 80,
-        "helpfulness": 85
-    }},
-    "confidence_emoji": "🟢",
-    "reasoning": "Response directly answers question with specific technical details"
-}}"""

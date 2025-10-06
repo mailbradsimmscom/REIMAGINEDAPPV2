@@ -69,6 +69,7 @@ class ChatResponse(BaseModel):
     classification: Optional[QueryClassification] = None
     processing_time_ms: int
     metadata: Dict[str, Any] = {}
+    detailed_metrics: Optional[Dict[str, Any]] = None  # Added for stats panel
 
 class HealthResponse(BaseModel):
     """Health check response"""

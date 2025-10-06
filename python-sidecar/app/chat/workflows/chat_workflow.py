@@ -1,4 +1,7 @@
 """
+DEPRECATED: This LangGraph-based workflow is not currently used.
+Use chat_workflow_sequential.py instead.
+
 LangGraph workflow for conversational chat with DIP integration
 
 This workflow implements:

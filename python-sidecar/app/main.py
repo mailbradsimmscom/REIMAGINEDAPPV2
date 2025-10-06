@@ -886,7 +886,8 @@ if chat_enabled:
                     score=workflow_result.get("score"),
                     classification=normalized_classification,
                     processing_time_ms=workflow_result.get("processing_time_ms", 0),
-                    metadata=workflow_result.get("metadata", {})
+                    metadata=workflow_result.get("metadata", {}),
+                    detailed_metrics=workflow_result.get("detailed_metrics")  # Pass through metrics
                 )
 
             except Exception as e:

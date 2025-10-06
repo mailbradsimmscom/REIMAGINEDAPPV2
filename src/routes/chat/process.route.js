@@ -83,9 +83,17 @@ router.post(
             classification: result.classification,
             score: result.score,
             metadata: result.metadata
-          }
+          },
+          detailed_metrics: result.detailed_metrics || null  // Pass through detailed metrics from Python
         }
       };
+
+      // Debug: Log response structure
+      requestLogger.info('🎯 Route response structure:', {
+        hasDetailedMetrics: !!envelope.data.detailed_metrics,
+        responseKeys: Object.keys(envelope.data),
+        telemetryKeys: Object.keys(envelope.data.telemetry || {})
+      });
 
       const totalDuration = Date.now() - startTime;
 

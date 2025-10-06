@@ -678,6 +678,20 @@ async function processMessage(message) {
 
       addEnhancedMessage(assistantMessage, formattedSources);
 
+      // Update stats panel with detailed metrics
+      if (responseData.detailed_metrics) {
+        window.lastMetrics = responseData.detailed_metrics;
+        updateStatsPanel(responseData.detailed_metrics);
+
+        // Auto-show stats panel if not visible
+        const chatSection = document.getElementById('chatSection');
+        if (chatSection && !chatSection.classList.contains('show-stats')) {
+          setTimeout(() => {
+            chatSection.classList.add('show-stats');
+          }, 500); // Small delay to let message render first
+        }
+      }
+
       if (responseData.telemetry && responseData.telemetry.score) {
         const score = responseData.telemetry.score;
         const scoreIndicator = document.createElement('div');
@@ -740,7 +754,99 @@ function getSourceIcon(sourceType) {
   return iconMap[sourceType] || iconMap.default;
 }
 
+// Stats Panel Functions
+function initializeStatsPanel() {
+  const toggleBtn = document.getElementById('toggleStatsBtn');
+  const closeBtn = document.getElementById('closeStatsBtn');
+  const chatSection = document.getElementById('chatSection');
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      chatSection.classList.toggle('show-stats');
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      chatSection.classList.remove('show-stats');
+    });
+  }
+}
+
+function updateStatsPanel(metrics) {
+  if (!metrics) return;
+
+  // Helper to convert ms to seconds with 2 decimals
+  const msToSec = (ms) => ms ? `${(ms / 1000).toFixed(2)}s` : '-';
+
+  // Classification stats
+  if (metrics.classification) {
+    const c = metrics.classification;
+    updateStatValue('stat-intent', c.intent || '-');
+    updateStatValue('stat-confidence', c.confidence ? `${(c.confidence * 100).toFixed(1)}%` : '-');
+    updateStatValue('stat-complexity', `${c.complexity || '-'} (${(c.complexity_score || 0).toFixed(2)})`);
+    updateStatValue('stat-class-duration', msToSec(c.duration_ms));
+  }
+
+  // Pinecone stats
+  if (metrics.pinecone) {
+    const p = metrics.pinecone;
+    updateStatValue('stat-total-matches', p.total_matches || 0);
+    updateStatValue('stat-filtered-matches', p.filtered_matches || 0);
+    updateStatValue('stat-pinecone-duration', msToSec(p.duration_ms));
+
+    // Update chunks list - show ALL chunks with scores, not just selected ones
+    const chunksList = document.getElementById('chunks-list');
+    if (chunksList && p.chunks) {
+      // Show all chunks with their scores
+      const allChunks = p.chunks.slice(0, 10); // Show up to 10 chunks
+      chunksList.innerHTML = allChunks.map((chunk, index) => `
+        <div class="chunk-item ${index < p.filtered_matches ? 'selected-chunk' : 'unselected-chunk'}">
+          <span class="chunk-score">${chunk.score.toFixed(3)}</span>
+          <span class="chunk-content">${chunk.content_preview}</span>
+          ${index < p.filtered_matches ? '<span class="chunk-badge">✓ Used</span>' : '<span class="chunk-badge-excluded">✗ Not used</span>'}
+        </div>
+      `).join('');
+    }
+  }
+
+  // Synthesis stats
+  if (metrics.synthesis) {
+    const s = metrics.synthesis;
+    updateStatValue('stat-model', s.model_used || '-');
+    updateStatValue('stat-reasoning', s.reasoning_effort || '-');
+    updateStatValue('stat-dip-tables', s.dip_tables_sent || 0);
+    updateStatValue('stat-dip-entries', s.dip_entries_sent || 0);
+    updateStatValue('stat-chunks-sent', s.pinecone_chunks_sent || 0);
+    updateStatValue('stat-synth-duration', msToSec(s.duration_ms));
+
+    // Update equipment list
+    const equipmentList = document.getElementById('equipment-list');
+    if (equipmentList && s.equipment_context) {
+      equipmentList.innerHTML = s.equipment_context.map(eq => `
+        <div class="equipment-item">
+          <div class="equipment-name">${eq.manufacturer} ${eq.model}</div>
+          <div class="equipment-rank">Confidence: ${(eq.rank * 100).toFixed(1)}%</div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function updateStatValue(elementId, value) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.textContent = value;
+  }
+}
+
+// Store last metrics globally for debugging
+window.lastMetrics = null;
+
 // Initialize chat on page load
-document.addEventListener('DOMContentLoaded', initializeChat);
+document.addEventListener('DOMContentLoaded', () => {
+  initializeChat();
+  initializeStatsPanel();
+});
 
 

@@ -27,6 +27,7 @@ const EnvSchema = z.object({
   PY_SUPABASE_SERVICE_KEY: z.string().optional(),
   ADMIN_TOKEN: z.string().optional(),
   PYTHON_SIDECAR_URL: z.string().optional(),
+  PYTHON_CHAT_TIMEOUT_MS: z.string().optional(),
   APP_VERSION: z.string().optional(),
   RESPONSE_VALIDATE: z.string().optional(),
   CHAT_CONTEXT_SIZE: z.string().optional().default('5'),

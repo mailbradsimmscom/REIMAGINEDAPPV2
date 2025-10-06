@@ -16,7 +16,6 @@ from datetime import datetime
 from ..config import (
     CLASSIFICATION_PROMPT_TEMPLATE,
     SYNTHESIS_PROMPT_TEMPLATE,
-    SCORING_PROMPT_TEMPLATE,
     PERSONALITY_TRAITS,
     RESPONSE_FORMAT_RULES,
     SYNTHESIS_INSTRUCTIONS
@@ -36,6 +35,7 @@ class LLMService:
         # Read configuration
         self.chat_model_provider = os.getenv('CHAT_MODEL', 'ANTHROPIC').upper()
         self.openai_model = os.getenv('OPENAI_MODEL', 'gpt-4o')
+        self.openai_summary_model = os.getenv('OPENAI_SUMMARY_MODEL', 'gpt-4o-mini')
 
         # Initialize Anthropic if available
         try:
@@ -103,15 +103,29 @@ class LLMService:
         )
 
         try:
-            response_text = await self._call_llm(prompt)
+            # Use faster/cheaper model for classification with lower token limit
+            response_text = await self._call_llm(
+                prompt,
+                model=self.openai_summary_model,
+                max_tokens=500
+            )
 
-            # Parse JSON response
+            # Parse JSON response - strip markdown code fences if present
             try:
-                result = json.loads(response_text)
+                cleaned_text = response_text.strip()
+                if cleaned_text.startswith('```'):
+                    # Remove ```json or ``` from start and ``` from end
+                    cleaned_text = cleaned_text.split('\n', 1)[1] if '\n' in cleaned_text else cleaned_text
+                    cleaned_text = cleaned_text.rsplit('```', 1)[0] if '```' in cleaned_text else cleaned_text
+                    cleaned_text = cleaned_text.strip()
+
+                result = json.loads(cleaned_text)
 
                 # Validate and set defaults
                 result.setdefault("intent", "general_information")
                 result.setdefault("confidence", 0.7)
+                result.setdefault("complexity", "moderate")
+                result.setdefault("complexity_score", 0.5)
                 result.setdefault("table_types_needed", ["spec", "routing"])
                 result.setdefault("primary_equipment_index", 0 if systems_context else None)
                 result.setdefault("search_keywords", [])
@@ -167,74 +181,164 @@ class LLMService:
             synthesis_instructions=SYNTHESIS_INSTRUCTIONS
         )
 
+        # Determine reasoning_effort based on query complexity
+        complexity_score = classification.get("complexity_score", 0.5) if classification else 0.5
+        reasoning_effort = "high" if complexity_score >= 0.7 else "medium"
+
         # Log the context being sent to LLM (full content for troubleshooting)
         logger.info("📦 LLM Synthesis Context:")
         logger.info(f"  Equipment: {equipment_context}")
         logger.info(f"  DIP Context: {dip_context}")
         logger.info(f"  Pinecone Context: {pinecone_context}")
+        logger.info(f"  Complexity: {complexity_score:.2f} → reasoning_effort={reasoning_effort}")
 
         try:
-            response = await self._call_llm(prompt)
+            response = await self._call_llm(prompt, reasoning_effort=reasoning_effort)
             return response.strip()
 
         except Exception as e:
             logger.error(f"Response synthesis failed: {e}")
             return self._fallback_response(user_query, systems_context, dip_results)
 
-    async def score_response(self,
-                           user_query: str,
-                           response: str,
-                           dip_results: List[Dict[str, Any]],
-                           systems_context: List[Dict[str, Any]]) -> Dict[str, Any]:
+    async def rank_chunks(self,
+                         user_query: str,
+                         chunks: List[Dict[str, Any]],
+                         complexity_score: float) -> List[Dict[str, Any]]:
         """
-        Score response quality and confidence
+        Rank and filter Pinecone chunks based on relevance and complexity
 
         Args:
-            user_query: Original user query
-            response: Generated response
-            dip_results: DIP query results used
-            systems_context: Equipment context
+            user_query: User's question
+            chunks: Pinecone search results
+            complexity_score: Query complexity (0.0-1.0)
 
         Returns:
-            Score breakdown with confidence level
+            Filtered list of chunks based on complexity
         """
-        total_results = sum(r.get('count', 0) for r in dip_results)
-        equipment_count = len(systems_context)
+        if not chunks:
+            return []
 
-        prompt = SCORING_PROMPT_TEMPLATE.format(
-            user_query=user_query,
-            response=response,
-            equipment_count=equipment_count,
-            dip_table_count=len(dip_results),
-            total_results=total_results
-        )
+        # Determine chunk limit based on complexity
+        if complexity_score < 0.3:
+            chunk_limit = 1  # Simple
+        elif complexity_score < 0.7:
+            chunk_limit = 3  # Moderate
+        else:
+            chunk_limit = 8  # Complex
 
+        # If we have fewer chunks than the limit, return all
+        if len(chunks) <= chunk_limit:
+            logger.info(f"🔍 Chunk filtering: {len(chunks)} chunks <= limit {chunk_limit}, using all")
+            return chunks
+
+        # Use LLM to rank chunks by relevance
         try:
-            score_text = await self._call_llm(prompt)
+            chunks_text = ""
+            for i, chunk in enumerate(chunks[:10]):  # Use 0-based indexing
+                content = chunk.get('metadata', {}).get('text', '')
+                chunks_text += f"\n=== CHUNK {i} ===\n{content}\n"
 
-            try:
-                result = json.loads(score_text)
+            prompt = f"""Rank these document chunks by relevance to the query. Return JSON only.
 
-                # Validate and set defaults
-                result.setdefault("total_score", 70)
-                result.setdefault("confidence", "medium")
-                result.setdefault("breakdown", {})
-                result.setdefault("confidence_emoji", "🟡")
-                result.setdefault("reasoning", "Automated scoring")
+USER QUERY: "{user_query}"
 
-                return result
+CHUNKS:
+{chunks_text}
 
-            except json.JSONDecodeError:
-                logger.warning("Failed to parse LLM scoring response")
-                return self._fallback_scoring(total_results, equipment_count)
+Return JSON with chunk rankings (1 is most relevant):
+{{
+    "rankings": [
+        {{"chunk_index": 0, "rank": 1, "relevance_score": 0.9}},
+        {{"chunk_index": 1, "rank": 2, "relevance_score": 0.7}}
+    ]
+}}"""
+
+            response_text = await self._call_llm(
+                prompt,
+                model=self.openai_summary_model,
+                max_tokens=500
+            )
+
+            result = json.loads(response_text.strip().strip('```json').strip('```'))
+
+            # Sort chunks by rank and take top N
+            sorted_rankings = sorted(result.get('rankings', []), key=lambda x: x['rank'])
+            top_indices = [r['chunk_index'] for r in sorted_rankings[:chunk_limit]]
+
+            filtered_chunks = [chunks[i] for i in top_indices if i < len(chunks)]
+
+            logger.info(f"🔍 Chunk filtering: {len(chunks)} → {len(filtered_chunks)} chunks (complexity: {complexity_score:.2f}, limit: {chunk_limit})")
+
+            return filtered_chunks
 
         except Exception as e:
-            logger.error(f"Response scoring failed: {e}")
-            return self._fallback_scoring(total_results, equipment_count)
+            logger.warning(f"Chunk ranking failed, using all chunks: {e}")
+            return chunks[:chunk_limit]
 
-    async def _call_llm(self, prompt: str) -> str:
-        """Call LLM with fallback between Anthropic and OpenAI with usage tracking"""
+    # async def score_response(self,
+    #                        user_query: str,
+    #                        response: str,
+    #                        dip_results: List[Dict[str, Any]],
+    #                        systems_context: List[Dict[str, Any]]) -> Dict[str, Any]:
+    #     """
+    #     Score response quality and confidence
+    #
+    #     Args:
+    #         user_query: Original user query
+    #         response: Generated response
+    #         dip_results: DIP query results used
+    #         systems_context: Equipment context
+    #
+    #     Returns:
+    #         Score breakdown with confidence level
+    #     """
+    #     total_results = sum(r.get('count', 0) for r in dip_results)
+    #     equipment_count = len(systems_context)
+    #
+    #     prompt = SCORING_PROMPT_TEMPLATE.format(
+    #         user_query=user_query,
+    #         response=response,
+    #         equipment_count=equipment_count,
+    #         dip_table_count=len(dip_results),
+    #         total_results=total_results
+    #     )
+    #
+    #     try:
+    #         score_text = await self._call_llm(prompt)
+    #
+    #         try:
+    #             result = json.loads(score_text)
+    #
+    #             # Validate and set defaults
+    #             result.setdefault("total_score", 70)
+    #             result.setdefault("confidence", "medium")
+    #             result.setdefault("breakdown", {})
+    #             result.setdefault("confidence_emoji", "🟡")
+    #             result.setdefault("reasoning", "Automated scoring")
+    #
+    #             return result
+    #
+    #         except json.JSONDecodeError:
+    #             logger.warning("Failed to parse LLM scoring response")
+    #             return self._fallback_scoring(total_results, equipment_count)
+    #
+    #     except Exception as e:
+    #         logger.error(f"Response scoring failed: {e}")
+    #         return self._fallback_scoring(total_results, equipment_count)
+
+    async def _call_llm(self, prompt: str, model: str = None, max_tokens: int = 4000, reasoning_effort: str = None) -> str:
+        """Call LLM with fallback between Anthropic and OpenAI with usage tracking
+
+        Args:
+            prompt: The prompt to send to the LLM
+            model: Optional model override (defaults to self.openai_model)
+            max_tokens: Maximum completion tokens (default 4000)
+            reasoning_effort: Optional reasoning effort for GPT-5 ("medium" or "high")
+        """
         start_time = datetime.now()
+
+        # Use provided model or fall back to default
+        selected_model = model or self.openai_model
 
         # Determine provider priority based on CHAT_MODEL env var
         use_openai_first = self.chat_model_provider == 'OPENAI'
@@ -243,17 +347,25 @@ class LLMService:
         if use_openai_first and self.openai_client:
             try:
                 # Log full prompt (no character limits)
-                logger.info(f"📤 OpenAI Prompt ({self.openai_model}):")
+                logger.info(f"📤 OpenAI Prompt ({selected_model}):")
                 logger.info(f"{prompt}")
 
-                response = await self.openai_client.chat.completions.create(
-                    model=self.openai_model,
-                    messages=[{
+                # Build request parameters
+                request_params = {
+                    "model": selected_model,
+                    "messages": [{
                         "role": "user",
                         "content": prompt
                     }],
-                    max_completion_tokens=4000
-                )
+                    "max_completion_tokens": max_tokens
+                }
+
+                # Add reasoning_effort for GPT-5 if specified
+                if reasoning_effort and "gpt-5" in selected_model.lower():
+                    request_params["reasoning_effort"] = reasoning_effort
+                    logger.info(f"🧠 Using reasoning_effort={reasoning_effort}")
+
+                response = await self.openai_client.chat.completions.create(**request_params)
 
                 # Log LLM usage metrics
                 duration_ms = (datetime.now() - start_time).total_seconds() * 1000
@@ -268,8 +380,8 @@ class LLMService:
                 output_cost = (output_tokens / 1_000_000) * 10.00
                 total_cost = input_cost + output_cost
 
-                logger.info(f"💰 LLM Usage (OpenAI {self.openai_model})", {
-                    "model": self.openai_model,
+                logger.info(f"💰 LLM Usage (OpenAI {selected_model})", {
+                    "model": selected_model,
                     "input_tokens": input_tokens,
                     "output_tokens": output_tokens,
                     "total_tokens": total_tokens,
@@ -369,8 +481,8 @@ class LLMService:
                 output_cost = (output_tokens / 1_000_000) * 10.00
                 total_cost = input_cost + output_cost
 
-                logger.info(f"💰 LLM Usage (OpenAI {self.openai_model})", {
-                    "model": self.openai_model,
+                logger.info(f"💰 LLM Usage (OpenAI {selected_model})", {
+                    "model": selected_model,
                     "input_tokens": input_tokens,
                     "output_tokens": output_tokens,
                     "total_tokens": total_tokens,
