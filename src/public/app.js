@@ -12,6 +12,17 @@ let currentMessageSequence = 0;
 // Debug: expose to window for console access
 window.debugThreadId = () => currentThreadId;
 
+// Helper function to scroll messages container properly (respects padding-bottom)
+function scrollToBottom() {
+  const messagesContainer = document.querySelector('.messages');
+  if (!messagesContainer) return;
+
+  const lastMessage = messagesContainer.lastElementChild;
+  if (lastMessage) {
+    lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+}
+
 function generateThreadId() {
   return crypto.randomUUID();
 }
@@ -35,6 +46,9 @@ async function initializeChat() {
   try {
     const urlThreadId = getThreadIdFromURL();
 
+    // Always load the chat sessions list for the sidebar
+    await loadChatSessions();
+
     if (urlThreadId) {
       currentThreadId = urlThreadId;
       console.log('🔵 Loaded thread from URL:', currentThreadId);
@@ -45,8 +59,6 @@ async function initializeChat() {
       updateChatHeader(thread.thread?.name || 'Active Conversation');
     } else {
       console.log('🔵 No thread in URL, starting fresh');
-      // Start fresh with no thread loaded
-      await loadChatSessions();
       updateChatHeader('New Thread');
     }
   } catch (error) {
@@ -226,7 +238,7 @@ async function deleteChatThread(threadId) {
 // Load chat history
 async function loadChatHistory() {
   if (!currentThreadId) return;
-  
+
   try {
     const response = await fetch(`/chat/enhanced/history?threadId=${currentThreadId}&limit=50`);
     if (response.ok) {
@@ -235,10 +247,11 @@ async function loadChatHistory() {
       const messagesContainer = document.getElementById('messages');
       if (messagesContainer) {
         messagesContainer.innerHTML = '';
-        // Add messages to chat
+        // Add messages to chat (without scrolling each time)
         data.data.messages.forEach(msg => {
-          addMessage(msg.content, msg.role === 'user' ? 'outbound' : 'inbound', msg.metadata || {});
+          addMessage(msg.content, msg.role === 'user' ? 'outbound' : 'inbound', msg.metadata || {}, false);
         });
+        // Don't manipulate scroll - let natural padding work
       }
     }
   } catch (error) {
@@ -315,7 +328,7 @@ function formatMessageContent(text) {
 }
 
 // Add message to chat
-function addMessage(text, type, metadata = {}) {
+function addMessage(text, type, metadata = {}, autoScroll = true) {
   const messagesContainer = document.getElementById('messages');
   if (!messagesContainer) return;
 
@@ -348,7 +361,10 @@ function addMessage(text, type, metadata = {}) {
   wrapper.appendChild(bubble);
 
   messagesContainer.appendChild(wrapper);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  if (autoScroll) {
+    scrollToBottom();
+  }
 }
 
 // Simple markdown parser for chat messages
@@ -468,9 +484,9 @@ function addEnhancedMessage(text, sources = []) {
       showSourceDetails(source, sourceIndex + 1);
     });
   });
-  
+
   messagesContainer.appendChild(wrapper);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  scrollToBottom();
 }
 
 // Parse main content by removing the detailed documentation section
@@ -598,7 +614,7 @@ function addLoadingAnimation() {
   `;
 
   messagesContainer.appendChild(loadingWrapper);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  scrollToBottom();
   return loadingWrapper;
 }
 
@@ -722,9 +738,11 @@ async function processMessage(message) {
 
         // Auto-show stats panel if not visible
         const chatSection = document.getElementById('chatSection');
+        const appContainer = document.querySelector('.app');
         if (chatSection && !chatSection.classList.contains('show-stats')) {
           setTimeout(() => {
             chatSection.classList.add('show-stats');
+            if (appContainer) appContainer.classList.add('show-stats');
           }, 500); // Small delay to let message render first
         }
       }
@@ -796,16 +814,19 @@ function initializeStatsPanel() {
   const toggleBtn = document.getElementById('toggleStatsBtn');
   const closeBtn = document.getElementById('closeStatsBtn');
   const chatSection = document.getElementById('chatSection');
+  const appContainer = document.querySelector('.app');
 
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
       chatSection.classList.toggle('show-stats');
+      if (appContainer) appContainer.classList.toggle('show-stats');
     });
   }
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       chatSection.classList.remove('show-stats');
+      if (appContainer) appContainer.classList.remove('show-stats');
     });
   }
 }

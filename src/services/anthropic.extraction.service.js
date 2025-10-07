@@ -98,14 +98,14 @@ class AnthropicExtractionService {
       const { promisify } = await import('util');
       const execAsync = promisify(exec);
 
-      // Run the Python test file for specifications with doc_id inside Docker container
-      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-python-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_spec.py`;
+      // Run the Python test file for specifications with doc_id in venv
+      const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks_spec.py`;
 
       this.requestLogger.info('Running specifications extraction', { docId, command });
       this.requestLogger.debug('Command details', {
         docId,
         command,
-        container: 'reimaginedappv2-python-sidecar-1',
+        environment: 'venv',
         script: 'test_anthropic_chunks_spec.py'
       });
       
@@ -145,8 +145,8 @@ class AnthropicExtractionService {
       const { promisify } = await import('util');
       const execAsync = promisify(exec);
 
-      // Run the Python test file for golden rules with doc_id inside Docker container
-      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-python-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_GR.py`;
+      // Run the Python test file for golden rules with doc_id in venv
+      const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks_GR.py`;
       
       this.requestLogger.info('Running golden rules extraction', { docId, command });
       
@@ -179,8 +179,8 @@ class AnthropicExtractionService {
       const { promisify } = await import('util');
       const execAsync = promisify(exec);
 
-      // Run the Python test file for intent router with doc_id inside Docker container
-      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-python-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks_IR.py`;
+      // Run the Python test file for intent router with doc_id in venv
+      const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks_IR.py`;
       
       this.requestLogger.info('Running intent router extraction', { docId, command });
       
@@ -213,8 +213,8 @@ class AnthropicExtractionService {
       const { promisify } = await import('util');
       const execAsync = promisify(exec);
 
-      // Run the Python test file for playbook hints with doc_id inside Docker container
-      const command = `docker exec -e DOC_ID=${docId} reimaginedappv2-python-sidecar-1 python3.11 /app/scripts/test_anthropic_chunks.py`;
+      // Run the Python test file for playbook hints with doc_id in venv
+      const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks.py`;
       
       this.requestLogger.info('Running playbook hints extraction', { docId, command });
       

@@ -111,6 +111,9 @@ body {
 .sidebar-header {
     padding: var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0; /* Prevent header from collapsing */
+    min-height: 100px; /* Ensure header has visible height */
+    background: var(--surface-color); /* Ensure visible background */
 }
 
 .sidebar-title {
@@ -211,8 +214,7 @@ body {
     display: flex;
     flex-direction: column;
     background: var(--background-color);
-    position: relative;
-    height: 100%;
+    height: calc(100% - 215px);
     overflow: hidden;
 }
 
@@ -220,6 +222,7 @@ body {
     background: var(--surface-color);
     padding: var(--spacing-lg) var(--spacing-xl);
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .chat-header h2 {
@@ -242,7 +245,6 @@ body {
     max-width: 900px;
     margin: 0 auto 0 0;
     width: 100%;
-    padding-left: var(--spacing-xl);
 }
 
 .message {
@@ -360,11 +362,15 @@ body {
 
 /* Composer */
 .composer {
+    position: fixed;
+    bottom: 0;
+    left: 280px;
+    right: 0;
     background: var(--surface-color);
     border-top: 1px solid var(--border-color);
     padding: var(--spacing-lg) var(--spacing-xl);
-    padding-left: calc(280px + var(--spacing-xl)); /* Sidebar width + padding */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 100;
 }
 
 .input-container {
@@ -498,6 +504,10 @@ body {
         left: 0;
     }
 
+    .composer {
+        left: 0;
+    }
+
     .message-bubble {
         max-width: 85%;
     }
@@ -601,18 +611,24 @@ body {
     width: 350px;
     background: var(--surface-color);
     border-left: 1px solid var(--border-color);
-    overflow-y: auto;
     display: none; /* Hidden by default, show with .show-stats class */
     animation: slideInRight 0.3s ease;
+    /* Flex container for header + scrollable content */
+    flex-direction: column;
+    z-index: 10;
 }
 
 .chat.show-stats .stats-panel {
-    display: block;
+    display: flex;
 }
 
 /* Adjust messages area when stats panel is shown */
 .chat.show-stats .messages {
     margin-right: 350px;
+}
+
+.app.show-stats .composer {
+    right: 350px;
 }
 
 /* Stats Panel Header */
@@ -622,10 +638,8 @@ body {
     align-items: center;
     padding: var(--spacing-md) var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
     background: var(--surface-color);
-    z-index: 10;
+    flex-shrink: 0;
 }
 
 .stats-header h3 {
@@ -655,6 +669,8 @@ body {
 
 /* Stats Content */
 .stats-content {
+    flex: 1;
+    overflow-y: auto;
     padding: var(--spacing-lg);
 }
 
