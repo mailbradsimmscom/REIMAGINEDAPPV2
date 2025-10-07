@@ -11,6 +11,7 @@ class Dashboard {
 
     async init() {
         await this.fetchAllMetrics();
+        await this.refreshLogs();
         this.startPolling();
         this.attachEventListeners();
     }

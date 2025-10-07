@@ -57,25 +57,45 @@ async function initializeChat() {
 // Load chat sessions for sidebar
 async function loadChatSessions() {
   try {
+    console.log('🔵 Loading chat sessions...');
     const response = await fetch('/chat/list?limit=10');
+    console.log('🔵 Chat list response status:', response.status);
+
     if (response.ok) {
       const data = await response.json();
-      renderChatSessions(data.data.chats);
+      console.log('🔵 Chat list data:', data);
+
+      if (data.data && data.data.chats) {
+        console.log('🔵 Found', data.data.chats.length, 'chat sessions');
+        renderChatSessions(data.data.chats);
+      } else {
+        console.warn('⚠️ No chats found in response data structure');
+      }
     } else {
-      // Failed to load chat sessions
+      const errorText = await response.text();
+      console.error('🔴 Failed to load chat sessions:', response.status, errorText);
     }
   } catch (error) {
-    // Failed to load chat sessions
+    console.error('🔴 Error loading chat sessions:', error);
   }
 }
 
 // Render chat sessions in sidebar
 function renderChatSessions(chats) {
+  console.log('🔵 renderChatSessions called with', chats.length, 'chats');
+
   if (!chatList) {
+    console.error('🔴 chatList element not found!');
     return;
   }
 
   chatList.innerHTML = '';
+
+  if (!chats || chats.length === 0) {
+    console.warn('⚠️ No chats to render');
+    chatList.innerHTML = '<div style="padding: 16px; text-align: center; color: #8E8E93;">No chat history</div>';
+    return;
+  }
 
   chats.forEach((chat, index) => {
     const chatItem = document.createElement('div');
@@ -116,7 +136,12 @@ function renderChatSessions(chats) {
     const deleteBtn = chatItem.querySelector('.delete-chat-btn');
     deleteBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // Prevent chat selection when clicking delete
-      deleteChatSession(chat.id);
+      const threadId = chat.latestThread?.id;
+      if (threadId) {
+        deleteChatThread(threadId);
+      } else {
+        console.error('🔴 No thread ID found for chat:', chat);
+      }
     });
     
     chatList.appendChild(chatItem);
@@ -146,42 +171,54 @@ async function loadChatThread(threadId, threadName) {
   }
 }
 
-// Delete a chat session
-async function deleteChatSession(sessionId) {
+// Delete a chat thread
+async function deleteChatThread(threadId) {
+  console.log('🔵 deleteChatThread called with threadId:', threadId);
+
   // Show confirmation dialog
-  if (!confirm('Delete this chat?')) {
+  if (!confirm('Delete this chat thread?')) {
+    console.log('⚠️ Delete cancelled by user');
     return;
   }
-  
+
   try {
+    console.log('🔵 Sending DELETE request to /chat/enhanced/delete with threadId:', threadId);
     const response = await fetch(`/chat/enhanced/delete`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        sessionId: sessionId
+        sessionId: threadId  // Backend expects 'sessionId' parameter but we're passing thread ID
       })
     });
-    
+
+    console.log('🔵 Delete response status:', response.status);
+
     if (response.ok) {
-      // If we deleted the currently active chat, clear the current session
-      if (sessionId === currentSessionId) {
-        currentSessionId = null;
+      const data = await response.json();
+      console.log('✅ Delete successful:', data);
+
+      // If we deleted the currently active thread, clear the display
+      if (threadId === currentThreadId) {
         currentThreadId = null;
         const messagesContainer = document.getElementById('messages');
         if (messagesContainer) {
           messagesContainer.innerHTML = '';
         }
         updateChatHeader('Start a New Conversation');
+        updateURL(null);
       }
-      
+
       // Reload chat sessions to update the sidebar
       await loadChatSessions();
     } else {
-      alert('Failed to delete chat');
+      const errorText = await response.text();
+      console.error('🔴 Delete failed:', response.status, errorText);
+      alert('Failed to delete chat: ' + errorText);
     }
   } catch (error) {
+    console.error('🔴 Delete error:', error);
     alert('Error deleting chat: ' + error.message);
   }
 }

@@ -41,8 +41,8 @@ body {
 /* Main App Container */
 .app {
     height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr;
     background: var(--background-color);
 }
 
@@ -91,18 +91,21 @@ body {
 
 /* Layout */
 .layout {
-    flex: 1;
-    display: flex;
+    display: grid;
+    grid-template-columns: 280px 1fr;
     overflow: hidden;
+    height: 100%;
 }
 
 /* Sidebar */
 .sidebar {
-    width: 280px;
     background: var(--surface-color);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
+    height: 100%;
+    position: relative;
+    z-index: 1; /* Ensure sidebar appears above composer background */
 }
 
 .sidebar-header {
@@ -205,11 +208,12 @@ body {
 
 /* Chat Area */
 .chat {
-    flex: 1;
     display: flex;
     flex-direction: column;
     background: var(--background-color);
     position: relative;
+    height: 100%;
+    overflow: hidden;
 }
 
 .chat-header {
@@ -235,10 +239,10 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: var(--spacing-xl);
-    max-width: 1000px;
-    margin: 0 auto 0 0;  /* Changed from center alignment to left */
+    max-width: 900px;
+    margin: 0 auto 0 0;
     width: 100%;
-    padding-left: var(--spacing-xl);  /* Small padding from sidebar edge */
+    padding-left: var(--spacing-xl);
 }
 
 .message {
@@ -267,7 +271,7 @@ body {
 }
 
 .message-bubble {
-    max-width: 1000px;
+    max-width: 900px;
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: var(--border-radius);
     word-wrap: break-word;
@@ -358,15 +362,15 @@ body {
 .composer {
     background: var(--surface-color);
     border-top: 1px solid var(--border-color);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    padding-left: calc(280px + var(--spacing-xl)); /* Sidebar width + padding */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .input-container {
     display: flex;
     gap: var(--spacing-md);
-    max-width: 1000px;
-    margin: 0 auto 0 var(--spacing-xl);  /* Left margin matches messages area */
+    max-width: 900px;
 }
 
 #messageInput {
@@ -501,7 +505,7 @@ body {
 
 /* Mirror styles for addEnhancedMessage elements to fix initial rendering */
 .bubble {
-    max-width: 1000px;
+    max-width: 900px;
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: var(--border-radius);
     word-wrap: break-word;

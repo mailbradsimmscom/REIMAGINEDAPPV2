@@ -465,28 +465,12 @@
                         <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleChunkCheckbox('${chunk.id}', '${model}')" id="cb-chunk-${chunk.id}">
                         <span class="tree-toggle" id="toggle-chunk-${chunk.id}">▶</span>
                         <span class="tree-label">${chunk.metadata.chunk_id || chunk.id.substring(0, 8)}</span>
-                        <span class="tree-count">Page ${chunk.metadata.page || 'N/A'}</span>
+                        <span class="tree-count">${chunk.metadata.section_title || 'N/A'}</span>
                     </div>
                     <div class="tree-metadata" id="metadata-${chunk.id}">
                         <div class="metadata-row">
-                            <span class="metadata-label">Vector ID:</span>
-                            <span class="metadata-value">${chunk.id}</span>
-                        </div>
-                        <div class="metadata-row">
-                            <span class="metadata-label">File:</span>
-                            <span class="metadata-value">${chunk.metadata.file_name || 'N/A'}</span>
-                        </div>
-                        <div class="metadata-row">
-                            <span class="metadata-label">Page:</span>
-                            <span class="metadata-value">${chunk.metadata.page || 'N/A'}</span>
-                        </div>
-                        <div class="metadata-row">
-                            <span class="metadata-label">Chunk Index:</span>
-                            <span class="metadata-value">${chunk.metadata.chunk_index || 'N/A'}</span>
-                        </div>
-                        <div class="metadata-row">
-                            <span class="metadata-label">Chunk Type:</span>
-                            <span class="metadata-value">${chunk.metadata.chunk_type || 'N/A'}</span>
+                            <span class="metadata-label">Chunk ID:</span>
+                            <span class="metadata-value">${chunk.metadata.chunk_id || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
                             <span class="metadata-label">Manufacturer:</span>
@@ -497,13 +481,57 @@
                             <span class="metadata-value">${chunk.metadata.model || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
+                            <span class="metadata-label">Char Count:</span>
+                            <span class="metadata-value">${chunk.metadata.char_count || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Token Count:</span>
+                            <span class="metadata-value">${chunk.metadata.token_count || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Chunk Index:</span>
+                            <span class="metadata-value">${chunk.metadata.chunk_index !== undefined ? chunk.metadata.chunk_index : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Chunk Strategy:</span>
+                            <span class="metadata-value">${chunk.metadata.chunk_strategy_version || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Content Snippet:</span>
+                            <span class="metadata-value">${chunk.metadata.content_snippet || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Document ID:</span>
+                            <span class="metadata-value">${chunk.metadata.document_id || chunk.metadata.doc_id || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Linked Asset UID:</span>
+                            <span class="metadata-value">${chunk.metadata.linked_asset_uid || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Previous Chunk ID:</span>
+                            <span class="metadata-value">${chunk.metadata.previous_chunk_id || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
                             <span class="metadata-label">Revision Date:</span>
                             <span class="metadata-value">${chunk.metadata.revision_date || 'N/A'}</span>
                         </div>
-                        ${chunk.metadata.content ? `
+                        <div class="metadata-row">
+                            <span class="metadata-label">Section Hierarchy:</span>
+                            <span class="metadata-value">${chunk.metadata.section_hierarchy ? JSON.stringify(chunk.metadata.section_hierarchy) : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Section Level:</span>
+                            <span class="metadata-value">${chunk.metadata.section_level !== undefined ? chunk.metadata.section_level : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Section Title:</span>
+                            <span class="metadata-value">${chunk.metadata.section_title || 'N/A'}</span>
+                        </div>
+                        ${chunk.metadata.text ? `
                             <div class="metadata-row" style="flex-direction: column; align-items: flex-start;">
-                                <span class="content-toggle" onclick="toggleContent('${chunk.id}')">▶ Show Content</span>
-                                <div class="content-preview" id="content-${chunk.id}">${chunk.metadata.content}</div>
+                                <span class="content-toggle" onclick="toggleContent('${chunk.id}')">▶ Show Full Text</span>
+                                <div class="content-preview" id="content-${chunk.id}">${chunk.metadata.text}</div>
                             </div>
                         ` : ''}
                     </div>

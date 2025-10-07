@@ -679,24 +679,33 @@ export async function deleteChatThreads(sessionId) {
 
 export async function deleteChatSession(sessionId) {
   try {
+    console.log('🔵 deleteChatSession called with sessionId:', sessionId);
+    console.log('🔵 Deleting from table:', THREADS_TABLE);
+
     const supabase = await checkSupabaseAvailability();
-    
-    const { error } = await supabase
-      .from(SESSIONS_TABLE)
+
+    const { data, error } = await supabase
+      .from(THREADS_TABLE)
       .delete()
-      .eq('id', sessionId);
-    
+      .eq('id', sessionId)
+      .select();
+
+    console.log('🔵 Delete result - data:', data);
+    console.log('🔵 Delete result - error:', error);
+
     if (error) {
-      const err = new Error(`Failed to delete chat session: ${error.message}`);
+      const err = new Error(`Failed to delete chat thread: ${error.message}`);
       err.cause = error;
-      err.context = { operation: 'delete_session', sessionId, table: SESSIONS_TABLE };
+      err.context = { operation: 'delete_thread', sessionId, table: THREADS_TABLE };
       throw err;
     }
-    
+
+    console.log('✅ Successfully deleted thread:', sessionId);
     return { success: true };
   } catch (error) {
+    console.error('🔴 Error in deleteChatSession:', error);
     if (!error.context) {
-      error.context = { operation: 'delete_session', sessionId, table: SESSIONS_TABLE };
+      error.context = { operation: 'delete_thread', sessionId, table: THREADS_TABLE };
     }
     throw error;
   }
