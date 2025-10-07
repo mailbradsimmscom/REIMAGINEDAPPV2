@@ -7,6 +7,7 @@ class Logger {
     this.logsDir = join(process.cwd(), 'logs');
     this.maxLogSize = 5 * 1024 * 1024; // 5MB
     this.maxLogFiles = 5;
+    this.healthCheckPaths = ['/health', '/admin/api/health', '/v1/pinecone/stats'];
     this.ensureLogsDirectory();
   }
 
@@ -22,39 +23,103 @@ class Logger {
     } catch {
       await fs.mkdir(this.logsDir, { recursive: true });
     }
+
+    // Create subdirectories
+    const subdirs = ['chat', 'api', 'errors', 'debug'];
+    for (const dir of subdirs) {
+      const dirPath = join(this.logsDir, dir);
+      try {
+        await fs.access(dirPath);
+      } catch {
+        await fs.mkdir(dirPath, { recursive: true });
+      }
+    }
+  }
+
+  isHealthCheck(meta = {}) {
+    // Check if this is a health check request
+    if (meta.path) {
+      return this.healthCheckPaths.some(hc => meta.path.includes(hc));
+    }
+    if (meta.message && typeof meta.message === 'string') {
+      return this.healthCheckPaths.some(hc => meta.message.includes(hc));
+    }
+    return false;
+  }
+
+  formatChatLog(level, message, meta = {}) {
+    const timestamp = new Date().toTimeString().split(' ')[0];
+    const logType = meta.logType || level;
+
+    let formatted = `[${logType}] ${timestamp} | ${message}`;
+
+    if (meta.details) {
+      for (const [key, value] of Object.entries(meta.details)) {
+        formatted += `\n  ${key}: ${value}`;
+      }
+    }
+
+    return formatted + '\n';
+  }
+
+  formatHumanLog(level, message, meta = {}) {
+    const timestamp = new Date().toISOString();
+    const module = meta.module || 'unknown';
+
+    let formatted = `[${timestamp}] [${level.toUpperCase()}] [${module}] ${message}`;
+
+    if (meta.error) {
+      formatted += `\n  Error: ${meta.error}`;
+      if (meta.stack) {
+        formatted += `\n  Stack: ${meta.stack}`;
+      }
+    }
+
+    return formatted + '\n';
   }
 
   async writeLog(level, message, meta = {}) {
-    const env = await this.getEnv();
-    const logEntry = {
-      timestamp: new Date().toISOString(),
-      level: level.toUpperCase(),
-      message,
-      correlationId: meta.correlationId || randomUUID(),
-      service: 'node-web',  // Service identifier
-      module: meta.module || 'unknown',  // Module/component identifier
-      version: env.APP_VERSION || '1.0.0',
-      environment: env.NODE_ENV || 'development',
-      ...meta
-    };
-
-    const logLine = JSON.stringify(logEntry) + '\n';
-    const logFile = join(this.logsDir, 'combined.log');
-
-    // ALWAYS log to console in development for visibility
-    if (level === 'error' || level === 'warn') {
-      console.log(logLine.trim());
-    }
-
     try {
-      await fs.appendFile(logFile, logLine);
+      const env = await this.getEnv();
 
-      // Also write to level-specific file
-      const levelFile = join(this.logsDir, `${level.toLowerCase()}.log`);
-      await fs.appendFile(levelFile, logLine);
+      // Skip health checks for API logs
+      const isHealthCheck = this.isHealthCheck(meta);
 
-      // Check if we need to rotate logs
-      await this.checkLogRotation(logFile);
+      // ALWAYS log to console in development for visibility (except health checks)
+      if ((level === 'error' || level === 'warn') && !isHealthCheck) {
+        console.log(`[${level.toUpperCase()}] ${message}`, meta);
+      }
+
+      // Determine log type for routing
+      const isChat = meta.module?.includes('chat') || meta.logType === 'CHAT';
+      const isError = level === 'error';
+
+      // Write to chat log if chat-related
+      if (isChat) {
+        const chatLog = this.formatChatLog(level, message, meta);
+        const chatFile = join(this.logsDir, 'chat', 'node-chat.log');
+        await fs.appendFile(chatFile, chatLog);
+      }
+
+      // Write to API log (excluding health checks)
+      if (!isHealthCheck) {
+        const apiLog = this.formatHumanLog(level, message, meta);
+        const apiFile = join(this.logsDir, 'api', 'node-api.log');
+        await fs.appendFile(apiFile, apiLog);
+      }
+
+      // Write to error log
+      if (isError) {
+        const errorLog = this.formatHumanLog(level, message, meta);
+        const errorFile = join(this.logsDir, 'errors', 'node-errors.log');
+        await fs.appendFile(errorFile, errorLog);
+      }
+
+      // Write to debug log (everything)
+      const debugLog = this.formatHumanLog(level, message, meta);
+      const debugFile = join(this.logsDir, 'debug', 'node-debug.log');
+      await fs.appendFile(debugFile, debugLog);
+
     } catch (error) {
       // Fallback to console if file writing fails
       console.error('Logging failed:', error.message);
@@ -165,6 +230,16 @@ class Logger {
     });
   }
 
+  // Chat logging with structured format
+  async chat(type, message, details = {}, meta = {}) {
+    await this.writeLog('INFO', message, {
+      ...meta,
+      logType: type,  // CHAT, MATCH, SEARCH, RESPONSE, SUCCESS, ERROR
+      details,
+      module: 'chat'
+    });
+  }
+
   // Request-scoped logging
   createRequestLogger(correlationId = randomUUID(), module = 'unknown') {
     return {
@@ -173,7 +248,8 @@ class Logger {
       warn: (message, meta = {}) => this.warn(message, { correlationId, module, ...meta }),
       info: (message, meta = {}) => this.info(message, { correlationId, module, ...meta }),
       debug: (message, meta = {}) => this.debug(message, { correlationId, module, ...meta }),
-      performance: (operation, duration, meta = {}) => this.performance(operation, duration, { correlationId, module, ...meta })
+      performance: (operation, duration, meta = {}) => this.performance(operation, duration, { correlationId, module, ...meta }),
+      chat: (type, message, details = {}, meta = {}) => this.chat(type, message, details, { correlationId, module, ...meta })
     };
   }
 
@@ -185,6 +261,7 @@ class Logger {
       info: (message, meta = {}) => this.info(message, { module, ...meta }),
       debug: (message, meta = {}) => this.debug(message, { module, ...meta }),
       performance: (operation, duration, meta = {}) => this.performance(operation, duration, { module, ...meta }),
+      chat: (type, message, details = {}, meta = {}) => this.chat(type, message, details, { module, ...meta }),
       createRequestLogger: (correlationId) => this.createRequestLogger(correlationId, module)
     };
   }

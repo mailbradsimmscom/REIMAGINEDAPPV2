@@ -90,6 +90,42 @@ class HumanReadableFormatter(logging.Formatter):
         return formatted
 
 
+class ChatLogFormatter(logging.Formatter):
+    """Formatter for chat logs - human-readable, structured format"""
+
+    def format(self, record: logging.LogRecord) -> str:
+        timestamp = datetime.utcnow().strftime('%H:%M:%S')
+
+        # Get log type tag (CHAT, MATCH, SEARCH, etc.) from extra fields
+        log_type = getattr(record, 'log_type', record.levelname)
+
+        # Format main message
+        formatted = f"[{log_type}] {timestamp} | {record.getMessage()}"
+
+        # Add details if present (from extra fields)
+        details = getattr(record, 'details', None)
+        if details and isinstance(details, dict):
+            for key, value in details.items():
+                formatted += f"\n  {key}: {value}"
+
+        # Add exception if present
+        if record.exc_info:
+            formatted += "\n" + self.formatException(record.exc_info)
+
+        return formatted
+
+
+class HealthCheckFilter(logging.Filter):
+    """Filter to suppress health check endpoint spam"""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        message = record.getMessage()
+        # Suppress uvicorn access logs for health check endpoints
+        if '/health' in message or '/v1/pinecone/stats' in message:
+            return False
+        return True
+
+
 def setup_logging(
     service_name: str = "python-sidecar",
     log_dir: str = "../../logs",
@@ -127,44 +163,68 @@ def setup_logging(
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
         console_handler.setFormatter(HumanReadableFormatter(service_name))
+        console_handler.addFilter(HealthCheckFilter())  # Suppress health check spam
         root_logger.addHandler(console_handler)
 
-    # File handlers (structured JSON for production)
+    # File handlers (organized by type)
     if enable_files:
-        # Combined log (all levels) - rotates daily or at 10MB
-        combined_handler = logging.handlers.TimedRotatingFileHandler(
-            filename=log_path / f"{service_name}-combined.log",
+        # Create subdirectories
+        chat_dir = log_path / "chat"
+        api_dir = log_path / "api"
+        errors_dir = log_path / "errors"
+        debug_dir = log_path / "debug"
+
+        chat_dir.mkdir(exist_ok=True)
+        api_dir.mkdir(exist_ok=True)
+        errors_dir.mkdir(exist_ok=True)
+        debug_dir.mkdir(exist_ok=True)
+
+        # Chat log (human-readable, chat operations only)
+        chat_handler = logging.handlers.TimedRotatingFileHandler(
+            filename=chat_dir / "python-chat.log",
             when='midnight',
             interval=1,
-            backupCount=7  # Keep 7 days
+            backupCount=7
         )
-        combined_handler.setLevel(logging.DEBUG)
-        combined_handler.setFormatter(StructuredFormatter(service_name))
-        root_logger.addHandler(combined_handler)
+        chat_handler.setLevel(logging.INFO)
+        chat_handler.setFormatter(ChatLogFormatter())
+        # Only log messages from chat modules
+        chat_handler.addFilter(lambda record: 'chat' in record.name.lower())
+        root_logger.addHandler(chat_handler)
 
-        # Error log (ERROR and above only) - rotates daily or at 10MB
+        # API log (all API calls, filtered to remove health checks)
+        api_handler = logging.handlers.TimedRotatingFileHandler(
+            filename=api_dir / "python-api.log",
+            when='midnight',
+            interval=1,
+            backupCount=7
+        )
+        api_handler.setLevel(logging.INFO)
+        api_handler.setFormatter(HumanReadableFormatter(service_name))
+        api_handler.addFilter(HealthCheckFilter())
+        root_logger.addHandler(api_handler)
+
+        # Error log (ERROR and above only with full stack traces)
         error_handler = logging.handlers.TimedRotatingFileHandler(
-            filename=log_path / f"{service_name}-error.log",
+            filename=errors_dir / "python-errors.log",
             when='midnight',
             interval=1,
             backupCount=30  # Keep 30 days for errors
         )
         error_handler.setLevel(logging.ERROR)
-        error_handler.setFormatter(StructuredFormatter(service_name))
+        error_handler.setFormatter(HumanReadableFormatter(service_name))
         root_logger.addHandler(error_handler)
 
-        # Info log (INFO and above, but not ERROR) - rotates daily
-        info_handler = logging.handlers.TimedRotatingFileHandler(
-            filename=log_path / f"{service_name}-info.log",
+        # Debug log (everything, for troubleshooting)
+        debug_handler = logging.handlers.TimedRotatingFileHandler(
+            filename=debug_dir / "python-debug.log",
             when='midnight',
             interval=1,
-            backupCount=7
+            backupCount=3  # Keep 3 days
         )
-        info_handler.setLevel(logging.INFO)
-        # Filter to exclude ERROR and above
-        info_handler.addFilter(lambda record: record.levelno < logging.ERROR)
-        info_handler.setFormatter(StructuredFormatter(service_name))
-        root_logger.addHandler(info_handler)
+        debug_handler.setLevel(logging.DEBUG)
+        debug_handler.setFormatter(HumanReadableFormatter(service_name))
+        root_logger.addHandler(debug_handler)
 
     # Log initialization
     root_logger.info(f"{service_name} logging initialized", extra={

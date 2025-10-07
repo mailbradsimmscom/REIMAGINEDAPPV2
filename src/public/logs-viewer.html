@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Viewer - Mantis</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+            --font-mono: 'SF Mono', 'Monaco', 'Courier New', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header-content h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .header-content p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .refresh-button {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-light);
+        }
+
+        .refresh-button:hover {
+            background: #0051d5;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .auto-refresh-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auto-refresh-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .last-refresh {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Main content area */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--surface-color);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .log-source-group {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .source-header {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            cursor: pointer;
+            background: var(--background-color);
+            font-weight: 600;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .source-header:hover {
+            background: #e5e5ea;
+        }
+
+        .source-header .toggle-icon {
+            margin-right: var(--spacing-sm);
+            font-size: 12px;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .source-header.expanded .toggle-icon {
+            transform: rotate(90deg);
+        }
+
+        .folder-icon {
+            margin-right: var(--spacing-sm);
+        }
+
+        .source-list {
+            display: none;
+        }
+
+        .source-list.visible {
+            display: block;
+        }
+
+        .source-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            padding-left: var(--spacing-xl);
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .source-item:hover {
+            background: var(--background-color);
+        }
+
+        .source-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .source-icon {
+            margin-right: var(--spacing-sm);
+        }
+
+        /* Right content area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Filters bar */
+        .filters-bar {
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-md);
+            display: flex;
+            gap: var(--spacing-lg);
+            align-items: center;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .filter-group select,
+        .filter-group input[type="text"] {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            font-size: 14px;
+            background: white;
+            font-family: inherit;
+        }
+
+        .filter-group input[type="text"] {
+            min-width: 250px;
+        }
+
+        .filter-group select:focus,
+        .filter-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Logs container */
+        .logs-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-lg);
+            background: var(--background-color);
+        }
+
+        .log-entry {
+            border-left: 3px solid transparent;
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            background: var(--surface-color);
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-light);
+        }
+
+        .log-entry:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-1px);
+        }
+
+        .log-entry.log-error {
+            border-left-color: var(--error-color);
+            background: rgba(255, 59, 48, 0.05);
+        }
+
+        .log-entry.log-warn,
+        .log-entry.log-warning {
+            border-left-color: var(--warning-color);
+            background: rgba(255, 204, 0, 0.05);
+        }
+
+        .log-entry.log-success {
+            border-left-color: var(--success-color);
+            background: rgba(52, 199, 89, 0.05);
+        }
+
+        .log-entry.log-chat,
+        .log-entry.log-response,
+        .log-entry.log-match,
+        .log-entry.log-search {
+            border-left-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.03);
+        }
+
+        .log-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .log-toggle {
+            font-size: 10px;
+            color: var(--text-secondary);
+            transition: transform 0.2s;
+            display: inline-block;
+            width: 12px;
+        }
+
+        .log-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .log-type {
+            font-weight: 600;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            min-width: 80px;
+        }
+
+        .log-time {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: var(--font-mono);
+            min-width: 90px;
+        }
+
+        .log-message {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .log-details {
+            margin-top: var(--spacing-sm);
+            padding-left: calc(var(--spacing-sm) + 12px + var(--spacing-sm) + 80px + var(--spacing-sm) + 90px + var(--spacing-sm));
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .log-details.visible {
+            display: block;
+        }
+
+        .log-detail-row {
+            margin-bottom: var(--spacing-xs);
+            padding: var(--spacing-xs) 0;
+        }
+
+        .log-detail-row strong {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-right: var(--spacing-sm);
+        }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        /* Messages */
+        .message {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin: var(--spacing-md);
+            display: none;
+        }
+
+        .message.visible {
+            display: block;
+        }
+
+        .message.error {
+            background: #ffebeb;
+            color: #c62828;
+            border: 1px solid var(--error-color);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🔍 Log Viewer</h1>
+                <p>Real-time log streaming with filtering and search</p>
+            </div>
+            <div class="header-actions">
+                <div class="auto-refresh-toggle">
+                    <input type="checkbox" id="auto-refresh-checkbox" checked onchange="toggleAutoRefresh()">
+                    <label for="auto-refresh-checkbox">Auto-refresh</label>
+                </div>
+                <span class="last-refresh" id="last-refresh">Last: --:--:--</span>
+                <button class="refresh-button" onclick="fetchLogs()">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="message error" id="errorMessage"></div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="log-source-group">
+                    <div class="source-header" onclick="toggleGroup('nodejs')">
+                        <span class="toggle-icon">▶</span>
+                        <span class="folder-icon">📁</span>
+                        <span>Node.js</span>
+                    </div>
+                    <div class="source-list" id="group-nodejs">
+                        <div class="source-item active" data-source="node-chat" onclick="selectSource('node-chat')">
+                            <span class="source-icon">💬</span>
+                            <span>Chat</span>
+                        </div>
+                        <div class="source-item" data-source="node-api" onclick="selectSource('node-api')">
+                            <span class="source-icon">🔌</span>
+                            <span>API</span>
+                        </div>
+                        <div class="source-item" data-source="node-errors" onclick="selectSource('node-errors')">
+                            <span class="source-icon">❌</span>
+                            <span>Errors</span>
+                        </div>
+                        <div class="source-item" data-source="node-debug" onclick="selectSource('node-debug')">
+                            <span class="source-icon">🐛</span>
+                            <span>Debug</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="log-source-group">
+                    <div class="source-header" onclick="toggleGroup('python')">
+                        <span class="toggle-icon">▶</span>
+                        <span class="folder-icon">📁</span>
+                        <span>Python</span>
+                    </div>
+                    <div class="source-list" id="group-python">
+                        <div class="source-item" data-source="python-chat" onclick="selectSource('python-chat')">
+                            <span class="source-icon">💬</span>
+                            <span>Chat</span>
+                        </div>
+                        <div class="source-item" data-source="python-api" onclick="selectSource('python-api')">
+                            <span class="source-icon">🔌</span>
+                            <span>API</span>
+                        </div>
+                        <div class="source-item" data-source="python-errors" onclick="selectSource('python-errors')">
+                            <span class="source-icon">❌</span>
+                            <span>Errors</span>
+                        </div>
+                        <div class="source-item" data-source="python-debug" onclick="selectSource('python-debug')">
+                            <span class="source-icon">🐛</span>
+                            <span>Debug</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content area -->
+            <div class="content-area">
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label>Level:</label>
+                        <select id="level-filter" onchange="applyFilters()">
+                            <option value="all">All</option>
+                            <option value="ERROR">ERROR</option>
+                            <option value="WARN">WARN</option>
+                            <option value="INFO">INFO</option>
+                            <option value="DEBUG">DEBUG</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Time Range:</label>
+                        <select id="time-filter" onchange="applyFilters()">
+                            <option value="1h">Last 1 hour</option>
+                            <option value="6h">Last 6 hours</option>
+                            <option value="24h">Last 24 hours</option>
+                            <option value="all" selected>All time</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Search:</label>
+                        <input type="text" id="search-input" placeholder="Search logs..." oninput="applyFilters()">
+                    </div>
+                </div>
+
+                <!-- Logs display -->
+                <div class="logs-container" id="logs-display">
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Loading logs...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentSource = 'node-chat';
+        let currentLogs = [];
+        let autoRefresh = true;
+        let refreshInterval = null;
+        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
+
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Helper function to add admin token
+        function getAdminToken() {
+            return ADMIN_TOKEN;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Expand Node.js group by default
+            toggleGroup('nodejs');
+
+            // Load initial logs
+            fetchLogs();
+
+            // Start auto-refresh
+            toggleAutoRefresh();
+        });
+
+        // Toggle source group
+        function toggleGroup(groupId) {
+            const header = document.querySelector(`#group-${groupId}`).previousElementSibling;
+            const list = document.getElementById(`group-${groupId}`);
+
+            if (list.classList.contains('visible')) {
+                list.classList.remove('visible');
+                header.classList.remove('expanded');
+            } else {
+                list.classList.add('visible');
+                header.classList.add('expanded');
+            }
+        }
+
+        // Select log source
+        function selectSource(source) {
+            currentSource = source;
+            document.querySelectorAll('.source-item').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-source="${source}"]`).classList.add('active');
+            fetchLogs();
+        }
+
+        // Fetch logs from backend
+        async function fetchLogs() {
+            const level = document.getElementById('level-filter').value;
+            const timeRange = document.getElementById('time-filter').value;
+            const search = document.getElementById('search-input').value;
+
+            const logsDisplay = document.getElementById('logs-display');
+            let loading = document.getElementById('loading');
+
+            // Show loading if no logs yet
+            if (currentLogs.length === 0 && loading) {
+                loading.style.display = 'block';
+            }
+
+            try {
+                const params = new URLSearchParams({
+                    source: currentSource,
+                    level: level,
+                    since: timeRange,
+                    search: search,
+                    limit: 100
+                });
+
+                const response = await fetch(`/admin/api/logs/stream?${params}`, {
+                    headers: { 'x-admin-token': getAdminToken() }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentLogs = data.data.logs;
+                    renderLogs();
+                    updateLastRefresh();
+                } else {
+                    showError('Failed to fetch logs: ' + (data.error || 'Unknown error'));
+                }
+
+                // Re-query loading element as it may have been removed by renderLogs
+                loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+
+            } catch (error) {
+                console.error('Failed to fetch logs:', error);
+                showError('Failed to fetch logs: ' + error.message);
+
+                // Re-query loading element
+                loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+            }
+        }
+
+        // Render logs to DOM
+        function renderLogs() {
+            const container = document.getElementById('logs-display');
+            const loading = document.getElementById('loading');
+
+            // Remove loading
+            if (loading) {
+                loading.style.display = 'none';
+            }
+
+            // Clear container
+            container.innerHTML = '';
+
+            if (currentLogs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No logs found</h3>
+                        <p>Try adjusting your filters or wait for new logs to appear.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            currentLogs.forEach((log, index) => {
+                const logEntry = document.createElement('div');
+                const logType = (log.type || 'INFO').toLowerCase();
+                logEntry.className = `log-entry log-${logType}`;
+
+                logEntry.innerHTML = `
+                    <div class="log-header" onclick="toggleLog(${index})">
+                        <span class="log-toggle" id="toggle-${index}">▶</span>
+                        <span class="log-type">[${log.type || 'INFO'}]</span>
+                        <span class="log-time">${formatTime(log.timestamp)}</span>
+                        <span class="log-message">${escapeHtml(log.message || '')}</span>
+                    </div>
+                    <div class="log-details" id="log-details-${index}">
+                        ${renderLogDetails(log.details)}
+                    </div>
+                `;
+                container.appendChild(logEntry);
+            });
+        }
+
+        // Render log details
+        function renderLogDetails(details) {
+            if (!details || Object.keys(details).length === 0) {
+                return '<div class="log-detail-row" style="color: var(--text-secondary);">No additional details</div>';
+            }
+
+            return Object.entries(details)
+                .map(([key, value]) => `<div class="log-detail-row"><strong>${escapeHtml(key)}:</strong> ${escapeHtml(String(value))}</div>`)
+                .join('');
+        }
+
+        // Toggle log expansion
+        function toggleLog(index) {
+            const details = document.getElementById(`log-details-${index}`);
+            const toggle = document.getElementById(`toggle-${index}`);
+
+            if (details.classList.contains('visible')) {
+                details.classList.remove('visible');
+                toggle.classList.remove('expanded');
+            } else {
+                details.classList.add('visible');
+                toggle.classList.add('expanded');
+            }
+        }
+
+        // Toggle auto-refresh
+        function toggleAutoRefresh() {
+            const checkbox = document.getElementById('auto-refresh-checkbox');
+            autoRefresh = checkbox.checked;
+
+            if (autoRefresh) {
+                refreshInterval = setInterval(fetchLogs, 5000);
+            } else {
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                    refreshInterval = null;
+                }
+            }
+        }
+
+        // Apply filters
+        function applyFilters() {
+            fetchLogs();
+        }
+
+        // Format timestamp in EST
+        function formatTime(timestamp) {
+            if (!timestamp) return '--:--:--';
+
+            const date = new Date(timestamp);
+
+            // Convert to EST (America/New_York)
+            const estTime = date.toLocaleString('en-US', {
+                timeZone: 'America/New_York',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+
+            return estTime;
+        }
+
+        // Update last refresh time in EST
+        function updateLastRefresh() {
+            const now = new Date();
+            const timeStr = formatTime(now.toISOString());
+            document.getElementById('last-refresh').textContent = `Last: ${timeStr} EST`;
+        }
+
+        // Show error message
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.classList.add('visible');
+            setTimeout(() => el.classList.remove('visible'), 10000);
+        }
+    </script>
+</body>
+</html>

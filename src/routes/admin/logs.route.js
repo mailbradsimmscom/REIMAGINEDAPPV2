@@ -6,12 +6,38 @@ import { getLogs, getLogMetadata } from '../../services/logs.service.js';
 
 const router = express.Router();
 
-// Apply response validation to all routes in this file
-router.use(validateResponse(AdminLogsEnvelope));
+// GET /admin/logs/stream - Get logs from specific source with filters (no validation)
+router.get('/stream', async (req, res, next) => {
+  try {
+    const { source, level, since, search, limit } = req.query;
 
-// GET /admin/logs - Get log files
+    // Get logs with source filter
+    const result = await getLogs({
+      source,
+      level,
+      since,
+      limit: limit ? parseInt(limit) : 100,
+      search
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        logs: result.logs,
+        count: result.returned,
+        source,
+        hasMore: result.total > result.returned
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /admin/logs - Get log files (legacy endpoint)
 router.get('/',
   validate(adminLogsQuerySchema, 'query'),
+  validateResponse(AdminLogsEnvelope),
   async (req, res, next) => {
   try {
     const { level, service, module, correlationId, limit, search } = req.query;
@@ -44,7 +70,7 @@ router.get('/',
 });
 
 // GET /admin/logs/metadata - Get available services, modules, levels
-router.get('/metadata', async (req, res, next) => {
+router.get('/metadata', validateResponse(AdminLogsEnvelope), async (req, res, next) => {
   try {
     const metadata = await getLogMetadata();
 

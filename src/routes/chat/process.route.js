@@ -40,6 +40,13 @@ router.post(
         hasMessage: !!message
       });
 
+      // Structured chat logging
+      await logger.chat('CHAT', 'User message received', {
+        query: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
+        thread_id: threadId || 'new',
+        message_length: message.length
+      }, { correlationId: requestLogger.requestId });
+
       requestLogger.debug('🔍 [PROCESS] Chat request received', {
         threadId,
         messageLength: message.length
@@ -102,6 +109,15 @@ router.post(
         sourcesCount: result.sources?.length || 0
       });
 
+      // Structured success logging
+      await logger.chat('SUCCESS', 'Chat request completed', {
+        total_duration_ms: `${totalDuration}ms`,
+        systems_found: result.systems_context?.length || 0,
+        sources_found: result.sources?.length || 0,
+        classification: result.classification?.primary || 'unknown',
+        response_length: result.response?.length || 0
+      }, { correlationId: requestLogger.requestId });
+
       requestLogger.performance('chat_processing', totalDuration, {
         systems_found: result.systems_context?.length || 0,
         sources_found: result.sources?.length || 0,
@@ -116,6 +132,14 @@ router.post(
         threadId: req.body.threadId || req.body.thread_id,
         duration: totalDuration
       });
+
+      // Structured error logging
+      await logger.chat('ERROR', 'Chat request failed', {
+        error: error.message,
+        thread_id: req.body.threadId || req.body.thread_id,
+        duration_ms: `${totalDuration}ms`,
+        stack: error.stack?.split('\n').slice(0, 3).join('\n')  // First 3 lines of stack
+      }, { correlationId: requestLogger.requestId });
 
       requestLogger.performance('chat_processing_failed', totalDuration, {
         error: error.message

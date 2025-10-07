@@ -831,6 +831,16 @@ if chat_enabled:
                 from .chat.workflows.chat_workflow_sequential import ChatWorkflowSequential
                 from .chat.debug_logger import chat_debug
 
+                # Structured chat logging
+                logger.info("Chat request received", extra={
+                    'log_type': 'CHAT',
+                    'details': {
+                        'query': request.query[:100] + ('...' if len(request.query) > 100 else ''),
+                        'thread_id': request.thread_id or 'new',
+                        'systems_count': len(request.systems_context or [])
+                    }
+                })
+
                 chat_debug.step('ENDPOINT_INIT', {
                     'endpoint': '/v1/chat/process',
                     'workflow_type': 'sequential',
@@ -864,6 +874,16 @@ if chat_enabled:
                     'has_score': bool(workflow_result.get("score"))
                 })
 
+                # Log workflow completion
+                logger.info("Workflow complete", extra={
+                    'log_type': 'RESPONSE',
+                    'details': {
+                        'duration_ms': f"{workflow_duration:.0f}ms",
+                        'sources': len(workflow_result.get("sources", [])),
+                        'score': workflow_result.get("score", 0.0)
+                    }
+                })
+
                 thread_id = request.thread_id
 
                 # Normalize classification to match schema
@@ -878,6 +898,17 @@ if chat_enabled:
                     }
                 else:
                     normalized_classification = classification
+
+                # Log success
+                total_duration = (datetime.now() - start_time).total_seconds() * 1000
+                logger.info("Chat request successful", extra={
+                    'log_type': 'SUCCESS',
+                    'details': {
+                        'total_duration_ms': f"{total_duration:.0f}ms",
+                        'response_length': len(workflow_result.get("response", "")),
+                        'classification': normalized_classification.get('primary', 'unknown') if normalized_classification else 'unknown'
+                    }
+                })
 
                 return ChatResponse(
                     response=workflow_result["response"],
@@ -896,7 +927,17 @@ if chat_enabled:
                     'query': request.query[:100],
                     'systems_count': len(request.systems_context or [])
                 })
-                logger.error(f"Chat processing failed: {e}")
+
+                # Structured error logging
+                logger.error("Chat request failed", extra={
+                    'log_type': 'ERROR',
+                    'details': {
+                        'error': str(e),
+                        'query': request.query[:100],
+                        'systems_count': len(request.systems_context or [])
+                    }
+                }, exc_info=True)
+
                 raise HTTPException(status_code=500, detail=f"Chat processing failed: {str(e)}")
 
         @app.get("/v1/chat/health")
