@@ -364,19 +364,33 @@ class DocumentService {
 
         // Update document with storage path
         await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
+
+        // Process job immediately instead of waiting for worker
+        this.requestLogger.info('Starting immediate job processing', {
+          jobId: job.job_id,
+          docId: finalDocId
+        });
+
+        await this.processJob(job.job_id);
+
+        this.requestLogger.info('Job processing completed', {
+          jobId: job.job_id,
+          docId: finalDocId
+        });
+
       } catch (uploadError) {
         this.requestLogger.error('Upload failed', { error: uploadError.message });
         throw uploadError;
       }
 
-      this.requestLogger.info('Ingest job created', { 
-        jobId: job.job_id, 
-        docId: finalDocId 
+      this.requestLogger.info('Ingest job created and processed', {
+        jobId: job.job_id,
+        docId: finalDocId
       });
 
       return {
         job_id: job.job_id,
-        status: 'queued',
+        status: 'completed',
         doc_id: finalDocId
       };
     } catch (error) {
@@ -456,6 +470,24 @@ class DocumentService {
       });
 
       const processingResult = await this.callPythonSidecar(fileBuffer, job, document, fileName);
+
+      // Update systems.manual flag after successful Pinecone upsert
+      if (document.asset_uid) {
+        try {
+          await documentRepository.updateSystemManualFlag(document.asset_uid, true);
+          this.requestLogger.info('System manual flag set to true', {
+            assetUid: document.asset_uid,
+            jobId
+          });
+        } catch (flagError) {
+          // Log but don't fail the job - this is non-critical
+          this.requestLogger.warn('Failed to update system manual flag', {
+            assetUid: document.asset_uid,
+            jobId,
+            error: flagError.message
+          });
+        }
+      }
 
       // Update processing stage after Python sidecar (chunking, embedding, pinecone_upsert)
       await documentRepository.updateJobStatusV2(jobId, 'pinecone_upsert');

@@ -407,6 +407,34 @@ class DocumentRepository {
       throw error;
     }
   }
+
+  // System Management
+  async updateSystemManualFlag(assetUid, manualValue) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('systems')
+        .update({
+          manual: manualValue,
+          updated_at: new Date().toISOString()
+        })
+        .eq('asset_uid', assetUid)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      this.requestLogger.info('System manual flag updated', { assetUid, manual: manualValue });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update system manual flag', {
+        error: error.message,
+        assetUid,
+        manual: manualValue
+      });
+      throw error;
+    }
+  }
 }
 
 export default new DocumentRepository();

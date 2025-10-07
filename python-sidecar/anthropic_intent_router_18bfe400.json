@@ -1,0 +1,1152 @@
+{
+  "total_chunks_processed": 8,
+  "successful_chunks": 8,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 40,
+  "unique_intent_routes": 25,
+  "question_type_breakdown": {
+    "What": 10,
+    "Where": 1,
+    "How": 13,
+    "When": 1
+  },
+  "intent_routes": [
+    {
+      "question": "What are the main features of Rocna anchors?",
+      "question_variations": [
+        "What makes Rocna anchors special?",
+        "What are the key characteristics of Rocna anchors?",
+        "What features do Rocna anchors have?"
+      ],
+      "answer": "Rocna anchors feature universal-function design for all seabed types, large fluke area for maximum holding power, reliable quick setting, excellent penetration on difficult seabeds, resistance to roll-out, practical bow stowage design, high strength components, and no moving parts.",
+      "question_type": "What",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "About Your Rocna or Vulcan Anchor and Its Features section"
+      ]
+    },
+    {
+      "question": "What are the main components of a Rocna anchor?",
+      "question_variations": [
+        "What parts make up a Rocna anchor?",
+        "What are the different parts of a Rocna anchor?",
+        "How is a Rocna anchor constructed?"
+      ],
+      "answer": "Main components include the shank with I+V Profile, fluke, toe, heel, roll-bar, shackle/rode attachment point, lashing point, tandem anchor attachment point, buoyed retrieval line attachment point, and skid.",
+      "question_type": "What",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Becoming Familiar With Your Rocna Original, Mk II, or Vulcan section"
+      ]
+    },
+    {
+      "question": "Where was the Rocna anchor developed?",
+      "question_variations": [
+        "Which country are Rocna anchors from?",
+        "What is the origin of Rocna anchors?",
+        "Who developed Rocna anchors?"
+      ],
+      "answer": "Rocna anchors were developed in New Zealand as new generation anchors.",
+      "question_type": "Where",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "About Your Rocna or Vulcan Anchor and Its Features section"
+      ]
+    },
+    {
+      "question": "What types of seabeds can Rocna anchors handle?",
+      "question_variations": [
+        "Which seabed conditions work with Rocna anchors?",
+        "Can Rocna anchors work in difficult seabeds?",
+        "How versatile are Rocna anchors with different seabeds?"
+      ],
+      "answer": "Rocna anchors are designed for universal function across all seabed types, with excellent penetration abilities even on difficult seabeds such as weed, kelp, and grass.",
+      "question_type": "What",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "About Your Rocna or Vulcan Anchor and Its Features section"
+      ]
+    },
+    {
+      "question": "How does the warranty work for Rocna anchors?",
+      "question_variations": [
+        "What kind of warranty comes with Rocna anchors?",
+        "Is there a warranty on Rocna anchors?",
+        "What is the Rocna anchor warranty coverage?"
+      ],
+      "answer": "Rocna anchors come with a lifetime manufacturer's warranty against defects.",
+      "question_type": "How",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Contents section, page 15"
+      ]
+    },
+    {
+      "question": "How do I attach a shackle to my Rocna or Vulcan anchor?",
+      "question_variations": [
+        "What's the proper way to connect a shackle?",
+        "How do I connect chain to my Rocna anchor?",
+        "What type of shackle should I use for my anchor?"
+      ],
+      "answer": "Loop the shackle head through the shank attachment point and fasten the pin through the chain end link. Use the largest shackle size that will fit through your chain end-link. The shackle pin must be seized with two turns of stainless steel or Monel seizing wire.",
+      "question_type": "How",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Shackles and attaching rode section"
+      ]
+    },
+    {
+      "question": "What type of shackle is recommended for larger anchors?",
+      "question_variations": [
+        "Which shackles work best for heavy anchors?",
+        "Do I need special shackles for bigger anchors?"
+      ],
+      "answer": "For anchor sizes 15 kg (33 lb) and above, tested shackles are recommended. When using G40 or stronger chain, use appropriately rated high-strength bow shackles. Forged stainless steel shackles are preferable to cast versions.",
+      "question_type": "What",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Shackles and attaching rode section"
+      ]
+    },
+    {
+      "question": "Can I attach a swivel directly to my Vulcan anchor?",
+      "question_variations": [
+        "Is it okay to connect a swivel straight to the Vulcan?",
+        "How should I install a swivel on my Vulcan anchor?"
+      ],
+      "answer": "No, swivels must never be connected directly to the Vulcan anchor shank. It is safer to put a few links of chain between the swivel and the anchor.",
+      "question_type": "How",
+      "models": [
+        "Vulcan"
+      ],
+      "references": [
+        "Swivels section"
+      ]
+    },
+    {
+      "question": "What type of rode should I use with my anchor?",
+      "question_variations": [
+        "What's the best anchor rode?",
+        "Should I use chain or rope for my anchor rode?"
+      ],
+      "answer": "Certified chain is strongly recommended, either for all rode or as a leader at least equal to boat length. Higher strength chains (G40, G50, G70) can save weight. For rope portions, polyester is preferred over nylon, and premium 8- or 10-plait rope is ideal.",
+      "question_type": "What",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "What to use for rode section"
+      ]
+    },
+    {
+      "question": "How do I recover my anchor onto the bow roller?",
+      "question_variations": [
+        "What's the proper way to retrieve my anchor?",
+        "How do I safely get my anchor back on the roller?"
+      ],
+      "answer": "Ensure the anchor transitions onto the roller in the correct orientation. While the anchor will self-right if pulled up upside-down, this action can be violent and potentially damage your boat. Use proper caution during recovery.",
+      "question_type": "How",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Launching and recovery from bow rollers section"
+      ]
+    },
+    {
+      "question": "What is the purpose of the roll-bar on a Rocna anchor?",
+      "question_variations": [
+        "Why does the Rocna have a roll-bar?",
+        "What does the roll-bar do on a Rocna?",
+        "How does the roll-bar function on a Rocna anchor?"
+      ],
+      "answer": "The roll-bar ensures the anchor adopts the correct preliminary setting attitude by supporting the anchor's weight between the skids, shank end, and blade's chisel-tip. It eliminates the need for fluke ballast, allowing for larger fluke area and optimized weight distribution. It also reinforces the fluke heel and can be used as a carry point.",
+      "question_type": "What",
+      "models": [
+        "Rocna Original"
+      ],
+      "references": [
+        "Roll-bar section"
+      ]
+    },
+    {
+      "question": "How does the Rocna Mk II roll-foil differ from the original roll-bar?",
+      "question_variations": [
+        "What's special about the Mk II roll-foil?",
+        "What are the advantages of the roll-foil design?"
+      ],
+      "answer": "The patented roll-foil performs the same self-righting function but has varying wing-like profiles that direct mudflow, improving self-righting action, reducing fouling during setting, and adding more setting force and holding power.",
+      "question_type": "How",
+      "models": [
+        "Rocna Mk II"
+      ],
+      "references": [
+        "Mk II roll-foil section"
+      ]
+    },
+    {
+      "question": "How quickly does a Rocna anchor set?",
+      "question_variations": [
+        "What is the setting time for a Rocna?",
+        "How fast will my Rocna anchor dig in?"
+      ],
+      "answer": "A Rocna typically buries itself within one anchor's length of where it lands. The setting can be quite dramatic and abrupt, requiring careful anchoring procedure to avoid equipment damage from too rapid reversal.",
+      "question_type": "How",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Setting performance section"
+      ]
+    },
+    {
+      "question": "What is the roll-palm on the Vulcan anchor?",
+      "question_variations": [
+        "How does the Vulcan roll-palm work?",
+        "What's the purpose of the Vulcan's roll-palm?"
+      ],
+      "answer": "The roll-palm works with the shank shape to enable self-righting for correct setting attitude. It supports the anchor on soft mud when landing on-end and reinforces the fluke heel section. It works in conjunction with dedicated ballast on the fluke underside positioned for maximum torque.",
+      "question_type": "What",
+      "models": [
+        "Vulcan"
+      ],
+      "references": [
+        "Vulcan roll-palm section"
+      ]
+    },
+    {
+      "question": "How does the anchor penetrate the seabed?",
+      "question_variations": [
+        "What happens when the anchor starts to set?",
+        "How does the anchor dig into the bottom?"
+      ],
+      "answer": "When in correct setting orientation, the boat's pull creates resistance from the fluke tip and skid, generating a turning moment that forces the chisel-shaped tip into the seabed. As resistance increases, the anchor rolls upright and buries itself.",
+      "question_type": "How",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Penetrating the seabed surface section"
+      ]
+    },
+    {
+      "question": "How do I retrieve a fouled anchor?",
+      "question_variations": [
+        "What do I do if my anchor gets stuck?",
+        "How can I recover a caught anchor?",
+        "What's the procedure for freeing a stuck anchor?"
+      ],
+      "answer": "Use a buoyed retrieval line attached to the dedicated attachment point with a non-floating rope slightly longer than water depth at high tide. If normal retrieval fails, pick up the buoy and lift anchor backward using the retrieval line.",
+      "question_type": "How",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Buoyed Retrieval Line section"
+      ]
+    },
+    {
+      "question": "How do I attach a retrieval line to a Vulcan anchor?",
+      "question_variations": [
+        "What's the proper way to connect a buoy line to Vulcan?",
+        "How should I secure a retrieval line on my Vulcan?"
+      ],
+      "answer": "Feed the line through from the top and tie a figure-of-8 knot in its end to securely stop the line.",
+      "question_type": "How",
+      "models": [
+        "Vulcan"
+      ],
+      "references": [
+        "Buoyed Retrieval Line section"
+      ]
+    },
+    {
+      "question": "How do I set up tandem anchoring?",
+      "question_variations": [
+        "Can I use two anchors together?",
+        "What's the process for tandem anchor setup?"
+      ],
+      "answer": "Set second anchor about a boat-length ahead of primary anchor. Attach its chain rode directly to the tandem attachment point, running over the main anchor fluke and through the roll-bar. Only use chain, not rope.",
+      "question_type": "How",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "references": [
+        "Using a Tandem Anchor section"
+      ]
+    },
+    {
+      "question": "How should I secure the anchor while underway?",
+      "question_variations": [
+        "What's the best way to secure anchor while sailing?",
+        "How do I prevent anchor movement while moving?"
+      ],
+      "answer": "Hold anchor tightly back on bow roller. Don't rely on windlass alone. Use alternative tensioning system near anchor. Lash with rope using dedicated lashing point or tandem anchor attachment point. Twin rollers or large single roller recommended.",
+      "question_type": "How",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Securing the Anchor When Underway section"
+      ]
+    },
+    {
+      "question": "What should I not do when securing the anchor?",
+      "question_variations": [
+        "Are there any warnings about anchor securing?",
+        "What practices should I avoid with anchor security?"
+      ],
+      "answer": "Do not use restraining pins in attachment holes. Do not drill new holes in anchor shank as this weakens it and voids warranty. Do not rely solely on windlass for securing.",
+      "question_type": "What",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "references": [
+        "Securing the Anchor When Underway section"
+      ]
+    },
+    {
+      "question": "What is the minimum scope ratio for anchoring?",
+      "question_variations": [
+        "What rode to depth ratio should I use?",
+        "How much anchor line should I let out?",
+        "What's the minimum anchor rode length needed?"
+      ],
+      "answer": "The minimum scope ratio is 3:1 (rode-length to depth). Generally, 5:1 is appropriate, and in bad weather, it can be increased up to 8:1. There is little benefit in increased scopes beyond 8:1.",
+      "question_type": "What",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Anchoring Guidelines - Setting the Anchor"
+      ]
+    },
+    {
+      "question": "How do I properly set the anchor?",
+      "question_variations": [
+        "What's the correct way to deploy the anchor?",
+        "How should I drop the anchor?",
+        "What's the procedure for setting the anchor?"
+      ],
+      "answer": "Drop the anchor with the boat stationary or starting to drift back with the wind or tide. Let the rode out consistently as the vessel drifts back, avoiding snubbing until at least three times the water depth has been paid out. In wind, let the bow wipe off to provide setting force; in calm conditions, motor backward slowly. Be careful as these anchors set very quickly.",
+      "question_type": "How",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Deploying rode and setting the anchor"
+      ]
+    },
+    {
+      "question": "Can I use these anchors in rocky areas?",
+      "question_variations": [
+        "How do the anchors perform in rock?",
+        "Is it safe to anchor in rocky bottom?",
+        "What precautions should I take when anchoring in rocks?"
+      ],
+      "answer": "While Rocna and Vulcan are not specialist rock anchors, they can perform in rock by finding rocks or crevices to hold onto. However, they can become fouled if care is not taken. When anchoring in rock, it's recommended to use a retrieval line.",
+      "question_type": "How",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Using Your Anchor in Rock"
+      ]
+    },
+    {
+      "question": "What should I do to protect marine environments when anchoring?",
+      "question_variations": [
+        "How can I anchor responsibly in sensitive areas?",
+        "What are the environmental guidelines for anchoring?",
+        "How do I avoid damaging marine life while anchoring?"
+      ],
+      "answer": "Drop the anchor on bare sand or mud when seafloor is visible, away from grass or rocks. Set the anchor with conservative scope for fast setting, then reduce to minimum prudent scope. Never deploy on or near live coral. These anchors set quickly which minimizes seafloor impact.",
+      "question_type": "What",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Looking After the Marine Environment"
+      ]
+    },
+    {
+      "question": "When should I use a chain-stop or snubber?",
+      "question_variations": [
+        "Do I need a chain-stop?",
+        "What's the purpose of a snubber?",
+        "Should I use a rope snubber with chain rode?"
+      ],
+      "answer": "Chain-stops are recommended on larger boats to reduce windlass stress. For all-chain rodes, a rope snubber is advisable as it acts as a shock absorber for peak loads and reduces chain rumble vibrations through the boat.",
+      "question_type": "When",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "references": [
+        "Chain-Stops and Snubbers"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the main features of Rocna anchors?",
+            "question_variations": [
+              "What makes Rocna anchors special?",
+              "What are the key characteristics of Rocna anchors?",
+              "What features do Rocna anchors have?"
+            ],
+            "answer": "Rocna anchors feature universal-function design for all seabed types, large fluke area for maximum holding power, reliable quick setting, excellent penetration on difficult seabeds, resistance to roll-out, practical bow stowage design, high strength components, and no moving parts.",
+            "question_type": "What",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "About Your Rocna or Vulcan Anchor and Its Features section"
+            ]
+          },
+          {
+            "question": "What are the main components of a Rocna anchor?",
+            "question_variations": [
+              "What parts make up a Rocna anchor?",
+              "What are the different parts of a Rocna anchor?",
+              "How is a Rocna anchor constructed?"
+            ],
+            "answer": "Main components include the shank with I+V Profile, fluke, toe, heel, roll-bar, shackle/rode attachment point, lashing point, tandem anchor attachment point, buoyed retrieval line attachment point, and skid.",
+            "question_type": "What",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Becoming Familiar With Your Rocna Original, Mk II, or Vulcan section"
+            ]
+          },
+          {
+            "question": "Where was the Rocna anchor developed?",
+            "question_variations": [
+              "Which country are Rocna anchors from?",
+              "What is the origin of Rocna anchors?",
+              "Who developed Rocna anchors?"
+            ],
+            "answer": "Rocna anchors were developed in New Zealand as new generation anchors.",
+            "question_type": "Where",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "About Your Rocna or Vulcan Anchor and Its Features section"
+            ]
+          },
+          {
+            "question": "What types of seabeds can Rocna anchors handle?",
+            "question_variations": [
+              "Which seabed conditions work with Rocna anchors?",
+              "Can Rocna anchors work in difficult seabeds?",
+              "How versatile are Rocna anchors with different seabeds?"
+            ],
+            "answer": "Rocna anchors are designed for universal function across all seabed types, with excellent penetration abilities even on difficult seabeds such as weed, kelp, and grass.",
+            "question_type": "What",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "About Your Rocna or Vulcan Anchor and Its Features section"
+            ]
+          },
+          {
+            "question": "How does the warranty work for Rocna anchors?",
+            "question_variations": [
+              "What kind of warranty comes with Rocna anchors?",
+              "Is there a warranty on Rocna anchors?",
+              "What is the Rocna anchor warranty coverage?"
+            ],
+            "answer": "Rocna anchors come with a lifetime manufacturer's warranty against defects.",
+            "question_type": "How",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Contents section, page 15"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I attach a shackle to my Rocna or Vulcan anchor?",
+            "question_variations": [
+              "What's the proper way to connect a shackle?",
+              "How do I connect chain to my Rocna anchor?",
+              "What type of shackle should I use for my anchor?"
+            ],
+            "answer": "Loop the shackle head through the shank attachment point and fasten the pin through the chain end link. Use the largest shackle size that will fit through your chain end-link. The shackle pin must be seized with two turns of stainless steel or Monel seizing wire.",
+            "question_type": "How",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Shackles and attaching rode section"
+            ]
+          },
+          {
+            "question": "What type of shackle is recommended for larger anchors?",
+            "question_variations": [
+              "Which shackles work best for heavy anchors?",
+              "Do I need special shackles for bigger anchors?"
+            ],
+            "answer": "For anchor sizes 15 kg (33 lb) and above, tested shackles are recommended. When using G40 or stronger chain, use appropriately rated high-strength bow shackles. Forged stainless steel shackles are preferable to cast versions.",
+            "question_type": "What",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Shackles and attaching rode section"
+            ]
+          },
+          {
+            "question": "Can I attach a swivel directly to my Vulcan anchor?",
+            "question_variations": [
+              "Is it okay to connect a swivel straight to the Vulcan?",
+              "How should I install a swivel on my Vulcan anchor?"
+            ],
+            "answer": "No, swivels must never be connected directly to the Vulcan anchor shank. It is safer to put a few links of chain between the swivel and the anchor.",
+            "question_type": "How",
+            "models": [
+              "Vulcan"
+            ],
+            "references": [
+              "Swivels section"
+            ]
+          },
+          {
+            "question": "What type of rode should I use with my anchor?",
+            "question_variations": [
+              "What's the best anchor rode?",
+              "Should I use chain or rope for my anchor rode?"
+            ],
+            "answer": "Certified chain is strongly recommended, either for all rode or as a leader at least equal to boat length. Higher strength chains (G40, G50, G70) can save weight. For rope portions, polyester is preferred over nylon, and premium 8- or 10-plait rope is ideal.",
+            "question_type": "What",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "What to use for rode section"
+            ]
+          },
+          {
+            "question": "How do I recover my anchor onto the bow roller?",
+            "question_variations": [
+              "What's the proper way to retrieve my anchor?",
+              "How do I safely get my anchor back on the roller?"
+            ],
+            "answer": "Ensure the anchor transitions onto the roller in the correct orientation. While the anchor will self-right if pulled up upside-down, this action can be violent and potentially damage your boat. Use proper caution during recovery.",
+            "question_type": "How",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Launching and recovery from bow rollers section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the purpose of the roll-bar on a Rocna anchor?",
+            "question_variations": [
+              "Why does the Rocna have a roll-bar?",
+              "What does the roll-bar do on a Rocna?",
+              "How does the roll-bar function on a Rocna anchor?"
+            ],
+            "answer": "The roll-bar ensures the anchor adopts the correct preliminary setting attitude by supporting the anchor's weight between the skids, shank end, and blade's chisel-tip. It eliminates the need for fluke ballast, allowing for larger fluke area and optimized weight distribution. It also reinforces the fluke heel and can be used as a carry point.",
+            "question_type": "What",
+            "models": [
+              "Rocna Original"
+            ],
+            "references": [
+              "Roll-bar section"
+            ]
+          },
+          {
+            "question": "How does the Rocna Mk II roll-foil differ from the original roll-bar?",
+            "question_variations": [
+              "What's special about the Mk II roll-foil?",
+              "What are the advantages of the roll-foil design?"
+            ],
+            "answer": "The patented roll-foil performs the same self-righting function but has varying wing-like profiles that direct mudflow, improving self-righting action, reducing fouling during setting, and adding more setting force and holding power.",
+            "question_type": "How",
+            "models": [
+              "Rocna Mk II"
+            ],
+            "references": [
+              "Mk II roll-foil section"
+            ]
+          },
+          {
+            "question": "How quickly does a Rocna anchor set?",
+            "question_variations": [
+              "What is the setting time for a Rocna?",
+              "How fast will my Rocna anchor dig in?"
+            ],
+            "answer": "A Rocna typically buries itself within one anchor's length of where it lands. The setting can be quite dramatic and abrupt, requiring careful anchoring procedure to avoid equipment damage from too rapid reversal.",
+            "question_type": "How",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Setting performance section"
+            ]
+          },
+          {
+            "question": "What is the roll-palm on the Vulcan anchor?",
+            "question_variations": [
+              "How does the Vulcan roll-palm work?",
+              "What's the purpose of the Vulcan's roll-palm?"
+            ],
+            "answer": "The roll-palm works with the shank shape to enable self-righting for correct setting attitude. It supports the anchor on soft mud when landing on-end and reinforces the fluke heel section. It works in conjunction with dedicated ballast on the fluke underside positioned for maximum torque.",
+            "question_type": "What",
+            "models": [
+              "Vulcan"
+            ],
+            "references": [
+              "Vulcan roll-palm section"
+            ]
+          },
+          {
+            "question": "How does the anchor penetrate the seabed?",
+            "question_variations": [
+              "What happens when the anchor starts to set?",
+              "How does the anchor dig into the bottom?"
+            ],
+            "answer": "When in correct setting orientation, the boat's pull creates resistance from the fluke tip and skid, generating a turning moment that forces the chisel-shaped tip into the seabed. As resistance increases, the anchor rolls upright and buries itself.",
+            "question_type": "How",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Penetrating the seabed surface section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I retrieve a fouled anchor?",
+            "question_variations": [
+              "What do I do if my anchor gets stuck?",
+              "How can I recover a caught anchor?",
+              "What's the procedure for freeing a stuck anchor?"
+            ],
+            "answer": "Use a buoyed retrieval line attached to the dedicated attachment point with a non-floating rope slightly longer than water depth at high tide. If normal retrieval fails, pick up the buoy and lift anchor backward using the retrieval line.",
+            "question_type": "How",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Buoyed Retrieval Line section"
+            ]
+          },
+          {
+            "question": "How do I attach a retrieval line to a Vulcan anchor?",
+            "question_variations": [
+              "What's the proper way to connect a buoy line to Vulcan?",
+              "How should I secure a retrieval line on my Vulcan?"
+            ],
+            "answer": "Feed the line through from the top and tie a figure-of-8 knot in its end to securely stop the line.",
+            "question_type": "How",
+            "models": [
+              "Vulcan"
+            ],
+            "references": [
+              "Buoyed Retrieval Line section"
+            ]
+          },
+          {
+            "question": "How do I set up tandem anchoring?",
+            "question_variations": [
+              "Can I use two anchors together?",
+              "What's the process for tandem anchor setup?"
+            ],
+            "answer": "Set second anchor about a boat-length ahead of primary anchor. Attach its chain rode directly to the tandem attachment point, running over the main anchor fluke and through the roll-bar. Only use chain, not rope.",
+            "question_type": "How",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "references": [
+              "Using a Tandem Anchor section"
+            ]
+          },
+          {
+            "question": "How should I secure the anchor while underway?",
+            "question_variations": [
+              "What's the best way to secure anchor while sailing?",
+              "How do I prevent anchor movement while moving?"
+            ],
+            "answer": "Hold anchor tightly back on bow roller. Don't rely on windlass alone. Use alternative tensioning system near anchor. Lash with rope using dedicated lashing point or tandem anchor attachment point. Twin rollers or large single roller recommended.",
+            "question_type": "How",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Securing the Anchor When Underway section"
+            ]
+          },
+          {
+            "question": "What should I not do when securing the anchor?",
+            "question_variations": [
+              "Are there any warnings about anchor securing?",
+              "What practices should I avoid with anchor security?"
+            ],
+            "answer": "Do not use restraining pins in attachment holes. Do not drill new holes in anchor shank as this weakens it and voids warranty. Do not rely solely on windlass for securing.",
+            "question_type": "What",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "references": [
+              "Securing the Anchor When Underway section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the minimum scope ratio for anchoring?",
+            "question_variations": [
+              "What rode to depth ratio should I use?",
+              "How much anchor line should I let out?",
+              "What's the minimum anchor rode length needed?"
+            ],
+            "answer": "The minimum scope ratio is 3:1 (rode-length to depth). Generally, 5:1 is appropriate, and in bad weather, it can be increased up to 8:1. There is little benefit in increased scopes beyond 8:1.",
+            "question_type": "What",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Anchoring Guidelines - Setting the Anchor"
+            ]
+          },
+          {
+            "question": "How do I properly set the anchor?",
+            "question_variations": [
+              "What's the correct way to deploy the anchor?",
+              "How should I drop the anchor?",
+              "What's the procedure for setting the anchor?"
+            ],
+            "answer": "Drop the anchor with the boat stationary or starting to drift back with the wind or tide. Let the rode out consistently as the vessel drifts back, avoiding snubbing until at least three times the water depth has been paid out. In wind, let the bow wipe off to provide setting force; in calm conditions, motor backward slowly. Be careful as these anchors set very quickly.",
+            "question_type": "How",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Deploying rode and setting the anchor"
+            ]
+          },
+          {
+            "question": "Can I use these anchors in rocky areas?",
+            "question_variations": [
+              "How do the anchors perform in rock?",
+              "Is it safe to anchor in rocky bottom?",
+              "What precautions should I take when anchoring in rocks?"
+            ],
+            "answer": "While Rocna and Vulcan are not specialist rock anchors, they can perform in rock by finding rocks or crevices to hold onto. However, they can become fouled if care is not taken. When anchoring in rock, it's recommended to use a retrieval line.",
+            "question_type": "How",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Using Your Anchor in Rock"
+            ]
+          },
+          {
+            "question": "What should I do to protect marine environments when anchoring?",
+            "question_variations": [
+              "How can I anchor responsibly in sensitive areas?",
+              "What are the environmental guidelines for anchoring?",
+              "How do I avoid damaging marine life while anchoring?"
+            ],
+            "answer": "Drop the anchor on bare sand or mud when seafloor is visible, away from grass or rocks. Set the anchor with conservative scope for fast setting, then reduce to minimum prudent scope. Never deploy on or near live coral. These anchors set quickly which minimizes seafloor impact.",
+            "question_type": "What",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Looking After the Marine Environment"
+            ]
+          },
+          {
+            "question": "When should I use a chain-stop or snubber?",
+            "question_variations": [
+              "Do I need a chain-stop?",
+              "What's the purpose of a snubber?",
+              "Should I use a rope snubber with chain rode?"
+            ],
+            "answer": "Chain-stops are recommended on larger boats to reduce windlass stress. For all-chain rodes, a rope snubber is advisable as it acts as a shock absorber for peak loads and reduces chain rumble vibrations through the boat.",
+            "question_type": "When",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "references": [
+              "Chain-Stops and Snubbers"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How should I clean my Rocna anchor?",
+            "question_variations": [
+              "What's the best way to clean a Rocna anchor?",
+              "How do I maintain my Rocna anchor?",
+              "What cleaning is required for Rocna anchors?"
+            ],
+            "answer": "Clean the anchor with fresh water whenever possible. For Rocna Original models, regularly rinse the inside of the hollow roll-bar with fresh water.",
+            "question_type": "How",
+            "models": [
+              "All Rocna Models",
+              "Rocna Original"
+            ],
+            "references": [
+              "Looking After Your Anchor section"
+            ]
+          },
+          {
+            "question": "How should I store my Rocna anchor?",
+            "question_variations": [
+              "What's the proper way to stow a Rocna anchor?",
+              "Where should I keep my Rocna anchor when not in use?"
+            ],
+            "answer": "Store the anchor in dry conditions with good air circulation and drainage. Avoid storing in damp conditions or in contact with water-absorbent materials like cordage or soil.",
+            "question_type": "How",
+            "models": [
+              "All Rocna Models"
+            ],
+            "references": [
+              "Looking After Your Anchor section"
+            ]
+          },
+          {
+            "question": "How do I maintain a stainless steel Rocna anchor?",
+            "question_variations": [
+              "What maintenance does a stainless Rocna need?",
+              "How do I prevent rust on my stainless Rocna?"
+            ],
+            "answer": "Avoid contact with regular steel or rust, keep free from organic materials, and maintain the smooth surface finish. For light scratches, use stainless steel polish. Avoid cleaners with chlorine or ammonia. Deep scratches may require re-passivation.",
+            "question_type": "How",
+            "models": [
+              "Stainless Steel Rocna Models"
+            ],
+            "references": [
+              "Maintaining the Polished Stainless Steel Finish section"
+            ]
+          },
+          {
+            "question": "What products can I use to clean my stainless steel Rocna?",
+            "question_variations": [
+              "Which cleaners are safe for stainless Rocna anchors?",
+              "What should I use to polish my stainless Rocna?"
+            ],
+            "answer": "Recommended products include Spotless Stainless\u2122, Grunt Emer-Gel\u2122, Wichinox\u2122, and Davis FSR\u2122. Clean the anchor well and follow the manufacturer's instructions.",
+            "question_type": "What",
+            "models": [
+              "Stainless Steel Rocna Models"
+            ],
+            "references": [
+              "Recommended Products for Cleaning and Passivation section"
+            ]
+          },
+          {
+            "question": "How do I maintain a galvanized Rocna anchor?",
+            "question_variations": [
+              "What maintenance does a galvanized Rocna need?",
+              "How do I protect my galvanized Rocna from corrosion?"
+            ],
+            "answer": "Maintain the zinc coating to prevent corrosion. When zinc wears off with normal use, it must be renewed by a galvanizing provider. For Rocna Original models, inform the galvanizer about the breather hole on the roll-bar for zinc drainage.",
+            "question_type": "How",
+            "models": [
+              "Galvanized Rocna Models",
+              "Rocna Original"
+            ],
+            "references": [
+              "Maintaining the Zinc Coating section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I use the anchor in foul ground?",
+            "question_variations": [
+              "What's the procedure for anchoring in rocky bottom?",
+              "How should I set up the anchor when there's risk of fouling?"
+            ],
+            "answer": "Attach the rode to the shackle rail slot using a stainless steel shackle. Use a reduced scope of 2:1 when retrieving. Move vessel over anchor and pull backward to clear if fouled.",
+            "question_type": "How",
+            "models": [
+              "Rocna with shackle rail"
+            ],
+            "references": [
+              "Usage in foul ground section"
+            ]
+          },
+          {
+            "question": "What is the recommended anchoring method for overnight stays?",
+            "question_variations": [
+              "How should I anchor when leaving the boat unattended?",
+              "Which anchor point should I use for secure anchoring?"
+            ],
+            "answer": "Use the secure point rather than the shackle rail slot for overnight anchoring or when leaving the vessel unattended. This prevents unintentional un-setting during wind or tide changes.",
+            "question_type": "What",
+            "models": [
+              "Rocna with shackle rail"
+            ],
+            "references": [
+              "Secure anchoring section"
+            ]
+          },
+          {
+            "question": "What does the lifetime warranty cover?",
+            "question_variations": [
+              "What's included in the Rocna warranty?",
+              "Is bending covered under warranty?"
+            ],
+            "answer": "The warranty covers material defects, workmanship failures, and any bending or deformation, provided the anchor was properly sized according to Rocna's sizing chart. Coverage applies to the original purchaser only and is non-transferable.",
+            "question_type": "What",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "references": [
+              "Coverage section"
+            ]
+          },
+          {
+            "question": "What is not covered by the warranty?",
+            "question_variations": [
+              "What are the warranty exclusions?",
+              "When does the warranty not apply?"
+            ],
+            "answer": "The warranty does not cover: damage from misuse, general wear-and-tear, unauthorized modifications, unapproved accessories, unauthorized repairs, damage from improper maintenance, personal injury, or operation contrary to user guide instructions.",
+            "question_type": "What",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "references": [
+              "Exclusions section"
+            ]
+          },
+          {
+            "question": "How is the warranty honored?",
+            "question_variations": [
+              "What happens if my anchor is faulty?",
+              "How do I claim the warranty?"
+            ],
+            "answer": "The reseller will replace the faulty or damaged product if available. If a replacement is not available, you will receive a full refund of the purchase price.",
+            "question_type": "How",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "references": [
+              "Honoring the Warranty section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I submit a warranty claim for my Rocna anchor?",
+            "question_variations": [
+              "What's the process for warranty claims?",
+              "How can I claim warranty on my anchor?",
+              "What do I do if my anchor is faulty?"
+            ],
+            "answer": "Download the Warranty Claim form at rocna.com/lifetime-warranty/, complete it fully, and submit to support@rocna.com. Customer service will contact you to address your concerns.",
+            "question_type": "How",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "references": [
+              "Warranty Claim Procedure section"
+            ]
+          },
+          {
+            "question": "What is covered under the Rocna anchor warranty?",
+            "question_variations": [
+              "What's included in the warranty?",
+              "What warranty do I get with my anchor?",
+              "What happens if my anchor is faulty?"
+            ],
+            "answer": "For faulty or damaged anchors, the reseller will replace the product if available, or provide a full refund of the purchase price if replacement is not available.",
+            "question_type": "What",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "references": [
+              "Honoring the Warranty section"
+            ]
+          },
+          {
+            "question": "How can I contact Rocna support?",
+            "question_variations": [
+              "What's Rocna's contact information?",
+              "How do I reach Rocna customer service?",
+              "Where can I get help with my Rocna anchor?"
+            ],
+            "answer": "Contact Rocna by phone at +1-604-940-2010, email at support@rocna.com, or mail at CMP Group Ltd., 7733 Progress Way, Delta, B.C. V4G 1A3, Canada. Additional information is available at Rocna.com.",
+            "question_type": "How",
+            "models": [
+              "All Rocna products"
+            ],
+            "references": [
+              "How to Contact Us section"
+            ]
+          },
+          {
+            "question": "Where can I find more information about using my Rocna anchor?",
+            "question_variations": [
+              "How do I learn more about my anchor?",
+              "Where are the anchor usage instructions?",
+              "What resources are available for Rocna anchor users?"
+            ],
+            "answer": "Visit the Rocna Anchors Knowledge Base at kb.rocna.com/kb for comprehensive information and material about anchors, accessories, and their use. The User's Guide is also available at Rocna.com.",
+            "question_type": "Where",
+            "models": [
+              "Rocna anchors",
+              "Vulcan anchors"
+            ],
+            "references": [
+              "Knowledge Base section",
+              "Disclaimer section"
+            ]
+          },
+          {
+            "question": "What are the liability limitations for Rocna anchors?",
+            "question_variations": [
+              "What is Rocna's liability policy?",
+              "How much liability does Rocna accept?",
+              "What compensation can I get for a faulty anchor?"
+            ],
+            "answer": "Rocna's liability is limited to the price invoiced by the reseller for the faulty products. They are not liable for indirect or consequential injury or specific damage or loss of any kind.",
+            "question_type": "What",
+            "models": [
+              "All Rocna products"
+            ],
+            "references": [
+              "Liability section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 
 import { Router } from 'express';
 import { logger } from '../../utils/logger.js';
-import jobProcessor from '../../services/job.processor.js';
+import documentService from '../../services/document.service.js';
 import documentRepository from '../../repositories/document.repository.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
@@ -56,25 +56,25 @@ router.get('/', async (req, res, next) => {
 router.post('/process-next', async (req, res, next) => {
   try {
     log.info('Manual job processing triggered');
-    
-    // Get the next queued job
-    const queuedJobs = await documentRepository.getJobsByStatus('upload_complete', 1);
-    
+
+    // Get the next job stuck in parsing or queued (failed jobs that need retry)
+    const queuedJobs = await documentRepository.getJobsByStatus('parsing', 1);
+
     if (queuedJobs.length === 0) {
       return res.json({
         success: true,
         data: {
-          message: 'No queued jobs found',
+          message: 'No jobs found for reprocessing',
           processed: false
         }
       });
     }
-    
+
     const job = queuedJobs[0];
     log.info('Processing job manually', { jobId: job.job_id, docId: job.doc_id });
-    
-    // Process the job using the existing processor
-    await jobProcessor.processJob(job.job_id);
+
+    // Process the job using document service
+    await documentService.processJob(job.job_id);
     
     log.info('Manual job processing completed', { jobId: job.job_id });
     
@@ -96,13 +96,13 @@ router.post('/process-next', async (req, res, next) => {
 
 /**
  * GET /admin/jobs/queue
- * List queued jobs for inspection
+ * List jobs in processing stages for inspection
  */
 router.get('/queue', async (req, res, next) => {
   try {
     const { limit = 10 } = req.query;
-    
-    const queuedJobs = await documentRepository.getJobsByStatus('upload_complete', Number(limit));
+
+    const queuedJobs = await documentRepository.getJobsByStatus('parsing', Number(limit));
     
     res.json({
       success: true,

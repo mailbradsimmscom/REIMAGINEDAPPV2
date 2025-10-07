@@ -1,0 +1,1128 @@
+{
+  "total_chunks_processed": 8,
+  "successful_chunks": 8,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 30,
+  "unique_procedures": 25,
+  "procedures": [
+    {
+      "title": "Installing Anchor Shackle",
+      "preconditions": [
+        "Have appropriate sized shackle",
+        "Have anchor chain"
+      ],
+      "steps": [
+        "Select largest shackle size that fits through chain end-link",
+        "Loop shackle head through shank shackle attachment point",
+        "Fasten pin through end link in chain",
+        "Seize pin with two turns of stainless steel or Monel seizing wire"
+      ],
+      "expected_outcome": "Secure connection between anchor and rode",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installing Anchor Swivel",
+      "preconditions": [
+        "Have appropriate rated swivel",
+        "Have anchor chain"
+      ],
+      "steps": [
+        "Ensure swivel is rated to chain breaking strength",
+        "Install few links of chain between swivel and anchor",
+        "Verify swivel can rotate properly",
+        "Confirm swivel cannot be subjected to veering load"
+      ],
+      "expected_outcome": "Properly functioning swivel installation",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Launching Anchor from Bow Roller",
+      "preconditions": [
+        "Anchor mounted on bow roller",
+        "Rode properly attached"
+      ],
+      "steps": [
+        "Release anchor from secured position",
+        "Allow anchor to slide forward off roller",
+        "If anchor doesn't self-launch, check roller diameter",
+        "Adjust resting angle if needed",
+        "Reduce suspended chain length if needed"
+      ],
+      "expected_outcome": "Smooth self-launching of anchor",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Recovering Anchor to Bow Roller",
+      "preconditions": [
+        "Anchor deployed",
+        "Bow roller clear"
+      ],
+      "steps": [
+        "Begin anchor retrieval",
+        "Monitor anchor orientation as it approaches roller",
+        "Guide anchor onto roller in correct orientation",
+        "Allow self-righting if upside down but maintain control",
+        "Secure anchor in final position"
+      ],
+      "expected_outcome": "Anchor safely stored on bow roller",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Anchor Selection and Verification",
+      "preconditions": [
+        "Purchase of Rocna Original, Mk II, or Vulcan anchor",
+        "Access to user guide"
+      ],
+      "steps": [
+        "Identify anchor model (Original, Mk II, or Vulcan)",
+        "Verify presence of key components: shank, fluke, roll-bar, shackle attachment point",
+        "Confirm presence of I+V\u2122 Profile on shank",
+        "Check for tandem anchor attachment points",
+        "Verify buoyed retrieval line attachment point",
+        "Inspect roll-bar or roll-foil\u2122 depending on model"
+      ],
+      "expected_outcome": "Confirmed authentic Rocna anchor with all features present",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Rocna Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Anchor Component Inspection",
+      "preconditions": [
+        "Access to anchor",
+        "Good lighting"
+      ],
+      "steps": [
+        "Check shackle/rode attachment point for wear",
+        "Inspect fluke condition including toe and heel",
+        "Verify roll-bar or roll-foil\u2122 integrity",
+        "Check lashing point condition",
+        "Inspect breather holes for galvanizing",
+        "Verify skid condition",
+        "Check V-bulb\u2122 integrity"
+      ],
+      "expected_outcome": "All components verified in good working condition",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Rocna Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Anchor Feature Verification",
+      "preconditions": [
+        "Access to anchor"
+      ],
+      "steps": [
+        "Verify universal-function design for multiple seabed types",
+        "Check fluke area size and concave geometry",
+        "Inspect roll-out resistance features",
+        "Verify bow stowage fit",
+        "Check shank and load-bearing component strength",
+        "Confirm absence of moving parts"
+      ],
+      "expected_outcome": "All design features verified present and functional",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Rocna Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic Anchor Setting Procedure",
+      "preconditions": [
+        "Anchor must be properly mounted on bow",
+        "Boat must be in suitable anchoring location"
+      ],
+      "steps": [
+        "Allow anchor to achieve correct preliminary setting attitude (on its side)",
+        "Let anchor weight be supported between skids, end of shank, and chisel-tip of blade",
+        "Apply gentle reverse thrust to create pull on anchor rode",
+        "Wait for anchor to roll toward upright position and bury itself",
+        "Avoid reversing boat too quickly to prevent equipment damage"
+      ],
+      "expected_outcome": "Anchor should set within one anchor's length of landing point",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Roll-Bar/Roll-Foil Function Check",
+      "preconditions": [
+        "Anchor must be accessible for inspection"
+      ],
+      "steps": [
+        "Verify roll-bar/roll-foil is intact and properly attached",
+        "Check that roll-bar/roll-foil allows anchor to achieve side orientation",
+        "Confirm roll-bar reinforces heel of fluke",
+        "For Mk II: Inspect varying profiles along roll-foil width"
+      ],
+      "expected_outcome": "Roll-bar/roll-foil enables proper self-righting and reinforcement",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Vulcan Roll-Palm Inspection",
+      "preconditions": [
+        "Vulcan anchor must be accessible for inspection"
+      ],
+      "steps": [
+        "Check roll-palm attachment and condition",
+        "Verify roll-palm works with shank shape for self-righting",
+        "Inspect ballast on underside of fluke",
+        "Confirm roll-palm reinforces heel section of fluke"
+      ],
+      "expected_outcome": "Roll-palm system enables proper self-righting and reinforcement",
+      "models": [
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Anchor Load Stability Check",
+      "preconditions": [
+        "Anchor must be set in seabed"
+      ],
+      "steps": [
+        "Apply normal working load to set anchor",
+        "Verify anchor maintains upright attitude",
+        "Test anchor stability under veering loads if possible",
+        "Monitor anchor position during tide changes"
+      ],
+      "expected_outcome": "Anchor remains stable and embedded under varying load conditions",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Using a Buoyed Retrieval Line - Rocna Original and Mk II",
+      "preconditions": [
+        "Anchor may be fouled or difficult to retrieve normally"
+      ],
+      "steps": [
+        "Attach line by shackle to the buoyed retrieval line attachment point",
+        "Ensure line remains outside the roll-bar or roll-foil",
+        "Use non-floating rope slightly longer than water depth at high tide",
+        "If normal retrieval fails, pick up buoy and lift anchor backward using retrieval line"
+      ],
+      "expected_outcome": "Successfully retrieve fouled anchor",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Using a Buoyed Retrieval Line - Vulcan",
+      "preconditions": [
+        "Anchor may be fouled or difficult to retrieve normally"
+      ],
+      "steps": [
+        "Feed line through from the top",
+        "Tie figure-of-8 knot in line end to secure",
+        "Use non-floating rope slightly longer than water depth at high tide",
+        "If normal retrieval fails, pick up buoy and lift anchor backward using retrieval line"
+      ],
+      "expected_outcome": "Successfully retrieve fouled anchor",
+      "models": [
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Setting Up Tandem Anchor Configuration",
+      "preconditions": [
+        "Storm conditions requiring additional holding power"
+      ],
+      "steps": [
+        "Set second anchor about one boat-length ahead of primary anchor",
+        "Use chain rode (not rope) for second anchor",
+        "Run rode over top of main anchor fluke and through roll-bar",
+        "Attach tandem anchor chain directly to tandem attachment point"
+      ],
+      "expected_outcome": "Increased holding power in extreme conditions",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Securing Anchor When Underway",
+      "preconditions": [
+        "Vessel is underway",
+        "Anchor needs to be secured"
+      ],
+      "steps": [
+        "Pull anchor home securely on bow roller",
+        "Hold anchor tightly back in correct roller position",
+        "Use alternative tensioning system on rode near anchor (not windlass)",
+        "Optionally lash anchor with rope using dedicated lashing point",
+        "For additional security, use tandem anchor attachment point for lashing"
+      ],
+      "expected_outcome": "Anchor secured safely while underway",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic Anchor Deployment",
+      "preconditions": [
+        "Boat stationary or drifting back",
+        "Clear water ahead"
+      ],
+      "steps": [
+        "Drop anchor with boat stationary or drifting back",
+        "Let rode out consistently as vessel drifts back",
+        "Avoid snubbing until at least 3x water depth is paid out",
+        "Avoid piling chain on top of anchor",
+        "Maintain minimum 3:1 ratio of rode-length to depth"
+      ],
+      "expected_outcome": "Properly deployed anchor ready for setting",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Setting the Anchor",
+      "preconditions": [
+        "Anchor deployed",
+        "Sufficient space for maneuver"
+      ],
+      "steps": [
+        "In wind conditions: Allow bow to wipe off naturally",
+        "In calm conditions: Motor backward slowly",
+        "Watch for sudden take-up due to quick setting",
+        "Adjust scope to 5:1 for normal conditions",
+        "Increase scope up to 8:1 for bad weather"
+      ],
+      "expected_outcome": "Securely set anchor",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Anchoring in Rocky Areas",
+      "preconditions": [
+        "Rocky bottom conditions"
+      ],
+      "steps": [
+        "Attach retrieval line before deployment",
+        "Deploy anchor with extra caution",
+        "Monitor for potential fouling",
+        "Use retrieval line if needed during recovery"
+      ],
+      "expected_outcome": "Safe anchoring in rocky conditions with recovery option",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Environmentally Conscious Anchoring",
+      "preconditions": [
+        "Visible seafloor",
+        "Sensitive marine environment"
+      ],
+      "steps": [
+        "Identify bare sand or mud areas",
+        "Avoid grass or rocks with sea life",
+        "Drop anchor away from marine habitats",
+        "Set anchor with conservative scope for quick set",
+        "Reduce scope to minimum safe length",
+        "Never deploy on live coral"
+      ],
+      "expected_outcome": "Secure anchoring with minimal environmental impact",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Chain-Stop and Snubber Installation",
+      "preconditions": [
+        "Larger boat",
+        "All-chain rode"
+      ],
+      "steps": [
+        "Install chain-stop to reduce windlass stress",
+        "Attach rope snubber to chain",
+        "Adjust snubber length for proper shock absorption",
+        "Verify proper installation before relying on system"
+      ],
+      "expected_outcome": "Reduced stress on windlass and smoother anchoring",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic Anchor Maintenance",
+      "preconditions": [
+        "Anchor requires regular maintenance"
+      ],
+      "steps": [
+        "Clean anchor with fresh water when possible",
+        "For Rocna Original: rinse inside of hollow roll-bar with fresh water",
+        "Ensure oxygen availability to metal surfaces",
+        "Avoid storing anchor in damp conditions",
+        "Avoid contact with water-absorbent materials like cordage or soil",
+        "Store in dry conditions",
+        "Ensure air circulation around anchor during storage",
+        "Ensure proper drainage of any water"
+      ],
+      "expected_outcome": "Properly maintained anchor with reduced corrosion risk",
+      "models": [
+        "Rocna Original",
+        "All Rocna Models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Galvanized Anchor Maintenance",
+      "preconditions": [
+        "Anchor is galvanized model"
+      ],
+      "steps": [
+        "Monitor zinc coating condition regularly",
+        "When zinc coating wears off, have anchor re-galvanized by provider",
+        "For Rocna Original: Inform galvanizer about breather hole on roll-bar"
+      ],
+      "expected_outcome": "Maintained protective zinc coating preventing steel corrosion",
+      "models": [
+        "Rocna Galvanized Models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Stainless Steel Anchor Maintenance",
+      "preconditions": [
+        "Anchor is stainless steel model"
+      ],
+      "steps": [
+        "Avoid any contact with regular steel or rust",
+        "Keep anchor free from organic materials",
+        "Clean thoroughly after use in brackish water",
+        "For light scratches: use stainless steel polish to restore finish",
+        "For deep scratches: perform re-passivation of affected area",
+        "Avoid cleaners containing chlorine or ammonia"
+      ],
+      "expected_outcome": "Maintained stainless steel finish with intact protective layer",
+      "models": [
+        "Rocna Stainless Steel Models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Stainless Steel Anchor Cleaning",
+      "preconditions": [
+        "Anchor is stainless steel model",
+        "Cleaning products available"
+      ],
+      "steps": [
+        "Clean anchor thoroughly",
+        "Apply one of recommended products: Spotless Stainless\u2122, Grunt Emer-Gel\u2122, Wichinox\u2122, or Davis FSR\u2122",
+        "Follow manufacturer's instructions for chosen product"
+      ],
+      "expected_outcome": "Clean stainless steel anchor surface",
+      "models": [
+        "Rocna Stainless Steel Models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Buoyed Retrieval Line Installation",
+      "preconditions": [
+        "Anchor has retrieval line attachment point"
+      ],
+      "steps": [
+        "Obtain float and shackle",
+        "Attach float to dedicated retrieval line attachment point at heel of anchor fluke",
+        "Verify secure connection"
+      ],
+      "expected_outcome": "Installed recovery system for fouled anchor situations",
+      "models": [
+        "All Rocna Models"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Installing Anchor Shackle",
+            "preconditions": [
+              "Have appropriate sized shackle",
+              "Have anchor chain"
+            ],
+            "steps": [
+              "Select largest shackle size that fits through chain end-link",
+              "Loop shackle head through shank shackle attachment point",
+              "Fasten pin through end link in chain",
+              "Seize pin with two turns of stainless steel or Monel seizing wire"
+            ],
+            "expected_outcome": "Secure connection between anchor and rode",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installing Anchor Swivel",
+            "preconditions": [
+              "Have appropriate rated swivel",
+              "Have anchor chain"
+            ],
+            "steps": [
+              "Ensure swivel is rated to chain breaking strength",
+              "Install few links of chain between swivel and anchor",
+              "Verify swivel can rotate properly",
+              "Confirm swivel cannot be subjected to veering load"
+            ],
+            "expected_outcome": "Properly functioning swivel installation",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Launching Anchor from Bow Roller",
+            "preconditions": [
+              "Anchor mounted on bow roller",
+              "Rode properly attached"
+            ],
+            "steps": [
+              "Release anchor from secured position",
+              "Allow anchor to slide forward off roller",
+              "If anchor doesn't self-launch, check roller diameter",
+              "Adjust resting angle if needed",
+              "Reduce suspended chain length if needed"
+            ],
+            "expected_outcome": "Smooth self-launching of anchor",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Recovering Anchor to Bow Roller",
+            "preconditions": [
+              "Anchor deployed",
+              "Bow roller clear"
+            ],
+            "steps": [
+              "Begin anchor retrieval",
+              "Monitor anchor orientation as it approaches roller",
+              "Guide anchor onto roller in correct orientation",
+              "Allow self-righting if upside down but maintain control",
+              "Secure anchor in final position"
+            ],
+            "expected_outcome": "Anchor safely stored on bow roller",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Anchor Selection and Verification",
+            "preconditions": [
+              "Purchase of Rocna Original, Mk II, or Vulcan anchor",
+              "Access to user guide"
+            ],
+            "steps": [
+              "Identify anchor model (Original, Mk II, or Vulcan)",
+              "Verify presence of key components: shank, fluke, roll-bar, shackle attachment point",
+              "Confirm presence of I+V\u2122 Profile on shank",
+              "Check for tandem anchor attachment points",
+              "Verify buoyed retrieval line attachment point",
+              "Inspect roll-bar or roll-foil\u2122 depending on model"
+            ],
+            "expected_outcome": "Confirmed authentic Rocna anchor with all features present",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Rocna Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Anchor Component Inspection",
+            "preconditions": [
+              "Access to anchor",
+              "Good lighting"
+            ],
+            "steps": [
+              "Check shackle/rode attachment point for wear",
+              "Inspect fluke condition including toe and heel",
+              "Verify roll-bar or roll-foil\u2122 integrity",
+              "Check lashing point condition",
+              "Inspect breather holes for galvanizing",
+              "Verify skid condition",
+              "Check V-bulb\u2122 integrity"
+            ],
+            "expected_outcome": "All components verified in good working condition",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Rocna Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Anchor Feature Verification",
+            "preconditions": [
+              "Access to anchor"
+            ],
+            "steps": [
+              "Verify universal-function design for multiple seabed types",
+              "Check fluke area size and concave geometry",
+              "Inspect roll-out resistance features",
+              "Verify bow stowage fit",
+              "Check shank and load-bearing component strength",
+              "Confirm absence of moving parts"
+            ],
+            "expected_outcome": "All design features verified present and functional",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Rocna Vulcan"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Basic Anchor Setting Procedure",
+            "preconditions": [
+              "Anchor must be properly mounted on bow",
+              "Boat must be in suitable anchoring location"
+            ],
+            "steps": [
+              "Allow anchor to achieve correct preliminary setting attitude (on its side)",
+              "Let anchor weight be supported between skids, end of shank, and chisel-tip of blade",
+              "Apply gentle reverse thrust to create pull on anchor rode",
+              "Wait for anchor to roll toward upright position and bury itself",
+              "Avoid reversing boat too quickly to prevent equipment damage"
+            ],
+            "expected_outcome": "Anchor should set within one anchor's length of landing point",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Roll-Bar/Roll-Foil Function Check",
+            "preconditions": [
+              "Anchor must be accessible for inspection"
+            ],
+            "steps": [
+              "Verify roll-bar/roll-foil is intact and properly attached",
+              "Check that roll-bar/roll-foil allows anchor to achieve side orientation",
+              "Confirm roll-bar reinforces heel of fluke",
+              "For Mk II: Inspect varying profiles along roll-foil width"
+            ],
+            "expected_outcome": "Roll-bar/roll-foil enables proper self-righting and reinforcement",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Vulcan Roll-Palm Inspection",
+            "preconditions": [
+              "Vulcan anchor must be accessible for inspection"
+            ],
+            "steps": [
+              "Check roll-palm attachment and condition",
+              "Verify roll-palm works with shank shape for self-righting",
+              "Inspect ballast on underside of fluke",
+              "Confirm roll-palm reinforces heel section of fluke"
+            ],
+            "expected_outcome": "Roll-palm system enables proper self-righting and reinforcement",
+            "models": [
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Anchor Load Stability Check",
+            "preconditions": [
+              "Anchor must be set in seabed"
+            ],
+            "steps": [
+              "Apply normal working load to set anchor",
+              "Verify anchor maintains upright attitude",
+              "Test anchor stability under veering loads if possible",
+              "Monitor anchor position during tide changes"
+            ],
+            "expected_outcome": "Anchor remains stable and embedded under varying load conditions",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Using a Buoyed Retrieval Line - Rocna Original and Mk II",
+            "preconditions": [
+              "Anchor may be fouled or difficult to retrieve normally"
+            ],
+            "steps": [
+              "Attach line by shackle to the buoyed retrieval line attachment point",
+              "Ensure line remains outside the roll-bar or roll-foil",
+              "Use non-floating rope slightly longer than water depth at high tide",
+              "If normal retrieval fails, pick up buoy and lift anchor backward using retrieval line"
+            ],
+            "expected_outcome": "Successfully retrieve fouled anchor",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Using a Buoyed Retrieval Line - Vulcan",
+            "preconditions": [
+              "Anchor may be fouled or difficult to retrieve normally"
+            ],
+            "steps": [
+              "Feed line through from the top",
+              "Tie figure-of-8 knot in line end to secure",
+              "Use non-floating rope slightly longer than water depth at high tide",
+              "If normal retrieval fails, pick up buoy and lift anchor backward using retrieval line"
+            ],
+            "expected_outcome": "Successfully retrieve fouled anchor",
+            "models": [
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Setting Up Tandem Anchor Configuration",
+            "preconditions": [
+              "Storm conditions requiring additional holding power"
+            ],
+            "steps": [
+              "Set second anchor about one boat-length ahead of primary anchor",
+              "Use chain rode (not rope) for second anchor",
+              "Run rode over top of main anchor fluke and through roll-bar",
+              "Attach tandem anchor chain directly to tandem attachment point"
+            ],
+            "expected_outcome": "Increased holding power in extreme conditions",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Securing Anchor When Underway",
+            "preconditions": [
+              "Vessel is underway",
+              "Anchor needs to be secured"
+            ],
+            "steps": [
+              "Pull anchor home securely on bow roller",
+              "Hold anchor tightly back in correct roller position",
+              "Use alternative tensioning system on rode near anchor (not windlass)",
+              "Optionally lash anchor with rope using dedicated lashing point",
+              "For additional security, use tandem anchor attachment point for lashing"
+            ],
+            "expected_outcome": "Anchor secured safely while underway",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Basic Anchor Deployment",
+            "preconditions": [
+              "Boat stationary or drifting back",
+              "Clear water ahead"
+            ],
+            "steps": [
+              "Drop anchor with boat stationary or drifting back",
+              "Let rode out consistently as vessel drifts back",
+              "Avoid snubbing until at least 3x water depth is paid out",
+              "Avoid piling chain on top of anchor",
+              "Maintain minimum 3:1 ratio of rode-length to depth"
+            ],
+            "expected_outcome": "Properly deployed anchor ready for setting",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Setting the Anchor",
+            "preconditions": [
+              "Anchor deployed",
+              "Sufficient space for maneuver"
+            ],
+            "steps": [
+              "In wind conditions: Allow bow to wipe off naturally",
+              "In calm conditions: Motor backward slowly",
+              "Watch for sudden take-up due to quick setting",
+              "Adjust scope to 5:1 for normal conditions",
+              "Increase scope up to 8:1 for bad weather"
+            ],
+            "expected_outcome": "Securely set anchor",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Anchoring in Rocky Areas",
+            "preconditions": [
+              "Rocky bottom conditions"
+            ],
+            "steps": [
+              "Attach retrieval line before deployment",
+              "Deploy anchor with extra caution",
+              "Monitor for potential fouling",
+              "Use retrieval line if needed during recovery"
+            ],
+            "expected_outcome": "Safe anchoring in rocky conditions with recovery option",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Environmentally Conscious Anchoring",
+            "preconditions": [
+              "Visible seafloor",
+              "Sensitive marine environment"
+            ],
+            "steps": [
+              "Identify bare sand or mud areas",
+              "Avoid grass or rocks with sea life",
+              "Drop anchor away from marine habitats",
+              "Set anchor with conservative scope for quick set",
+              "Reduce scope to minimum safe length",
+              "Never deploy on live coral"
+            ],
+            "expected_outcome": "Secure anchoring with minimal environmental impact",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Chain-Stop and Snubber Installation",
+            "preconditions": [
+              "Larger boat",
+              "All-chain rode"
+            ],
+            "steps": [
+              "Install chain-stop to reduce windlass stress",
+              "Attach rope snubber to chain",
+              "Adjust snubber length for proper shock absorption",
+              "Verify proper installation before relying on system"
+            ],
+            "expected_outcome": "Reduced stress on windlass and smoother anchoring",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Basic Anchor Maintenance",
+            "preconditions": [
+              "Anchor requires regular maintenance"
+            ],
+            "steps": [
+              "Clean anchor with fresh water when possible",
+              "For Rocna Original: rinse inside of hollow roll-bar with fresh water",
+              "Ensure oxygen availability to metal surfaces",
+              "Avoid storing anchor in damp conditions",
+              "Avoid contact with water-absorbent materials like cordage or soil",
+              "Store in dry conditions",
+              "Ensure air circulation around anchor during storage",
+              "Ensure proper drainage of any water"
+            ],
+            "expected_outcome": "Properly maintained anchor with reduced corrosion risk",
+            "models": [
+              "Rocna Original",
+              "All Rocna Models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Galvanized Anchor Maintenance",
+            "preconditions": [
+              "Anchor is galvanized model"
+            ],
+            "steps": [
+              "Monitor zinc coating condition regularly",
+              "When zinc coating wears off, have anchor re-galvanized by provider",
+              "For Rocna Original: Inform galvanizer about breather hole on roll-bar"
+            ],
+            "expected_outcome": "Maintained protective zinc coating preventing steel corrosion",
+            "models": [
+              "Rocna Galvanized Models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Stainless Steel Anchor Maintenance",
+            "preconditions": [
+              "Anchor is stainless steel model"
+            ],
+            "steps": [
+              "Avoid any contact with regular steel or rust",
+              "Keep anchor free from organic materials",
+              "Clean thoroughly after use in brackish water",
+              "For light scratches: use stainless steel polish to restore finish",
+              "For deep scratches: perform re-passivation of affected area",
+              "Avoid cleaners containing chlorine or ammonia"
+            ],
+            "expected_outcome": "Maintained stainless steel finish with intact protective layer",
+            "models": [
+              "Rocna Stainless Steel Models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Stainless Steel Anchor Cleaning",
+            "preconditions": [
+              "Anchor is stainless steel model",
+              "Cleaning products available"
+            ],
+            "steps": [
+              "Clean anchor thoroughly",
+              "Apply one of recommended products: Spotless Stainless\u2122, Grunt Emer-Gel\u2122, Wichinox\u2122, or Davis FSR\u2122",
+              "Follow manufacturer's instructions for chosen product"
+            ],
+            "expected_outcome": "Clean stainless steel anchor surface",
+            "models": [
+              "Rocna Stainless Steel Models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Buoyed Retrieval Line Installation",
+            "preconditions": [
+              "Anchor has retrieval line attachment point"
+            ],
+            "steps": [
+              "Obtain float and shackle",
+              "Attach float to dedicated retrieval line attachment point at heel of anchor fluke",
+              "Verify secure connection"
+            ],
+            "expected_outcome": "Installed recovery system for fouled anchor situations",
+            "models": [
+              "All Rocna Models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Warranty Claim Submission",
+            "preconditions": [
+              "Have a valid warranty claim",
+              "Access to rocna.com/lifetime-warranty/"
+            ],
+            "steps": [
+              "Download the Warranty Claim form from rocna.com/lifetime-warranty/",
+              "Fill out the form completely",
+              "Submit completed form to support@rocna.com",
+              "Wait for customer service response",
+              "Follow provided resolution steps from customer service"
+            ],
+            "expected_outcome": "Warranty claim processed and addressed by customer service",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Contacting Technical Support",
+            "preconditions": [
+              "Have technical question or issue"
+            ],
+            "steps": [
+              "Contact via phone: +1-604-940-2010",
+              "Or contact via email: support@rocna.com",
+              "Or visit website: Rocna.com",
+              "Or visit knowledge base: kb.rocna.com/kb"
+            ],
+            "expected_outcome": "Successfully reach technical support",
+            "models": [
+              "All Rocna products"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Foul Ground Recovery Mode",
+            "preconditions": [
+              "Risk of anchor becoming stuck on seabed",
+              "Vessel must be attended"
+            ],
+            "steps": [
+              "Attach rode to shackle rail\u2122 slot using stainless steel shackle",
+              "If fouled, move vessel over anchor",
+              "Reduce scope to 2:1 ratio",
+              "Pull anchor backward",
+              "Allow shackle to slide to opposite end of slot",
+              "Pull anchor clear from new position"
+            ],
+            "expected_outcome": "Successfully retrieve fouled anchor",
+            "models": [
+              "Rocna anchor with shackle rail"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Secure Anchoring Mode",
+            "preconditions": [
+              "Overnight anchoring required",
+              "Unattended vessel anchoring required"
+            ],
+            "steps": [
+              "Attach shackle to secure point",
+              "Verify connection is secure"
+            ],
+            "expected_outcome": "Anchor remains set during wind or tide reversals",
+            "models": [
+              "Rocna anchor with shackle rail"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Warranty Claim Procedure",
+            "preconditions": [
+              "Must be original purchaser",
+              "Anchor must be within warranty coverage",
+              "Damage must not fall under exclusions"
+            ],
+            "steps": [
+              "Contact reseller",
+              "Demonstrate proof of original purchase",
+              "Present damaged anchor for inspection",
+              "Receive replacement or refund"
+            ],
+            "expected_outcome": "Replacement anchor or full refund of purchase price",
+            "models": [
+              "All Rocna anchors"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

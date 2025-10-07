@@ -1,0 +1,998 @@
+{
+  "total_chunks_processed": 8,
+  "successful_chunks": 8,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 44,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "Does anchor achieve correct preliminary setting attitude?",
+      "expected_value": "Anchor rests on its side supported between skids, shank end, and chisel-tip",
+      "test_method": "Visual inspection during deployment",
+      "failure_indication": "Anchor not orienting correctly for setting",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Initial anchor deployment"
+      ]
+    },
+    {
+      "query": "What is the initial setting distance?",
+      "expected_value": "Anchor should set within one anchor length of landing point",
+      "test_method": "Measure distance from initial touchdown to set position",
+      "failure_indication": "Anchor dragging beyond one length before setting",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Anchor setting procedure"
+      ]
+    },
+    {
+      "query": "Does anchor maintain set position under load changes?",
+      "expected_value": "Anchor remains buried and maintains upright attitude",
+      "test_method": "Monitor anchor position during tide/wind changes",
+      "failure_indication": "Anchor rolling out or losing set position",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Load testing",
+        "Holding power verification"
+      ]
+    },
+    {
+      "query": "Is roll-foil clear of fouling during setting?",
+      "expected_value": "No mud/debris accumulation blocking roll-foil function",
+      "test_method": "Visual inspection after retrieval",
+      "failure_indication": "Clogged roll-foil affecting self-righting",
+      "models": [
+        "Rocna Mk II"
+      ],
+      "related_procedures": [
+        "Post-use inspection"
+      ]
+    },
+    {
+      "query": "Does Vulcan roll-palm support anchor on soft mud?",
+      "expected_value": "Anchor supported when landing on-end in soft substrate",
+      "test_method": "Deployment test in soft mud conditions",
+      "failure_indication": "Anchor sinking vertically without self-righting",
+      "models": [
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Soft bottom deployment"
+      ]
+    },
+    {
+      "query": "Is shackle properly sized for chain end-link?",
+      "expected_value": "Largest possible shackle that fits chain end-link",
+      "test_method": "Visual inspection of shackle pin diameter vs chain end-link opening",
+      "failure_indication": "Undersized shackle compromising system strength",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Anchor Assembly",
+        "Chain Connection"
+      ]
+    },
+    {
+      "query": "Is shackle pin properly seized?",
+      "expected_value": "Two turns of stainless steel or Monel seizing wire",
+      "test_method": "Visual inspection of seizing wire installation",
+      "failure_indication": "Risk of shackle pin working loose",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Shackle Installation",
+        "Safety Checks"
+      ]
+    },
+    {
+      "query": "Is swivel rated appropriately?",
+      "expected_value": "Rated to breaking strength of chain",
+      "test_method": "Check swivel specifications against chain rating",
+      "failure_indication": "Underrated swivel creating weak point",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Swivel Selection",
+        "Load Rating Verification"
+      ]
+    },
+    {
+      "query": "Is swivel connected directly to Vulcan shank?",
+      "expected_value": "No direct connection - chain links required between swivel and anchor",
+      "test_method": "Visual inspection of connection method",
+      "failure_indication": "Unsafe direct swivel connection",
+      "models": [
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Swivel Installation",
+        "Safety Requirements"
+      ]
+    },
+    {
+      "query": "Does anchor self-launch from bow roller?",
+      "expected_value": "Smooth self-launch when released",
+      "test_method": "Test launch operation",
+      "failure_indication": "Launching difficulty indicates roller system issues",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Anchor Deployment",
+        "Roller System Setup"
+      ]
+    },
+    {
+      "query": "Does anchor recover onto roller in correct orientation?",
+      "expected_value": "Smooth transition to roller in upright position",
+      "test_method": "Observe recovery operation",
+      "failure_indication": "Violent self-righting action risking boat damage",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Anchor Recovery",
+        "Safe Handling"
+      ]
+    },
+    {
+      "query": "Is anchor properly secured for stowage?",
+      "expected_value": "Anchor fits securely on bow with minimal movement when underway",
+      "test_method": "Visual inspection and physical check of anchor mounting during vessel movement",
+      "failure_indication": "Excessive movement or insecure fit when mounted on bow",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Bow mounting installation",
+        "Underway safety checks"
+      ]
+    },
+    {
+      "query": "Does anchor set properly in seabed?",
+      "expected_value": "Quick setting with strong holding power across all seabed types",
+      "test_method": "Field testing in various seabed conditions (weed, kelp, grass, etc)",
+      "failure_indication": "Slow or unreliable setting, poor holding power",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Anchoring procedure",
+        "Seabed type assessment"
+      ]
+    },
+    {
+      "query": "Are all attachment points intact?",
+      "expected_value": "All points (shackle, rode, retrieval line, tandem) secure with no wear",
+      "test_method": "Visual inspection of all attachment points for wear or damage",
+      "failure_indication": "Visible wear, deformation or damage to any attachment point",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Pre-use inspection",
+        "Wear point monitoring"
+      ]
+    },
+    {
+      "query": "Is anchor maintaining integrity under load?",
+      "expected_value": "No bending in shank or load-bearing components under normal use",
+      "test_method": "Inspection of components after heavy loading conditions",
+      "failure_indication": "Any visible bending or deformation in shank or components",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Post-use inspection",
+        "Load testing"
+      ]
+    },
+    {
+      "query": "Does anchor resist roll-out?",
+      "expected_value": "Maintains embedding under heavy or veering loads",
+      "test_method": "Field testing under various load conditions and directions",
+      "failure_indication": "Anchor breaks free or rolls out under load changes",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Heavy weather anchoring",
+        "Load response testing"
+      ]
+    },
+    {
+      "query": "What is the minimum safe scope ratio for anchor deployment?",
+      "expected_value": "3:1 ratio of rode-length to water depth",
+      "test_method": "Measure rode length and divide by vertical distance from seabed to bow roller",
+      "failure_indication": "Insufficient holding power and risk of anchor dragging",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Anchor Deployment",
+        "Scope Setting"
+      ]
+    },
+    {
+      "query": "What is the recommended normal scope ratio for anchoring?",
+      "expected_value": "5:1 ratio of rode-length to water depth",
+      "test_method": "Measure rode length and divide by vertical distance from seabed to bow roller",
+      "failure_indication": "Sub-optimal holding power",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Standard Anchoring"
+      ]
+    },
+    {
+      "query": "What is the maximum recommended scope ratio for bad weather?",
+      "expected_value": "8:1 ratio of rode-length to water depth",
+      "test_method": "Measure rode length and divide by vertical distance from seabed to bow roller",
+      "failure_indication": "No additional benefit beyond this ratio",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Heavy Weather Anchoring"
+      ]
+    },
+    {
+      "query": "Is anchor deployment over live coral permitted?",
+      "expected_value": "No deployment on or near live coral",
+      "test_method": "Visual inspection of seafloor before deployment",
+      "failure_indication": "Environmental damage risk",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Environmental Protection Guidelines"
+      ]
+    },
+    {
+      "query": "Is a chain-stop required for larger boats?",
+      "expected_value": "Yes, recommended for stress reduction on windlass",
+      "test_method": "Verify presence and proper installation of chain-stop",
+      "failure_indication": "Excessive stress on windlass",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Chain-Stop Installation"
+      ]
+    },
+    {
+      "query": "Is a rope snubber required with all-chain rode?",
+      "expected_value": "Yes, advisable for shock absorption",
+      "test_method": "Verify presence and proper installation of rope snubber",
+      "failure_indication": "Excessive peak loads and chain rumble",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Snubber Installation"
+      ]
+    },
+    {
+      "query": "Is the retrieval line properly attached to Rocna Original/Mk II?",
+      "expected_value": "Line attached by shackle to retrieval point, kept outside roll-bar/roll-foil",
+      "test_method": "Visual inspection of attachment point and line routing",
+      "failure_indication": "Line routed incorrectly or wrong attachment method used",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "related_procedures": [
+        "Buoyed Retrieval Line Installation"
+      ]
+    },
+    {
+      "query": "Is the retrieval line properly attached to Vulcan?",
+      "expected_value": "Line fed through from top with secure figure-of-8 knot",
+      "test_method": "Visual inspection of knot and line routing",
+      "failure_indication": "Missing/incorrect knot or improper line routing",
+      "models": [
+        "Vulcan"
+      ],
+      "related_procedures": [
+        "Buoyed Retrieval Line Installation"
+      ]
+    },
+    {
+      "query": "Is tandem anchor chain properly attached?",
+      "expected_value": "Chain attached to tandem point, rode over fluke and through roll-bar",
+      "test_method": "Visual inspection of chain routing and attachment",
+      "failure_indication": "Incorrect routing may cause primary anchor pull-out",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "related_procedures": [
+        "Tandem Anchor Setup"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Does anchor achieve correct preliminary setting attitude?",
+            "expected_value": "Anchor rests on its side supported between skids, shank end, and chisel-tip",
+            "test_method": "Visual inspection during deployment",
+            "failure_indication": "Anchor not orienting correctly for setting",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Initial anchor deployment"
+            ]
+          },
+          {
+            "query": "What is the initial setting distance?",
+            "expected_value": "Anchor should set within one anchor length of landing point",
+            "test_method": "Measure distance from initial touchdown to set position",
+            "failure_indication": "Anchor dragging beyond one length before setting",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchor setting procedure"
+            ]
+          },
+          {
+            "query": "Does anchor maintain set position under load changes?",
+            "expected_value": "Anchor remains buried and maintains upright attitude",
+            "test_method": "Monitor anchor position during tide/wind changes",
+            "failure_indication": "Anchor rolling out or losing set position",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Load testing",
+              "Holding power verification"
+            ]
+          },
+          {
+            "query": "Is roll-foil clear of fouling during setting?",
+            "expected_value": "No mud/debris accumulation blocking roll-foil function",
+            "test_method": "Visual inspection after retrieval",
+            "failure_indication": "Clogged roll-foil affecting self-righting",
+            "models": [
+              "Rocna Mk II"
+            ],
+            "related_procedures": [
+              "Post-use inspection"
+            ]
+          },
+          {
+            "query": "Does Vulcan roll-palm support anchor on soft mud?",
+            "expected_value": "Anchor supported when landing on-end in soft substrate",
+            "test_method": "Deployment test in soft mud conditions",
+            "failure_indication": "Anchor sinking vertically without self-righting",
+            "models": [
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Soft bottom deployment"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is shackle properly sized for chain end-link?",
+            "expected_value": "Largest possible shackle that fits chain end-link",
+            "test_method": "Visual inspection of shackle pin diameter vs chain end-link opening",
+            "failure_indication": "Undersized shackle compromising system strength",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchor Assembly",
+              "Chain Connection"
+            ]
+          },
+          {
+            "query": "Is shackle pin properly seized?",
+            "expected_value": "Two turns of stainless steel or Monel seizing wire",
+            "test_method": "Visual inspection of seizing wire installation",
+            "failure_indication": "Risk of shackle pin working loose",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Shackle Installation",
+              "Safety Checks"
+            ]
+          },
+          {
+            "query": "Is swivel rated appropriately?",
+            "expected_value": "Rated to breaking strength of chain",
+            "test_method": "Check swivel specifications against chain rating",
+            "failure_indication": "Underrated swivel creating weak point",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Swivel Selection",
+              "Load Rating Verification"
+            ]
+          },
+          {
+            "query": "Is swivel connected directly to Vulcan shank?",
+            "expected_value": "No direct connection - chain links required between swivel and anchor",
+            "test_method": "Visual inspection of connection method",
+            "failure_indication": "Unsafe direct swivel connection",
+            "models": [
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Swivel Installation",
+              "Safety Requirements"
+            ]
+          },
+          {
+            "query": "Does anchor self-launch from bow roller?",
+            "expected_value": "Smooth self-launch when released",
+            "test_method": "Test launch operation",
+            "failure_indication": "Launching difficulty indicates roller system issues",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchor Deployment",
+              "Roller System Setup"
+            ]
+          },
+          {
+            "query": "Does anchor recover onto roller in correct orientation?",
+            "expected_value": "Smooth transition to roller in upright position",
+            "test_method": "Observe recovery operation",
+            "failure_indication": "Violent self-righting action risking boat damage",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchor Recovery",
+              "Safe Handling"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is anchor properly secured for stowage?",
+            "expected_value": "Anchor fits securely on bow with minimal movement when underway",
+            "test_method": "Visual inspection and physical check of anchor mounting during vessel movement",
+            "failure_indication": "Excessive movement or insecure fit when mounted on bow",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Bow mounting installation",
+              "Underway safety checks"
+            ]
+          },
+          {
+            "query": "Does anchor set properly in seabed?",
+            "expected_value": "Quick setting with strong holding power across all seabed types",
+            "test_method": "Field testing in various seabed conditions (weed, kelp, grass, etc)",
+            "failure_indication": "Slow or unreliable setting, poor holding power",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchoring procedure",
+              "Seabed type assessment"
+            ]
+          },
+          {
+            "query": "Are all attachment points intact?",
+            "expected_value": "All points (shackle, rode, retrieval line, tandem) secure with no wear",
+            "test_method": "Visual inspection of all attachment points for wear or damage",
+            "failure_indication": "Visible wear, deformation or damage to any attachment point",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Pre-use inspection",
+              "Wear point monitoring"
+            ]
+          },
+          {
+            "query": "Is anchor maintaining integrity under load?",
+            "expected_value": "No bending in shank or load-bearing components under normal use",
+            "test_method": "Inspection of components after heavy loading conditions",
+            "failure_indication": "Any visible bending or deformation in shank or components",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Post-use inspection",
+              "Load testing"
+            ]
+          },
+          {
+            "query": "Does anchor resist roll-out?",
+            "expected_value": "Maintains embedding under heavy or veering loads",
+            "test_method": "Field testing under various load conditions and directions",
+            "failure_indication": "Anchor breaks free or rolls out under load changes",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Heavy weather anchoring",
+              "Load response testing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum safe scope ratio for anchor deployment?",
+            "expected_value": "3:1 ratio of rode-length to water depth",
+            "test_method": "Measure rode length and divide by vertical distance from seabed to bow roller",
+            "failure_indication": "Insufficient holding power and risk of anchor dragging",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchor Deployment",
+              "Scope Setting"
+            ]
+          },
+          {
+            "query": "What is the recommended normal scope ratio for anchoring?",
+            "expected_value": "5:1 ratio of rode-length to water depth",
+            "test_method": "Measure rode length and divide by vertical distance from seabed to bow roller",
+            "failure_indication": "Sub-optimal holding power",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Standard Anchoring"
+            ]
+          },
+          {
+            "query": "What is the maximum recommended scope ratio for bad weather?",
+            "expected_value": "8:1 ratio of rode-length to water depth",
+            "test_method": "Measure rode length and divide by vertical distance from seabed to bow roller",
+            "failure_indication": "No additional benefit beyond this ratio",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Heavy Weather Anchoring"
+            ]
+          },
+          {
+            "query": "Is anchor deployment over live coral permitted?",
+            "expected_value": "No deployment on or near live coral",
+            "test_method": "Visual inspection of seafloor before deployment",
+            "failure_indication": "Environmental damage risk",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Environmental Protection Guidelines"
+            ]
+          },
+          {
+            "query": "Is a chain-stop required for larger boats?",
+            "expected_value": "Yes, recommended for stress reduction on windlass",
+            "test_method": "Verify presence and proper installation of chain-stop",
+            "failure_indication": "Excessive stress on windlass",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Chain-Stop Installation"
+            ]
+          },
+          {
+            "query": "Is a rope snubber required with all-chain rode?",
+            "expected_value": "Yes, advisable for shock absorption",
+            "test_method": "Verify presence and proper installation of rope snubber",
+            "failure_indication": "Excessive peak loads and chain rumble",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Snubber Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the retrieval line properly attached to Rocna Original/Mk II?",
+            "expected_value": "Line attached by shackle to retrieval point, kept outside roll-bar/roll-foil",
+            "test_method": "Visual inspection of attachment point and line routing",
+            "failure_indication": "Line routed incorrectly or wrong attachment method used",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "related_procedures": [
+              "Buoyed Retrieval Line Installation"
+            ]
+          },
+          {
+            "query": "Is the retrieval line properly attached to Vulcan?",
+            "expected_value": "Line fed through from top with secure figure-of-8 knot",
+            "test_method": "Visual inspection of knot and line routing",
+            "failure_indication": "Missing/incorrect knot or improper line routing",
+            "models": [
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Buoyed Retrieval Line Installation"
+            ]
+          },
+          {
+            "query": "Is tandem anchor chain properly attached?",
+            "expected_value": "Chain attached to tandem point, rode over fluke and through roll-bar",
+            "test_method": "Visual inspection of chain routing and attachment",
+            "failure_indication": "Incorrect routing may cause primary anchor pull-out",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "related_procedures": [
+              "Tandem Anchor Setup"
+            ]
+          },
+          {
+            "query": "Is anchor properly secured when underway?",
+            "expected_value": "Anchor held tightly back on bow roller, not secured by windlass alone",
+            "test_method": "Visual check of anchor position and securing method",
+            "failure_indication": "Loose movement or reliance on windlass only",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Underway Securing Procedure"
+            ]
+          },
+          {
+            "query": "Is anchor properly lashed when underway?",
+            "expected_value": "Rope lashing through dedicated points, no restraining pins used",
+            "test_method": "Visual inspection of lashing method",
+            "failure_indication": "Use of pins or incorrect lashing points",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "related_procedures": [
+              "Anchor Lashing Procedure"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the retaining bail properly positioned?",
+            "expected_value": "Bail contacts top of anchor shank",
+            "test_method": "Visual inspection of bail position",
+            "failure_indication": "Anchor not properly secured on bow roller",
+            "models": [
+              "All Rocna models"
+            ],
+            "related_procedures": [
+              "Anchor mounting",
+              "Bow roller assembly"
+            ]
+          },
+          {
+            "query": "Has anchor been cleaned after use?",
+            "expected_value": "Anchor cleaned with fresh water",
+            "test_method": "Visual inspection and cleaning log",
+            "failure_indication": "Risk of corrosion and material degradation",
+            "models": [
+              "All Rocna models"
+            ],
+            "related_procedures": [
+              "Post-use maintenance"
+            ]
+          },
+          {
+            "query": "Is roll-bar interior clean?",
+            "expected_value": "Interior regularly rinsed with fresh water",
+            "test_method": "Inspect roll-bar interior for debris/salt",
+            "failure_indication": "Risk of internal corrosion",
+            "models": [
+              "Rocna Original"
+            ],
+            "related_procedures": [
+              "Roll-bar maintenance"
+            ]
+          },
+          {
+            "query": "Are storage conditions appropriate?",
+            "expected_value": "Dry storage with air circulation and drainage",
+            "test_method": "Inspect storage area conditions",
+            "failure_indication": "Risk of moisture damage and corrosion",
+            "models": [
+              "All Rocna models"
+            ],
+            "related_procedures": [
+              "Storage guidelines"
+            ]
+          },
+          {
+            "query": "Is zinc coating intact?",
+            "expected_value": "Complete galvanized coating coverage",
+            "test_method": "Visual inspection of coating",
+            "failure_indication": "Corrosion risk to underlying steel",
+            "models": [
+              "Galvanized Rocna models"
+            ],
+            "related_procedures": [
+              "Galvanizing maintenance"
+            ]
+          },
+          {
+            "query": "Is breather hole clear?",
+            "expected_value": "Unobstructed hole on roll-bar",
+            "test_method": "Visual inspection of breather hole",
+            "failure_indication": "Improper zinc drainage during galvanizing",
+            "models": [
+              "Rocna Original"
+            ],
+            "related_procedures": [
+              "Galvanizing process"
+            ]
+          },
+          {
+            "query": "Is stainless steel surface free of rust?",
+            "expected_value": "No rust spots or contamination",
+            "test_method": "Visual inspection of surface",
+            "failure_indication": "Compromised passivation layer",
+            "models": [
+              "Stainless Steel Rocna models"
+            ],
+            "related_procedures": [
+              "Stainless maintenance"
+            ]
+          },
+          {
+            "query": "Is anchor free from organic materials?",
+            "expected_value": "Clean surface without biofouling",
+            "test_method": "Visual inspection for organic matter",
+            "failure_indication": "Increased corrosion risk",
+            "models": [
+              "Stainless Steel Rocna models"
+            ],
+            "related_procedures": [
+              "Cleaning procedures"
+            ]
+          },
+          {
+            "query": "Is surface finish smooth?",
+            "expected_value": "No deep scratches or damage",
+            "test_method": "Visual and tactile inspection",
+            "failure_indication": "Need for re-passivation",
+            "models": [
+              "Stainless Steel Rocna models"
+            ],
+            "related_procedures": [
+              "Surface restoration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is warranty claim form submission valid?",
+            "expected_value": "Form must be filled completely and submitted to support@rocna.com",
+            "test_method": "Verify form submission receipt and completeness",
+            "failure_indication": "Incomplete form or wrong submission method",
+            "models": [
+              "All Rocna anchors",
+              "All Vulcan anchors"
+            ],
+            "related_procedures": [
+              "Warranty claim process",
+              "Customer support contact"
+            ]
+          },
+          {
+            "query": "Is anchor being used according to User's Guide?",
+            "expected_value": "Usage must strictly follow User's Guide specifications",
+            "test_method": "Compare actual usage to User's Guide requirements",
+            "failure_indication": "Usage outside specified parameters voids warranty",
+            "models": [
+              "All Rocna anchors",
+              "All Vulcan anchors"
+            ],
+            "related_procedures": [
+              "User's Guide compliance",
+              "Warranty validation"
+            ]
+          },
+          {
+            "query": "Is product defect eligible for warranty?",
+            "expected_value": "Faulty or damaged anchors qualify for replacement or refund",
+            "test_method": "Inspect anchor for manufacturing defects or damage",
+            "failure_indication": "Non-warranty damage or normal wear",
+            "models": [
+              "All Rocna anchors",
+              "All Vulcan anchors"
+            ],
+            "related_procedures": [
+              "Defect assessment",
+              "Warranty claim process"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is shackle properly attached for foul ground operation?",
+            "expected_value": "Shackle attached to shackle rail slot using stainless steel shackle",
+            "test_method": "Visual inspection of shackle placement",
+            "failure_indication": "Improper attachment could lead to retrieval difficulties",
+            "models": [
+              "Rocna with shackle rail"
+            ],
+            "related_procedures": [
+              "Foul ground anchoring procedure"
+            ]
+          },
+          {
+            "query": "Is anchor sized correctly for vessel?",
+            "expected_value": "Anchor size matches official Rocna sizing chart recommendations",
+            "test_method": "Compare boat specifications to Rocna sizing chart",
+            "failure_indication": "Warranty void if undersized",
+            "models": [
+              "All Rocna models under 110kg"
+            ],
+            "related_procedures": [
+              "Anchor selection guidelines"
+            ]
+          },
+          {
+            "query": "For overnight anchoring, is secure point used?",
+            "expected_value": "Shackle attached to secure point, not rail slot",
+            "test_method": "Visual inspection of attachment point",
+            "failure_indication": "Risk of unintentional un-setting during wind/tide changes",
+            "models": [
+              "Rocna with shackle rail"
+            ],
+            "related_procedures": [
+              "Secure anchoring procedure"
+            ]
+          },
+          {
+            "query": "For anchors over 110kg, is sizing appropriate?",
+            "expected_value": "Size matches classification society rules referenced by Rocna",
+            "test_method": "Compare specifications to classification society requirements",
+            "failure_indication": "Warranty coverage may be void",
+            "models": [
+              "Rocna models over 110kg"
+            ],
+            "related_procedures": [
+              "Large anchor selection guidelines"
+            ]
+          },
+          {
+            "query": "Has anchor been modified by unauthorized party?",
+            "expected_value": "No unauthorized modifications present",
+            "test_method": "Visual inspection for modifications",
+            "failure_indication": "Warranty void if modified",
+            "models": [
+              "All Rocna models"
+            ],
+            "related_procedures": [
+              "Warranty terms"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

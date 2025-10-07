@@ -1,0 +1,1672 @@
+{
+  "total_chunks_processed": 8,
+  "successful_chunks": 8,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 28,
+  "unique_specifications": 28,
+  "category_breakdown": {
+    "Performance": 7,
+    "Installation": 16,
+    "Design": 1,
+    "Environmental": 1,
+    "Physical": 3
+  },
+  "specifications": [
+    {
+      "parameter": "Design Origin",
+      "normalized_parameter": "design_origin",
+      "parameter_aliases": [
+        "manufacturing location",
+        "country of origin"
+      ],
+      "value": "New Zealand",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "where is rocna made",
+        "manufacturing location",
+        "origin country",
+        "made in"
+      ],
+      "concept_group": "Manufacturing",
+      "references": [
+        "About Your Rocna or Vulcan Anchor and Its Features"
+      ]
+    },
+    {
+      "parameter": "Structural Components",
+      "normalized_parameter": "anchor_components",
+      "parameter_aliases": [
+        "anchor parts",
+        "design elements"
+      ],
+      "value": "Shank with I+V Profile, Roll-bar, Fluke, Toe, Heel, Skid",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "anchor parts",
+        "components",
+        "structure",
+        "design elements"
+      ],
+      "concept_group": "Construction",
+      "references": [
+        "Becoming Familiar With Your Rocna Original, Mk II, or Vulcan"
+      ]
+    },
+    {
+      "parameter": "Attachment Points",
+      "normalized_parameter": "connection_points",
+      "parameter_aliases": [
+        "mounting points",
+        "connection locations"
+      ],
+      "value": "Shackle/rode attachment, Tandem anchor attachment, Buoyed retrieval line attachment, Lashing point",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how to attach",
+        "mounting points",
+        "connection points",
+        "attachment locations"
+      ],
+      "concept_group": "Installation",
+      "references": [
+        "Becoming Familiar With Your Rocna Original, Mk II, or Vulcan"
+      ]
+    },
+    {
+      "parameter": "Minimum Anchor Size for Tested Shackles",
+      "normalized_parameter": "min_anchor_size_tested_shackles",
+      "parameter_aliases": [
+        "anchor weight threshold",
+        "shackle requirement size"
+      ],
+      "value": "15",
+      "range": "15 kg and above",
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "33",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "shackle requirements",
+        "minimum anchor size",
+        "anchor weight",
+        "shackle specifications"
+      ],
+      "concept_group": "anchor_attachment",
+      "references": [
+        "Shackles and attaching rode section"
+      ]
+    },
+    {
+      "parameter": "Minimum Chain Leader Length",
+      "normalized_parameter": "min_chain_leader_length",
+      "parameter_aliases": [
+        "chain length requirement",
+        "minimum chain scope"
+      ],
+      "value": "equal to boat length",
+      "range": "boat length or greater",
+      "units": "boat lengths",
+      "normalized_units": "boat lengths",
+      "converted_value": "1",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "chain leader",
+        "minimum chain length",
+        "rode requirements",
+        "chain scope"
+      ],
+      "concept_group": "rode_specifications",
+      "references": [
+        "What to use for rode section"
+      ]
+    },
+    {
+      "parameter": "Recommended Rope Construction",
+      "normalized_parameter": "rope_construction",
+      "parameter_aliases": [
+        "rope type",
+        "rope specification"
+      ],
+      "value": "8 or 10-plait",
+      "range": "8-10 plait",
+      "units": "plait count",
+      "normalized_units": "plait count",
+      "converted_value": "8-10",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "rope type",
+        "plait count",
+        "rope construction",
+        "anchor rope"
+      ],
+      "concept_group": "rode_specifications",
+      "references": [
+        "What to use for rode section"
+      ]
+    },
+    {
+      "parameter": "Shackle Wire Seizing",
+      "normalized_parameter": "shackle_seizing",
+      "parameter_aliases": [
+        "wire turns",
+        "seizing requirement"
+      ],
+      "value": "2",
+      "range": "exactly 2",
+      "units": "turns",
+      "normalized_units": "turns",
+      "converted_value": "2",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "seizing wire",
+        "shackle securing",
+        "wire turns",
+        "shackle safety"
+      ],
+      "concept_group": "anchor_attachment",
+      "references": [
+        "Shackles and attaching rode section"
+      ]
+    },
+    {
+      "parameter": "Setting Distance",
+      "normalized_parameter": "setting_distance",
+      "parameter_aliases": [
+        "burial distance",
+        "setting length",
+        "initial set"
+      ],
+      "value": "one anchor length",
+      "range": null,
+      "units": "anchor lengths",
+      "normalized_units": "anchor_lengths",
+      "converted_value": "1",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how far does anchor set",
+        "setting distance",
+        "burial depth",
+        "initial set length",
+        "anchor setting performance"
+      ],
+      "concept_group": "setting_characteristics",
+      "references": [
+        "Setting performance section"
+      ]
+    },
+    {
+      "parameter": "Fluke Area",
+      "normalized_parameter": "fluke_area",
+      "parameter_aliases": [
+        "blade area",
+        "surface area",
+        "holding surface"
+      ],
+      "value": "large",
+      "range": null,
+      "units": "qualitative",
+      "normalized_units": "qualitative",
+      "converted_value": null,
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "fluke size",
+        "blade area",
+        "holding surface",
+        "anchor area",
+        "surface area"
+      ],
+      "concept_group": "design_characteristics",
+      "references": [
+        "Design features section"
+      ]
+    },
+    {
+      "parameter": "Roll Stability",
+      "normalized_parameter": "roll_stability",
+      "parameter_aliases": [
+        "trip resistance",
+        "roll resistance",
+        "stability"
+      ],
+      "value": "high",
+      "range": null,
+      "units": "qualitative",
+      "normalized_units": "qualitative",
+      "converted_value": null,
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "roll stability",
+        "anti-roll",
+        "trip resistance",
+        "roll out resistance",
+        "stability"
+      ],
+      "concept_group": "stability_characteristics",
+      "references": [
+        "About roll-stability section"
+      ]
+    },
+    {
+      "parameter": "Moving Parts",
+      "normalized_parameter": "moving_parts",
+      "parameter_aliases": [
+        "mechanical components",
+        "mobile parts"
+      ],
+      "value": "0",
+      "range": null,
+      "units": "count",
+      "normalized_units": "count",
+      "converted_value": "0",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Design",
+      "search_terms": [
+        "moving parts",
+        "mechanical components",
+        "design simplicity",
+        "parts count"
+      ],
+      "concept_group": "construction_characteristics",
+      "references": [
+        "Design features section"
+      ]
+    },
+    {
+      "parameter": "Setting Orientation",
+      "normalized_parameter": "setting_orientation",
+      "parameter_aliases": [
+        "setting attitude",
+        "initial position"
+      ],
+      "value": "on side",
+      "range": null,
+      "units": "position",
+      "normalized_units": "position",
+      "converted_value": null,
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "setting position",
+        "initial orientation",
+        "setting attitude",
+        "anchor position"
+      ],
+      "concept_group": "setting_characteristics",
+      "references": [
+        "Roll-bar section"
+      ]
+    },
+    {
+      "parameter": "Minimum Scope Ratio",
+      "normalized_parameter": "minimum_scope_ratio",
+      "parameter_aliases": [
+        "rode to depth ratio",
+        "minimum rode length",
+        "minimum anchor scope"
+      ],
+      "value": "3:1",
+      "range": "3:1 - 8:1",
+      "units": "ratio",
+      "normalized_units": "ratio",
+      "converted_value": "3:1",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "minimum scope",
+        "anchor rode length",
+        "rode to depth ratio",
+        "safe anchoring ratio",
+        "minimum anchor depth ratio"
+      ],
+      "concept_group": "anchoring_requirements",
+      "references": [
+        "Deploying rode and setting the anchor section"
+      ]
+    },
+    {
+      "parameter": "Recommended Scope Ratio",
+      "normalized_parameter": "recommended_scope_ratio",
+      "parameter_aliases": [
+        "standard scope",
+        "normal scope ratio",
+        "typical rode length"
+      ],
+      "value": "5:1",
+      "range": "5:1",
+      "units": "ratio",
+      "normalized_units": "ratio",
+      "converted_value": "5:1",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "recommended scope",
+        "ideal scope ratio",
+        "standard anchoring ratio",
+        "typical scope"
+      ],
+      "concept_group": "anchoring_requirements",
+      "references": [
+        "Anchoring Guidelines section"
+      ]
+    },
+    {
+      "parameter": "Maximum Weather Scope Ratio",
+      "normalized_parameter": "maximum_weather_scope_ratio",
+      "parameter_aliases": [
+        "bad weather scope",
+        "heavy weather ratio",
+        "storm scope"
+      ],
+      "value": "8:1",
+      "range": "up to 8:1",
+      "units": "ratio",
+      "normalized_units": "ratio",
+      "converted_value": "8:1",
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "maximum scope",
+        "storm anchoring ratio",
+        "bad weather scope",
+        "heavy weather anchoring"
+      ],
+      "concept_group": "anchoring_requirements",
+      "references": [
+        "Setting the Anchor section"
+      ]
+    },
+    {
+      "parameter": "Retrieval Line Length",
+      "normalized_parameter": "retrieval_line_length",
+      "parameter_aliases": [
+        "buoy line length",
+        "recovery line length"
+      ],
+      "value": "greater than depth at high tide",
+      "range": "variable based on water depth",
+      "units": "length",
+      "normalized_units": "meters",
+      "converted_value": "site specific",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "retrieval line",
+        "buoy line",
+        "recovery line",
+        "anchor line length",
+        "buoyed line"
+      ],
+      "concept_group": "anchor_recovery",
+      "references": [
+        "Using a Buoyed Retrieval Line section"
+      ]
+    },
+    {
+      "parameter": "Tandem Anchor Distance",
+      "normalized_parameter": "tandem_anchor_spacing",
+      "parameter_aliases": [
+        "secondary anchor distance",
+        "anchor spacing"
+      ],
+      "value": "one boat length",
+      "range": "approximate boat length",
+      "units": "boat lengths",
+      "normalized_units": "meters",
+      "converted_value": "vessel specific",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "tandem anchor setup",
+        "dual anchor spacing",
+        "storm anchor spacing"
+      ],
+      "concept_group": "tandem_anchoring",
+      "references": [
+        "Using a Tandem Anchor section"
+      ]
+    },
+    {
+      "parameter": "Tandem Rode Type",
+      "normalized_parameter": "tandem_rode_material",
+      "parameter_aliases": [
+        "secondary anchor line",
+        "tandem line type"
+      ],
+      "value": "chain only",
+      "range": "not applicable",
+      "units": "material type",
+      "normalized_units": "material type",
+      "converted_value": "not applicable",
+      "models": [
+        "Rocna Original",
+        "Rocna Mk II"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "tandem anchor chain",
+        "tandem rode requirements",
+        "secondary anchor line"
+      ],
+      "concept_group": "tandem_anchoring",
+      "references": [
+        "Using a Tandem Anchor section"
+      ]
+    },
+    {
+      "parameter": "Fisherman Model Weight (Small)",
+      "normalized_parameter": "anchor_weight_small",
+      "parameter_aliases": [
+        "weight",
+        "mass",
+        "size"
+      ],
+      "value": "4",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "9",
+      "models": [
+        "Rocna Fisherman"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "anchor weight",
+        "how heavy",
+        "anchor size",
+        "small fisherman weight"
+      ],
+      "concept_group": "anchor_dimensions",
+      "references": [
+        "Fisherman Variant section"
+      ]
+    },
+    {
+      "parameter": "Fisherman Model Weight (Large)",
+      "normalized_parameter": "anchor_weight_large",
+      "parameter_aliases": [
+        "weight",
+        "mass",
+        "size"
+      ],
+      "value": "6",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "13",
+      "models": [
+        "Rocna Fisherman"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "anchor weight",
+        "how heavy",
+        "anchor size",
+        "large fisherman weight"
+      ],
+      "concept_group": "anchor_dimensions",
+      "references": [
+        "Fisherman Variant section"
+      ]
+    },
+    {
+      "parameter": "Construction Materials",
+      "normalized_parameter": "construction_material",
+      "parameter_aliases": [
+        "material",
+        "build material",
+        "composition"
+      ],
+      "value": "galvanized steel, stainless steel",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna Original",
+        "Rocna Fisherman"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "what material",
+        "construction",
+        "steel type",
+        "galvanized or stainless"
+      ],
+      "concept_group": "materials",
+      "references": [
+        "Looking After Your Anchor section"
+      ]
+    },
+    {
+      "parameter": "Attachment Points",
+      "normalized_parameter": "attachment_points",
+      "parameter_aliases": [
+        "connection points",
+        "secure points",
+        "mounting locations"
+      ],
+      "value": "E point, retrieval line point",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna Fisherman"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "where to attach",
+        "connection point",
+        "mounting point",
+        "shackle points"
+      ],
+      "concept_group": "mounting",
+      "references": [
+        "Shackle rail section"
+      ]
+    },
+    {
+      "parameter": "Shackle Mode - Recovery",
+      "normalized_parameter": "recovery_shackle_mode",
+      "parameter_aliases": [
+        "foul ground mode",
+        "recovery mode",
+        "shackle rail mode"
+      ],
+      "value": "shackle rail slot attachment",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "Rocna anchor"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how to attach shackle for recovery",
+        "foul ground setup",
+        "recovery mode attachment",
+        "shackle rail usage"
+      ],
+      "concept_group": "anchor_attachment",
+      "references": [
+        "Usage in foul ground section"
+      ]
+    },
+    {
+      "parameter": "Recovery Scope Ratio",
+      "normalized_parameter": "recovery_scope_ratio",
+      "parameter_aliases": [
+        "retrieval scope",
+        "recovery ratio"
+      ],
+      "value": "2:1",
+      "range": "N/A",
+      "units": "ratio",
+      "normalized_units": "ratio",
+      "converted_value": "2:1",
+      "models": [
+        "Rocna anchor"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "recommended scope for recovery",
+        "retrieval ratio",
+        "foul ground scope"
+      ],
+      "concept_group": "anchor_recovery",
+      "references": [
+        "Usage in foul ground section"
+      ]
+    },
+    {
+      "parameter": "Maximum Covered Anchor Size",
+      "normalized_parameter": "warranty_size_limit",
+      "parameter_aliases": [
+        "size limit",
+        "maximum anchor weight"
+      ],
+      "value": "110",
+      "range": "\u2264110",
+      "units": "kg",
+      "normalized_units": "kilograms",
+      "converted_value": "110",
+      "models": [
+        "Rocna anchor"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "warranty size limit",
+        "maximum covered anchor weight",
+        "anchor size warranty"
+      ],
+      "concept_group": "warranty_specifications",
+      "references": [
+        "Coverage section"
+      ]
+    },
+    {
+      "parameter": "Phone Number",
+      "normalized_parameter": "contact_phone",
+      "parameter_aliases": [
+        "telephone",
+        "tel",
+        "contact number"
+      ],
+      "value": "+1-604-940-2010",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "phone",
+        "telephone",
+        "contact",
+        "support number",
+        "customer service"
+      ],
+      "concept_group": "contact_information",
+      "references": [
+        "How to Contact Us"
+      ]
+    },
+    {
+      "parameter": "Patent Numbers",
+      "normalized_parameter": "intellectual_property_patents",
+      "parameter_aliases": [
+        "patents",
+        "patent protection"
+      ],
+      "value": "US8950352, NZ620976, NZ602454, NZ620973, CA2790598, CA2922499, CA2922515, GB2505931, GB2518531, GB2518530",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "patents",
+        "intellectual property",
+        "legal protection",
+        "patent numbers"
+      ],
+      "concept_group": "legal_specifications",
+      "references": [
+        "Disclaimer & Intellectual Property"
+      ]
+    },
+    {
+      "parameter": "Design Registration Numbers",
+      "normalized_parameter": "registered_designs",
+      "parameter_aliases": [
+        "design registrations",
+        "design patents"
+      ],
+      "value": "EU 000390687, UK 90003906870001",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "Rocna",
+        "Vulcan"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "design registration",
+        "registered designs",
+        "design patents"
+      ],
+      "concept_group": "legal_specifications",
+      "references": [
+        "Disclaimer & Intellectual Property"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Design Origin",
+            "normalized_parameter": "design_origin",
+            "parameter_aliases": [
+              "manufacturing location",
+              "country of origin"
+            ],
+            "value": "New Zealand",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "where is rocna made",
+              "manufacturing location",
+              "origin country",
+              "made in"
+            ],
+            "concept_group": "Manufacturing",
+            "references": [
+              "About Your Rocna or Vulcan Anchor and Its Features"
+            ]
+          },
+          {
+            "parameter": "Structural Components",
+            "normalized_parameter": "anchor_components",
+            "parameter_aliases": [
+              "anchor parts",
+              "design elements"
+            ],
+            "value": "Shank with I+V Profile, Roll-bar, Fluke, Toe, Heel, Skid",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "anchor parts",
+              "components",
+              "structure",
+              "design elements"
+            ],
+            "concept_group": "Construction",
+            "references": [
+              "Becoming Familiar With Your Rocna Original, Mk II, or Vulcan"
+            ]
+          },
+          {
+            "parameter": "Attachment Points",
+            "normalized_parameter": "connection_points",
+            "parameter_aliases": [
+              "mounting points",
+              "connection locations"
+            ],
+            "value": "Shackle/rode attachment, Tandem anchor attachment, Buoyed retrieval line attachment, Lashing point",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how to attach",
+              "mounting points",
+              "connection points",
+              "attachment locations"
+            ],
+            "concept_group": "Installation",
+            "references": [
+              "Becoming Familiar With Your Rocna Original, Mk II, or Vulcan"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Minimum Anchor Size for Tested Shackles",
+            "normalized_parameter": "min_anchor_size_tested_shackles",
+            "parameter_aliases": [
+              "anchor weight threshold",
+              "shackle requirement size"
+            ],
+            "value": "15",
+            "range": "15 kg and above",
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "33",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "shackle requirements",
+              "minimum anchor size",
+              "anchor weight",
+              "shackle specifications"
+            ],
+            "concept_group": "anchor_attachment",
+            "references": [
+              "Shackles and attaching rode section"
+            ]
+          },
+          {
+            "parameter": "Minimum Chain Leader Length",
+            "normalized_parameter": "min_chain_leader_length",
+            "parameter_aliases": [
+              "chain length requirement",
+              "minimum chain scope"
+            ],
+            "value": "equal to boat length",
+            "range": "boat length or greater",
+            "units": "boat lengths",
+            "normalized_units": "boat lengths",
+            "converted_value": "1",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "chain leader",
+              "minimum chain length",
+              "rode requirements",
+              "chain scope"
+            ],
+            "concept_group": "rode_specifications",
+            "references": [
+              "What to use for rode section"
+            ]
+          },
+          {
+            "parameter": "Recommended Rope Construction",
+            "normalized_parameter": "rope_construction",
+            "parameter_aliases": [
+              "rope type",
+              "rope specification"
+            ],
+            "value": "8 or 10-plait",
+            "range": "8-10 plait",
+            "units": "plait count",
+            "normalized_units": "plait count",
+            "converted_value": "8-10",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "rope type",
+              "plait count",
+              "rope construction",
+              "anchor rope"
+            ],
+            "concept_group": "rode_specifications",
+            "references": [
+              "What to use for rode section"
+            ]
+          },
+          {
+            "parameter": "Shackle Wire Seizing",
+            "normalized_parameter": "shackle_seizing",
+            "parameter_aliases": [
+              "wire turns",
+              "seizing requirement"
+            ],
+            "value": "2",
+            "range": "exactly 2",
+            "units": "turns",
+            "normalized_units": "turns",
+            "converted_value": "2",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "seizing wire",
+              "shackle securing",
+              "wire turns",
+              "shackle safety"
+            ],
+            "concept_group": "anchor_attachment",
+            "references": [
+              "Shackles and attaching rode section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Setting Distance",
+            "normalized_parameter": "setting_distance",
+            "parameter_aliases": [
+              "burial distance",
+              "setting length",
+              "initial set"
+            ],
+            "value": "one anchor length",
+            "range": null,
+            "units": "anchor lengths",
+            "normalized_units": "anchor_lengths",
+            "converted_value": "1",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how far does anchor set",
+              "setting distance",
+              "burial depth",
+              "initial set length",
+              "anchor setting performance"
+            ],
+            "concept_group": "setting_characteristics",
+            "references": [
+              "Setting performance section"
+            ]
+          },
+          {
+            "parameter": "Fluke Area",
+            "normalized_parameter": "fluke_area",
+            "parameter_aliases": [
+              "blade area",
+              "surface area",
+              "holding surface"
+            ],
+            "value": "large",
+            "range": null,
+            "units": "qualitative",
+            "normalized_units": "qualitative",
+            "converted_value": null,
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "fluke size",
+              "blade area",
+              "holding surface",
+              "anchor area",
+              "surface area"
+            ],
+            "concept_group": "design_characteristics",
+            "references": [
+              "Design features section"
+            ]
+          },
+          {
+            "parameter": "Roll Stability",
+            "normalized_parameter": "roll_stability",
+            "parameter_aliases": [
+              "trip resistance",
+              "roll resistance",
+              "stability"
+            ],
+            "value": "high",
+            "range": null,
+            "units": "qualitative",
+            "normalized_units": "qualitative",
+            "converted_value": null,
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "roll stability",
+              "anti-roll",
+              "trip resistance",
+              "roll out resistance",
+              "stability"
+            ],
+            "concept_group": "stability_characteristics",
+            "references": [
+              "About roll-stability section"
+            ]
+          },
+          {
+            "parameter": "Moving Parts",
+            "normalized_parameter": "moving_parts",
+            "parameter_aliases": [
+              "mechanical components",
+              "mobile parts"
+            ],
+            "value": "0",
+            "range": null,
+            "units": "count",
+            "normalized_units": "count",
+            "converted_value": "0",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Design",
+            "search_terms": [
+              "moving parts",
+              "mechanical components",
+              "design simplicity",
+              "parts count"
+            ],
+            "concept_group": "construction_characteristics",
+            "references": [
+              "Design features section"
+            ]
+          },
+          {
+            "parameter": "Setting Orientation",
+            "normalized_parameter": "setting_orientation",
+            "parameter_aliases": [
+              "setting attitude",
+              "initial position"
+            ],
+            "value": "on side",
+            "range": null,
+            "units": "position",
+            "normalized_units": "position",
+            "converted_value": null,
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "setting position",
+              "initial orientation",
+              "setting attitude",
+              "anchor position"
+            ],
+            "concept_group": "setting_characteristics",
+            "references": [
+              "Roll-bar section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Minimum Scope Ratio",
+            "normalized_parameter": "minimum_scope_ratio",
+            "parameter_aliases": [
+              "rode to depth ratio",
+              "minimum rode length",
+              "minimum anchor scope"
+            ],
+            "value": "3:1",
+            "range": "3:1 - 8:1",
+            "units": "ratio",
+            "normalized_units": "ratio",
+            "converted_value": "3:1",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "minimum scope",
+              "anchor rode length",
+              "rode to depth ratio",
+              "safe anchoring ratio",
+              "minimum anchor depth ratio"
+            ],
+            "concept_group": "anchoring_requirements",
+            "references": [
+              "Deploying rode and setting the anchor section"
+            ]
+          },
+          {
+            "parameter": "Recommended Scope Ratio",
+            "normalized_parameter": "recommended_scope_ratio",
+            "parameter_aliases": [
+              "standard scope",
+              "normal scope ratio",
+              "typical rode length"
+            ],
+            "value": "5:1",
+            "range": "5:1",
+            "units": "ratio",
+            "normalized_units": "ratio",
+            "converted_value": "5:1",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "recommended scope",
+              "ideal scope ratio",
+              "standard anchoring ratio",
+              "typical scope"
+            ],
+            "concept_group": "anchoring_requirements",
+            "references": [
+              "Anchoring Guidelines section"
+            ]
+          },
+          {
+            "parameter": "Maximum Weather Scope Ratio",
+            "normalized_parameter": "maximum_weather_scope_ratio",
+            "parameter_aliases": [
+              "bad weather scope",
+              "heavy weather ratio",
+              "storm scope"
+            ],
+            "value": "8:1",
+            "range": "up to 8:1",
+            "units": "ratio",
+            "normalized_units": "ratio",
+            "converted_value": "8:1",
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "maximum scope",
+              "storm anchoring ratio",
+              "bad weather scope",
+              "heavy weather anchoring"
+            ],
+            "concept_group": "anchoring_requirements",
+            "references": [
+              "Setting the Anchor section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Retrieval Line Length",
+            "normalized_parameter": "retrieval_line_length",
+            "parameter_aliases": [
+              "buoy line length",
+              "recovery line length"
+            ],
+            "value": "greater than depth at high tide",
+            "range": "variable based on water depth",
+            "units": "length",
+            "normalized_units": "meters",
+            "converted_value": "site specific",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "retrieval line",
+              "buoy line",
+              "recovery line",
+              "anchor line length",
+              "buoyed line"
+            ],
+            "concept_group": "anchor_recovery",
+            "references": [
+              "Using a Buoyed Retrieval Line section"
+            ]
+          },
+          {
+            "parameter": "Tandem Anchor Distance",
+            "normalized_parameter": "tandem_anchor_spacing",
+            "parameter_aliases": [
+              "secondary anchor distance",
+              "anchor spacing"
+            ],
+            "value": "one boat length",
+            "range": "approximate boat length",
+            "units": "boat lengths",
+            "normalized_units": "meters",
+            "converted_value": "vessel specific",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "tandem anchor setup",
+              "dual anchor spacing",
+              "storm anchor spacing"
+            ],
+            "concept_group": "tandem_anchoring",
+            "references": [
+              "Using a Tandem Anchor section"
+            ]
+          },
+          {
+            "parameter": "Tandem Rode Type",
+            "normalized_parameter": "tandem_rode_material",
+            "parameter_aliases": [
+              "secondary anchor line",
+              "tandem line type"
+            ],
+            "value": "chain only",
+            "range": "not applicable",
+            "units": "material type",
+            "normalized_units": "material type",
+            "converted_value": "not applicable",
+            "models": [
+              "Rocna Original",
+              "Rocna Mk II"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "tandem anchor chain",
+              "tandem rode requirements",
+              "secondary anchor line"
+            ],
+            "concept_group": "tandem_anchoring",
+            "references": [
+              "Using a Tandem Anchor section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Fisherman Model Weight (Small)",
+            "normalized_parameter": "anchor_weight_small",
+            "parameter_aliases": [
+              "weight",
+              "mass",
+              "size"
+            ],
+            "value": "4",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "9",
+            "models": [
+              "Rocna Fisherman"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "anchor weight",
+              "how heavy",
+              "anchor size",
+              "small fisherman weight"
+            ],
+            "concept_group": "anchor_dimensions",
+            "references": [
+              "Fisherman Variant section"
+            ]
+          },
+          {
+            "parameter": "Fisherman Model Weight (Large)",
+            "normalized_parameter": "anchor_weight_large",
+            "parameter_aliases": [
+              "weight",
+              "mass",
+              "size"
+            ],
+            "value": "6",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "13",
+            "models": [
+              "Rocna Fisherman"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "anchor weight",
+              "how heavy",
+              "anchor size",
+              "large fisherman weight"
+            ],
+            "concept_group": "anchor_dimensions",
+            "references": [
+              "Fisherman Variant section"
+            ]
+          },
+          {
+            "parameter": "Construction Materials",
+            "normalized_parameter": "construction_material",
+            "parameter_aliases": [
+              "material",
+              "build material",
+              "composition"
+            ],
+            "value": "galvanized steel, stainless steel",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna Original",
+              "Rocna Fisherman"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "what material",
+              "construction",
+              "steel type",
+              "galvanized or stainless"
+            ],
+            "concept_group": "materials",
+            "references": [
+              "Looking After Your Anchor section"
+            ]
+          },
+          {
+            "parameter": "Attachment Points",
+            "normalized_parameter": "attachment_points",
+            "parameter_aliases": [
+              "connection points",
+              "secure points",
+              "mounting locations"
+            ],
+            "value": "E point, retrieval line point",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna Fisherman"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "where to attach",
+              "connection point",
+              "mounting point",
+              "shackle points"
+            ],
+            "concept_group": "mounting",
+            "references": [
+              "Shackle rail section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Shackle Mode - Recovery",
+            "normalized_parameter": "recovery_shackle_mode",
+            "parameter_aliases": [
+              "foul ground mode",
+              "recovery mode",
+              "shackle rail mode"
+            ],
+            "value": "shackle rail slot attachment",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "Rocna anchor"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how to attach shackle for recovery",
+              "foul ground setup",
+              "recovery mode attachment",
+              "shackle rail usage"
+            ],
+            "concept_group": "anchor_attachment",
+            "references": [
+              "Usage in foul ground section"
+            ]
+          },
+          {
+            "parameter": "Recovery Scope Ratio",
+            "normalized_parameter": "recovery_scope_ratio",
+            "parameter_aliases": [
+              "retrieval scope",
+              "recovery ratio"
+            ],
+            "value": "2:1",
+            "range": "N/A",
+            "units": "ratio",
+            "normalized_units": "ratio",
+            "converted_value": "2:1",
+            "models": [
+              "Rocna anchor"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "recommended scope for recovery",
+              "retrieval ratio",
+              "foul ground scope"
+            ],
+            "concept_group": "anchor_recovery",
+            "references": [
+              "Usage in foul ground section"
+            ]
+          },
+          {
+            "parameter": "Maximum Covered Anchor Size",
+            "normalized_parameter": "warranty_size_limit",
+            "parameter_aliases": [
+              "size limit",
+              "maximum anchor weight"
+            ],
+            "value": "110",
+            "range": "\u2264110",
+            "units": "kg",
+            "normalized_units": "kilograms",
+            "converted_value": "110",
+            "models": [
+              "Rocna anchor"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "warranty size limit",
+              "maximum covered anchor weight",
+              "anchor size warranty"
+            ],
+            "concept_group": "warranty_specifications",
+            "references": [
+              "Coverage section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Phone Number",
+            "normalized_parameter": "contact_phone",
+            "parameter_aliases": [
+              "telephone",
+              "tel",
+              "contact number"
+            ],
+            "value": "+1-604-940-2010",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "phone",
+              "telephone",
+              "contact",
+              "support number",
+              "customer service"
+            ],
+            "concept_group": "contact_information",
+            "references": [
+              "How to Contact Us"
+            ]
+          },
+          {
+            "parameter": "Patent Numbers",
+            "normalized_parameter": "intellectual_property_patents",
+            "parameter_aliases": [
+              "patents",
+              "patent protection"
+            ],
+            "value": "US8950352, NZ620976, NZ602454, NZ620973, CA2790598, CA2922499, CA2922515, GB2505931, GB2518531, GB2518530",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "patents",
+              "intellectual property",
+              "legal protection",
+              "patent numbers"
+            ],
+            "concept_group": "legal_specifications",
+            "references": [
+              "Disclaimer & Intellectual Property"
+            ]
+          },
+          {
+            "parameter": "Design Registration Numbers",
+            "normalized_parameter": "registered_designs",
+            "parameter_aliases": [
+              "design registrations",
+              "design patents"
+            ],
+            "value": "EU 000390687, UK 90003906870001",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "Rocna",
+              "Vulcan"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "design registration",
+              "registered designs",
+              "design patents"
+            ],
+            "concept_group": "legal_specifications",
+            "references": [
+              "Disclaimer & Intellectual Property"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

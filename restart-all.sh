@@ -19,13 +19,6 @@ echo -e "${RED}🛑 Killing Node services on port 3000...${NC}"
 lsof -ti :3000 | xargs kill -9 2>/dev/null
 sleep 1
 
-# Step 3: Kill any npm/node processes for worker
-echo -e "${RED}🛑 Killing Node worker processes...${NC}"
-# Kill any npm run dev:worker processes
-pkill -f "npm.*dev:worker" 2>/dev/null
-pkill -f "node.*worker" 2>/dev/null
-sleep 1
-
 # Verify everything is dead
 echo -e "${YELLOW}✓ Verifying ports are clear...${NC}"
 if lsof -i :8000 >/dev/null 2>&1; then
@@ -71,25 +64,16 @@ else
     exit 1
 fi
 
-# Start Node worker (background)
-echo -e "${GREEN}3. Starting Node worker service...${NC}"
-npm run dev:worker > logs/node-worker.log 2>&1 &
-NODE_WORKER_PID=$!
-sleep 2
-echo -e "${GREEN}   ✓ Node worker service started (PID: $NODE_WORKER_PID)${NC}"
-
 echo ""
 echo -e "${GREEN}✅ All services restarted successfully!${NC}"
 echo "================================"
 echo "Services running:"
 echo "  • Python sidecar: http://localhost:8000 (PID: $PYTHON_PID)"
 echo "  • Node main:      http://localhost:3000 (PID: $NODE_MAIN_PID)"
-echo "  • Node worker:    (PID: $NODE_WORKER_PID)"
 echo ""
 echo "Logs available at:"
 echo "  • logs/python.log"
 echo "  • logs/node-main.log"
-echo "  • logs/node-worker.log"
 echo ""
 echo -e "${YELLOW}To monitor: tail -f logs/*.log${NC}"
 echo -e "${YELLOW}To stop all: ./restart-all.sh (will kill before restart)${NC}"
