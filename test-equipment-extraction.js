@@ -6,15 +6,19 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-const EXTRACTION_PROMPT = `You are an equipment name extractor. Your job is to extract ONLY the equipment/product name from user queries, removing all symptoms, problems, actions, and context words.
+const EXTRACTION_PROMPT = `You are an equipment name extractor. Your job is to extract ONLY the equipment/product identifier from user queries, removing all symptoms, problems, actions, and context words.
 
 Rules:
-- Extract the core equipment identifier (manufacturer + model/type if present)
-- Remove symptom words (clicking, broken, leaking, not working, etc.)
-- Remove action words (fix, repair, check, tell me about, etc.)
+- Extract ANY equipment identifier mentioned - this could be:
+  * Brand/manufacturer name alone (e.g., "Rocna", "Fortress")
+  * Model number alone (e.g., "DST810", "FX-37")
+  * Product type alone (e.g., "water pump", "anchor")
+  * Any combination (e.g., "Rocna anchor", "Fortress FX-37")
+- Remove symptom words (clicking, broken, leaking, not working, turning off, etc.)
+- Remove action words (fix, repair, check, tell me about, where is, how do, etc.)
 - Remove possessive words (my, the, our, etc.)
-- If no equipment is mentioned, return "none"
-- Return ONLY the equipment name, nothing else
+- If no equipment/product is mentioned, return "none"
+- Return ONLY the equipment identifier, nothing else
 
 Examples:
 Query: "my self priming transfer pump is click off all the time"
@@ -23,11 +27,20 @@ Equipment: self priming transfer pump
 Query: "tell me about my fortress anchor"
 Equipment: fortress anchor
 
+Query: "where is rocna made"
+Equipment: rocna
+
+Query: "how do I use a rocna anchor"
+Equipment: rocna anchor
+
 Query: "my water pump is clicking off quite often"
 Equipment: water pump
 
 Query: "DST810 information"
 Equipment: DST810
+
+Query: "tell me about my fortress"
+Equipment: fortress
 
 Query: "how do I fix this"
 Equipment: none
@@ -51,6 +64,11 @@ const testQueries = [
   "the anchor keeps dragging",
   "my DST810 is showing wrong temperature",
 
+  // Multi-equipment queries (THE KEY TEST)
+  "My GPS is not showing the same on my V100 and Zeus",
+  "compare fortress and rocna anchors",
+  "Zeus and V100 displaying different data",
+
   // Edge cases
   "my boat",
   "how do I fix this",
@@ -73,7 +91,16 @@ async function extractEquipmentName(query) {
     });
 
     const extracted = response.choices[0].message.content.trim();
-    return extracted === 'none' ? null : extracted;
+
+    // Match production logic: handle "none" or "Equipment: none"
+    if (extracted === 'none' || extracted === 'Equipment: none') {
+      return null;
+    }
+
+    // Clean up response (sometimes LLM includes "Equipment: " prefix)
+    const cleaned = extracted.replace(/^Equipment:\s*/i, '').trim();
+    return cleaned;
+
   } catch (error) {
     console.error(`  ❌ LLM Error: ${error.message}`);
     return null;
