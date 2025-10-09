@@ -6,6 +6,16 @@ Read env only via src/config/env.js.
 
 never hard code items that should be in .env just ask and I will add it.
 
+Python environment
+
+Never commit venv/ or __pycache__/ (use .gitignore).
+
+Keep python-sidecar/requirements.txt synced with venv.
+
+After pip install/uninstall: run pip freeze > requirements.txt
+
+Breaking Python deps change: propose first, then update requirements.txt in same commit.
+
 Architecture
 
 Flow: routes → services → repositories.
