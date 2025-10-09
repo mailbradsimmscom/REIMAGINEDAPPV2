@@ -1,0 +1,625 @@
+{
+  "total_chunks_processed": 3,
+  "successful_chunks": 3,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 24,
+  "unique_golden_rules": 24,
+  "golden_rules": [
+    {
+      "query": "What is the minimum speed for accurate data collection?",
+      "expected_value": "0.3 knots",
+      "test_method": "Verify speed readings at low speeds using calibrated reference",
+      "failure_indication": "Inaccurate or no speed readings below 0.3 knots",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration",
+        "CAST app setup"
+      ]
+    },
+    {
+      "query": "What is the maximum speed limit for accurate readings?",
+      "expected_value": "45 knots",
+      "test_method": "Verify speed readings at high speeds using calibrated reference",
+      "failure_indication": "Inaccurate readings above 45 knots",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration",
+        "High-speed testing"
+      ]
+    },
+    {
+      "query": "What is the speed data output frequency?",
+      "expected_value": "5.7 Hz (5 times per second)",
+      "test_method": "Measure data output frequency using diagnostic tools",
+      "failure_indication": "Speed updates slower than 5 times per second",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Data output verification"
+      ]
+    },
+    {
+      "query": "Is the device properly connected to CAST app?",
+      "expected_value": "Wireless connection established and maintained",
+      "test_method": "Attempt to connect and calibrate through CAST app",
+      "failure_indication": "Unable to establish wireless connection or frequent disconnects",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "CAST app setup",
+        "Wireless connectivity troubleshooting"
+      ]
+    },
+    {
+      "query": "Does the attitude sensor detect heel and trim?",
+      "expected_value": "Accurate heel and trim readings within operational range",
+      "test_method": "Compare sensor readings to known vessel attitude",
+      "failure_indication": "Missing or inaccurate heel and trim data",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Attitude sensor calibration"
+      ]
+    },
+    {
+      "query": "Is device compliant with marine electronics standards?",
+      "expected_value": "Complies with IERC60945",
+      "test_method": "Check certification documentation",
+      "failure_indication": "Device not certified for marine use",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Certification verification"
+      ]
+    },
+    {
+      "query": "Is depth reading within operational range?",
+      "expected_value": "Maximum 15.5 m",
+      "test_method": "Compare depth sensor reading to specification",
+      "failure_indication": "Depth readings unreliable or out of range",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Depth calibration"
+      ]
+    },
+    {
+      "query": "Is speed reading within operational range?",
+      "expected_value": "Maximum 3.25 KTS",
+      "test_method": "Compare speed sensor reading to specification",
+      "failure_indication": "Speed readings unreliable or out of range",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration"
+      ]
+    },
+    {
+      "query": "Is temperature reading within operational range?",
+      "expected_value": "Maximum 65\u00b0",
+      "test_method": "Compare temperature reading to specification",
+      "failure_indication": "Temperature readings unreliable or out of range",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Temperature calibration"
+      ]
+    },
+    {
+      "query": "Is speed calibration complete for all required angles?",
+      "expected_value": "Calibrated at 5 heel angles and up to 10 speeds",
+      "test_method": "Check calibration settings in CAST app",
+      "failure_indication": "Incomplete speed calibration",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "CAST app calibration"
+      ]
+    },
+    {
+      "query": "Is device transmitting heartbeat PGN?",
+      "expected_value": "PGN 126993 active",
+      "test_method": "Monitor NMEA 2000 network traffic",
+      "failure_indication": "Device not properly connected to network",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Network diagnostics"
+      ]
+    },
+    {
+      "query": "Is self-closing valve functioning?",
+      "expected_value": "Valve closes when insert is removed",
+      "test_method": "Remove insert and check for water flow",
+      "failure_indication": "Water ingress when insert removed",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "related_procedures": [
+        "Maintenance check"
+      ]
+    },
+    {
+      "query": "What is the minimum speed measurement capability?",
+      "expected_value": "0.3 knots",
+      "test_method": "Verify speed readings at low speeds using calibrated reference",
+      "failure_indication": "Unable to detect speeds below 0.3 knots",
+      "models": [
+        "Gen2 paddlewheel",
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration"
+      ]
+    },
+    {
+      "query": "What is the maximum speed measurement range?",
+      "expected_value": "45 knots",
+      "test_method": "Verify speed readings at high speeds using calibrated reference",
+      "failure_indication": "Inaccurate readings above 45 knots",
+      "models": [
+        "Gen2 paddlewheel",
+        "DST810"
+      ],
+      "related_procedures": [
+        "Speed calibration"
+      ]
+    },
+    {
+      "query": "What is the depth update rate?",
+      "expected_value": "1 time per second",
+      "test_method": "Monitor depth data output frequency",
+      "failure_indication": "Depth updates slower than 1Hz",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Data output verification"
+      ]
+    },
+    {
+      "query": "What is the speed update rate?",
+      "expected_value": "5 times per second",
+      "test_method": "Monitor speed data output frequency",
+      "failure_indication": "Speed updates slower than 5Hz",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Data output verification"
+      ]
+    },
+    {
+      "query": "What is the heel/trim update rate?",
+      "expected_value": "10 times per second",
+      "test_method": "Monitor heel/trim data output frequency",
+      "failure_indication": "Heel/trim updates slower than 10Hz",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Data output verification"
+      ]
+    },
+    {
+      "query": "What is the attitude accuracy after calibration?",
+      "expected_value": "+/- 1\u00b0 nominal",
+      "test_method": "Compare against reference attitude measurement",
+      "failure_indication": "Attitude error exceeds 1 degree",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Attitude calibration"
+      ]
+    },
+    {
+      "query": "What is the minimum depth range?",
+      "expected_value": "0.5 m (1.6')",
+      "test_method": "Verify depth readings in shallow water",
+      "failure_indication": "Unable to measure depths less than 0.5m",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Depth measurement verification"
+      ]
+    },
+    {
+      "query": "What is the maximum depth range?",
+      "expected_value": "100 m (330')",
+      "test_method": "Verify depth readings in deep water",
+      "failure_indication": "Unable to measure depths greater than 100m",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Depth measurement verification"
+      ]
+    },
+    {
+      "query": "What is the operating voltage range?",
+      "expected_value": "9 VDC to 16 VDC",
+      "test_method": "Measure supply voltage at device",
+      "failure_indication": "Voltage outside specified range",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Power supply verification"
+      ]
+    },
+    {
+      "query": "What is the maximum current draw?",
+      "expected_value": "<200 mA",
+      "test_method": "Measure current consumption",
+      "failure_indication": "Current draw exceeds 200mA",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Power consumption test"
+      ]
+    },
+    {
+      "query": "What is the wireless range?",
+      "expected_value": "Up to 30 feet",
+      "test_method": "Test Bluetooth connection at various distances",
+      "failure_indication": "Connection lost before 30 feet",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Wireless connectivity test"
+      ]
+    },
+    {
+      "query": "What is the temperature sensor accuracy?",
+      "expected_value": "\u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+      "test_method": "Compare against calibrated temperature reference",
+      "failure_indication": "Temperature error exceeds \u00b10.5\u00b0C",
+      "models": [
+        "DST810"
+      ],
+      "related_procedures": [
+        "Temperature sensor verification"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum speed for accurate data collection?",
+            "expected_value": "0.3 knots",
+            "test_method": "Verify speed readings at low speeds using calibrated reference",
+            "failure_indication": "Inaccurate or no speed readings below 0.3 knots",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration",
+              "CAST app setup"
+            ]
+          },
+          {
+            "query": "What is the maximum speed limit for accurate readings?",
+            "expected_value": "45 knots",
+            "test_method": "Verify speed readings at high speeds using calibrated reference",
+            "failure_indication": "Inaccurate readings above 45 knots",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration",
+              "High-speed testing"
+            ]
+          },
+          {
+            "query": "What is the speed data output frequency?",
+            "expected_value": "5.7 Hz (5 times per second)",
+            "test_method": "Measure data output frequency using diagnostic tools",
+            "failure_indication": "Speed updates slower than 5 times per second",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Data output verification"
+            ]
+          },
+          {
+            "query": "Is the device properly connected to CAST app?",
+            "expected_value": "Wireless connection established and maintained",
+            "test_method": "Attempt to connect and calibrate through CAST app",
+            "failure_indication": "Unable to establish wireless connection or frequent disconnects",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "CAST app setup",
+              "Wireless connectivity troubleshooting"
+            ]
+          },
+          {
+            "query": "Does the attitude sensor detect heel and trim?",
+            "expected_value": "Accurate heel and trim readings within operational range",
+            "test_method": "Compare sensor readings to known vessel attitude",
+            "failure_indication": "Missing or inaccurate heel and trim data",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Attitude sensor calibration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is device compliant with marine electronics standards?",
+            "expected_value": "Complies with IERC60945",
+            "test_method": "Check certification documentation",
+            "failure_indication": "Device not certified for marine use",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Certification verification"
+            ]
+          },
+          {
+            "query": "Is depth reading within operational range?",
+            "expected_value": "Maximum 15.5 m",
+            "test_method": "Compare depth sensor reading to specification",
+            "failure_indication": "Depth readings unreliable or out of range",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Depth calibration"
+            ]
+          },
+          {
+            "query": "Is speed reading within operational range?",
+            "expected_value": "Maximum 3.25 KTS",
+            "test_method": "Compare speed sensor reading to specification",
+            "failure_indication": "Speed readings unreliable or out of range",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration"
+            ]
+          },
+          {
+            "query": "Is temperature reading within operational range?",
+            "expected_value": "Maximum 65\u00b0",
+            "test_method": "Compare temperature reading to specification",
+            "failure_indication": "Temperature readings unreliable or out of range",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Temperature calibration"
+            ]
+          },
+          {
+            "query": "Is speed calibration complete for all required angles?",
+            "expected_value": "Calibrated at 5 heel angles and up to 10 speeds",
+            "test_method": "Check calibration settings in CAST app",
+            "failure_indication": "Incomplete speed calibration",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "CAST app calibration"
+            ]
+          },
+          {
+            "query": "Is device transmitting heartbeat PGN?",
+            "expected_value": "PGN 126993 active",
+            "test_method": "Monitor NMEA 2000 network traffic",
+            "failure_indication": "Device not properly connected to network",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Network diagnostics"
+            ]
+          },
+          {
+            "query": "Is self-closing valve functioning?",
+            "expected_value": "Valve closes when insert is removed",
+            "test_method": "Remove insert and check for water flow",
+            "failure_indication": "Water ingress when insert removed",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "related_procedures": [
+              "Maintenance check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum speed measurement capability?",
+            "expected_value": "0.3 knots",
+            "test_method": "Verify speed readings at low speeds using calibrated reference",
+            "failure_indication": "Unable to detect speeds below 0.3 knots",
+            "models": [
+              "Gen2 paddlewheel",
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration"
+            ]
+          },
+          {
+            "query": "What is the maximum speed measurement range?",
+            "expected_value": "45 knots",
+            "test_method": "Verify speed readings at high speeds using calibrated reference",
+            "failure_indication": "Inaccurate readings above 45 knots",
+            "models": [
+              "Gen2 paddlewheel",
+              "DST810"
+            ],
+            "related_procedures": [
+              "Speed calibration"
+            ]
+          },
+          {
+            "query": "What is the depth update rate?",
+            "expected_value": "1 time per second",
+            "test_method": "Monitor depth data output frequency",
+            "failure_indication": "Depth updates slower than 1Hz",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Data output verification"
+            ]
+          },
+          {
+            "query": "What is the speed update rate?",
+            "expected_value": "5 times per second",
+            "test_method": "Monitor speed data output frequency",
+            "failure_indication": "Speed updates slower than 5Hz",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Data output verification"
+            ]
+          },
+          {
+            "query": "What is the heel/trim update rate?",
+            "expected_value": "10 times per second",
+            "test_method": "Monitor heel/trim data output frequency",
+            "failure_indication": "Heel/trim updates slower than 10Hz",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Data output verification"
+            ]
+          },
+          {
+            "query": "What is the attitude accuracy after calibration?",
+            "expected_value": "+/- 1\u00b0 nominal",
+            "test_method": "Compare against reference attitude measurement",
+            "failure_indication": "Attitude error exceeds 1 degree",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Attitude calibration"
+            ]
+          },
+          {
+            "query": "What is the minimum depth range?",
+            "expected_value": "0.5 m (1.6')",
+            "test_method": "Verify depth readings in shallow water",
+            "failure_indication": "Unable to measure depths less than 0.5m",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Depth measurement verification"
+            ]
+          },
+          {
+            "query": "What is the maximum depth range?",
+            "expected_value": "100 m (330')",
+            "test_method": "Verify depth readings in deep water",
+            "failure_indication": "Unable to measure depths greater than 100m",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Depth measurement verification"
+            ]
+          },
+          {
+            "query": "What is the operating voltage range?",
+            "expected_value": "9 VDC to 16 VDC",
+            "test_method": "Measure supply voltage at device",
+            "failure_indication": "Voltage outside specified range",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Power supply verification"
+            ]
+          },
+          {
+            "query": "What is the maximum current draw?",
+            "expected_value": "<200 mA",
+            "test_method": "Measure current consumption",
+            "failure_indication": "Current draw exceeds 200mA",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Power consumption test"
+            ]
+          },
+          {
+            "query": "What is the wireless range?",
+            "expected_value": "Up to 30 feet",
+            "test_method": "Test Bluetooth connection at various distances",
+            "failure_indication": "Connection lost before 30 feet",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Wireless connectivity test"
+            ]
+          },
+          {
+            "query": "What is the temperature sensor accuracy?",
+            "expected_value": "\u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+            "test_method": "Compare against calibrated temperature reference",
+            "failure_indication": "Temperature error exceeds \u00b10.5\u00b0C",
+            "models": [
+              "DST810"
+            ],
+            "related_procedures": [
+              "Temperature sensor verification"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

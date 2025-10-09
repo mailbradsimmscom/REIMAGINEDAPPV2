@@ -1,0 +1,1193 @@
+{
+  "total_chunks_processed": 3,
+  "successful_chunks": 3,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 21,
+  "unique_specifications": 21,
+  "category_breakdown": {
+    "Performance": 11,
+    "Environmental": 1,
+    "Dimensions": 2,
+    "Installation": 2,
+    "Physical": 3,
+    "Electrical": 2
+  },
+  "specifications": [
+    {
+      "parameter": "Minimum Speed Detection",
+      "normalized_parameter": "min_speed_detection",
+      "parameter_aliases": [
+        "startup speed",
+        "minimum measurable speed",
+        "speed threshold"
+      ],
+      "value": "0.3",
+      "range": "0.3-45",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "0.3",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "minimum speed",
+        "lowest detectable speed",
+        "speed threshold",
+        "startup speed"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Speed Linearity Point",
+      "normalized_parameter": "speed_linearity_threshold",
+      "parameter_aliases": [
+        "linear speed start",
+        "accuracy threshold"
+      ],
+      "value": "0.6",
+      "range": null,
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "0.6",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "linear speed",
+        "accuracy point",
+        "linearity threshold"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Main description"
+      ]
+    },
+    {
+      "parameter": "Maximum Speed",
+      "normalized_parameter": "max_speed",
+      "parameter_aliases": [
+        "speed range upper limit",
+        "maximum measurable speed"
+      ],
+      "value": "45",
+      "range": null,
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "45",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "maximum speed",
+        "top speed",
+        "speed limit",
+        "speed range"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Update Rate",
+      "normalized_parameter": "speed_update_frequency",
+      "parameter_aliases": [
+        "refresh rate",
+        "sampling rate"
+      ],
+      "value": "5.7",
+      "range": null,
+      "units": "Hz",
+      "normalized_units": "Hz",
+      "converted_value": "5.7",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "update rate",
+        "refresh rate",
+        "data frequency",
+        "sampling rate"
+      ],
+      "concept_group": "data_output",
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "parameter": "Roll Range",
+      "normalized_parameter": "roll_range",
+      "parameter_aliases": [
+        "heel angle range",
+        "roll angle limit"
+      ],
+      "value": "-30 to 30",
+      "range": "-30 to 30",
+      "units": "degrees",
+      "normalized_units": "degrees",
+      "converted_value": "-30 to 30",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "roll angle",
+        "heel angle",
+        "roll range",
+        "heel range"
+      ],
+      "concept_group": "attitude_measurement",
+      "references": [
+        "Device Data section"
+      ]
+    },
+    {
+      "parameter": "DPT",
+      "normalized_parameter": "depth",
+      "parameter_aliases": [
+        "depth",
+        "water_depth",
+        "sonar_depth"
+      ],
+      "value": "15.5",
+      "range": null,
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "15.5",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "depth",
+        "water depth",
+        "sonar depth",
+        "DPT",
+        "depth reading"
+      ],
+      "concept_group": "depth_measurement",
+      "references": [
+        "Technical Specifications"
+      ]
+    },
+    {
+      "parameter": "SPD",
+      "normalized_parameter": "speed",
+      "parameter_aliases": [
+        "speed",
+        "water_speed",
+        "boat_speed"
+      ],
+      "value": "3.25",
+      "range": null,
+      "units": "KTS",
+      "normalized_units": "knots",
+      "converted_value": "3.25",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "speed",
+        "water speed",
+        "boat speed",
+        "SPD",
+        "velocity"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Technical Specifications"
+      ]
+    },
+    {
+      "parameter": "TEMP",
+      "normalized_parameter": "temperature",
+      "parameter_aliases": [
+        "temperature",
+        "water_temperature",
+        "sea_temp"
+      ],
+      "value": "65",
+      "range": null,
+      "units": "\u00b0",
+      "normalized_units": "fahrenheit",
+      "converted_value": "65",
+      "models": [
+        "DST810"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "temperature",
+        "water temperature",
+        "temp",
+        "TEMP"
+      ],
+      "concept_group": "temperature_measurement",
+      "references": [
+        "Technical Specifications"
+      ]
+    },
+    {
+      "parameter": "Plastic Housing Diameter",
+      "normalized_parameter": "housing_diameter_plastic",
+      "parameter_aliases": [
+        "diameter",
+        "housing size",
+        "hull fitting"
+      ],
+      "value": "75",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "75",
+      "models": [
+        "P617V"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "diameter",
+        "housing size",
+        "dimensions",
+        "hull fitting size"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "DIMENSIONS"
+      ]
+    },
+    {
+      "parameter": "Bronze/Stainless Housing Length",
+      "normalized_parameter": "housing_length_metal",
+      "parameter_aliases": [
+        "length",
+        "housing length"
+      ],
+      "value": "125",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "millimeters",
+      "converted_value": "125",
+      "models": [
+        "B617V",
+        "SS617V"
+      ],
+      "category": "Dimensions",
+      "search_terms": [
+        "length",
+        "housing length",
+        "dimensions",
+        "size"
+      ],
+      "concept_group": "physical_dimensions",
+      "references": [
+        "DIMENSIONS"
+      ]
+    },
+    {
+      "parameter": "Regulatory Compliance",
+      "normalized_parameter": "compliance_standard",
+      "parameter_aliases": [
+        "certification",
+        "regulatory_approval"
+      ],
+      "value": "IERC60945",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "DST810"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "CE",
+        "certification",
+        "compliance",
+        "regulatory",
+        "standards"
+      ],
+      "concept_group": "certifications",
+      "references": [
+        "CE Regulation"
+      ]
+    },
+    {
+      "parameter": "Minimum Speed",
+      "normalized_parameter": "minimum_speed",
+      "parameter_aliases": [
+        "low speed threshold",
+        "starting speed",
+        "minimum velocity"
+      ],
+      "value": "0.3",
+      "range": "0.3-0.6",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "0.3",
+      "models": [
+        "Gen2 paddlewheel",
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "minimum speed",
+        "lowest speed",
+        "speed threshold",
+        "slow speed accuracy"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Key benefits section"
+      ]
+    },
+    {
+      "parameter": "Maximum Speed",
+      "normalized_parameter": "maximum_speed",
+      "parameter_aliases": [
+        "speed limit",
+        "max velocity",
+        "speed range upper"
+      ],
+      "value": "45",
+      "range": "0.3-45",
+      "units": "knots",
+      "normalized_units": "knots",
+      "converted_value": "45",
+      "models": [
+        "Gen2 paddlewheel",
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "maximum speed",
+        "top speed",
+        "speed limit",
+        "speed range"
+      ],
+      "concept_group": "speed_measurement",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Weight Plastic",
+      "normalized_parameter": "weight_plastic",
+      "parameter_aliases": [
+        "plastic housing weight",
+        "plastic model mass"
+      ],
+      "value": "0.9",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "0.9",
+      "models": [
+        "Gen2 paddlewheel plastic"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "plastic weight",
+        "weight plastic version",
+        "plastic model weight"
+      ],
+      "concept_group": "weight",
+      "references": [
+        "Weight section"
+      ]
+    },
+    {
+      "parameter": "Weight Bronze",
+      "normalized_parameter": "weight_bronze",
+      "parameter_aliases": [
+        "bronze housing weight",
+        "bronze model mass"
+      ],
+      "value": "1.6",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "1.6",
+      "models": [
+        "Gen2 paddlewheel bronze"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "bronze weight",
+        "weight bronze version",
+        "bronze model weight"
+      ],
+      "concept_group": "weight",
+      "references": [
+        "Weight section"
+      ]
+    },
+    {
+      "parameter": "Weight Stainless Steel",
+      "normalized_parameter": "weight_stainless_steel",
+      "parameter_aliases": [
+        "steel housing weight",
+        "ss model mass"
+      ],
+      "value": "1.9",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kg",
+      "converted_value": "1.9",
+      "models": [
+        "Gen2 paddlewheel stainless"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "stainless weight",
+        "steel version weight",
+        "ss model weight"
+      ],
+      "concept_group": "weight",
+      "references": [
+        "Weight section"
+      ]
+    },
+    {
+      "parameter": "Hull Deadrise",
+      "normalized_parameter": "hull_deadrise_angle",
+      "parameter_aliases": [
+        "deadrise angle",
+        "hull angle"
+      ],
+      "value": "22",
+      "range": "0-22",
+      "units": "degrees",
+      "normalized_units": "degrees",
+      "converted_value": "22",
+      "models": [
+        "Gen2 paddlewheel",
+        "DST810"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "hull deadrise",
+        "deadrise angle",
+        "installation angle",
+        "hull angle"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "Hull Deadrise section"
+      ]
+    },
+    {
+      "parameter": "Depth Update Rate",
+      "normalized_parameter": "depth_update_frequency",
+      "parameter_aliases": [
+        "depth refresh rate",
+        "depth sampling rate"
+      ],
+      "value": "1",
+      "range": null,
+      "units": "Hz",
+      "normalized_units": "Hz",
+      "converted_value": "1",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "depth update rate",
+        "depth refresh",
+        "depth frequency update"
+      ],
+      "concept_group": "update_rates",
+      "references": [
+        "Data Update Rate section"
+      ]
+    },
+    {
+      "parameter": "Speed Update Rate",
+      "normalized_parameter": "speed_update_frequency",
+      "parameter_aliases": [
+        "speed refresh rate",
+        "speed sampling rate"
+      ],
+      "value": "5",
+      "range": null,
+      "units": "Hz",
+      "normalized_units": "Hz",
+      "converted_value": "5",
+      "models": [
+        "DST810"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "speed update rate",
+        "speed refresh",
+        "speed frequency update"
+      ],
+      "concept_group": "update_rates",
+      "references": [
+        "Data Update Rate section"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "supply_voltage",
+      "parameter_aliases": [
+        "input voltage",
+        "power supply voltage"
+      ],
+      "value": null,
+      "range": "9-16",
+      "units": "VDC",
+      "normalized_units": "V",
+      "converted_value": null,
+      "models": [
+        "DST810"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power supply",
+        "operating voltage",
+        "input voltage"
+      ],
+      "concept_group": "power_requirements",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Supply Current",
+      "normalized_parameter": "current_draw",
+      "parameter_aliases": [
+        "current consumption",
+        "power draw"
+      ],
+      "value": "200",
+      "range": "0-200",
+      "units": "mA",
+      "normalized_units": "mA",
+      "converted_value": "200",
+      "models": [
+        "DST810"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "current",
+        "power consumption",
+        "current draw",
+        "amperage"
+      ],
+      "concept_group": "power_requirements",
+      "references": [
+        "Specifications section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Minimum Speed Detection",
+            "normalized_parameter": "min_speed_detection",
+            "parameter_aliases": [
+              "startup speed",
+              "minimum measurable speed",
+              "speed threshold"
+            ],
+            "value": "0.3",
+            "range": "0.3-45",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "0.3",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "minimum speed",
+              "lowest detectable speed",
+              "speed threshold",
+              "startup speed"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Speed Linearity Point",
+            "normalized_parameter": "speed_linearity_threshold",
+            "parameter_aliases": [
+              "linear speed start",
+              "accuracy threshold"
+            ],
+            "value": "0.6",
+            "range": null,
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "0.6",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "linear speed",
+              "accuracy point",
+              "linearity threshold"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Main description"
+            ]
+          },
+          {
+            "parameter": "Maximum Speed",
+            "normalized_parameter": "max_speed",
+            "parameter_aliases": [
+              "speed range upper limit",
+              "maximum measurable speed"
+            ],
+            "value": "45",
+            "range": null,
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "45",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "maximum speed",
+              "top speed",
+              "speed limit",
+              "speed range"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Update Rate",
+            "normalized_parameter": "speed_update_frequency",
+            "parameter_aliases": [
+              "refresh rate",
+              "sampling rate"
+            ],
+            "value": "5.7",
+            "range": null,
+            "units": "Hz",
+            "normalized_units": "Hz",
+            "converted_value": "5.7",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "update rate",
+              "refresh rate",
+              "data frequency",
+              "sampling rate"
+            ],
+            "concept_group": "data_output",
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "parameter": "Roll Range",
+            "normalized_parameter": "roll_range",
+            "parameter_aliases": [
+              "heel angle range",
+              "roll angle limit"
+            ],
+            "value": "-30 to 30",
+            "range": "-30 to 30",
+            "units": "degrees",
+            "normalized_units": "degrees",
+            "converted_value": "-30 to 30",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "roll angle",
+              "heel angle",
+              "roll range",
+              "heel range"
+            ],
+            "concept_group": "attitude_measurement",
+            "references": [
+              "Device Data section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "DPT",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "depth",
+              "water_depth",
+              "sonar_depth"
+            ],
+            "value": "15.5",
+            "range": null,
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "15.5",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "depth",
+              "water depth",
+              "sonar depth",
+              "DPT",
+              "depth reading"
+            ],
+            "concept_group": "depth_measurement",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "SPD",
+            "normalized_parameter": "speed",
+            "parameter_aliases": [
+              "speed",
+              "water_speed",
+              "boat_speed"
+            ],
+            "value": "3.25",
+            "range": null,
+            "units": "KTS",
+            "normalized_units": "knots",
+            "converted_value": "3.25",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "speed",
+              "water speed",
+              "boat speed",
+              "SPD",
+              "velocity"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "TEMP",
+            "normalized_parameter": "temperature",
+            "parameter_aliases": [
+              "temperature",
+              "water_temperature",
+              "sea_temp"
+            ],
+            "value": "65",
+            "range": null,
+            "units": "\u00b0",
+            "normalized_units": "fahrenheit",
+            "converted_value": "65",
+            "models": [
+              "DST810"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature",
+              "water temperature",
+              "temp",
+              "TEMP"
+            ],
+            "concept_group": "temperature_measurement",
+            "references": [
+              "Technical Specifications"
+            ]
+          },
+          {
+            "parameter": "Plastic Housing Diameter",
+            "normalized_parameter": "housing_diameter_plastic",
+            "parameter_aliases": [
+              "diameter",
+              "housing size",
+              "hull fitting"
+            ],
+            "value": "75",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "75",
+            "models": [
+              "P617V"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "diameter",
+              "housing size",
+              "dimensions",
+              "hull fitting size"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "DIMENSIONS"
+            ]
+          },
+          {
+            "parameter": "Bronze/Stainless Housing Length",
+            "normalized_parameter": "housing_length_metal",
+            "parameter_aliases": [
+              "length",
+              "housing length"
+            ],
+            "value": "125",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "125",
+            "models": [
+              "B617V",
+              "SS617V"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "length",
+              "housing length",
+              "dimensions",
+              "size"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "DIMENSIONS"
+            ]
+          },
+          {
+            "parameter": "Regulatory Compliance",
+            "normalized_parameter": "compliance_standard",
+            "parameter_aliases": [
+              "certification",
+              "regulatory_approval"
+            ],
+            "value": "IERC60945",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "DST810"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "CE",
+              "certification",
+              "compliance",
+              "regulatory",
+              "standards"
+            ],
+            "concept_group": "certifications",
+            "references": [
+              "CE Regulation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Minimum Speed",
+            "normalized_parameter": "minimum_speed",
+            "parameter_aliases": [
+              "low speed threshold",
+              "starting speed",
+              "minimum velocity"
+            ],
+            "value": "0.3",
+            "range": "0.3-0.6",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "0.3",
+            "models": [
+              "Gen2 paddlewheel",
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "minimum speed",
+              "lowest speed",
+              "speed threshold",
+              "slow speed accuracy"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Key benefits section"
+            ]
+          },
+          {
+            "parameter": "Maximum Speed",
+            "normalized_parameter": "maximum_speed",
+            "parameter_aliases": [
+              "speed limit",
+              "max velocity",
+              "speed range upper"
+            ],
+            "value": "45",
+            "range": "0.3-45",
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": "45",
+            "models": [
+              "Gen2 paddlewheel",
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "maximum speed",
+              "top speed",
+              "speed limit",
+              "speed range"
+            ],
+            "concept_group": "speed_measurement",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Weight Plastic",
+            "normalized_parameter": "weight_plastic",
+            "parameter_aliases": [
+              "plastic housing weight",
+              "plastic model mass"
+            ],
+            "value": "0.9",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "0.9",
+            "models": [
+              "Gen2 paddlewheel plastic"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "plastic weight",
+              "weight plastic version",
+              "plastic model weight"
+            ],
+            "concept_group": "weight",
+            "references": [
+              "Weight section"
+            ]
+          },
+          {
+            "parameter": "Weight Bronze",
+            "normalized_parameter": "weight_bronze",
+            "parameter_aliases": [
+              "bronze housing weight",
+              "bronze model mass"
+            ],
+            "value": "1.6",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "1.6",
+            "models": [
+              "Gen2 paddlewheel bronze"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "bronze weight",
+              "weight bronze version",
+              "bronze model weight"
+            ],
+            "concept_group": "weight",
+            "references": [
+              "Weight section"
+            ]
+          },
+          {
+            "parameter": "Weight Stainless Steel",
+            "normalized_parameter": "weight_stainless_steel",
+            "parameter_aliases": [
+              "steel housing weight",
+              "ss model mass"
+            ],
+            "value": "1.9",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "1.9",
+            "models": [
+              "Gen2 paddlewheel stainless"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "stainless weight",
+              "steel version weight",
+              "ss model weight"
+            ],
+            "concept_group": "weight",
+            "references": [
+              "Weight section"
+            ]
+          },
+          {
+            "parameter": "Hull Deadrise",
+            "normalized_parameter": "hull_deadrise_angle",
+            "parameter_aliases": [
+              "deadrise angle",
+              "hull angle"
+            ],
+            "value": "22",
+            "range": "0-22",
+            "units": "degrees",
+            "normalized_units": "degrees",
+            "converted_value": "22",
+            "models": [
+              "Gen2 paddlewheel",
+              "DST810"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "hull deadrise",
+              "deadrise angle",
+              "installation angle",
+              "hull angle"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "Hull Deadrise section"
+            ]
+          },
+          {
+            "parameter": "Depth Update Rate",
+            "normalized_parameter": "depth_update_frequency",
+            "parameter_aliases": [
+              "depth refresh rate",
+              "depth sampling rate"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "Hz",
+            "normalized_units": "Hz",
+            "converted_value": "1",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "depth update rate",
+              "depth refresh",
+              "depth frequency update"
+            ],
+            "concept_group": "update_rates",
+            "references": [
+              "Data Update Rate section"
+            ]
+          },
+          {
+            "parameter": "Speed Update Rate",
+            "normalized_parameter": "speed_update_frequency",
+            "parameter_aliases": [
+              "speed refresh rate",
+              "speed sampling rate"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "Hz",
+            "normalized_units": "Hz",
+            "converted_value": "5",
+            "models": [
+              "DST810"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "speed update rate",
+              "speed refresh",
+              "speed frequency update"
+            ],
+            "concept_group": "update_rates",
+            "references": [
+              "Data Update Rate section"
+            ]
+          },
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "supply_voltage",
+            "parameter_aliases": [
+              "input voltage",
+              "power supply voltage"
+            ],
+            "value": null,
+            "range": "9-16",
+            "units": "VDC",
+            "normalized_units": "V",
+            "converted_value": null,
+            "models": [
+              "DST810"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power supply",
+              "operating voltage",
+              "input voltage"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Supply Current",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "current consumption",
+              "power draw"
+            ],
+            "value": "200",
+            "range": "0-200",
+            "units": "mA",
+            "normalized_units": "mA",
+            "converted_value": "200",
+            "models": [
+              "DST810"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "power consumption",
+              "current draw",
+              "amperage"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Specifications section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,583 @@
+{
+  "total_chunks_processed": 3,
+  "successful_chunks": 3,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 17,
+  "unique_intent_routes": 17,
+  "question_type_breakdown": {
+    "What": 12,
+    "How": 5
+  },
+  "intent_routes": [
+    {
+      "question": "What app is used to calibrate the DST810?",
+      "question_variations": [
+        "Which application do I need for DST810 calibration?",
+        "How do I calibrate my DST810 device?",
+        "What software works with DST810?"
+      ],
+      "answer": "The Airmar CAST\u2122 app is used to calibrate the DST810",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "CAST App With DST810 section"
+      ]
+    },
+    {
+      "question": "What are the supported NMEA 2000 PGNs?",
+      "question_variations": [
+        "Which PGNs work with DST810?",
+        "What NMEA protocols are compatible?",
+        "List the supported PGN numbers"
+      ],
+      "answer": "Supported PGNs include 059904 (ISO Request), 060928 (ISO Address Claim), 065240 (Commanded Address), 59392 (ISO Acknowledgement), 126208, 126464, 126993, 126996, 126998, 127257, 128259, 128267, 128275, 130310, 130311, 130312, and 130316",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "NMEA 2000\u00ae Supported PGNs section"
+      ]
+    },
+    {
+      "question": "How many heel angles can be calibrated?",
+      "question_variations": [
+        "What is the maximum number of heel angle calibrations?",
+        "How many heel angles does DST810 support?",
+        "Tell me about heel angle calibration limits"
+      ],
+      "answer": "The DST810 can be calibrated at 5 heel angles and up to 10 speeds",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Calibration Options section"
+      ]
+    },
+    {
+      "question": "What are the dimensions of the DST810?",
+      "question_variations": [
+        "How big is the DST810?",
+        "What are the size specifications?",
+        "Give me the DST810 measurements"
+      ],
+      "answer": "Dimensions vary by material: 75 mm (2.94\") for Plastic, Bronze, and Stainless Steel models, and 125 mm (4.92\") for Bronze and Plastic models, with 5 mm (0.20\") thickness",
+      "question_type": "What",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "references": [
+        "DIMENSIONS section"
+      ]
+    },
+    {
+      "question": "What are the technical specifications?",
+      "question_variations": [
+        "What are the DST810 specs?",
+        "Give me the technical details",
+        "What are the operating parameters?"
+      ],
+      "answer": "Technical specifications include: DPT: 15.5 m, SPD: 3.25 KTS, TEMP: 65\u00b0",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Technical Specifications section"
+      ]
+    },
+    {
+      "question": "What is the speed range of the DST810 sensor?",
+      "question_variations": [
+        "What speeds can the DST810 measure?",
+        "What is the operating speed range for the DST810?",
+        "How fast can the DST810 measure?"
+      ],
+      "answer": "The DST810 with Gen2 paddlewheel measures speeds from 0.3 knots up to 45 knots, with linear performance starting at 0.6 knots",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "question": "How do I calibrate the DST810 speed sensor?",
+      "question_variations": [
+        "What's the calibration process for DST810?",
+        "Can I calibrate the DST810 myself?",
+        "How to set up DST810 speed calibration?"
+      ],
+      "answer": "The DST810 can be calibrated using the free CAST mobile app. The app allows for both basic and advanced heel-compensated speed calibrations, with options to enter manual speed entries for multiple heel angles and up to 10 speeds",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section",
+        "Wireless connectivity details"
+      ]
+    },
+    {
+      "question": "What measurements does the DST810 provide?",
+      "question_variations": [
+        "What data can I get from the DST810?",
+        "What parameters does the DST810 measure?",
+        "What sensors are in the DST810?"
+      ],
+      "answer": "The DST810 measures depth, speed-through-water, water temperature, and boat attitude (heel and trim). It features 5.7 Hz speed output (5 times per second) and includes an integrated attitude sensor",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Product description",
+        "Features section"
+      ]
+    },
+    {
+      "question": "What is new in the 2022 DST810 model?",
+      "question_variations": [
+        "What are the 2022 updates to DST810?",
+        "What's different in the latest DST810?",
+        "What improvements were made to DST810 in 2022?"
+      ],
+      "answer": "The 2022 DST810 features the new Gen2 paddlewheel, providing industry-leading speed performance from 0.3 knots to 45 knots with improved start-up responsiveness and linearity throughout the speed range",
+      "question_type": "What",
+      "models": [
+        "DST810 2022"
+      ],
+      "references": [
+        "Features section",
+        "Paddlewheel Performance section"
+      ]
+    },
+    {
+      "question": "How often does the DST810 update speed readings?",
+      "question_variations": [
+        "What is the speed update rate of DST810?",
+        "How frequently does DST810 measure speed?",
+        "What's the speed sampling rate of DST810?"
+      ],
+      "answer": "The DST810 features 5.7 Hz speed output, which means it updates speed measurements 5 times per second",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Features section"
+      ]
+    },
+    {
+      "question": "What is the speed range of the Gen2 paddlewheel?",
+      "question_variations": [
+        "What speeds can the Gen2 paddlewheel measure?",
+        "What's the minimum and maximum speed for the Gen2?",
+        "How fast can the Gen2 paddlewheel measure?"
+      ],
+      "answer": "The Gen2 paddlewheel measures speeds from 0.3 knots to 45 knots, becoming linear at 0.6 knots",
+      "question_type": "What",
+      "models": [
+        "Gen2 paddlewheel",
+        "DST810"
+      ],
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "question": "What are the different weight options for the paddlewheel?",
+      "question_variations": [
+        "How much does each paddlewheel material version weigh?",
+        "What's the weight difference between plastic and bronze versions?"
+      ],
+      "answer": "Plastic version weighs 0.9 kg (2.0 lb), Bronze version weighs 1.6 kg (3.5 lb), and Stainless Steel version weighs 1.9 kg (4.2 lb)",
+      "question_type": "What",
+      "models": [
+        "Gen2 paddlewheel"
+      ],
+      "references": [
+        "Weight section"
+      ]
+    },
+    {
+      "question": "What is the maximum depth range?",
+      "question_variations": [
+        "How deep can it measure?",
+        "What's the deepest measurement possible?"
+      ],
+      "answer": "Maximum depth range is up to 100 meters (330 feet) for NMEA 2000\u00ae",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Maximum Depth Range section"
+      ]
+    },
+    {
+      "question": "How often does the system update data?",
+      "question_variations": [
+        "What's the data update frequency?",
+        "How frequently does it refresh measurements?"
+      ],
+      "answer": "Depth updates 1 time per second, Speed updates 5 times per second, and Heel/Trim updates 10 times per second",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Data Update Rate section"
+      ]
+    },
+    {
+      "question": "What is the wireless range?",
+      "question_variations": [
+        "How far does the wireless signal reach?",
+        "What's the Bluetooth range?"
+      ],
+      "answer": "Wireless range is up to 30 feet depending on mount location, using Bluetooth Low Energy (BLE) protocol",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "question": "How do you calibrate the DST810?",
+      "question_variations": [
+        "What's the calibration process?",
+        "How can I calibrate speed measurements?"
+      ],
+      "answer": "Use the Airmar CAST app to calibrate speed at 5 heel angles and up to 10 speeds. The app allows for basic or heel compensated speed calibration with DST810 connectivity",
+      "question_type": "How",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Calibration Options section"
+      ]
+    },
+    {
+      "question": "What is the temperature measurement range?",
+      "question_variations": [
+        "What temperatures can it measure?",
+        "What's the temperature sensor range?"
+      ],
+      "answer": "Temperature sensor range is -10\u00b0C to 40\u00b0C (14\u00b0F to 104\u00b0F) with accuracy of \u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+      "question_type": "What",
+      "models": [
+        "DST810"
+      ],
+      "references": [
+        "Specifications section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What app is used to calibrate the DST810?",
+            "question_variations": [
+              "Which application do I need for DST810 calibration?",
+              "How do I calibrate my DST810 device?",
+              "What software works with DST810?"
+            ],
+            "answer": "The Airmar CAST\u2122 app is used to calibrate the DST810",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "CAST App With DST810 section"
+            ]
+          },
+          {
+            "question": "What are the supported NMEA 2000 PGNs?",
+            "question_variations": [
+              "Which PGNs work with DST810?",
+              "What NMEA protocols are compatible?",
+              "List the supported PGN numbers"
+            ],
+            "answer": "Supported PGNs include 059904 (ISO Request), 060928 (ISO Address Claim), 065240 (Commanded Address), 59392 (ISO Acknowledgement), 126208, 126464, 126993, 126996, 126998, 127257, 128259, 128267, 128275, 130310, 130311, 130312, and 130316",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "NMEA 2000\u00ae Supported PGNs section"
+            ]
+          },
+          {
+            "question": "How many heel angles can be calibrated?",
+            "question_variations": [
+              "What is the maximum number of heel angle calibrations?",
+              "How many heel angles does DST810 support?",
+              "Tell me about heel angle calibration limits"
+            ],
+            "answer": "The DST810 can be calibrated at 5 heel angles and up to 10 speeds",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Calibration Options section"
+            ]
+          },
+          {
+            "question": "What are the dimensions of the DST810?",
+            "question_variations": [
+              "How big is the DST810?",
+              "What are the size specifications?",
+              "Give me the DST810 measurements"
+            ],
+            "answer": "Dimensions vary by material: 75 mm (2.94\") for Plastic, Bronze, and Stainless Steel models, and 125 mm (4.92\") for Bronze and Plastic models, with 5 mm (0.20\") thickness",
+            "question_type": "What",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "references": [
+              "DIMENSIONS section"
+            ]
+          },
+          {
+            "question": "What are the technical specifications?",
+            "question_variations": [
+              "What are the DST810 specs?",
+              "Give me the technical details",
+              "What are the operating parameters?"
+            ],
+            "answer": "Technical specifications include: DPT: 15.5 m, SPD: 3.25 KTS, TEMP: 65\u00b0",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Technical Specifications section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the speed range of the DST810 sensor?",
+            "question_variations": [
+              "What speeds can the DST810 measure?",
+              "What is the operating speed range for the DST810?",
+              "How fast can the DST810 measure?"
+            ],
+            "answer": "The DST810 with Gen2 paddlewheel measures speeds from 0.3 knots up to 45 knots, with linear performance starting at 0.6 knots",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section"
+            ]
+          },
+          {
+            "question": "How do I calibrate the DST810 speed sensor?",
+            "question_variations": [
+              "What's the calibration process for DST810?",
+              "Can I calibrate the DST810 myself?",
+              "How to set up DST810 speed calibration?"
+            ],
+            "answer": "The DST810 can be calibrated using the free CAST mobile app. The app allows for both basic and advanced heel-compensated speed calibrations, with options to enter manual speed entries for multiple heel angles and up to 10 speeds",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section",
+              "Wireless connectivity details"
+            ]
+          },
+          {
+            "question": "What measurements does the DST810 provide?",
+            "question_variations": [
+              "What data can I get from the DST810?",
+              "What parameters does the DST810 measure?",
+              "What sensors are in the DST810?"
+            ],
+            "answer": "The DST810 measures depth, speed-through-water, water temperature, and boat attitude (heel and trim). It features 5.7 Hz speed output (5 times per second) and includes an integrated attitude sensor",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Product description",
+              "Features section"
+            ]
+          },
+          {
+            "question": "What is new in the 2022 DST810 model?",
+            "question_variations": [
+              "What are the 2022 updates to DST810?",
+              "What's different in the latest DST810?",
+              "What improvements were made to DST810 in 2022?"
+            ],
+            "answer": "The 2022 DST810 features the new Gen2 paddlewheel, providing industry-leading speed performance from 0.3 knots to 45 knots with improved start-up responsiveness and linearity throughout the speed range",
+            "question_type": "What",
+            "models": [
+              "DST810 2022"
+            ],
+            "references": [
+              "Features section",
+              "Paddlewheel Performance section"
+            ]
+          },
+          {
+            "question": "How often does the DST810 update speed readings?",
+            "question_variations": [
+              "What is the speed update rate of DST810?",
+              "How frequently does DST810 measure speed?",
+              "What's the speed sampling rate of DST810?"
+            ],
+            "answer": "The DST810 features 5.7 Hz speed output, which means it updates speed measurements 5 times per second",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Features section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the speed range of the Gen2 paddlewheel?",
+            "question_variations": [
+              "What speeds can the Gen2 paddlewheel measure?",
+              "What's the minimum and maximum speed for the Gen2?",
+              "How fast can the Gen2 paddlewheel measure?"
+            ],
+            "answer": "The Gen2 paddlewheel measures speeds from 0.3 knots to 45 knots, becoming linear at 0.6 knots",
+            "question_type": "What",
+            "models": [
+              "Gen2 paddlewheel",
+              "DST810"
+            ],
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "question": "What are the different weight options for the paddlewheel?",
+            "question_variations": [
+              "How much does each paddlewheel material version weigh?",
+              "What's the weight difference between plastic and bronze versions?"
+            ],
+            "answer": "Plastic version weighs 0.9 kg (2.0 lb), Bronze version weighs 1.6 kg (3.5 lb), and Stainless Steel version weighs 1.9 kg (4.2 lb)",
+            "question_type": "What",
+            "models": [
+              "Gen2 paddlewheel"
+            ],
+            "references": [
+              "Weight section"
+            ]
+          },
+          {
+            "question": "What is the maximum depth range?",
+            "question_variations": [
+              "How deep can it measure?",
+              "What's the deepest measurement possible?"
+            ],
+            "answer": "Maximum depth range is up to 100 meters (330 feet) for NMEA 2000\u00ae",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Maximum Depth Range section"
+            ]
+          },
+          {
+            "question": "How often does the system update data?",
+            "question_variations": [
+              "What's the data update frequency?",
+              "How frequently does it refresh measurements?"
+            ],
+            "answer": "Depth updates 1 time per second, Speed updates 5 times per second, and Heel/Trim updates 10 times per second",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Data Update Rate section"
+            ]
+          },
+          {
+            "question": "What is the wireless range?",
+            "question_variations": [
+              "How far does the wireless signal reach?",
+              "What's the Bluetooth range?"
+            ],
+            "answer": "Wireless range is up to 30 feet depending on mount location, using Bluetooth Low Energy (BLE) protocol",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "question": "How do you calibrate the DST810?",
+            "question_variations": [
+              "What's the calibration process?",
+              "How can I calibrate speed measurements?"
+            ],
+            "answer": "Use the Airmar CAST app to calibrate speed at 5 heel angles and up to 10 speeds. The app allows for basic or heel compensated speed calibration with DST810 connectivity",
+            "question_type": "How",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Calibration Options section"
+            ]
+          },
+          {
+            "question": "What is the temperature measurement range?",
+            "question_variations": [
+              "What temperatures can it measure?",
+              "What's the temperature sensor range?"
+            ],
+            "answer": "Temperature sensor range is -10\u00b0C to 40\u00b0C (14\u00b0F to 104\u00b0F) with accuracy of \u00b10.5\u00b0C (\u00b11.8\u00b0F)",
+            "question_type": "What",
+            "models": [
+              "DST810"
+            ],
+            "references": [
+              "Specifications section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

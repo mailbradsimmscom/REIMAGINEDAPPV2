@@ -1,0 +1,444 @@
+{
+  "total_chunks_processed": 3,
+  "successful_chunks": 3,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 11,
+  "unique_procedures": 10,
+  "procedures": [
+    {
+      "title": "DST810 Speed Calibration Using CAST App",
+      "preconditions": [
+        "DST810 device installed",
+        "CAST app installed on mobile device",
+        "Bluetooth connection available",
+        "Within 30 feet wireless range"
+      ],
+      "steps": [
+        "Launch CAST app",
+        "Connect wirelessly to DST810",
+        "Select speed calibration mode",
+        "Calibrate speed at 5 different heel angles",
+        "Calibrate speed at up to 10 different speeds",
+        "Verify calibration data is stored internally in DST810"
+      ],
+      "expected_outcome": "Calibrated speed data delivered to NMEA 2000 network",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "DST810 Attitude Calibration",
+      "preconditions": [
+        "DST810 device installed",
+        "CAST app installed",
+        "Bluetooth connection available"
+      ],
+      "steps": [
+        "Launch CAST app",
+        "Connect to DST810",
+        "Navigate to attitude calibration settings",
+        "Configure attitude offsets",
+        "Calibrate attitude sensors",
+        "Verify \u00b11\u00b0 nominal accuracy"
+      ],
+      "expected_outcome": "Properly calibrated attitude measurements",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "DST810 Output Configuration",
+      "preconditions": [
+        "DST810 device installed",
+        "CAST app installed",
+        "Bluetooth connection available"
+      ],
+      "steps": [
+        "Launch CAST app",
+        "Connect to DST810",
+        "Navigate to output configuration",
+        "Configure desired output parameters",
+        "Set data update rates if applicable",
+        "Verify configuration is saved"
+      ],
+      "expected_outcome": "DST810 outputs configured to desired specifications",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic DST810 Speed Calibration",
+      "preconditions": [
+        "DST810 installed",
+        "CAST app installed"
+      ],
+      "steps": [
+        "Open CAST app",
+        "Connect wirelessly to DST810",
+        "Select speed calibration option",
+        "Calibrate speed at up to 10 different speeds",
+        "Save calibration to DST810"
+      ],
+      "expected_outcome": "Calibrated speed data available on NMEA 2000 network",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Heel-Compensated Speed Calibration",
+      "preconditions": [
+        "DST810 installed",
+        "CAST app installed"
+      ],
+      "steps": [
+        "Open CAST app",
+        "Connect wirelessly to DST810",
+        "Select heel compensation calibration",
+        "Calibrate speed at 5 different heel angles",
+        "Calibrate speed at up to 10 different speeds per heel angle",
+        "Save calibration to DST810"
+      ],
+      "expected_outcome": "Heel-compensated speed data available on NMEA 2000 network",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Transducer Insert Removal",
+      "preconditions": [
+        "Boat stationary"
+      ],
+      "steps": [
+        "Locate self-closing valve housing",
+        "Remove transducer insert carefully",
+        "Allow valve to self-close",
+        "Perform necessary maintenance",
+        "Reinstall transducer insert"
+      ],
+      "expected_outcome": "Minimal water ingress during transducer maintenance",
+      "models": [
+        "P617V",
+        "B617V",
+        "SS617V"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "DST810 Smart Multisensor Initial Setup",
+      "preconditions": [
+        "DST810 sensor installed under boat",
+        "CAST app downloaded on mobile device",
+        "Bluetooth enabled on mobile device"
+      ],
+      "steps": [
+        "Connect mobile device to DST810 via Bluetooth",
+        "Launch CAST app",
+        "Verify sensor is detected in app",
+        "Confirm initial sensor readings for speed, depth, and temperature"
+      ],
+      "expected_outcome": "DST810 connected and providing basic readings",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic Speed Calibration",
+      "preconditions": [
+        "DST810 installed and connected to CAST app",
+        "Boat in calm water conditions"
+      ],
+      "steps": [
+        "Access calibration menu in CAST app",
+        "Select basic speed calibration",
+        "Follow app prompts for speed entries",
+        "Confirm calibration settings"
+      ],
+      "expected_outcome": "Accurate speed readings from 0.3 to 45 knots",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Advanced Heel-Compensated Speed Calibration",
+      "preconditions": [
+        "DST810 installed and connected to CAST app",
+        "Various sailing conditions available"
+      ],
+      "steps": [
+        "Access advanced calibration in CAST app",
+        "Enter speed data for up to 10 different speeds",
+        "Record measurements at multiple heel angles",
+        "Save heel-compensated calibration profile"
+      ],
+      "expected_outcome": "Accurate speed readings across multiple heel angles",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Attitude Sensor Verification",
+      "preconditions": [
+        "DST810 installed and connected"
+      ],
+      "steps": [
+        "Check pitch reading in display",
+        "Verify roll angle measurement",
+        "Confirm readings change with boat movement",
+        "Validate heel angle sensor operation"
+      ],
+      "expected_outcome": "Accurate pitch and roll measurements",
+      "models": [
+        "DST810"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "DST810 Speed Calibration Using CAST App",
+            "preconditions": [
+              "DST810 device installed",
+              "CAST app installed on mobile device",
+              "Bluetooth connection available",
+              "Within 30 feet wireless range"
+            ],
+            "steps": [
+              "Launch CAST app",
+              "Connect wirelessly to DST810",
+              "Select speed calibration mode",
+              "Calibrate speed at 5 different heel angles",
+              "Calibrate speed at up to 10 different speeds",
+              "Verify calibration data is stored internally in DST810"
+            ],
+            "expected_outcome": "Calibrated speed data delivered to NMEA 2000 network",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "DST810 Attitude Calibration",
+            "preconditions": [
+              "DST810 device installed",
+              "CAST app installed",
+              "Bluetooth connection available"
+            ],
+            "steps": [
+              "Launch CAST app",
+              "Connect to DST810",
+              "Navigate to attitude calibration settings",
+              "Configure attitude offsets",
+              "Calibrate attitude sensors",
+              "Verify \u00b11\u00b0 nominal accuracy"
+            ],
+            "expected_outcome": "Properly calibrated attitude measurements",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "DST810 Output Configuration",
+            "preconditions": [
+              "DST810 device installed",
+              "CAST app installed",
+              "Bluetooth connection available"
+            ],
+            "steps": [
+              "Launch CAST app",
+              "Connect to DST810",
+              "Navigate to output configuration",
+              "Configure desired output parameters",
+              "Set data update rates if applicable",
+              "Verify configuration is saved"
+            ],
+            "expected_outcome": "DST810 outputs configured to desired specifications",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Basic DST810 Speed Calibration",
+            "preconditions": [
+              "DST810 installed",
+              "CAST app installed"
+            ],
+            "steps": [
+              "Open CAST app",
+              "Connect wirelessly to DST810",
+              "Select speed calibration option",
+              "Calibrate speed at up to 10 different speeds",
+              "Save calibration to DST810"
+            ],
+            "expected_outcome": "Calibrated speed data available on NMEA 2000 network",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Heel-Compensated Speed Calibration",
+            "preconditions": [
+              "DST810 installed",
+              "CAST app installed"
+            ],
+            "steps": [
+              "Open CAST app",
+              "Connect wirelessly to DST810",
+              "Select heel compensation calibration",
+              "Calibrate speed at 5 different heel angles",
+              "Calibrate speed at up to 10 different speeds per heel angle",
+              "Save calibration to DST810"
+            ],
+            "expected_outcome": "Heel-compensated speed data available on NMEA 2000 network",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "DST810 Output Configuration",
+            "preconditions": [
+              "DST810 installed",
+              "CAST app installed"
+            ],
+            "steps": [
+              "Open CAST app",
+              "Connect wirelessly to DST810",
+              "Navigate to output configuration",
+              "Configure desired PGN outputs",
+              "Save configuration"
+            ],
+            "expected_outcome": "DST810 outputs configured according to specifications",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Transducer Insert Removal",
+            "preconditions": [
+              "Boat stationary"
+            ],
+            "steps": [
+              "Locate self-closing valve housing",
+              "Remove transducer insert carefully",
+              "Allow valve to self-close",
+              "Perform necessary maintenance",
+              "Reinstall transducer insert"
+            ],
+            "expected_outcome": "Minimal water ingress during transducer maintenance",
+            "models": [
+              "P617V",
+              "B617V",
+              "SS617V"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "DST810 Smart Multisensor Initial Setup",
+            "preconditions": [
+              "DST810 sensor installed under boat",
+              "CAST app downloaded on mobile device",
+              "Bluetooth enabled on mobile device"
+            ],
+            "steps": [
+              "Connect mobile device to DST810 via Bluetooth",
+              "Launch CAST app",
+              "Verify sensor is detected in app",
+              "Confirm initial sensor readings for speed, depth, and temperature"
+            ],
+            "expected_outcome": "DST810 connected and providing basic readings",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Basic Speed Calibration",
+            "preconditions": [
+              "DST810 installed and connected to CAST app",
+              "Boat in calm water conditions"
+            ],
+            "steps": [
+              "Access calibration menu in CAST app",
+              "Select basic speed calibration",
+              "Follow app prompts for speed entries",
+              "Confirm calibration settings"
+            ],
+            "expected_outcome": "Accurate speed readings from 0.3 to 45 knots",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Advanced Heel-Compensated Speed Calibration",
+            "preconditions": [
+              "DST810 installed and connected to CAST app",
+              "Various sailing conditions available"
+            ],
+            "steps": [
+              "Access advanced calibration in CAST app",
+              "Enter speed data for up to 10 different speeds",
+              "Record measurements at multiple heel angles",
+              "Save heel-compensated calibration profile"
+            ],
+            "expected_outcome": "Accurate speed readings across multiple heel angles",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Attitude Sensor Verification",
+            "preconditions": [
+              "DST810 installed and connected"
+            ],
+            "steps": [
+              "Check pitch reading in display",
+              "Verify roll angle measurement",
+              "Confirm readings change with boat movement",
+              "Validate heel angle sensor operation"
+            ],
+            "expected_outcome": "Accurate pitch and roll measurements",
+            "models": [
+              "DST810"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

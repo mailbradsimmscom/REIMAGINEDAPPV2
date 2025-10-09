@@ -1,0 +1,1552 @@
+{
+  "total_chunks_processed": 13,
+  "successful_chunks": 13,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 56,
+  "unique_procedures": 25,
+  "procedures": [
+    {
+      "title": "Frontier Built-in Grill Installation Requirements",
+      "preconditions": [
+        "Power supply must be 48V DC",
+        "Power supply must handle 27 amps",
+        "Voltage range must be between 35V DC and 55V DC"
+      ],
+      "steps": [
+        "Ensure cutout width is 11 5/8\" (295mm)",
+        "Ensure cutout depth is 19 3/4\" (502mm)",
+        "Ensure corner radius is 1/4\" (6mm)",
+        "Allow for 1\" drain fitting clearance below unit"
+      ],
+      "expected_outcome": "Proper installation clearance for model B70750",
+      "models": [
+        "B70750"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "SilKEN Built-in Grill Installation Requirements",
+      "preconditions": [
+        "Power supply must be 48V DC",
+        "Power supply must handle 27 amps",
+        "Voltage range must be between 35V DC and 55V DC"
+      ],
+      "steps": [
+        "Ensure cutout width is 19 3/4\" (502mm)",
+        "Ensure cutout depth is 11 5/8\" (295mm)",
+        "Ensure corner radius is 1/4\" (6mm)",
+        "Allow for 1\" drain fitting clearance below unit"
+      ],
+      "expected_outcome": "Proper installation clearance for model B70770",
+      "models": [
+        "B70770"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic Grill Operation",
+      "preconditions": [
+        "Grill must be properly installed",
+        "Power supply connected"
+      ],
+      "steps": [
+        "Remove grates and drip trays",
+        "Clean grates and drip trays",
+        "Insert drip trays into bottom of grill",
+        "Verify burner brackets are not resting on drip trays",
+        "Fill drip trays with 2 cups of liquid (water, beer or wine)",
+        "Re-install cooking grate",
+        "Close lid and preheat for 5-7 minutes"
+      ],
+      "expected_outcome": "Grill ready for cooking",
+      "models": [
+        "B70750"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Temperature Settings Guide",
+      "preconditions": [
+        "Grill preheated"
+      ],
+      "steps": [
+        "For vegetables: Set temperature to 350\u00b0F or power setting 4",
+        "For chicken, pork and fish: Set temperature to 400\u00b0F or power setting 5",
+        "For hamburgers: Set temperature to 500\u00b0F or power setting 9",
+        "For steak: Set temperature to 550\u00b0F or power setting 16"
+      ],
+      "expected_outcome": "Proper temperature for specific food type",
+      "models": [
+        "B70750"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Post-Cooking Cleaning",
+      "preconditions": [
+        "Grill cooled down"
+      ],
+      "steps": [
+        "Remove cooking grate",
+        "Place grate in dishwasher",
+        "Remove and empty drip tray contents",
+        "Clean drip tray thoroughly"
+      ],
+      "expected_outcome": "Clean grill components ready for next use",
+      "models": [
+        "B70750"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Fire Safety Procedure",
+      "preconditions": [
+        "Grease fire occurs"
+      ],
+      "steps": [
+        "Do not use water to extinguish",
+        "Use dry chemical fire extinguisher"
+      ],
+      "expected_outcome": "Safe extinguishing of grease fire",
+      "models": [
+        "B70750"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Safety Inspection",
+      "preconditions": [
+        "Regular maintenance check"
+      ],
+      "steps": [
+        "Examine power wires for signs of damage",
+        "Verify 30-amp circuit breaker protection",
+        "Check RCD operation (must not exceed 30A)",
+        "Ensure no flammable materials near grill"
+      ],
+      "expected_outcome": "Confirmed safe operating condition",
+      "models": [
+        "B70750"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Initial Safety Setup",
+      "preconditions": [
+        "Grill is unplugged",
+        "Grill is cool"
+      ],
+      "steps": [
+        "Read all instructions before using grill",
+        "Store grill indoors when used as portable unit",
+        "Ensure grill is kept out of reach of children",
+        "Provide shelter to prevent rain exposure",
+        "Verify power cord and plugs are undamaged"
+      ],
+      "expected_outcome": "Grill is safely prepared for operation",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKen Touch"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Basic Safety Operation",
+      "preconditions": [
+        "Grill is plugged in"
+      ],
+      "steps": [
+        "Use only handles or knobs to touch grill",
+        "Keep power cord and plugs away from water",
+        "Supervise closely when children are nearby",
+        "Disconnect power when not in use",
+        "Allow grill to cool before cleaning"
+      ],
+      "expected_outcome": "Safe operation of grill during use",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKen Touch"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Drip Tray Preparation",
+      "preconditions": [
+        "Grill is cool",
+        "Disposable drip tray is installed"
+      ],
+      "steps": [
+        "Add minimum two cups of water to disposable drip tray before grilling",
+        "Clean drip tray after each use",
+        "Allow grill to cool before removing drip tray"
+      ],
+      "expected_outcome": "Drip tray properly prepared and maintained",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKen Touch"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Cracked Surface Emergency Procedure",
+      "preconditions": [
+        "Surface crack detected"
+      ],
+      "steps": [
+        "Immediately switch off appliance",
+        "Disconnect from power source",
+        "Contact Kenyon Customer Care at (860) 664-4906"
+      ],
+      "expected_outcome": "Safe shutdown of damaged unit",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKen Touch"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Malfunction Response Procedure",
+      "preconditions": [
+        "Grill malfunction detected"
+      ],
+      "steps": [
+        "Discontinue use immediately",
+        "Disconnect from power source",
+        "Contact Kenyon Customer Care at (860) 664-4906"
+      ],
+      "expected_outcome": "Safe shutdown and support contact made",
+      "models": [
+        "48VDC Single Zone Grill with IntelliKen Touch"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Verify Power Requirements",
+      "preconditions": [
+        "Access to power specifications"
+      ],
+      "steps": [
+        "Confirm voltage is 48V DC",
+        "Verify maximum current draw is 27 amps",
+        "Ensure power supply can deliver 1300 watts",
+        "Check voltage range is between 35V DC minimum and 55V DC maximum"
+      ],
+      "expected_outcome": "Power supply meets all electrical specifications for safe operation",
+      "models": [
+        "No Lid Built-In Grill with IntelliKEN Touch\u2122"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Verify Installation Space Requirements",
+      "preconditions": [
+        "Access to installation location",
+        "Measuring tools"
+      ],
+      "steps": [
+        "Measure cutout width - must be 19 3/4\" (502mm)",
+        "Measure cutout depth - must be 11 5/8\" (295mm)",
+        "Verify corner radius is 1/4\" (6mm)",
+        "Confirm total height clearance of 21\" (533mm) including 1\" drain fitting",
+        "Verify width clearance of 12\" (305mm)",
+        "Ensure depth clearance of 21\" (533mm)"
+      ],
+      "expected_outcome": "Installation space meets all dimensional requirements",
+      "models": [
+        "No Lid Built-In Grill with IntelliKEN Touch\u2122"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pre-Use Cleaning",
+      "preconditions": [
+        "New grill or before use"
+      ],
+      "steps": [
+        "Wipe stainless steel surfaces with damp cloth to remove residue",
+        "Apply stainless steel cleaner monthly",
+        "Clean touch control area with glass cleaner and soft towel",
+        "Use ceramic glass cleaner for stubborn stains on control area"
+      ],
+      "expected_outcome": "Clean grill surfaces ready for use",
+      "models": [
+        "Kenyon Grill"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Grease Fire Response",
+      "preconditions": [
+        "Active grease fire"
+      ],
+      "steps": [
+        "DO NOT use water on the fire",
+        "Smother fire or flame",
+        "OR use dry chemical extinguisher",
+        "OR use foam-type extinguisher"
+      ],
+      "expected_outcome": "Safe extinguishment of grease fire",
+      "models": [
+        "Kenyon Grill"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Post-Use Cleaning Protocol",
+      "preconditions": [
+        "After each use"
+      ],
+      "steps": [
+        "Remove drip tray",
+        "Clean drip tray thoroughly",
+        "Clean baffle tray",
+        "Ensure no grease accumulation between cooking sessions"
+      ],
+      "expected_outcome": "Clean grill ready for next use",
+      "models": [
+        "Kenyon Grill"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Broken Grate Safety Protocol",
+      "preconditions": [
+        "Broken grill grate or griddle"
+      ],
+      "steps": [
+        "Stop using grill immediately",
+        "Contact authorized service center",
+        "OR contact KENYON Customer Care at (860) 664-4906"
+      ],
+      "expected_outcome": "Prevention of electric shock and fire hazards",
+      "models": [
+        "Kenyon Grill"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Proper Cleaning Method",
+      "preconditions": [
+        "Grill needs cleaning"
+      ],
+      "steps": [
+        "DO NOT use pressurized water",
+        "DO NOT use other types of pressurized cleaners",
+        "Use only cloth for cleaning",
+        "Use only stainless steel or glass surface cleaner"
+      ],
+      "expected_outcome": "Safely cleaned grill without warranty violation",
+      "models": [
+        "Kenyon Grill"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Initial Grill Setup",
+      "preconditions": [
+        "New or unused grill"
+      ],
+      "steps": [
+        "Remove cooking grate and drip tray",
+        "Wash grill with warm soapy water using non-abrasive cloth",
+        "Insert drip tray completely into bottom of grill",
+        "Ensure electric element bracket rests on element support bracket",
+        "Add liquid (non-flammable) to drip tray",
+        "Place cooking grate or optional griddle onto element"
+      ],
+      "expected_outcome": "Grill ready for first use",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Grill Preheating Procedure",
+      "preconditions": [
+        "Clean grill",
+        "Drip tray installed",
+        "Cooking grate in place"
+      ],
+      "steps": [
+        "Close lid",
+        "Set temperature according to food type:",
+        "For steak - Set to 550\u00b0F / Power setting 16",
+        "For burgers - Set to 500\u00b0F / Power setting 9",
+        "For pork and fish - Set to 400\u00b0F / Power setting 5",
+        "For vegetables - Set to 350\u00b0F / Power setting 4",
+        "Preheat for 5-7 minutes"
+      ],
+      "expected_outcome": "Grill properly preheated for cooking",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Post-Cooking Cleaning Procedure",
+      "preconditions": [
+        "Grill has been used",
+        "Grill surface cooled to touch"
+      ],
+      "steps": [
+        "Place paper towels on grilling surface",
+        "Pour one ounce of water on towel",
+        "Use high temperature nylon tongs to swab surface",
+        "Discard paper towel",
+        "Wipe grates with dry paper towel",
+        "Remove grate when cool and place in dishwasher",
+        "Lift electric elements",
+        "Remove and empty drip tray",
+        "Wipe drip tray with dry paper towel"
+      ],
+      "expected_outcome": "Clean grill ready for next use",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Lid Cleaning Procedure",
+      "preconditions": [
+        "Lid requires cleaning",
+        "Dishwasher available"
+      ],
+      "steps": [
+        "Remove lid from grill",
+        "Place lid in dishwasher",
+        "Run on pots & pans cycle"
+      ],
+      "expected_outcome": "Restored pristine lid appearance",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Cleaning the Grill",
+      "preconditions": [
+        "Grill surface may be hot",
+        "Appropriate cleaning supplies available"
+      ],
+      "steps": [
+        "Use a cloth to clean the grill",
+        "Apply stainless steel or glass surface cleaner",
+        "If cleaning hot surface with wet sponge/cloth, exercise caution for steam burns",
+        "Check cleaner label before applying to hot surface"
+      ],
+      "expected_outcome": "Clean grill surface",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Grill Storage",
+      "preconditions": [
+        "Grill not in use"
+      ],
+      "steps": [
+        "For portable grills: Store indoors when not in use",
+        "For built-in grills: Provide suitable shelter to prevent rain exposure",
+        "Optional: Purchase cover from www.cookwithkenyon.com"
+      ],
+      "expected_outcome": "Properly protected grill during storage",
+      "models": [
+        "All Kenyon grills"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Frontier Built-in Grill Installation Requirements",
+            "preconditions": [
+              "Power supply must be 48V DC",
+              "Power supply must handle 27 amps",
+              "Voltage range must be between 35V DC and 55V DC"
+            ],
+            "steps": [
+              "Ensure cutout width is 11 5/8\" (295mm)",
+              "Ensure cutout depth is 19 3/4\" (502mm)",
+              "Ensure corner radius is 1/4\" (6mm)",
+              "Allow for 1\" drain fitting clearance below unit"
+            ],
+            "expected_outcome": "Proper installation clearance for model B70750",
+            "models": [
+              "B70750"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "SilKEN Built-in Grill Installation Requirements",
+            "preconditions": [
+              "Power supply must be 48V DC",
+              "Power supply must handle 27 amps",
+              "Voltage range must be between 35V DC and 55V DC"
+            ],
+            "steps": [
+              "Ensure cutout width is 19 3/4\" (502mm)",
+              "Ensure cutout depth is 11 5/8\" (295mm)",
+              "Ensure corner radius is 1/4\" (6mm)",
+              "Allow for 1\" drain fitting clearance below unit"
+            ],
+            "expected_outcome": "Proper installation clearance for model B70770",
+            "models": [
+              "B70770"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Basic Grill Operation",
+            "preconditions": [
+              "Grill must be properly installed",
+              "Power supply connected"
+            ],
+            "steps": [
+              "Remove grates and drip trays",
+              "Clean grates and drip trays",
+              "Insert drip trays into bottom of grill",
+              "Verify burner brackets are not resting on drip trays",
+              "Fill drip trays with 2 cups of liquid (water, beer or wine)",
+              "Re-install cooking grate",
+              "Close lid and preheat for 5-7 minutes"
+            ],
+            "expected_outcome": "Grill ready for cooking",
+            "models": [
+              "B70750"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Temperature Settings Guide",
+            "preconditions": [
+              "Grill preheated"
+            ],
+            "steps": [
+              "For vegetables: Set temperature to 350\u00b0F or power setting 4",
+              "For chicken, pork and fish: Set temperature to 400\u00b0F or power setting 5",
+              "For hamburgers: Set temperature to 500\u00b0F or power setting 9",
+              "For steak: Set temperature to 550\u00b0F or power setting 16"
+            ],
+            "expected_outcome": "Proper temperature for specific food type",
+            "models": [
+              "B70750"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Post-Cooking Cleaning",
+            "preconditions": [
+              "Grill cooled down"
+            ],
+            "steps": [
+              "Remove cooking grate",
+              "Place grate in dishwasher",
+              "Remove and empty drip tray contents",
+              "Clean drip tray thoroughly"
+            ],
+            "expected_outcome": "Clean grill components ready for next use",
+            "models": [
+              "B70750"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Fire Safety Procedure",
+            "preconditions": [
+              "Grease fire occurs"
+            ],
+            "steps": [
+              "Do not use water to extinguish",
+              "Use dry chemical fire extinguisher"
+            ],
+            "expected_outcome": "Safe extinguishing of grease fire",
+            "models": [
+              "B70750"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Safety Inspection",
+            "preconditions": [
+              "Regular maintenance check"
+            ],
+            "steps": [
+              "Examine power wires for signs of damage",
+              "Verify 30-amp circuit breaker protection",
+              "Check RCD operation (must not exceed 30A)",
+              "Ensure no flammable materials near grill"
+            ],
+            "expected_outcome": "Confirmed safe operating condition",
+            "models": [
+              "B70750"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Safety Setup",
+            "preconditions": [
+              "Grill is unplugged",
+              "Grill is cool"
+            ],
+            "steps": [
+              "Read all instructions before using grill",
+              "Store grill indoors when used as portable unit",
+              "Ensure grill is kept out of reach of children",
+              "Provide shelter to prevent rain exposure",
+              "Verify power cord and plugs are undamaged"
+            ],
+            "expected_outcome": "Grill is safely prepared for operation",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKen Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Basic Safety Operation",
+            "preconditions": [
+              "Grill is plugged in"
+            ],
+            "steps": [
+              "Use only handles or knobs to touch grill",
+              "Keep power cord and plugs away from water",
+              "Supervise closely when children are nearby",
+              "Disconnect power when not in use",
+              "Allow grill to cool before cleaning"
+            ],
+            "expected_outcome": "Safe operation of grill during use",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKen Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Drip Tray Preparation",
+            "preconditions": [
+              "Grill is cool",
+              "Disposable drip tray is installed"
+            ],
+            "steps": [
+              "Add minimum two cups of water to disposable drip tray before grilling",
+              "Clean drip tray after each use",
+              "Allow grill to cool before removing drip tray"
+            ],
+            "expected_outcome": "Drip tray properly prepared and maintained",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKen Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Cracked Surface Emergency Procedure",
+            "preconditions": [
+              "Surface crack detected"
+            ],
+            "steps": [
+              "Immediately switch off appliance",
+              "Disconnect from power source",
+              "Contact Kenyon Customer Care at (860) 664-4906"
+            ],
+            "expected_outcome": "Safe shutdown of damaged unit",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKen Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Malfunction Response Procedure",
+            "preconditions": [
+              "Grill malfunction detected"
+            ],
+            "steps": [
+              "Discontinue use immediately",
+              "Disconnect from power source",
+              "Contact Kenyon Customer Care at (860) 664-4906"
+            ],
+            "expected_outcome": "Safe shutdown and support contact made",
+            "models": [
+              "48VDC Single Zone Grill with IntelliKen Touch"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Verify Power Requirements",
+            "preconditions": [
+              "Access to power specifications"
+            ],
+            "steps": [
+              "Confirm voltage is 48V DC",
+              "Verify maximum current draw is 27 amps",
+              "Ensure power supply can deliver 1300 watts",
+              "Check voltage range is between 35V DC minimum and 55V DC maximum"
+            ],
+            "expected_outcome": "Power supply meets all electrical specifications for safe operation",
+            "models": [
+              "No Lid Built-In Grill with IntelliKEN Touch\u2122"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Verify Installation Space Requirements",
+            "preconditions": [
+              "Access to installation location",
+              "Measuring tools"
+            ],
+            "steps": [
+              "Measure cutout width - must be 19 3/4\" (502mm)",
+              "Measure cutout depth - must be 11 5/8\" (295mm)",
+              "Verify corner radius is 1/4\" (6mm)",
+              "Confirm total height clearance of 21\" (533mm) including 1\" drain fitting",
+              "Verify width clearance of 12\" (305mm)",
+              "Ensure depth clearance of 21\" (533mm)"
+            ],
+            "expected_outcome": "Installation space meets all dimensional requirements",
+            "models": [
+              "No Lid Built-In Grill with IntelliKEN Touch\u2122"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pre-Use Cleaning",
+            "preconditions": [
+              "New grill or before use"
+            ],
+            "steps": [
+              "Wipe stainless steel surfaces with damp cloth to remove residue",
+              "Apply stainless steel cleaner monthly",
+              "Clean touch control area with glass cleaner and soft towel",
+              "Use ceramic glass cleaner for stubborn stains on control area"
+            ],
+            "expected_outcome": "Clean grill surfaces ready for use",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Grease Fire Response",
+            "preconditions": [
+              "Active grease fire"
+            ],
+            "steps": [
+              "DO NOT use water on the fire",
+              "Smother fire or flame",
+              "OR use dry chemical extinguisher",
+              "OR use foam-type extinguisher"
+            ],
+            "expected_outcome": "Safe extinguishment of grease fire",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Post-Use Cleaning Protocol",
+            "preconditions": [
+              "After each use"
+            ],
+            "steps": [
+              "Remove drip tray",
+              "Clean drip tray thoroughly",
+              "Clean baffle tray",
+              "Ensure no grease accumulation between cooking sessions"
+            ],
+            "expected_outcome": "Clean grill ready for next use",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Broken Grate Safety Protocol",
+            "preconditions": [
+              "Broken grill grate or griddle"
+            ],
+            "steps": [
+              "Stop using grill immediately",
+              "Contact authorized service center",
+              "OR contact KENYON Customer Care at (860) 664-4906"
+            ],
+            "expected_outcome": "Prevention of electric shock and fire hazards",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Proper Cleaning Method",
+            "preconditions": [
+              "Grill needs cleaning"
+            ],
+            "steps": [
+              "DO NOT use pressurized water",
+              "DO NOT use other types of pressurized cleaners",
+              "Use only cloth for cleaning",
+              "Use only stainless steel or glass surface cleaner"
+            ],
+            "expected_outcome": "Safely cleaned grill without warranty violation",
+            "models": [
+              "Kenyon Grill"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Grill Setup",
+            "preconditions": [
+              "New or unused grill"
+            ],
+            "steps": [
+              "Remove cooking grate and drip tray",
+              "Wash grill with warm soapy water using non-abrasive cloth",
+              "Insert drip tray completely into bottom of grill",
+              "Ensure electric element bracket rests on element support bracket",
+              "Add liquid (non-flammable) to drip tray",
+              "Place cooking grate or optional griddle onto element"
+            ],
+            "expected_outcome": "Grill ready for first use",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Grill Preheating Procedure",
+            "preconditions": [
+              "Clean grill",
+              "Drip tray installed",
+              "Cooking grate in place"
+            ],
+            "steps": [
+              "Close lid",
+              "Set temperature according to food type:",
+              "For steak - Set to 550\u00b0F / Power setting 16",
+              "For burgers - Set to 500\u00b0F / Power setting 9",
+              "For pork and fish - Set to 400\u00b0F / Power setting 5",
+              "For vegetables - Set to 350\u00b0F / Power setting 4",
+              "Preheat for 5-7 minutes"
+            ],
+            "expected_outcome": "Grill properly preheated for cooking",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Post-Cooking Cleaning Procedure",
+            "preconditions": [
+              "Grill has been used",
+              "Grill surface cooled to touch"
+            ],
+            "steps": [
+              "Place paper towels on grilling surface",
+              "Pour one ounce of water on towel",
+              "Use high temperature nylon tongs to swab surface",
+              "Discard paper towel",
+              "Wipe grates with dry paper towel",
+              "Remove grate when cool and place in dishwasher",
+              "Lift electric elements",
+              "Remove and empty drip tray",
+              "Wipe drip tray with dry paper towel"
+            ],
+            "expected_outcome": "Clean grill ready for next use",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Lid Cleaning Procedure",
+            "preconditions": [
+              "Lid requires cleaning",
+              "Dishwasher available"
+            ],
+            "steps": [
+              "Remove lid from grill",
+              "Place lid in dishwasher",
+              "Run on pots & pans cycle"
+            ],
+            "expected_outcome": "Restored pristine lid appearance",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Cleaning the Grill",
+            "preconditions": [
+              "Grill surface may be hot",
+              "Appropriate cleaning supplies available"
+            ],
+            "steps": [
+              "Use a cloth to clean the grill",
+              "Apply stainless steel or glass surface cleaner",
+              "If cleaning hot surface with wet sponge/cloth, exercise caution for steam burns",
+              "Check cleaner label before applying to hot surface"
+            ],
+            "expected_outcome": "Clean grill surface",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Grill Storage",
+            "preconditions": [
+              "Grill not in use"
+            ],
+            "steps": [
+              "For portable grills: Store indoors when not in use",
+              "For built-in grills: Provide suitable shelter to prevent rain exposure",
+              "Optional: Purchase cover from www.cookwithkenyon.com"
+            ],
+            "expected_outcome": "Properly protected grill during storage",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Prevent Smoking During Operation",
+            "preconditions": [
+              "Before cooking"
+            ],
+            "steps": [
+              "Place 2 cups of water in drip tray",
+              "Ensure water covers bottom of pan"
+            ],
+            "expected_outcome": "Reduced smoke during cooking",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Safety Lock Operation - Grill ON",
+            "preconditions": [
+              "Grill is powered on"
+            ],
+            "steps": [
+              "Activate lock feature",
+              "Power settings will be locked from adjustment",
+              "Press zone power or master power button to turn off grill if needed"
+            ],
+            "expected_outcome": "Locked grill controls while powered on",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Safety Lock Operation - Grill OFF",
+            "preconditions": [
+              "Grill is powered off"
+            ],
+            "steps": [
+              "Activate lock feature",
+              "All control panel functions will be deactivated",
+              "Master power button will not function until unlocked"
+            ],
+            "expected_outcome": "Completely locked grill controls",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Turning On the Grill",
+            "preconditions": [
+              "Grill is unlocked"
+            ],
+            "steps": [
+              "Touch POWER button in main control frame",
+              "Hold element power button for 2 seconds",
+              "Choose cooking option within 15 seconds",
+              "If no selection made within 15 seconds, grill will automatically power off"
+            ],
+            "expected_outcome": "Grill powered on and ready for cooking",
+            "models": [
+              "All Kenyon grills"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Heat Level Cooking Mode Operation",
+            "preconditions": [
+              "Main power is on",
+              "Element is powered on"
+            ],
+            "steps": [
+              "Swipe finger along temperature control arc to desired setting",
+              "Alternatively, use + and - signs to select heat level",
+              "Observe LED light array for selected setting confirmation"
+            ],
+            "expected_outcome": "Desired heat level is set between LOW-MED-HIGH in 16 increments",
+            "models": [
+              "All"
+            ],
+            "error_codes": [
+              "Element de-powers if set to 0 or inactive for 15 seconds"
+            ]
+          },
+          {
+            "title": "Temperature Cooking Mode Operation",
+            "preconditions": [
+              "Main power is on"
+            ],
+            "steps": [
+              "Touch thermometer/gradient graphic to select temperature mode",
+              "Select cooking temperature using + and - buttons or arc swipe",
+              "Wait for temperature value to stop flashing (indicates temperature reached)"
+            ],
+            "expected_outcome": "Temperature set between 150\u00b0F-550\u00b0F (65\u00b0C-287\u00b0C) in 10\u00b0F (12\u00b0C) increments",
+            "models": [
+              "All"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Changing Temperature Units",
+            "preconditions": [
+              "Main power is on"
+            ],
+            "steps": [
+              "Touch \u00b0F/\u00b0C button in main power control frame"
+            ],
+            "expected_outcome": "Temperature units switch between Fahrenheit and Celsius",
+            "models": [
+              "All"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Setting Cooking Timer",
+            "preconditions": [
+              "Main power is on"
+            ],
+            "steps": [
+              "Touch timer clock graphic in element control frame",
+              "Set time duration using + and - buttons",
+              "Touch timer button to start",
+              "Monitor time remaining on display",
+              "Wait for automatic shutoff at end of set time"
+            ],
+            "expected_outcome": "Element automatically shuts off when timer reaches zero",
+            "models": [
+              "All"
+            ],
+            "error_codes": [
+              "Timer deactivates after 20 seconds if no time set",
+              "Timer shuts off after 30 seconds of inactivity post-completion"
+            ]
+          },
+          {
+            "title": "Timer Alarm Response",
+            "preconditions": [
+              "Timer has completed countdown"
+            ],
+            "steps": [
+              "Observe flashing display",
+              "Listen for double beep alarm every 10 seconds",
+              "Touch power button to stop alarm",
+              "Alternatively, wait 3 minutes for automatic deactivation"
+            ],
+            "expected_outcome": "Alarm stops and display returns to normal",
+            "models": [
+              "All"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Timer Operation",
+            "preconditions": [
+              "Timer must be active"
+            ],
+            "steps": [
+              "Display will flash when time elapses",
+              "Double beep alarm sounds every 10 seconds",
+              "Alarm continues until power button is touched or 3 minutes pass",
+              "Timer shuts off after 30 seconds of no activity"
+            ],
+            "expected_outcome": "Timer alerts user and automatically shuts off",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Automatic Shut-Off System",
+            "preconditions": [
+              "Grill must be powered on",
+              "Heat setting must be selected"
+            ],
+            "steps": [
+              "Heat settings 1-4 shut off after 90 minutes",
+              "Heat settings 5-10 shut off after 70 minutes",
+              "Heat settings 11-16 shut off after 60 minutes"
+            ],
+            "expected_outcome": "Grill automatically shuts off after predetermined time based on heat setting",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Temperature Guide Operation",
+            "preconditions": [
+              "Grill must be powered on"
+            ],
+            "steps": [
+              "Settings 1-2: Cook fried eggs on griddle",
+              "Settings 3-4: Cook pancakes and French toast on griddle",
+              "Settings 5-6: Cook vegetables",
+              "Settings 7-8: Cook vegetables and fish",
+              "Settings 9-10: Cook fish and chicken",
+              "Settings 11-12: Cook chicken and hamburgers",
+              "Settings 13-14: Cook hamburgers and steaks",
+              "Settings 15-16: Cook steaks"
+            ],
+            "expected_outcome": "Food cooked at appropriate temperature setting",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Error Code E04 Resolution",
+            "preconditions": [
+              "Error code E04 displayed"
+            ],
+            "steps": [
+              "Allow unit to cool",
+              "Verify correct cooking utensil type is being used",
+              "Lower cooking level or temperature setting",
+              "De-power and restart unit to clear display"
+            ],
+            "expected_outcome": "High temperature error resolved",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "error_codes": [
+              "E04"
+            ]
+          },
+          {
+            "title": "Error Code E06 Resolution",
+            "preconditions": [
+              "Error code E06 displayed"
+            ],
+            "steps": [
+              "De-power and restart unit to clear display",
+              "Contact Kenyon Customer Care if problem persists"
+            ],
+            "expected_outcome": "Internal electronic control issue addressed",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "error_codes": [
+              "E06"
+            ]
+          },
+          {
+            "title": "Error Code E10 Resolution",
+            "preconditions": [
+              "Error code E10 displayed"
+            ],
+            "steps": [
+              "De-power the unit",
+              "Re-power the unit",
+              "Command only one control input at a time"
+            ],
+            "expected_outcome": "Multiple control function error resolved",
+            "models": [
+              "Single Zone Grill with IntelliKEN Touch"
+            ],
+            "error_codes": [
+              "E10"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Heating Element Operation",
+            "preconditions": [
+              "Grill must be cool enough to handle"
+            ],
+            "steps": [
+              "To raise: Pivot heating element upward until it stays in position",
+              "To lower: Apply slight downward pressure on the heating element"
+            ],
+            "expected_outcome": "Heating element moves up and down to allow access to baffle/drip trays",
+            "models": [
+              "All SilKEN Grill models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Drip Tray Installation and Preparation",
+            "preconditions": [
+              "Baffle tray must be in place"
+            ],
+            "steps": [
+              "Position drip tray completely inside the baffle tray",
+              "Ensure rim of drip tray does not protrude outside baffle tray",
+              "Add 2 cups of water (or enough to cover bottom) before cooking"
+            ],
+            "expected_outcome": "Properly positioned drip tray ready for cooking",
+            "models": [
+              "All SilKEN Grill models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Grate Cleaning",
+            "preconditions": [
+              "Grill must be cool enough to handle"
+            ],
+            "steps": [
+              "Remove grate after use",
+              "Wash in warm soapy water",
+              "Ensure all residue is removed from non-stick coating"
+            ],
+            "expected_outcome": "Clean grate ready for next use",
+            "models": [
+              "All SilKEN Grill models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Lid Removal",
+            "preconditions": [
+              "Grill must be cool before handling"
+            ],
+            "steps": [
+              "Remove quick release pin from hinge",
+              "Grasp lid and lift left side to clear hinge",
+              "Slide lid to left until clear of right hinge pin",
+              "Wash removed lid in warm, soapy water if needed"
+            ],
+            "expected_outcome": "Lid successfully removed for cleaning",
+            "models": [
+              "SilKEN Portable & Built-in Grills"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Grill Installation",
+            "preconditions": [
+              "Appropriate electrical supply available"
+            ],
+            "steps": [
+              "Unpack grill from shipping container",
+              "Verify all components are present",
+              "Check electrical supply meets requirements (48V DC 27A or 35V DC-55V DC)",
+              "Use 8AWG wire for power supply runs up to 40 feet",
+              "Install according to national, state and local codes",
+              "Incorporate disconnection means in fixed wiring"
+            ],
+            "expected_outcome": "Properly installed grill ready for use",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Electrical Supply Verification",
+            "preconditions": [
+              "Access to electrical specifications"
+            ],
+            "steps": [
+              "Verify power supply meets requirements: 48V DC 27A for model B70750",
+              "For models B70770-B70790, ensure voltage is between 35V DC and 55V DC",
+              "For power supply runs up to 40 feet, verify 8AWG wire is used",
+              "If specifications don't match, consult licensed electrician"
+            ],
+            "expected_outcome": "Proper electrical supply confirmed for installation",
+            "models": [
+              "B70750",
+              "B70760",
+              "B70770",
+              "B70772",
+              "B70790"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Countertop Installation Clearance Verification",
+            "preconditions": [
+              "Uninstalled grill",
+              "Access to installation location"
+            ],
+            "steps": [
+              "Verify 30 inches minimum clearance between cooking surface and unprotected cabinets",
+              "Verify 24 inch minimum clearance if cabinet is protected with flame retardant materials",
+              "Ensure 6-inch minimum from backsplash to edge of grill",
+              "Confirm 1-1/2 inches minimum from front of counter to grill",
+              "Verify 2 inch minimum clearance between grill bottom and combustible surface below",
+              "Check for 13 inches maximum depth of overhead cabinets",
+              "Confirm 36 inches minimum height of countertop above floor",
+              "For Canadian installations, ensure 1/2 inch minimum from any adjacent surface"
+            ],
+            "expected_outcome": "All clearance requirements met for safe installation",
+            "models": [
+              "All IntelliKEN Touch Grill models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Grill Installation",
+            "preconditions": [
+              "Verified clearances",
+              "Proper electrical supply"
+            ],
+            "steps": [
+              "Apply non-adhesive Plumber's Putty around edge of countertop beneath trim flange",
+              "Place grill into countertop cutout",
+              "Secure grill using four oval head wood screws through mounting flange",
+              "Ensure adequate ventilation below countertop"
+            ],
+            "expected_outcome": "Grill securely mounted with proper sealing",
+            "models": [
+              "All IntelliKEN Touch Grill models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Grate Cleaning",
+            "preconditions": [
+              "New grill with nonstick coated grates"
+            ],
+            "steps": [
+              "Wash grates in warm soapy water before first use"
+            ],
+            "expected_outcome": "Clean, ready-to-use grill grates",
+            "models": [
+              "All Kenyon grills with nonstick grates"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Stainless Steel Maintenance",
+            "preconditions": [
+              "Stainless steel components"
+            ],
+            "steps": [
+              "Care for stainless steel monthly as outlined in owner's manual",
+              "If corrosion appears, document with photos",
+              "Contact company with photo evidence",
+              "Request replacement components"
+            ],
+            "expected_outcome": "Rust-free stainless steel components",
+            "models": [
+              "All Kenyon products with stainless steel components"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Warranty Service Request",
+            "preconditions": [
+              "Product under warranty",
+              "Defective component"
+            ],
+            "steps": [
+              "Contact kenyonservice@cookwithkenyon.com",
+              "Request return instructions",
+              "Return product to company for evaluation",
+              "Await repair or replacement determination"
+            ],
+            "expected_outcome": "Warranty service resolution",
+            "models": [
+              "All Kenyon products"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Cabinet Ventilation Requirements",
+            "preconditions": [
+              "Cabinet installation planned",
+              "Ambient temperature consideration"
+            ],
+            "steps": [
+              "Ensure cabinet has minimum two openings",
+              "Install one opening for fresh air intake",
+              "Install second opening for hot air escape",
+              "Make each opening 8 square inches for ambient temperatures \u226485\u00baF/30\u00baC",
+              "Increase opening sizes if ambient temperature >85\u00baF/30\u00baC"
+            ],
+            "expected_outcome": "Properly ventilated cabinet installation for optimal grill performance",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Countertop Cutout Procedure",
+            "preconditions": [
+              "Countertop material selected",
+              "Installation dimensions available"
+            ],
+            "steps": [
+              "Measure cutout dimensions according to provided specifications",
+              "Mark corners for radius cuts",
+              "Create 1/4 inch radius on corners (or as specified by countertop manufacturer)",
+              "Follow manufacturer reinforcement requirements"
+            ],
+            "expected_outcome": "Properly sized and reinforced countertop cutout",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Drain Connection Installation",
+            "preconditions": [
+              "Fixed installation planned"
+            ],
+            "steps": [
+              "Locate 1/2\" NPT brass pipe fitting",
+              "Attach 90\u00ba brass elbow",
+              "Connect 5/8\" ID flexible hose"
+            ],
+            "expected_outcome": "Properly connected drain system",
+            "models": [
+              "Fixed installation models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Initial Grill Preparation",
+            "preconditions": [
+              "New grill installation"
+            ],
+            "steps": [
+              "Remove protective plastic film from lid",
+              "Remove protective film from trim flange",
+              "Remove protective film from glass panel",
+              "Clean grill with stainless steel or glass cleaner",
+              "Wash nonstick coated grates in warm soapy water"
+            ],
+            "expected_outcome": "Grill ready for first use",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Special Countertop Protection Procedure",
+            "preconditions": [
+              "Granite, marble, quartz, sandstone or Corian countertop"
+            ],
+            "steps": [
+              "Obtain stain-free Plumber's Putty",
+              "Apply putty according to manufacturer instructions"
+            ],
+            "expected_outcome": "Protected countertop surface from potential staining",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}
