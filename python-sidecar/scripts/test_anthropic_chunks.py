@@ -9,8 +9,6 @@ import json
 import requests
 import time
 
-# Global configuration from environment
-anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
@@ -18,6 +16,9 @@ from anthropic import Anthropic
 
 # Load environment variables
 load_dotenv()
+
+# Global configuration from environment (must be after load_dotenv)
+anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
 
 def fetch_chunks_from_supabase(doc_id: str) -> list:
     """Fetch document chunks from Supabase database"""

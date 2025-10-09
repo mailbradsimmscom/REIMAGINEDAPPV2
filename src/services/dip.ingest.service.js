@@ -231,16 +231,12 @@ async function processPlaybookHints(supabase, docId, storagePath, results, syste
         manufacturer_norm: systemMetadata?.manufacturer_norm || null,
         model_norm: systemMetadata?.model_norm || null,
         asset_uid: systemMetadata?.asset_uid || null,
-        system_norm: systemMetadata?.system_norm || null,
-        subsystem_norm: systemMetadata?.subsystem_norm || null,
         description: item.models ? item.models.join(', ') : '',
         title: item.title || 'Untitled Procedure',
         steps: Array.isArray(item.steps) ? item.steps : [],
         expected_outcome: item.expected_outcome || null,
         preconditions: Array.isArray(item.preconditions) ? item.preconditions : [],
         error_codes: Array.isArray(item.error_codes) ? item.error_codes : [],
-        page: item.page || null,
-        confidence: typeof item.confidence === 'number' ? item.confidence : null,
         status: 'pending'
       }));
 

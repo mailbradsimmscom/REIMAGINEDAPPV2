@@ -60,6 +60,9 @@ class ChatRequest(BaseModel):
     equipment_inference: Optional[Dict[str, Any]] = None
     table_types: Optional[List[str]] = None
 
+    # Model selection for synthesis
+    synthesis_model: Optional[str] = None  # Default None = use env var OPENAI_MODEL
+
 class ChatResponse(BaseModel):
     """Chat response"""
     response: str

@@ -13,8 +13,6 @@ import time
 
 print("DEBUG: Line 20 - Imports completed")
 
-# Global configuration from environment
-anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
@@ -24,6 +22,9 @@ print("DEBUG: Line 40 - Additional imports completed")
 
 # Load environment variables
 load_dotenv()
+
+# Global configuration from environment (must be after load_dotenv)
+anthropic_api_delay = float(os.getenv('ANTHROPIC_API_DELAY', '2'))
 
 print("DEBUG: Line 50 - Environment variables loaded")
 

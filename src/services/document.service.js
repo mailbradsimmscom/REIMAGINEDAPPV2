@@ -353,11 +353,17 @@ class DocumentService {
 
       // Upload file to storage synchronously
       try {
+        // Step 1: Uploading
+        await documentRepository.updateJobStatusV2(job.job_id, 'uploading');
+
         const storagePath = await this.uploadFile(fileBuffer, metadata.fileName || 'document.pdf', finalDocId);
         this.requestLogger.info('Upload successful, storagePath', { storagePath });
 
         // Update job with storage path and set to upload_success
         await documentRepository.updateJobStatus(job.job_id, 'upload_success', { storage_path: storagePath });
+
+        // Step 2: Verifying
+        await documentRepository.updateJobStatusV2(job.job_id, 'verifying');
 
         // Verify file exists in storage with retry logic
         await this.verifyFileInStorage(storagePath, job.job_id);
@@ -365,17 +371,18 @@ class DocumentService {
         // Update document with storage path
         await documentRepository.updateDocumentStoragePath(finalDocId, storagePath);
 
-        // Process job immediately instead of waiting for worker
-        this.requestLogger.info('Starting immediate job processing', {
+        // Process job asynchronously (don't block response)
+        this.requestLogger.info('Starting background job processing', {
           jobId: job.job_id,
           docId: finalDocId
         });
 
-        await this.processJob(job.job_id);
-
-        this.requestLogger.info('Job processing completed', {
-          jobId: job.job_id,
-          docId: finalDocId
+        // Fire and forget - errors handled in processJob catch block
+        this.processJob(job.job_id).catch(error => {
+          this.requestLogger.error('Background job processing failed', {
+            jobId: job.job_id,
+            error: error.message
+          });
         });
 
       } catch (uploadError) {
@@ -383,14 +390,14 @@ class DocumentService {
         throw uploadError;
       }
 
-      this.requestLogger.info('Ingest job created and processed', {
+      this.requestLogger.info('Ingest job created and processing in background', {
         jobId: job.job_id,
         docId: finalDocId
       });
 
       return {
         job_id: job.job_id,
-        status: 'completed',
+        status: 'processing',
         doc_id: finalDocId
       };
     } catch (error) {
@@ -436,8 +443,8 @@ class DocumentService {
       this.requestLogger.info('Document retrieved from DB', {
         doc_id: document.doc_id,
         asset_uid: document.asset_uid,
-        manufacturer: document.manufacturer,
-        model: document.model
+        manufacturer: document.manufacturer_norm,
+        model: document.model_norm
       });
 
       // Step 28: Download file from Supabase Storage
@@ -489,10 +496,28 @@ class DocumentService {
         }
       }
 
-      // Update processing stage after Python sidecar (chunking, embedding, pinecone_upsert)
-      await documentRepository.updateJobStatusV2(jobId, 'pinecone_upsert');
+      // Extract and update colloquial keywords from Pinecone chunks
+      // Wait 5 seconds for Pinecone to finish indexing (eventual consistency)
+      if (document.asset_uid && document.manufacturer_norm && document.model_norm) {
+        this.requestLogger.info('Waiting for Pinecone indexing before extracting colloquial keywords', {
+          assetUid: document.asset_uid
+        });
+        await new Promise(resolve => setTimeout(resolve, 5000));
 
-      // Step 3: Run Anthropic extraction using the 4 Python scripts
+        // Update status to colloquial_extraction
+        await documentRepository.updateJobStatusV2(jobId, 'colloquial_extraction');
+
+        await this.extractAndUpdateColloquialKeywords(
+          document.asset_uid,
+          document.manufacturer_norm,
+          document.model_norm
+        );
+      }
+
+      // Step 7: Extracting
+      await documentRepository.updateJobStatusV2(jobId, 'extracting');
+
+      // Run Anthropic extraction using the 4 Python scripts
       this.requestLogger.info('Starting Anthropic extraction', {
         jobId,
         docId: job.doc_id,
@@ -510,10 +535,7 @@ class DocumentService {
         }
       );
 
-      // Update processing stage after integrated DIP processing
-      await documentRepository.updateJobStatusV2(jobId, 'extraction');
-
-      // Step 4: Store Anthropic extraction results in Supabase Storage
+      // Store Anthropic extraction results in database
       this.requestLogger.info('Starting Anthropic extraction storage', {
         jobId,
         docId: job.doc_id,
@@ -530,34 +552,10 @@ class DocumentService {
         }
       });
 
-      // Update processing stage after DIP ingestion
-      await documentRepository.updateJobStatusV2(jobId, 'ingestion');
+      // Step 8: Storing
+      await documentRepository.updateJobStatusV2(jobId, 'storing');
 
-      // Update job with results from Anthropic extraction
-      await documentRepository.updateJobProgress(jobId, {
-        pages_total: 0,
-        pages_ocr: 0,
-        tables: 0,
-        vectors_upserted: 0,
-        chunks_processed: 0,
-        chunks_total: 0,
-        processing_time: 0,
-        dip_success: true,
-        extraction_results: {
-          spec_suggestions: !!extractionResult.storageResults?.spec_suggestions,
-          golden_rules: !!extractionResult.storageResults?.golden_rules,
-          intent_router: !!extractionResult.storageResults?.intent_router,
-          playbook_hints: !!extractionResult.storageResults?.playbook_hints
-        },
-        dip_results: {
-          spec_suggestions: ingestionResult.inserted.spec_suggestions,
-          playbook_hints: ingestionResult.inserted.playbook_hints,
-          intent_router: ingestionResult.inserted.intent_router,
-          golden_tests: ingestionResult.inserted.golden_tests
-        }
-      });
-
-      // Mark job as completed
+      // Step 9: Completed (mark job as completed)
       await documentRepository.updateJobStatus(jobId, 'completed');
       
       // Update final processing stage
@@ -579,9 +577,9 @@ class DocumentService {
       };
 
     } catch (error) {
-      this.requestLogger.error('Job processing failed', { 
-        jobId, 
-        error: error.message 
+      this.requestLogger.error('Job processing failed', {
+        jobId,
+        error: error.message
       });
 
       // Update job status to failed
@@ -592,6 +590,9 @@ class DocumentService {
           timestamp: new Date().toISOString()
         }
       });
+
+      // Update status_v2 to failed for UI display
+      await documentRepository.updateJobStatusV2(jobId, 'failed');
 
       throw error;
     }
@@ -663,6 +664,48 @@ class DocumentService {
     }
   }
 
+  // Extract colloquial keywords from Pinecone chunks and update systems table
+  async extractAndUpdateColloquialKeywords(assetUid, manufacturer, model) {
+    try {
+      const { extractColloquialKeywords } = await import('./colloquial-extraction.service.js');
+
+      this.requestLogger.info('Extracting colloquial keywords', {
+        assetUid,
+        manufacturer,
+        model
+      });
+
+      const keywords = await extractColloquialKeywords(manufacturer, model);
+
+      if (!keywords || keywords.trim().length === 0) {
+        this.requestLogger.warn('No colloquial keywords extracted, skipping update', {
+          assetUid,
+          manufacturer,
+          model
+        });
+        return;
+      }
+
+      // Update systems table
+      await documentRepository.updateSystemColloquialKeywords(assetUid, keywords);
+
+      this.requestLogger.info('Colloquial keywords updated successfully', {
+        assetUid,
+        keywordsCount: keywords.split(',').length,
+        preview: keywords.substring(0, 100) + (keywords.length > 100 ? '...' : '')
+      });
+
+    } catch (error) {
+      // Log but don't fail the job - this is a non-critical enhancement
+      this.requestLogger.warn('Failed to extract or update colloquial keywords', {
+        assetUid,
+        manufacturer,
+        model,
+        error: error.message
+      });
+    }
+  }
+
   // Call Python sidecar for document processing
   async callPythonSidecar(fileBuffer, job, document, fileName) {
     try {
@@ -698,13 +741,46 @@ class DocumentService {
       formData.append('extract_tables', 'true');
       formData.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
 
-      // Call Python sidecar
+      // Step 4: Chunking
+      await documentRepository.updateJobStatusV2(job.job_id, 'chunking');
+
+      // Call Python sidecar with 20-minute timeout
       const { getEnv } = await import('../config/env.js');
       const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
-      const response = await fetch(`${sidecarUrl}/v1/process-document`, {
-        method: 'POST',
-        body: formData
-      });
+
+      // Set 20-minute timeout for document processing
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), 1200000); // 20 minutes
+
+      let response;
+      try {
+        response = await fetch(`${sidecarUrl}/v1/process-document`, {
+          method: 'POST',
+          body: formData,
+          signal: abortController.signal
+        });
+        clearTimeout(timeoutId);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+
+        // Log detailed error information
+        this.requestLogger.error('Fetch to Python sidecar failed', {
+          jobId: job.job_id,
+          url: `${sidecarUrl}/v1/process-document`,
+          errorName: fetchError.name,
+          errorMessage: fetchError.message,
+          errorCause: fetchError.cause?.message || fetchError.cause,
+          errorCode: fetchError.code,
+          isTimeout: fetchError.name === 'AbortError'
+        });
+
+        // Provide helpful error message
+        if (fetchError.name === 'AbortError') {
+          throw new Error(`Python sidecar timeout: Processing took longer than 20 minutes`);
+        } else {
+          throw new Error(`Python sidecar connection failed: ${fetchError.message}`);
+        }
+      }
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -716,6 +792,9 @@ class DocumentService {
       if (!result.success) {
         throw new Error(`Processing failed: ${result.error || 'Unknown error'}`);
       }
+
+      // Step 5: Embedding
+      await documentRepository.updateJobStatusV2(job.job_id, 'embedding');
 
       this.requestLogger.info('Python sidecar processing completed', {
         jobId: job.job_id,
@@ -731,6 +810,9 @@ class DocumentService {
         chunks_processed: result.chunks_processed || 0,
         vectors_upserted: result.vectors_upserted || 0
       });
+
+      // Step 6: Indexing
+      await documentRepository.updateJobStatusV2(job.job_id, 'indexing');
 
       return result;
 

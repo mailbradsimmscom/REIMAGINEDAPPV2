@@ -1,0 +1,1083 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 32,
+  "unique_procedures": 25,
+  "procedures": [
+    {
+      "title": "Reset Warning After No Liquid Detection",
+      "preconditions": [
+        "Red and blue LED blinking alternatively"
+      ],
+      "steps": [
+        "Option 1: Reboot the circuit",
+        "Option 2: Press the Reset button on control panel (if present)"
+      ],
+      "expected_outcome": "Warning cleared and pump operational",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": [
+        "Red+Blue LED alternating"
+      ]
+    },
+    {
+      "title": "Power Supply Voltage Check",
+      "preconditions": [
+        "Yellow and blue LED blinking together"
+      ],
+      "steps": [
+        "Check wire section for power supply",
+        "Check battery charge level if battery present"
+      ],
+      "expected_outcome": "Correct voltage restored to pump",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": [
+        "Yellow+Blue LED simultaneous"
+      ]
+    },
+    {
+      "title": "Reset Low Speed Timeout Warning",
+      "preconditions": [
+        "Steady red and blinking blue LED"
+      ],
+      "steps": [
+        "Option 1: Reboot the circuit",
+        "Option 2: Press the Reset button on control panel (if present)"
+      ],
+      "expected_outcome": "Warning cleared and pump operational",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": [
+        "Red steady + Blue blinking"
+      ]
+    },
+    {
+      "title": "Expansion Tank Installation",
+      "preconditions": [
+        "Short rigid pipes or presence of solenoid valves"
+      ],
+      "steps": [
+        "Install expansion tank of minimum 0.5 liter capacity",
+        "Position tank to prevent water hammer effect",
+        "Ensure proper connection to system"
+      ],
+      "expected_outcome": "Prevention of overpressure damage to pressure sensor",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "System Installation with Appliances",
+      "preconditions": [
+        "Presence of dryers or ice machines in system"
+      ],
+      "steps": [
+        "Install expansion vessel",
+        "Connect vessel to system",
+        "Verify proper operation"
+      ],
+      "expected_outcome": "Prevention of pump overheating during continuous use",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Air Vent Valve Operation",
+      "preconditions": [
+        "Pump is installed",
+        "Tank contains liquid"
+      ],
+      "steps": [
+        "Slightly open the small valve when starting pump",
+        "Allow air to escape to facilitate priming",
+        "Close the small valve once pump is operating",
+        "Install at least 1m length of flexible tubing on outlet side"
+      ],
+      "expected_outcome": "Proper pump priming and operation",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "LED Status Monitoring",
+      "preconditions": [
+        "Electronic pressure sensor system is powered"
+      ],
+      "steps": [
+        "Observe blue LED for liquid presence status",
+        "Monitor multicolored LED for pressure and operation status",
+        "Verify normal operation through LED indicators"
+      ],
+      "expected_outcome": "Confirmation of proper system operation",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "error_codes": [
+        "Solid yellow - Pressure below target",
+        "Solid green - Target pressure reached with constant flow",
+        "Flashing green - Standby mode",
+        "Solid/slow flashing red - Short circuit detected",
+        "Fast flashing red - Pump overload"
+      ]
+    },
+    {
+      "title": "Short Circuit Error Resolution",
+      "preconditions": [
+        "Red LED is solid or slowly flashing"
+      ],
+      "steps": [
+        "Check for blocked gears",
+        "Inspect pump-circuit connection",
+        "Wait for automatic retry (up to 3 attempts)",
+        "If error persists after 4th attempt, check for permanent damage",
+        "Reboot circuit or press Reset button to clear error"
+      ],
+      "expected_outcome": "Resolution of short circuit error",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "error_codes": [
+        "Solid/slow flashing red"
+      ]
+    },
+    {
+      "title": "Overload Error Resolution",
+      "preconditions": [
+        "Red LED is rapidly flashing"
+      ],
+      "steps": [
+        "Check liquid viscosity is appropriate for pump",
+        "Verify gears move freely",
+        "Allow automatic speed reduction for 30 seconds",
+        "Monitor for repeated overload (up to 3 attempts)",
+        "Reboot circuit or press Reset button if pump turns off"
+      ],
+      "expected_outcome": "Resolution of pump overload condition",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "error_codes": [
+        "Fast flashing red"
+      ]
+    },
+    {
+      "title": "Temperature Range Compliance",
+      "preconditions": [
+        "Pump is installed"
+      ],
+      "steps": [
+        "Ensure ambient temperature is above -10\u00b0C/14\u00b0F",
+        "Ensure ambient temperature is below +60\u00b0C/140\u00b0F",
+        "Monitor temperature of all pump components"
+      ],
+      "expected_outcome": "Pump operates within safe temperature limits",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Transportation and Handling Procedure",
+      "preconditions": [
+        "Pump requires moving or transport"
+      ],
+      "steps": [
+        "Wear appropriate safety gear (safety shoes with toe piece)",
+        "Handle manually due to limited weight",
+        "Inspect packaging for damage upon receipt",
+        "Store pump in dry area"
+      ],
+      "expected_outcome": "Safe transport and storage of pump",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installation Pre-Check Procedure",
+      "preconditions": [
+        "New pump installation"
+      ],
+      "steps": [
+        "Inspect pump for transportation or storage damage",
+        "Clean inlet port thoroughly removing dust and packaging material",
+        "Clean outlet port thoroughly removing dust and packaging material",
+        "Verify electrical power supply matches specification requirements"
+      ],
+      "expected_outcome": "Pump ready for safe installation",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Fluid Compatibility Check",
+      "preconditions": [
+        "Before pump operation"
+      ],
+      "steps": [
+        "Verify fluid is either water (max 85\u00b0C) or gasoline",
+        "Confirm fluid viscosity is less than 20 cSt",
+        "Ensure fluid is not a solvent",
+        "Ensure fluid is not corrosive",
+        "Verify fluid flash point is above 38\u00b0C if flammable"
+      ],
+      "expected_outcome": "Safe fluid compatibility confirmed",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "High Pressure Operation Management",
+      "preconditions": [
+        "Pump operating at high pressure"
+      ],
+      "steps": [
+        "Monitor pump temperature",
+        "Monitor operating duration",
+        "Avoid prolonged operation at high pressure",
+        "Check for signs of stress or overheating"
+      ],
+      "expected_outcome": "Prevention of pump stress and overheating",
+      "models": [
+        "UP6/E"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pump Assembly Parts Identification",
+      "preconditions": [
+        "Have access to pump components",
+        "Reference exploded view diagram"
+      ],
+      "steps": [
+        "Identify pump body (Pos. 1)",
+        "Locate flange (Pos. 2)",
+        "Verify presence of two rods (Pos. 3)",
+        "Check armature assembly (Pos. 4)",
+        "Locate pump frame (Pos. 5)",
+        "Identify all O-rings (Pos. 6, 10, 16, 22, 25, 27)",
+        "Locate brush holder (Pos. 7)",
+        "Verify ball bearing (Pos. 8)",
+        "Check compensation spring (Pos. 9)",
+        "Locate driving and idle gears (Pos. 14, 15)",
+        "Identify electronic pressure sensor (Pos. 19)",
+        "Locate non-return valve (Pos. 20)",
+        "Verify antivibration mounts and inserts (Pos. 29, 30)"
+      ],
+      "expected_outcome": "All pump components correctly identified and accounted for",
+      "models": [
+        "MARCO Pump"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Replaceable Parts Identification",
+      "preconditions": [
+        "Access to pump parts list"
+      ],
+      "steps": [
+        "Identify compensation spring (Pos. 9) as replaceable",
+        "Note idle gear (Pos. 15) as replaceable",
+        "Locate electronic control (Pos. 19) as replaceable",
+        "Check nipple (Pos. 24) as replaceable",
+        "Verify air vent cap (Pos. 26) as replaceable",
+        "Note O-ring (Pos. 27) as replaceable",
+        "Identify filter (Pos. 28) as replaceable",
+        "Check antivibration mount (Pos. 29) as replaceable"
+      ],
+      "expected_outcome": "All replaceable parts identified for maintenance purposes",
+      "models": [
+        "MARCO Pump"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pump Priming Troubleshooting",
+      "preconditions": [
+        "Pump not priming properly"
+      ],
+      "steps": [
+        "Check pump height relative to fluid level",
+        "Verify pump has not run dry for extended period",
+        "Inspect suction pipe for air leaks, cuts, or inadequate hose clamps",
+        "Check filter seals and clean clogged filter",
+        "Inspect front plate cover for loose screws and seal effectiveness",
+        "Verify electrical cable connections",
+        "Check for obstructions in suction/delivery pipes",
+        "Look for liquid loops in outlet tube"
+      ],
+      "expected_outcome": "Properly priming pump",
+      "models": [
+        "All pump models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Extended Storage Preparation",
+      "preconditions": [
+        "Pump will be unused for 30+ days"
+      ],
+      "steps": [
+        "Run fresh water through the pump",
+        "Loosen front plate screws",
+        "Upon re-use, run pump briefly for few seconds",
+        "Re-tighten screws",
+        "Check motor current value under maximum operating pressure"
+      ],
+      "expected_outcome": "Pump properly prepared for storage",
+      "models": [
+        "All pump models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Normal Maintenance Routine",
+      "preconditions": [
+        "Regular operation"
+      ],
+      "steps": [
+        "Check and clean inlet filter frequently",
+        "Inspect and clean chamber monthly",
+        "Check electrical wiring condition monthly"
+      ],
+      "expected_outcome": "Well-maintained pump",
+      "models": [
+        "All pump models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Performance Monitoring",
+      "preconditions": [
+        "Pump in operation"
+      ],
+      "steps": [
+        "Monitor body and motor frame temperature (should be 60\u00b0C-70\u00b0C)",
+        "Check for regular flow and constant noise levels",
+        "Verify amp-draw within specified limits"
+      ],
+      "expected_outcome": "Confirmed proper pump operation",
+      "models": [
+        "All pump models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Environmental Disposal Procedure",
+      "preconditions": [
+        "Pump needs disposal"
+      ],
+      "steps": [
+        "Contact local governing authorities",
+        "Identify specific refuse collection structures",
+        "Dispose through authorized channels"
+      ],
+      "expected_outcome": "Proper disposal of pump",
+      "models": [
+        "All pump models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Packaging Disposal Procedure",
+      "preconditions": [
+        "Packaging needs disposal"
+      ],
+      "steps": [
+        "Separate waste materials",
+        "Sort packaging materials for recycling",
+        "Dispose through appropriate recycling channels"
+      ],
+      "expected_outcome": "Proper disposal of packaging",
+      "models": [
+        "All pump models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Initial Inspection and Storage",
+      "preconditions": [
+        "New pump delivery"
+      ],
+      "steps": [
+        "Inspect packaging for damages",
+        "Store pump in a dry area"
+      ],
+      "expected_outcome": "Pump properly inspected and stored",
+      "models": [
+        "All models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Preliminary Installation Checks",
+      "preconditions": [
+        "Pump ready for installation"
+      ],
+      "steps": [
+        "Check pump for transportation or storage damage",
+        "Clean inlet and outlet ports of dust and packaging material",
+        "Verify electrical power supply matches specifications"
+      ],
+      "expected_outcome": "Pump verified ready for installation",
+      "models": [
+        "All models"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pump Positioning and Electrical Connection",
+      "preconditions": [
+        "Installation location prepared"
+      ],
+      "steps": [
+        "Mount pump in desired position using appropriate screws",
+        "Connect positive pole (+) of battery to red wire on motor end-cap",
+        "Connect negative pole (-) to black wire",
+        "Ensure tight fitment of electrical connections using adequate terminal blocks"
+      ],
+      "expected_outcome": "Pump properly mounted and electrically connected",
+      "models": [
+        "All models"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Reset Warning After No Liquid Detection",
+            "preconditions": [
+              "Red and blue LED blinking alternatively"
+            ],
+            "steps": [
+              "Option 1: Reboot the circuit",
+              "Option 2: Press the Reset button on control panel (if present)"
+            ],
+            "expected_outcome": "Warning cleared and pump operational",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": [
+              "Red+Blue LED alternating"
+            ]
+          },
+          {
+            "title": "Power Supply Voltage Check",
+            "preconditions": [
+              "Yellow and blue LED blinking together"
+            ],
+            "steps": [
+              "Check wire section for power supply",
+              "Check battery charge level if battery present"
+            ],
+            "expected_outcome": "Correct voltage restored to pump",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": [
+              "Yellow+Blue LED simultaneous"
+            ]
+          },
+          {
+            "title": "Reset Low Speed Timeout Warning",
+            "preconditions": [
+              "Steady red and blinking blue LED"
+            ],
+            "steps": [
+              "Option 1: Reboot the circuit",
+              "Option 2: Press the Reset button on control panel (if present)"
+            ],
+            "expected_outcome": "Warning cleared and pump operational",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": [
+              "Red steady + Blue blinking"
+            ]
+          },
+          {
+            "title": "Expansion Tank Installation",
+            "preconditions": [
+              "Short rigid pipes or presence of solenoid valves"
+            ],
+            "steps": [
+              "Install expansion tank of minimum 0.5 liter capacity",
+              "Position tank to prevent water hammer effect",
+              "Ensure proper connection to system"
+            ],
+            "expected_outcome": "Prevention of overpressure damage to pressure sensor",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "System Installation with Appliances",
+            "preconditions": [
+              "Presence of dryers or ice machines in system"
+            ],
+            "steps": [
+              "Install expansion vessel",
+              "Connect vessel to system",
+              "Verify proper operation"
+            ],
+            "expected_outcome": "Prevention of pump overheating during continuous use",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Air Vent Valve Operation",
+            "preconditions": [
+              "Pump is installed",
+              "Tank contains liquid"
+            ],
+            "steps": [
+              "Slightly open the small valve when starting pump",
+              "Allow air to escape to facilitate priming",
+              "Close the small valve once pump is operating",
+              "Install at least 1m length of flexible tubing on outlet side"
+            ],
+            "expected_outcome": "Proper pump priming and operation",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "LED Status Monitoring",
+            "preconditions": [
+              "Electronic pressure sensor system is powered"
+            ],
+            "steps": [
+              "Observe blue LED for liquid presence status",
+              "Monitor multicolored LED for pressure and operation status",
+              "Verify normal operation through LED indicators"
+            ],
+            "expected_outcome": "Confirmation of proper system operation",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "error_codes": [
+              "Solid yellow - Pressure below target",
+              "Solid green - Target pressure reached with constant flow",
+              "Flashing green - Standby mode",
+              "Solid/slow flashing red - Short circuit detected",
+              "Fast flashing red - Pump overload"
+            ]
+          },
+          {
+            "title": "Short Circuit Error Resolution",
+            "preconditions": [
+              "Red LED is solid or slowly flashing"
+            ],
+            "steps": [
+              "Check for blocked gears",
+              "Inspect pump-circuit connection",
+              "Wait for automatic retry (up to 3 attempts)",
+              "If error persists after 4th attempt, check for permanent damage",
+              "Reboot circuit or press Reset button to clear error"
+            ],
+            "expected_outcome": "Resolution of short circuit error",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "error_codes": [
+              "Solid/slow flashing red"
+            ]
+          },
+          {
+            "title": "Overload Error Resolution",
+            "preconditions": [
+              "Red LED is rapidly flashing"
+            ],
+            "steps": [
+              "Check liquid viscosity is appropriate for pump",
+              "Verify gears move freely",
+              "Allow automatic speed reduction for 30 seconds",
+              "Monitor for repeated overload (up to 3 attempts)",
+              "Reboot circuit or press Reset button if pump turns off"
+            ],
+            "expected_outcome": "Resolution of pump overload condition",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "error_codes": [
+              "Fast flashing red"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Temperature Range Compliance",
+            "preconditions": [
+              "Pump is installed"
+            ],
+            "steps": [
+              "Ensure ambient temperature is above -10\u00b0C/14\u00b0F",
+              "Ensure ambient temperature is below +60\u00b0C/140\u00b0F",
+              "Monitor temperature of all pump components"
+            ],
+            "expected_outcome": "Pump operates within safe temperature limits",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Transportation and Handling Procedure",
+            "preconditions": [
+              "Pump requires moving or transport"
+            ],
+            "steps": [
+              "Wear appropriate safety gear (safety shoes with toe piece)",
+              "Handle manually due to limited weight",
+              "Inspect packaging for damage upon receipt",
+              "Store pump in dry area"
+            ],
+            "expected_outcome": "Safe transport and storage of pump",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installation Pre-Check Procedure",
+            "preconditions": [
+              "New pump installation"
+            ],
+            "steps": [
+              "Inspect pump for transportation or storage damage",
+              "Clean inlet port thoroughly removing dust and packaging material",
+              "Clean outlet port thoroughly removing dust and packaging material",
+              "Verify electrical power supply matches specification requirements"
+            ],
+            "expected_outcome": "Pump ready for safe installation",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Fluid Compatibility Check",
+            "preconditions": [
+              "Before pump operation"
+            ],
+            "steps": [
+              "Verify fluid is either water (max 85\u00b0C) or gasoline",
+              "Confirm fluid viscosity is less than 20 cSt",
+              "Ensure fluid is not a solvent",
+              "Ensure fluid is not corrosive",
+              "Verify fluid flash point is above 38\u00b0C if flammable"
+            ],
+            "expected_outcome": "Safe fluid compatibility confirmed",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "High Pressure Operation Management",
+            "preconditions": [
+              "Pump operating at high pressure"
+            ],
+            "steps": [
+              "Monitor pump temperature",
+              "Monitor operating duration",
+              "Avoid prolonged operation at high pressure",
+              "Check for signs of stress or overheating"
+            ],
+            "expected_outcome": "Prevention of pump stress and overheating",
+            "models": [
+              "UP6/E"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pump Assembly Parts Identification",
+            "preconditions": [
+              "Have access to pump components",
+              "Reference exploded view diagram"
+            ],
+            "steps": [
+              "Identify pump body (Pos. 1)",
+              "Locate flange (Pos. 2)",
+              "Verify presence of two rods (Pos. 3)",
+              "Check armature assembly (Pos. 4)",
+              "Locate pump frame (Pos. 5)",
+              "Identify all O-rings (Pos. 6, 10, 16, 22, 25, 27)",
+              "Locate brush holder (Pos. 7)",
+              "Verify ball bearing (Pos. 8)",
+              "Check compensation spring (Pos. 9)",
+              "Locate driving and idle gears (Pos. 14, 15)",
+              "Identify electronic pressure sensor (Pos. 19)",
+              "Locate non-return valve (Pos. 20)",
+              "Verify antivibration mounts and inserts (Pos. 29, 30)"
+            ],
+            "expected_outcome": "All pump components correctly identified and accounted for",
+            "models": [
+              "MARCO Pump"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Replaceable Parts Identification",
+            "preconditions": [
+              "Access to pump parts list"
+            ],
+            "steps": [
+              "Identify compensation spring (Pos. 9) as replaceable",
+              "Note idle gear (Pos. 15) as replaceable",
+              "Locate electronic control (Pos. 19) as replaceable",
+              "Check nipple (Pos. 24) as replaceable",
+              "Verify air vent cap (Pos. 26) as replaceable",
+              "Note O-ring (Pos. 27) as replaceable",
+              "Identify filter (Pos. 28) as replaceable",
+              "Check antivibration mount (Pos. 29) as replaceable"
+            ],
+            "expected_outcome": "All replaceable parts identified for maintenance purposes",
+            "models": [
+              "MARCO Pump"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Pump Priming Troubleshooting",
+            "preconditions": [
+              "Pump not priming properly"
+            ],
+            "steps": [
+              "Check pump height relative to fluid level",
+              "Verify pump has not run dry for extended period",
+              "Inspect suction pipe for air leaks, cuts, or inadequate hose clamps",
+              "Check filter seals and clean clogged filter",
+              "Inspect front plate cover for loose screws and seal effectiveness",
+              "Verify electrical cable connections",
+              "Check for obstructions in suction/delivery pipes",
+              "Look for liquid loops in outlet tube"
+            ],
+            "expected_outcome": "Properly priming pump",
+            "models": [
+              "All pump models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Extended Storage Preparation",
+            "preconditions": [
+              "Pump will be unused for 30+ days"
+            ],
+            "steps": [
+              "Run fresh water through the pump",
+              "Loosen front plate screws",
+              "Upon re-use, run pump briefly for few seconds",
+              "Re-tighten screws",
+              "Check motor current value under maximum operating pressure"
+            ],
+            "expected_outcome": "Pump properly prepared for storage",
+            "models": [
+              "All pump models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Normal Maintenance Routine",
+            "preconditions": [
+              "Regular operation"
+            ],
+            "steps": [
+              "Check and clean inlet filter frequently",
+              "Inspect and clean chamber monthly",
+              "Check electrical wiring condition monthly"
+            ],
+            "expected_outcome": "Well-maintained pump",
+            "models": [
+              "All pump models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Performance Monitoring",
+            "preconditions": [
+              "Pump in operation"
+            ],
+            "steps": [
+              "Monitor body and motor frame temperature (should be 60\u00b0C-70\u00b0C)",
+              "Check for regular flow and constant noise levels",
+              "Verify amp-draw within specified limits"
+            ],
+            "expected_outcome": "Confirmed proper pump operation",
+            "models": [
+              "All pump models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Environmental Disposal Procedure",
+            "preconditions": [
+              "Pump needs disposal"
+            ],
+            "steps": [
+              "Contact local governing authorities",
+              "Identify specific refuse collection structures",
+              "Dispose through authorized channels"
+            ],
+            "expected_outcome": "Proper disposal of pump",
+            "models": [
+              "All pump models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Packaging Disposal Procedure",
+            "preconditions": [
+              "Packaging needs disposal"
+            ],
+            "steps": [
+              "Separate waste materials",
+              "Sort packaging materials for recycling",
+              "Dispose through appropriate recycling channels"
+            ],
+            "expected_outcome": "Proper disposal of packaging",
+            "models": [
+              "All pump models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Inspection and Storage",
+            "preconditions": [
+              "New pump delivery"
+            ],
+            "steps": [
+              "Inspect packaging for damages",
+              "Store pump in a dry area"
+            ],
+            "expected_outcome": "Pump properly inspected and stored",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Preliminary Installation Checks",
+            "preconditions": [
+              "Pump ready for installation"
+            ],
+            "steps": [
+              "Check pump for transportation or storage damage",
+              "Clean inlet and outlet ports of dust and packaging material",
+              "Verify electrical power supply matches specifications"
+            ],
+            "expected_outcome": "Pump verified ready for installation",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pump Positioning and Electrical Connection",
+            "preconditions": [
+              "Installation location prepared"
+            ],
+            "steps": [
+              "Mount pump in desired position using appropriate screws",
+              "Connect positive pole (+) of battery to red wire on motor end-cap",
+              "Connect negative pole (-) to black wire",
+              "Ensure tight fitment of electrical connections using adequate terminal blocks"
+            ],
+            "expected_outcome": "Pump properly mounted and electrically connected",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Tubing Installation",
+            "preconditions": [
+              "Pump mounted"
+            ],
+            "steps": [
+              "Check and remove any end caps from inlet ports",
+              "Position pump at appropriate height relative to fluid level",
+              "Ensure outlet tube is empty and unchoked",
+              "Install inlet filter if handling fluids with impurities (mesh ASTM no. 35)",
+              "Connect tubes and fittings resistant to handled fluids"
+            ],
+            "expected_outcome": "Tubing properly connected and optimized",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Electrical Protection Installation",
+            "preconditions": [
+              "Pump ready for electrical connection"
+            ],
+            "steps": [
+              "Install protection fuse rated according to motor label",
+              "Mount anti-vibration rubber fittings",
+              "Install appropriately sized electrical cabling based on pump-to-power supply distance",
+              "Verify internal tube diameter matches Pump Data Table specifications"
+            ],
+            "expected_outcome": "Pump electrically protected and properly connected",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Troubleshooting Non-Starting Pump",
+            "preconditions": [
+              "Pump not starting or has stopped"
+            ],
+            "steps": [
+              "Check battery power supply voltage",
+              "Inspect fuse condition",
+              "Disconnect power supply",
+              "Unscrew four fixing screws",
+              "Remove front cover plate",
+              "Inspect chamber for foreign matter",
+              "Replace cover plate in original position"
+            ],
+            "expected_outcome": "Pump issue identified and resolved",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Maintenance Check - Motor Brushes",
+            "preconditions": [
+              "2500 hours of operation or pump stoppage"
+            ],
+            "steps": [
+              "Check motor commutator brushes for wear",
+              "Replace if necessary after 2500 hours of normal operation"
+            ],
+            "expected_outcome": "Motor brushes maintained or replaced",
+            "models": [
+              "All models"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Filter Installation",
+            "preconditions": [
+              "Access to filter mounting location"
+            ],
+            "steps": [
+              "Locate filter mounting position (component #28)",
+              "Install filter in designated location",
+              "Ensure proper orientation according to diagram"
+            ],
+            "expected_outcome": "Filter securely mounted in correct position",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Antivibration Mount Installation",
+            "preconditions": [
+              "Access to mounting locations",
+              "4 antivibration mounts available",
+              "Mounting screws (not included)"
+            ],
+            "steps": [
+              "Locate the 4 mounting points for antivibration mounts (#29)",
+              "Insert antivibration inserts (#30) into mounts if required",
+              "Secure antivibration mounts using appropriate screws (not included)",
+              "Verify mounts are properly seated"
+            ],
+            "expected_outcome": "All 4 antivibration mounts securely installed",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "System Operating Parameters",
+            "preconditions": [
+              "System properly installed"
+            ],
+            "steps": [
+              "Monitor flow rate according to pressure chart",
+              "Maintain flow rate between 0-30 l/min",
+              "Monitor electrical absorption between 0-6A",
+              "Maintain pressure between 0-4 bar"
+            ],
+            "expected_outcome": "System operating within specified parameters",
+            "models": [
+              "UP6/E electronic water pressure system 26 l/min / gear pump"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -415,8 +415,7 @@ class DocumentRepository {
       const { data, error } = await supabase
         .from('systems')
         .update({
-          manual: manualValue,
-          updated_at: new Date().toISOString()
+          manual: manualValue
         })
         .eq('asset_uid', assetUid)
         .select()
@@ -431,6 +430,35 @@ class DocumentRepository {
         error: error.message,
         assetUid,
         manual: manualValue
+      });
+      throw error;
+    }
+  }
+
+  async updateSystemColloquialKeywords(assetUid, keywords) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('systems')
+        .update({
+          colloquial_keywords: keywords,
+          updated_at: new Date().toISOString()
+        })
+        .eq('asset_uid', assetUid)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      this.requestLogger.info('System colloquial keywords updated', {
+        assetUid,
+        keywordCount: keywords.split(',').length
+      });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update system colloquial keywords', {
+        error: error.message,
+        assetUid
       });
       throw error;
     }

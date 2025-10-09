@@ -147,13 +147,15 @@ class LLMService:
                                 classification: Optional[Dict[str, Any]],
                                 dip_results: List[Dict[str, Any]],
                                 pinecone_results: Optional[Dict[str, Any]] = None,
-                                conversation_summary: Optional[str] = None) -> str:
+                                conversation_summary: Optional[str] = None,
+                                synthesis_model: Optional[str] = None) -> str:
         """
         Synthesize natural language response from structured data with conversation memory
 
         Args:
             user_query: Original user query
             systems_context: Equipment context
+            synthesis_model: Optional model override (gpt-5 or gpt-4.1-mini), defaults to env var
             classification: Query classification results
             dip_results: Results from DIP table queries
             pinecone_results: Results from Pinecone search (optional)
@@ -181,19 +183,47 @@ class LLMService:
             synthesis_instructions=SYNTHESIS_INSTRUCTIONS
         )
 
-        # Determine reasoning_effort based on query complexity
+        # Determine which model to use
+        model_to_use = synthesis_model or self.openai_model
         complexity_score = classification.get("complexity_score", 0.5) if classification else 0.5
-        reasoning_effort = "high" if complexity_score >= 0.7 else "medium"
+
+        # Set model-specific parameters
+        if "gpt-5" in model_to_use.lower():
+            # GPT-5: Use reasoning, high token limit, no temperature
+            reasoning_effort = "high" if complexity_score >= 0.7 else "medium"
+            max_tokens = 8000
+            temperature = None
+            logger.info(f"🤖 Using GPT-5 with reasoning_effort={reasoning_effort}, max_tokens={max_tokens}")
+
+        elif "gpt-4.1-mini" in model_to_use.lower():
+            # GPT-4.1-mini: Use temperature, standard limit, no reasoning
+            reasoning_effort = None
+            max_tokens = 4000
+            temperature = float(os.getenv('OPENAI_TEMPERATURE', '0'))
+            logger.info(f"🤖 Using GPT-4.1-mini with temperature={temperature}, max_tokens={max_tokens}")
+
+        else:
+            # Fallback for other models (gpt-4o, etc)
+            reasoning_effort = None
+            max_tokens = 4000
+            temperature = None
+            logger.info(f"🤖 Using default model: {model_to_use} with max_tokens={max_tokens}")
 
         # Log the context being sent to LLM (full content for troubleshooting)
         logger.info("📦 LLM Synthesis Context:")
         logger.info(f"  Equipment: {equipment_context}")
         logger.info(f"  DIP Context: {dip_context}")
         logger.info(f"  Pinecone Context: {pinecone_context}")
-        logger.info(f"  Complexity: {complexity_score:.2f} → reasoning_effort={reasoning_effort}")
+        logger.info(f"  Complexity: {complexity_score:.2f}")
 
         try:
-            response = await self._call_llm(prompt, reasoning_effort=reasoning_effort)
+            response = await self._call_llm(
+                prompt,
+                model=model_to_use,
+                max_tokens=max_tokens,
+                reasoning_effort=reasoning_effort,
+                temperature=temperature
+            )
             return response.strip()
 
         except Exception as e:
@@ -219,12 +249,12 @@ class LLMService:
             return []
 
         # Determine chunk limit based on complexity
-        if complexity_score < 0.3:
-            chunk_limit = 1  # Simple
-        elif complexity_score < 0.7:
-            chunk_limit = 3  # Moderate
+        if complexity_score <= 0.3:
+            chunk_limit = 2  # Simple (bumped from 1)
+        elif complexity_score <= 0.6:  # Tightened from 0.7
+            chunk_limit = 5  # Moderate (bumped from 3)
         else:
-            chunk_limit = 8  # Complex
+            chunk_limit = 10  # Complex (bumped from 8)
 
         # If we have fewer chunks than the limit, return all
         if len(chunks) <= chunk_limit:
@@ -233,6 +263,11 @@ class LLMService:
 
         # Use LLM to rank chunks by relevance
         try:
+            # Log chunk metadata to debug empty content
+            logger.info(f"🔍 Ranking {len(chunks[:10])} chunks for query: '{user_query}'")
+            for i, chunk in enumerate(chunks[:3]):
+                logger.info(f"  Chunk {i}: score={chunk.get('score', 0):.3f}, metadata_keys={list(chunk.get('metadata', {}).keys())}")
+
             chunks_text = ""
             for i, chunk in enumerate(chunks[:10]):  # Use 0-based indexing
                 content = chunk.get('metadata', {}).get('text', '')
@@ -326,7 +361,7 @@ Return JSON with chunk rankings (1 is most relevant):
     #         logger.error(f"Response scoring failed: {e}")
     #         return self._fallback_scoring(total_results, equipment_count)
 
-    async def _call_llm(self, prompt: str, model: str = None, max_tokens: int = 4000, reasoning_effort: str = None) -> str:
+    async def _call_llm(self, prompt: str, model: str = None, max_tokens: int = 4000, reasoning_effort: str = None, temperature: float = None) -> str:
         """Call LLM with fallback between Anthropic and OpenAI with usage tracking
 
         Args:
@@ -334,6 +369,7 @@ Return JSON with chunk rankings (1 is most relevant):
             model: Optional model override (defaults to self.openai_model)
             max_tokens: Maximum completion tokens (default 4000)
             reasoning_effort: Optional reasoning effort for GPT-5 ("medium" or "high")
+            temperature: Optional temperature for non-reasoning models
         """
         start_time = datetime.now()
 
@@ -364,6 +400,11 @@ Return JSON with chunk rankings (1 is most relevant):
                 if reasoning_effort and "gpt-5" in selected_model.lower():
                     request_params["reasoning_effort"] = reasoning_effort
                     logger.info(f"🧠 Using reasoning_effort={reasoning_effort}")
+
+                # Add temperature if specified (for non-reasoning models)
+                if temperature is not None:
+                    request_params["temperature"] = temperature
+                    logger.info(f"🌡️ Using temperature={temperature}")
 
                 response = await self.openai_client.chat.completions.create(**request_params)
 
@@ -456,17 +497,28 @@ Return JSON with chunk rankings (1 is most relevant):
         if not use_openai_first and self.openai_client:
             try:
                 # Log full prompt (no character limits)
-                logger.info(f"📤 OpenAI Prompt ({self.openai_model}):")
+                logger.info(f"📤 OpenAI Prompt ({selected_model}):")
                 logger.info(f"{prompt}")
 
-                response = await self.openai_client.chat.completions.create(
-                    model=self.openai_model,
-                    messages=[{
+                # Build request parameters for fallback
+                request_params = {
+                    "model": selected_model,
+                    "messages": [{
                         "role": "user",
                         "content": prompt
                     }],
-                    max_completion_tokens=4000
-                )
+                    "max_completion_tokens": max_tokens
+                }
+
+                # Add reasoning_effort for GPT-5 if specified
+                if reasoning_effort and "gpt-5" in selected_model.lower():
+                    request_params["reasoning_effort"] = reasoning_effort
+
+                # Add temperature if specified
+                if temperature is not None:
+                    request_params["temperature"] = temperature
+
+                response = await self.openai_client.chat.completions.create(**request_params)
 
                 # Log LLM usage metrics
                 duration_ms = (datetime.now() - start_time).total_seconds() * 1000

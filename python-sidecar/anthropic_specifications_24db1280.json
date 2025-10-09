@@ -1,0 +1,3278 @@
+{
+  "total_chunks_processed": 17,
+  "successful_chunks": 17,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 83,
+  "unique_specifications": 30,
+  "category_breakdown": {
+    "Electrical": 8,
+    "Performance": 5,
+    "Network": 1,
+    "Regulatory": 4,
+    "Installation": 10,
+    "Safety": 1,
+    "Communication": 1
+  },
+  "specifications": [
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "operating_voltage",
+      "parameter_aliases": [
+        "power supply voltage",
+        "input voltage",
+        "supply voltage"
+      ],
+      "value": "12 to 24",
+      "range": "12V - 24V DC",
+      "units": "V DC",
+      "normalized_units": "volts",
+      "converted_value": "12-24",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "DC voltage",
+        "power supply",
+        "electrical requirements"
+      ],
+      "concept_group": "power_requirements",
+      "references": [
+        "Specifications section"
+      ]
+    },
+    {
+      "parameter": "Device Type",
+      "normalized_parameter": "device_type",
+      "parameter_aliases": [
+        "transceiver class",
+        "AIS class",
+        "device classification"
+      ],
+      "value": "Class B",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "AIS class",
+        "transceiver type",
+        "device class",
+        "AIS category"
+      ],
+      "concept_group": "device_classification",
+      "references": [
+        "Title section",
+        "About your AIS class B transceiver"
+      ]
+    },
+    {
+      "parameter": "Communication Protocol",
+      "normalized_parameter": "communication_protocol",
+      "parameter_aliases": [
+        "data interface",
+        "connectivity"
+      ],
+      "value": "NMEA 0183",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Network",
+      "search_terms": [
+        "NMEA",
+        "data protocol",
+        "interface",
+        "communication standard"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "Figure 11"
+      ]
+    },
+    {
+      "parameter": "Device Classification",
+      "normalized_parameter": "device_class",
+      "parameter_aliases": [
+        "device type",
+        "equipment class",
+        "classification"
+      ],
+      "value": "Class B",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Regulatory",
+      "search_terms": [
+        "device class",
+        "equipment type",
+        "class B",
+        "classification",
+        "device category"
+      ],
+      "concept_group": "regulatory_compliance",
+      "references": [
+        "FCC Notice section"
+      ]
+    },
+    {
+      "parameter": "FCC Classification",
+      "normalized_parameter": "fcc_class",
+      "parameter_aliases": [
+        "FCC category",
+        "federal communications classification"
+      ],
+      "value": "Class B digital device",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Regulatory",
+      "search_terms": [
+        "FCC class",
+        "FCC classification",
+        "federal communications commission class",
+        "digital device class"
+      ],
+      "concept_group": "regulatory_compliance",
+      "references": [
+        "FCC Notice section"
+      ]
+    },
+    {
+      "parameter": "Regulatory Compliance",
+      "normalized_parameter": "regulatory_compliance",
+      "parameter_aliases": [
+        "certifications",
+        "approvals",
+        "regulatory standards"
+      ],
+      "value": "CE, FCC Part 15, IC RSS, ICES-003",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Regulatory",
+      "search_terms": [
+        "certifications",
+        "compliance",
+        "regulatory approval",
+        "CE mark",
+        "FCC compliance",
+        "Industry Canada"
+      ],
+      "concept_group": "regulatory_compliance",
+      "references": [
+        "Declaration of Conformity section",
+        "FCC Notice section",
+        "Industry Canada Notice section"
+      ]
+    },
+    {
+      "parameter": "EU Directive Compliance",
+      "normalized_parameter": "eu_directive",
+      "parameter_aliases": [
+        "European directive",
+        "CE directive"
+      ],
+      "value": "2014/53/EU",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Regulatory",
+      "search_terms": [
+        "EU directive",
+        "European compliance",
+        "CE directive",
+        "radio equipment directive",
+        "RED"
+      ],
+      "concept_group": "regulatory_compliance",
+      "references": [
+        "Declaration of Conformity section"
+      ]
+    },
+    {
+      "parameter": "Compass Safe Distance",
+      "normalized_parameter": "compass_safe_distance",
+      "parameter_aliases": [
+        "magnetic interference distance",
+        "compass interference zone"
+      ],
+      "value": "0.55",
+      "range": "\u2265 0.55",
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "0.55",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "compass safe distance",
+        "magnetic interference",
+        "compass interference",
+        "safe mounting distance"
+      ],
+      "concept_group": "installation_safety",
+      "references": [
+        "Compass safe distance section"
+      ]
+    },
+    {
+      "parameter": "MPE Radius",
+      "normalized_parameter": "maximum_permissible_exposure_radius",
+      "parameter_aliases": [
+        "RF exposure radius",
+        "safe RF distance"
+      ],
+      "value": "0.6",
+      "range": null,
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "0.6",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Safety",
+      "search_terms": [
+        "MPE radius",
+        "RF safety distance",
+        "radiation exposure radius",
+        "safe operating distance"
+      ],
+      "concept_group": "rf_safety",
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "parameter": "Antenna Mounting Height",
+      "normalized_parameter": "antenna_mounting_height",
+      "parameter_aliases": [
+        "antenna height",
+        "installation height"
+      ],
+      "value": "3.5",
+      "range": "\u2265 3.5",
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "3.5",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "antenna height",
+        "mounting height",
+        "installation height",
+        "antenna position"
+      ],
+      "concept_group": "antenna_installation",
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "parameter": "Minimum Antenna Distance",
+      "normalized_parameter": "minimum_antenna_distance",
+      "parameter_aliases": [
+        "antenna separation",
+        "safe antenna distance"
+      ],
+      "value": "1.5",
+      "range": "\u2265 1.5",
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "1.5",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "antenna distance",
+        "minimum separation",
+        "installation distance",
+        "antenna spacing"
+      ],
+      "concept_group": "antenna_installation",
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "parameter": "Antenna Impedance",
+      "normalized_parameter": "antenna_impedance",
+      "parameter_aliases": [
+        "RF impedance",
+        "characteristic impedance"
+      ],
+      "value": "50",
+      "range": null,
+      "units": "ohms",
+      "normalized_units": "ohms",
+      "converted_value": "50",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "antenna impedance",
+        "RF impedance",
+        "characteristic impedance",
+        "impedance matching"
+      ],
+      "concept_group": "rf_specifications",
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "parameter": "Maximum Antenna Gain",
+      "normalized_parameter": "maximum_antenna_gain",
+      "parameter_aliases": [
+        "antenna gain",
+        "RF gain"
+      ],
+      "value": "3",
+      "range": "\u2264 3",
+      "units": "dB",
+      "normalized_units": "decibels",
+      "converted_value": "3",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "antenna gain",
+        "RF gain",
+        "dB gain",
+        "maximum gain"
+      ],
+      "concept_group": "rf_specifications",
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "parameter": "Power and Data Interface",
+      "normalized_parameter": "data_interface_types",
+      "parameter_aliases": [
+        "connections",
+        "ports",
+        "interfaces"
+      ],
+      "value": "NMEA 0183, USB, NMEA 2000",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "connections",
+        "ports",
+        "interfaces",
+        "NMEA",
+        "USB",
+        "data ports"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "p.11"
+      ]
+    },
+    {
+      "parameter": "NMEA 0183 Ports",
+      "normalized_parameter": "nmea_0183_ports",
+      "parameter_aliases": [
+        "serial ports",
+        "data ports"
+      ],
+      "value": "2",
+      "range": "N/A",
+      "units": "ports",
+      "normalized_units": "count",
+      "converted_value": "2",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "NMEA ports",
+        "serial ports",
+        "chartplotter connections",
+        "number of NMEA ports"
+      ],
+      "concept_group": "connectivity",
+      "references": [
+        "p.11"
+      ]
+    },
+    {
+      "parameter": "Antenna Types",
+      "normalized_parameter": "antenna_connections",
+      "parameter_aliases": [
+        "RF connections",
+        "antenna inputs"
+      ],
+      "value": "VHF, GPS",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "antenna",
+        "GPS antenna",
+        "VHF antenna",
+        "antenna connections"
+      ],
+      "concept_group": "rf_system",
+      "references": [
+        "p.10"
+      ]
+    },
+    {
+      "parameter": "Kit Part Number",
+      "normalized_parameter": "kit_part_number",
+      "parameter_aliases": [
+        "model number",
+        "product code"
+      ],
+      "value": "000-13609-001",
+      "range": "N/A",
+      "units": "N/A",
+      "normalized_units": "N/A",
+      "converted_value": "N/A",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "part number",
+        "model",
+        "product code",
+        "ordering information"
+      ],
+      "concept_group": "product_identification",
+      "references": [
+        "p.9"
+      ]
+    },
+    {
+      "parameter": "Device Class",
+      "normalized_parameter": "ais_class",
+      "parameter_aliases": [
+        "class type",
+        "transceiver class",
+        "AIS type"
+      ],
+      "value": "B",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "class B",
+        "device class",
+        "transceiver type",
+        "AIS class"
+      ],
+      "concept_group": "device_classification",
+      "references": [
+        "p.7"
+      ]
+    },
+    {
+      "parameter": "Radio Standard Compliance",
+      "normalized_parameter": "radio_compliance",
+      "parameter_aliases": [
+        "EMC compliance",
+        "radio certification"
+      ],
+      "value": "NMB-003",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "NMB-003",
+        "radio compliance",
+        "certification",
+        "regulatory compliance"
+      ],
+      "concept_group": "regulatory_compliance",
+      "references": [
+        "p.7"
+      ]
+    },
+    {
+      "parameter": "Communication Protocol",
+      "normalized_parameter": "communication_protocol",
+      "parameter_aliases": [
+        "transmission type",
+        "radio protocol"
+      ],
+      "value": "VHF digital",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Communication",
+      "search_terms": [
+        "VHF",
+        "digital transmission",
+        "radio protocol",
+        "communication type"
+      ],
+      "concept_group": "communication_specifications",
+      "references": [
+        "p.7"
+      ]
+    },
+    {
+      "parameter": "Position System",
+      "normalized_parameter": "positioning_system",
+      "parameter_aliases": [
+        "location system",
+        "navigation system"
+      ],
+      "value": "GPS",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "GPS",
+        "positioning",
+        "location system",
+        "navigation"
+      ],
+      "concept_group": "navigation_specifications",
+      "references": [
+        "p.7"
+      ]
+    },
+    {
+      "parameter": "Required License",
+      "normalized_parameter": "required_license",
+      "parameter_aliases": [
+        "certification requirement",
+        "operational license"
+      ],
+      "value": "VHF radiotelephone license",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "VHF license",
+        "radio license",
+        "operating permit",
+        "legal requirements"
+      ],
+      "concept_group": "regulatory_requirements",
+      "references": [
+        "p.8"
+      ]
+    },
+    {
+      "parameter": "Power Cable Length",
+      "normalized_parameter": "power_cable_length",
+      "parameter_aliases": [
+        "cable length",
+        "wiring length",
+        "power wire length"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "meters",
+      "normalized_units": "m",
+      "converted_value": "2",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "power cable length",
+        "how long is power cable",
+        "cable specifications",
+        "wiring length"
+      ],
+      "concept_group": "power_wiring",
+      "references": [
+        "Power and Data Cable section"
+      ]
+    },
+    {
+      "parameter": "Power Current Peak",
+      "normalized_parameter": "peak_current_draw",
+      "parameter_aliases": [
+        "max current",
+        "peak amperage",
+        "maximum current"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "A",
+      "normalized_units": "A",
+      "converted_value": "2",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "peak current",
+        "maximum amperage",
+        "current requirements",
+        "power consumption"
+      ],
+      "concept_group": "power_requirements",
+      "references": [
+        "Power and Data Cable section"
+      ]
+    },
+    {
+      "parameter": "Average Current Draw",
+      "normalized_parameter": "average_current_draw",
+      "parameter_aliases": [
+        "typical current",
+        "nominal current"
+      ],
+      "value": "200",
+      "range": null,
+      "units": "mA",
+      "normalized_units": "A",
+      "converted_value": "0.2",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "average current",
+        "typical power consumption",
+        "normal operating current"
+      ],
+      "concept_group": "power_requirements",
+      "references": [
+        "Power and Data Cable section"
+      ]
+    },
+    {
+      "parameter": "NMEA Baud Rate",
+      "normalized_parameter": "nmea_baud_rate",
+      "parameter_aliases": [
+        "communication speed",
+        "data rate"
+      ],
+      "value": "38400",
+      "range": null,
+      "units": "baud",
+      "normalized_units": "baud",
+      "converted_value": "38400",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "NMEA speed",
+        "baud rate",
+        "communication rate",
+        "data speed"
+      ],
+      "concept_group": "communications",
+      "references": [
+        "Chartplotters section"
+      ]
+    },
+    {
+      "parameter": "VHF Antenna Connector Type",
+      "normalized_parameter": "vhf_connector_type",
+      "parameter_aliases": [
+        "antenna connector",
+        "RF connector",
+        "coaxial connector"
+      ],
+      "value": "SO239",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "SO239 connector",
+        "VHF antenna connection",
+        "antenna connector type",
+        "RF connection",
+        "coaxial fitting"
+      ],
+      "concept_group": "antenna_connections",
+      "references": [
+        "Page 18"
+      ]
+    },
+    {
+      "parameter": "Required Mating Connector",
+      "normalized_parameter": "mating_connector_type",
+      "parameter_aliases": [
+        "plug type",
+        "male connector",
+        "antenna plug"
+      ],
+      "value": "PL259",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "PL259 connector",
+        "antenna plug type",
+        "compatible connector",
+        "VHF plug",
+        "mating connector"
+      ],
+      "concept_group": "antenna_connections",
+      "references": [
+        "Page 18"
+      ]
+    },
+    {
+      "parameter": "Mounting Holes",
+      "normalized_parameter": "mounting_holes_quantity",
+      "parameter_aliases": [
+        "installation holes",
+        "screw holes"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "holes",
+      "normalized_units": "count",
+      "converted_value": "2",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "mounting holes",
+        "installation holes",
+        "screw holes",
+        "antenna mounting",
+        "holes required"
+      ],
+      "concept_group": "mechanical_installation",
+      "references": [
+        "Page 17"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "input_voltage",
+      "parameter_aliases": [
+        "power supply voltage",
+        "supply voltage",
+        "voltage range"
+      ],
+      "value": "12 to 24",
+      "range": "12V - 24V",
+      "units": "V DC",
+      "normalized_units": "volts_dc",
+      "converted_value": "12-24",
+      "models": [
+        "NAIS-500"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirements",
+        "DC voltage",
+        "power supply",
+        "voltage range"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Step 4 - Connecting the accessory cable"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "power supply voltage",
+              "input voltage",
+              "supply voltage"
+            ],
+            "value": "12 to 24",
+            "range": "12V - 24V DC",
+            "units": "V DC",
+            "normalized_units": "volts",
+            "converted_value": "12-24",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "DC voltage",
+              "power supply",
+              "electrical requirements"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Device Type",
+            "normalized_parameter": "device_type",
+            "parameter_aliases": [
+              "transceiver class",
+              "AIS class",
+              "device classification"
+            ],
+            "value": "Class B",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "AIS class",
+              "transceiver type",
+              "device class",
+              "AIS category"
+            ],
+            "concept_group": "device_classification",
+            "references": [
+              "Title section",
+              "About your AIS class B transceiver"
+            ]
+          },
+          {
+            "parameter": "Communication Protocol",
+            "normalized_parameter": "communication_protocol",
+            "parameter_aliases": [
+              "data interface",
+              "connectivity"
+            ],
+            "value": "NMEA 0183",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "NMEA",
+              "data protocol",
+              "interface",
+              "communication standard"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "Figure 11"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Device Classification",
+            "normalized_parameter": "device_class",
+            "parameter_aliases": [
+              "device type",
+              "equipment class",
+              "classification"
+            ],
+            "value": "Class B",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Regulatory",
+            "search_terms": [
+              "device class",
+              "equipment type",
+              "class B",
+              "classification",
+              "device category"
+            ],
+            "concept_group": "regulatory_compliance",
+            "references": [
+              "FCC Notice section"
+            ]
+          },
+          {
+            "parameter": "FCC Classification",
+            "normalized_parameter": "fcc_class",
+            "parameter_aliases": [
+              "FCC category",
+              "federal communications classification"
+            ],
+            "value": "Class B digital device",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Regulatory",
+            "search_terms": [
+              "FCC class",
+              "FCC classification",
+              "federal communications commission class",
+              "digital device class"
+            ],
+            "concept_group": "regulatory_compliance",
+            "references": [
+              "FCC Notice section"
+            ]
+          },
+          {
+            "parameter": "Regulatory Compliance",
+            "normalized_parameter": "regulatory_compliance",
+            "parameter_aliases": [
+              "certifications",
+              "approvals",
+              "regulatory standards"
+            ],
+            "value": "CE, FCC Part 15, IC RSS, ICES-003",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Regulatory",
+            "search_terms": [
+              "certifications",
+              "compliance",
+              "regulatory approval",
+              "CE mark",
+              "FCC compliance",
+              "Industry Canada"
+            ],
+            "concept_group": "regulatory_compliance",
+            "references": [
+              "Declaration of Conformity section",
+              "FCC Notice section",
+              "Industry Canada Notice section"
+            ]
+          },
+          {
+            "parameter": "EU Directive Compliance",
+            "normalized_parameter": "eu_directive",
+            "parameter_aliases": [
+              "European directive",
+              "CE directive"
+            ],
+            "value": "2014/53/EU",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Regulatory",
+            "search_terms": [
+              "EU directive",
+              "European compliance",
+              "CE directive",
+              "radio equipment directive",
+              "RED"
+            ],
+            "concept_group": "regulatory_compliance",
+            "references": [
+              "Declaration of Conformity section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Compass Safe Distance",
+            "normalized_parameter": "compass_safe_distance",
+            "parameter_aliases": [
+              "magnetic interference distance",
+              "compass interference zone"
+            ],
+            "value": "0.55",
+            "range": "\u2265 0.55",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "0.55",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "compass safe distance",
+              "magnetic interference",
+              "compass interference",
+              "safe mounting distance"
+            ],
+            "concept_group": "installation_safety",
+            "references": [
+              "Compass safe distance section"
+            ]
+          },
+          {
+            "parameter": "MPE Radius",
+            "normalized_parameter": "maximum_permissible_exposure_radius",
+            "parameter_aliases": [
+              "RF exposure radius",
+              "safe RF distance"
+            ],
+            "value": "0.6",
+            "range": null,
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "0.6",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Safety",
+            "search_terms": [
+              "MPE radius",
+              "RF safety distance",
+              "radiation exposure radius",
+              "safe operating distance"
+            ],
+            "concept_group": "rf_safety",
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "parameter": "Antenna Mounting Height",
+            "normalized_parameter": "antenna_mounting_height",
+            "parameter_aliases": [
+              "antenna height",
+              "installation height"
+            ],
+            "value": "3.5",
+            "range": "\u2265 3.5",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "3.5",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "antenna height",
+              "mounting height",
+              "installation height",
+              "antenna position"
+            ],
+            "concept_group": "antenna_installation",
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "parameter": "Minimum Antenna Distance",
+            "normalized_parameter": "minimum_antenna_distance",
+            "parameter_aliases": [
+              "antenna separation",
+              "safe antenna distance"
+            ],
+            "value": "1.5",
+            "range": "\u2265 1.5",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "1.5",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "antenna distance",
+              "minimum separation",
+              "installation distance",
+              "antenna spacing"
+            ],
+            "concept_group": "antenna_installation",
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "parameter": "Antenna Impedance",
+            "normalized_parameter": "antenna_impedance",
+            "parameter_aliases": [
+              "RF impedance",
+              "characteristic impedance"
+            ],
+            "value": "50",
+            "range": null,
+            "units": "ohms",
+            "normalized_units": "ohms",
+            "converted_value": "50",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "antenna impedance",
+              "RF impedance",
+              "characteristic impedance",
+              "impedance matching"
+            ],
+            "concept_group": "rf_specifications",
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "parameter": "Maximum Antenna Gain",
+            "normalized_parameter": "maximum_antenna_gain",
+            "parameter_aliases": [
+              "antenna gain",
+              "RF gain"
+            ],
+            "value": "3",
+            "range": "\u2264 3",
+            "units": "dB",
+            "normalized_units": "decibels",
+            "converted_value": "3",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "antenna gain",
+              "RF gain",
+              "dB gain",
+              "maximum gain"
+            ],
+            "concept_group": "rf_specifications",
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power and Data Interface",
+            "normalized_parameter": "data_interface_types",
+            "parameter_aliases": [
+              "connections",
+              "ports",
+              "interfaces"
+            ],
+            "value": "NMEA 0183, USB, NMEA 2000",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "connections",
+              "ports",
+              "interfaces",
+              "NMEA",
+              "USB",
+              "data ports"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "p.11"
+            ]
+          },
+          {
+            "parameter": "NMEA 0183 Ports",
+            "normalized_parameter": "nmea_0183_ports",
+            "parameter_aliases": [
+              "serial ports",
+              "data ports"
+            ],
+            "value": "2",
+            "range": "N/A",
+            "units": "ports",
+            "normalized_units": "count",
+            "converted_value": "2",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "NMEA ports",
+              "serial ports",
+              "chartplotter connections",
+              "number of NMEA ports"
+            ],
+            "concept_group": "connectivity",
+            "references": [
+              "p.11"
+            ]
+          },
+          {
+            "parameter": "Antenna Types",
+            "normalized_parameter": "antenna_connections",
+            "parameter_aliases": [
+              "RF connections",
+              "antenna inputs"
+            ],
+            "value": "VHF, GPS",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "antenna",
+              "GPS antenna",
+              "VHF antenna",
+              "antenna connections"
+            ],
+            "concept_group": "rf_system",
+            "references": [
+              "p.10"
+            ]
+          },
+          {
+            "parameter": "Kit Part Number",
+            "normalized_parameter": "kit_part_number",
+            "parameter_aliases": [
+              "model number",
+              "product code"
+            ],
+            "value": "000-13609-001",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "part number",
+              "model",
+              "product code",
+              "ordering information"
+            ],
+            "concept_group": "product_identification",
+            "references": [
+              "p.9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Device Class",
+            "normalized_parameter": "ais_class",
+            "parameter_aliases": [
+              "class type",
+              "transceiver class",
+              "AIS type"
+            ],
+            "value": "B",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "class B",
+              "device class",
+              "transceiver type",
+              "AIS class"
+            ],
+            "concept_group": "device_classification",
+            "references": [
+              "p.7"
+            ]
+          },
+          {
+            "parameter": "Radio Standard Compliance",
+            "normalized_parameter": "radio_compliance",
+            "parameter_aliases": [
+              "EMC compliance",
+              "radio certification"
+            ],
+            "value": "NMB-003",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "NMB-003",
+              "radio compliance",
+              "certification",
+              "regulatory compliance"
+            ],
+            "concept_group": "regulatory_compliance",
+            "references": [
+              "p.7"
+            ]
+          },
+          {
+            "parameter": "Communication Protocol",
+            "normalized_parameter": "communication_protocol",
+            "parameter_aliases": [
+              "transmission type",
+              "radio protocol"
+            ],
+            "value": "VHF digital",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "VHF",
+              "digital transmission",
+              "radio protocol",
+              "communication type"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "p.7"
+            ]
+          },
+          {
+            "parameter": "Position System",
+            "normalized_parameter": "positioning_system",
+            "parameter_aliases": [
+              "location system",
+              "navigation system"
+            ],
+            "value": "GPS",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "GPS",
+              "positioning",
+              "location system",
+              "navigation"
+            ],
+            "concept_group": "navigation_specifications",
+            "references": [
+              "p.7"
+            ]
+          },
+          {
+            "parameter": "Required License",
+            "normalized_parameter": "required_license",
+            "parameter_aliases": [
+              "certification requirement",
+              "operational license"
+            ],
+            "value": "VHF radiotelephone license",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "VHF license",
+              "radio license",
+              "operating permit",
+              "legal requirements"
+            ],
+            "concept_group": "regulatory_requirements",
+            "references": [
+              "p.8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Cable Length",
+            "normalized_parameter": "power_cable_length",
+            "parameter_aliases": [
+              "cable length",
+              "wiring length",
+              "power wire length"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "meters",
+            "normalized_units": "m",
+            "converted_value": "2",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "power cable length",
+              "how long is power cable",
+              "cable specifications",
+              "wiring length"
+            ],
+            "concept_group": "power_wiring",
+            "references": [
+              "Power and Data Cable section"
+            ]
+          },
+          {
+            "parameter": "Power Current Peak",
+            "normalized_parameter": "peak_current_draw",
+            "parameter_aliases": [
+              "max current",
+              "peak amperage",
+              "maximum current"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "A",
+            "normalized_units": "A",
+            "converted_value": "2",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "peak current",
+              "maximum amperage",
+              "current requirements",
+              "power consumption"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Power and Data Cable section"
+            ]
+          },
+          {
+            "parameter": "Average Current Draw",
+            "normalized_parameter": "average_current_draw",
+            "parameter_aliases": [
+              "typical current",
+              "nominal current"
+            ],
+            "value": "200",
+            "range": null,
+            "units": "mA",
+            "normalized_units": "A",
+            "converted_value": "0.2",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "average current",
+              "typical power consumption",
+              "normal operating current"
+            ],
+            "concept_group": "power_requirements",
+            "references": [
+              "Power and Data Cable section"
+            ]
+          },
+          {
+            "parameter": "NMEA Baud Rate",
+            "normalized_parameter": "nmea_baud_rate",
+            "parameter_aliases": [
+              "communication speed",
+              "data rate"
+            ],
+            "value": "38400",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "38400",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "NMEA speed",
+              "baud rate",
+              "communication rate",
+              "data speed"
+            ],
+            "concept_group": "communications",
+            "references": [
+              "Chartplotters section"
+            ]
+          },
+          {
+            "parameter": "Antenna Impedance",
+            "normalized_parameter": "antenna_impedance",
+            "parameter_aliases": [
+              "RF impedance",
+              "characteristic impedance"
+            ],
+            "value": "50",
+            "range": null,
+            "units": "ohms",
+            "normalized_units": "\u03a9",
+            "converted_value": "50",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "antenna impedance",
+              "RF impedance",
+              "characteristic impedance",
+              "antenna specifications"
+            ],
+            "concept_group": "rf_specifications",
+            "references": [
+              "VHF Antenna Cable section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "VHF Antenna Connector Type",
+            "normalized_parameter": "vhf_connector_type",
+            "parameter_aliases": [
+              "antenna connector",
+              "RF connector",
+              "coaxial connector"
+            ],
+            "value": "SO239",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "SO239 connector",
+              "VHF antenna connection",
+              "antenna connector type",
+              "RF connection",
+              "coaxial fitting"
+            ],
+            "concept_group": "antenna_connections",
+            "references": [
+              "Page 18"
+            ]
+          },
+          {
+            "parameter": "Required Mating Connector",
+            "normalized_parameter": "mating_connector_type",
+            "parameter_aliases": [
+              "plug type",
+              "male connector",
+              "antenna plug"
+            ],
+            "value": "PL259",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "PL259 connector",
+              "antenna plug type",
+              "compatible connector",
+              "VHF plug",
+              "mating connector"
+            ],
+            "concept_group": "antenna_connections",
+            "references": [
+              "Page 18"
+            ]
+          },
+          {
+            "parameter": "Mounting Holes",
+            "normalized_parameter": "mounting_holes_quantity",
+            "parameter_aliases": [
+              "installation holes",
+              "screw holes"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "holes",
+            "normalized_units": "count",
+            "converted_value": "2",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "mounting holes",
+              "installation holes",
+              "screw holes",
+              "antenna mounting",
+              "holes required"
+            ],
+            "concept_group": "mechanical_installation",
+            "references": [
+              "Page 17"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "input_voltage",
+            "parameter_aliases": [
+              "power supply voltage",
+              "supply voltage",
+              "voltage range"
+            ],
+            "value": "12 to 24",
+            "range": "12V - 24V",
+            "units": "V DC",
+            "normalized_units": "volts_dc",
+            "converted_value": "12-24",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirements",
+              "DC voltage",
+              "power supply",
+              "voltage range"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Step 4 - Connecting the accessory cable"
+            ]
+          },
+          {
+            "parameter": "NMEA Port 1 Baud Rate",
+            "normalized_parameter": "nmea_port1_baud",
+            "parameter_aliases": [
+              "port 1 speed",
+              "high speed port",
+              "communication rate"
+            ],
+            "value": "38400",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "38400",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "NMEA speed",
+              "port 1 baud",
+              "high speed NMEA"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Step 4 - Connecting the accessory cable"
+            ]
+          },
+          {
+            "parameter": "NMEA Port 2 Baud Rate",
+            "normalized_parameter": "nmea_port2_baud",
+            "parameter_aliases": [
+              "port 2 speed",
+              "low speed port",
+              "communication rate"
+            ],
+            "value": "4800",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "4800",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Network",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "NMEA speed",
+              "port 2 baud",
+              "low speed NMEA"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Step 4 - Connecting the accessory cable"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Compass Safe Distance",
+            "normalized_parameter": "compass_safe_distance",
+            "parameter_aliases": [
+              "magnetic interference distance",
+              "compass deviation distance"
+            ],
+            "value": "0.55",
+            "range": "\u22650.55",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "0.55",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "compass safe distance",
+              "magnetic interference",
+              "compass deviation",
+              "safe mounting distance"
+            ],
+            "concept_group": "mounting_requirements",
+            "references": [
+              "Installation section"
+            ]
+          },
+          {
+            "parameter": "Operating Temperature Range",
+            "normalized_parameter": "operating_temperature_range",
+            "parameter_aliases": [
+              "ambient temperature range",
+              "temperature limits"
+            ],
+            "value": "-15 to +55",
+            "range": "-15\u00b0C to +55\u00b0C",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "-15 to 55",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "operating temperature",
+              "temperature range",
+              "ambient temperature",
+              "temperature limits"
+            ],
+            "concept_group": "environmental_specifications",
+            "references": [
+              "Installation section"
+            ]
+          },
+          {
+            "parameter": "Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "horizontal dimension"
+            ],
+            "value": "151.5",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "151.5",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions",
+              "horizontal measurement"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Figure 5"
+            ]
+          },
+          {
+            "parameter": "Height",
+            "normalized_parameter": "height",
+            "parameter_aliases": [
+              "vertical dimension"
+            ],
+            "value": "98",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "98",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "height",
+              "size",
+              "dimensions",
+              "vertical measurement"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Figure 5"
+            ]
+          },
+          {
+            "parameter": "Depth",
+            "normalized_parameter": "depth",
+            "parameter_aliases": [
+              "thickness"
+            ],
+            "value": "47",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": "47",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "depth",
+              "thickness",
+              "dimensions"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Figure 5"
+            ]
+          },
+          {
+            "parameter": "Water Resistance Rating",
+            "normalized_parameter": "ingress_protection",
+            "parameter_aliases": [
+              "waterproof rating",
+              "IP rating"
+            ],
+            "value": "IPx7",
+            "range": null,
+            "units": "IP code",
+            "normalized_units": "IP code",
+            "converted_value": "IPx7",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "waterproof",
+              "water resistance",
+              "IP rating",
+              "ingress protection"
+            ],
+            "concept_group": "environmental_protection",
+            "references": [
+              "Installation section"
+            ]
+          },
+          {
+            "parameter": "GPS Antenna Mount Thread",
+            "normalized_parameter": "gps_antenna_thread",
+            "parameter_aliases": [
+              "pole mount thread",
+              "antenna mounting specification"
+            ],
+            "value": "1-inch 14 TPI",
+            "range": null,
+            "units": "TPI",
+            "normalized_units": "threads per inch",
+            "converted_value": "14",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "GPS antenna mount",
+              "thread specification",
+              "pole mount",
+              "antenna mounting"
+            ],
+            "concept_group": "antenna_specifications",
+            "references": [
+              "GPS Antenna Installation section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "NMEA Port 1 Baud Rate",
+            "normalized_parameter": "nmea_port_1_baud_rate",
+            "parameter_aliases": [
+              "high speed port rate",
+              "primary nmea speed",
+              "port 1 speed"
+            ],
+            "value": "38400",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "38400",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "nmea speed",
+              "port 1 baud",
+              "high speed port"
+            ],
+            "concept_group": "communication_parameters",
+            "references": [
+              "Step 6"
+            ]
+          },
+          {
+            "parameter": "NMEA Port 2 Baud Rate",
+            "normalized_parameter": "nmea_port_2_baud_rate",
+            "parameter_aliases": [
+              "low speed port rate",
+              "secondary nmea speed",
+              "port 2 speed"
+            ],
+            "value": "4800",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "4800",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "nmea speed",
+              "port 2 baud",
+              "low speed port"
+            ],
+            "concept_group": "communication_parameters",
+            "references": [
+              "Step 6"
+            ]
+          },
+          {
+            "parameter": "Power Input Positive Wire",
+            "normalized_parameter": "power_positive_wire_color",
+            "parameter_aliases": [
+              "power in +",
+              "positive power connection"
+            ],
+            "value": "Red",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "power wire",
+              "positive wire",
+              "red wire",
+              "power connection"
+            ],
+            "concept_group": "wiring_specifications",
+            "references": [
+              "Fig. 10",
+              "Fig. 11"
+            ]
+          },
+          {
+            "parameter": "Silent Mode Switch Input",
+            "normalized_parameter": "silent_mode_switch_wires",
+            "parameter_aliases": [
+              "external switch connection",
+              "silent mode control"
+            ],
+            "value": "Light green and orange wires",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "silent mode",
+              "switch connection",
+              "external switch",
+              "toggle switch"
+            ],
+            "concept_group": "control_interfaces",
+            "references": [
+              "Step 5",
+              "Fig. 10"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Supply Voltage",
+            "normalized_parameter": "supply_voltage",
+            "parameter_aliases": [
+              "input voltage",
+              "operating voltage",
+              "power input"
+            ],
+            "value": "12V or 24V",
+            "range": "12V - 24V",
+            "units": "V",
+            "normalized_units": "volts",
+            "converted_value": "12-24",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power supply",
+              "input voltage",
+              "operating voltage",
+              "power requirements"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Step 9 - Connection to a Power Supply"
+            ]
+          },
+          {
+            "parameter": "NMEA0183 Port 1 Baud Rate",
+            "normalized_parameter": "nmea0183_port1_baud",
+            "parameter_aliases": [
+              "port 1 speed",
+              "communication rate"
+            ],
+            "value": "38400",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "38400",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "port 1",
+              "nmea speed",
+              "data rate"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Fig. 12"
+            ]
+          },
+          {
+            "parameter": "NMEA0183 Port 2 Baud Rate",
+            "normalized_parameter": "nmea0183_port2_baud",
+            "parameter_aliases": [
+              "port 2 speed",
+              "communication rate"
+            ],
+            "value": "4800",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "4800",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "port 2",
+              "nmea speed",
+              "data rate"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Fig. 12"
+            ]
+          },
+          {
+            "parameter": "Recommended Fuse Rating",
+            "normalized_parameter": "fuse_rating",
+            "parameter_aliases": [
+              "circuit breaker rating",
+              "protection rating"
+            ],
+            "value": "3",
+            "range": null,
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "3",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "fuse",
+              "circuit breaker",
+              "protection",
+              "electrical safety"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Step 9 - Connection to a Power Supply"
+            ]
+          },
+          {
+            "parameter": "USB Connection Speed",
+            "normalized_parameter": "usb_baud_rate",
+            "parameter_aliases": [
+              "PC connection speed",
+              "USB communication rate"
+            ],
+            "value": "38400",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "38400",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "USB speed",
+              "PC connection",
+              "USB baud rate",
+              "computer interface speed"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "Connection to a PC"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Input Positive Wire",
+            "normalized_parameter": "power_input_positive_wire_color",
+            "parameter_aliases": [
+              "power in +",
+              "positive power wire",
+              "power positive"
+            ],
+            "value": "Red",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "power wire color",
+              "positive wire",
+              "red wire",
+              "power connection"
+            ],
+            "concept_group": "wiring",
+            "references": [
+              "Figure 12"
+            ]
+          },
+          {
+            "parameter": "NMEA0183 Port 1 Baud Rate",
+            "normalized_parameter": "nmea_port1_baud_rate",
+            "parameter_aliases": [
+              "port 1 speed",
+              "chart plotter baud rate"
+            ],
+            "value": "38400",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "38400",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "NMEA speed",
+              "port 1"
+            ],
+            "concept_group": "communication_parameters",
+            "references": [
+              "Wire Color Table"
+            ]
+          },
+          {
+            "parameter": "NMEA0183 Port 2 Baud Rate",
+            "normalized_parameter": "nmea_port2_baud_rate",
+            "parameter_aliases": [
+              "port 2 speed",
+              "NMEA device baud rate"
+            ],
+            "value": "4800",
+            "range": null,
+            "units": "baud",
+            "normalized_units": "baud",
+            "converted_value": "4800",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Communication",
+            "search_terms": [
+              "baud rate",
+              "communication speed",
+              "NMEA speed",
+              "port 2"
+            ],
+            "concept_group": "communication_parameters",
+            "references": [
+              "Wire Color Table"
+            ]
+          },
+          {
+            "parameter": "Power LED Color",
+            "normalized_parameter": "power_led_color",
+            "parameter_aliases": [
+              "PWR indicator",
+              "power indicator"
+            ],
+            "value": "Green",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "LED",
+              "indicator",
+              "power light",
+              "status light"
+            ],
+            "concept_group": "indicators",
+            "references": [
+              "LED Indicator Table"
+            ]
+          },
+          {
+            "parameter": "Error LED Color",
+            "normalized_parameter": "error_led_color",
+            "parameter_aliases": [
+              "ERR indicator",
+              "error indicator"
+            ],
+            "value": "Red",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "LED",
+              "indicator",
+              "error light",
+              "fault indicator"
+            ],
+            "concept_group": "indicators",
+            "references": [
+              "LED Indicator Table"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Source - Configuration",
+            "normalized_parameter": "configuration_power_source",
+            "parameter_aliases": [
+              "config power",
+              "setup power",
+              "configuration power"
+            ],
+            "value": "USB",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "usb power",
+              "configuration power",
+              "setup power source",
+              "programming power"
+            ],
+            "concept_group": "configuration_requirements",
+            "references": [
+              "Configuration using NAIS System Configurator"
+            ]
+          },
+          {
+            "parameter": "Position Data Update Time",
+            "normalized_parameter": "vessel_data_update_time",
+            "parameter_aliases": [
+              "update period",
+              "refresh time",
+              "data visibility time"
+            ],
+            "value": "6",
+            "range": "0-6",
+            "units": "minutes",
+            "normalized_units": "minutes",
+            "converted_value": "360",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "update time",
+              "refresh rate",
+              "data visibility",
+              "position update"
+            ],
+            "concept_group": "operational_parameters",
+            "references": [
+              "Operation"
+            ]
+          },
+          {
+            "parameter": "Status Indicators",
+            "normalized_parameter": "status_indicators",
+            "parameter_aliases": [
+              "LED indicators",
+              "status lights",
+              "indicator lights"
+            ],
+            "value": "4",
+            "range": "N/A",
+            "units": "LEDs",
+            "normalized_units": "count",
+            "converted_value": "4",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "LED indicators",
+              "status lights",
+              "indicator count",
+              "status display"
+            ],
+            "concept_group": "user_interface",
+            "references": [
+              "Indicator functions"
+            ]
+          },
+          {
+            "parameter": "Required Configuration Data",
+            "normalized_parameter": "required_config_parameters",
+            "parameter_aliases": [
+              "setup data",
+              "configuration requirements",
+              "vessel data"
+            ],
+            "value": "MMSI, vessel name, vessel type, call sign, vessel dimensions, GPS antenna position",
+            "range": "N/A",
+            "units": "N/A",
+            "normalized_units": "N/A",
+            "converted_value": "N/A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "configuration data",
+              "setup requirements",
+              "vessel information",
+              "required settings"
+            ],
+            "concept_group": "configuration_requirements",
+            "references": [
+              "Configuring your AIS transceiver"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Supply Voltage Range",
+            "normalized_parameter": "operating_voltage_range",
+            "parameter_aliases": [
+              "voltage input",
+              "power input",
+              "supply voltage"
+            ],
+            "value": "9.6V - 31.2V",
+            "range": "9.6V - 31.2V",
+            "units": "V",
+            "normalized_units": "volts",
+            "converted_value": "9.6-31.2",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage range",
+              "power requirements",
+              "voltage limits",
+              "operating voltage",
+              "input voltage"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "p.27"
+            ]
+          },
+          {
+            "parameter": "Nominal System Voltage",
+            "normalized_parameter": "nominal_voltage",
+            "parameter_aliases": [
+              "rated voltage",
+              "system voltage"
+            ],
+            "value": "12V or 24V",
+            "range": null,
+            "units": "V",
+            "normalized_units": "volts",
+            "converted_value": "12,24",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "nominal voltage",
+              "rated voltage",
+              "system voltage",
+              "voltage rating"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "p.27"
+            ]
+          },
+          {
+            "parameter": "AIS Message Type",
+            "normalized_parameter": "ais_message_type",
+            "parameter_aliases": [
+              "vessel name message",
+              "AIS protocol"
+            ],
+            "value": "Message 24",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "AIS message",
+              "vessel name transmission",
+              "message type",
+              "class B message"
+            ],
+            "concept_group": "communication_specifications",
+            "references": [
+              "p.27-28"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Power Indicator State",
+            "normalized_parameter": "power_indicator_state",
+            "parameter_aliases": [
+              "PWR LED",
+              "Power LED",
+              "Power Status"
+            ],
+            "value": "Green, steady",
+            "range": null,
+            "units": "color/pattern",
+            "normalized_units": "color/pattern",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "power indicator",
+              "power light",
+              "PWR LED",
+              "power status light",
+              "green light"
+            ],
+            "concept_group": "status_indicators",
+            "references": [
+              "Indicator lights section"
+            ]
+          },
+          {
+            "parameter": "Error Indicator States",
+            "normalized_parameter": "error_indicator_states",
+            "parameter_aliases": [
+              "ERR LED",
+              "Error LED",
+              "Fault Indicator"
+            ],
+            "value": "Red steady or flashing",
+            "range": null,
+            "units": "color/pattern",
+            "normalized_units": "color/pattern",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "error light",
+              "fault indicator",
+              "ERR LED",
+              "red light",
+              "system error indicator"
+            ],
+            "concept_group": "status_indicators",
+            "references": [
+              "Indicator lights section"
+            ]
+          },
+          {
+            "parameter": "Receive Indicator",
+            "normalized_parameter": "receive_indicator_state",
+            "parameter_aliases": [
+              "Rx LED",
+              "Receive LED",
+              "Reception Indicator"
+            ],
+            "value": "Green, flashing",
+            "range": null,
+            "units": "color/pattern",
+            "normalized_units": "color/pattern",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "receive indicator",
+              "reception light",
+              "Rx LED",
+              "receiving data indicator"
+            ],
+            "concept_group": "status_indicators",
+            "references": [
+              "Indicator lights section"
+            ]
+          },
+          {
+            "parameter": "Transmission Speed Threshold",
+            "normalized_parameter": "transmission_speed_threshold",
+            "parameter_aliases": [
+              "Speed Limit",
+              "Transmission Rate Change Speed"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "knots",
+            "normalized_units": "knots",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "speed threshold",
+              "transmission rate",
+              "speed limit",
+              "reporting rate"
+            ],
+            "concept_group": "transmission_parameters",
+            "references": [
+              "Indicator lights section"
+            ]
+          },
+          {
+            "parameter": "Slow Speed Transmission Interval",
+            "normalized_parameter": "slow_speed_transmission_interval",
+            "parameter_aliases": [
+              "Transmission Rate Below 2 Knots",
+              "Slow Speed Report Rate"
+            ],
+            "value": "3",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "seconds",
+            "converted_value": "180",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "transmission interval",
+              "report rate",
+              "slow speed interval",
+              "update rate"
+            ],
+            "concept_group": "transmission_parameters",
+            "references": [
+              "Indicator lights section"
+            ]
+          },
+          {
+            "parameter": "High Speed Transmission Interval",
+            "normalized_parameter": "high_speed_transmission_interval",
+            "parameter_aliases": [
+              "Transmission Rate Above 2 Knots",
+              "High Speed Report Rate"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "30",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "transmission interval",
+              "report rate",
+              "high speed interval",
+              "update rate"
+            ],
+            "concept_group": "transmission_parameters",
+            "references": [
+              "Indicator lights section"
+            ]
+          },
+          {
+            "parameter": "GPS Fix Timeout",
+            "normalized_parameter": "gps_fix_timeout",
+            "parameter_aliases": [
+              "GPS Recovery Time",
+              "Position Fix Timeout"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "minutes",
+            "normalized_units": "seconds",
+            "converted_value": "1800",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "GPS timeout",
+              "position fix timeout",
+              "GPS recovery period",
+              "position loss timeout"
+            ],
+            "concept_group": "gps_parameters",
+            "references": [
+              "Indicator lights section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Dimensions",
+            "normalized_parameter": "physical_dimensions",
+            "parameter_aliases": [
+              "size",
+              "measurements",
+              "l_w_h"
+            ],
+            "value": "152 x 98 x 52 mm",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "millimeters",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "size",
+              "dimensions",
+              "length",
+              "width",
+              "height",
+              "how big",
+              "measurements"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "mass"
+            ],
+            "value": "260",
+            "range": null,
+            "units": "g",
+            "normalized_units": "grams",
+            "converted_value": "0.26 kg",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "weight",
+              "mass",
+              "how heavy",
+              "grams"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Power Supply Voltage",
+            "normalized_parameter": "input_voltage",
+            "parameter_aliases": [
+              "supply voltage",
+              "DC power"
+            ],
+            "value": null,
+            "range": "9.6 V - 31.2 V",
+            "units": "VDC",
+            "normalized_units": "volts_dc",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "voltage",
+              "power supply",
+              "DC voltage",
+              "input voltage"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Power Consumption",
+            "normalized_parameter": "power_consumption",
+            "parameter_aliases": [
+              "current draw",
+              "power usage"
+            ],
+            "value": "180",
+            "range": null,
+            "units": "mA at 12 VDC",
+            "normalized_units": "milliamps",
+            "converted_value": "0.18 A",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "power consumption",
+              "current draw",
+              "amperage",
+              "power usage"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Peak Current",
+            "normalized_parameter": "peak_current",
+            "parameter_aliases": [
+              "maximum current",
+              "max current"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "A at 12 VDC",
+            "normalized_units": "amperes",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Power",
+            "search_terms": [
+              "peak current",
+              "max current",
+              "maximum current",
+              "surge current"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "VHF Frequency Range",
+            "normalized_parameter": "vhf_frequency_range",
+            "parameter_aliases": [
+              "frequency band",
+              "operating frequency"
+            ],
+            "value": null,
+            "range": "156.025 to 162.025 MHz",
+            "units": "MHz",
+            "normalized_units": "megahertz",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "frequency",
+              "frequency range",
+              "VHF range",
+              "operating frequency"
+            ],
+            "concept_group": "radio_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Output Power",
+            "normalized_parameter": "rf_output_power",
+            "parameter_aliases": [
+              "transmit power",
+              "TX power"
+            ],
+            "value": "33 \u00b1 1.5",
+            "range": null,
+            "units": "dBm",
+            "normalized_units": "dBm",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "output power",
+              "transmit power",
+              "RF power",
+              "TX power"
+            ],
+            "concept_group": "radio_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "parameter": "Channel Bandwidth",
+            "normalized_parameter": "channel_bandwidth",
+            "parameter_aliases": [
+              "bandwidth"
+            ],
+            "value": "25",
+            "range": null,
+            "units": "kHz",
+            "normalized_units": "kilohertz",
+            "converted_value": null,
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "bandwidth",
+              "channel width",
+              "frequency bandwidth"
+            ],
+            "concept_group": "radio_specifications",
+            "references": [
+              "Specifications section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "VHF Frequency Range",
+            "normalized_parameter": "vhf_frequency_range",
+            "parameter_aliases": [
+              "frequency range",
+              "operating frequency",
+              "vhf range"
+            ],
+            "value": "156.025 to 162.025 MHz",
+            "range": "156.025-162.025",
+            "units": "MHz",
+            "normalized_units": "MHz",
+            "converted_value": "156.025-162.025",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "frequency",
+              "MHz",
+              "VHF range",
+              "radio frequency",
+              "operating frequency"
+            ],
+            "concept_group": "RF_Specifications",
+            "references": [
+              "Technical Specifications section"
+            ]
+          },
+          {
+            "parameter": "Output Power",
+            "normalized_parameter": "rf_output_power",
+            "parameter_aliases": [
+              "transmit power",
+              "tx power",
+              "rf power"
+            ],
+            "value": "33 dBm \u00b1 1.5 dB",
+            "range": "31.5-34.5",
+            "units": "dBm",
+            "normalized_units": "dBm",
+            "converted_value": "33 \u00b1 1.5",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "power output",
+              "transmission power",
+              "dBm",
+              "RF output"
+            ],
+            "concept_group": "RF_Specifications",
+            "references": [
+              "Technical Specifications section"
+            ]
+          },
+          {
+            "parameter": "Channel Bandwidth",
+            "normalized_parameter": "channel_bandwidth",
+            "parameter_aliases": [
+              "bandwidth",
+              "channel width"
+            ],
+            "value": "25",
+            "range": null,
+            "units": "kHz",
+            "normalized_units": "kHz",
+            "converted_value": "25",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "bandwidth",
+              "channel width",
+              "frequency spacing"
+            ],
+            "concept_group": "RF_Specifications",
+            "references": [
+              "Technical Specifications section"
+            ]
+          },
+          {
+            "parameter": "Operating Temperature",
+            "normalized_parameter": "operating_temperature_range",
+            "parameter_aliases": [
+              "temp range",
+              "temperature range"
+            ],
+            "value": "-15\u00baC to +55\u00baC",
+            "range": "-15 to 55",
+            "units": "\u00baC",
+            "normalized_units": "celsius",
+            "converted_value": "-15 to 55",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature",
+              "operating temp",
+              "thermal range"
+            ],
+            "concept_group": "Environmental_Specifications",
+            "references": [
+              "Environmental section"
+            ]
+          },
+          {
+            "parameter": "Water Resistance Rating",
+            "normalized_parameter": "ingress_protection",
+            "parameter_aliases": [
+              "waterproof rating",
+              "IP rating"
+            ],
+            "value": "IP67",
+            "range": null,
+            "units": "IP",
+            "normalized_units": "IP",
+            "converted_value": "IP67",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "waterproof",
+              "water resistance",
+              "IP rating",
+              "ingress protection"
+            ],
+            "concept_group": "Environmental_Specifications",
+            "references": [
+              "Environmental section"
+            ]
+          },
+          {
+            "parameter": "Bit Rate GMSK",
+            "normalized_parameter": "gmsk_bit_rate",
+            "parameter_aliases": [
+              "data rate",
+              "transmission rate"
+            ],
+            "value": "9600 \u00b1 50",
+            "range": "9550-9650",
+            "units": "b/s",
+            "normalized_units": "bps",
+            "converted_value": "9600 \u00b1 50",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "bit rate",
+              "data speed",
+              "transmission speed",
+              "GMSK rate"
+            ],
+            "concept_group": "Communication_Specifications",
+            "references": [
+              "Bit rate section"
+            ]
+          },
+          {
+            "parameter": "Receiver Sensitivity",
+            "normalized_parameter": "rx_sensitivity",
+            "parameter_aliases": [
+              "receive sensitivity",
+              "reception threshold"
+            ],
+            "value": "-107",
+            "range": null,
+            "units": "dBm",
+            "normalized_units": "dBm",
+            "converted_value": "-107",
+            "models": [
+              "NAIS-500"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "sensitivity",
+              "receiver performance",
+              "reception level"
+            ],
+            "concept_group": "RF_Specifications",
+            "references": [
+              "RX sensitivity section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

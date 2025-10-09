@@ -144,6 +144,17 @@ app.get('/admin/testing/golden-tests', async (req, res) => {
   }
 });
 
+// Landing page (no auth required)
+app.get('/landing', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/landing.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Landing page not found' });
+  }
+});
+
 // Document upload page (no auth required for HTML page)
 app.get('/upload', async (req, res) => {
   try {

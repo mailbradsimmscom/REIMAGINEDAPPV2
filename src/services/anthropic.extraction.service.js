@@ -108,8 +108,11 @@ class AnthropicExtractionService {
         environment: 'venv',
         script: 'test_anthropic_chunks_spec.py'
       });
-      
-      const { stdout, stderr } = await execAsync(command);
+
+      const { stdout, stderr } = await execAsync(command, {
+        timeout: 1200000, // 20 minutes
+        maxBuffer: 10 * 1024 * 1024 // 10MB
+      });
       
       this.requestLogger.debug('Python script execution completed', { 
         docId, 
@@ -149,8 +152,11 @@ class AnthropicExtractionService {
       const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks_GR.py`;
       
       this.requestLogger.info('Running golden rules extraction', { docId, command });
-      
-      const { stdout, stderr } = await execAsync(command);
+
+      const { stdout, stderr } = await execAsync(command, {
+        timeout: 1200000, // 20 minutes
+        maxBuffer: 10 * 1024 * 1024 // 10MB
+      });
       
       if (stderr) {
         this.requestLogger.warn('Golden rules extraction stderr', { docId, stderr });
@@ -183,8 +189,11 @@ class AnthropicExtractionService {
       const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks_IR.py`;
       
       this.requestLogger.info('Running intent router extraction', { docId, command });
-      
-      const { stdout, stderr } = await execAsync(command);
+
+      const { stdout, stderr } = await execAsync(command, {
+        timeout: 1200000, // 20 minutes
+        maxBuffer: 10 * 1024 * 1024 // 10MB
+      });
       
       if (stderr) {
         this.requestLogger.warn('Intent router extraction stderr', { docId, stderr });
@@ -217,8 +226,11 @@ class AnthropicExtractionService {
       const command = `cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar && DOC_ID=${docId} venv/bin/python3 scripts/test_anthropic_chunks.py`;
       
       this.requestLogger.info('Running playbook hints extraction', { docId, command });
-      
-      const { stdout, stderr } = await execAsync(command);
+
+      const { stdout, stderr } = await execAsync(command, {
+        timeout: 1200000, // 20 minutes
+        maxBuffer: 10 * 1024 * 1024 // 10MB
+      });
       
       if (stderr) {
         this.requestLogger.warn('Playbook hints extraction stderr', { docId, stderr });

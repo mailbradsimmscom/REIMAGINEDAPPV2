@@ -50,7 +50,8 @@ class ChatWorkflowSequential:
                           systems_context: List[Dict[str, Any]],
                           thread_id: Optional[str] = None,
                           conversation_summary: Optional[str] = None,
-                          memory_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                          memory_context: Optional[Dict[str, Any]] = None,
+                          synthesis_model: Optional[str] = None) -> Dict[str, Any]:
         """
         Process chat query through sequential workflow
 
@@ -60,6 +61,7 @@ class ChatWorkflowSequential:
             thread_id: Optional thread ID
             conversation_summary: Weighted conversation summary from Node.js
             memory_context: Memory context with weights and equipment transitions
+            synthesis_model: Optional model override for synthesis (gpt-5 or gpt-4.1-mini)
 
         Returns:
             Dict with response, sources, metadata, etc.
@@ -87,6 +89,7 @@ class ChatWorkflowSequential:
                 "systems_context": systems_context,
                 "conversation_summary": conversation_summary,
                 "memory_context": memory_context,
+                "synthesis_model": synthesis_model,  # Model selection for synthesis
                 "classification": None,
                 "primary_equipment": None,
                 "secondary_equipment": [],
@@ -113,8 +116,8 @@ class ChatWorkflowSequential:
             state["classification_duration_ms"] = step_duration
             logger.info(f"✅ STEP 1 Complete: Classification took {step_duration:.2f}ms")
             chat_debug.timing('classify_query', step_duration, {
-                'intent': state.get('classification', {}).get('intent', 'unknown'),
-                'confidence': state.get('classification', {}).get('confidence', 0)
+                'intent': (state.get('classification') or {}).get('intent', 'unknown'),
+                'confidence': (state.get('classification') or {}).get('confidence', 0)
             })
 
             if state.get("error"):
@@ -132,7 +135,7 @@ class ChatWorkflowSequential:
             logger.info(f"✅ STEP 2 Complete: Data retrieval took {step_duration:.2f}ms")
             chat_debug.timing('retrieve_data', step_duration, {
                 'dip_results_count': len(state.get('dip_results', [])),
-                'pinecone_success': state.get('pinecone_results', {}).get('success', False)
+                'pinecone_success': (state.get('pinecone_results') or {}).get('success', False)
             })
 
             if state.get("error"):
@@ -194,10 +197,10 @@ class ChatWorkflowSequential:
                 },
                 "pinecone": {
                     "duration_ms": state.get("pinecone_duration_ms", 0),
-                    "total_matches": state.get("pinecone_results", {}).get("total_matches", 0),
-                    "filtered_matches": state.get("pinecone_results", {}).get("filtered_matches", 0),
+                    "total_matches": (state.get("pinecone_results") or {}).get("total_matches", 0),
+                    "filtered_matches": (state.get("pinecone_results") or {}).get("filtered_matches", 0),
                     "chunks": [],  # Will be populated below
-                    "metadata_filter_used": state.get("pinecone_results", {}).get("metadata_filter_used", False),
+                    "metadata_filter_used": (state.get("pinecone_results") or {}).get("metadata_filter_used", False),
                     "complexity_based_filtering": state.get("pinecone_complexity_filtering", {})
                 },
                 "synthesis": {
@@ -205,7 +208,7 @@ class ChatWorkflowSequential:
                     "reasoning_effort": state.get("reasoning_effort", "medium"),
                     "dip_tables_sent": len(state["dip_results"]),
                     "dip_entries_sent": sum(r.get('count', 0) for r in state["dip_results"]),
-                    "pinecone_chunks_sent": len(state.get("pinecone_results", {}).get("matches", [])),
+                    "pinecone_chunks_sent": len((state.get("pinecone_results") or {}).get("matches", [])),
                     "equipment_context": [
                         {
                             "manufacturer": eq.get("manufacturer", ""),
@@ -215,7 +218,7 @@ class ChatWorkflowSequential:
                         for eq in systems_context[:3]  # Top 3 equipment
                     ],
                     "token_usage": state.get("synthesis_token_usage", {}),
-                    "model_used": state.get("synthesis_model", "unknown")
+                    "model_used": state.get("synthesis_model_used", "unknown")
                 }
             }
 
@@ -338,7 +341,7 @@ class ChatWorkflowSequential:
 
             chat_debug.transform('equipment_classification',
                 f"{len(state['systems_context'])} equipment",
-                f"primary={state.get('primary_equipment', {}).get('model', 'none')}, secondary={len(state['secondary_equipment'])}"
+                f"primary={(state.get('primary_equipment') or {}).get('model', 'none')}, secondary={len(state['secondary_equipment'])}"
             )
 
             logger.debug(f"Query classified: {classification.get('intent', 'unknown')}")
@@ -360,8 +363,8 @@ class ChatWorkflowSequential:
             state["processing_steps"].append("data_retrieval")
 
             chat_debug.workflow_node('retrieve_data', {
-                'primary_equipment': state.get('primary_equipment', {}).get('model', 'none'),
-                'classification_intent': state.get('classification', {}).get('intent', 'unknown')
+                'primary_equipment': (state.get('primary_equipment') or {}).get('model', 'none'),
+                'classification_intent': (state.get('classification') or {}).get('intent', 'unknown')
             })
 
             # Determine table types based on classification
@@ -521,11 +524,27 @@ class ChatWorkflowSequential:
 
             chat_debug.workflow_node('synthesize_response', {
                 'dip_results_count': len(state.get('dip_results', [])),
-                'pinecone_matches': state.get('pinecone_results', {}).get('match_count', 0),
+                'pinecone_matches': (state.get('pinecone_results') or {}).get('match_count', 0),
                 'has_conversation_summary': bool(state.get('conversation_summary'))
             })
 
             llm_start = datetime.now()
+
+            # Determine actual model that will be used (for metrics)
+            synthesis_model_used = state.get("synthesis_model") or self.llm_service.openai_model
+            state["synthesis_model_used"] = synthesis_model_used
+
+            # Determine reasoning_effort/temperature for metrics display
+            complexity_score = (state.get("classification") or {}).get("complexity_score", 0.5)
+            if "gpt-5" in synthesis_model_used.lower():
+                # GPT-5: Show reasoning effort
+                state["reasoning_effort"] = "high" if complexity_score >= 0.7 else "medium"
+            elif "gpt-4.1-mini" in synthesis_model_used.lower():
+                # GPT-4.1-mini: Show temperature
+                state["reasoning_effort"] = f"temp={os.getenv('OPENAI_TEMPERATURE', '0')}"
+            else:
+                # Other models: Show default
+                state["reasoning_effort"] = "-"
 
             # Use LLM to generate natural response
             response = await self.llm_service.synthesize_response(
@@ -534,7 +553,8 @@ class ChatWorkflowSequential:
                 classification=state["classification"],
                 dip_results=state["dip_results"],
                 pinecone_results=state["pinecone_results"],
-                conversation_summary=state.get("conversation_summary")
+                conversation_summary=state.get("conversation_summary"),
+                synthesis_model=state.get("synthesis_model")
             )
 
             llm_duration = (datetime.now() - llm_start).total_seconds() * 1000
@@ -542,10 +562,6 @@ class ChatWorkflowSequential:
             # Store synthesis timing for detailed metrics
             state["synthesis_duration_ms"] = int(llm_duration)
             state["final_response"] = response
-
-            # Determine reasoning effort based on complexity
-            complexity_score = state.get("classification", {}).get("complexity_score", 0.5)
-            state["reasoning_effort"] = "high" if complexity_score >= 0.7 else "medium"
 
             chat_debug.llm_call(
                 model='synthesis',
@@ -781,6 +797,14 @@ class ChatWorkflowSequential:
                 f"original='{original_query or query}')"
             )
 
+            # Log exact Pinecone search parameters
+            logger.info("📤 PINECONE SEARCH PARAMETERS:")
+            logger.info(f"  → Query: '{enhanced_query}'")
+            logger.info(f"  → Top K: {top_k}")
+            logger.info(f"  → Metadata Filter: {metadata_filter}")
+            logger.info(f"  → Include Metadata: True")
+            logger.info(f"  → Include Values: False")
+
             # Search Pinecone
             search_result = self.pinecone_client.search_vectors(
                 query=enhanced_query,
@@ -794,7 +818,7 @@ class ChatWorkflowSequential:
                 matches = search_result.get("matches", [])
 
                 # INTELLIGENCE: Adaptive score threshold
-                threshold = 0.35 if metadata_filter else 0.5
+                threshold = 0.2
                 filtered_matches = [m for m in matches if m.get('score', 0) >= threshold]
 
                 logger.info(

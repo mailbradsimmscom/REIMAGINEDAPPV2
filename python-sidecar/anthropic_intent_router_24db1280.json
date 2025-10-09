@@ -1,0 +1,1937 @@
+{
+  "total_chunks_processed": 17,
+  "successful_chunks": 17,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 90,
+  "unique_intent_routes": 25,
+  "question_type_breakdown": {
+    "What": 15,
+    "How": 7,
+    "Where": 3
+  },
+  "intent_routes": [
+    {
+      "question": "What is included in the NAIS-500 package?",
+      "question_variations": [
+        "What comes in the box with the NAIS-500?",
+        "What items are supplied with the NAIS-500 AIS transceiver?"
+      ],
+      "answer": "The contents are shown in Figure 1 on page 10 of the manual",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 10, Figure 1"
+      ]
+    },
+    {
+      "question": "How do I mount the NAIS-500 transceiver?",
+      "question_variations": [
+        "What is the installation procedure for mounting the unit?",
+        "Where should I install the NAIS-500?"
+      ],
+      "answer": "Mounting instructions are provided in Figure 6 on page 16, including transceiver dimensions and positioning guidelines",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 16, Figure 5 and 6"
+      ]
+    },
+    {
+      "question": "Where should I install the GPS antenna?",
+      "question_variations": [
+        "What is the proper GPS antenna mounting location?",
+        "How do I mount the GPS antenna?"
+      ],
+      "answer": "GPS antenna mounting instructions are shown in Figure 7 on page 17",
+      "question_type": "Where",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 17, Figure 7"
+      ]
+    },
+    {
+      "question": "How do I connect power to the NAIS-500?",
+      "question_variations": [
+        "What are the power connection instructions?",
+        "How is the power supply connected?"
+      ],
+      "answer": "Power supply connection instructions are detailed in Figure 12 on page 22",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 22, Figure 12"
+      ]
+    },
+    {
+      "question": "Where are the indicator lights located?",
+      "question_variations": [
+        "What are the locations of the status indicators?",
+        "How can I see the unit's status lights?"
+      ],
+      "answer": "The indicator locations are shown in Figure 13 on page 27",
+      "question_type": "Where",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 27, Figure 13"
+      ]
+    },
+    {
+      "question": "What is the compass safe distance for the NAIS-500?",
+      "question_variations": [
+        "How far should the unit be from a compass?",
+        "What's the minimum compass separation distance?"
+      ],
+      "answer": "The compass safe distance is 0.55 meters or greater for 0.3\u00b0 deviation",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Compass safe distance section"
+      ]
+    },
+    {
+      "question": "How far should the antenna be mounted above deck?",
+      "question_variations": [
+        "What's the required antenna height?",
+        "How high should I install the antenna?"
+      ],
+      "answer": "The antenna should be mounted 3.5 meters above the deck to meet RF exposure requirements",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "question": "What is the MPE radius for the system?",
+      "question_variations": [
+        "What's the Maximum Permissible Exposure radius?",
+        "How far is the safe exposure distance?"
+      ],
+      "answer": "The system has a Maximum Permissible Exposure (MPE) radius of 0.6 meters",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "question": "What is the required antenna impedance?",
+      "question_variations": [
+        "What impedance antenna do I need?",
+        "What's the antenna impedance specification?"
+      ],
+      "answer": "The required antenna impedance is 50 ohms",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "question": "How far should the antenna be from the AIS transceiver?",
+      "question_variations": [
+        "What's the minimum distance between antenna and transceiver?",
+        "How should I space the antenna from the unit?"
+      ],
+      "answer": "The antenna must be mounted at least 1.5 meters away from the AIS transceiver",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "RF Emissions Notice section"
+      ]
+    },
+    {
+      "question": "Where should this equipment not be installed?",
+      "question_variations": [
+        "What areas should I avoid for installation?",
+        "Where is it unsafe to mount the unit?"
+      ],
+      "answer": "Do not install this equipment in a flammable atmosphere such as in an engine room or near to fuel tanks",
+      "question_type": "Where",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Safety warnings section"
+      ]
+    },
+    {
+      "question": "What certifications does this product have?",
+      "question_variations": [
+        "Is this product CE certified?",
+        "What compliance certifications does this device have?",
+        "Does this product meet regulatory requirements?"
+      ],
+      "answer": "The product is CE certified according to the 2014/53/EU Directive and carries the CE mark, notified body number and alert symbol. It also complies with FCC Class B digital device requirements and Industry Canada license-exempt RSS standards.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Declaration of Conformity section"
+      ]
+    },
+    {
+      "question": "What are the FCC compliance requirements?",
+      "question_variations": [
+        "How does this device comply with FCC rules?",
+        "What FCC rules apply to this equipment?",
+        "What are the FCC operating conditions?"
+      ],
+      "answer": "The device complies with FCC Part 15 rules for Class B digital devices and must operate under two conditions: 1) It may not cause harmful interference, and 2) It must accept any interference received, including interference that may cause undesired operation.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "FCC Notice section"
+      ]
+    },
+    {
+      "question": "What are the Industry Canada compliance requirements?",
+      "question_variations": [
+        "How does this device comply with Canadian regulations?",
+        "What are the IC operating conditions?",
+        "What Canadian standards apply?"
+      ],
+      "answer": "The device complies with Industry Canada license-exempt RSS standards under two conditions: 1) The device may not cause interference, and 2) Must accept any interference, including interference that may cause undesired operation. It also complies with Canadian ICES-003 Class B requirements.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Industry Canada Notice section"
+      ]
+    },
+    {
+      "question": "What happens if I modify the equipment?",
+      "question_variations": [
+        "Can I make changes to the device?",
+        "Are modifications allowed?",
+        "What if I alter the equipment?"
+      ],
+      "answer": "Changes or modifications not expressly approved by the party responsible for compliance could void the user's authority to operate the equipment.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "FCC Notice section"
+      ]
+    },
+    {
+      "question": "How should MMSI numbers be handled?",
+      "question_variations": [
+        "What are the rules about MMSI input?",
+        "Can I enter any MMSI number?",
+        "What MMSI restrictions apply?"
+      ],
+      "answer": "It is a violation of FCC rules to input an MMSI that has not been properly assigned to the end user, or to input any inaccurate data in the device.",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "FCC Notice section"
+      ]
+    },
+    {
+      "question": "What is AIS?",
+      "question_variations": [
+        "Can you explain what AIS means?",
+        "What does AIS stand for?",
+        "What is the Automatic Identification System?"
+      ],
+      "answer": "AIS (Automatic Identification System) is a marine location and vessel information reporting system that allows vessels to automatically share their position, speed, course, and identity with other AIS-equipped vessels. It uses GPS for positioning and VHF digital transmissions for vessel communication.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 7, About AIS section"
+      ]
+    },
+    {
+      "question": "What are the different types of AIS devices?",
+      "question_variations": [
+        "What kinds of AIS transceivers exist?",
+        "How many types of AIS are there?"
+      ],
+      "answer": "There are 5 types of AIS devices: Class A transceivers (for large vessels), Class B transceivers (lower cost version), AIS base stations (for Vessel Traffic Systems), Aids to Navigation (AtoN) transceivers (for buoys and hazards), and AIS receivers (receive-only units).",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 7-8, About AIS section"
+      ]
+    },
+    {
+      "question": "What information does AIS transmit?",
+      "question_variations": [
+        "What data does AIS send?",
+        "What details does AIS share?"
+      ],
+      "answer": "AIS transmits two categories of information: Dynamic data (location, speed over ground, course over ground) calculated automatically, and Static data (MMSI, vessel name, call sign, vessel type, vessel dimensions) which must be programmed manually.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 8, Static and Dynamic Vessel Data section"
+      ]
+    },
+    {
+      "question": "How do I get an MMSI number?",
+      "question_variations": [
+        "Where can I obtain an MMSI number?",
+        "What's required to get an MMSI?"
+      ],
+      "answer": "You need to contact the relevant authority in your country to obtain an MMSI number. The vessel must possess a current VHF radiotelephone license that lists the AIS system, vessel Call Sign, and MMSI number.",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 8, Static Data section"
+      ]
+    },
+    {
+      "question": "What are the special requirements for US customers?",
+      "question_variations": [
+        "Are there specific rules for AIS in US waters?",
+        "What US laws apply to AIS configuration?"
+      ],
+      "answer": "In the USA, AIS class B transceivers must be pre-configured by the retailer or a competent installer. End users are not authorized to enter their own vessel data. The MMSI and static data must only be entered by a competent installer.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 8-9, Important Information for US Customers section"
+      ]
+    },
+    {
+      "question": "What items come in the NAIS-500 box?",
+      "question_variations": [
+        "What's included with the NAIS-500?",
+        "What accessories come with NAIS-500?",
+        "What's in the package for NAIS-500?"
+      ],
+      "answer": "The NAIS-500 includes: AIS transceiver unit, Quick Start Guide, product manual, warranty information, screws (packet of 4), power and data cable, USB configuration cable. Optional items in kit 000-13609-001: T-Connector, GPS antenna, N2k cable.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 9, What's in the box section"
+      ]
+    },
+    {
+      "question": "What's on the support tools CD?",
+      "question_variations": [
+        "What software comes with NAIS-500?",
+        "What's included on the CD?",
+        "What drivers are on the support CD?"
+      ],
+      "answer": "The support CD contains: NAIS System Configurator software tool for AIS configuration, USB drivers for AIS transceiver connection, and alternative language versions of the manual.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 9, Support tools CD section"
+      ]
+    },
+    {
+      "question": "What electrical connections does the NAIS-500 have?",
+      "question_variations": [
+        "How do I connect the NAIS-500?",
+        "What ports are available on NAIS-500?",
+        "What can I connect to the NAIS-500?"
+      ],
+      "answer": "The NAIS-500 has: Power supply connection, two independent NMEA 0183 data ports for chartplotters, USB port for PC/Mac connection, external switch input for silent mode control, NMEA 2000 port, VHF antenna connection, and external GPS antenna connection.",
+      "question_type": "What",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 11, Electrical Connections section"
+      ]
+    },
+    {
+      "question": "How do I mount the AIS transceiver?",
+      "question_variations": [
+        "What screws do I need for installation?",
+        "How is the NAIS-500 mounted?",
+        "What's needed to install the transceiver?"
+      ],
+      "answer": "The AIS transceiver comes with four fixing screws for mounting. Refer to Installation procedures in chapter 3 for detailed mounting instructions. Ensure the GPS antenna is mounted with clear view of the sky.",
+      "question_type": "How",
+      "models": [
+        "NAIS-500"
+      ],
+      "references": [
+        "Page 10, Fixing screws section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is included in the NAIS-500 package?",
+            "question_variations": [
+              "What comes in the box with the NAIS-500?",
+              "What items are supplied with the NAIS-500 AIS transceiver?"
+            ],
+            "answer": "The contents are shown in Figure 1 on page 10 of the manual",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 10, Figure 1"
+            ]
+          },
+          {
+            "question": "How do I mount the NAIS-500 transceiver?",
+            "question_variations": [
+              "What is the installation procedure for mounting the unit?",
+              "Where should I install the NAIS-500?"
+            ],
+            "answer": "Mounting instructions are provided in Figure 6 on page 16, including transceiver dimensions and positioning guidelines",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 16, Figure 5 and 6"
+            ]
+          },
+          {
+            "question": "Where should I install the GPS antenna?",
+            "question_variations": [
+              "What is the proper GPS antenna mounting location?",
+              "How do I mount the GPS antenna?"
+            ],
+            "answer": "GPS antenna mounting instructions are shown in Figure 7 on page 17",
+            "question_type": "Where",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 17, Figure 7"
+            ]
+          },
+          {
+            "question": "How do I connect power to the NAIS-500?",
+            "question_variations": [
+              "What are the power connection instructions?",
+              "How is the power supply connected?"
+            ],
+            "answer": "Power supply connection instructions are detailed in Figure 12 on page 22",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 22, Figure 12"
+            ]
+          },
+          {
+            "question": "Where are the indicator lights located?",
+            "question_variations": [
+              "What are the locations of the status indicators?",
+              "How can I see the unit's status lights?"
+            ],
+            "answer": "The indicator locations are shown in Figure 13 on page 27",
+            "question_type": "Where",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Figure 13"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the compass safe distance for the NAIS-500?",
+            "question_variations": [
+              "How far should the unit be from a compass?",
+              "What's the minimum compass separation distance?"
+            ],
+            "answer": "The compass safe distance is 0.55 meters or greater for 0.3\u00b0 deviation",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Compass safe distance section"
+            ]
+          },
+          {
+            "question": "How far should the antenna be mounted above deck?",
+            "question_variations": [
+              "What's the required antenna height?",
+              "How high should I install the antenna?"
+            ],
+            "answer": "The antenna should be mounted 3.5 meters above the deck to meet RF exposure requirements",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "question": "What is the MPE radius for the system?",
+            "question_variations": [
+              "What's the Maximum Permissible Exposure radius?",
+              "How far is the safe exposure distance?"
+            ],
+            "answer": "The system has a Maximum Permissible Exposure (MPE) radius of 0.6 meters",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "question": "What is the required antenna impedance?",
+            "question_variations": [
+              "What impedance antenna do I need?",
+              "What's the antenna impedance specification?"
+            ],
+            "answer": "The required antenna impedance is 50 ohms",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "question": "How far should the antenna be from the AIS transceiver?",
+            "question_variations": [
+              "What's the minimum distance between antenna and transceiver?",
+              "How should I space the antenna from the unit?"
+            ],
+            "answer": "The antenna must be mounted at least 1.5 meters away from the AIS transceiver",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "RF Emissions Notice section"
+            ]
+          },
+          {
+            "question": "Where should this equipment not be installed?",
+            "question_variations": [
+              "What areas should I avoid for installation?",
+              "Where is it unsafe to mount the unit?"
+            ],
+            "answer": "Do not install this equipment in a flammable atmosphere such as in an engine room or near to fuel tanks",
+            "question_type": "Where",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Safety warnings section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What certifications does this product have?",
+            "question_variations": [
+              "Is this product CE certified?",
+              "What compliance certifications does this device have?",
+              "Does this product meet regulatory requirements?"
+            ],
+            "answer": "The product is CE certified according to the 2014/53/EU Directive and carries the CE mark, notified body number and alert symbol. It also complies with FCC Class B digital device requirements and Industry Canada license-exempt RSS standards.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Declaration of Conformity section"
+            ]
+          },
+          {
+            "question": "What are the FCC compliance requirements?",
+            "question_variations": [
+              "How does this device comply with FCC rules?",
+              "What FCC rules apply to this equipment?",
+              "What are the FCC operating conditions?"
+            ],
+            "answer": "The device complies with FCC Part 15 rules for Class B digital devices and must operate under two conditions: 1) It may not cause harmful interference, and 2) It must accept any interference received, including interference that may cause undesired operation.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "FCC Notice section"
+            ]
+          },
+          {
+            "question": "What are the Industry Canada compliance requirements?",
+            "question_variations": [
+              "How does this device comply with Canadian regulations?",
+              "What are the IC operating conditions?",
+              "What Canadian standards apply?"
+            ],
+            "answer": "The device complies with Industry Canada license-exempt RSS standards under two conditions: 1) The device may not cause interference, and 2) Must accept any interference, including interference that may cause undesired operation. It also complies with Canadian ICES-003 Class B requirements.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Industry Canada Notice section"
+            ]
+          },
+          {
+            "question": "What happens if I modify the equipment?",
+            "question_variations": [
+              "Can I make changes to the device?",
+              "Are modifications allowed?",
+              "What if I alter the equipment?"
+            ],
+            "answer": "Changes or modifications not expressly approved by the party responsible for compliance could void the user's authority to operate the equipment.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "FCC Notice section"
+            ]
+          },
+          {
+            "question": "How should MMSI numbers be handled?",
+            "question_variations": [
+              "What are the rules about MMSI input?",
+              "Can I enter any MMSI number?",
+              "What MMSI restrictions apply?"
+            ],
+            "answer": "It is a violation of FCC rules to input an MMSI that has not been properly assigned to the end user, or to input any inaccurate data in the device.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "FCC Notice section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is AIS?",
+            "question_variations": [
+              "Can you explain what AIS means?",
+              "What does AIS stand for?",
+              "What is the Automatic Identification System?"
+            ],
+            "answer": "AIS (Automatic Identification System) is a marine location and vessel information reporting system that allows vessels to automatically share their position, speed, course, and identity with other AIS-equipped vessels. It uses GPS for positioning and VHF digital transmissions for vessel communication.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 7, About AIS section"
+            ]
+          },
+          {
+            "question": "What are the different types of AIS devices?",
+            "question_variations": [
+              "What kinds of AIS transceivers exist?",
+              "How many types of AIS are there?"
+            ],
+            "answer": "There are 5 types of AIS devices: Class A transceivers (for large vessels), Class B transceivers (lower cost version), AIS base stations (for Vessel Traffic Systems), Aids to Navigation (AtoN) transceivers (for buoys and hazards), and AIS receivers (receive-only units).",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 7-8, About AIS section"
+            ]
+          },
+          {
+            "question": "What information does AIS transmit?",
+            "question_variations": [
+              "What data does AIS send?",
+              "What details does AIS share?"
+            ],
+            "answer": "AIS transmits two categories of information: Dynamic data (location, speed over ground, course over ground) calculated automatically, and Static data (MMSI, vessel name, call sign, vessel type, vessel dimensions) which must be programmed manually.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 8, Static and Dynamic Vessel Data section"
+            ]
+          },
+          {
+            "question": "How do I get an MMSI number?",
+            "question_variations": [
+              "Where can I obtain an MMSI number?",
+              "What's required to get an MMSI?"
+            ],
+            "answer": "You need to contact the relevant authority in your country to obtain an MMSI number. The vessel must possess a current VHF radiotelephone license that lists the AIS system, vessel Call Sign, and MMSI number.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 8, Static Data section"
+            ]
+          },
+          {
+            "question": "What are the special requirements for US customers?",
+            "question_variations": [
+              "Are there specific rules for AIS in US waters?",
+              "What US laws apply to AIS configuration?"
+            ],
+            "answer": "In the USA, AIS class B transceivers must be pre-configured by the retailer or a competent installer. End users are not authorized to enter their own vessel data. The MMSI and static data must only be entered by a competent installer.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 8-9, Important Information for US Customers section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What items come in the NAIS-500 box?",
+            "question_variations": [
+              "What's included with the NAIS-500?",
+              "What accessories come with NAIS-500?",
+              "What's in the package for NAIS-500?"
+            ],
+            "answer": "The NAIS-500 includes: AIS transceiver unit, Quick Start Guide, product manual, warranty information, screws (packet of 4), power and data cable, USB configuration cable. Optional items in kit 000-13609-001: T-Connector, GPS antenna, N2k cable.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 9, What's in the box section"
+            ]
+          },
+          {
+            "question": "What's on the support tools CD?",
+            "question_variations": [
+              "What software comes with NAIS-500?",
+              "What's included on the CD?",
+              "What drivers are on the support CD?"
+            ],
+            "answer": "The support CD contains: NAIS System Configurator software tool for AIS configuration, USB drivers for AIS transceiver connection, and alternative language versions of the manual.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 9, Support tools CD section"
+            ]
+          },
+          {
+            "question": "What electrical connections does the NAIS-500 have?",
+            "question_variations": [
+              "How do I connect the NAIS-500?",
+              "What ports are available on NAIS-500?",
+              "What can I connect to the NAIS-500?"
+            ],
+            "answer": "The NAIS-500 has: Power supply connection, two independent NMEA 0183 data ports for chartplotters, USB port for PC/Mac connection, external switch input for silent mode control, NMEA 2000 port, VHF antenna connection, and external GPS antenna connection.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 11, Electrical Connections section"
+            ]
+          },
+          {
+            "question": "How do I mount the AIS transceiver?",
+            "question_variations": [
+              "What screws do I need for installation?",
+              "How is the NAIS-500 mounted?",
+              "What's needed to install the transceiver?"
+            ],
+            "answer": "The AIS transceiver comes with four fixing screws for mounting. Refer to Installation procedures in chapter 3 for detailed mounting instructions. Ensure the GPS antenna is mounted with clear view of the sky.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 10, Fixing screws section"
+            ]
+          },
+          {
+            "question": "What indicator lights are on the NAIS-500?",
+            "question_variations": [
+              "What do the lights mean on NAIS-500?",
+              "Where are the indicator lights?",
+              "What status indicators does it have?"
+            ],
+            "answer": "The NAIS-500 has indicator lights for: VHF Antenna (Orange/Green), GPS Antenna (Green), and other status indicators. Refer to Indicator functions in chapter 5 for detailed information about what these lights indicate.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 10, Indicator lights section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What type of VHF antenna do I need for the NAIS-500?",
+            "question_variations": [
+              "Which VHF antenna works with NAIS-500?",
+              "Can I use a regular marine VHF antenna with NAIS-500?"
+            ],
+            "answer": "A standard marine band VHF antenna like those used with VHF voice radios is sufficient. The antenna connector type on the unit is SO 239 (mates with PL 259) and requires 50 ohms impedance.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation section, VHF Antenna Cable specifications"
+            ]
+          },
+          {
+            "question": "How do I connect the NAIS-500 to my chartplotter?",
+            "question_variations": [
+              "What are the connection options for chartplotters?",
+              "Can I connect NAIS-500 to NMEA 2000?"
+            ],
+            "answer": "You can connect the NAIS-500 to your chartplotter via either NMEA 0183 (configured at 38400 baud/NMEA HS) or NMEA 2000 network using the supplied cable.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Chartplotters section"
+            ]
+          },
+          {
+            "question": "Can I use an existing VHF antenna with the NAIS-500?",
+            "question_variations": [
+              "How do I share my VHF antenna with NAIS-500?",
+              "What antenna splitter works with NAIS-500?"
+            ],
+            "answer": "Yes, you can use an existing VHF antenna by installing a Navico NSPL-500 VHF Antenna Splitter. Warning: Only use the NSPL-500 splitter as third-party splitters may cause malfunction or permanent damage.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation section, Warning notice"
+            ]
+          },
+          {
+            "question": "What is the power cable length for the NAIS-500?",
+            "question_variations": [
+              "How long is the included power cable?",
+              "Can I extend the power cable?"
+            ],
+            "answer": "The NAIS-500 comes with a 2-meter power and data cable. Extended cables must support currents of up to 2A peak and 200mA average. Consult a qualified marine installer for extensions.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Power and Data Cable section"
+            ]
+          },
+          {
+            "question": "How do I connect the NAIS-500 to a computer?",
+            "question_variations": [
+              "Can I connect NAIS-500 to my laptop?",
+              "Is PC connection possible with NAIS-500?"
+            ],
+            "answer": "The NAIS-500 can be connected to a PC or Mac using the USB connector on the transceiver. Compatible charting software is required to display AIS messages.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Connection to a PC or Mac section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I install the GPS antenna?",
+            "question_variations": [
+              "What are the steps to mount the GPS antenna?",
+              "How should I mount the GPS antenna?",
+              "What's the GPS antenna installation process?"
+            ],
+            "answer": "1. Mark and drill 2 mounting holes and a cable hole. 2. Thread the cable through the gasket center. 3. Screw antenna to mounting surface using supplied gasket and 2 small screws. 4. Route cable to AIS transceiver. 5. Connect to GPS connector on AIS unit. Ensure mounting surface is clean before installation.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 17",
+              "Figure 8"
+            ]
+          },
+          {
+            "question": "What type of VHF antenna connector is needed?",
+            "question_variations": [
+              "Which connector does the VHF antenna require?",
+              "What connector type matches the AIS transceiver?",
+              "Is my VHF antenna compatible with the AIS unit?"
+            ],
+            "answer": "The AIS transceiver uses an SO239 connector. Your VHF antenna needs a PL259 connector to be compatible. Adaptors are available through dealers if needed.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 18"
+            ]
+          },
+          {
+            "question": "How do I connect the VHF antenna?",
+            "question_variations": [
+              "What's the process for VHF antenna installation?",
+              "Where does the VHF antenna connect?",
+              "How do I hook up the VHF antenna?"
+            ],
+            "answer": "Route the cable from the VHF antenna to the AIS transceiver and connect it to the VHF connector shown in Figure 9. Use a standard marine band VHF antenna or AIS antenna with a PL259 connector.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 18",
+              "Figure 9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the voltage range for power supply?",
+            "question_variations": [
+              "What voltage does the unit need?",
+              "What power supply is required?",
+              "What's the operating voltage?"
+            ],
+            "answer": "The unit requires 12V to 24V DC power supply",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 19, Power Supply Connections"
+            ]
+          },
+          {
+            "question": "How do I connect the accessory cable?",
+            "question_variations": [
+              "Where does the accessory cable go?",
+              "What's the cable connection process?",
+              "How to install the accessory cable?"
+            ],
+            "answer": "Connect the pre-moulded connector end to the port marked 'PWR/0183' on the unit. The other end has color-coded bare wires for various connections.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 19, Step 4"
+            ]
+          },
+          {
+            "question": "What are the NMEA port speeds?",
+            "question_variations": [
+              "What baud rate does each NMEA port use?",
+              "How fast are the NMEA ports?",
+              "What's the speed difference between NMEA ports?"
+            ],
+            "answer": "Port 1 is high speed at 38,400 baud. Port 2 is low speed at 4,800 baud.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 19, Wire Color Table"
+            ]
+          },
+          {
+            "question": "Which wires are for the external switch?",
+            "question_variations": [
+              "How do I connect the silent mode switch?",
+              "What colors are the switch input wires?",
+              "Which wires control silent mode?"
+            ],
+            "answer": "Light green (Switch input-) and Orange (Switch input+) wires are used for external switch connection for silent mode",
+            "question_type": "Which",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 19, Wire Color Table"
+            ]
+          },
+          {
+            "question": "What are the power connection wires?",
+            "question_variations": [
+              "Which wires connect to power?",
+              "What color are the power wires?",
+              "How do I identify the power cables?"
+            ],
+            "answer": "Red wire is Power in + and Black wire is Power in - for 12V to 24V DC connections",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 19, Wire Color Table"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I connect the NAIS-500 to a computer?",
+            "question_variations": [
+              "How can I connect the AIS to my PC?",
+              "What's needed to connect NAIS-500 to Mac?",
+              "How do I link my computer to the AIS transceiver?"
+            ],
+            "answer": "Connect to the USB connector on the AIS transceiver to use with PC or Mac charting software for displaying AIS messages.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 14"
+            ]
+          },
+          {
+            "question": "What are the mounting requirements for the NAIS-500?",
+            "question_variations": [
+              "Where should I install the NAIS-500?",
+              "What are the installation guidelines for the AIS transceiver?",
+              "What conditions are needed for mounting the NAIS-500?"
+            ],
+            "answer": "Mount in a below deck environment, maintain temperature between -15\u00b0C and +55\u00b0C, keep 0.55m from compass, ensure adequate cable space, avoid flammable areas, can mount vertically or horizontally, ensure indicators are visible, use supplied self-tapping screws.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 14"
+            ]
+          },
+          {
+            "question": "What are the dimensions of the NAIS-500?",
+            "question_variations": [
+              "How big is the NAIS-500?",
+              "What's the size of the AIS transceiver?",
+              "What are the measurements of the NAIS-500?"
+            ],
+            "answer": "The unit measures 151.5mm x 132.5mm x 53mm, with a depth of 98mm and height of 47mm.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 14, Figure 5"
+            ]
+          },
+          {
+            "question": "How do I install the GPS antenna?",
+            "question_variations": [
+              "What's the process for mounting the GPS antenna?",
+              "Where should I mount the GPS antenna?",
+              "How do I connect the GPS antenna?"
+            ],
+            "answer": "Can be pole mounted (requires 1-inch 14 TPI thread pole) or surface mounted. For surface mounting: mark and drill 2 mounting holes, install gasket, thread cable through center, screw antenna to surface, route cable to AIS transceiver. Avoid mounting on masts or in radar path.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 16"
+            ]
+          },
+          {
+            "question": "What is the waterproof rating of the NAIS-500?",
+            "question_variations": [
+              "Is the NAIS-500 waterproof?",
+              "What's the ingress protection rating?",
+              "Can the NAIS-500 get wet?"
+            ],
+            "answer": "The AIS transceiver is fully waterproof to ingress protection rating IPx7, but extended exposure to spray or submersion should be avoided.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 14"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I connect an external switch for Silent Mode?",
+            "question_variations": [
+              "How to wire silent mode switch?",
+              "What wires do I use for silent mode?",
+              "How can I install a silent mode toggle?"
+            ],
+            "answer": "Connect a toggle switch between the light green (Switch input +) and orange (Switch input -) wires. This connection is optional and not essential for normal operation.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual p.19, Step 5"
+            ]
+          },
+          {
+            "question": "What are the NMEA 0183 port baud rates?",
+            "question_variations": [
+              "What speed do the NMEA ports operate at?",
+              "What is the baud rate for each NMEA port?"
+            ],
+            "answer": "Port 1 operates at 38,400 baud (high speed) and Port 2 operates at 4,800 baud (low speed)",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual, Step 6"
+            ]
+          },
+          {
+            "question": "What color wires are used for NMEA Port 1?",
+            "question_variations": [
+              "What is the wire color coding for NMEA Port 1?",
+              "How do I identify NMEA Port 1 wires?"
+            ],
+            "answer": "NMEA Port 1 uses: Brown (Transmit +), Blue (Transmit -), White (Receive +), Green (Receive -)",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual, NMEA0183 Connections Table"
+            ]
+          },
+          {
+            "question": "What color wires are used for NMEA Port 2?",
+            "question_variations": [
+              "What is the wire color coding for NMEA Port 2?",
+              "How do I identify NMEA Port 2 wires?"
+            ],
+            "answer": "NMEA Port 2 uses: Purple (Transmit +), Pink (Transmit -), Grey (Receive +), Yellow (Receive -)",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual, NMEA0183 Connections Table"
+            ]
+          },
+          {
+            "question": "What are the power connection wire colors?",
+            "question_variations": [
+              "How do I wire power to the unit?",
+              "What colors are the power wires?"
+            ],
+            "answer": "Power connections use Red wire for Power in + and Black wire for Power in -",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual, NMEA0183 Connections Table"
+            ]
+          },
+          {
+            "question": "Can I connect a voltage source to the switch inputs?",
+            "question_variations": [
+              "Is it safe to connect voltage to switch inputs?",
+              "What happens if I connect power to switch terminals?"
+            ],
+            "answer": "No, do not connect a voltage source across the switch inputs as this may damage the transceiver",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual p.19, Warning Note"
+            ]
+          },
+          {
+            "question": "How does the multiplexing feature work?",
+            "question_variations": [
+              "What is the multiplexing functionality?",
+              "How does data multiplexing work between ports?"
+            ],
+            "answer": "Messages received via the low speed port (4,800 baud) are automatically transmitted via the high speed port (38,400 baud), allowing devices like gyro-compass data to be combined with AIS data to the chartplotter",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installation Manual, Step 6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What color wires are used for NMEA0183 Port 1?",
+            "question_variations": [
+              "What are the wire colors for NMEA Port 1?",
+              "Which wires connect to NMEA0183 first port?",
+              "What is the color coding for NMEA0183 Port 1 connections?"
+            ],
+            "answer": "NMEA0183 Port 1 uses Brown wire for Transmit+, Blue wire for Transmit-, White wire for Receive+, and Green wire for Receive-",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "NMEA0183 Connections Table"
+            ]
+          },
+          {
+            "question": "How do I connect the AIS transceiver to power?",
+            "question_variations": [
+              "What's the power connection process?",
+              "How do I wire power to the AIS unit?",
+              "What are the power supply connection steps?"
+            ],
+            "answer": "Connect the red wire to a 12V or 24V power supply positive terminal and the black wire to the supply negative terminal. Use crimped and soldered lugs, and connect through a circuit breaker and/or 3A fuse block.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Step 9 - Connection to a Power Supply"
+            ]
+          },
+          {
+            "question": "What is required for USB connection to a PC?",
+            "question_variations": [
+              "How do I connect the AIS to my computer via USB?",
+              "What do I need to do before connecting USB to PC?",
+              "What's the USB setup process?"
+            ],
+            "answer": "USB drivers must be installed first. Install NAIS System Configurator before attempting to connect the USB port to a PC. Once connected, the AIS unit will be automatically detected as a new COM port device. Select this COM port and set baud rate to 38,400 in PC navigation software.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Step 8 - USB Connection"
+            ]
+          },
+          {
+            "question": "How do I reset the USB connection if it fails?",
+            "question_variations": [
+              "What should I do if USB connection stops working?",
+              "How to restore USB connection?",
+              "USB connection troubleshooting steps?"
+            ],
+            "answer": "To reset the connection: 1) Disconnect power from the AIS unit 2) Re-apply power to the AIS 3) Close any PC applications using the USB connection 4) Re-launch the applications 5) Re-connect the USB cable between PC and AIS transceiver",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Connection to a PC section"
+            ]
+          },
+          {
+            "question": "How do I connect to NMEA 2000 network?",
+            "question_variations": [
+              "What's needed for NMEA 2000 connection?",
+              "Can I connect this to NMEA 2000?",
+              "NMEA 2000 setup instructions?"
+            ],
+            "answer": "Connect the AIS transceiver to NMEA 2000 network using a suitable Navico NMEA 2000 network cable. With both AIS and chartplotter connected to NMEA 2000 network, you will be able to receive AIS targets on your chartplotter.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Step 7 - Connection to an NMEA 2000 network"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What color is the power input positive wire?",
+            "question_variations": [
+              "Which wire is power positive?",
+              "What color wire connects to power in +?"
+            ],
+            "answer": "The power input positive wire is red",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Wire Color Table, Installation Section"
+            ]
+          },
+          {
+            "question": "How do I know if my AIS transceiver is working normally?",
+            "question_variations": [
+              "What indicates normal operation?",
+              "How can I tell if the unit is operating correctly?"
+            ],
+            "answer": "The green PWR LED indicator will be illuminated when the unit is powered up and operating normally",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "LED Indicator Table, Section 4"
+            ]
+          },
+          {
+            "question": "What does a flashing green Rx light mean?",
+            "question_variations": [
+              "When does the Rx indicator flash?",
+              "What is the green Rx light indicating?"
+            ],
+            "answer": "A flashing green Rx light indicates the unit is receiving AIS data",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "LED Indicator Table, Section 4"
+            ]
+          },
+          {
+            "question": "How do I install the configuration software on a PC?",
+            "question_variations": [
+              "What are the steps to install NAIS System Configurator on Windows?",
+              "How do I set up the configuration software on my computer?"
+            ],
+            "answer": "1. Insert the CD, navigate to NAIS System Configurator/Windows folder and run setup.exe. 2. Click 'Run' if security warning appears. 3. Follow on-screen prompts to complete installation",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Installing NAIS System Configurator - PC Section"
+            ]
+          },
+          {
+            "question": "What does an orange Tx light mean?",
+            "question_variations": [
+              "Why is the Tx indicator orange?",
+              "What does it mean when the Tx light is on?"
+            ],
+            "answer": "An orange Tx light indicates that silent mode is activated",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "LED Indicator Table, Section 4"
+            ]
+          },
+          {
+            "question": "How can I configure my AIS transceiver?",
+            "question_variations": [
+              "What are the ways to configure the AIS unit?",
+              "What options do I have for setting up my AIS?"
+            ],
+            "answer": "There are two ways to configure the AIS transceiver: 1. Configuration in advance by your dealer or installer 2. Configuration using NAIS System Configurator software (where legally permitted)",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Configuring your AIS transceiver Section"
+            ]
+          },
+          {
+            "question": "Where do I connect the NMEA0183 Port 1 transmit negative wire?",
+            "question_variations": [
+              "What color is the Port 1 Transmit negative wire?",
+              "Which wire is for NMEA Port 1 Tx negative?"
+            ],
+            "answer": "The NMEA0183 Port 1 Transmit negative (Transmit -) wire is blue",
+            "question_type": "Where",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Wire Color Table, Installation Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I configure my AIS transceiver?",
+            "question_variations": [
+              "What do I need to set up my AIS transceiver?",
+              "How do I set up my NAIS-500?",
+              "What information is needed for AIS configuration?"
+            ],
+            "answer": "To configure the AIS transceiver, you need: MMSI number, vessel name, vessel type, call sign, and vessel dimensions including GPS antenna installation position. Use the NAIS System Configurator software for configuration. The unit can be powered via USB for configuration purposes only.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Configuration using NAIS System Configurator section"
+            ]
+          },
+          {
+            "question": "Can I change my MMSI number after initial programming?",
+            "question_variations": [
+              "How do I update my MMSI?",
+              "Is it possible to reprogram MMSI?",
+              "What if I need to change my MMSI?"
+            ],
+            "answer": "The MMSI can only be programmed once using NAIS System Configurator. If you need to change the MMSI for any reason, you must contact your dealer who will arrange to have the MMSI reset.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Configuration Warning section"
+            ]
+          },
+          {
+            "question": "What is silent mode?",
+            "question_variations": [
+              "How does silent mode work?",
+              "Can I stop transmitting my position?",
+              "What happens in silent mode?"
+            ],
+            "answer": "Silent mode stops the transmission of your vessel position while continuing to receive other vessels' AIS positions. When active, the orange light on Tx indicator will be illuminated. Warning: Other vessels cannot receive your information when in silent mode, which may compromise navigational safety.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Switch functions section"
+            ]
+          },
+          {
+            "question": "How long does it take for my vessel to appear on other AIS displays?",
+            "question_variations": [
+              "When will other boats see my AIS signal?",
+              "How soon is my vessel visible to others?",
+              "What's the delay for AIS visibility?"
+            ],
+            "answer": "It may take up to six minutes for your full vessel details to become visible to other vessels on their chartplotter or PC.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Using the AIS transceiver section"
+            ]
+          },
+          {
+            "question": "Can I configure the AIS using USB power?",
+            "question_variations": [
+              "Does USB power work for AIS setup?",
+              "Can I set up AIS without vessel power?",
+              "Is USB configuration possible?"
+            ],
+            "answer": "Yes, the AIS transceiver can be powered via USB for configuration purposes only. However, while USB-powered, the unit will not transmit any data or acquire a GPS position fix.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Configuration using NAIS System Configurator section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What do the indicator lights mean on the AIS transceiver?",
+            "question_variations": [
+              "How do I read the status lights on my AIS?",
+              "What do the different LED indicators show on the NAIS-500?",
+              "What are the meanings of the AIS indicator lights?"
+            ],
+            "answer": "The AIS has 4 indicator lights: PWR (green steady means powered correctly), ERR (red steady means MMSI not programmed, red flashing means system error), Rx (green flashing means receiving AIS data), and Tx (orange flashing means acquiring GPS fix, orange steady means silent mode, green flashing means transmitting AIS data).",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Indicator Lights Section"
+            ]
+          },
+          {
+            "question": "What does a steady red ERR light mean?",
+            "question_variations": [
+              "Why is my ERR light solid red?",
+              "What causes the red error light to stay on?"
+            ],
+            "answer": "A steady red ERR light indicates that the MMSI is not properly programmed in the AIS transceiver.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Indicator Lights Section"
+            ]
+          },
+          {
+            "question": "How do I know if my AIS is transmitting?",
+            "question_variations": [
+              "What indicates AIS transmission?",
+              "How can I tell if AIS data is being sent?"
+            ],
+            "answer": "When the Tx light is flashing green, the AIS is transmitting data. The flash interval is 3 minutes when vessel speed is under 2 knots, and 30 seconds when vessel speed is above 2 knots.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Indicator Lights Section"
+            ]
+          },
+          {
+            "question": "What does an orange flashing Tx light mean?",
+            "question_variations": [
+              "Why is my Tx light flashing orange?",
+              "What causes the orange flashing transmit light?"
+            ],
+            "answer": "A flashing orange Tx light indicates the transceiver is acquiring a GPS fix and no AIS transmission occurs during this time. This happens when the device is newly powered on or when GPS position fix has been lost and the device is attempting to re-acquire for up to 30 minutes.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Indicator Lights Section"
+            ]
+          },
+          {
+            "question": "How do I know if my AIS is receiving data?",
+            "question_variations": [
+              "What indicates AIS reception?",
+              "How can I tell if AIS is receiving?"
+            ],
+            "answer": "When the Rx light is flashing green, the AIS transceiver is receiving AIS data.",
+            "question_type": "How",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Indicator Lights Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "Why are no indicators illuminated on my NAIS-500?",
+            "question_variations": [
+              "Why won't my NAIS-500 lights turn on?",
+              "No indicator lights on AIS unit",
+              "NAIS-500 display not lighting up"
+            ],
+            "answer": "Check that the power supply is connected correctly and verify it is a 12V or 24V supply.",
+            "question_type": "Why",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Troubleshooting Section"
+            ]
+          },
+          {
+            "question": "What does a red error indicator mean on NAIS-500?",
+            "question_variations": [
+              "Why is the red light on my AIS?",
+              "Red error light illuminated on NAIS-500",
+              "What causes the red indicator light?"
+            ],
+            "answer": "A red error indicator can mean several things: 1) Invalid MMSI configuration 2) Faulty VHF antenna 3) No GPS position fix 4) Power supply outside allowable range of 9.6V to 31.2V",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Troubleshooting Section"
+            ]
+          },
+          {
+            "question": "Why isn't my chartplotter receiving AIS data?",
+            "question_variations": [
+              "No data showing on chartplotter",
+              "Chartplotter not receiving AIS information",
+              "How do I fix no data on chartplotter?"
+            ],
+            "answer": "Check three things: 1) Power supply is connected correctly 2) Power supply is 12V or 24V 3) Connections to the chartplotter are correct",
+            "question_type": "Why",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Troubleshooting Section"
+            ]
+          },
+          {
+            "question": "Why can other vessels see my MMSI but not my vessel name?",
+            "question_variations": [
+              "Vessel name not showing on other chartplotters",
+              "Other boats can't see my ship name",
+              "MMSI visible but not vessel name"
+            ],
+            "answer": "This occurs with older AIS devices and chartplotters that don't process class B AIS message 24, which contains vessel names. It's not a fault with your unit. The other vessels need to update their AIS units or chart-plotting software to receive message 24.",
+            "question_type": "Why",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Troubleshooting Section"
+            ]
+          },
+          {
+            "question": "What is the acceptable power supply range for NAIS-500?",
+            "question_variations": [
+              "What voltage does NAIS-500 need?",
+              "Power requirements for NAIS-500",
+              "Required voltage for AIS unit"
+            ],
+            "answer": "The NAIS-500 requires a power supply within the range of 9.6V to 31.2V",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Page 27, Troubleshooting Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the NAIS-500?",
+            "question_variations": [
+              "How big is the NAIS-500?",
+              "What is the size of the NAIS-500?",
+              "What's the physical size of the NAIS-500 unit?"
+            ],
+            "answer": "The NAIS-500 dimensions are 152 x 98 x 52 mm (Length x Width x Height)",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Specifications section, p.28"
+            ]
+          },
+          {
+            "question": "What is the power consumption of the NAIS-500?",
+            "question_variations": [
+              "How much power does the NAIS-500 use?",
+              "What's the current draw of the NAIS-500?",
+              "How many amps does the NAIS-500 need?"
+            ],
+            "answer": "Average power consumption is 180 mA at 12 VDC with a peak current rating of 2 A at 12 VDC. The unit accepts DC power from 9.6 V to 31.2 V.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Specifications section, p.28"
+            ]
+          },
+          {
+            "question": "What connection types does the NAIS-500 have?",
+            "question_variations": [
+              "What ports are available on the NAIS-500?",
+              "How can I connect to the NAIS-500?",
+              "What interfaces does the NAIS-500 support?"
+            ],
+            "answer": "The NAIS-500 has VHF antenna connector (SO-239), External GPS antenna connector (SMA), USB type mini-B, NMEA 2000 standard connector, and 12 way power input/NMEA 0183/external switch connections",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Specifications section, p.28"
+            ]
+          },
+          {
+            "question": "What are the NMEA interface specifications?",
+            "question_variations": [
+              "What NMEA protocols does the NAIS-500 support?",
+              "What are the NMEA baud rates?",
+              "How does NMEA work on the NAIS-500?"
+            ],
+            "answer": "The unit supports NMEA 0183 at 38,400 baud (bi-directional), NMEA 0183 at 4,800 baud (bi-directional), and NMEA 2000 with LEN=1",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Specifications section, p.28"
+            ]
+          },
+          {
+            "question": "What are the VHF specifications?",
+            "question_variations": [
+              "What are the radio specs of the NAIS-500?",
+              "What frequency range does the NAIS-500 use?",
+              "What's the VHF transmitter power?"
+            ],
+            "answer": "The unit has 1 AIS transmitter and 2 AIS receivers (one shared between AIS and DSC). Frequency range is 156.025 to 162.025 MHz in 25 kHz steps. Output power is 33 dBm \u00b1 1.5 dB. Channel bandwidth and step are 25 kHz.",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Specifications section, p.28-29"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the connection ports available on the NAIS-500?",
+            "question_variations": [
+              "What connectors does the NAIS-500 have?",
+              "How can I connect devices to the NAIS-500?",
+              "What connection types are supported on NAIS-500?"
+            ],
+            "answer": "The NAIS-500 has GPS antenna connector (SMA), USB type mini-B, NMEA 2000 standard connector, and 12 way power input/NMEA 0183/external switch connections",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Specifications section"
+            ]
+          },
+          {
+            "question": "What is the operating frequency range of the NAIS-500?",
+            "question_variations": [
+              "What frequencies does the NAIS-500 work on?",
+              "What is the frequency range for the AIS transceiver?"
+            ],
+            "answer": "The frequency range is 156.025 to 162.025 MHz in 25 kHz steps",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "VHF transceiver specifications"
+            ]
+          },
+          {
+            "question": "What is the output power of the NAIS-500?",
+            "question_variations": [
+              "How much power does the NAIS-500 transmit at?",
+              "What's the transmission power level?"
+            ],
+            "answer": "The output power is 33 dBm \u00b1 1.5 dB",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Output power specifications"
+            ]
+          },
+          {
+            "question": "What are the environmental specifications of the NAIS-500?",
+            "question_variations": [
+              "Is the NAIS-500 waterproof?",
+              "What temperature range can the NAIS-500 operate in?",
+              "What are the operating conditions for NAIS-500?"
+            ],
+            "answer": "The unit is water resistant to IP67, operates in temperatures from -15\u00baC to +55\u00baC, and is tested to IEC 60945 'Protected' category",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Environmental specifications"
+            ]
+          },
+          {
+            "question": "What are the receiver sensitivity specifications?",
+            "question_variations": [
+              "How sensitive is the NAIS-500 receiver?",
+              "What is the RX sensitivity?"
+            ],
+            "answer": "Less than -107 dBm at 20% PER, with Co-channel 10 dB, Adjacent channel 70 dB, IMD 65 dB, and Blocking 84 dB",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "RX sensitivity specifications"
+            ]
+          },
+          {
+            "question": "What are the supported bit rates?",
+            "question_variations": [
+              "What data rates does the NAIS-500 support?",
+              "What are the transmission speeds?"
+            ],
+            "answer": "9600 b/s \u00b1 50 ppm (GMSK) and 1200 b/s \u00b1 30 ppm (FSK)",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Bit rate specifications"
+            ]
+          },
+          {
+            "question": "What indicator lights are on the NAIS-500?",
+            "question_variations": [
+              "What status lights does the NAIS-500 have?",
+              "How can I check the status of NAIS-500?"
+            ],
+            "answer": "The unit has Power, Error, Rx, and Tx (silent mode) indicators",
+            "question_type": "What",
+            "models": [
+              "NAIS-500"
+            ],
+            "references": [
+              "Indicators specifications"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

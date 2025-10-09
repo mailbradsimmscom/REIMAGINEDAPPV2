@@ -1,0 +1,1040 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 54,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "What is the correct LED indication for normal operation?",
+      "expected_value": "Solid green LED when target pressure is precisely reached",
+      "test_method": "Visual inspection of LED status",
+      "failure_indication": "Non-green or blinking LED indicates pressure issues",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Pressure calibration"
+      ]
+    },
+    {
+      "query": "What is the no-liquid timeout duration?",
+      "expected_value": "1 minute and 30 seconds",
+      "test_method": "Run pump without liquid and time until shutdown",
+      "failure_indication": "Pump running dry for longer than timeout period",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Dry run protection"
+      ]
+    },
+    {
+      "query": "What is the slow speed timeout duration?",
+      "expected_value": "2 hours",
+      "test_method": "Run pump at low speeds and time until shutdown",
+      "failure_indication": "Pump running at low speed beyond timeout period",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Overheat protection"
+      ]
+    },
+    {
+      "query": "What is the minimum expansion tank size requirement?",
+      "expected_value": "0.5 liters minimum for rigid pipes or systems with solenoid valves",
+      "test_method": "Verify expansion tank capacity",
+      "failure_indication": "Pressure sensor damage from water hammer effect",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Installation specifications"
+      ]
+    },
+    {
+      "query": "How to identify power supply problems?",
+      "expected_value": "Yellow and blue LEDs blinking together",
+      "test_method": "Check LED status and verify power supply voltage",
+      "failure_indication": "Incorrect voltage or insufficient wire gauge",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Power supply verification"
+      ]
+    },
+    {
+      "query": "How to identify dry run condition?",
+      "expected_value": "Red and blue LEDs blinking alternatively",
+      "test_method": "Check LED status during operation",
+      "failure_indication": "Pump running without liquid",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Dry run protection"
+      ]
+    },
+    {
+      "query": "How to identify overheating condition?",
+      "expected_value": "Steady red and blinking blue LEDs",
+      "test_method": "Monitor LED status during low-speed operation",
+      "failure_indication": "Extended operation at very low speeds",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Thermal protection"
+      ]
+    },
+    {
+      "query": "What indicates normal liquid presence?",
+      "expected_value": "Solid blue LED",
+      "test_method": "Check LED status during operation",
+      "failure_indication": "No liquid detected in system",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Operation monitoring"
+      ]
+    },
+    {
+      "query": "Is operating voltage within specification?",
+      "expected_value": "24V DC",
+      "test_method": "Measure voltage at power supply connection with voltmeter",
+      "failure_indication": "Incorrect voltage may damage motor",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Electrical Installation"
+      ]
+    },
+    {
+      "query": "Is current draw within limits?",
+      "expected_value": "5A maximum",
+      "test_method": "Measure current draw with ammeter during operation",
+      "failure_indication": "Excessive current indicates motor overload",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Motor Protection"
+      ]
+    },
+    {
+      "query": "Is proper fuse installed?",
+      "expected_value": "10A fuse",
+      "test_method": "Visual inspection of fuse rating",
+      "failure_indication": "Wrong fuse may not protect motor",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Circuit Protection"
+      ]
+    },
+    {
+      "query": "Is fluid temperature within limits?",
+      "expected_value": "Max 85\u00b0C for water",
+      "test_method": "Measure fluid temperature with thermometer",
+      "failure_indication": "Warranty void if exceeded, risk of damage",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Temperature Monitoring"
+      ]
+    },
+    {
+      "query": "Is ambient temperature within range?",
+      "expected_value": "-10\u00b0C to +60\u00b0C",
+      "test_method": "Monitor ambient temperature",
+      "failure_indication": "Risk of malfunction or damage",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Environmental Monitoring"
+      ]
+    },
+    {
+      "query": "Is correct wire gauge used?",
+      "expected_value": "2.5mm\u00b2 or 14 AWG",
+      "test_method": "Visual inspection of installed wiring",
+      "failure_indication": "Undersized wiring may overheat",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Electrical Installation"
+      ]
+    },
+    {
+      "query": "Is fluid viscosity within specification?",
+      "expected_value": "Less than 20 cSt",
+      "test_method": "Check fluid specifications",
+      "failure_indication": "High viscosity may damage pump",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Fluid Compatibility"
+      ]
+    },
+    {
+      "query": "Are ports free of debris?",
+      "expected_value": "Clean, unobstructed ports",
+      "test_method": "Visual inspection of inlet/outlet ports",
+      "failure_indication": "Blockage may affect performance",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Installation Checks"
+      ]
+    },
+    {
+      "query": "Is flash point of pumped fluid safe?",
+      "expected_value": "PM > 38\u00b0C",
+      "test_method": "Check fluid specifications",
+      "failure_indication": "Fire/explosion hazard",
+      "models": [
+        "UP6/E"
+      ],
+      "related_procedures": [
+        "Safety Compliance"
+      ]
+    },
+    {
+      "query": "Is air vent valve open during startup?",
+      "expected_value": "Slightly open during priming, then closed during operation",
+      "test_method": "Visual inspection of valve position during startup sequence",
+      "failure_indication": "Difficulty in priming or air trapped in system",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Pump Priming",
+        "Initial Startup"
+      ]
+    },
+    {
+      "query": "Is outlet tubing properly configured?",
+      "expected_value": "Minimum 1m flexible tubing on outlet side",
+      "test_method": "Measure length of flexible outlet tubing",
+      "failure_indication": "Potential pressure fluctuations or system damage",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Installation"
+      ]
+    },
+    {
+      "query": "Is blue LED on during normal operation?",
+      "expected_value": "Solid blue when liquid present in hoses",
+      "test_method": "Observe blue LED status during operation",
+      "failure_indication": "No liquid in hoses if LED is off",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Operation Monitoring"
+      ]
+    },
+    {
+      "query": "Is priming sequence correct?",
+      "expected_value": "Blue LED flashes for 10 seconds when first sensing water",
+      "test_method": "Monitor blue LED behavior during priming",
+      "failure_indication": "Improper priming if LED pattern differs",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Priming Verification"
+      ]
+    },
+    {
+      "query": "Has auto-shutdown activated?",
+      "expected_value": "System shuts down after 5 cycles between priming and no liquid",
+      "test_method": "Count priming cycles during operation",
+      "failure_indication": "Running dry protection activated",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Safety Shutdown"
+      ]
+    },
+    {
+      "query": "Is pressure building correctly?",
+      "expected_value": "Yellow LED solid while building pressure",
+      "test_method": "Observe LED color during pressure build",
+      "failure_indication": "System not reaching target pressure",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Pressure Monitoring"
+      ]
+    },
+    {
+      "query": "Is target pressure maintained?",
+      "expected_value": "Solid green LED with constant flow",
+      "test_method": "Check LED color during stable operation",
+      "failure_indication": "Pressure regulation issues if not green",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Pressure Control"
+      ]
+    },
+    {
+      "query": "Is standby mode active?",
+      "expected_value": "Flashing green LED when no demand",
+      "test_method": "Observe LED in no-flow condition",
+      "failure_indication": "Improper standby detection if not flashing green",
+      "models": [
+        "UP6/E 24V"
+      ],
+      "related_procedures": [
+        "Standby Operation"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the correct LED indication for normal operation?",
+            "expected_value": "Solid green LED when target pressure is precisely reached",
+            "test_method": "Visual inspection of LED status",
+            "failure_indication": "Non-green or blinking LED indicates pressure issues",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Pressure calibration"
+            ]
+          },
+          {
+            "query": "What is the no-liquid timeout duration?",
+            "expected_value": "1 minute and 30 seconds",
+            "test_method": "Run pump without liquid and time until shutdown",
+            "failure_indication": "Pump running dry for longer than timeout period",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Dry run protection"
+            ]
+          },
+          {
+            "query": "What is the slow speed timeout duration?",
+            "expected_value": "2 hours",
+            "test_method": "Run pump at low speeds and time until shutdown",
+            "failure_indication": "Pump running at low speed beyond timeout period",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Overheat protection"
+            ]
+          },
+          {
+            "query": "What is the minimum expansion tank size requirement?",
+            "expected_value": "0.5 liters minimum for rigid pipes or systems with solenoid valves",
+            "test_method": "Verify expansion tank capacity",
+            "failure_indication": "Pressure sensor damage from water hammer effect",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Installation specifications"
+            ]
+          },
+          {
+            "query": "How to identify power supply problems?",
+            "expected_value": "Yellow and blue LEDs blinking together",
+            "test_method": "Check LED status and verify power supply voltage",
+            "failure_indication": "Incorrect voltage or insufficient wire gauge",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Power supply verification"
+            ]
+          },
+          {
+            "query": "How to identify dry run condition?",
+            "expected_value": "Red and blue LEDs blinking alternatively",
+            "test_method": "Check LED status during operation",
+            "failure_indication": "Pump running without liquid",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Dry run protection"
+            ]
+          },
+          {
+            "query": "How to identify overheating condition?",
+            "expected_value": "Steady red and blinking blue LEDs",
+            "test_method": "Monitor LED status during low-speed operation",
+            "failure_indication": "Extended operation at very low speeds",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Thermal protection"
+            ]
+          },
+          {
+            "query": "What indicates normal liquid presence?",
+            "expected_value": "Solid blue LED",
+            "test_method": "Check LED status during operation",
+            "failure_indication": "No liquid detected in system",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Operation monitoring"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is operating voltage within specification?",
+            "expected_value": "24V DC",
+            "test_method": "Measure voltage at power supply connection with voltmeter",
+            "failure_indication": "Incorrect voltage may damage motor",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Electrical Installation"
+            ]
+          },
+          {
+            "query": "Is current draw within limits?",
+            "expected_value": "5A maximum",
+            "test_method": "Measure current draw with ammeter during operation",
+            "failure_indication": "Excessive current indicates motor overload",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Motor Protection"
+            ]
+          },
+          {
+            "query": "Is proper fuse installed?",
+            "expected_value": "10A fuse",
+            "test_method": "Visual inspection of fuse rating",
+            "failure_indication": "Wrong fuse may not protect motor",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Circuit Protection"
+            ]
+          },
+          {
+            "query": "Is fluid temperature within limits?",
+            "expected_value": "Max 85\u00b0C for water",
+            "test_method": "Measure fluid temperature with thermometer",
+            "failure_indication": "Warranty void if exceeded, risk of damage",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Temperature Monitoring"
+            ]
+          },
+          {
+            "query": "Is ambient temperature within range?",
+            "expected_value": "-10\u00b0C to +60\u00b0C",
+            "test_method": "Monitor ambient temperature",
+            "failure_indication": "Risk of malfunction or damage",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Environmental Monitoring"
+            ]
+          },
+          {
+            "query": "Is correct wire gauge used?",
+            "expected_value": "2.5mm\u00b2 or 14 AWG",
+            "test_method": "Visual inspection of installed wiring",
+            "failure_indication": "Undersized wiring may overheat",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Electrical Installation"
+            ]
+          },
+          {
+            "query": "Is fluid viscosity within specification?",
+            "expected_value": "Less than 20 cSt",
+            "test_method": "Check fluid specifications",
+            "failure_indication": "High viscosity may damage pump",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Fluid Compatibility"
+            ]
+          },
+          {
+            "query": "Are ports free of debris?",
+            "expected_value": "Clean, unobstructed ports",
+            "test_method": "Visual inspection of inlet/outlet ports",
+            "failure_indication": "Blockage may affect performance",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Installation Checks"
+            ]
+          },
+          {
+            "query": "Is flash point of pumped fluid safe?",
+            "expected_value": "PM > 38\u00b0C",
+            "test_method": "Check fluid specifications",
+            "failure_indication": "Fire/explosion hazard",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Safety Compliance"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is air vent valve open during startup?",
+            "expected_value": "Slightly open during priming, then closed during operation",
+            "test_method": "Visual inspection of valve position during startup sequence",
+            "failure_indication": "Difficulty in priming or air trapped in system",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Pump Priming",
+              "Initial Startup"
+            ]
+          },
+          {
+            "query": "Is outlet tubing properly configured?",
+            "expected_value": "Minimum 1m flexible tubing on outlet side",
+            "test_method": "Measure length of flexible outlet tubing",
+            "failure_indication": "Potential pressure fluctuations or system damage",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Installation"
+            ]
+          },
+          {
+            "query": "Is blue LED on during normal operation?",
+            "expected_value": "Solid blue when liquid present in hoses",
+            "test_method": "Observe blue LED status during operation",
+            "failure_indication": "No liquid in hoses if LED is off",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Operation Monitoring"
+            ]
+          },
+          {
+            "query": "Is priming sequence correct?",
+            "expected_value": "Blue LED flashes for 10 seconds when first sensing water",
+            "test_method": "Monitor blue LED behavior during priming",
+            "failure_indication": "Improper priming if LED pattern differs",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Priming Verification"
+            ]
+          },
+          {
+            "query": "Has auto-shutdown activated?",
+            "expected_value": "System shuts down after 5 cycles between priming and no liquid",
+            "test_method": "Count priming cycles during operation",
+            "failure_indication": "Running dry protection activated",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Safety Shutdown"
+            ]
+          },
+          {
+            "query": "Is pressure building correctly?",
+            "expected_value": "Yellow LED solid while building pressure",
+            "test_method": "Observe LED color during pressure build",
+            "failure_indication": "System not reaching target pressure",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Pressure Monitoring"
+            ]
+          },
+          {
+            "query": "Is target pressure maintained?",
+            "expected_value": "Solid green LED with constant flow",
+            "test_method": "Check LED color during stable operation",
+            "failure_indication": "Pressure regulation issues if not green",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Pressure Control"
+            ]
+          },
+          {
+            "query": "Is standby mode active?",
+            "expected_value": "Flashing green LED when no demand",
+            "test_method": "Observe LED in no-flow condition",
+            "failure_indication": "Improper standby detection if not flashing green",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Standby Operation"
+            ]
+          },
+          {
+            "query": "Is there a short circuit?",
+            "expected_value": "No red LED indication",
+            "test_method": "Monitor LED color during operation",
+            "failure_indication": "Short circuit if solid/slow flashing red LED",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Fault Diagnosis"
+            ]
+          },
+          {
+            "query": "Is pump overloaded?",
+            "expected_value": "No fast flashing red LED",
+            "test_method": "Monitor LED during operation with load",
+            "failure_indication": "Overload if fast flashing red LED",
+            "models": [
+              "UP6/E 24V"
+            ],
+            "related_procedures": [
+              "Load Management"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is pump priming correctly?",
+            "expected_value": "Pump primes and starts normally",
+            "test_method": "Observe pump startup behavior",
+            "failure_indication": "Pump not priming due to height above fluid, dry running, or air leaks",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Installation height check",
+              "Suction pipe inspection"
+            ]
+          },
+          {
+            "query": "What is the operating temperature of pump body and motor?",
+            "expected_value": "Between 60\u00b0C/140\u00b0F and 70\u00b0C/158\u00b0F",
+            "test_method": "Temperature measurement of body and motor frame",
+            "failure_indication": "Overheating or abnormal temperature indicates potential issues",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Temperature monitoring",
+              "Maintenance check"
+            ]
+          },
+          {
+            "query": "Is the inlet filter clean?",
+            "expected_value": "Filter free from debris and contamination",
+            "test_method": "Visual inspection of inlet filter",
+            "failure_indication": "Clogged or dirty filter affecting performance",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Regular maintenance",
+              "Filter cleaning"
+            ]
+          },
+          {
+            "query": "Is the pump chamber clean?",
+            "expected_value": "Chamber free from foreign matter",
+            "test_method": "Monthly chamber inspection",
+            "failure_indication": "Presence of foreign matter affecting operation",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Monthly maintenance",
+              "Chamber cleaning"
+            ]
+          },
+          {
+            "query": "Are electrical connections in good condition?",
+            "expected_value": "Wiring intact and properly connected",
+            "test_method": "Monthly inspection of electrical wiring",
+            "failure_indication": "Damaged or loose wiring creating safety hazard",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Electrical safety check",
+              "Monthly maintenance"
+            ]
+          },
+          {
+            "query": "Is the amp-draw within specified limits?",
+            "expected_value": "Current draw matches motor label specifications",
+            "test_method": "Measure current draw under maximum operating pressure",
+            "failure_indication": "Excessive current draw indicating overload",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Electrical testing",
+              "Performance verification"
+            ]
+          },
+          {
+            "query": "Is the pump noise level normal?",
+            "expected_value": "Regular and constant noise levels",
+            "test_method": "Auditory observation during operation",
+            "failure_indication": "Irregular or excessive noise indicating problems",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Operational monitoring",
+              "Maintenance check"
+            ]
+          },
+          {
+            "query": "Are front plate screws properly tightened?",
+            "expected_value": "Screws securely fastened",
+            "test_method": "Check screw tightness after inactive periods",
+            "failure_indication": "Loose screws causing air leaks",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "related_procedures": [
+              "Post-inactivity startup",
+              "Maintenance check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the compensation spring (part #9) properly installed?",
+            "expected_value": "Spring should be undamaged and correctly seated",
+            "test_method": "Visual inspection and physical check of spring tension",
+            "failure_indication": "Pump may have irregular pressure or vibration",
+            "models": [
+              "MARCO pump assembly"
+            ],
+            "related_procedures": [
+              "Spring replacement",
+              "Pressure regulation"
+            ]
+          },
+          {
+            "query": "Are all O-rings (#6,10,16,22,25,27) intact and properly seated?",
+            "expected_value": "O-rings should be undamaged, properly seated with no visible gaps",
+            "test_method": "Visual inspection and leak test",
+            "failure_indication": "Fluid leakage or loss of pressure",
+            "models": [
+              "MARCO pump assembly"
+            ],
+            "related_procedures": [
+              "O-ring replacement",
+              "Seal maintenance"
+            ]
+          },
+          {
+            "query": "Is the electronic pressure sensor (#19) functioning?",
+            "expected_value": "Sensor should provide accurate pressure readings",
+            "test_method": "Compare sensor readings with calibrated pressure gauge",
+            "failure_indication": "Incorrect pressure readings or control issues",
+            "models": [
+              "MARCO pump assembly"
+            ],
+            "related_procedures": [
+              "Sensor calibration",
+              "Pressure control testing"
+            ]
+          },
+          {
+            "query": "Are the antivibration mounts (#29) properly installed?",
+            "expected_value": "All 4 mounts should be securely fastened with inserts (#30)",
+            "test_method": "Physical inspection and vibration test",
+            "failure_indication": "Excessive vibration during operation",
+            "models": [
+              "MARCO pump assembly"
+            ],
+            "related_procedures": [
+              "Mount installation",
+              "Vibration testing"
+            ]
+          },
+          {
+            "query": "Is the filter (#28) clean and properly installed?",
+            "expected_value": "Filter should be clean and correctly positioned",
+            "test_method": "Visual inspection and flow test",
+            "failure_indication": "Reduced flow rate or contamination",
+            "models": [
+              "MARCO pump assembly"
+            ],
+            "related_procedures": [
+              "Filter maintenance",
+              "Flow testing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the pump packaging intact upon delivery?",
+            "expected_value": "No visible damage to packaging or pump",
+            "test_method": "Visual inspection of packaging and pump upon receipt",
+            "failure_indication": "Potential damage during transport that may affect pump operation",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Receiving inspection",
+              "Storage procedures"
+            ]
+          },
+          {
+            "query": "Are inlet and outlet ports clean?",
+            "expected_value": "Ports free of dust and packaging material",
+            "test_method": "Visual inspection and cleaning of ports",
+            "failure_indication": "Flow restrictions and potential pump damage",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Installation preparation",
+              "Port cleaning"
+            ]
+          },
+          {
+            "query": "Does power supply match specifications?",
+            "expected_value": "Power supply matches pump specifications exactly",
+            "test_method": "Compare available power supply ratings with pump requirements",
+            "failure_indication": "Risk of pump damage or malfunction",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Power verification"
+            ]
+          },
+          {
+            "query": "Is protection fuse installed and correctly rated?",
+            "expected_value": "Fuse installed and rated as per motor label",
+            "test_method": "Visual inspection and fuse rating verification",
+            "failure_indication": "Warranty void, risk of electrical damage",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Warranty compliance"
+            ]
+          },
+          {
+            "query": "Are anti-vibration rubber fittings mounted?",
+            "expected_value": "All rubber fittings properly installed",
+            "test_method": "Visual inspection of mounting points",
+            "failure_indication": "Increased noise and vibration levels",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Installation",
+              "Noise reduction measures"
+            ]
+          },
+          {
+            "query": "Is electrical cable sizing correct?",
+            "expected_value": "Cable size matches distance requirements per Motor Data Table",
+            "test_method": "Measure cable length and verify against Motor Data Table",
+            "failure_indication": "Overheating risk, voltage drop, reduced efficiency",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Cable sizing"
+            ]
+          },
+          {
+            "query": "Is tube diameter correct?",
+            "expected_value": "Internal tube diameter matches Pump Data Table specifications",
+            "test_method": "Measure tube diameter and compare to specifications",
+            "failure_indication": "Increased current draw, potential motor overheating",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Tubing installation",
+              "Flow optimization"
+            ]
+          },
+          {
+            "query": "Is battery power supply effective?",
+            "expected_value": "Proper voltage activity present",
+            "test_method": "Check voltage at battery terminals",
+            "failure_indication": "Pump won't start or stops running",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Troubleshooting",
+              "Power supply verification"
+            ]
+          },
+          {
+            "query": "What is the condition of motor brushes?",
+            "expected_value": "Less than 2500 hours of operation",
+            "test_method": "Track operating hours and inspect brush wear",
+            "failure_indication": "Pump stoppages due to brush wear",
+            "models": [
+              "All pump models"
+            ],
+            "related_procedures": [
+              "Maintenance",
+              "Brush replacement"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is electromagnetic compatibility certification valid?",
+            "expected_value": "Compliant with Directive 2014/30/EU",
+            "test_method": "Verify certification documents and test reports",
+            "failure_indication": "Non-compliance with EMC requirements",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "related_procedures": [
+              "EN 55014-1",
+              "EN 55014-2"
+            ]
+          },
+          {
+            "query": "What is the maximum flow rate at 24V?",
+            "expected_value": "26 l/min",
+            "test_method": "Measure flow rate at 24V input",
+            "failure_indication": "Flow rate below specification",
+            "models": [
+              "16462213"
+            ],
+            "related_procedures": [
+              "Flow rate measurement"
+            ]
+          },
+          {
+            "query": "Are antivibration mounts properly installed?",
+            "expected_value": "4 mounts with inserts present and secure",
+            "test_method": "Visual inspection of mounting points",
+            "failure_indication": "Missing or loose mounts causing vibration",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Installation manual"
+            ]
+          },
+          {
+            "query": "Is filter element present and clean?",
+            "expected_value": "Filter installed and unobstructed",
+            "test_method": "Visual inspection of filter",
+            "failure_indication": "Missing or clogged filter",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Maintenance checklist"
+            ]
+          },
+          {
+            "query": "Does current draw match specification at operating pressure?",
+            "expected_value": "Current within specified range on absorption curve",
+            "test_method": "Measure current draw across pressure range",
+            "failure_indication": "Excessive current draw indicating malfunction",
+            "models": [
+              "UP6/E"
+            ],
+            "related_procedures": [
+              "Electrical testing"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

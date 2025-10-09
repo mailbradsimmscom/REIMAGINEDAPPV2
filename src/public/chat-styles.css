@@ -93,8 +93,8 @@ body {
 .layout {
     display: grid;
     grid-template-columns: 280px 1fr;
-    overflow: hidden;
     height: 100%;
+    overflow: hidden;
 }
 
 /* Sidebar */
@@ -104,6 +104,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
     position: relative;
     z-index: 1; /* Ensure sidebar appears above composer background */
 }
@@ -121,6 +122,47 @@ body {
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: var(--spacing-md);
+}
+
+/* Model Selector */
+.model-selector {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--background-color);
+    border-radius: var(--border-radius-small);
+}
+
+.model-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.model-select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-primary);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.model-select:hover {
+    border-color: var(--primary-color);
+}
+
+.model-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
 .new-chat {
@@ -150,6 +192,7 @@ body {
 /* Chat List */
 .chat-list {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
     padding: var(--spacing-sm);
 }
@@ -211,18 +254,15 @@ body {
 
 /* Chat Area */
 .chat {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr auto;
     background: var(--background-color);
-    height: calc(100% - 215px);
+    height: 100%;
     overflow: hidden;
 }
 
 .chat-header {
-    background: var(--surface-color);
-    padding: var(--spacing-lg) var(--spacing-xl);
-    border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0;
+    display: none;
 }
 
 .chat-header h2 {
@@ -239,7 +279,8 @@ body {
 
 /* Messages Area */
 .messages {
-    flex: 1;
+    grid-row: 1;
+    min-height: 0;
     overflow-y: auto;
     padding: var(--spacing-xl);
     max-width: 900px;
@@ -362,15 +403,11 @@ body {
 
 /* Composer */
 .composer {
-    position: fixed;
-    bottom: 0;
-    left: 280px;
-    right: 0;
+    grid-row: 2;
     background: var(--surface-color);
     border-top: 1px solid var(--border-color);
     padding: var(--spacing-lg) var(--spacing-xl);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    z-index: 100;
 }
 
 .input-container {
@@ -504,10 +541,6 @@ body {
         left: 0;
     }
 
-    .composer {
-        left: 0;
-    }
-
     .message-bubble {
         max-width: 85%;
     }
@@ -583,10 +616,6 @@ body {
 
 /* Toggle Stats Button */
 .toggle-stats-btn {
-    position: absolute;
-    right: var(--spacing-lg);
-    top: 50%;
-    transform: translateY(-50%);
     background: var(--primary-color);
     color: white;
     border: none;
@@ -599,7 +628,7 @@ body {
 
 .toggle-stats-btn:hover {
     background: var(--primary-hover);
-    transform: translateY(-50%) scale(1.1);
+    transform: scale(1.1);
 }
 
 /* Stats Panel */
@@ -616,6 +645,7 @@ body {
     /* Flex container for header + scrollable content */
     flex-direction: column;
     z-index: 10;
+    grid-row: 1 / -1; /* Span all rows, overlay the grid */
 }
 
 .chat.show-stats .stats-panel {
@@ -625,10 +655,6 @@ body {
 /* Adjust messages area when stats panel is shown */
 .chat.show-stats .messages {
     margin-right: 350px;
-}
-
-.app.show-stats .composer {
-    right: 350px;
 }
 
 /* Stats Panel Header */

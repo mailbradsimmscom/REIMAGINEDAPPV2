@@ -1,0 +1,1923 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 38,
+  "unique_specifications": 30,
+  "category_breakdown": {
+    "Performance": 9,
+    "Installation": 7,
+    "Physical": 1,
+    "Electrical": 5,
+    "Environmental": 3,
+    "Operating": 2,
+    "Maintenance": 3
+  },
+  "specifications": [
+    {
+      "parameter": "No Liquid Timeout",
+      "normalized_parameter": "no_liquid_timeout",
+      "parameter_aliases": [
+        "dry run protection",
+        "run dry timeout",
+        "liquid detection timeout"
+      ],
+      "value": "90",
+      "range": null,
+      "units": "seconds",
+      "normalized_units": "seconds",
+      "converted_value": "90",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "timeout",
+        "dry run",
+        "protection time",
+        "safety shutdown",
+        "no liquid detection"
+      ],
+      "concept_group": "safety_timeouts",
+      "references": [
+        "TIMEOUTS section"
+      ]
+    },
+    {
+      "parameter": "Slow Speed Timeout",
+      "normalized_parameter": "slow_speed_timeout",
+      "parameter_aliases": [
+        "low speed protection",
+        "minimum speed timeout"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "hours",
+      "normalized_units": "hours",
+      "converted_value": "2",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "timeout",
+        "slow speed",
+        "protection time",
+        "overheating protection"
+      ],
+      "concept_group": "safety_timeouts",
+      "references": [
+        "TIMEOUTS section"
+      ]
+    },
+    {
+      "parameter": "Minimum Expansion Tank Size",
+      "normalized_parameter": "min_expansion_tank_volume",
+      "parameter_aliases": [
+        "expansion vessel size",
+        "buffer tank capacity"
+      ],
+      "value": "0.5",
+      "range": null,
+      "units": "liter",
+      "normalized_units": "liters",
+      "converted_value": "0.5",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "expansion tank",
+        "vessel",
+        "buffer tank",
+        "minimum size"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "WARNINGS section"
+      ]
+    },
+    {
+      "parameter": "Flow Rate",
+      "normalized_parameter": "flow_rate",
+      "parameter_aliases": [
+        "water flow",
+        "delivery rate",
+        "output flow"
+      ],
+      "value": "26",
+      "range": null,
+      "units": "l/min",
+      "normalized_units": "liters_per_minute",
+      "converted_value": "26",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "flow rate",
+        "water flow",
+        "output",
+        "delivery rate"
+      ],
+      "concept_group": "performance_specs",
+      "references": [
+        "TECHNICAL DETAILS section"
+      ]
+    },
+    {
+      "parameter": "Weight",
+      "normalized_parameter": "weight",
+      "parameter_aliases": [
+        "mass",
+        "product weight"
+      ],
+      "value": "3.7",
+      "range": null,
+      "units": "kg",
+      "normalized_units": "kilograms",
+      "converted_value": "3.7",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Physical",
+      "search_terms": [
+        "weight",
+        "mass",
+        "how heavy",
+        "product weight"
+      ],
+      "concept_group": "physical_specifications",
+      "references": [
+        "PRODUCT DATA section"
+      ]
+    },
+    {
+      "parameter": "Operating Voltage",
+      "normalized_parameter": "operating_voltage",
+      "parameter_aliases": [
+        "voltage",
+        "power supply",
+        "electrical input"
+      ],
+      "value": "24",
+      "range": null,
+      "units": "V",
+      "normalized_units": "volts",
+      "converted_value": "24",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "voltage",
+        "power requirement",
+        "electrical spec",
+        "24V",
+        "24 volt"
+      ],
+      "concept_group": "power_specifications",
+      "references": [
+        "Model specification"
+      ]
+    },
+    {
+      "parameter": "Minimum Outlet Tube Length",
+      "normalized_parameter": "minimum_outlet_tube_length",
+      "parameter_aliases": [
+        "outlet tubing length",
+        "discharge tube length"
+      ],
+      "value": "1",
+      "range": "\u22651",
+      "units": "m",
+      "normalized_units": "meters",
+      "converted_value": "1",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "tube length",
+        "outlet tube",
+        "flexible tubing",
+        "discharge line"
+      ],
+      "concept_group": "installation_requirements",
+      "references": [
+        "Air Vent Valve Activation section"
+      ]
+    },
+    {
+      "parameter": "Priming Verification Time",
+      "normalized_parameter": "priming_verification_time",
+      "parameter_aliases": [
+        "initial pump verification",
+        "priming check duration"
+      ],
+      "value": "10",
+      "range": null,
+      "units": "seconds",
+      "normalized_units": "seconds",
+      "converted_value": "10",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "priming time",
+        "startup verification",
+        "initial operation time"
+      ],
+      "concept_group": "operational_parameters",
+      "references": [
+        "Blue LED Indicators section"
+      ]
+    },
+    {
+      "parameter": "Maximum Retry Attempts",
+      "normalized_parameter": "maximum_retry_attempts",
+      "parameter_aliases": [
+        "retry limit",
+        "restart attempts"
+      ],
+      "value": "3",
+      "range": "1-3",
+      "units": "attempts",
+      "normalized_units": "attempts",
+      "converted_value": "3",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "retry attempts",
+        "restart limit",
+        "fault recovery"
+      ],
+      "concept_group": "safety_parameters",
+      "references": [
+        "Multicolored LED Indicators section"
+      ]
+    },
+    {
+      "parameter": "Error Reset Time",
+      "normalized_parameter": "error_reset_time",
+      "parameter_aliases": [
+        "fault timeout",
+        "error timeout"
+      ],
+      "value": "30",
+      "range": null,
+      "units": "seconds",
+      "normalized_units": "seconds",
+      "converted_value": "30",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "reset time",
+        "error timeout",
+        "fault duration"
+      ],
+      "concept_group": "safety_parameters",
+      "references": [
+        "Multicolored LED Indicators section"
+      ]
+    },
+    {
+      "parameter": "Current Consumption",
+      "normalized_parameter": "current_draw",
+      "parameter_aliases": [
+        "amperage",
+        "current draw"
+      ],
+      "value": "5",
+      "range": null,
+      "units": "A",
+      "normalized_units": "A",
+      "converted_value": "5",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "current",
+        "amps",
+        "amperage",
+        "power consumption"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Motor Data"
+      ]
+    },
+    {
+      "parameter": "Motor Power",
+      "normalized_parameter": "motor_power",
+      "parameter_aliases": [
+        "power rating",
+        "power consumption"
+      ],
+      "value": "180",
+      "range": null,
+      "units": "W",
+      "normalized_units": "W",
+      "converted_value": "180",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "power",
+        "wattage",
+        "motor power",
+        "power rating"
+      ],
+      "concept_group": "electrical_specifications",
+      "references": [
+        "Motor Data"
+      ]
+    },
+    {
+      "parameter": "IP Protection",
+      "normalized_parameter": "ip_rating",
+      "parameter_aliases": [
+        "ingress protection",
+        "water resistance"
+      ],
+      "value": "67",
+      "range": null,
+      "units": "IP",
+      "normalized_units": "IP",
+      "converted_value": "67",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "IP rating",
+        "water resistance",
+        "dust protection",
+        "waterproof"
+      ],
+      "concept_group": "protection_rating",
+      "references": [
+        "Motor Data"
+      ]
+    },
+    {
+      "parameter": "Operating Temperature Range",
+      "normalized_parameter": "operating_temperature_range",
+      "parameter_aliases": [
+        "ambient temperature",
+        "temperature limits"
+      ],
+      "value": null,
+      "range": "-10 to +60",
+      "units": "\u00b0C",
+      "normalized_units": "\u00b0C",
+      "converted_value": "14 to 140 \u00b0F",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "temperature range",
+        "operating temperature",
+        "ambient conditions"
+      ],
+      "concept_group": "environmental_limits",
+      "references": [
+        "Ambient Conditions"
+      ]
+    },
+    {
+      "parameter": "Maximum Fluid Temperature",
+      "normalized_parameter": "max_fluid_temperature",
+      "parameter_aliases": [
+        "liquid temperature",
+        "water temperature"
+      ],
+      "value": "85",
+      "range": null,
+      "units": "\u00b0C",
+      "normalized_units": "\u00b0C",
+      "converted_value": "185 \u00b0F",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Environmental",
+      "search_terms": [
+        "fluid temperature",
+        "max temperature",
+        "liquid temp"
+      ],
+      "concept_group": "environmental_limits",
+      "references": [
+        "Fluids Allowed"
+      ]
+    },
+    {
+      "parameter": "Maximum Pressure",
+      "normalized_parameter": "max_pressure",
+      "parameter_aliases": [
+        "operating pressure",
+        "pump pressure"
+      ],
+      "value": "3.5",
+      "range": null,
+      "units": "bar",
+      "normalized_units": "bar",
+      "converted_value": "50.8 psi",
+      "models": [
+        "UP6/E"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "pressure",
+        "max pressure",
+        "operating pressure",
+        "PSI",
+        "bar"
+      ],
+      "concept_group": "performance_specifications",
+      "references": [
+        "Pump Data"
+      ]
+    },
+    {
+      "parameter": "Brush Life",
+      "normalized_parameter": "motor_brush_lifespan",
+      "parameter_aliases": [
+        "commutator brush life",
+        "brush durability",
+        "motor brush lifetime"
+      ],
+      "value": "2500",
+      "range": null,
+      "units": "hours",
+      "normalized_units": "hours",
+      "converted_value": "2500",
+      "models": [
+        "all"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "how long do brushes last",
+        "brush replacement interval",
+        "motor brush duration",
+        "maintenance interval"
+      ],
+      "concept_group": "maintenance_requirements",
+      "references": [
+        "Troubleshooting"
+      ]
+    },
+    {
+      "parameter": "Maximum Inlet Filter Pressure",
+      "normalized_parameter": "max_inlet_filter_pressure",
+      "parameter_aliases": [
+        "filter pressure limit",
+        "inlet filter max pressure"
+      ],
+      "value": "0.5",
+      "range": "0 - 0.5",
+      "units": "bar",
+      "normalized_units": "bar",
+      "converted_value": "0.5",
+      "models": [
+        "all"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "filter pressure limit",
+        "maximum filter pressure",
+        "inlet pressure limit"
+      ],
+      "concept_group": "operational_limits",
+      "references": [
+        "Tubing Connections"
+      ]
+    },
+    {
+      "parameter": "Inlet Filter Mesh Size",
+      "normalized_parameter": "filter_mesh_size",
+      "parameter_aliases": [
+        "mesh size",
+        "filter grade",
+        "strainer size"
+      ],
+      "value": "35",
+      "range": null,
+      "units": "ASTM",
+      "normalized_units": "ASTM",
+      "converted_value": "35",
+      "models": [
+        "all"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "filter mesh specification",
+        "strainer size",
+        "filter grade",
+        "mesh number"
+      ],
+      "concept_group": "filtration",
+      "references": [
+        "Tubing Connections"
+      ]
+    },
+    {
+      "parameter": "Power Supply Polarity",
+      "normalized_parameter": "electrical_polarity",
+      "parameter_aliases": [
+        "wiring polarity",
+        "electrical connection"
+      ],
+      "value": "Red wire (+), Black wire (-)",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "all"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "wire colors",
+        "polarity connection",
+        "positive negative wires",
+        "electrical hookup"
+      ],
+      "concept_group": "electrical_installation",
+      "references": [
+        "Positioning"
+      ]
+    },
+    {
+      "parameter": "Protection Fuse Requirement",
+      "normalized_parameter": "fuse_requirement",
+      "parameter_aliases": [
+        "electrical protection",
+        "circuit protection"
+      ],
+      "value": "Required as per motor label",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "all"
+      ],
+      "category": "Electrical",
+      "search_terms": [
+        "fuse needed",
+        "electrical protection",
+        "warranty requirement",
+        "fuse specification"
+      ],
+      "concept_group": "safety_requirements",
+      "references": [
+        "Electrical Connection"
+      ]
+    },
+    {
+      "parameter": "Maximum Operating Temperature - Body",
+      "normalized_parameter": "max_body_temperature",
+      "parameter_aliases": [
+        "body temp",
+        "housing temperature",
+        "pump body temperature"
+      ],
+      "value": "60",
+      "range": "0-60",
+      "units": "\u00b0C",
+      "normalized_units": "celsius",
+      "converted_value": "60",
+      "models": [
+        "all"
+      ],
+      "category": "Operating",
+      "search_terms": [
+        "body temperature",
+        "operating temperature",
+        "pump temperature",
+        "how hot pump body"
+      ],
+      "concept_group": "temperature_limits",
+      "references": [
+        "Indicators section"
+      ]
+    },
+    {
+      "parameter": "Maximum Operating Temperature - Motor",
+      "normalized_parameter": "max_motor_temperature",
+      "parameter_aliases": [
+        "motor temp",
+        "motor frame temperature"
+      ],
+      "value": "70",
+      "range": "0-70",
+      "units": "\u00b0C",
+      "normalized_units": "celsius",
+      "converted_value": "70",
+      "models": [
+        "all"
+      ],
+      "category": "Operating",
+      "search_terms": [
+        "motor temperature",
+        "motor temp limit",
+        "how hot can motor get"
+      ],
+      "concept_group": "temperature_limits",
+      "references": [
+        "Indicators section"
+      ]
+    },
+    {
+      "parameter": "Warranty Period",
+      "normalized_parameter": "warranty_duration",
+      "parameter_aliases": [
+        "guarantee period",
+        "warranty coverage"
+      ],
+      "value": "2",
+      "range": null,
+      "units": "years",
+      "normalized_units": "years",
+      "converted_value": "2",
+      "models": [
+        "all"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "warranty",
+        "guarantee",
+        "how long is warranty",
+        "warranty period"
+      ],
+      "concept_group": "warranty_terms",
+      "references": [
+        "Warranty section"
+      ]
+    },
+    {
+      "parameter": "Maintenance Inspection Interval - Filter",
+      "normalized_parameter": "filter_inspection_interval",
+      "parameter_aliases": [
+        "filter check period",
+        "filter maintenance frequency"
+      ],
+      "value": "frequent",
+      "range": null,
+      "units": "undefined",
+      "normalized_units": "undefined",
+      "converted_value": "frequent",
+      "models": [
+        "all"
+      ],
+      "category": "Maintenance",
+      "search_terms": [
+        "filter check",
+        "when check filter",
+        "filter maintenance",
+        "filter inspection"
+      ],
+      "concept_group": "maintenance_schedule",
+      "references": [
+        "Normal Maintenance section"
+      ]
+    },
+    {
+      "parameter": "Maintenance Inspection Interval - Chamber",
+      "normalized_parameter": "chamber_inspection_interval",
+      "parameter_aliases": [
+        "chamber check period",
+        "chamber cleaning frequency"
+      ],
+      "value": "1",
+      "range": null,
+      "units": "months",
+      "normalized_units": "months",
+      "converted_value": "1",
+      "models": [
+        "all"
+      ],
+      "category": "Maintenance",
+      "search_terms": [
+        "chamber inspection",
+        "chamber maintenance",
+        "when clean chamber"
+      ],
+      "concept_group": "maintenance_schedule",
+      "references": [
+        "Normal Maintenance section"
+      ]
+    },
+    {
+      "parameter": "Electrical Inspection Interval",
+      "normalized_parameter": "electrical_inspection_interval",
+      "parameter_aliases": [
+        "wiring check period",
+        "electrical maintenance frequency"
+      ],
+      "value": "1",
+      "range": null,
+      "units": "months",
+      "normalized_units": "months",
+      "converted_value": "1",
+      "models": [
+        "all"
+      ],
+      "category": "Maintenance",
+      "search_terms": [
+        "electrical inspection",
+        "wiring check",
+        "when check electrical",
+        "electrical maintenance"
+      ],
+      "concept_group": "maintenance_schedule",
+      "references": [
+        "Normal Maintenance section"
+      ]
+    },
+    {
+      "parameter": "Component Count - O-Ring",
+      "normalized_parameter": "component_count_oring",
+      "parameter_aliases": [
+        "o-ring quantity",
+        "number of o-rings",
+        "o-ring count"
+      ],
+      "value": "10",
+      "range": null,
+      "units": "pieces",
+      "normalized_units": "count",
+      "converted_value": "10",
+      "models": [
+        "MARCO pump"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how many o-rings",
+        "o-ring quantity",
+        "number of seals",
+        "seal count"
+      ],
+      "concept_group": "sealing_components",
+      "references": [
+        "exploded view"
+      ]
+    },
+    {
+      "parameter": "Component Count - Antivibration Mounts",
+      "normalized_parameter": "component_count_antivibration",
+      "parameter_aliases": [
+        "vibration damper count",
+        "mount quantity"
+      ],
+      "value": "4",
+      "range": null,
+      "units": "pieces",
+      "normalized_units": "count",
+      "converted_value": "4",
+      "models": [
+        "MARCO pump"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "antivibration mounts",
+        "vibration dampers",
+        "number of mounts"
+      ],
+      "concept_group": "mounting_components",
+      "references": [
+        "pos. 29"
+      ]
+    },
+    {
+      "parameter": "Serviceable Components",
+      "normalized_parameter": "serviceable_parts",
+      "parameter_aliases": [
+        "replacement parts",
+        "spare parts"
+      ],
+      "value": "compensation spring, idle gear, electronic control, nipple, air vent cap, o-ring, filter, antivibration mount",
+      "range": null,
+      "units": null,
+      "normalized_units": null,
+      "converted_value": null,
+      "models": [
+        "MARCO pump"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "replaceable parts",
+        "spare parts",
+        "maintenance items",
+        "service parts"
+      ],
+      "concept_group": "maintenance",
+      "references": [
+        "X marked items"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "No Liquid Timeout",
+            "normalized_parameter": "no_liquid_timeout",
+            "parameter_aliases": [
+              "dry run protection",
+              "run dry timeout",
+              "liquid detection timeout"
+            ],
+            "value": "90",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "90",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timeout",
+              "dry run",
+              "protection time",
+              "safety shutdown",
+              "no liquid detection"
+            ],
+            "concept_group": "safety_timeouts",
+            "references": [
+              "TIMEOUTS section"
+            ]
+          },
+          {
+            "parameter": "Slow Speed Timeout",
+            "normalized_parameter": "slow_speed_timeout",
+            "parameter_aliases": [
+              "low speed protection",
+              "minimum speed timeout"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "hours",
+            "normalized_units": "hours",
+            "converted_value": "2",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "timeout",
+              "slow speed",
+              "protection time",
+              "overheating protection"
+            ],
+            "concept_group": "safety_timeouts",
+            "references": [
+              "TIMEOUTS section"
+            ]
+          },
+          {
+            "parameter": "Minimum Expansion Tank Size",
+            "normalized_parameter": "min_expansion_tank_volume",
+            "parameter_aliases": [
+              "expansion vessel size",
+              "buffer tank capacity"
+            ],
+            "value": "0.5",
+            "range": null,
+            "units": "liter",
+            "normalized_units": "liters",
+            "converted_value": "0.5",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "expansion tank",
+              "vessel",
+              "buffer tank",
+              "minimum size"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "WARNINGS section"
+            ]
+          },
+          {
+            "parameter": "Flow Rate",
+            "normalized_parameter": "flow_rate",
+            "parameter_aliases": [
+              "water flow",
+              "delivery rate",
+              "output flow"
+            ],
+            "value": "26",
+            "range": null,
+            "units": "l/min",
+            "normalized_units": "liters_per_minute",
+            "converted_value": "26",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "flow rate",
+              "water flow",
+              "output",
+              "delivery rate"
+            ],
+            "concept_group": "performance_specs",
+            "references": [
+              "TECHNICAL DETAILS section"
+            ]
+          },
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "mass",
+              "product weight"
+            ],
+            "value": "3.7",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kilograms",
+            "converted_value": "3.7",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "how heavy",
+              "product weight"
+            ],
+            "concept_group": "physical_specifications",
+            "references": [
+              "PRODUCT DATA section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Operating Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "voltage",
+              "power supply",
+              "electrical input"
+            ],
+            "value": "24",
+            "range": null,
+            "units": "V",
+            "normalized_units": "volts",
+            "converted_value": "24",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power requirement",
+              "electrical spec",
+              "24V",
+              "24 volt"
+            ],
+            "concept_group": "power_specifications",
+            "references": [
+              "Model specification"
+            ]
+          },
+          {
+            "parameter": "Minimum Outlet Tube Length",
+            "normalized_parameter": "minimum_outlet_tube_length",
+            "parameter_aliases": [
+              "outlet tubing length",
+              "discharge tube length"
+            ],
+            "value": "1",
+            "range": "\u22651",
+            "units": "m",
+            "normalized_units": "meters",
+            "converted_value": "1",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "tube length",
+              "outlet tube",
+              "flexible tubing",
+              "discharge line"
+            ],
+            "concept_group": "installation_requirements",
+            "references": [
+              "Air Vent Valve Activation section"
+            ]
+          },
+          {
+            "parameter": "Priming Verification Time",
+            "normalized_parameter": "priming_verification_time",
+            "parameter_aliases": [
+              "initial pump verification",
+              "priming check duration"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "10",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "priming time",
+              "startup verification",
+              "initial operation time"
+            ],
+            "concept_group": "operational_parameters",
+            "references": [
+              "Blue LED Indicators section"
+            ]
+          },
+          {
+            "parameter": "Maximum Retry Attempts",
+            "normalized_parameter": "maximum_retry_attempts",
+            "parameter_aliases": [
+              "retry limit",
+              "restart attempts"
+            ],
+            "value": "3",
+            "range": "1-3",
+            "units": "attempts",
+            "normalized_units": "attempts",
+            "converted_value": "3",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "retry attempts",
+              "restart limit",
+              "fault recovery"
+            ],
+            "concept_group": "safety_parameters",
+            "references": [
+              "Multicolored LED Indicators section"
+            ]
+          },
+          {
+            "parameter": "Error Reset Time",
+            "normalized_parameter": "error_reset_time",
+            "parameter_aliases": [
+              "fault timeout",
+              "error timeout"
+            ],
+            "value": "30",
+            "range": null,
+            "units": "seconds",
+            "normalized_units": "seconds",
+            "converted_value": "30",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "reset time",
+              "error timeout",
+              "fault duration"
+            ],
+            "concept_group": "safety_parameters",
+            "references": [
+              "Multicolored LED Indicators section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Weight",
+            "normalized_parameter": "weight",
+            "parameter_aliases": [
+              "mass",
+              "unit weight"
+            ],
+            "value": "3.7",
+            "range": null,
+            "units": "kg",
+            "normalized_units": "kg",
+            "converted_value": "8.2 lb",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Physical",
+            "search_terms": [
+              "weight",
+              "mass",
+              "how heavy",
+              "kg",
+              "pounds"
+            ],
+            "concept_group": "physical_properties",
+            "references": [
+              "Product Data"
+            ]
+          },
+          {
+            "parameter": "Voltage",
+            "normalized_parameter": "operating_voltage",
+            "parameter_aliases": [
+              "supply voltage",
+              "power supply"
+            ],
+            "value": "24",
+            "range": null,
+            "units": "V DC",
+            "normalized_units": "VDC",
+            "converted_value": "24",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "voltage",
+              "power supply",
+              "DC voltage",
+              "electrical requirements"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Motor Data"
+            ]
+          },
+          {
+            "parameter": "Current Consumption",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "amperage",
+              "current draw"
+            ],
+            "value": "5",
+            "range": null,
+            "units": "A",
+            "normalized_units": "A",
+            "converted_value": "5",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "amps",
+              "amperage",
+              "power consumption"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Motor Data"
+            ]
+          },
+          {
+            "parameter": "Motor Power",
+            "normalized_parameter": "motor_power",
+            "parameter_aliases": [
+              "power rating",
+              "power consumption"
+            ],
+            "value": "180",
+            "range": null,
+            "units": "W",
+            "normalized_units": "W",
+            "converted_value": "180",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "power",
+              "wattage",
+              "motor power",
+              "power rating"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Motor Data"
+            ]
+          },
+          {
+            "parameter": "IP Protection",
+            "normalized_parameter": "ip_rating",
+            "parameter_aliases": [
+              "ingress protection",
+              "water resistance"
+            ],
+            "value": "67",
+            "range": null,
+            "units": "IP",
+            "normalized_units": "IP",
+            "converted_value": "67",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "IP rating",
+              "water resistance",
+              "dust protection",
+              "waterproof"
+            ],
+            "concept_group": "protection_rating",
+            "references": [
+              "Motor Data"
+            ]
+          },
+          {
+            "parameter": "Flow Rate",
+            "normalized_parameter": "flow_rate",
+            "parameter_aliases": [
+              "pump capacity",
+              "output flow"
+            ],
+            "value": "26",
+            "range": null,
+            "units": "l/min",
+            "normalized_units": "l/min",
+            "converted_value": "6.9 gpm",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "flow rate",
+              "pump output",
+              "capacity",
+              "GPM",
+              "LPM"
+            ],
+            "concept_group": "performance_specifications",
+            "references": [
+              "Pump Data"
+            ]
+          },
+          {
+            "parameter": "Operating Temperature Range",
+            "normalized_parameter": "operating_temperature_range",
+            "parameter_aliases": [
+              "ambient temperature",
+              "temperature limits"
+            ],
+            "value": null,
+            "range": "-10 to +60",
+            "units": "\u00b0C",
+            "normalized_units": "\u00b0C",
+            "converted_value": "14 to 140 \u00b0F",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "temperature range",
+              "operating temperature",
+              "ambient conditions"
+            ],
+            "concept_group": "environmental_limits",
+            "references": [
+              "Ambient Conditions"
+            ]
+          },
+          {
+            "parameter": "Maximum Fluid Temperature",
+            "normalized_parameter": "max_fluid_temperature",
+            "parameter_aliases": [
+              "liquid temperature",
+              "water temperature"
+            ],
+            "value": "85",
+            "range": null,
+            "units": "\u00b0C",
+            "normalized_units": "\u00b0C",
+            "converted_value": "185 \u00b0F",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Environmental",
+            "search_terms": [
+              "fluid temperature",
+              "max temperature",
+              "liquid temp"
+            ],
+            "concept_group": "environmental_limits",
+            "references": [
+              "Fluids Allowed"
+            ]
+          },
+          {
+            "parameter": "Maximum Pressure",
+            "normalized_parameter": "max_pressure",
+            "parameter_aliases": [
+              "operating pressure",
+              "pump pressure"
+            ],
+            "value": "3.5",
+            "range": null,
+            "units": "bar",
+            "normalized_units": "bar",
+            "converted_value": "50.8 psi",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "pressure",
+              "max pressure",
+              "operating pressure",
+              "PSI",
+              "bar"
+            ],
+            "concept_group": "performance_specifications",
+            "references": [
+              "Pump Data"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Brush Life",
+            "normalized_parameter": "motor_brush_lifespan",
+            "parameter_aliases": [
+              "commutator brush life",
+              "brush durability",
+              "motor brush lifetime"
+            ],
+            "value": "2500",
+            "range": null,
+            "units": "hours",
+            "normalized_units": "hours",
+            "converted_value": "2500",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "how long do brushes last",
+              "brush replacement interval",
+              "motor brush duration",
+              "maintenance interval"
+            ],
+            "concept_group": "maintenance_requirements",
+            "references": [
+              "Troubleshooting"
+            ]
+          },
+          {
+            "parameter": "Maximum Inlet Filter Pressure",
+            "normalized_parameter": "max_inlet_filter_pressure",
+            "parameter_aliases": [
+              "filter pressure limit",
+              "inlet filter max pressure"
+            ],
+            "value": "0.5",
+            "range": "0 - 0.5",
+            "units": "bar",
+            "normalized_units": "bar",
+            "converted_value": "0.5",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "filter pressure limit",
+              "maximum filter pressure",
+              "inlet pressure limit"
+            ],
+            "concept_group": "operational_limits",
+            "references": [
+              "Tubing Connections"
+            ]
+          },
+          {
+            "parameter": "Inlet Filter Mesh Size",
+            "normalized_parameter": "filter_mesh_size",
+            "parameter_aliases": [
+              "mesh size",
+              "filter grade",
+              "strainer size"
+            ],
+            "value": "35",
+            "range": null,
+            "units": "ASTM",
+            "normalized_units": "ASTM",
+            "converted_value": "35",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "filter mesh specification",
+              "strainer size",
+              "filter grade",
+              "mesh number"
+            ],
+            "concept_group": "filtration",
+            "references": [
+              "Tubing Connections"
+            ]
+          },
+          {
+            "parameter": "Power Supply Polarity",
+            "normalized_parameter": "electrical_polarity",
+            "parameter_aliases": [
+              "wiring polarity",
+              "electrical connection"
+            ],
+            "value": "Red wire (+), Black wire (-)",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "wire colors",
+              "polarity connection",
+              "positive negative wires",
+              "electrical hookup"
+            ],
+            "concept_group": "electrical_installation",
+            "references": [
+              "Positioning"
+            ]
+          },
+          {
+            "parameter": "Protection Fuse Requirement",
+            "normalized_parameter": "fuse_requirement",
+            "parameter_aliases": [
+              "electrical protection",
+              "circuit protection"
+            ],
+            "value": "Required as per motor label",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "all"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "fuse needed",
+              "electrical protection",
+              "warranty requirement",
+              "fuse specification"
+            ],
+            "concept_group": "safety_requirements",
+            "references": [
+              "Electrical Connection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Operating Temperature - Body",
+            "normalized_parameter": "max_body_temperature",
+            "parameter_aliases": [
+              "body temp",
+              "housing temperature",
+              "pump body temperature"
+            ],
+            "value": "60",
+            "range": "0-60",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "60",
+            "models": [
+              "all"
+            ],
+            "category": "Operating",
+            "search_terms": [
+              "body temperature",
+              "operating temperature",
+              "pump temperature",
+              "how hot pump body"
+            ],
+            "concept_group": "temperature_limits",
+            "references": [
+              "Indicators section"
+            ]
+          },
+          {
+            "parameter": "Maximum Operating Temperature - Motor",
+            "normalized_parameter": "max_motor_temperature",
+            "parameter_aliases": [
+              "motor temp",
+              "motor frame temperature"
+            ],
+            "value": "70",
+            "range": "0-70",
+            "units": "\u00b0C",
+            "normalized_units": "celsius",
+            "converted_value": "70",
+            "models": [
+              "all"
+            ],
+            "category": "Operating",
+            "search_terms": [
+              "motor temperature",
+              "motor temp limit",
+              "how hot can motor get"
+            ],
+            "concept_group": "temperature_limits",
+            "references": [
+              "Indicators section"
+            ]
+          },
+          {
+            "parameter": "Warranty Period",
+            "normalized_parameter": "warranty_duration",
+            "parameter_aliases": [
+              "guarantee period",
+              "warranty coverage"
+            ],
+            "value": "2",
+            "range": null,
+            "units": "years",
+            "normalized_units": "years",
+            "converted_value": "2",
+            "models": [
+              "all"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "warranty",
+              "guarantee",
+              "how long is warranty",
+              "warranty period"
+            ],
+            "concept_group": "warranty_terms",
+            "references": [
+              "Warranty section"
+            ]
+          },
+          {
+            "parameter": "Maintenance Inspection Interval - Filter",
+            "normalized_parameter": "filter_inspection_interval",
+            "parameter_aliases": [
+              "filter check period",
+              "filter maintenance frequency"
+            ],
+            "value": "frequent",
+            "range": null,
+            "units": "undefined",
+            "normalized_units": "undefined",
+            "converted_value": "frequent",
+            "models": [
+              "all"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "filter check",
+              "when check filter",
+              "filter maintenance",
+              "filter inspection"
+            ],
+            "concept_group": "maintenance_schedule",
+            "references": [
+              "Normal Maintenance section"
+            ]
+          },
+          {
+            "parameter": "Maintenance Inspection Interval - Chamber",
+            "normalized_parameter": "chamber_inspection_interval",
+            "parameter_aliases": [
+              "chamber check period",
+              "chamber cleaning frequency"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "months",
+            "normalized_units": "months",
+            "converted_value": "1",
+            "models": [
+              "all"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "chamber inspection",
+              "chamber maintenance",
+              "when clean chamber"
+            ],
+            "concept_group": "maintenance_schedule",
+            "references": [
+              "Normal Maintenance section"
+            ]
+          },
+          {
+            "parameter": "Electrical Inspection Interval",
+            "normalized_parameter": "electrical_inspection_interval",
+            "parameter_aliases": [
+              "wiring check period",
+              "electrical maintenance frequency"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "months",
+            "normalized_units": "months",
+            "converted_value": "1",
+            "models": [
+              "all"
+            ],
+            "category": "Maintenance",
+            "search_terms": [
+              "electrical inspection",
+              "wiring check",
+              "when check electrical",
+              "electrical maintenance"
+            ],
+            "concept_group": "maintenance_schedule",
+            "references": [
+              "Normal Maintenance section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Component Count - O-Ring",
+            "normalized_parameter": "component_count_oring",
+            "parameter_aliases": [
+              "o-ring quantity",
+              "number of o-rings",
+              "o-ring count"
+            ],
+            "value": "10",
+            "range": null,
+            "units": "pieces",
+            "normalized_units": "count",
+            "converted_value": "10",
+            "models": [
+              "MARCO pump"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how many o-rings",
+              "o-ring quantity",
+              "number of seals",
+              "seal count"
+            ],
+            "concept_group": "sealing_components",
+            "references": [
+              "exploded view"
+            ]
+          },
+          {
+            "parameter": "Component Count - Antivibration Mounts",
+            "normalized_parameter": "component_count_antivibration",
+            "parameter_aliases": [
+              "vibration damper count",
+              "mount quantity"
+            ],
+            "value": "4",
+            "range": null,
+            "units": "pieces",
+            "normalized_units": "count",
+            "converted_value": "4",
+            "models": [
+              "MARCO pump"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "antivibration mounts",
+              "vibration dampers",
+              "number of mounts"
+            ],
+            "concept_group": "mounting_components",
+            "references": [
+              "pos. 29"
+            ]
+          },
+          {
+            "parameter": "Serviceable Components",
+            "normalized_parameter": "serviceable_parts",
+            "parameter_aliases": [
+              "replacement parts",
+              "spare parts"
+            ],
+            "value": "compensation spring, idle gear, electronic control, nipple, air vent cap, o-ring, filter, antivibration mount",
+            "range": null,
+            "units": null,
+            "normalized_units": null,
+            "converted_value": null,
+            "models": [
+              "MARCO pump"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "replaceable parts",
+              "spare parts",
+              "maintenance items",
+              "service parts"
+            ],
+            "concept_group": "maintenance",
+            "references": [
+              "X marked items"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Length",
+            "normalized_parameter": "length",
+            "parameter_aliases": [
+              "overall length",
+              "total length"
+            ],
+            "value": "230",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "230",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "length",
+              "size",
+              "dimensions",
+              "how long"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "parameter": "Width",
+            "normalized_parameter": "width",
+            "parameter_aliases": [
+              "overall width"
+            ],
+            "value": "111",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "111",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Dimensions",
+            "search_terms": [
+              "width",
+              "size",
+              "dimensions",
+              "how wide"
+            ],
+            "concept_group": "physical_dimensions",
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "parameter": "Flow Rate",
+            "normalized_parameter": "flow_rate",
+            "parameter_aliases": [
+              "water flow",
+              "pump capacity"
+            ],
+            "value": "26",
+            "range": "0-30",
+            "units": "l/min",
+            "normalized_units": "liters_per_minute",
+            "converted_value": "26",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "flow rate",
+              "flow",
+              "capacity",
+              "output"
+            ],
+            "concept_group": "hydraulic_performance",
+            "references": [
+              "Flow Rate diagram"
+            ]
+          },
+          {
+            "parameter": "Operating Pressure",
+            "normalized_parameter": "operating_pressure",
+            "parameter_aliases": [
+              "pressure range",
+              "working pressure"
+            ],
+            "value": "4",
+            "range": "0-4",
+            "units": "bar",
+            "normalized_units": "bar",
+            "converted_value": "4",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "pressure",
+              "bar pressure",
+              "operating pressure"
+            ],
+            "concept_group": "hydraulic_performance",
+            "references": [
+              "Electrical Absorption diagram"
+            ]
+          },
+          {
+            "parameter": "Current Draw",
+            "normalized_parameter": "current_draw",
+            "parameter_aliases": [
+              "electrical consumption",
+              "amperage"
+            ],
+            "value": "6",
+            "range": "0-6",
+            "units": "A",
+            "normalized_units": "amperes",
+            "converted_value": "6",
+            "models": [
+              "UP6/E"
+            ],
+            "category": "Electrical",
+            "search_terms": [
+              "current",
+              "amps",
+              "power consumption"
+            ],
+            "concept_group": "electrical_specifications",
+            "references": [
+              "Electrical Absorption diagram"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

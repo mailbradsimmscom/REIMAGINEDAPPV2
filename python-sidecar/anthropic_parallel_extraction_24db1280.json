@@ -1,0 +1,1753 @@
+{
+  "total_chunks_processed": 17,
+  "successful_chunks": 17,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 63,
+  "unique_procedures": 25,
+  "procedures": [
+    {
+      "title": "FCC Compliance Operation",
+      "preconditions": [
+        "Device must be properly installed",
+        "Device must be configured according to instructions"
+      ],
+      "steps": [
+        "Ensure device does not cause harmful interference",
+        "Accept any interference received, including interference causing undesired operation",
+        "Do not make unauthorized modifications to equipment",
+        "Input only properly assigned MMSI numbers",
+        "Input only accurate device data"
+      ],
+      "expected_outcome": "Device operates in compliance with FCC rules Part 15",
+      "models": [
+        "Class B digital device"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Industry Canada Compliance Operation",
+      "preconditions": [
+        "Device must be properly installed",
+        "Device must be configured according to instructions"
+      ],
+      "steps": [
+        "Ensure device does not cause interference",
+        "Accept any interference received, including interference causing undesired operation"
+      ],
+      "expected_outcome": "Device operates in compliance with Industry Canada RSS standards",
+      "models": [
+        "Class B digital apparatus"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Initial Power Up",
+      "preconditions": [
+        "AIS transceiver is properly installed",
+        "Power supply is connected"
+      ],
+      "steps": [
+        "Switch on power to the AIS transceiver",
+        "Verify indicator lights activate",
+        "Wait for initial system startup"
+      ],
+      "expected_outcome": "AIS transceiver powers up and enters operational mode",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "GPS Antenna Installation",
+      "preconditions": [
+        "Mounting location selected with clear view of sky",
+        "Installation tools available"
+      ],
+      "steps": [
+        "Select mounting location with clear view of sky",
+        "Mount GPS antenna using appropriate hardware",
+        "Route antenna cable to AIS transceiver",
+        "Connect to GPS antenna connector on unit"
+      ],
+      "expected_outcome": "GPS antenna securely mounted with clear signal reception",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "VHF Antenna Connection",
+      "preconditions": [
+        "VHF antenna available",
+        "Access to antenna connector"
+      ],
+      "steps": [
+        "Locate VHF antenna connector on unit",
+        "Route VHF antenna cable to AIS transceiver",
+        "Connect antenna to VHF connector"
+      ],
+      "expected_outcome": "VHF antenna properly connected for AIS transmission/reception",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "External Switch Installation",
+      "preconditions": [
+        "External switch available",
+        "Access to connection points"
+      ],
+      "steps": [
+        "Locate external switch connection points",
+        "Route switch wiring to AIS transceiver",
+        "Connect switch wiring to appropriate terminals"
+      ],
+      "expected_outcome": "External switch properly connected and functional",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "NMEA 0183 Data Port Connection",
+      "preconditions": [
+        "NMEA 0183 device available",
+        "Access to NMEA 0183 port"
+      ],
+      "steps": [
+        "Identify NMEA 0183 connection points",
+        "Route data cables to AIS transceiver",
+        "Connect NMEA 0183 wiring to appropriate terminals"
+      ],
+      "expected_outcome": "NMEA 0183 data connection established",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Safe Installation Distance Requirements",
+      "preconditions": [
+        "AIS transceiver installation in progress"
+      ],
+      "steps": [
+        "Ensure antenna is mounted at least 1.5 meters away from the AIS transceiver",
+        "Mount antenna 3.5 meters above deck to meet RF exposure requirements",
+        "Maintain MPE radius of 0.6 meters from antenna",
+        "Ensure no one operates within MPE radius unless shielded by grounded metallic barrier",
+        "Do not co-locate antenna with other transmitting antennas"
+      ],
+      "expected_outcome": "Safe RF exposure levels maintained during operation",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Antenna Requirements",
+      "preconditions": [
+        "Pre-installation"
+      ],
+      "steps": [
+        "Verify antenna impedance is 50 ohms",
+        "Connect VHF antenna before applying power",
+        "Ensure antenna gain does not exceed 3 dB for standard MPE radius"
+      ],
+      "expected_outcome": "Proper antenna configuration for safe operation",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Compass Safe Distance Maintenance",
+      "preconditions": [
+        "During installation"
+      ],
+      "steps": [
+        "Maintain minimum distance of 0.55 meters between unit and compass",
+        "Verify no compass deviation greater than 0.3\u00b0 when properly distanced"
+      ],
+      "expected_outcome": "Accurate compass readings without interference",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Product Disposal Procedure",
+      "preconditions": [
+        "End of product life"
+      ],
+      "steps": [
+        "Dispose of AIS transceiver according to European WEEE Directive",
+        "Alternatively, follow local regulations for electrical equipment disposal",
+        "Separate packaging materials for recycling",
+        "Dispose of packaging through environmentally friendly means"
+      ],
+      "expected_outcome": "Proper disposal of equipment and packaging",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Safety Installation Requirements",
+      "preconditions": [
+        "Pre-installation"
+      ],
+      "steps": [
+        "Verify installation location is not in a flammable atmosphere",
+        "Ensure installation area is away from engine room",
+        "Maintain distance from fuel tanks",
+        "Follow all installation instructions in manual"
+      ],
+      "expected_outcome": "Safe installation environment established",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "AIS Static Data Configuration",
+      "preconditions": [
+        "Must have valid VHF radiotelephone license",
+        "Must have MMSI number",
+        "Must be performed by competent installer if in US waters"
+      ],
+      "steps": [
+        "Program Maritime Mobile Service Identity (MMSI)",
+        "Enter vessel name",
+        "Enter vessel call sign (if available)",
+        "Configure vessel type",
+        "Input vessel dimensions"
+      ],
+      "expected_outcome": "AIS transceiver properly configured with static vessel data",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "US Configuration Requirements",
+      "preconditions": [
+        "Must be used in US waters",
+        "Must be performed by authorized dealer/installer"
+      ],
+      "steps": [
+        "Contact dealer for proper configuration",
+        "Have competent installer enter MMSI",
+        "Have competent installer enter static data"
+      ],
+      "expected_outcome": "AIS transceiver properly configured for US waters operation",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Dynamic Data Collection",
+      "preconditions": [
+        "AIS antenna must be properly installed",
+        "System must be powered on"
+      ],
+      "steps": [
+        "System automatically calculates location",
+        "System automatically calculates speed over ground (SOG)",
+        "System automatically calculates course over ground (COG)"
+      ],
+      "expected_outcome": "Real-time dynamic vessel data collected and transmitted",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Package Contents Verification",
+      "preconditions": [
+        "New NAIS-500 package received"
+      ],
+      "steps": [
+        "Verify presence of NAIS-500 unit",
+        "Verify Quick Start Guide",
+        "Verify Product manual",
+        "Verify Warranty information",
+        "Verify packet of 4 screws",
+        "Verify Power and data cable",
+        "Verify USB configuration cable",
+        "Check for optional items in kit 000-13609-001: T-Connector, GPS antenna, N2k cable"
+      ],
+      "expected_outcome": "All components present and accounted for",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Support Tools CD Installation",
+      "preconditions": [
+        "CD provided with package"
+      ],
+      "steps": [
+        "Insert CD into computer",
+        "Install NAIS System Configurator software",
+        "Install USB drivers",
+        "Access alternative language manuals if needed"
+      ],
+      "expected_outcome": "Required software and drivers installed successfully",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "AIS Transceiver Physical Installation",
+      "preconditions": [
+        "Mounting location selected",
+        "Mounting screws available"
+      ],
+      "steps": [
+        "Locate the four mounting holes on the AIS transceiver",
+        "Position unit in desired location",
+        "Install using provided fixing screws",
+        "Ensure GPS antenna has clear view of sky"
+      ],
+      "expected_outcome": "AIS transceiver securely mounted with proper GPS antenna positioning",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Electrical Connections Setup",
+      "preconditions": [
+        "AIS transceiver mounted",
+        "All cables available"
+      ],
+      "steps": [
+        "Connect power supply",
+        "Connect NMEA 0183 data ports to chart-plotters",
+        "Connect USB port to PC/Mac if needed",
+        "Connect external switch for silent mode control",
+        "Connect NMEA 2000 port to compatible equipment",
+        "Install VHF antenna",
+        "Install external GPS antenna"
+      ],
+      "expected_outcome": "All electrical connections properly established",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installing NAIS-500 AIS Transceiver",
+      "preconditions": [
+        "Have all necessary additional items from 'Preparing for installation' section",
+        "Read all manual instructions"
+      ],
+      "steps": [
+        "Select location meeting following criteria:",
+        "Ensure 0.55m or greater compass safe distance for 0.3\u00b0 deviation",
+        "Allow adequate cable routing space",
+        "Maintain ambient temperature between -15\u00b0C and +55\u00b0C",
+        "Avoid flammable/hazardous atmospheres",
+        "Mount vertically or horizontally",
+        "Install in 'below deck' environment",
+        "Use four supplied self-tapping screws to mount",
+        "Ensure indicators are visible"
+      ],
+      "expected_outcome": "AIS transceiver securely mounted in suitable location",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installing External GPS Antenna - Pole Mount",
+      "preconditions": [
+        "Have 1-inch 14 TPI thread pole",
+        "Avoid mast mounting",
+        "Avoid direct radar transmitter path"
+      ],
+      "steps": [
+        "Feed GPS antenna cable through pole",
+        "Mount pole into position",
+        "Fit GPS antenna to pole adapter using 2 small screws"
+      ],
+      "expected_outcome": "GPS antenna securely pole-mounted",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installing External GPS Antenna - Surface Mount",
+      "preconditions": [
+        "Select flat clean surface with clear sky view",
+        "Ensure surface is clean without dirt/paint/debris"
+      ],
+      "steps": [
+        "Mark and drill 2 mounting holes and cable hole",
+        "Install gasket by threading cable through center",
+        "Screw GPS antenna to mounting surface",
+        "Route cable to AIS transceiver",
+        "Connect cable to GPS connector on transceiver"
+      ],
+      "expected_outcome": "GPS antenna securely surface-mounted and connected",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Connecting VHF Antenna",
+      "preconditions": [
+        "Have VHF antenna",
+        "Have access to AIS transceiver"
+      ],
+      "steps": [
+        "Route cable from VHF antenna to AIS transceiver",
+        "Connect to VHF connector on AIS transceiver"
+      ],
+      "expected_outcome": "VHF antenna successfully connected to transceiver",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "VHF Antenna Installation",
+      "preconditions": [
+        "NAIS-500 transceiver available",
+        "Marine band VHF antenna available"
+      ],
+      "steps": [
+        "Select a standard marine band VHF antenna compatible with VHF voice radios",
+        "Ensure antenna has sufficient cable length to reach the transceiver",
+        "Connect antenna to SO 239 connector on AIS transceiver using PL 259 connector",
+        "Verify cable impedance is 50 ohms"
+      ],
+      "expected_outcome": "VHF antenna properly connected to AIS transceiver",
+      "models": [
+        "NAIS-500"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "VHF Antenna Splitter Installation",
+      "preconditions": [
+        "Existing VHF antenna",
+        "NSPL-500 splitter available"
+      ],
+      "steps": [
+        "Obtain Navico NSPL-500 VHF Antenna Splitter",
+        "Connect existing antenna to splitter",
+        "Connect splitter to NAIS-500 transceiver",
+        "Connect splitter to VHF voice radio"
+      ],
+      "expected_outcome": "Single antenna working with both VHF radio and AIS transceiver",
+      "models": [
+        "NAIS-500",
+        "NSPL-500"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "FCC Compliance Operation",
+            "preconditions": [
+              "Device must be properly installed",
+              "Device must be configured according to instructions"
+            ],
+            "steps": [
+              "Ensure device does not cause harmful interference",
+              "Accept any interference received, including interference causing undesired operation",
+              "Do not make unauthorized modifications to equipment",
+              "Input only properly assigned MMSI numbers",
+              "Input only accurate device data"
+            ],
+            "expected_outcome": "Device operates in compliance with FCC rules Part 15",
+            "models": [
+              "Class B digital device"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Industry Canada Compliance Operation",
+            "preconditions": [
+              "Device must be properly installed",
+              "Device must be configured according to instructions"
+            ],
+            "steps": [
+              "Ensure device does not cause interference",
+              "Accept any interference received, including interference causing undesired operation"
+            ],
+            "expected_outcome": "Device operates in compliance with Industry Canada RSS standards",
+            "models": [
+              "Class B digital apparatus"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Power Up",
+            "preconditions": [
+              "AIS transceiver is properly installed",
+              "Power supply is connected"
+            ],
+            "steps": [
+              "Switch on power to the AIS transceiver",
+              "Verify indicator lights activate",
+              "Wait for initial system startup"
+            ],
+            "expected_outcome": "AIS transceiver powers up and enters operational mode",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "GPS Antenna Installation",
+            "preconditions": [
+              "Mounting location selected with clear view of sky",
+              "Installation tools available"
+            ],
+            "steps": [
+              "Select mounting location with clear view of sky",
+              "Mount GPS antenna using appropriate hardware",
+              "Route antenna cable to AIS transceiver",
+              "Connect to GPS antenna connector on unit"
+            ],
+            "expected_outcome": "GPS antenna securely mounted with clear signal reception",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "VHF Antenna Connection",
+            "preconditions": [
+              "VHF antenna available",
+              "Access to antenna connector"
+            ],
+            "steps": [
+              "Locate VHF antenna connector on unit",
+              "Route VHF antenna cable to AIS transceiver",
+              "Connect antenna to VHF connector"
+            ],
+            "expected_outcome": "VHF antenna properly connected for AIS transmission/reception",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "External Switch Installation",
+            "preconditions": [
+              "External switch available",
+              "Access to connection points"
+            ],
+            "steps": [
+              "Locate external switch connection points",
+              "Route switch wiring to AIS transceiver",
+              "Connect switch wiring to appropriate terminals"
+            ],
+            "expected_outcome": "External switch properly connected and functional",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "NMEA 0183 Data Port Connection",
+            "preconditions": [
+              "NMEA 0183 device available",
+              "Access to NMEA 0183 port"
+            ],
+            "steps": [
+              "Identify NMEA 0183 connection points",
+              "Route data cables to AIS transceiver",
+              "Connect NMEA 0183 wiring to appropriate terminals"
+            ],
+            "expected_outcome": "NMEA 0183 data connection established",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Safe Installation Distance Requirements",
+            "preconditions": [
+              "AIS transceiver installation in progress"
+            ],
+            "steps": [
+              "Ensure antenna is mounted at least 1.5 meters away from the AIS transceiver",
+              "Mount antenna 3.5 meters above deck to meet RF exposure requirements",
+              "Maintain MPE radius of 0.6 meters from antenna",
+              "Ensure no one operates within MPE radius unless shielded by grounded metallic barrier",
+              "Do not co-locate antenna with other transmitting antennas"
+            ],
+            "expected_outcome": "Safe RF exposure levels maintained during operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Antenna Requirements",
+            "preconditions": [
+              "Pre-installation"
+            ],
+            "steps": [
+              "Verify antenna impedance is 50 ohms",
+              "Connect VHF antenna before applying power",
+              "Ensure antenna gain does not exceed 3 dB for standard MPE radius"
+            ],
+            "expected_outcome": "Proper antenna configuration for safe operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Compass Safe Distance Maintenance",
+            "preconditions": [
+              "During installation"
+            ],
+            "steps": [
+              "Maintain minimum distance of 0.55 meters between unit and compass",
+              "Verify no compass deviation greater than 0.3\u00b0 when properly distanced"
+            ],
+            "expected_outcome": "Accurate compass readings without interference",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Product Disposal Procedure",
+            "preconditions": [
+              "End of product life"
+            ],
+            "steps": [
+              "Dispose of AIS transceiver according to European WEEE Directive",
+              "Alternatively, follow local regulations for electrical equipment disposal",
+              "Separate packaging materials for recycling",
+              "Dispose of packaging through environmentally friendly means"
+            ],
+            "expected_outcome": "Proper disposal of equipment and packaging",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Safety Installation Requirements",
+            "preconditions": [
+              "Pre-installation"
+            ],
+            "steps": [
+              "Verify installation location is not in a flammable atmosphere",
+              "Ensure installation area is away from engine room",
+              "Maintain distance from fuel tanks",
+              "Follow all installation instructions in manual"
+            ],
+            "expected_outcome": "Safe installation environment established",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "AIS Static Data Configuration",
+            "preconditions": [
+              "Must have valid VHF radiotelephone license",
+              "Must have MMSI number",
+              "Must be performed by competent installer if in US waters"
+            ],
+            "steps": [
+              "Program Maritime Mobile Service Identity (MMSI)",
+              "Enter vessel name",
+              "Enter vessel call sign (if available)",
+              "Configure vessel type",
+              "Input vessel dimensions"
+            ],
+            "expected_outcome": "AIS transceiver properly configured with static vessel data",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "US Configuration Requirements",
+            "preconditions": [
+              "Must be used in US waters",
+              "Must be performed by authorized dealer/installer"
+            ],
+            "steps": [
+              "Contact dealer for proper configuration",
+              "Have competent installer enter MMSI",
+              "Have competent installer enter static data"
+            ],
+            "expected_outcome": "AIS transceiver properly configured for US waters operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Dynamic Data Collection",
+            "preconditions": [
+              "AIS antenna must be properly installed",
+              "System must be powered on"
+            ],
+            "steps": [
+              "System automatically calculates location",
+              "System automatically calculates speed over ground (SOG)",
+              "System automatically calculates course over ground (COG)"
+            ],
+            "expected_outcome": "Real-time dynamic vessel data collected and transmitted",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Package Contents Verification",
+            "preconditions": [
+              "New NAIS-500 package received"
+            ],
+            "steps": [
+              "Verify presence of NAIS-500 unit",
+              "Verify Quick Start Guide",
+              "Verify Product manual",
+              "Verify Warranty information",
+              "Verify packet of 4 screws",
+              "Verify Power and data cable",
+              "Verify USB configuration cable",
+              "Check for optional items in kit 000-13609-001: T-Connector, GPS antenna, N2k cable"
+            ],
+            "expected_outcome": "All components present and accounted for",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Support Tools CD Installation",
+            "preconditions": [
+              "CD provided with package"
+            ],
+            "steps": [
+              "Insert CD into computer",
+              "Install NAIS System Configurator software",
+              "Install USB drivers",
+              "Access alternative language manuals if needed"
+            ],
+            "expected_outcome": "Required software and drivers installed successfully",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "AIS Transceiver Physical Installation",
+            "preconditions": [
+              "Mounting location selected",
+              "Mounting screws available"
+            ],
+            "steps": [
+              "Locate the four mounting holes on the AIS transceiver",
+              "Position unit in desired location",
+              "Install using provided fixing screws",
+              "Ensure GPS antenna has clear view of sky"
+            ],
+            "expected_outcome": "AIS transceiver securely mounted with proper GPS antenna positioning",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Electrical Connections Setup",
+            "preconditions": [
+              "AIS transceiver mounted",
+              "All cables available"
+            ],
+            "steps": [
+              "Connect power supply",
+              "Connect NMEA 0183 data ports to chart-plotters",
+              "Connect USB port to PC/Mac if needed",
+              "Connect external switch for silent mode control",
+              "Connect NMEA 2000 port to compatible equipment",
+              "Install VHF antenna",
+              "Install external GPS antenna"
+            ],
+            "expected_outcome": "All electrical connections properly established",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Installing NAIS-500 AIS Transceiver",
+            "preconditions": [
+              "Have all necessary additional items from 'Preparing for installation' section",
+              "Read all manual instructions"
+            ],
+            "steps": [
+              "Select location meeting following criteria:",
+              "Ensure 0.55m or greater compass safe distance for 0.3\u00b0 deviation",
+              "Allow adequate cable routing space",
+              "Maintain ambient temperature between -15\u00b0C and +55\u00b0C",
+              "Avoid flammable/hazardous atmospheres",
+              "Mount vertically or horizontally",
+              "Install in 'below deck' environment",
+              "Use four supplied self-tapping screws to mount",
+              "Ensure indicators are visible"
+            ],
+            "expected_outcome": "AIS transceiver securely mounted in suitable location",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installing External GPS Antenna - Pole Mount",
+            "preconditions": [
+              "Have 1-inch 14 TPI thread pole",
+              "Avoid mast mounting",
+              "Avoid direct radar transmitter path"
+            ],
+            "steps": [
+              "Feed GPS antenna cable through pole",
+              "Mount pole into position",
+              "Fit GPS antenna to pole adapter using 2 small screws"
+            ],
+            "expected_outcome": "GPS antenna securely pole-mounted",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installing External GPS Antenna - Surface Mount",
+            "preconditions": [
+              "Select flat clean surface with clear sky view",
+              "Ensure surface is clean without dirt/paint/debris"
+            ],
+            "steps": [
+              "Mark and drill 2 mounting holes and cable hole",
+              "Install gasket by threading cable through center",
+              "Screw GPS antenna to mounting surface",
+              "Route cable to AIS transceiver",
+              "Connect cable to GPS connector on transceiver"
+            ],
+            "expected_outcome": "GPS antenna securely surface-mounted and connected",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Connecting VHF Antenna",
+            "preconditions": [
+              "Have VHF antenna",
+              "Have access to AIS transceiver"
+            ],
+            "steps": [
+              "Route cable from VHF antenna to AIS transceiver",
+              "Connect to VHF connector on AIS transceiver"
+            ],
+            "expected_outcome": "VHF antenna successfully connected to transceiver",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "VHF Antenna Installation",
+            "preconditions": [
+              "NAIS-500 transceiver available",
+              "Marine band VHF antenna available"
+            ],
+            "steps": [
+              "Select a standard marine band VHF antenna compatible with VHF voice radios",
+              "Ensure antenna has sufficient cable length to reach the transceiver",
+              "Connect antenna to SO 239 connector on AIS transceiver using PL 259 connector",
+              "Verify cable impedance is 50 ohms"
+            ],
+            "expected_outcome": "VHF antenna properly connected to AIS transceiver",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "VHF Antenna Splitter Installation",
+            "preconditions": [
+              "Existing VHF antenna",
+              "NSPL-500 splitter available"
+            ],
+            "steps": [
+              "Obtain Navico NSPL-500 VHF Antenna Splitter",
+              "Connect existing antenna to splitter",
+              "Connect splitter to NAIS-500 transceiver",
+              "Connect splitter to VHF voice radio"
+            ],
+            "expected_outcome": "Single antenna working with both VHF radio and AIS transceiver",
+            "models": [
+              "NAIS-500",
+              "NSPL-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Silent Mode Switch Installation",
+            "preconditions": [
+              "Latching toggle switch available"
+            ],
+            "steps": [
+              "Obtain suitable latching toggle switch",
+              "Connect switch to transceiver silent mode terminals",
+              "Verify switch operation for enabling/disabling silent mode"
+            ],
+            "expected_outcome": "Functional silent mode toggle capability",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Chartplotter Connection via NMEA 0183",
+            "preconditions": [
+              "Compatible chartplotter available",
+              "Power and data cable available"
+            ],
+            "steps": [
+              "Connect AIS transceiver to chartplotter using appropriate cables",
+              "Configure chartplotter to accept NMEA 0183 data at 38400 baud",
+              "Enable AIS target display in chart options",
+              "Verify data transmission"
+            ],
+            "expected_outcome": "Chartplotter displaying AIS messages",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Chartplotter Connection via NMEA 2000",
+            "preconditions": [
+              "NMEA 2000 network available",
+              "Compatible chartplotter"
+            ],
+            "steps": [
+              "Connect AIS transceiver to NMEA 2000 network using supplied cable",
+              "Configure chartplotter NMEA 2000 settings",
+              "Enable AIS target display in chart options",
+              "Verify data transmission"
+            ],
+            "expected_outcome": "Chartplotter displaying AIS messages via NMEA 2000",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "PC/Mac Connection",
+            "preconditions": [
+              "PC/Mac with charting software",
+              "USB cable"
+            ],
+            "steps": [
+              "Connect AIS transceiver to PC/Mac using USB connector",
+              "Install any required drivers",
+              "Configure charting software for AIS data input",
+              "Verify data reception"
+            ],
+            "expected_outcome": "PC/Mac displaying AIS messages",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "GPS Antenna Installation",
+            "preconditions": [
+              "Clean mounting surface with no dirt, old paint, or debris",
+              "Have gasket and 2 small screws ready",
+              "Have appropriate tools for drilling"
+            ],
+            "steps": [
+              "Mark and drill 2 mounting holes and additional hole for GPS cable if needed",
+              "Thread the attached cable through center of gasket",
+              "Install gasket",
+              "Screw GPS antenna to mounting surface",
+              "Route cable to AIS transceiver unit, adding extension cables if needed",
+              "Connect GPS antenna cable to GPS connector on AIS transceiver"
+            ],
+            "expected_outcome": "GPS antenna securely mounted and connected to AIS transceiver",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "VHF Antenna Connection",
+            "preconditions": [
+              "Have standard marine band VHF antenna or AIS antenna",
+              "Antenna must have PL259 connector"
+            ],
+            "steps": [
+              "Route cable from VHF antenna to AIS transceiver",
+              "Connect cable to VHF connector (SO239) on AIS transceiver"
+            ],
+            "expected_outcome": "VHF antenna properly connected to AIS transceiver",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Connecting the Accessory Cable",
+            "preconditions": [
+              "Have the supplied accessory cable ready",
+              "Power is disconnected",
+              "Access to connection points available"
+            ],
+            "steps": [
+              "Locate the connector marked 'PWR/0183' on the unit",
+              "Connect the pre-moulded connector end of the cable to the 'PWR/0183' port",
+              "Identify the eight color-coded bare wires on the other end",
+              "Connect red wire (Pin 8) to positive power supply (12-24V DC)",
+              "Connect black wire (Pin 9) to negative power supply",
+              "Connect light green wire (Pin 12) to external switch negative",
+              "Connect orange wire (Pin 10) to external switch positive for silent mode",
+              "Connect brown wire (Pin 1) to NMEA 0183 Port 1 TX+",
+              "Connect blue wire (Pin 2) to NMEA 0183 Port 1 TX-",
+              "Connect white wire (Pin 3) to NMEA 0183 Port 1 RX+",
+              "Connect green wire (Pin 4) to NMEA 0183 Port 1 RX-",
+              "Connect purple wire (Pin 11) to NMEA 0183 Port 2 TX+",
+              "Connect pink wire (Pin 7) to NMEA 0183 Port 2 TX-",
+              "Connect grey wire (Pin 6) to NMEA 0183 Port 2 RX+",
+              "Connect yellow wire (Pin 5) to NMEA 0183 Port 2 RX-",
+              "Double check all connections before applying power"
+            ],
+            "expected_outcome": "All wires properly connected according to color code and pin assignments",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": [
+              "Permanent damage may occur if wired incorrectly"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Installing External Silent Mode Switch",
+            "preconditions": [
+              "NAIS-500 AIS transceiver installation in progress",
+              "External toggle switch available"
+            ],
+            "steps": [
+              "Locate the light green and orange wires from the transceiver",
+              "Connect one terminal of toggle switch to light green wire",
+              "Connect other terminal of toggle switch to orange wire"
+            ],
+            "expected_outcome": "External switch installed for remote control of silent mode",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": [
+              "Do not connect voltage source across switch inputs - may cause damage"
+            ]
+          },
+          {
+            "title": "Connecting NMEA 0183 Port 1 (38,400 baud)",
+            "preconditions": [
+              "NAIS-500 AIS transceiver installation in progress",
+              "NMEA 0183 compatible equipment available"
+            ],
+            "steps": [
+              "Connect brown wire (Transmit+) to equipment NMEA input+",
+              "Connect blue wire (Transmit-) to equipment NMEA input-",
+              "Connect white wire (Receive+) to equipment NMEA output+",
+              "Connect green wire (Receive-) to equipment NMEA output-",
+              "Configure connected equipment for 38,400 baud rate"
+            ],
+            "expected_outcome": "High-speed NMEA 0183 connection established",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Connecting NMEA 0183 Port 2 (4,800 baud)",
+            "preconditions": [
+              "NAIS-500 AIS transceiver installation in progress",
+              "NMEA 0183 compatible equipment available"
+            ],
+            "steps": [
+              "Connect purple wire (Transmit+) to equipment NMEA input+",
+              "Connect pink wire (Transmit-) to equipment NMEA input-",
+              "Connect grey wire (Receive+) to equipment NMEA output+",
+              "Connect yellow wire (Receive-) to equipment NMEA output-",
+              "Configure connected equipment for 4,800 baud rate"
+            ],
+            "expected_outcome": "Low-speed NMEA 0183 connection established",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power Connection",
+            "preconditions": [
+              "NAIS-500 AIS transceiver installation in progress",
+              "Power source available"
+            ],
+            "steps": [
+              "Connect red wire to power source positive (+)",
+              "Connect black wire to power source negative (-)"
+            ],
+            "expected_outcome": "Power properly connected to AIS transceiver",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": [
+              "Incorrect wiring may cause permanent damage"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "NMEA0183 Connection Wiring",
+            "preconditions": [
+              "Access to NMEA0183 ports",
+              "Correct wire colors identified"
+            ],
+            "steps": [
+              "Connect Power in + wire (Red)",
+              "Connect Power in - wire (Black)",
+              "Connect Switch input + wire (Light green)",
+              "Connect Switch input - wire (Orange)",
+              "For Port 1: Connect Transmit + (Brown), Transmit - (Blue), Receive + (White), Receive - (Green)",
+              "For Port 2: Connect Transmit + (Purple), Transmit - (Pink), Receive + (Grey), Receive - (Yellow)"
+            ],
+            "expected_outcome": "NMEA0183 ports properly wired for data communication",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "NMEA 2000 Network Connection",
+            "preconditions": [
+              "Existing NMEA 2000 network",
+              "Navico NMEA 2000 network cable available"
+            ],
+            "steps": [
+              "Connect AIS transceiver to NMEA 2000 network using Navico cable",
+              "Ensure chartplotter is connected to same NMEA 2000 network"
+            ],
+            "expected_outcome": "AIS targets visible on chartplotter",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "USB Connection Setup",
+            "preconditions": [
+              "PC or Mac with USB port",
+              "NAIS System Configurator installed"
+            ],
+            "steps": [
+              "Connect USB cable between AIS transceiver and computer",
+              "Wait for automatic device detection",
+              "Select new COM port in navigation software",
+              "Set baud rate to 38,400"
+            ],
+            "expected_outcome": "AIS data accessible through PC/Mac",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "USB Connection Reset Procedure",
+            "preconditions": [
+              "USB connection interrupted"
+            ],
+            "steps": [
+              "Disconnect power from AIS unit",
+              "Close all PC/Mac applications using USB connection",
+              "Reapply power to AIS unit",
+              "Relaunch applications",
+              "Reconnect USB cable"
+            ],
+            "expected_outcome": "USB connection restored",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Power Supply Connection",
+            "preconditions": [
+              "12V or 24V power supply available",
+              "Crimped and soldered lugs",
+              "Circuit breaker or 3A fuse block"
+            ],
+            "steps": [
+              "Connect red wire to power supply positive terminal",
+              "Connect black wire to power supply negative terminal"
+            ],
+            "expected_outcome": "AIS transceiver powered on",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Power-Up Check",
+            "preconditions": [
+              "Unit is connected to power",
+              "Unit is properly installed"
+            ],
+            "steps": [
+              "Apply power to the AIS transceiver",
+              "Observe LED indicator pattern",
+              "Verify PWR (Green) indicates unit is powered and operating normally",
+              "Check ERR (Red) for any errors or invalid MMSI",
+              "Observe Rx (Green) flashing when receiving AIS data",
+              "Check Tx (Orange) for silent mode status"
+            ],
+            "expected_outcome": "Unit powers up and LED indicators show proper operational status",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": [
+              "Red ERR LED: Error or invalid MMSI"
+            ]
+          },
+          {
+            "title": "NAIS System Configurator Installation - PC",
+            "preconditions": [
+              "Installation CD available",
+              "PC with Windows operating system"
+            ],
+            "steps": [
+              "Insert CD into PC",
+              "Navigate to NAIS System Configurator folder",
+              "Open Windows folder",
+              "Run setup.exe file",
+              "Follow on-screen prompts",
+              "If security warning appears, click Run",
+              "Wait for installation to complete"
+            ],
+            "expected_outcome": "NAIS System Configurator launches automatically with start menu folder and shortcut created",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "NAIS System Configurator Installation - Mac",
+            "preconditions": [
+              "Installation CD available",
+              "Mac computer"
+            ],
+            "steps": [
+              "Insert CD into Mac",
+              "Navigate to NAIS System Configurator folder",
+              "Open OSX folder",
+              "Double click NAIS System Configurator.dmg file",
+              "Follow on-screen instructions"
+            ],
+            "expected_outcome": "NAIS System Configurator successfully installed on Mac",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Wire Connection Procedure",
+            "preconditions": [
+              "Installation materials ready",
+              "Power disconnected"
+            ],
+            "steps": [
+              "Connect Power in + to Red wire",
+              "Connect Power in \u2013 to Black wire",
+              "Connect Switch input + to Light green wire",
+              "Connect Switch input \u2013 to Orange wire",
+              "Connect NMEA0183 Transmit + to Brown wire",
+              "Connect Port 1 Transmit \u2013 to Blue wire",
+              "Connect 38,400 baud Receive + to White wire",
+              "Connect chart plotter Receive \u2013 to Green wire",
+              "Connect NMEA0183 Transmit + to Purple wire",
+              "Connect Port 2 Transmit \u2013 to Pink wire",
+              "Connect 4,800 baud Receive + to Grey wire",
+              "Connect other NMEA0183 device Receive \u2013 to Yellow wire"
+            ],
+            "expected_outcome": "All wires properly connected according to color code specification",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Initial Software Installation",
+            "preconditions": [
+              "NAIS System Configurator.dmg file downloaded"
+            ],
+            "steps": [
+              "Double click the NAIS System Configurator.dmg file",
+              "Follow on-screen instructions to complete installation"
+            ],
+            "expected_outcome": "NAIS System Configurator software installed successfully",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "AIS Transceiver Configuration",
+            "preconditions": [
+              "NAIS System Configurator installed",
+              "Required vessel information available (MMSI, vessel name, type, call sign, dimensions, GPS antenna position)"
+            ],
+            "steps": [
+              "Connect AIS transceiver via USB (for configuration only)",
+              "Launch NAIS System Configurator",
+              "Enter MMSI number (can only be done once)",
+              "Enter vessel name",
+              "Enter vessel type",
+              "Enter call sign",
+              "Enter vessel dimensions",
+              "Enter GPS antenna installation position"
+            ],
+            "expected_outcome": "AIS transceiver configured with vessel information",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Silent Mode Operation",
+            "preconditions": [
+              "External switch connected to AIS transceiver"
+            ],
+            "steps": [
+              "Activate external switch to enter silent mode",
+              "Verify orange light on Tx indicator is illuminated"
+            ],
+            "expected_outcome": "AIS transceiver enters silent mode - stops transmitting position while continuing to receive",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Normal Operation Mode",
+            "preconditions": [
+              "AIS transceiver configured",
+              "Unit properly installed",
+              "Power connected"
+            ],
+            "steps": [
+              "Power on unit",
+              "Wait up to six minutes for full vessel details to become visible to others",
+              "Monitor chartplotter or PC for AIS data from other vessels"
+            ],
+            "expected_outcome": "AIS transceiver transmitting and receiving vessel information",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Interpreting PWR Indicator Status",
+            "preconditions": [
+              "AIS transceiver is connected to power"
+            ],
+            "steps": [
+              "Observe PWR indicator light",
+              "If green steady light is shown, unit is powered up correctly"
+            ],
+            "expected_outcome": "Confirmation of proper power status",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Checking MMSI Programming Status",
+            "preconditions": [
+              "AIS transceiver is powered on"
+            ],
+            "steps": [
+              "Observe ERR indicator light",
+              "If red steady light is shown, MMSI needs programming",
+              "If red flashing light is shown, system error detected or unit is connected to USB for initial programming"
+            ],
+            "expected_outcome": "Determination of MMSI programming status",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": [
+              "ERR-Red-Steady",
+              "ERR-Red-Flash"
+            ]
+          },
+          {
+            "title": "Monitoring AIS Reception",
+            "preconditions": [
+              "AIS transceiver is powered on"
+            ],
+            "steps": [
+              "Observe Rx indicator light",
+              "Green flashing light indicates active AIS data reception"
+            ],
+            "expected_outcome": "Confirmation of AIS data reception",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Monitoring AIS Transmission Status",
+            "preconditions": [
+              "AIS transceiver is powered on"
+            ],
+            "steps": [
+              "Observe Tx indicator light",
+              "Orange flashing: Unit is acquiring GPS fix (no transmission)",
+              "Orange steady: Unit is in silent mode (no transmission)",
+              "Green flashing: Unit is transmitting AIS data",
+              "For green flashing - note flash interval:",
+              "- 3 minute intervals when vessel speed under 2 knots",
+              "- 30 second intervals when vessel speed above 2 knots"
+            ],
+            "expected_outcome": "Understanding of current transmission status",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "GPS Fix Acquisition Monitoring",
+            "preconditions": [
+              "AIS transceiver is powered on"
+            ],
+            "steps": [
+              "Observe Tx indicator for orange flashing light",
+              "If newly powered on: Wait several minutes for GPS fix",
+              "If GPS fix is lost: Unit will attempt reacquisition for 30 minutes",
+              "If no fix after 30 minutes: Unit will enter BIIT system error state"
+            ],
+            "expected_outcome": "Successful GPS position fix acquisition",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": [
+              "BIIT-Error"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "No Data Reception Troubleshooting",
+            "preconditions": [
+              "Chartplotter not receiving data from AIS"
+            ],
+            "steps": [
+              "Check power supply connection",
+              "Verify power supply is 12V or 24V",
+              "Verify chartplotter connections are correct"
+            ],
+            "expected_outcome": "Chartplotter receiving data from AIS",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "No Indicators Illuminated Troubleshooting",
+            "preconditions": [
+              "No indicator lights visible on unit"
+            ],
+            "steps": [
+              "Check power supply connection",
+              "Verify power supply is 12V or 24V"
+            ],
+            "expected_outcome": "Indicator lights functioning properly",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Red Error Indicator Troubleshooting",
+            "preconditions": [
+              "Red error indicator is illuminated"
+            ],
+            "steps": [
+              "Check MMSI configuration and validity",
+              "Inspect VHF antenna connection and condition",
+              "Verify GPS antenna connection and installation",
+              "Review GPS signal strength graph in NAIS System Configurator",
+              "Verify power supply is within 9.6V to 31.2V range",
+              "Contact dealer if issue persists"
+            ],
+            "expected_outcome": "Red error indicator turns off",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Vessel Name Not Displaying Troubleshooting",
+            "preconditions": [
+              "MMSI visible but vessel name not showing on other devices"
+            ],
+            "steps": [
+              "Verify other vessel's AIS device supports message 24",
+              "Recommend software upgrade for receiving vessel's equipment",
+              "Confirm other vessel updates AIS unit and/or chart-plotting software"
+            ],
+            "expected_outcome": "Vessel name visible on other devices",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "NAIS-500 Technical Specifications Reference",
+            "preconditions": [
+              "System must be NAIS-500 model"
+            ],
+            "steps": [
+              "Verify power requirements: DC 9.6V - 31.2V",
+              "Check average power consumption: 180mA at 12 VDC",
+              "Confirm peak current rating: 2A at 12 VDC",
+              "Verify physical dimensions: 152 x 98 x 52 mm (L x W x H)",
+              "Confirm unit weight: 260g",
+              "Ensure GPS receiver is 50 channel IEC 61108-1 compliant",
+              "Verify NMEA 0183 baud rates: 38,400 and 4,800",
+              "Confirm NMEA 2000 LEN=1 compatibility",
+              "Check VHF frequency range: 156.025 to 162.025 MHz in 25 kHz steps",
+              "Verify output power: 33 dBm \u00b1 1.5 dB"
+            ],
+            "expected_outcome": "All specifications match required parameters for proper operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "NAIS-500 Connection Verification",
+            "preconditions": [
+              "System must be powered off",
+              "All cables must be accessible"
+            ],
+            "steps": [
+              "Check VHF antenna connector (S\u039f-239)",
+              "Verify external GPS antenna connector (SMA)",
+              "Confirm USB type mini-B connection",
+              "Check NMEA 2000 standard connector",
+              "Verify 12-way power input/NMEA 0183/external switch connection"
+            ],
+            "expected_outcome": "All connections are properly seated and functional",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Operating Environment Requirements",
+            "preconditions": [
+              "Device must be installed in protected location"
+            ],
+            "steps": [
+              "Ensure operating temperature remains between -15\u00baC to +55\u00baC",
+              "Maintain water resistant rating of IP67",
+              "Follow IEC 60945 'Protected' category guidelines"
+            ],
+            "expected_outcome": "Device operates within safe environmental parameters",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Status Indicator Monitoring",
+            "preconditions": [
+              "Device is powered on"
+            ],
+            "steps": [
+              "Check Power indicator status",
+              "Monitor Error indicator",
+              "Verify Rx indicator operation",
+              "Observe Tx indicator for silent mode status"
+            ],
+            "expected_outcome": "All status indicators showing correct operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "VHF Transceiver Operation",
+            "preconditions": [
+              "Device properly connected to power",
+              "Antenna connected"
+            ],
+            "steps": [
+              "Verify frequency range of 156.025 to 162.025 MHz",
+              "Confirm channel bandwidth of 25 kHz",
+              "Monitor output power maintains 33 dBm \u00b1 1.5 dB",
+              "Ensure proper GMSK modulation for AIS",
+              "Verify AFSK modulation for DSC reception"
+            ],
+            "expected_outcome": "Transceiver operating within specified parameters",
+            "models": [
+              "NAIS-500"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

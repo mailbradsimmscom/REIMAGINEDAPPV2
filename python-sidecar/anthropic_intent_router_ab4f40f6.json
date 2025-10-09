@@ -1,0 +1,1158 @@
+{
+  "total_chunks_processed": 7,
+  "successful_chunks": 7,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 43,
+  "unique_intent_routes": 25,
+  "question_type_breakdown": {
+    "How": 6,
+    "What": 17,
+    "When": 1,
+    "Why": 1
+  },
+  "intent_routes": [
+    {
+      "question": "How do I activate the air vent valve?",
+      "question_variations": [
+        "What's the process for air vent valve operation?",
+        "How do I prime the pump using the air vent valve?",
+        "When should I open the air vent valve?"
+      ],
+      "answer": "When starting the pump or emptying the tank, slightly open the small valve to let air out and facilitate priming. Close the small valve once the pump is operating. Use at least 1m of flexible tubing on the outlet side.",
+      "question_type": "How",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "references": [
+        "Air Vent Valve Activation Section"
+      ]
+    },
+    {
+      "question": "What does the blue LED indicate?",
+      "question_variations": [
+        "How do I know if there's liquid in the hoses?",
+        "What are the blue LED status meanings?",
+        "When does the blue LED flash?"
+      ],
+      "answer": "The blue LED turns on when there's liquid in the hoses, turns off when there's no liquid, and flashes in priming mode. During initial priming, it flashes for 10 seconds to confirm continuous pumping. The system shuts off after five cycles between priming and no liquid states.",
+      "question_type": "What",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "references": [
+        "Blue LED Indicators Section"
+      ]
+    },
+    {
+      "question": "What do the different colored LED indicators mean?",
+      "question_variations": [
+        "How do I interpret the LED colors?",
+        "What does a red LED mean on the pump?",
+        "What does the green LED indicate?"
+      ],
+      "answer": "Yellow LED: pressure not at required level but pump is working to reach it. Green LED solid: target pressure reached with constant flow. Green LED flashing: standby mode. Red LED solid/slow flash: motor short circuit or blocked gears. Red LED fast flash: pump overload.",
+      "question_type": "What",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "references": [
+        "Multicolored LED Indicators Section"
+      ]
+    },
+    {
+      "question": "How do I reset a red LED warning?",
+      "question_variations": [
+        "What should I do when the red LED is on?",
+        "How to clear a pump error?",
+        "How do I restart after a red light warning?"
+      ],
+      "answer": "To reset a red LED warning, either reboot the circuit or press the Reset button on the control panel if present. For solid red LED warnings, check for permanent damage before resetting.",
+      "question_type": "How",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "references": [
+        "Multicolored LED Indicators Section"
+      ]
+    },
+    {
+      "question": "What are the benefits of the electronic pressure sensor?",
+      "question_variations": [
+        "Why use an electronic pressure sensor?",
+        "What advantages does the pressure sensor provide?",
+        "How does the electronic pressure sensor help?"
+      ],
+      "answer": "The electronic pressure sensor provides noise reduction during operation, optimized current consumption, reduced electrical noise through slow speed ramping, and longer system life due to reduced wear compared to mechanical pressure switches.",
+      "question_type": "What",
+      "models": [
+        "UP6/E 24V",
+        "16462213"
+      ],
+      "references": [
+        "Electronic Pressure Sensor Working Directions Section"
+      ]
+    },
+    {
+      "question": "How do I reset a warning on the pump?",
+      "question_variations": [
+        "How to clear pump warnings?",
+        "What do I do when the pump shows a warning?",
+        "How can I reset the pump after a warning?"
+      ],
+      "answer": "To reset a warning, either reboot the circuit or press the Reset button on the control panel if one is present.",
+      "question_type": "How",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Warnings section"
+      ]
+    },
+    {
+      "question": "What does it mean when red and blue LEDs blink alternatively?",
+      "question_variations": [
+        "Why are the red and blue lights alternating?",
+        "What causes alternating red and blue LED warnings?"
+      ],
+      "answer": "Alternating red and blue LEDs indicate the pump has run without liquid for 1 minute and 30 seconds and the motor has been stopped for protection.",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Warnings section",
+        "Timeouts section"
+      ]
+    },
+    {
+      "question": "What does yellow and blue LED blinking together mean?",
+      "question_variations": [
+        "Why are yellow and blue lights flashing simultaneously?",
+        "What's wrong when both yellow and blue LEDs blink?"
+      ],
+      "answer": "Yellow and blue LEDs blinking together indicate a power supply problem. Check for correct wire section and battery charge if applicable.",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Warnings section"
+      ]
+    },
+    {
+      "question": "Do I need an expansion tank?",
+      "question_variations": [
+        "When is an expansion tank required?",
+        "Is an expansion tank necessary for installation?"
+      ],
+      "answer": "An expansion tank of at least \u00bd liter is necessary with short, rigid pipes or solenoid valves to prevent overpressure from water hammer effect. It's not needed if you have a few meters of flexible pipe in the system.",
+      "question_type": "When",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Warnings section"
+      ]
+    },
+    {
+      "question": "What is the no liquid timeout duration?",
+      "question_variations": [
+        "How long is the no liquid timeout?",
+        "What's the dry run timeout period?"
+      ],
+      "answer": "The no liquid timeout duration is 1 minute and 30 seconds.",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Timeouts section"
+      ]
+    },
+    {
+      "question": "What does a solid green LED indicate?",
+      "question_variations": [
+        "What's the meaning of a steady green light?",
+        "When does the LED show solid green?"
+      ],
+      "answer": "A solid green LED indicates that the target pressure has been precisely reached.",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "LED Colors section"
+      ]
+    },
+    {
+      "question": "What is the weight of the UP6/E pump?",
+      "question_variations": [
+        "How heavy is the UP6/E pump?",
+        "What's the UP6/E pump weight?"
+      ],
+      "answer": "The UP6/E pump weighs 3.7 kg (8.2 lb).",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Technical Details section"
+      ]
+    },
+    {
+      "question": "What is the maximum water temperature this pump can handle?",
+      "question_variations": [
+        "What temperature water can I pump?",
+        "Is it safe to pump hot water?",
+        "What's the temperature limit for water?"
+      ],
+      "answer": "Maximum water temperature is 85\u00b0C",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Fluids Allowed Section"
+      ]
+    },
+    {
+      "question": "What is the flow rate of the pump?",
+      "question_variations": [
+        "How many liters per minute can it pump?",
+        "What's the pump's flow rate in GPM?",
+        "What's the pumping capacity?"
+      ],
+      "answer": "Flow rate is 26 l/min (6.9 GPM)",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Pump Data Section"
+      ]
+    },
+    {
+      "question": "What voltage does the pump operate on?",
+      "question_variations": [
+        "What's the power requirement?",
+        "What voltage do I need?",
+        "Is this a 24V pump?"
+      ],
+      "answer": "The pump operates on 24V DC with 5A consumption and requires a 10A fuse",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Motor Data Section"
+      ]
+    },
+    {
+      "question": "What liquids can I pump?",
+      "question_variations": [
+        "Which fluids are allowed?",
+        "Can I pump gasoline?",
+        "What materials are safe to pump?"
+      ],
+      "answer": "The pump can handle water (max 85\u00b0C) and gasoline. Do not use with solvents, flammable liquids with PM < 38\u00b0C, liquids with viscosity > 20 cSt, or corrosive chemicals",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Fluids Allowed Section"
+      ]
+    },
+    {
+      "question": "What are the operating temperature limits?",
+      "question_variations": [
+        "What temperature range can the pump work in?",
+        "What's the minimum operating temperature?",
+        "What's the maximum ambient temperature?"
+      ],
+      "answer": "Operating temperature range is minimum -10\u00b0C/14\u00b0F to maximum +60\u00b0C/140\u00b0F",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Ambient Conditions Section"
+      ]
+    },
+    {
+      "question": "How should I install the pump?",
+      "question_variations": [
+        "What are the installation requirements?",
+        "What should I check before installation?",
+        "How do I prepare for pump installation?"
+      ],
+      "answer": "Before installation: Check for transportation damage, clean inlet and outlet ports of dust and packaging material, verify electrical power supply meets specifications",
+      "question_type": "How",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Installation Section"
+      ]
+    },
+    {
+      "question": "What is the self-priming height?",
+      "question_variations": [
+        "How high can it self-prime?",
+        "What's the maximum priming height?",
+        "What's the self-priming capability?"
+      ],
+      "answer": "Self-priming height is 1.5 meters (4.9 feet)",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Pump Data Section"
+      ]
+    },
+    {
+      "question": "What size ports does the pump have?",
+      "question_variations": [
+        "What are the connection sizes?",
+        "What size fittings do I need?",
+        "What's the port diameter?"
+      ],
+      "answer": "Ports are 1/2\" BSPP",
+      "question_type": "What",
+      "models": [
+        "UP6/E"
+      ],
+      "references": [
+        "Pump Data Section"
+      ]
+    },
+    {
+      "question": "Why won't the pump prime itself?",
+      "question_variations": [
+        "Why is my pump not priming?",
+        "What causes pump priming issues?",
+        "My pump won't prime, what's wrong?"
+      ],
+      "answer": "Common causes include: excessive pump height above fluid level, running dry too long, long periods of inactivity, air leaks in suction pipe (cuts/loose clamps), clogged or defective filter, loose front plate screws, poor seals, faulty electrical connections, or obstructions in pipes.",
+      "question_type": "Why",
+      "models": [
+        "All MARCO pumps"
+      ],
+      "references": [
+        "Pump Priming Section"
+      ]
+    },
+    {
+      "question": "How should I maintain the pump?",
+      "question_variations": [
+        "What is required for normal maintenance?",
+        "How do I keep the pump in good condition?",
+        "What regular maintenance is needed?"
+      ],
+      "answer": "Check and clean inlet filter frequently, inspect chamber monthly and remove foreign matter, verify electrical wiring condition monthly.",
+      "question_type": "How",
+      "models": [
+        "All MARCO pumps"
+      ],
+      "references": [
+        "Normal Maintenance Section"
+      ]
+    },
+    {
+      "question": "What are the signs of correct pump operation?",
+      "question_variations": [
+        "How do I know if my pump is working properly?",
+        "What indicates normal pump function?",
+        "What are normal operating conditions?"
+      ],
+      "answer": "Body and motor temperature between 60\u00b0C-70\u00b0C (140\u00b0F-158\u00b0F), regular flow with constant noise levels, and amp-draw within specified diagram limits.",
+      "question_type": "What",
+      "models": [
+        "All MARCO pumps"
+      ],
+      "references": [
+        "Indicators Section"
+      ]
+    },
+    {
+      "question": "How long is the warranty period?",
+      "question_variations": [
+        "What is covered under warranty?",
+        "What's the warranty duration?",
+        "Is my pump still under warranty?"
+      ],
+      "answer": "2 years from date of purchase with valid sales invoice. If no invoice is available, 2 years from production date. Warranty covers original production defects only.",
+      "question_type": "How",
+      "models": [
+        "All MARCO pumps"
+      ],
+      "references": [
+        "Warranty Section"
+      ]
+    },
+    {
+      "question": "What should I do if the pump won't be used for a long time?",
+      "question_variations": [
+        "How do I store the pump long-term?",
+        "What's the procedure for extended pump storage?",
+        "How to prepare pump for storage?"
+      ],
+      "answer": "For periods over 30 days: run fresh water through the pump, loosen front plate screws. Before re-use, run briefly for a few seconds and retighten screws. Check motor current under maximum pressure matches specifications.",
+      "question_type": "What",
+      "models": [
+        "All MARCO pumps"
+      ],
+      "references": [
+        "Good Practices Section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I activate the air vent valve?",
+            "question_variations": [
+              "What's the process for air vent valve operation?",
+              "How do I prime the pump using the air vent valve?",
+              "When should I open the air vent valve?"
+            ],
+            "answer": "When starting the pump or emptying the tank, slightly open the small valve to let air out and facilitate priming. Close the small valve once the pump is operating. Use at least 1m of flexible tubing on the outlet side.",
+            "question_type": "How",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "references": [
+              "Air Vent Valve Activation Section"
+            ]
+          },
+          {
+            "question": "What does the blue LED indicate?",
+            "question_variations": [
+              "How do I know if there's liquid in the hoses?",
+              "What are the blue LED status meanings?",
+              "When does the blue LED flash?"
+            ],
+            "answer": "The blue LED turns on when there's liquid in the hoses, turns off when there's no liquid, and flashes in priming mode. During initial priming, it flashes for 10 seconds to confirm continuous pumping. The system shuts off after five cycles between priming and no liquid states.",
+            "question_type": "What",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "references": [
+              "Blue LED Indicators Section"
+            ]
+          },
+          {
+            "question": "What do the different colored LED indicators mean?",
+            "question_variations": [
+              "How do I interpret the LED colors?",
+              "What does a red LED mean on the pump?",
+              "What does the green LED indicate?"
+            ],
+            "answer": "Yellow LED: pressure not at required level but pump is working to reach it. Green LED solid: target pressure reached with constant flow. Green LED flashing: standby mode. Red LED solid/slow flash: motor short circuit or blocked gears. Red LED fast flash: pump overload.",
+            "question_type": "What",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "references": [
+              "Multicolored LED Indicators Section"
+            ]
+          },
+          {
+            "question": "How do I reset a red LED warning?",
+            "question_variations": [
+              "What should I do when the red LED is on?",
+              "How to clear a pump error?",
+              "How do I restart after a red light warning?"
+            ],
+            "answer": "To reset a red LED warning, either reboot the circuit or press the Reset button on the control panel if present. For solid red LED warnings, check for permanent damage before resetting.",
+            "question_type": "How",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "references": [
+              "Multicolored LED Indicators Section"
+            ]
+          },
+          {
+            "question": "What are the benefits of the electronic pressure sensor?",
+            "question_variations": [
+              "Why use an electronic pressure sensor?",
+              "What advantages does the pressure sensor provide?",
+              "How does the electronic pressure sensor help?"
+            ],
+            "answer": "The electronic pressure sensor provides noise reduction during operation, optimized current consumption, reduced electrical noise through slow speed ramping, and longer system life due to reduced wear compared to mechanical pressure switches.",
+            "question_type": "What",
+            "models": [
+              "UP6/E 24V",
+              "16462213"
+            ],
+            "references": [
+              "Electronic Pressure Sensor Working Directions Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How do I reset a warning on the pump?",
+            "question_variations": [
+              "How to clear pump warnings?",
+              "What do I do when the pump shows a warning?",
+              "How can I reset the pump after a warning?"
+            ],
+            "answer": "To reset a warning, either reboot the circuit or press the Reset button on the control panel if one is present.",
+            "question_type": "How",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Warnings section"
+            ]
+          },
+          {
+            "question": "What does it mean when red and blue LEDs blink alternatively?",
+            "question_variations": [
+              "Why are the red and blue lights alternating?",
+              "What causes alternating red and blue LED warnings?"
+            ],
+            "answer": "Alternating red and blue LEDs indicate the pump has run without liquid for 1 minute and 30 seconds and the motor has been stopped for protection.",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Warnings section",
+              "Timeouts section"
+            ]
+          },
+          {
+            "question": "What does yellow and blue LED blinking together mean?",
+            "question_variations": [
+              "Why are yellow and blue lights flashing simultaneously?",
+              "What's wrong when both yellow and blue LEDs blink?"
+            ],
+            "answer": "Yellow and blue LEDs blinking together indicate a power supply problem. Check for correct wire section and battery charge if applicable.",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Warnings section"
+            ]
+          },
+          {
+            "question": "Do I need an expansion tank?",
+            "question_variations": [
+              "When is an expansion tank required?",
+              "Is an expansion tank necessary for installation?"
+            ],
+            "answer": "An expansion tank of at least \u00bd liter is necessary with short, rigid pipes or solenoid valves to prevent overpressure from water hammer effect. It's not needed if you have a few meters of flexible pipe in the system.",
+            "question_type": "When",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Warnings section"
+            ]
+          },
+          {
+            "question": "What is the no liquid timeout duration?",
+            "question_variations": [
+              "How long is the no liquid timeout?",
+              "What's the dry run timeout period?"
+            ],
+            "answer": "The no liquid timeout duration is 1 minute and 30 seconds.",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Timeouts section"
+            ]
+          },
+          {
+            "question": "What does a solid green LED indicate?",
+            "question_variations": [
+              "What's the meaning of a steady green light?",
+              "When does the LED show solid green?"
+            ],
+            "answer": "A solid green LED indicates that the target pressure has been precisely reached.",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "LED Colors section"
+            ]
+          },
+          {
+            "question": "What is the weight of the UP6/E pump?",
+            "question_variations": [
+              "How heavy is the UP6/E pump?",
+              "What's the UP6/E pump weight?"
+            ],
+            "answer": "The UP6/E pump weighs 3.7 kg (8.2 lb).",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Technical Details section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the maximum water temperature this pump can handle?",
+            "question_variations": [
+              "What temperature water can I pump?",
+              "Is it safe to pump hot water?",
+              "What's the temperature limit for water?"
+            ],
+            "answer": "Maximum water temperature is 85\u00b0C",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Fluids Allowed Section"
+            ]
+          },
+          {
+            "question": "What is the flow rate of the pump?",
+            "question_variations": [
+              "How many liters per minute can it pump?",
+              "What's the pump's flow rate in GPM?",
+              "What's the pumping capacity?"
+            ],
+            "answer": "Flow rate is 26 l/min (6.9 GPM)",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Pump Data Section"
+            ]
+          },
+          {
+            "question": "What voltage does the pump operate on?",
+            "question_variations": [
+              "What's the power requirement?",
+              "What voltage do I need?",
+              "Is this a 24V pump?"
+            ],
+            "answer": "The pump operates on 24V DC with 5A consumption and requires a 10A fuse",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Motor Data Section"
+            ]
+          },
+          {
+            "question": "What liquids can I pump?",
+            "question_variations": [
+              "Which fluids are allowed?",
+              "Can I pump gasoline?",
+              "What materials are safe to pump?"
+            ],
+            "answer": "The pump can handle water (max 85\u00b0C) and gasoline. Do not use with solvents, flammable liquids with PM < 38\u00b0C, liquids with viscosity > 20 cSt, or corrosive chemicals",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Fluids Allowed Section"
+            ]
+          },
+          {
+            "question": "What are the operating temperature limits?",
+            "question_variations": [
+              "What temperature range can the pump work in?",
+              "What's the minimum operating temperature?",
+              "What's the maximum ambient temperature?"
+            ],
+            "answer": "Operating temperature range is minimum -10\u00b0C/14\u00b0F to maximum +60\u00b0C/140\u00b0F",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Ambient Conditions Section"
+            ]
+          },
+          {
+            "question": "How should I install the pump?",
+            "question_variations": [
+              "What are the installation requirements?",
+              "What should I check before installation?",
+              "How do I prepare for pump installation?"
+            ],
+            "answer": "Before installation: Check for transportation damage, clean inlet and outlet ports of dust and packaging material, verify electrical power supply meets specifications",
+            "question_type": "How",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Installation Section"
+            ]
+          },
+          {
+            "question": "What is the self-priming height?",
+            "question_variations": [
+              "How high can it self-prime?",
+              "What's the maximum priming height?",
+              "What's the self-priming capability?"
+            ],
+            "answer": "Self-priming height is 1.5 meters (4.9 feet)",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Pump Data Section"
+            ]
+          },
+          {
+            "question": "What size ports does the pump have?",
+            "question_variations": [
+              "What are the connection sizes?",
+              "What size fittings do I need?",
+              "What's the port diameter?"
+            ],
+            "answer": "Ports are 1/2\" BSPP",
+            "question_type": "What",
+            "models": [
+              "UP6/E"
+            ],
+            "references": [
+              "Pump Data Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "Why won't the pump prime itself?",
+            "question_variations": [
+              "Why is my pump not priming?",
+              "What causes pump priming issues?",
+              "My pump won't prime, what's wrong?"
+            ],
+            "answer": "Common causes include: excessive pump height above fluid level, running dry too long, long periods of inactivity, air leaks in suction pipe (cuts/loose clamps), clogged or defective filter, loose front plate screws, poor seals, faulty electrical connections, or obstructions in pipes.",
+            "question_type": "Why",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "references": [
+              "Pump Priming Section"
+            ]
+          },
+          {
+            "question": "How should I maintain the pump?",
+            "question_variations": [
+              "What is required for normal maintenance?",
+              "How do I keep the pump in good condition?",
+              "What regular maintenance is needed?"
+            ],
+            "answer": "Check and clean inlet filter frequently, inspect chamber monthly and remove foreign matter, verify electrical wiring condition monthly.",
+            "question_type": "How",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "references": [
+              "Normal Maintenance Section"
+            ]
+          },
+          {
+            "question": "What are the signs of correct pump operation?",
+            "question_variations": [
+              "How do I know if my pump is working properly?",
+              "What indicates normal pump function?",
+              "What are normal operating conditions?"
+            ],
+            "answer": "Body and motor temperature between 60\u00b0C-70\u00b0C (140\u00b0F-158\u00b0F), regular flow with constant noise levels, and amp-draw within specified diagram limits.",
+            "question_type": "What",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "references": [
+              "Indicators Section"
+            ]
+          },
+          {
+            "question": "How long is the warranty period?",
+            "question_variations": [
+              "What is covered under warranty?",
+              "What's the warranty duration?",
+              "Is my pump still under warranty?"
+            ],
+            "answer": "2 years from date of purchase with valid sales invoice. If no invoice is available, 2 years from production date. Warranty covers original production defects only.",
+            "question_type": "How",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "references": [
+              "Warranty Section"
+            ]
+          },
+          {
+            "question": "What should I do if the pump won't be used for a long time?",
+            "question_variations": [
+              "How do I store the pump long-term?",
+              "What's the procedure for extended pump storage?",
+              "How to prepare pump for storage?"
+            ],
+            "answer": "For periods over 30 days: run fresh water through the pump, loosen front plate screws. Before re-use, run briefly for a few seconds and retighten screws. Check motor current under maximum pressure matches specifications.",
+            "question_type": "What",
+            "models": [
+              "All MARCO pumps"
+            ],
+            "references": [
+              "Good Practices Section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the replaceable parts in the MARCO pump?",
+            "question_variations": [
+              "Which components are marked as spare parts?",
+              "What parts can be replaced in this pump?",
+              "Which items are marked with X in the parts list?"
+            ],
+            "answer": "The replaceable parts are: compensation spring (9), idle gear (15), electronic control (19), nipple (24), air vent cap (26), O-ring (27), filter (28), and antivibration mount (29)",
+            "question_type": "What",
+            "models": [
+              "MARCO pump"
+            ],
+            "references": [
+              "Exploded View Parts List"
+            ]
+          },
+          {
+            "question": "How many O-rings are in the assembly?",
+            "question_variations": [
+              "What is the total number of O-rings?",
+              "How many O-ring components are listed?"
+            ],
+            "answer": "There are 6 different O-ring positions (items 6, 10, 16, 22, 25, 27) with varying quantities totaling multiple O-rings in the assembly",
+            "question_type": "How",
+            "models": [
+              "MARCO pump"
+            ],
+            "references": [
+              "Exploded View Parts List"
+            ]
+          },
+          {
+            "question": "What is the warranty return process?",
+            "question_variations": [
+              "How do I get a replacement for faulty parts?",
+              "What's the procedure for defective items?"
+            ],
+            "answer": "No credit notes or replacement items will be issued until MARCO receives and properly tests the goods that are claimed to be faulty",
+            "question_type": "What",
+            "models": [
+              "All MARCO products"
+            ],
+            "references": [
+              "Warranty Policy"
+            ]
+          },
+          {
+            "question": "Where is the electronic control located?",
+            "question_variations": [
+              "What is the position of the pressure sensor?",
+              "How do I find the electronic control component?"
+            ],
+            "answer": "The electronic control (pressure sensor) is item 19 in the assembly, located near the bottom of the pump assembly according to the exploded view diagram",
+            "question_type": "Where",
+            "models": [
+              "MARCO pump"
+            ],
+            "references": [
+              "Exploded View Diagram"
+            ]
+          },
+          {
+            "question": "What are the antivibration components?",
+            "question_variations": [
+              "Which parts reduce vibration?",
+              "How is vibration dampening achieved?"
+            ],
+            "answer": "The antivibration system consists of antivibration mounts (item 29) and antivibration inserts (item 30), with 4 pieces of each used in the assembly",
+            "question_type": "What",
+            "models": [
+              "MARCO pump"
+            ],
+            "references": [
+              "Exploded View Parts List"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "How should I store the pump after receiving it?",
+            "question_variations": [
+              "Where do I store my new pump?",
+              "What are the storage requirements for the pump?",
+              "How do I store the pump properly?"
+            ],
+            "answer": "The pump should be stored in a dry area after inspecting the packaging for damages upon receipt.",
+            "question_type": "How",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Receiving section"
+            ]
+          },
+          {
+            "question": "What checks should be done before installation?",
+            "question_variations": [
+              "What should I inspect before installing?",
+              "What are the preliminary installation checks?",
+              "How do I prepare for pump installation?"
+            ],
+            "answer": "Check for transportation damage, clean both inlet and outlet ports to remove dust or packaging material, and verify electrical power supply matches specifications.",
+            "question_type": "What",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Installation - Preliminary Checks section"
+            ]
+          },
+          {
+            "question": "How should the pump be positioned?",
+            "question_variations": [
+              "What is the correct mounting position?",
+              "How do I mount the pump?",
+              "What's the proper pump orientation?"
+            ],
+            "answer": "The pump can be mounted in any position using suitable diameter screws corresponding to the mounting holes. For correct fluid flow, connect the red wire to battery positive (+) and black wire to negative (-).",
+            "question_type": "How",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Installation - Positioning section"
+            ]
+          },
+          {
+            "question": "What are the tubing connection requirements?",
+            "question_variations": [
+              "How do I connect the tubes?",
+              "What should I know about connecting tubes?",
+              "How should I install the tubing?"
+            ],
+            "answer": "Remove inlet port end caps, don't position pump too high above fluid level, ensure outlet tube is empty and unchoked, use appropriate fluid-resistant tubes, and install an inlet filter (ASTM no. 35 mesh) for fluids with impurities.",
+            "question_type": "What",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Tubing Connections section"
+            ]
+          },
+          {
+            "question": "What electrical protection is required?",
+            "question_variations": [
+              "Do I need a fuse?",
+              "What type of fuse should I use?",
+              "Is electrical protection necessary?"
+            ],
+            "answer": "A protection fuse rated as indicated on the motor label must be installed. The warranty expires if no fuse is utilized.",
+            "question_type": "What",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Electrical Connection section"
+            ]
+          },
+          {
+            "question": "What should I check if the pump stops working?",
+            "question_variations": [
+              "Why won't my pump start?",
+              "How do I troubleshoot a non-working pump?",
+              "What causes pump failure?"
+            ],
+            "answer": "Check battery power supply voltage, inspect fuse condition, check for foreign matter in pump body (requires disconnecting power and removing cover plate), and verify pump hasn't run dry. Also check motor brush wear if pump has run for approximately 2500 hours.",
+            "question_type": "What",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Troubleshooting section"
+            ]
+          },
+          {
+            "question": "What is the life expectancy of the motor brushes?",
+            "question_variations": [
+              "When do motor brushes need replacement?",
+              "How long do the brushes last?",
+              "What's the brush maintenance interval?"
+            ],
+            "answer": "The average life span of the motor commutator brushes is approximately 2500 hours under normal operating conditions.",
+            "question_type": "What",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Troubleshooting section"
+            ]
+          },
+          {
+            "question": "How should electrical connections be made?",
+            "question_variations": [
+              "What's the proper way to wire the pump?",
+              "How do I connect the electrical cables?",
+              "What are the wiring requirements?"
+            ],
+            "answer": "Use adequate terminal blocks and connectors ensuring tight fitment of electrical cables. Cable size should match distance between pump and power supply per Motor Data Table. Undersized cables can cause overheating and fire hazard.",
+            "question_type": "How",
+            "models": [
+              "All pump models"
+            ],
+            "references": [
+              "Electrical Connection section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What are the dimensions of the UP6/E water pressure system?",
+            "question_variations": [
+              "How big is the UP6/E pump?",
+              "What is the size of the water pressure system?",
+              "What are the measurements of the UP6/E?"
+            ],
+            "answer": "The UP6/E has the following dimensions: 230mm (9\") length, 111mm (4 3/8\") width, 48mm (1 7/8\") height, with additional measurements of 58mm (2 1/4\") and 59mm (2 3/8\") for specific components",
+            "question_type": "What",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "references": [
+              "Dimensions section"
+            ]
+          },
+          {
+            "question": "What is the flow rate of the UP6/E pump?",
+            "question_variations": [
+              "How many liters per minute can the UP6/E pump?",
+              "What is the pumping capacity?",
+              "What's the maximum flow rate?"
+            ],
+            "answer": "The UP6/E has a flow rate of 26 l/min with a gear pump system. The flow rate varies from approximately 0-30 l/min depending on pressure, as shown in the flow rate diagram",
+            "question_type": "What",
+            "models": [
+              "UP6/E 24V High Pressure"
+            ],
+            "references": [
+              "Flow Rate diagram",
+              "Product specification"
+            ]
+          },
+          {
+            "question": "What certifications does the UP6/E pump have?",
+            "question_variations": [
+              "Is the UP6/E CE certified?",
+              "What compliance standards does the pump meet?",
+              "What are the regulatory approvals?"
+            ],
+            "answer": "The UP6/E conforms to Directive 2014/30/EU for electromagnetic compatibility and Directive 2006/42/EC for machines. It meets EN 55014-1 for emissions and EN 55014-2 for immunity standards",
+            "question_type": "What",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "references": [
+              "E.C. Declaration of Conformity section"
+            ]
+          },
+          {
+            "question": "Where is the UP6/E manufactured?",
+            "question_variations": [
+              "Who makes the UP6/E pump?",
+              "What company produces this water pressure system?",
+              "Where is the manufacturer located?"
+            ],
+            "answer": "The UP6/E is manufactured by MARCO S.P.A., located at Via Mameli 10, 25014 Castenedolo, Brescia, Italy",
+            "question_type": "Where",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "references": [
+              "Manufacturer information section"
+            ]
+          },
+          {
+            "question": "What antivibration components are included?",
+            "question_variations": [
+              "Does it come with vibration dampeners?",
+              "What parts reduce vibration?",
+              "Are antivibration mounts included?"
+            ],
+            "answer": "The system includes 4 antivibration mounts and antivibration inserts. Note that screws for mounting are not included with the system",
+            "question_type": "What",
+            "models": [
+              "UP6/E electronic water pressure system"
+            ],
+            "references": [
+              "Parts list items 29 and 30"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

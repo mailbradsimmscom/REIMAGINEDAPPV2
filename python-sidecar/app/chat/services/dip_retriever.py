@@ -12,10 +12,10 @@ class DIPRetriever(BaseService):
 
     # Define table names as constants to avoid runtime errors
     TABLES = {
-        'spec': 'staging_spec_suggestions',
-        'procedure': 'staging_playbook_hints',
-        'troubleshooting': 'staging_golden_tests',
-        'routing': 'staging_intent_router'
+        'spec': 'spec_suggestions',
+        'procedure': 'playbook_hints',
+        'troubleshooting': 'golden_tests',
+        'routing': 'intent_router'
     }
 
     async def query_dip_tables(
@@ -105,7 +105,10 @@ class DIPRetriever(BaseService):
                 conditions.extend([
                     f"parameter.ilike.%{term}%",
                     f"category.ilike.%{term}%",
-                    f"normalized_parameter.ilike.%{term}%"
+                    f"normalized_parameter.ilike.%{term}%",
+                    f"parameter_aliases_text.ilike.%{term}%",
+                    f"search_terms_text.ilike.%{term}%",
+                    f"concept_group.ilike.%{term}%"
                 ])
             if conditions:
                 filter_string = ','.join(conditions)
@@ -128,8 +131,9 @@ class DIPRetriever(BaseService):
             conditions = []
             for term in query_terms[:3]:
                 conditions.extend([
-                    f"question.ilike.%{term}%",
-                    f"answer.ilike.%{term}%"
+                    f"query.ilike.%{term}%",
+                    f"expected.ilike.%{term}%",
+                    f"related_procedures_text.ilike.%{term}%"
                 ])
             if conditions:
                 filter_string = ','.join(conditions)
@@ -140,8 +144,9 @@ class DIPRetriever(BaseService):
             conditions = []
             for term in query_terms[:3]:
                 conditions.extend([
-                    f"user_query.ilike.%{term}%",
-                    f"intent.ilike.%{term}%"
+                    f"question.ilike.%{term}%",
+                    f"answer.ilike.%{term}%",
+                    f"question_variations_text.ilike.%{term}%"
                 ])
             if conditions:
                 filter_string = ','.join(conditions)

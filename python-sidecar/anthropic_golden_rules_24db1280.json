@@ -1,0 +1,1729 @@
+{
+  "total_chunks_processed": 17,
+  "successful_chunks": 17,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 103,
+  "unique_golden_rules": 25,
+  "golden_rules": [
+    {
+      "query": "What is the minimum safe distance between AIS transceiver and compass?",
+      "expected_value": "0.55 meters or greater",
+      "test_method": "Measure physical distance between unit and compass",
+      "failure_indication": "Compass deviation greater than 0.3\u00b0",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Equipment Installation"
+      ]
+    },
+    {
+      "query": "What is the required minimum distance between antenna and people?",
+      "expected_value": "0.6 meters MPE radius",
+      "test_method": "Measure radius from antenna",
+      "failure_indication": "RF exposure safety violation",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "RF Safety Compliance"
+      ]
+    },
+    {
+      "query": "What is the required antenna mounting height above deck?",
+      "expected_value": "3.5 meters",
+      "test_method": "Measure vertical distance from deck to antenna",
+      "failure_indication": "Non-compliance with RF exposure requirements",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Antenna Installation"
+      ]
+    },
+    {
+      "query": "What is the required antenna impedance?",
+      "expected_value": "50 ohms",
+      "test_method": "Measure antenna impedance with analyzer",
+      "failure_indication": "Signal transmission/reception issues",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Antenna Specification Verification"
+      ]
+    },
+    {
+      "query": "Is VHF antenna connected before power-up?",
+      "expected_value": "Yes",
+      "test_method": "Visual inspection of antenna connection",
+      "failure_indication": "Risk of equipment malfunction",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Power-up Sequence"
+      ]
+    },
+    {
+      "query": "Is unit installed in flammable atmosphere?",
+      "expected_value": "No",
+      "test_method": "Verify installation location",
+      "failure_indication": "Safety hazard - improper installation location",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Installation Safety Check"
+      ]
+    },
+    {
+      "query": "Is the GPS antenna mounted with clear view of sky?",
+      "expected_value": "Unobstructed view of sky with minimum 3ft distance from other antennas",
+      "test_method": "Visual inspection of GPS antenna mounting location",
+      "failure_indication": "Poor GPS signal reception, reduced AIS functionality",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "GPS Antenna Installation"
+      ]
+    },
+    {
+      "query": "Is VHF antenna properly separated from GPS antenna?",
+      "expected_value": "Minimum 3 feet separation between VHF and GPS antennas",
+      "test_method": "Measure distance between antenna mounting positions",
+      "failure_indication": "Signal interference, degraded AIS performance",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Antenna Installation Guidelines"
+      ]
+    },
+    {
+      "query": "Is power supply voltage within specification?",
+      "expected_value": "12V or 24V DC power supply",
+      "test_method": "Measure voltage at power connection terminals",
+      "failure_indication": "Unit will not power on or operate correctly",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Power Supply Connection"
+      ]
+    },
+    {
+      "query": "Are NMEA 0183 connections properly wired?",
+      "expected_value": "Correct polarity and voltage levels on NMEA ports",
+      "test_method": "Verify wiring connections and test data communication",
+      "failure_indication": "No data exchange with navigation devices",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "NMEA 0183 Connection Setup"
+      ]
+    },
+    {
+      "query": "Does device meet FCC Class B digital device limits?",
+      "expected_value": "Within Class B limits for residential installations",
+      "test_method": "FCC compliance testing per Part 15",
+      "failure_indication": "Harmful interference to radio communications",
+      "models": [
+        "Class B digital devices"
+      ],
+      "related_procedures": [
+        "FCC Part 15 testing protocol"
+      ]
+    },
+    {
+      "query": "Is device causing harmful interference?",
+      "expected_value": "No harmful interference generated",
+      "test_method": "Monitor radio communications in vicinity",
+      "failure_indication": "Disruption to nearby radio communications",
+      "models": [
+        "All radio frequency devices"
+      ],
+      "related_procedures": [
+        "FCC interference monitoring"
+      ]
+    },
+    {
+      "query": "Does device accept interference from other sources?",
+      "expected_value": "Device continues operating with interference present",
+      "test_method": "Operate device in presence of known RF sources",
+      "failure_indication": "Device malfunction or shutdown",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Interference tolerance testing"
+      ]
+    },
+    {
+      "query": "Is MMSI number properly assigned?",
+      "expected_value": "MMSI matches official assignment to end user",
+      "test_method": "Verify MMSI against assignment documentation",
+      "failure_indication": "FCC rules violation",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "MMSI verification"
+      ]
+    },
+    {
+      "query": "Does device meet Industry Canada RSS standards?",
+      "expected_value": "Compliant with license-exempt RSS standards",
+      "test_method": "Industry Canada compliance testing",
+      "failure_indication": "Non-compliance with Canadian regulations",
+      "models": [
+        "Class B digital devices"
+      ],
+      "related_procedures": [
+        "IC RSS-Gen testing"
+      ]
+    },
+    {
+      "query": "Does device meet Canadian ICES-003 standard?",
+      "expected_value": "Compliant with ICES-003 requirements",
+      "test_method": "ICES-003 compliance testing",
+      "failure_indication": "Non-compliance with Canadian EMC standards",
+      "models": [
+        "Class B digital apparatus"
+      ],
+      "related_procedures": [
+        "ICES-003 verification"
+      ]
+    },
+    {
+      "query": "Is the VHF antenna splitter compatible?",
+      "expected_value": "Only NSPL-500 splitter must be used",
+      "test_method": "Verify splitter model number",
+      "failure_indication": "Risk of malfunction or permanent damage to NAIS-500",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Antenna installation"
+      ]
+    },
+    {
+      "query": "Is VHF antenna impedance correct?",
+      "expected_value": "50 ohms",
+      "test_method": "Check antenna specifications",
+      "failure_indication": "Signal transmission/reception issues",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Antenna installation"
+      ]
+    },
+    {
+      "query": "Are power cables rated appropriately?",
+      "expected_value": "Capable of 2A peak and 200mA average current",
+      "test_method": "Check cable specifications",
+      "failure_indication": "Power delivery issues, system malfunction",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Power installation"
+      ]
+    },
+    {
+      "query": "Is chartplotter NMEA 0183 baud rate correct?",
+      "expected_value": "38400 baud",
+      "test_method": "Check chartplotter configuration",
+      "failure_indication": "AIS messages not displaying",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Chartplotter configuration"
+      ]
+    },
+    {
+      "query": "Is VHF antenna connector type correct?",
+      "expected_value": "SO 239 connector mating with PL 259",
+      "test_method": "Visual inspection of connector types",
+      "failure_indication": "Unable to connect antenna properly",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Antenna installation"
+      ]
+    },
+    {
+      "query": "Is VHF radio license present?",
+      "expected_value": "Valid VHF license listing AIS system, Call Sign, and MMSI",
+      "test_method": "Verify vessel documentation includes VHF license with AIS listing",
+      "failure_indication": "Illegal operation of AIS transceiver",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "License verification",
+        "AIS registration"
+      ]
+    },
+    {
+      "query": "Is MMSI number programmed?",
+      "expected_value": "Valid MMSI number entered in system",
+      "test_method": "Check MMSI number in AIS settings",
+      "failure_indication": "AIS transceiver will not operate without MMSI",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "MMSI registration",
+        "Initial configuration"
+      ]
+    },
+    {
+      "query": "Is static vessel data properly configured?",
+      "expected_value": "All required fields populated: vessel name, call sign, type, dimensions",
+      "test_method": "Review AIS static data settings",
+      "failure_indication": "Incomplete vessel identification in AIS broadcasts",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "Static data configuration"
+      ]
+    },
+    {
+      "query": "For US customers: Was AIS pre-configured by retailer?",
+      "expected_value": "AIS configured by competent installer, not end user",
+      "test_method": "Verify configuration documentation from retailer/installer",
+      "failure_indication": "Non-compliance with US regulations",
+      "models": [
+        "NAIS-500"
+      ],
+      "related_procedures": [
+        "US compliance verification"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum safe distance between AIS transceiver and compass?",
+            "expected_value": "0.55 meters or greater",
+            "test_method": "Measure physical distance between unit and compass",
+            "failure_indication": "Compass deviation greater than 0.3\u00b0",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Equipment Installation"
+            ]
+          },
+          {
+            "query": "What is the required minimum distance between antenna and people?",
+            "expected_value": "0.6 meters MPE radius",
+            "test_method": "Measure radius from antenna",
+            "failure_indication": "RF exposure safety violation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "RF Safety Compliance"
+            ]
+          },
+          {
+            "query": "What is the required antenna mounting height above deck?",
+            "expected_value": "3.5 meters",
+            "test_method": "Measure vertical distance from deck to antenna",
+            "failure_indication": "Non-compliance with RF exposure requirements",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna Installation"
+            ]
+          },
+          {
+            "query": "What is the required antenna impedance?",
+            "expected_value": "50 ohms",
+            "test_method": "Measure antenna impedance with analyzer",
+            "failure_indication": "Signal transmission/reception issues",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna Specification Verification"
+            ]
+          },
+          {
+            "query": "Is VHF antenna connected before power-up?",
+            "expected_value": "Yes",
+            "test_method": "Visual inspection of antenna connection",
+            "failure_indication": "Risk of equipment malfunction",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power-up Sequence"
+            ]
+          },
+          {
+            "query": "Is unit installed in flammable atmosphere?",
+            "expected_value": "No",
+            "test_method": "Verify installation location",
+            "failure_indication": "Safety hazard - improper installation location",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Installation Safety Check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the GPS antenna mounted with clear view of sky?",
+            "expected_value": "Unobstructed view of sky with minimum 3ft distance from other antennas",
+            "test_method": "Visual inspection of GPS antenna mounting location",
+            "failure_indication": "Poor GPS signal reception, reduced AIS functionality",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS Antenna Installation"
+            ]
+          },
+          {
+            "query": "Is VHF antenna properly separated from GPS antenna?",
+            "expected_value": "Minimum 3 feet separation between VHF and GPS antennas",
+            "test_method": "Measure distance between antenna mounting positions",
+            "failure_indication": "Signal interference, degraded AIS performance",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna Installation Guidelines"
+            ]
+          },
+          {
+            "query": "Is power supply voltage within specification?",
+            "expected_value": "12V or 24V DC power supply",
+            "test_method": "Measure voltage at power connection terminals",
+            "failure_indication": "Unit will not power on or operate correctly",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power Supply Connection"
+            ]
+          },
+          {
+            "query": "Are NMEA 0183 connections properly wired?",
+            "expected_value": "Correct polarity and voltage levels on NMEA ports",
+            "test_method": "Verify wiring connections and test data communication",
+            "failure_indication": "No data exchange with navigation devices",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA 0183 Connection Setup"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 3,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Does device meet FCC Class B digital device limits?",
+            "expected_value": "Within Class B limits for residential installations",
+            "test_method": "FCC compliance testing per Part 15",
+            "failure_indication": "Harmful interference to radio communications",
+            "models": [
+              "Class B digital devices"
+            ],
+            "related_procedures": [
+              "FCC Part 15 testing protocol"
+            ]
+          },
+          {
+            "query": "Is device causing harmful interference?",
+            "expected_value": "No harmful interference generated",
+            "test_method": "Monitor radio communications in vicinity",
+            "failure_indication": "Disruption to nearby radio communications",
+            "models": [
+              "All radio frequency devices"
+            ],
+            "related_procedures": [
+              "FCC interference monitoring"
+            ]
+          },
+          {
+            "query": "Does device accept interference from other sources?",
+            "expected_value": "Device continues operating with interference present",
+            "test_method": "Operate device in presence of known RF sources",
+            "failure_indication": "Device malfunction or shutdown",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Interference tolerance testing"
+            ]
+          },
+          {
+            "query": "Is MMSI number properly assigned?",
+            "expected_value": "MMSI matches official assignment to end user",
+            "test_method": "Verify MMSI against assignment documentation",
+            "failure_indication": "FCC rules violation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "MMSI verification"
+            ]
+          },
+          {
+            "query": "Does device meet Industry Canada RSS standards?",
+            "expected_value": "Compliant with license-exempt RSS standards",
+            "test_method": "Industry Canada compliance testing",
+            "failure_indication": "Non-compliance with Canadian regulations",
+            "models": [
+              "Class B digital devices"
+            ],
+            "related_procedures": [
+              "IC RSS-Gen testing"
+            ]
+          },
+          {
+            "query": "Does device meet Canadian ICES-003 standard?",
+            "expected_value": "Compliant with ICES-003 requirements",
+            "test_method": "ICES-003 compliance testing",
+            "failure_indication": "Non-compliance with Canadian EMC standards",
+            "models": [
+              "Class B digital apparatus"
+            ],
+            "related_procedures": [
+              "ICES-003 verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 6,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the VHF antenna splitter compatible?",
+            "expected_value": "Only NSPL-500 splitter must be used",
+            "test_method": "Verify splitter model number",
+            "failure_indication": "Risk of malfunction or permanent damage to NAIS-500",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna installation"
+            ]
+          },
+          {
+            "query": "Is VHF antenna impedance correct?",
+            "expected_value": "50 ohms",
+            "test_method": "Check antenna specifications",
+            "failure_indication": "Signal transmission/reception issues",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna installation"
+            ]
+          },
+          {
+            "query": "Are power cables rated appropriately?",
+            "expected_value": "Capable of 2A peak and 200mA average current",
+            "test_method": "Check cable specifications",
+            "failure_indication": "Power delivery issues, system malfunction",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power installation"
+            ]
+          },
+          {
+            "query": "Is chartplotter NMEA 0183 baud rate correct?",
+            "expected_value": "38400 baud",
+            "test_method": "Check chartplotter configuration",
+            "failure_indication": "AIS messages not displaying",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Chartplotter configuration"
+            ]
+          },
+          {
+            "query": "Is VHF antenna connector type correct?",
+            "expected_value": "SO 239 connector mating with PL 259",
+            "test_method": "Visual inspection of connector types",
+            "failure_indication": "Unable to connect antenna properly",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 4,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is VHF radio license present?",
+            "expected_value": "Valid VHF license listing AIS system, Call Sign, and MMSI",
+            "test_method": "Verify vessel documentation includes VHF license with AIS listing",
+            "failure_indication": "Illegal operation of AIS transceiver",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "License verification",
+              "AIS registration"
+            ]
+          },
+          {
+            "query": "Is MMSI number programmed?",
+            "expected_value": "Valid MMSI number entered in system",
+            "test_method": "Check MMSI number in AIS settings",
+            "failure_indication": "AIS transceiver will not operate without MMSI",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "MMSI registration",
+              "Initial configuration"
+            ]
+          },
+          {
+            "query": "Is static vessel data properly configured?",
+            "expected_value": "All required fields populated: vessel name, call sign, type, dimensions",
+            "test_method": "Review AIS static data settings",
+            "failure_indication": "Incomplete vessel identification in AIS broadcasts",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Static data configuration"
+            ]
+          },
+          {
+            "query": "For US customers: Was AIS pre-configured by retailer?",
+            "expected_value": "AIS configured by competent installer, not end user",
+            "test_method": "Verify configuration documentation from retailer/installer",
+            "failure_indication": "Non-compliance with US regulations",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "US compliance verification"
+            ]
+          },
+          {
+            "query": "Is dynamic vessel data updating?",
+            "expected_value": "Current location, SOG, and COG data transmitted",
+            "test_method": "Monitor AIS output for dynamic data updates",
+            "failure_indication": "GPS or calculation system malfunction",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Dynamic data verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 5,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the complete package contents present?",
+            "expected_value": "NAIS-500 unit, manual, screws (4), power/data cable, GPS antenna (optional), quick start guide, warranty info, T-connector (optional), USB cable, N2k cable (optional)",
+            "test_method": "Visual inspection of package contents against checklist",
+            "failure_indication": "Missing components may prevent proper installation/operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Unboxing verification",
+              "Installation preparation"
+            ]
+          },
+          {
+            "query": "Is the support CD content complete?",
+            "expected_value": "NAIS System Configurator software, USB drivers, alternative language manuals",
+            "test_method": "Check CD contents through file explorer",
+            "failure_indication": "Missing software tools may prevent device configuration",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Software installation",
+              "Device configuration"
+            ]
+          },
+          {
+            "query": "Is the GPS antenna properly positioned?",
+            "expected_value": "Clear view of sky with no obstructions",
+            "test_method": "Visual inspection of GPS antenna mounting location",
+            "failure_indication": "Poor GPS reception and position reporting",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS antenna installation",
+              "Signal verification"
+            ]
+          },
+          {
+            "query": "Are all electrical connections present and functional?",
+            "expected_value": "Power supply, 2x NMEA 0183 ports, USB port, external switch input, NMEA 2000 port, VHF antenna, GPS antenna",
+            "test_method": "Visual inspection and continuity testing of all connections",
+            "failure_indication": "Communication or power issues may occur",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Electrical installation",
+              "Connection verification"
+            ]
+          },
+          {
+            "query": "Is user authorization valid?",
+            "expected_value": "End user must not enter vessel data",
+            "test_method": "Verify user access levels and permissions",
+            "failure_indication": "Unauthorized configuration changes",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "User authorization",
+              "System configuration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 8,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the GPS antenna mounting surface properly prepared?",
+            "expected_value": "Surface is clean with no dirt, old paint or debris",
+            "test_method": "Visual inspection of mounting area before installation",
+            "failure_indication": "Poor antenna adhesion, potential water ingress",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS Antenna Installation"
+            ]
+          },
+          {
+            "query": "Is the GPS antenna gasket properly installed?",
+            "expected_value": "Cable threaded through center of gasket before mounting",
+            "test_method": "Visual verification during installation",
+            "failure_indication": "Risk of water ingress, improper sealing",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS Antenna Installation",
+              "Waterproofing Procedures"
+            ]
+          },
+          {
+            "query": "Is the VHF antenna connector type compatible?",
+            "expected_value": "PL259 connector on antenna matching SO239 on transceiver",
+            "test_method": "Visual inspection of connector types",
+            "failure_indication": "Unable to connect antenna, requires adapter",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "VHF Antenna Installation"
+            ]
+          },
+          {
+            "query": "Are the GPS antenna mounting holes properly placed?",
+            "expected_value": "2 mounting holes plus cable hole drilled according to marks",
+            "test_method": "Verify hole positions match mounting points",
+            "failure_indication": "Unstable mounting, improper installation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS Antenna Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 7,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "What is the minimum compass safe distance for the NAIS-500?",
+            "expected_value": "0.55m or greater for 0.3\u00b0 deviation",
+            "test_method": "Measure physical distance between unit and compass",
+            "failure_indication": "Compass deviation exceeds 0.3\u00b0 at distances less than 0.55m",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Unit placement",
+              "Installation safety checks"
+            ]
+          },
+          {
+            "query": "What is the acceptable operating temperature range?",
+            "expected_value": "Between -15\u00b0C and +55\u00b0C",
+            "test_method": "Measure ambient temperature at installation location",
+            "failure_indication": "Temperature outside specified range could cause malfunction",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Environmental verification",
+              "Installation site preparation"
+            ]
+          },
+          {
+            "query": "Is the unit waterproof?",
+            "expected_value": "Yes, IPx7 rated",
+            "test_method": "Verify rating mark on unit",
+            "failure_indication": "Water ingress could occur if rating not met",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Waterproofing verification",
+              "Installation environment check"
+            ]
+          },
+          {
+            "query": "What mounting orientations are acceptable?",
+            "expected_value": "Both vertical and horizontal mounting allowed",
+            "test_method": "Visual inspection of mounting orientation",
+            "failure_indication": "No specific failure mode for orientation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Physical installation",
+              "Mounting procedures"
+            ]
+          },
+          {
+            "query": "Is the GPS antenna properly positioned away from radar?",
+            "expected_value": "Not in direct path of radar transmitter",
+            "test_method": "Visual inspection of GPS antenna placement relative to radar",
+            "failure_indication": "GPS signal interference if in radar path",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS antenna installation",
+              "Interference prevention"
+            ]
+          },
+          {
+            "query": "Is the GPS antenna mounted in a stable location?",
+            "expected_value": "Not mounted on mast where vessel motion causes swinging",
+            "test_method": "Visual inspection of GPS antenna location",
+            "failure_indication": "Reduced GPS position accuracy",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS antenna installation",
+              "Position accuracy verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 9,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is power supply voltage within acceptable range?",
+            "expected_value": "12V to 24V DC",
+            "test_method": "Measure voltage between red (+) and black (-) wires with multimeter",
+            "failure_indication": "Device may not power on or could be damaged if voltage outside range",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power connection",
+              "Initial setup"
+            ]
+          },
+          {
+            "query": "Is NMEA 0183 Port 1 operating at correct baud rate?",
+            "expected_value": "38,400 baud",
+            "test_method": "Verify communication settings on connected devices and test data transmission",
+            "failure_indication": "Data communication errors or no data transfer on Port 1",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA setup",
+              "Chartplotter connection"
+            ]
+          },
+          {
+            "query": "Is NMEA 0183 Port 2 operating at correct baud rate?",
+            "expected_value": "4,800 baud",
+            "test_method": "Verify communication settings on connected devices and test data transmission",
+            "failure_indication": "Data communication errors or no data transfer on Port 2",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA setup",
+              "Device integration"
+            ]
+          },
+          {
+            "query": "Are the NMEA TX+/TX- pairs correctly connected?",
+            "expected_value": "Brown/Blue for Port 1, Purple/Pink for Port 2",
+            "test_method": "Visual inspection of wire connections and continuity test",
+            "failure_indication": "No data transmission from device",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Cable installation",
+              "NMEA wiring"
+            ]
+          },
+          {
+            "query": "Are the NMEA RX+/RX- pairs correctly connected?",
+            "expected_value": "White/Green for Port 1, Grey/Yellow for Port 2",
+            "test_method": "Visual inspection of wire connections and continuity test",
+            "failure_indication": "No data reception at device",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Cable installation",
+              "NMEA wiring"
+            ]
+          },
+          {
+            "query": "Is external switch connection properly wired?",
+            "expected_value": "Light green to Switch input-, Orange to Switch input+",
+            "test_method": "Verify connections and test switch functionality for silent mode",
+            "failure_indication": "Silent mode control not working",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Switch installation",
+              "Silent mode setup"
+            ]
+          },
+          {
+            "query": "Is the pre-moulded connector properly seated?",
+            "expected_value": "Fully inserted and secured in PWR/0183 port",
+            "test_method": "Visual and physical inspection of connector",
+            "failure_indication": "Loose connection or intermittent operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Cable installation",
+              "Physical connections"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 10,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the silent mode switch properly connected?",
+            "expected_value": "Toggle switch connected between light green and orange wires with no voltage source",
+            "test_method": "Visual inspection of wire connections",
+            "failure_indication": "Damage to transceiver or non-functional silent mode",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Silent Mode Installation"
+            ]
+          },
+          {
+            "query": "Is NMEA0183 Port 1 operating at correct baud rate?",
+            "expected_value": "38,400 baud",
+            "test_method": "Check port settings in connected equipment",
+            "failure_indication": "Communication failure between AIS and chartplotter",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA0183 Configuration"
+            ]
+          },
+          {
+            "query": "Is NMEA0183 Port 2 operating at correct baud rate?",
+            "expected_value": "4,800 baud",
+            "test_method": "Check port settings in connected equipment",
+            "failure_indication": "Communication failure with NMEA devices",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA0183 Configuration"
+            ]
+          },
+          {
+            "query": "Are power connections correct?",
+            "expected_value": "Red wire to power positive, black wire to power negative",
+            "test_method": "Visual inspection of power connections",
+            "failure_indication": "Device damage or failure to power on",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power Installation"
+            ]
+          },
+          {
+            "query": "Is NMEA0183 Port 1 wired correctly?",
+            "expected_value": "Brown (TX+), Blue (TX-), White (RX+), Green (RX-)",
+            "test_method": "Visual inspection of wire connections",
+            "failure_indication": "High-speed port communication failure",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA0183 Installation"
+            ]
+          },
+          {
+            "query": "Is NMEA0183 Port 2 wired correctly?",
+            "expected_value": "Purple (TX+), Pink (TX-), Grey (RX+), Yellow (RX-)",
+            "test_method": "Visual inspection of wire connections",
+            "failure_indication": "Low-speed port communication failure",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA0183 Installation"
+            ]
+          },
+          {
+            "query": "Is multiplexing function working?",
+            "expected_value": "Messages from low speed port automatically transmit via high speed port",
+            "test_method": "Send test message through low speed port and verify receipt at high speed port",
+            "failure_indication": "Data not being forwarded between ports",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Multiplexing Verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 11,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the USB driver installed before connecting AIS to PC?",
+            "expected_value": "USB drivers must be installed before first connection",
+            "test_method": "Check if NAIS System Configurator is installed on PC",
+            "failure_indication": "AIS device will not be recognized by PC",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "USB Connection Setup"
+            ]
+          },
+          {
+            "query": "Is the correct baud rate set for Port 1?",
+            "expected_value": "38,400 baud",
+            "test_method": "Check port settings in navigation software",
+            "failure_indication": "Chart plotter will not receive AIS data properly",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA0183 Configuration"
+            ]
+          },
+          {
+            "query": "Is the correct baud rate set for Port 2?",
+            "expected_value": "4,800 baud",
+            "test_method": "Check port settings on connected NMEA0183 device",
+            "failure_indication": "Secondary NMEA device will not receive data properly",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA0183 Configuration"
+            ]
+          },
+          {
+            "query": "Is power supply within specification?",
+            "expected_value": "12V or 24V DC",
+            "test_method": "Measure voltage at power input terminals",
+            "failure_indication": "Device may not power on or operate properly",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power Supply Connection"
+            ]
+          },
+          {
+            "query": "Is proper circuit protection installed?",
+            "expected_value": "3A fuse or circuit breaker installed",
+            "test_method": "Visual inspection of power connection",
+            "failure_indication": "No protection against electrical faults",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power Supply Installation"
+            ]
+          },
+          {
+            "query": "Is AIS properly configured before use?",
+            "expected_value": "AIS configured and enabled for transmission",
+            "test_method": "Check if unit is transmitting AIS messages",
+            "failure_indication": "Unit will only receive but not transmit AIS messages",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Initial Configuration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 12,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is power supply wiring correct?",
+            "expected_value": "Red wire to power+, Black wire to power-",
+            "test_method": "Visual inspection of wire connections",
+            "failure_indication": "Unit will not power up or operate erratically",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power Installation"
+            ]
+          },
+          {
+            "query": "Is PWR LED indicator functioning?",
+            "expected_value": "Solid green light when powered",
+            "test_method": "Visual inspection after power-up",
+            "failure_indication": "Unit not receiving power or internal fault",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Initial Power Up",
+              "LED Diagnostics"
+            ]
+          },
+          {
+            "query": "Is ERR LED indicator status normal?",
+            "expected_value": "No red light illumination",
+            "test_method": "Visual inspection of LED",
+            "failure_indication": "Unit error or invalid MMSI",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Error Diagnostics",
+              "MMSI Configuration"
+            ]
+          },
+          {
+            "query": "Is Rx LED indicating reception?",
+            "expected_value": "Green LED flashes when receiving AIS data",
+            "test_method": "Visual inspection during operation",
+            "failure_indication": "Not receiving AIS signals",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Reception Testing"
+            ]
+          },
+          {
+            "query": "Is Tx LED status correct?",
+            "expected_value": "Orange light when in silent mode",
+            "test_method": "Visual inspection of LED",
+            "failure_indication": "Transmission system fault or unconfigured",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Transmission Testing",
+              "Silent Mode Operation"
+            ]
+          },
+          {
+            "query": "Is initial GPS acquisition completed?",
+            "expected_value": "First transmission within minutes of power-up",
+            "test_method": "Monitor Tx LED status after power-up",
+            "failure_indication": "GPS not acquiring fix",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS Testing",
+              "Initial Setup"
+            ]
+          },
+          {
+            "query": "Are NMEA0183 connections correct?",
+            "expected_value": "Port 1: Brown/Blue for Tx, White/Green for Rx; Port 2: Purple/Pink for Tx, Grey/Yellow for Rx",
+            "test_method": "Visual inspection of wire connections",
+            "failure_indication": "Data communication failure",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA Installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 13,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is USB power sufficient for full operation?",
+            "expected_value": "No - USB power only allows configuration, not transmission or GPS",
+            "test_method": "Attempt to transmit while on USB power",
+            "failure_indication": "Device attempts to transmit when it should not",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power configuration",
+              "USB connection"
+            ]
+          },
+          {
+            "query": "Can MMSI be programmed multiple times?",
+            "expected_value": "No - MMSI can only be programmed once",
+            "test_method": "Attempt to reprogram MMSI",
+            "failure_indication": "System allows MMSI reprogramming",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Initial configuration",
+              "MMSI programming"
+            ]
+          },
+          {
+            "query": "Is vessel data visible to others after initial configuration?",
+            "expected_value": "Yes - within 6 minutes maximum",
+            "test_method": "Check visibility on other AIS devices after configuration",
+            "failure_indication": "Data not visible after 6 minutes",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "AIS transmission verification"
+            ]
+          },
+          {
+            "query": "Does silent mode stop transmission while maintaining reception?",
+            "expected_value": "Yes - own position transmission stops but still receives others",
+            "test_method": "Activate silent mode and verify transmission stops",
+            "failure_indication": "Device continues transmitting in silent mode",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Silent mode operation"
+            ]
+          },
+          {
+            "query": "Is orange Tx indicator lit in silent mode?",
+            "expected_value": "Yes - orange light indicates silent mode active",
+            "test_method": "Visual check of Tx indicator when silent mode enabled",
+            "failure_indication": "Orange light not illuminated in silent mode",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "LED indicator verification"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 14,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is power indicator showing correct status?",
+            "expected_value": "Green steady light",
+            "test_method": "Visual inspection of PWR indicator",
+            "failure_indication": "No power or incorrect power supply",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power up sequence",
+              "Power supply verification"
+            ]
+          },
+          {
+            "query": "Is MMSI programmed correctly?",
+            "expected_value": "ERR indicator should be off",
+            "test_method": "Check ERR indicator status",
+            "failure_indication": "Red steady light indicates MMSI not properly programmed",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "MMSI programming",
+              "Initial setup"
+            ]
+          },
+          {
+            "query": "Is system functioning without errors?",
+            "expected_value": "ERR indicator should be off",
+            "test_method": "Monitor ERR indicator for flashing",
+            "failure_indication": "Red flashing light indicates system error or USB-only connection",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "System diagnostics",
+              "Error troubleshooting"
+            ]
+          },
+          {
+            "query": "Is unit receiving AIS data?",
+            "expected_value": "Rx indicator flashing green",
+            "test_method": "Monitor Rx indicator",
+            "failure_indication": "No green flashing indicates no AIS data reception",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "AIS reception verification"
+            ]
+          },
+          {
+            "query": "Is GPS fix acquired?",
+            "expected_value": "Tx indicator should not be flashing orange",
+            "test_method": "Check Tx indicator status",
+            "failure_indication": "Orange flashing indicates acquiring GPS fix or lost GPS position",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS functionality check",
+              "Position acquisition verification"
+            ]
+          },
+          {
+            "query": "Is unit in silent mode?",
+            "expected_value": "Tx indicator should not be steady orange",
+            "test_method": "Check Tx indicator status",
+            "failure_indication": "Steady orange indicates silent mode - no AIS transmission",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Transmission mode verification"
+            ]
+          },
+          {
+            "query": "Is unit transmitting AIS data at correct intervals for speed under 2 knots?",
+            "expected_value": "Tx indicator flashing green every 3 minutes",
+            "test_method": "Time Tx indicator flash interval",
+            "failure_indication": "Incorrect flash interval for vessel speed",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Transmission interval verification",
+              "Speed-dependent operation check"
+            ]
+          },
+          {
+            "query": "Is unit transmitting AIS data at correct intervals for speed above 2 knots?",
+            "expected_value": "Tx indicator flashing green every 30 seconds",
+            "test_method": "Time Tx indicator flash interval",
+            "failure_indication": "Incorrect flash interval for vessel speed",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Transmission interval verification",
+              "Speed-dependent operation check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 15,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is chartplotter receiving AIS data?",
+            "expected_value": "Chartplotter displays AIS data",
+            "test_method": "Check chartplotter display for AIS targets",
+            "failure_indication": "Power or connection issues",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power supply verification",
+              "Cable connection check"
+            ]
+          },
+          {
+            "query": "Are unit indicators illuminated?",
+            "expected_value": "Status indicators should be lit when powered",
+            "test_method": "Visual inspection of unit indicators",
+            "failure_indication": "Power supply issues",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power connection verification"
+            ]
+          },
+          {
+            "query": "Is power supply voltage correct?",
+            "expected_value": "Between 9.6V and 31.2V",
+            "test_method": "Measure power supply voltage with multimeter",
+            "failure_indication": "Power supply outside allowable range",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power system check"
+            ]
+          },
+          {
+            "query": "Is red error indicator off?",
+            "expected_value": "No red error indication",
+            "test_method": "Visual inspection of error indicator",
+            "failure_indication": "MMSI, VHF antenna, GPS, or power supply issues",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "MMSI verification",
+              "Antenna check",
+              "GPS status check"
+            ]
+          },
+          {
+            "query": "Is valid MMSI configured?",
+            "expected_value": "Valid MMSI number programmed",
+            "test_method": "Check MMSI configuration in system settings",
+            "failure_indication": "Missing or invalid MMSI",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "MMSI configuration"
+            ]
+          },
+          {
+            "query": "Is VHF antenna functioning?",
+            "expected_value": "Undamaged antenna with proper connection",
+            "test_method": "Visual inspection and connection check of VHF antenna",
+            "failure_indication": "Faulty antenna or connection",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Antenna installation verification"
+            ]
+          },
+          {
+            "query": "Is GPS position fix obtained?",
+            "expected_value": "Valid GPS fix shown in system configurator",
+            "test_method": "Check GPS signal strength graph in NAIS System Configurator",
+            "failure_indication": "No GPS position fix",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "GPS antenna installation check"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 16,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is power supply voltage within acceptable range?",
+            "expected_value": "Between 9.6V and 31.2V DC",
+            "test_method": "Measure DC voltage at power input connection",
+            "failure_indication": "Device may not power on or operate erratically if outside range",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power System Installation",
+              "Voltage Testing"
+            ]
+          },
+          {
+            "query": "Is power consumption at normal levels?",
+            "expected_value": "180mA average at 12VDC",
+            "test_method": "Measure current draw during normal operation",
+            "failure_indication": "Excessive power consumption may indicate component failure",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power System Diagnostics"
+            ]
+          },
+          {
+            "query": "Is peak current within specification?",
+            "expected_value": "2A maximum at 12VDC",
+            "test_method": "Measure peak current during transmission",
+            "failure_indication": "Exceeding peak current may indicate malfunction or short circuit",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Current Testing",
+              "Transmission Testing"
+            ]
+          },
+          {
+            "query": "Is NMEA 0183 primary baud rate correct?",
+            "expected_value": "38,400 baud",
+            "test_method": "Check interface settings and verify communication",
+            "failure_indication": "Communication errors or no data transfer",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA Configuration",
+              "Interface Testing"
+            ]
+          },
+          {
+            "query": "Is NMEA 0183 secondary baud rate correct?",
+            "expected_value": "4,800 baud",
+            "test_method": "Check interface settings and verify communication",
+            "failure_indication": "Communication errors or no data transfer",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "NMEA Configuration",
+              "Interface Testing"
+            ]
+          },
+          {
+            "query": "Is VHF transmission power correct?",
+            "expected_value": "33 dBm \u00b1 1.5 dB",
+            "test_method": "Measure RF output power during transmission",
+            "failure_indication": "Poor AIS transmission range or reception by other vessels",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "RF Power Testing",
+              "Transmission Verification"
+            ]
+          },
+          {
+            "query": "Is VHF frequency range correct?",
+            "expected_value": "156.025 to 162.025 MHz in 25 kHz steps",
+            "test_method": "Verify frequency settings and channel spacing",
+            "failure_indication": "Unable to transmit/receive on correct AIS frequencies",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Frequency Testing",
+              "Channel Configuration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 17,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is VHF frequency within operational range?",
+            "expected_value": "156.025 to 162.025 MHz in 25 kHz steps",
+            "test_method": "Measure output frequency with spectrum analyzer",
+            "failure_indication": "Out of band transmission, potential illegal operation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Frequency calibration",
+              "Channel setup"
+            ]
+          },
+          {
+            "query": "Is transmitter power output within specification?",
+            "expected_value": "33 dBm \u00b1 1.5 dB",
+            "test_method": "Measure RF power output under load",
+            "failure_indication": "Transmission range issues, compliance violation",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Power calibration",
+              "Antenna setup"
+            ]
+          },
+          {
+            "query": "Is GMSK bit rate within tolerance?",
+            "expected_value": "9600 b/s \u00b1 50 ppm",
+            "test_method": "Measure digital signal timing",
+            "failure_indication": "Communication errors, data corruption",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Digital modulation test"
+            ]
+          },
+          {
+            "query": "Is FSK bit rate within tolerance?",
+            "expected_value": "1200 b/s \u00b1 30 ppm",
+            "test_method": "Measure FSK timing characteristics",
+            "failure_indication": "DSC reception issues",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "FSK demodulation test"
+            ]
+          },
+          {
+            "query": "Is receiver sensitivity adequate?",
+            "expected_value": "Less than -107 dBm at 20% PER",
+            "test_method": "Measure packet error rate at specified signal level",
+            "failure_indication": "Poor reception range",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Sensitivity testing"
+            ]
+          },
+          {
+            "query": "Is operating temperature within range?",
+            "expected_value": "-15\u00baC to +55\u00baC",
+            "test_method": "Monitor temperature during operation",
+            "failure_indication": "Risk of damage or malfunction",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Environmental testing"
+            ]
+          },
+          {
+            "query": "Does unit meet water resistance rating?",
+            "expected_value": "IP67 compliant",
+            "test_method": "Conduct water ingress testing",
+            "failure_indication": "Risk of water damage",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Waterproof testing"
+            ]
+          },
+          {
+            "query": "Are all status indicators functional?",
+            "expected_value": "Power, Error, Rx, Tx indicators operational",
+            "test_method": "Visual inspection during power-up sequence",
+            "failure_indication": "Status monitoring impaired",
+            "models": [
+              "NAIS-500"
+            ],
+            "related_procedures": [
+              "Indicator lamp test"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

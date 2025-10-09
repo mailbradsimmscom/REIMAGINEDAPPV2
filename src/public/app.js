@@ -5,9 +5,30 @@ const newChatBtn = document.getElementById('newChatBtn');
 const chatList = document.getElementById('chatList');
 const currentChatName = document.getElementById('currentChatName');
 const currentChatDescription = document.getElementById('currentChatDescription');
+const modelSelect = document.getElementById('modelSelect');
 
 let currentThreadId = null;
 let currentMessageSequence = 0;
+
+// Model selection handling
+const MODEL_STORAGE_KEY = 'selectedSynthesisModel';
+
+function initializeModelSelector() {
+  // Load saved model preference (default to gpt-5)
+  const savedModel = localStorage.getItem(MODEL_STORAGE_KEY) || 'gpt-5';
+  modelSelect.value = savedModel;
+
+  // Save model selection when changed
+  modelSelect.addEventListener('change', (e) => {
+    const selectedModel = e.target.value;
+    localStorage.setItem(MODEL_STORAGE_KEY, selectedModel);
+    console.log('🔵 Synthesis model changed to:', selectedModel);
+  });
+}
+
+function getSelectedModel() {
+  return localStorage.getItem(MODEL_STORAGE_KEY) || 'gpt-5';
+}
 
 // Debug: expose to window for console access
 window.debugThreadId = () => currentThreadId;
@@ -44,6 +65,9 @@ function updateURL(threadId) {
 
 async function initializeChat() {
   try {
+    // Initialize model selector
+    initializeModelSelector();
+
     const urlThreadId = getThreadIdFromURL();
 
     // Always load the chat sessions list for the sidebar
@@ -694,12 +718,16 @@ async function processMessage(message) {
 
     addLoadingAnimation();
 
+    const selectedModel = getSelectedModel();
+    console.log('🔵 Sending message with model:', selectedModel);
+
     const response = await fetch('/chat/process', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query: message,
-        thread_id: currentThreadId
+        thread_id: currentThreadId,
+        synthesis_model: selectedModel
       })
     });
 

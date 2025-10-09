@@ -35,12 +35,10 @@ echo "================================"
 # Start Python with venv (background)
 echo -e "${GREEN}1. Starting Python sidecar (port 8000)...${NC}"
 cd /Users/brad/code/REIMAGINEDAPPV2/python-sidecar
-source venv/bin/activate
-python3 -m app.main > ../logs/python.log 2>&1 &
+venv/bin/python3 -m app.main > ../logs/python.log 2>&1 &
 PYTHON_PID=$!
-deactivate
 cd ..
-sleep 3
+sleep 4
 
 # Check if Python started successfully
 if lsof -i :8000 >/dev/null 2>&1; then
@@ -52,7 +50,7 @@ fi
 
 # Start Node main service (background)
 echo -e "${GREEN}2. Starting Node main service (port 3000)...${NC}"
-npm run dev > logs/node-main.log 2>&1 &
+npm run dev > logs/api/node-api.log 2>&1 &
 NODE_MAIN_PID=$!
 sleep 3
 
@@ -73,7 +71,7 @@ echo "  • Node main:      http://localhost:3000 (PID: $NODE_MAIN_PID)"
 echo ""
 echo "Logs available at:"
 echo "  • logs/python.log"
-echo "  • logs/node-main.log"
+echo "  • logs/api/node-api.log"
 echo ""
-echo -e "${YELLOW}To monitor: tail -f logs/*.log${NC}"
+echo -e "${YELLOW}To monitor: tail -f logs/python.log logs/api/node-api.log${NC}"
 echo -e "${YELLOW}To stop all: ./restart-all.sh (will kill before restart)${NC}"

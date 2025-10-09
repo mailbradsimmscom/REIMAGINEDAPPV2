@@ -864,7 +864,8 @@ if chat_enabled:
                     systems_context=request.systems_context or [],
                     thread_id=request.thread_id,
                     conversation_summary=request.conversation_summary,
-                    memory_context=request.memory_context
+                    memory_context=request.memory_context,
+                    synthesis_model=request.synthesis_model
                 )
                 workflow_duration = (datetime.now() - workflow_start).total_seconds() * 1000
 

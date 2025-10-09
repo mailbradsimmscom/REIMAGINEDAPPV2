@@ -677,7 +677,7 @@ The Grid refactor was reverted and the composer remained as a fixed footer eleme
 **Final Fix:**
 ```css
 .chat {
-    height: calc(100% - 215px);
+    height: calc(100% - 290px);
 }
 
 .messages {
@@ -696,14 +696,14 @@ The Grid refactor was reverted and the composer remained as a fixed footer eleme
 
 **Why This Works:**
 
-1. **Explicit viewport space reservation:** `.chat` with `height: calc(100% - 215px)` is actually **shorter** - it stops 215px from the bottom of the viewport
+1. **Explicit viewport space reservation:** `.chat` with `height: calc(100% - 290px)` is actually **shorter** - it stops 290px from the bottom of the viewport
 2. **Proper flex expansion:** `.messages` with `flex: 1` expands to fill the available space inside that shorter `.chat` container
-3. **No overlap:** The fixed `.composer` sits in the real 215px gap at the bottom - not overlapping the messages area
+3. **No overlap:** The fixed `.composer` sits in the real 290px gap at the bottom - not overlapping the messages area
 4. **Clean scroll behavior:** Messages scroll naturally within their properly-sized container
 
 **The Key Difference:**
 - **Before:** `.chat` was 100% height with padding → still went to bottom → composer overlapped
-- **After:** `.chat` is 85% height (100% - 215px) → actually shorter → composer sits in empty space
+- **After:** `.chat` is shorter (100% - 290px) → actually shorter → composer sits in empty space
 
 ### Height Calculation Details
 
@@ -715,19 +715,20 @@ The Grid refactor was reverted and the composer remained as a fixed footer eleme
 - Box shadow: ~10px visual space
 - **Total measured:** ~105-110px
 
-**Why we used 215px:**
+**Why we used 290px:**
 - Started with 115px - too small, still overlapping
-- Incremented: 135px → 150px → 200px → 215px
-- Final value of 215px includes:
+- Incremented: 135px → 150px → 200px → 215px → 230px → 250px → 280px → 290px
+- Final value of 290px includes:
   - Actual composer height (~110px)
-  - Extra breathing room (~105px) for visual comfort
-  - Accounts for box shadows and any browser rendering differences
+  - Extra breathing room (~180px) for visual comfort and clean layout
+  - Accounts for box shadows, browser rendering differences, and viewport variations
+  - Provides comfortable whitespace between messages and input area
 
 ### Files Changed
 
 **Modified:**
-- `src/public/chat-styles.css` (line 217)
-  - Changed `.chat` from `height: 100%` to `height: calc(100% - 215px)`
+- `src/public/chat-styles.css` (line 258)
+  - Changed `.chat` from `height: 100%` to `height: calc(100% - 290px)`
 
 ### Lessons Learned
 
@@ -759,7 +760,7 @@ The Grid refactor was reverted and the composer remained as a fixed footer eleme
 ├── .header (full width)
 └── .layout (grid: 280px 1fr)
     ├── .sidebar (full height, left column)
-    └── .chat (height: calc(100% - 215px), right column)
+    └── .chat (height: calc(100% - 290px), right column)
         ├── .chat-header (flex-shrink: 0)
         └── .messages (flex: 1, scrollable)
 
@@ -767,8 +768,255 @@ The Grid refactor was reverted and the composer remained as a fixed footer eleme
 ```
 
 **Key CSS Properties:**
-- `.chat`: `height: calc(100% - 215px)` - reserves space for fixed composer
+- `.chat`: `height: calc(100% - 290px)` - reserves space for fixed composer
 - `.messages`: `flex: 1` - fills available space in shortened chat container
 - `.composer`: `position: fixed; bottom: 0; left: 280px` - sits in reserved space
 
 **Result:** Clean, predictable layout with no content cutoff and proper scroll behavior.
+
+---
+
+## Follow-Up Session: Final Fix - Composer Inside Grid Flow
+
+**Date:** 2025-10-08
+**Problem:** Despite previous fixes, composer still disappearing/requiring scroll to see. The `calc(100% - 290px)` was still a magic number hack.
+
+### Root Cause Analysis
+
+The fundamental issue was never resolved: `.composer` was still `position: fixed`, which means:
+1. It exists outside the document flow
+2. It required magic number calculations (`calc(100% - 290px)`)
+3. Overflow clipping caused visibility issues
+4. Not architecturally sound
+
+### The Correct Solution
+
+**Move `.composer` into the `.chat` container as a grid child.**
+
+#### HTML Change
+```html
+<!-- BEFORE: Composer as global footer -->
+<section class="chat">
+  <div class="chat-header">...</div>
+  <div class="messages">...</div>
+  <div class="stats-panel">...</div>
+</section>
+<footer class="composer">...</footer>
+
+<!-- AFTER: Composer inside .chat -->
+<section class="chat">
+  <div class="messages">...</div>
+  <div class="stats-panel">...</div>
+  <footer class="composer">...</footer>
+</section>
+```
+
+#### CSS Changes
+
+**Before:**
+```css
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 290px); /* Magic number */
+}
+
+.composer {
+    position: fixed;
+    bottom: 0;
+    left: 280px;
+    right: 0;
+    z-index: 100;
+}
+```
+
+**After:**
+```css
+.chat {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    height: 100%;
+    overflow: hidden;
+}
+
+.messages {
+    grid-row: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.composer {
+    grid-row: 2;
+    /* No positioning needed */
+}
+
+.stats-panel {
+    grid-row: 1 / -1; /* Overlay all rows */
+    position: absolute;
+}
+```
+
+### Additional Changes Made
+
+#### 1. Removed Redundant `.chat-header`
+**Reason:** The chat name already shows in the sidebar (highlighted). Having "New Thread" + description in the chat area was redundant and took up valuable vertical space.
+
+```css
+.chat-header {
+    display: none;
+}
+```
+
+**Grid updated from:**
+- `grid-template-rows: auto 1fr auto` (header | messages | composer)
+
+**To:**
+- `grid-template-rows: 1fr auto` (messages | composer)
+
+#### 2. Moved Stats Button to Main Header
+**Before:** Stats button (📊) was in `.chat-header` which we removed.
+
+**After:** Moved to `.header` (top of page) next to "Enterprise Chat System"
+
+```html
+<header class="header">
+  <div class="header-content">...</div>
+  <button id="toggleStatsBtn" class="toggle-stats-btn">📊</button>
+</header>
+```
+
+#### 3. Fixed Sidebar Overflow
+**Issue:** Sidebar header (New Chat button, model selector) was disappearing on page load.
+
+**Fix:** Added `overflow: hidden` to `.sidebar` and `min-height: 0` to `.chat-list`
+
+```css
+.sidebar {
+    overflow: hidden;
+    height: 100%;
+}
+
+.chat-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+```
+
+### Key Grid Concepts Applied
+
+**Problem:** Grid items expanding beyond available space ("grid blowout")
+
+**Solution:**
+1. `min-height: 0` on scrollable children forces them to respect grid row size
+2. `overflow: hidden` on parent containers prevents children from expanding beyond boundaries
+3. Explicit `grid-row` assignments prevent ambiguity when position:absolute elements exist
+
+### Files Changed
+
+**Modified:**
+- `src/public/index.html`
+  - Moved `<footer class="composer">` inside `<section class="chat">`
+  - Added stats button to main header
+- `src/public/chat-styles.css`
+  - Changed `.chat` from flex → grid (2 rows)
+  - Removed `position: fixed` from `.composer`
+  - Hidden `.chat-header` with `display: none`
+  - Added `grid-row` assignments to all children
+  - Fixed sidebar overflow issues
+  - Moved stats button styles (removed absolute positioning)
+
+### Verification
+
+✅ **Composer visible on page load** - No scrolling required
+✅ **Messages scroll independently** - Proper overflow handling
+✅ **Sidebar header stays visible** - New Chat and model selector always accessible
+✅ **Stats panel still works** - Slides in from right as overlay
+✅ **No magic numbers** - Pure CSS Grid, browser calculates heights
+✅ **Architecturally sound** - Composer is part of document flow
+
+### Final Architecture
+
+```
+.app (grid: auto 1fr)
+├── .header (full width)
+│   └── Stats button (📊)
+└── .layout (grid: 280px 1fr, overflow: hidden)
+    ├── .sidebar (flex column, overflow: hidden)
+    │   ├── .sidebar-header (flex-shrink: 0)
+    │   │   ├── Model selector
+    │   │   └── New Chat button
+    │   └── .chat-list (flex: 1, min-height: 0, overflow-y: auto)
+    └── .chat (grid: 1fr auto, overflow: hidden)
+        ├── .messages (grid-row: 1, overflow-y: auto)
+        ├── .composer (grid-row: 2)
+        └── .stats-panel (grid-row: 1/-1, position: absolute)
+```
+
+### Key CSS Properties (Final)
+
+```css
+/* Layout containment */
+.layout { overflow: hidden; }
+.chat { overflow: hidden; }
+.sidebar { overflow: hidden; }
+
+/* Grid structure */
+.chat {
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+/* Prevent grid blowout */
+.messages {
+    grid-row: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.chat-list {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Composer in flow */
+.composer {
+    grid-row: 2;
+    /* No position: fixed */
+}
+
+/* Stats overlay */
+.stats-panel {
+    grid-row: 1 / -1;
+    position: absolute;
+}
+```
+
+### Lessons Learned (Part 2)
+
+1. **Don't give up on proper architecture:** We tried `calc(100% - 290px)` as a workaround, but the right answer was always "move composer into the grid flow"
+
+2. **HTML structure matters for CSS Grid:** Grid only works on direct children. The composer had to be moved into `.chat` in the HTML, not just styled differently in CSS.
+
+3. **Remove redundancy to gain space:** The `.chat-header` was taking ~100px of vertical space and showing duplicate information. Removing it solved both the layout problem and improved UX.
+
+4. **min-height: 0 is critical for grid scrolling:** Without it, grid items expand to their content size, breaking the layout. This applies to both `.messages` and `.chat-list`.
+
+5. **overflow: hidden cascades through layout:** Every level of containment (`.layout`, `.chat`, `.sidebar`) needs `overflow: hidden` to prevent nested children from expanding beyond boundaries.
+
+### Summary
+
+**Problem:** Composer hiding under messages, requiring scroll to access, using magic number hacks.
+
+**Root Cause:** Composer was `position: fixed` outside the document flow.
+
+**Solution:** Moved composer into `.chat` as a grid child (row 2), removed redundant header, fixed overflow containment.
+
+**Result:**
+- ✅ Composer always visible at bottom
+- ✅ No magic numbers
+- ✅ Proper grid architecture
+- ✅ More vertical space for messages
+- ✅ Maintainable and scalable
+
+**Key Insight:** Sometimes the right fix requires changing both HTML structure and CSS, not just CSS alone. The proper grid solution was only possible after moving the composer element in the DOM tree.
