@@ -1,10 +1,85 @@
 # Claude Code Quick Reference
 
-**Project:** REIMAGINEDAPPV2 - Marine Equipment Technical Documentation System
+**Project:** REIMAGINEDAPPV2 - AI-Powered Boat/OS for Catamarans
 **Last Updated:** 2025-10-09
 **Compliance Status:** ✅ A Grade (Excellent)
 
 ---
+
+## Context: What We're Building
+
+We are building an **AI-powered boat operating system for catamarans** in the marine environment.
+
+**The Challenge:**
+- **Marine environment is highly complex** - not like typical software domains
+- **200+ different systems** on a catamaran that appear disconnected but are deeply interconnected
+- Small changes can have cascading effects across multiple systems
+- Equipment from different manufacturers must work together seamlessly
+- Technical documentation is dense, inconsistent, and system-specific
+
+**What This System Does:**
+- Ingests technical manuals (PDFs) for marine equipment
+- Chunks and vectorizes documentation for semantic search
+- Provides AI-powered chat interface for boat owners and technicians
+- Extracts equipment specifications, maintenance schedules, and troubleshooting guides
+- Understands relationships between systems (e.g., power → pumps → plumbing → safety)
+
+**Why This Matters:**
+- A water pump failure might indicate electrical issues, affect refrigeration, impact safety systems
+- Understanding system interconnections is critical for accurate assistance
+- Incorrect advice in a marine environment can be dangerous or expensive
+
+---
+
+## 🚨 CRITICAL RULES (Read First, Every Session)
+
+### Rule #1: No Code Changes Without Approval
+**NEVER write, edit, or modify code without explicit user approval.**
+
+This means:
+- ✅ Analyze code, explain patterns, search files, answer questions
+- ✅ Propose changes, create plans, discuss approaches
+- ❌ Write/Edit/Bash commands that modify files (without asking first)
+- ❌ "Quick fixes" or "while I'm here" changes
+
+**Why:** Small changes in interconnected systems can have unexpected ripple effects.
+
+---
+
+### Rule #2: Very Detailed Planning to Avoid Regression
+
+**Before ANY code change:**
+
+1. **Understand the full context** - Look up AND down the chain:
+   - What calls this function? (consumers)
+   - What does this function call? (dependencies)
+   - What other systems depend on this data structure?
+   - Are there implicit contracts being relied upon?
+
+2. **Plan thoroughly:**
+   - Identify all files that will be touched
+   - List potential side effects
+   - Consider edge cases in marine context
+   - Check for similar patterns elsewhere that might need same fix
+
+3. **Discuss the plan with the user BEFORE coding**
+   - Explain what will change and why
+   - Highlight potential risks
+   - Get explicit approval
+
+**Why:** In a system with 200+ interconnected components, "obvious" changes often break unexpected things. Better to spend 10 minutes planning than 2 hours debugging cascading failures.
+
+**Example:**
+```
+❌ WRONG: "I'll just update this API response format"
+✅ RIGHT: "This API is used by 3 frontend components and 2 admin tools.
+           Changing the format will require updating all 5 consumers.
+           Here's the plan: [detailed steps]. Approve before proceeding?"
+```
+
+---
+
+## Additional Rules (.cursorrules)
 
 ## Architecture Overview
 
