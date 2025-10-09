@@ -7,6 +7,7 @@ import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { getRequestMetrics } from '../../middleware/requestLogging.js';
 import { logger } from '../../utils/logger.js';
 import { metrics as metricsUtils } from '../../utils/metrics.js';
+import { getEnv } from '../../config/env.js';
 import { z } from 'zod';
 
 const router = express.Router();
@@ -117,7 +118,7 @@ router.get('/',
       systemHealth: {
         uptime: process.uptime(),
         memoryUsage: process.memoryUsage(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: getEnv().NODE_ENV
       },
       
       // Recent Errors (from real request data)

@@ -1,6 +1,7 @@
 // src/services/suggestions/intent.suggestions.js
 import { logger } from '../../utils/logger.js';
 import { oaiJson } from '../../clients/openai.client.js';
+import { getEnv } from '../../config/env.js';
 
 /**
  * Call OpenAI to extract patterns from a chunk of text.
@@ -21,7 +22,8 @@ async function extractPatternsFromChunk(text, page, docId) {
     });
 
     const raw = res?.choices?.[0]?.message?.content ?? "";
-    if (process.env.DIP_LLM_DEBUG === '1') {
+    const env = getEnv();
+    if (env.DIP_LLM_DEBUG === '1') {
       logger.warn(`[LLM DEBUG][intent.patterns] raw: ${raw.slice(0, 1200)}`);
     }
 

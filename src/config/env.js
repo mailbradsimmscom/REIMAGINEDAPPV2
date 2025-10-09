@@ -39,7 +39,9 @@ const EnvSchema = z.object({
   DOC_CHUNKS_PAGE_COL: z.string().optional().default('page_start'),
   DOC_CHUNKS_TEXT_COL: z.string().optional().default('content'),
   // Anthropic API delay for rate limiting (seconds)
-  ANTHROPIC_API_DELAY: z.string().optional().default('1.2')
+  ANTHROPIC_API_DELAY: z.string().optional().default('1.2'),
+  // Debug flag for DIP LLM extraction (set to '1' to enable verbose logging)
+  DIP_LLM_DEBUG: z.string().optional()
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

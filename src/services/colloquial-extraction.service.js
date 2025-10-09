@@ -4,9 +4,17 @@ import { logger } from '../utils/logger.js';
 
 const requestLogger = logger.createModuleLogger('colloquial-extraction');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// Lazy-load OpenAI client to use getEnv()
+let openai = null;
+function getOpenAIClient() {
+  if (!openai) {
+    const env = getEnv();
+    openai = new OpenAI({
+      apiKey: env.OPENAI_API_KEY
+    });
+  }
+  return openai;
+}
 
 const COLLOQUIAL_EXTRACTION_PROMPT = `You are analyzing technical documentation to extract colloquial terms that boat owners and marine equipment users would naturally use when referring to this equipment.
 
@@ -118,7 +126,7 @@ async function extractTermsWithLLM(chunks) {
       textLength: combinedText.length
     });
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: model,
       messages: [
         {

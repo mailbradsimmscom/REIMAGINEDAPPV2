@@ -1,5 +1,8 @@
 import { getSupabaseClient } from './supabaseClient.js';
 import { isSupabaseConfigured } from '../services/guards/index.js';
+import { logger } from '../utils/logger.js';
+
+const moduleLogger = logger.createModuleLogger('chat.repository');
 
 const SESSIONS_TABLE = 'chat_sessions';
 const THREADS_TABLE = 'chat_threads';
@@ -326,7 +329,7 @@ export async function listChatThreads(sessionId, { limit = 25, cursor } = {}) {
 
 export async function listThreadsWithSummaries({ limit = 25, cursor } = {}) {
   try {
-    console.log('🔍 DEBUG: listThreadsWithSummaries called with limit:', limit);
+    moduleLogger.debug('listThreadsWithSummaries called', { limit });
     const supabase = await checkSupabaseAvailability();
 
     // Get threads with stored summaries
@@ -340,9 +343,9 @@ export async function listThreadsWithSummaries({ limit = 25, cursor } = {}) {
       query = query.lt('updated_at', cursor);
     }
 
-    console.log('🔍 DEBUG: About to execute query on table:', THREADS_TABLE);
+    moduleLogger.debug('Executing query on table', { table: THREADS_TABLE });
     const { data: threads, error: threadsError } = await query;
-    console.log('🔍 DEBUG: Query result - threads:', threads?.length || 0, 'error:', threadsError?.message || 'none');
+    moduleLogger.debug('Query result', { threadsCount: threads?.length || 0, error: threadsError?.message || 'none' });
 
     if (threadsError) {
       const err = new Error(`Failed to list threads: ${threadsError.message}`);
@@ -352,7 +355,7 @@ export async function listThreadsWithSummaries({ limit = 25, cursor } = {}) {
     }
 
     if (!threads || threads.length === 0) {
-      console.log('🔍 DEBUG: No threads found, returning empty array');
+      moduleLogger.debug('No threads found, returning empty array');
       return [];
     }
 
@@ -367,11 +370,11 @@ export async function listThreadsWithSummaries({ limit = 25, cursor } = {}) {
       metadata: thread.metadata || {}
     }));
 
-    console.log('🔍 DEBUG: Returning', result.length, 'threads');
+    moduleLogger.debug('Returning threads', { count: result.length });
     return result;
 
   } catch (error) {
-    console.log('🔍 DEBUG: Error in listThreadsWithSummaries:', error.message);
+    moduleLogger.debug('Error in listThreadsWithSummaries', { error: error.message });
     if (!error.context) {
       error.context = { operation: 'list_threads_with_summaries', limit, cursor, table: THREADS_TABLE };
     }
@@ -679,19 +682,17 @@ export async function deleteChatThreads(sessionId) {
 
 export async function deleteChatSession(sessionId) {
   try {
-    console.log('🔵 deleteChatSession called with sessionId:', sessionId);
-    console.log('🔵 Deleting from table:', THREADS_TABLE);
+    moduleLogger.debug('deleteChatSession called', { sessionId, table: THREADS_TABLE });
 
     const supabase = await checkSupabaseAvailability();
 
-    const { data, error } = await supabase
+    const { data, error} = await supabase
       .from(THREADS_TABLE)
       .delete()
       .eq('id', sessionId)
       .select();
 
-    console.log('🔵 Delete result - data:', data);
-    console.log('🔵 Delete result - error:', error);
+    moduleLogger.debug('Delete result', { data, error: error?.message || 'none' });
 
     if (error) {
       const err = new Error(`Failed to delete chat thread: ${error.message}`);
@@ -700,10 +701,10 @@ export async function deleteChatSession(sessionId) {
       throw err;
     }
 
-    console.log('✅ Successfully deleted thread:', sessionId);
+    moduleLogger.debug('Successfully deleted thread', { sessionId });
     return { success: true };
   } catch (error) {
-    console.error('🔴 Error in deleteChatSession:', error);
+    moduleLogger.error('Error in deleteChatSession', { error: error.message, sessionId });
     if (!error.context) {
       error.context = { operation: 'delete_thread', sessionId, table: THREADS_TABLE };
     }

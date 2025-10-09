@@ -85,14 +85,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
     let currentEquipmentSearch = [];
     let equipmentInference = null;
 
-    console.log('🔍 [DEBUG] Equipment search decision', {
-      query: query.substring(0, 100),
-      should_infer: referenceCheck.should_infer,
-      likely_reference: referenceCheck.likely_reference,
-      has_previous_context: referenceCheck.has_previous_context
-    });
-
-    requestLogger.info('🔍 [DEBUG] Equipment search decision', {
+    requestLogger.debug('🔍 Equipment search decision', {
       query: query.substring(0, 100),
       should_infer: referenceCheck.should_infer,
       likely_reference: referenceCheck.likely_reference,
@@ -172,7 +165,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
       // Traditional keyword-based equipment search
       const searchQuery = extractKeywords(query) || query;
 
-      console.log('🔍 [DEBUG] Keyword search path', {
+      requestLogger.debug('🔍 Keyword search path', {
         originalQuery: query,
         extractedKeywords: searchQuery,
         willSearch: searchQuery && searchQuery !== query
@@ -186,7 +179,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
 
         currentEquipmentSearch = await searchSystems(searchQuery, { limit: 10 });
 
-        console.log('🔍 [DEBUG] searchSystems result', {
+        requestLogger.debug('🔍 searchSystems result', {
           searchQuery,
           resultsCount: currentEquipmentSearch.length,
           results: currentEquipmentSearch
@@ -195,7 +188,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
 
       // NEW: If no equipment found, try LLM extraction ONCE as fallback
       if (currentEquipmentSearch.length === 0) {
-        console.log('🔍 [DEBUG] No equipment found, trying LLM extraction');
+        requestLogger.debug('🔍 No equipment found, trying LLM extraction');
 
         requestLogger.info('🤖 No equipment found with keywords, trying LLM extraction', {
           originalQuery: query.substring(0, 100)
@@ -203,7 +196,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
 
         const extraction = await extractEquipmentName(query);
 
-        console.log('🔍 [DEBUG] LLM extraction result', {
+        requestLogger.debug('🔍 LLM extraction result', {
           count: extraction.equipment?.length || 0,
           equipment: extraction.equipment
         });
@@ -234,7 +227,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
             }
           }
 
-          console.log('🔍 [DEBUG] Combined search results', {
+          requestLogger.debug('🔍 Combined search results', {
             totalSearched: extraction.equipment.length,
             totalFound: currentEquipmentSearch.length
           });

@@ -28,6 +28,20 @@ Repositories: all DB/storage/network I/O.
 
 Forbidden: route → repository imports.
 
+Known violations (fix on next touch):
+  - src/routes/chat/list.route.js
+  - src/routes/chat/history.route.js
+  - src/routes/chat/context.route.js
+  - src/routes/chat/delete.route.js
+  - src/routes/chat/session-delete.route.js
+  - src/routes/chat/thread-by-session.route.js
+  - src/routes/chat/sessions.route.js
+  - src/routes/chat/threads.route.js
+  - src/routes/admin/systems-minimal.route.js
+  - src/routes/admin/systems.route.js
+
+When modifying these files: create service layer FIRST, then make changes. Inform user you are fixing a Route → Repository violation.
+
 HTTP contract
 
 Every response: { success, data?, error?, requestId? } unchanged.

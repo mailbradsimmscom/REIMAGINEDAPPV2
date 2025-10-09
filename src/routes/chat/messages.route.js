@@ -8,6 +8,7 @@ import {
 } from '../../repositories/chat.repository.js';
 import { checkAndGenerateSummary, checkAndGenerateQASummary } from '../../services/thread-summary.service.js';
 import { logger } from '../../utils/logger.js';
+import { getEnv } from '../../config/env.js';
 
 const router = Router();
 
@@ -81,10 +82,11 @@ router.post('/messages', async (req, res) => {
       role: req.body.role
     });
 
+    const env = getEnv();
     return res.status(500).json({
       error: 'Failed to create chat message',
       details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      stack: env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
