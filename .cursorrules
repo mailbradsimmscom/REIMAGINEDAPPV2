@@ -37,8 +37,18 @@ Known violations (fix on next touch):
   - src/routes/chat/thread-by-session.route.js
   - src/routes/chat/sessions.route.js
   - src/routes/chat/threads.route.js
+  - src/routes/chat/messages.route.js
   - src/routes/admin/systems-minimal.route.js
   - src/routes/admin/systems.route.js
+  - src/routes/admin/golden-tests.route.js
+  - src/routes/admin/health.route.js
+  - src/routes/admin/jobs.route.js
+  - src/routes/admin/metrics.route.js
+  - src/routes/admin/pinecone-admin.route.js
+  - src/routes/admin/playbooks.route.js
+  - src/routes/admin/suggestions.route.js
+  - src/routes/admin/testing.route.js
+  - src/routes/admin/upload.route.js
 
 When modifying these files: create service layer FIRST, then make changes. Inform user you are fixing a Route → Repository violation.
 
