@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
+import { getEnv } from './config/env.js';
 import adminRouter from './routes/admin/index.js';
 
 // Create Express app
@@ -15,9 +16,14 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false // Disable COEP for development
 }));
 
-// CORS configuration
+// CORS configuration - environment-based origin allowlist
+const env = getEnv();
+const allowedOrigins = env.NODE_ENV === 'production'
+  ? ['https://your-production-domain.com']  // TODO: Update with actual production domain before deploying
+  : true;  // Development: allow all origins for local testing
+
 app.use(cors({
-  origin: true, // Allow all origins for development
+  origin: allowedOrigins,
   credentials: true
 }));
 
