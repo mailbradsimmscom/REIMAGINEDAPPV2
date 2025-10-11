@@ -34,7 +34,11 @@
     "docs:deps:dot": "depcruise --include-only \"^src\" --output-type dot src | dot -Tsvg -o docs/auto/graphs/deps.svg",
     "docs:deps:page": "node scripts/deps-page.mjs",
     "docs:openapi": "node scripts/gen-openapi.mjs",
-    "docs:all": "npm run docs:clean && npm run docs:js && npm run docs:routes && npm run docs:deps:dot && npm run docs:deps:page && npm run docs:openapi"
+    "docs:all": "npm run docs:clean && npm run docs:js && npm run docs:routes && npm run docs:deps:dot && npm run docs:deps:page && npm run docs:openapi",
+    "docs": "cd docs && npx mintlify dev --port 3100",
+    "structurizr:generate": "node scripts/generate-structurizr.mjs && python3 scripts/generate-structurizr-sidecar.py && node scripts/combine-structurizr.mjs",
+    "structurizr:push": "./scripts/push-structurizr.sh",
+    "structurizr:full": "npm run structurizr:generate && npm run structurizr:push"
   },
   "dependencies": {
     "@langchain/core": "^0.3.77",
@@ -64,6 +68,7 @@
     "eslint": "^9.34.0",
     "globals": "^16.3.0",
     "madge": "^8.0.0",
+    "mintlify": "^4.2.161",
     "supertest": "^7.1.4"
   }
 }

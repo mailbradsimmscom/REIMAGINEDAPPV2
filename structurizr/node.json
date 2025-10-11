@@ -1,0 +1,904 @@
+{
+  "workspace": {
+    "name": "REIMAGINEDAPPV2 - Node.js Backend",
+    "description": "Auto-generated from src/ directory",
+    "model": {
+      "softwareSystems": [
+        {
+          "id": "reimaginedapp",
+          "name": "REIMAGINEDAPPV2 Backend",
+          "description": "Node.js Express backend with layered architecture",
+          "location": "Internal",
+          "tags": "SoftwareSystem,Backend",
+          "containers": [
+            {
+              "id": "webapp-routes",
+              "name": "API Routes Layer",
+              "description": "Express route handlers and HTTP endpoints",
+              "technology": "Express.js",
+              "tags": "Container,Routes",
+              "components": [
+                {
+                  "id": "node-routes-admin-dashboard-route-js",
+                  "name": "routes/admin/dashboard.route",
+                  "description": "routes/admin/dashboard.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-golden-tests-route-js",
+                  "name": "routes/admin/golden-tests.route",
+                  "description": "routes/admin/golden-tests.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-health-route-js",
+                  "name": "routes/admin/health.route",
+                  "description": "routes/admin/health.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-index-js",
+                  "name": "routes/admin/index",
+                  "description": "routes/admin/index.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-jobs-route-js",
+                  "name": "routes/admin/jobs.route",
+                  "description": "routes/admin/jobs.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-logs-route-js",
+                  "name": "routes/admin/logs.route",
+                  "description": "routes/admin/logs.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-manufacturers-route-js",
+                  "name": "routes/admin/manufacturers.route",
+                  "description": "routes/admin/manufacturers.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-metrics-route-js",
+                  "name": "routes/admin/metrics.route",
+                  "description": "routes/admin/metrics.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-models-route-js",
+                  "name": "routes/admin/models.route",
+                  "description": "routes/admin/models.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-pinecone-admin-route-js",
+                  "name": "routes/admin/pinecone-admin.route",
+                  "description": "routes/admin/pinecone-admin.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-pinecone-route-js",
+                  "name": "routes/admin/pinecone.route",
+                  "description": "routes/admin/pinecone.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-playbooks-route-js",
+                  "name": "routes/admin/playbooks.route",
+                  "description": "routes/admin/playbooks.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-snapshots-route-js",
+                  "name": "routes/admin/snapshots.route",
+                  "description": "routes/admin/snapshots.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-suggestions-route-js",
+                  "name": "routes/admin/suggestions.route",
+                  "description": "routes/admin/suggestions.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-systems-minimal-route-js",
+                  "name": "routes/admin/systems-minimal.route",
+                  "description": "routes/admin/systems-minimal.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-systems-route-js",
+                  "name": "routes/admin/systems.route",
+                  "description": "routes/admin/systems.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-testing-route-js",
+                  "name": "routes/admin/testing.route",
+                  "description": "routes/admin/testing.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-text-extraction-route-js",
+                  "name": "routes/admin/text-extraction.route",
+                  "description": "routes/admin/text-extraction.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-admin-upload-route-js",
+                  "name": "routes/admin/upload.route",
+                  "description": "routes/admin/upload.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-context-route-js",
+                  "name": "routes/chat/context.route",
+                  "description": "routes/chat/context.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-delete-route-js",
+                  "name": "routes/chat/delete.route",
+                  "description": "routes/chat/delete.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-history-route-js",
+                  "name": "routes/chat/history.route",
+                  "description": "routes/chat/history.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-index-js",
+                  "name": "routes/chat/index",
+                  "description": "routes/chat/index.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-list-route-js",
+                  "name": "routes/chat/list.route",
+                  "description": "routes/chat/list.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-messages-route-js",
+                  "name": "routes/chat/messages.route",
+                  "description": "routes/chat/messages.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-process-route-js",
+                  "name": "routes/chat/process.route",
+                  "description": "routes/chat/process.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-session-delete-route-js",
+                  "name": "routes/chat/session-delete.route",
+                  "description": "routes/chat/session-delete.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-sessions-route-js",
+                  "name": "routes/chat/sessions.route",
+                  "description": "routes/chat/sessions.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-thread-by-session-route-js",
+                  "name": "routes/chat/thread-by-session.route",
+                  "description": "routes/chat/thread-by-session.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-threads-route-js",
+                  "name": "routes/chat/threads.route",
+                  "description": "routes/chat/threads.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-chat-route-js",
+                  "name": "routes/chat.route",
+                  "description": "routes/chat.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-document-documents-route-js",
+                  "name": "routes/document/documents.route",
+                  "description": "routes/document/documents.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-document-get-one-route-js",
+                  "name": "routes/document/get-one.route",
+                  "description": "routes/document/get-one.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-document-index-js",
+                  "name": "routes/document/index",
+                  "description": "routes/document/index.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-document-ingest-route-js",
+                  "name": "routes/document/ingest.route",
+                  "description": "routes/document/ingest.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-document-job-status-route-js",
+                  "name": "routes/document/job-status.route",
+                  "description": "routes/document/job-status.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-document-jobs-route-js",
+                  "name": "routes/document/jobs.route",
+                  "description": "routes/document/jobs.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-health-router-js",
+                  "name": "routes/health.router",
+                  "description": "routes/health.router.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-pinecone-router-js",
+                  "name": "routes/pinecone.router",
+                  "description": "routes/pinecone.router.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-system-management-route-js",
+                  "name": "routes/system-management.route",
+                  "description": "routes/system-management.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-systems-router-js",
+                  "name": "routes/systems.router",
+                  "description": "routes/systems.router.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                },
+                {
+                  "id": "node-routes-test-normalizer-route-js",
+                  "name": "routes/test-normalizer.route",
+                  "description": "routes/test-normalizer.route.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Route"
+                }
+              ]
+            },
+            {
+              "id": "webapp-services",
+              "name": "Business Logic Layer",
+              "description": "Core business services and orchestration",
+              "technology": "JavaScript Services",
+              "tags": "Container,Services",
+              "components": [
+                {
+                  "id": "node-services-admin-service-js",
+                  "name": "services/admin.service",
+                  "description": "services/admin.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-anthropic-extraction-service-js",
+                  "name": "services/anthropic.extraction.service",
+                  "description": "services/anthropic.extraction.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-assistant-response-service-js",
+                  "name": "services/assistant-response.service",
+                  "description": "services/assistant-response.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-chat-completion-service-js",
+                  "name": "services/chat-completion.service",
+                  "description": "services/chat-completion.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-chat-orchestrator-service-js",
+                  "name": "services/chat-orchestrator.service",
+                  "description": "services/chat-orchestrator.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-chat-proxy-service-js",
+                  "name": "services/chat-proxy.service",
+                  "description": "services/chat-proxy.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-colloquial-extraction-service-js",
+                  "name": "services/colloquial-extraction.service",
+                  "description": "services/colloquial-extraction.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-conversation-context-service-js",
+                  "name": "services/conversation-context.service",
+                  "description": "services/conversation-context.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-dip-retriever-service-js",
+                  "name": "services/dip-retriever.service",
+                  "description": "services/dip-retriever.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-dip-ingest-service-js",
+                  "name": "services/dip.ingest.service",
+                  "description": "services/dip.ingest.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-dip-service-js",
+                  "name": "services/dip.service",
+                  "description": "services/dip.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-document-text-service-js",
+                  "name": "services/document-text.service",
+                  "description": "services/document-text.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-document-service-js",
+                  "name": "services/document.service",
+                  "description": "services/document.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-enhanced-chat-service-js",
+                  "name": "services/enhanced-chat.service",
+                  "description": "services/enhanced-chat.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-equipment-extraction-service-js",
+                  "name": "services/equipment-extraction.service",
+                  "description": "services/equipment-extraction.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-equipment-relationship-inference-service-js",
+                  "name": "services/equipment-relationship-inference.service",
+                  "description": "services/equipment-relationship-inference.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-fact-first-service-js",
+                  "name": "services/fact-first.service",
+                  "description": "services/fact-first.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-guards-index-js",
+                  "name": "services/guards/index",
+                  "description": "services/guards/index.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-guards-openai-guard-js",
+                  "name": "services/guards/openai.guard",
+                  "description": "services/guards/openai.guard.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-guards-pinecone-guard-js",
+                  "name": "services/guards/pinecone.guard",
+                  "description": "services/guards/pinecone.guard.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-guards-sidecar-guard-js",
+                  "name": "services/guards/sidecar.guard",
+                  "description": "services/guards/sidecar.guard.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-guards-supabase-guard-js",
+                  "name": "services/guards/supabase.guard",
+                  "description": "services/guards/supabase.guard.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-intent-router-service-js",
+                  "name": "services/intent-router.service",
+                  "description": "services/intent-router.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-introspect-service-js",
+                  "name": "services/introspect.service",
+                  "description": "services/introspect.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-langgraph-chat-service-js",
+                  "name": "services/langgraph-chat.service",
+                  "description": "services/langgraph-chat.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-llm-service-js",
+                  "name": "services/llm.service",
+                  "description": "services/llm.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-logs-service-js",
+                  "name": "services/logs.service",
+                  "description": "services/logs.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-memory-service-js",
+                  "name": "services/memory.service",
+                  "description": "services/memory.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-pinecone-rag-service-js",
+                  "name": "services/pinecone-rag.service",
+                  "description": "services/pinecone-rag.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-pinecone-retrieval-service-js",
+                  "name": "services/pinecone-retrieval.service",
+                  "description": "services/pinecone-retrieval.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-pinecone-guard-js",
+                  "name": "services/pinecone.guard",
+                  "description": "services/pinecone.guard.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-pinecone-service-js",
+                  "name": "services/pinecone.service",
+                  "description": "services/pinecone.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-query-normalizer-js",
+                  "name": "services/query-normalizer",
+                  "description": "services/query-normalizer.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-rerank-service-js",
+                  "name": "services/rerank.service",
+                  "description": "services/rerank.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-suggestions-intent-suggestions-js",
+                  "name": "services/suggestions/intent.suggestions",
+                  "description": "services/suggestions/intent.suggestions.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-suggestions-apply-service-js",
+                  "name": "services/suggestions.apply.service",
+                  "description": "services/suggestions.apply.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-summarization-service-js",
+                  "name": "services/summarization.service",
+                  "description": "services/summarization.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-system-management-service-js",
+                  "name": "services/system-management.service",
+                  "description": "services/system-management.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-systems-service-js",
+                  "name": "services/systems.service",
+                  "description": "services/systems.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-thread-naming-service-js",
+                  "name": "services/thread-naming.service",
+                  "description": "services/thread-naming.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-thread-summary-service-js",
+                  "name": "services/thread-summary.service",
+                  "description": "services/thread-summary.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                },
+                {
+                  "id": "node-services-viewRefresh-service-js",
+                  "name": "services/viewRefresh.service",
+                  "description": "services/viewRefresh.service.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Service"
+                }
+              ]
+            },
+            {
+              "id": "webapp-repositories",
+              "name": "Data Access Layer",
+              "description": "Repository pattern for database operations",
+              "technology": "Data Access Layer",
+              "tags": "Container,Repositories",
+              "components": [
+                {
+                  "id": "node-repositories-anthropic-extraction-repository-js",
+                  "name": "repositories/anthropic.extraction.repository",
+                  "description": "repositories/anthropic.extraction.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-chat-repository-js",
+                  "name": "repositories/chat.repository",
+                  "description": "repositories/chat.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-document-chunks-repository-js",
+                  "name": "repositories/document-chunks.repository",
+                  "description": "repositories/document-chunks.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-document-repository-js",
+                  "name": "repositories/document.repository",
+                  "description": "repositories/document.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-example-repository-js",
+                  "name": "repositories/example.repository",
+                  "description": "repositories/example.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-intent-repository-js",
+                  "name": "repositories/intent.repository",
+                  "description": "repositories/intent.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-introspect-repository-js",
+                  "name": "repositories/introspect.repository",
+                  "description": "repositories/introspect.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-jobs-repository-js",
+                  "name": "repositories/jobs.repository",
+                  "description": "repositories/jobs.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-knowledge-repository-js",
+                  "name": "repositories/knowledge.repository",
+                  "description": "repositories/knowledge.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-pinecone-repository-js",
+                  "name": "repositories/pinecone.repository",
+                  "description": "repositories/pinecone.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-sidecar-client-js",
+                  "name": "repositories/sidecar.client",
+                  "description": "repositories/sidecar.client.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-supabaseClient-js",
+                  "name": "repositories/supabaseClient",
+                  "description": "repositories/supabaseClient.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-system-management-repository-js",
+                  "name": "repositories/system-management.repository",
+                  "description": "repositories/system-management.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                },
+                {
+                  "id": "node-repositories-systems-repository-js",
+                  "name": "repositories/systems.repository",
+                  "description": "repositories/systems.repository.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Repository"
+                }
+              ]
+            },
+            {
+              "id": "webapp-middleware",
+              "name": "Middleware Stack",
+              "description": "Authentication, validation, logging, security",
+              "technology": "Express Middleware",
+              "tags": "Container,Middleware",
+              "components": [
+                {
+                  "id": "node-middleware-admin-js",
+                  "name": "middleware/admin",
+                  "description": "middleware/admin.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-error-js",
+                  "name": "middleware/error",
+                  "description": "middleware/error.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-methodNotAllowed-js",
+                  "name": "middleware/methodNotAllowed",
+                  "description": "middleware/methodNotAllowed.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-requestLogging-js",
+                  "name": "middleware/requestLogging",
+                  "description": "middleware/requestLogging.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-security-js",
+                  "name": "middleware/security",
+                  "description": "middleware/security.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-serviceGuards-js",
+                  "name": "middleware/serviceGuards",
+                  "description": "middleware/serviceGuards.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-trace404-js",
+                  "name": "middleware/trace404",
+                  "description": "middleware/trace404.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-validate-js",
+                  "name": "middleware/validate",
+                  "description": "middleware/validate.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                },
+                {
+                  "id": "node-middleware-validateResponse-js",
+                  "name": "middleware/validateResponse",
+                  "description": "middleware/validateResponse.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Middleware"
+                }
+              ]
+            },
+            {
+              "id": "webapp-models",
+              "name": "Data Models & Schemas",
+              "description": "Zod schemas and data models",
+              "technology": "Zod/JavaScript",
+              "tags": "Container,Models",
+              "components": [
+                {
+                  "id": "node-schemas-admin-schema-js",
+                  "name": "schemas/admin.schema",
+                  "description": "schemas/admin.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-chat-schema-js",
+                  "name": "schemas/chat.schema",
+                  "description": "schemas/chat.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-common-schema-js",
+                  "name": "schemas/common.schema",
+                  "description": "schemas/common.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-document-schema-js",
+                  "name": "schemas/document.schema",
+                  "description": "schemas/document.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-envelope-schema-js",
+                  "name": "schemas/envelope.schema",
+                  "description": "schemas/envelope.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-health-schema-js",
+                  "name": "schemas/health.schema",
+                  "description": "schemas/health.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-id-schema-js",
+                  "name": "schemas/id.schema",
+                  "description": "schemas/id.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-index-js",
+                  "name": "schemas/index",
+                  "description": "schemas/index.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-ingestion-schema-js",
+                  "name": "schemas/ingestion.schema",
+                  "description": "schemas/ingestion.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-pinecone-schema-js",
+                  "name": "schemas/pinecone.schema",
+                  "description": "schemas/pinecone.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-suggestions-schema-js",
+                  "name": "schemas/suggestions.schema",
+                  "description": "schemas/suggestions.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-systems-schema-js",
+                  "name": "schemas/systems.schema",
+                  "description": "schemas/systems.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                },
+                {
+                  "id": "node-schemas-uploadDocument-schema-js",
+                  "name": "schemas/uploadDocument.schema",
+                  "description": "schemas/uploadDocument.schema.js",
+                  "technology": "JavaScript/Node.js",
+                  "tags": "Model"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

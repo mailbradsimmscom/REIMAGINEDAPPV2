@@ -1,16 +1,9 @@
-# `jobs.js`
+---
+title: init
+description: Auto-generated code reference
+---
 
-- **Path**: `src/public/js/admin/sections/jobs.js`
-- **Exports**: None
-- **Imports**:
-  - None
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 // /js/admin/sections/jobs.js
 // Loads job data into the jobs.html table
 // Independent module - initializes itself when DOM is ready
@@ -46,6 +39,38 @@ async function loadJobs() {
 
     jobsTableBody.innerHTML = data.data.jobs.map(job => {
       const jobId = escapeHtml(job.job_id || '');
-  
-...
+      const status = escapeHtml(job.status || '');
+      const docId = escapeHtml(job.doc_id || '');
+      const createdAt = escapeHtml(job.created_at || '');
+      const updatedAt = escapeHtml(job.updated_at || '');
+      
+      return `<tr>
+        <td>${jobId}</td>
+        <td><span class="status-${status}">${status}</span></td>
+        <td>${docId}</td>
+        <td>${createdAt}</td>
+        <td>${updatedAt}</td>
+      </tr>`;
+    }).join('');
+  } catch (err) {
+    console.error('Failed to load jobs:', err);
+    jobsTableBody.innerHTML = `<tr><td colspan="5">⚠️ Failed to load jobs</td></tr>`;
+  }
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Auto-initialize if this script is loaded directly (for development)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeJobsSection);
+} else {
+  initializeJobsSection();
+}
 ```

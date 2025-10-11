@@ -1,16 +1,9 @@
-# `systems.js`
+---
+title: init
+description: Auto-generated code reference
+---
 
-- **Path**: `src/public/js/admin/sections/systems.js`
-- **Exports**: None
-- **Imports**:
-  - None
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 // /js/admin/sections/systems.js
 // Loads system data into the systems.html table
 // Independent module - initializes itself when DOM is ready
@@ -45,6 +38,30 @@ async function loadSystems() {
     }
 
     tableBody.innerHTML = data.data.map(system => {
-      const uid = escapeHtml(system.uid 
-...
+      const uid = escapeHtml(system.uid || '');
+      const name = escapeHtml(system.name || '');
+      const subsystem = escapeHtml(system.subsystem_normalized || '');
+      return `<tr><td>${uid}</td><td>${name}</td><td>${subsystem}</td></tr>`;
+    }).join('');
+  } catch (err) {
+    console.error('Failed to load systems:', err);
+    tableBody.innerHTML = `<tr><td colspan="3">⚠️ Failed to load systems</td></tr>`;
+  }
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Auto-initialize if this script is loaded directly (for development)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSystemsSection);
+} else {
+  initializeSystemsSection();
+}
 ```

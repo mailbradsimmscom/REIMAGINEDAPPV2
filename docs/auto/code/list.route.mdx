@@ -1,29 +1,17 @@
-# `list.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/chat/list.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../services/enhanced-chat.service.js`
-  - `../../middleware/validate.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/chat.schema.js`
-
-## Express Routes
-- USE undefined
-- GET /
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
-import * as enhancedChatService from '../../services/enhanced-chat.service.js';
+import { listThreadsWithSummaries } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
-import { 
+import {
   ChatListEnvelope,
   chatListQuerySchema,
-  chatListResponseSchema 
+  chatListResponseSchema
 } from '../../schemas/chat.schema.js';
 
 const router = express.Router();
@@ -31,20 +19,59 @@ const router = express.Router();
 // Apply response validation to all routes in this file
 router.use(validateResponse(ChatListEnvelope));
 
-// GET /chat/enhanced/list - List chat sessions
-router.get('/', 
+// GET /chat/list - List chat threads with summaries
+router.get('/',
   validate(chatListQuerySchema, 'query'),
   async (req, res, next) => {
     try {
       const { limit, cursor } = req.query;
-      
-      const chats = await enhancedChatService.listUserChats({ limit, cursor });
-      
-      // Transform the data to match the schema
-      const transformedChats = chats.map(chat => ({
-        id: chat.id,
-        name: chat.name,
-        description: chat.description || '',
-        createdAt: chat.cr
-...
+
+      const threads = await listThreadsWithSummaries({ limit: parseInt(limit) || 25, cursor });
+
+      // Transform the data to match the schema (using threads as chats)
+      const transformedChats = threads.map(thread => ({
+        id: thread.id,
+        name: thread.summary || 'New Thread', // Use summary as name, fallback to 'New Thread'
+        description: '', // Remove duplicate description
+        createdAt: thread.created_at,
+        updatedAt: thread.updated_at,
+        messageCount: thread.message_count,
+        latestThread: {
+          id: thread.id,
+          name: thread.summary || 'New Thread', // Use summary as name, fallback to 'New Thread'
+          createdAt: thread.created_at,
+          updatedAt: thread.updated_at,
+          metadata: thread.metadata || {}
+        }
+      }));
+
+      const envelope = {
+        success: true,
+        data: {
+          chats: transformedChats,
+          count: transformedChats.length,
+          nextCursor: null // TODO: implement cursor pagination
+        }
+      };
+
+      return res.json(envelope);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return res.json({
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
+
+export default router;
+
 ```

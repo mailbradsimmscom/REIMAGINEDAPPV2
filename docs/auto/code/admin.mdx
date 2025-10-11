@@ -1,19 +1,9 @@
-# `admin.js`
+---
+title: adminGate, adminOnly
+description: Optional admin gate - only checks if token is provided Useful for routes that can work with or without admin access
+---
 
-- **Path**: `src/middleware/admin.js`
-- **Exports**: adminOnly
-- **Imports**:
-  - `node:crypto`
-  - `../config/env.js`
-  - `../utils/logger.js`
-  - `../constants/errorCodes.js`
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 import crypto from 'node:crypto';
 import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
@@ -47,6 +37,56 @@ export function adminGate(req, res, next) {
   const supplied = readAdminToken(req);
 
   if (!expected) {
+    return res.status(401).json({ 
+      success: false, 
+      data: null, 
+      error: { code: ERR.ADMIN_DISABLED, message: 'Admin token not configured' },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+  if (!supplied) {
+    logger.info('Admin auth: missing token');
+    return res.status(401).json({ 
+      success: false, 
+      data: null, 
+      error: { code: ERR.UNAUTHORIZED, message: 'Admin token required' },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+  if (supplied !== expected) {
+    logger.warn('Admin auth: bad token', { supplied: mask(supplied), supplied_sha: tokenHash(supplied) });
+    return res.status(403).json({ 
+      success: false, 
+      data: null, 
+      error: { code: ERR.FORBIDDEN, message: 'Invalid admin token' },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
 
-...
+  // success — don't log the raw token (debug level to reduce noise)
+  logger.debug('Admin auth: ok', { supplied_sha: tokenHash(supplied) });
+  return next();
+}
+
+// Alias for compliance script
+export const adminOnly = adminGate;
+
+/**
+ * Optional admin gate - only checks if token is provided
+ * Useful for routes that can work with or without admin access
+ */
+export async function optionalAdminGate(req, res, next) {
+  const env = getEnv({ loose: true });
+  const expected = env.ADMIN_TOKEN;
+  const supplied = readAdminToken(req);
+  
+  if (expected && supplied && supplied === expected) {
+    req.isAdmin = true;
+  } else {
+    req.isAdmin = false;
+  }
+  
+  next();
+}
+
 ```

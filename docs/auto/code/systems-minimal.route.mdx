@@ -1,18 +1,9 @@
-# `systems-minimal.route.js`
+---
+title: Module
+description: GET /admin/api/systems/minimal Get minimal system data for admin dropdowns
+---
 
-- **Path**: `src/routes/admin/systems-minimal.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../repositories/systems.repository.js`
-  - `../../middleware/admin.js`
-
-## Express Routes
-- GET /minimal
-
-## Raw Content
-
-```js
+```javascript
 import { Router } from 'express';
 import { listMinimal } from '../../repositories/systems.repository.js';
 import { adminOnly } from '../../middleware/admin.js';

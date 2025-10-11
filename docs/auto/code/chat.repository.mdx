@@ -1,21 +1,14 @@
-# `chat.repository.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/repositories/chat.repository.js`
-- **Exports**: default
-- **Imports**:
-  - `./supabaseClient.js`
-  - `../services/guards/index.js`
-
-## Express Routes
-- DELETE undefined
-- DELETE undefined
-- DELETE undefined
-
-## Raw Content
-
-```js
+```javascript
 import { getSupabaseClient } from './supabaseClient.js';
 import { isSupabaseConfigured } from '../services/guards/index.js';
+import { logger } from '../utils/logger.js';
+
+const moduleLogger = logger.createModuleLogger('chat.repository');
 
 const SESSIONS_TABLE = 'chat_sessions';
 const THREADS_TABLE = 'chat_threads';
@@ -42,11 +35,785 @@ async function checkSupabaseAvailability() {
 export async function createChatSession({ name, description, metadata = {} } = {}) {
   try {
     const supabase = await checkSupabaseAvailability();
-    
+
     const { data, error } = await supabase
       .from(SESSIONS_TABLE)
       .insert({
         name: name || 'New Chat',
-        description:
-...
+        description: description || '',
+        metadata,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to create chat session: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'create_session', table: SESSIONS_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'create_session', table: SESSIONS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function createChatSessionWithId({ id, name, description, metadata = {} } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    if (!id) {
+      throw new Error('Session ID is required for createChatSessionWithId');
+    }
+
+    const { data, error } = await supabase
+      .from(SESSIONS_TABLE)
+      .insert({
+        id,
+        name: name || 'New Chat',
+        description: description || '',
+        metadata,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to create chat session with ID: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'create_session_with_id', sessionId: id, table: SESSIONS_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'create_session_with_id', table: SESSIONS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function getChatSession(sessionId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    const { data, error } = await supabase
+      .from(SESSIONS_TABLE)
+      .select('*')
+      .eq('id', sessionId)
+      .maybeSingle();
+    
+    if (error) {
+      const err = new Error(`Failed to get chat session: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'get_session', sessionId, table: SESSIONS_TABLE };
+      throw err;
+    }
+    
+    if (!data) {
+      throw new Error(`No chat session found for sessionId: ${sessionId}`);
+    }
+    
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'get_session', sessionId, table: SESSIONS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function listChatSessions({ limit = 25, cursor } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    let query = supabase
+      .from(SESSIONS_TABLE)
+      .select('*')
+      .order('updated_at', { ascending: false })
+      .limit(limit);
+    
+    if (cursor) {
+      query = query.lt('updated_at', cursor);
+    }
+    
+    const { data, error } = await query;
+    
+    if (error) {
+      const err = new Error(`Failed to list chat sessions: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'list_sessions', limit, cursor, table: SESSIONS_TABLE };
+      throw err;
+    }
+    
+    return data ?? [];
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'list_sessions', limit, cursor, table: SESSIONS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function createChatThread({ sessionId, name, metadata = {} } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase
+      .from(THREADS_TABLE)
+      .insert({
+        name: name || 'New Thread',
+        metadata,
+        message_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      if (error.message && error.message.includes('duplicate key value violates unique constraint')) {
+        try {
+          const existingThread = await getThreadBySessionId(sessionId);
+          if (existingThread) {
+            return existingThread;
+          }
+        } catch (getError) {
+        }
+      }
+
+      const err = new Error(`Failed to create chat thread: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'create_thread', sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'create_thread', sessionId, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function createChatThreadWithId({ id, name, metadata = {} } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    if (!id) {
+      throw new Error('Thread ID is required for createChatThreadWithId');
+    }
+
+    const insertData = {
+      id,
+      name: name || 'New Thread',
+      metadata,
+      message_count: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase
+      .from(THREADS_TABLE)
+      .insert(insertData)
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to create chat thread with ID: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'create_thread_with_id', threadId: id, sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'create_thread_with_id', table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function getThreadBySessionId(sessionId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase
+      .from(THREADS_TABLE)
+      .select('*')
+      .eq('sessionId', sessionId)
+      .maybeSingle();
+
+    if (error) {
+      const err = new Error(`Failed to get thread by sessionId: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'get_thread_by_session', sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+
+    return data; // Can be null if no thread found
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'get_thread_by_session', sessionId, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function getChatThread(threadId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    const { data, error } = await supabase
+      .from(THREADS_TABLE)
+      .select('*')
+      .eq('id', threadId)
+      .maybeSingle();
+    
+    if (error) {
+      const err = new Error(`Failed to get chat thread: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'get_thread', threadId, table: THREADS_TABLE };
+      throw err;
+    }
+    
+    if (!data) {
+      throw new Error(`No chat thread found for thread_id: ${threadId}`);
+    }
+    
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'get_thread', threadId, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function listChatThreads(sessionId, { limit = 25, cursor } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    let query = supabase
+      .from(THREADS_TABLE)
+      .select('*')
+      .eq('sessionId', sessionId)
+      .order('updated_at', { ascending: false })
+      .limit(limit);
+    
+    if (cursor) {
+      query = query.lt('updated_at', cursor);
+    }
+    
+    const { data, error } = await query;
+    
+    if (error) {
+      const err = new Error(`Failed to list chat threads: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'list_threads', sessionId, limit, cursor, table: THREADS_TABLE };
+      throw err;
+    }
+    
+    return data ?? [];
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'list_threads', sessionId, limit, cursor, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function listThreadsWithSummaries({ limit = 25, cursor } = {}) {
+  try {
+    moduleLogger.debug('listThreadsWithSummaries called', { limit });
+    const supabase = await checkSupabaseAvailability();
+
+    // Get threads with stored summaries
+    let query = supabase
+      .from(THREADS_TABLE)
+      .select('*')
+      .order('updated_at', { ascending: false })
+      .limit(limit);
+
+    if (cursor) {
+      query = query.lt('updated_at', cursor);
+    }
+
+    moduleLogger.debug('Executing query on table', { table: THREADS_TABLE });
+    const { data: threads, error: threadsError } = await query;
+    moduleLogger.debug('Query result', { threadsCount: threads?.length || 0, error: threadsError?.message || 'none' });
+
+    if (threadsError) {
+      const err = new Error(`Failed to list threads: ${threadsError.message}`);
+      err.cause = threadsError;
+      err.context = { operation: 'list_threads_with_summaries', limit, cursor, table: THREADS_TABLE };
+      throw err;
+    }
+
+    if (!threads || threads.length === 0) {
+      moduleLogger.debug('No threads found, returning empty array');
+      return [];
+    }
+
+    // Return threads with stored summaries
+    const result = threads.map(thread => ({
+      id: thread.id,
+      name: thread.name,
+      summary: thread.summary || 'New Thread',
+      message_count: thread.message_count || 0,
+      created_at: thread.created_at,
+      updated_at: thread.updated_at,
+      metadata: thread.metadata || {}
+    }));
+
+    moduleLogger.debug('Returning threads', { count: result.length });
+    return result;
+
+  } catch (error) {
+    moduleLogger.debug('Error in listThreadsWithSummaries', { error: error.message });
+    if (!error.context) {
+      error.context = { operation: 'list_threads_with_summaries', limit, cursor, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function createChatMessage({ threadId, role, content, metadata = {} } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase
+      .from(MESSAGES_TABLE)
+      .insert({
+        thread_id: threadId,
+        role,
+        content,
+        metadata,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to create chat message: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'create_message', threadId, role, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'create_message', threadId, role, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function createChatMessageWithSequence({ threadId, role, content, sequenceNumber, metadata = {} } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    if (!sequenceNumber) {
+      throw new Error('Sequence number is required for createChatMessageWithSequence');
+    }
+
+    const { data, error } = await supabase
+      .from(MESSAGES_TABLE)
+      .insert({
+        thread_id: threadId,
+        role,
+        content,
+        sequence_number: sequenceNumber,
+        metadata,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to create chat message with sequence: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'create_message_with_sequence', threadId, role, sequenceNumber, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'create_message_with_sequence', threadId, role, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function getChatMessages(threadId, { limit = 50, cursor } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    let query = supabase
+      .from(MESSAGES_TABLE)
+      .select('*')
+      .eq('thread_id', threadId)
+      .order('sequence_number', { ascending: true })
+      .limit(limit);
+
+    if (cursor) {
+      query = query.gt('sequence_number', cursor);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      const err = new Error(`Failed to get chat messages: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'get_messages', threadId, limit, cursor, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return data ?? [];
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'get_messages', threadId, limit, cursor, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function getMessagesByThreadWithSequence(threadId, { limit = 50, afterSequence } = {}) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    let query = supabase
+      .from(MESSAGES_TABLE)
+      .select('*')
+      .eq('thread_id', threadId)
+      .order('sequence_number', { ascending: true })
+      .limit(limit);
+
+    if (afterSequence) {
+      query = query.gt('sequence_number', afterSequence);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      const err = new Error(`Failed to get chat messages by sequence: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'get_messages_by_sequence', threadId, limit, afterSequence, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return data ?? [];
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'get_messages_by_sequence', threadId, limit, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function updateChatSession(sessionId, updates) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    const { data, error } = await supabase
+      .from(SESSIONS_TABLE)
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', sessionId)
+      .select()
+      .single();
+    
+    if (error) {
+      const err = new Error(`Failed to update chat session: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'update_session', sessionId, updates, table: SESSIONS_TABLE };
+      throw err;
+    }
+    
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'update_session', sessionId, updates, table: SESSIONS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function updateChatThread(threadId, updates) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase
+      .from(THREADS_TABLE)
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', threadId)
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to update chat thread: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'update_thread', threadId, updates, table: THREADS_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'update_thread', threadId, updates, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function updateChatMessage(messageId, updates) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase
+      .from(MESSAGES_TABLE)
+      .update(updates)
+      .eq('id', messageId)
+      .select()
+      .single();
+
+    if (error) {
+      const err = new Error(`Failed to update chat message: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'update_message', messageId, updates, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'update_message', messageId, updates, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function deleteChatMessages(threadId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { error } = await supabase
+      .from(MESSAGES_TABLE)
+      .delete()
+      .eq('thread_id', threadId);
+
+    if (error) {
+      const err = new Error(`Failed to delete chat messages: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_messages', threadId, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return { success: true };
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'delete_messages', threadId, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function deleteChatMessageBySequence(threadId, sequenceNumber) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { error } = await supabase
+      .from(MESSAGES_TABLE)
+      .delete()
+      .eq('thread_id', threadId)
+      .eq('sequence_number', sequenceNumber);
+
+    if (error) {
+      const err = new Error(`Failed to delete chat message by sequence: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_message_by_sequence', threadId, sequenceNumber, table: MESSAGES_TABLE };
+      throw err;
+    }
+
+    return { success: true };
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'delete_message_by_sequence', threadId, sequenceNumber, table: MESSAGES_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function deleteChatThreads(sessionId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+    
+    const { error } = await supabase
+      .from(THREADS_TABLE)
+      .delete()
+      .eq('sessionId', sessionId);
+    
+    if (error) {
+      const err = new Error(`Failed to delete chat threads: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_threads', sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+    
+    return { success: true };
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'delete_threads', sessionId, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function deleteChatSession(sessionId) {
+  try {
+    moduleLogger.debug('deleteChatSession called', { sessionId, table: THREADS_TABLE });
+
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error} = await supabase
+      .from(THREADS_TABLE)
+      .delete()
+      .eq('id', sessionId)
+      .select();
+
+    moduleLogger.debug('Delete result', { data, error: error?.message || 'none' });
+
+    if (error) {
+      const err = new Error(`Failed to delete chat thread: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'delete_thread', sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+
+    moduleLogger.debug('Successfully deleted thread', { sessionId });
+    return { success: true };
+  } catch (error) {
+    moduleLogger.error('Error in deleteChatSession', { error: error.message, sessionId });
+    if (!error.context) {
+      error.context = { operation: 'delete_thread', sessionId, table: THREADS_TABLE };
+    }
+    throw error;
+  }
+}
+
+export async function incrementThreadMessageCount(threadId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase.rpc('increment_thread_message_count', {
+      p_thread_id: threadId
+    });
+
+    if (error) {
+      const err = new Error(`Failed to increment thread message count: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'increment_message_count', threadId };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'increment_message_count', threadId };
+    }
+    throw error;
+  }
+}
+
+export async function decrementThreadMessageCount(threadId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase.rpc('decrement_thread_message_count', {
+      p_thread_id: threadId
+    });
+
+    if (error) {
+      const err = new Error(`Failed to decrement thread message count: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'decrement_message_count', threadId };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'decrement_message_count', threadId };
+    }
+    throw error;
+  }
+}
+
+export async function getNextMessageSequence(threadId) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase.rpc('get_next_message_sequence', {
+      p_thread_id: threadId
+    });
+
+    if (error) {
+      const err = new Error(`Failed to get next message sequence: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'get_next_sequence', threadId };
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'get_next_sequence', threadId };
+    }
+    throw error;
+  }
+}
+
+export default {
+  createChatSession,
+  createChatSessionWithId,
+  getChatSession,
+  listChatSessions,
+  createChatThread,
+  createChatThreadWithId,
+  getChatThread,
+  getThreadBySessionId,
+  listChatThreads,
+  listThreadsWithSummaries,
+  createChatMessage,
+  createChatMessageWithSequence,
+  getChatMessages,
+  getMessagesByThreadWithSequence,
+  updateChatSession,
+  updateChatThread,
+  deleteChatMessages,
+  deleteChatMessageBySequence,
+  deleteChatThreads,
+  deleteChatSession,
+  incrementThreadMessageCount,
+  decrementThreadMessageCount,
+  getNextMessageSequence
+};
+
 ```

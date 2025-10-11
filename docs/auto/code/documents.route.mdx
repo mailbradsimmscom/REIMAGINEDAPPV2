@@ -1,23 +1,9 @@
-# `documents.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/document/documents.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../services/document.service.js`
-  - `../../middleware/admin.js`
-  - `../../middleware/validate.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/document.schema.js`
-
-## Express Routes
-- USE undefined
-- USE undefined
-- GET /
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
@@ -49,6 +35,34 @@ router.get('/',
         success: true,
         data: {
           documents,
-          
-...
+          count: documents.length,
+          limit: Number(limit),
+          offset: Number(offset)
+        },
+        error: null,
+      };
+
+      // Optional: Validate response schema if RESPONSE_VALIDATE=1
+      // documentDocumentsResponseSchema.parse(envelope);
+
+      return res.json(envelope);
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return res.json({
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
+
+export default router;
+
 ```

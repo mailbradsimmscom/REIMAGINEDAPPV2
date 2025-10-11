@@ -1,17 +1,9 @@
-# `configGuard.service.js`
+---
+title: Module
+description: Config guard service - ensure critical lexicon files exist Seeds defaults if missing to make startup resilient
+---
 
-- **Path**: `src/startup/configGuard.service.js`
-- **Exports**: None
-- **Imports**:
-  - `node:fs/promises`
-  - `node:path`
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 /**
  * Config guard service - ensure critical lexicon files exist
  * Seeds defaults if missing to make startup resilient
@@ -44,6 +36,58 @@ async function ensureFile(relPath, seedObj) {
   try {
     await fs.access(abs);
     // File exists - validate it's valid JSON
-    const txt = await fs.readFile(abs, 'utf-8')
-...
+    const txt = await fs.readFile(abs, 'utf-8');
+    JSON.parse(txt);
+  } catch {
+    // File doesn't exist or is invalid JSON - create it
+    await fs.mkdir(path.dirname(abs), { recursive: true });
+    await fs.writeFile(abs, JSON.stringify(seedObj, null, 2), 'utf-8');
+  }
+}
+
+/**
+ * Default maintenance lexicon content
+ * @returns {Object} Default maintenance configuration
+ */
+function defaultMaintenance() {
+  return {
+    maintenance_tokens: [
+      "filter", "filters", "micron", "cartridge", "carbon", "active carbon",
+      "replace", "replacement", "interval", "maintenance", "service", "hours", "year", "schedule",
+      "pre-filter", "pre filter", "strainer", "membrane", "flush", "flushing"
+    ],
+    interval_regexes: [
+      "every\\s+\\d+(?:-\\d+)?\\s+(?:hours?|days?|weeks?|months?|years?)",
+      "once\\s+per\\s+(?:day|week|month|year)",
+      "\\b\\d+\\s*(?:hours?|days?|weeks?|months?|years?)\\b"
+    ]
+  };
+}
+
+/**
+ * Default units lexicon content
+ * @returns {Object} Default units configuration
+ */
+function defaultUnits() {
+  return {
+    length: [
+      { "canonical": "m",  "aliases": ["m", "meter", "metre"] },
+      { "canonical": "ft", "aliases": ["ft", "feet", "′", "'"] },
+      { "canonical": "in", "aliases": ["in", "inch", "inches", "″", "\""] }
+    ],
+    pressure: [
+      { "canonical": "bar", "aliases": ["bar"] },
+      { "canonical": "kPa", "aliases": ["kpa", "kPa"] },
+      { "canonical": "psi", "aliases": ["psi"] }
+    ],
+    power: [
+      { "canonical": "kW", "aliases": ["kw", "kW"] },
+      { "canonical": "hp", "aliases": ["hp", "horsepower"] }
+    ],
+    torque: [
+      { "canonical": "N·m", "aliases": ["n·m", "n-m", "nm", "Nm"] }
+    ]
+  };
+}
+
 ```

@@ -1,17 +1,9 @@
-# `supabaseClient.js`
+---
+title: Module
+description: 👇 compat shim for older code
+---
 
-- **Path**: `src/repositories/supabaseClient.js`
-- **Exports**: default
-- **Imports**:
-  - `@supabase/supabase-js`
-  - `../utils/logger.js`
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 // src/repositories/supabaseClient.js
 import { createClient } from '@supabase/supabase-js';
 import { logger } from '../utils/logger.js';
@@ -26,6 +18,7 @@ async function getSupabaseConfig() {
   return {
     url: env.SUPABASE_URL,
     key:
+      env.PY_SUPABASE_SERVICE_KEY ||  // Use same key as Python first
       env.SUPABASE_SERVICE_KEY ||
       env.SUPABASE_SERVICE_ROLE_KEY ||
       env.SUPABASE_SERVICE_ROLE ||
@@ -49,6 +42,34 @@ export async function getSupabaseClient() {
     return null; // graceful degradation
   }
 
-  supabase = createClient(
-...
+  supabase = createClient(url, key);
+
+  // Log once on first real init
+  if (!hasLoggedConfig) {
+    logger.info('🔑 Supabase client initialized', {
+      supabaseUrlPrefix: url.split('//')[1]?.split('.')[0],
+      hasServiceKey: !!key,
+      keyPrefix: key?.substring(0, 20) + '...',
+      keyType: key?.startsWith('eyJ') ? 'JWT' : key?.startsWith('sb_') ? 'SERVICE' : 'OTHER'
+    });
+    hasLoggedConfig = true;
+  }
+
+  return supabase;
+}
+
+// Convenience, if you want explicit storage access without extra clients:
+export async function getSupabaseStorage() {
+  const client = await getSupabaseClient();
+  return client?.storage ?? null;
+}
+
+/** 👇 compat shim for older code */
+export async function getSupabaseStorageClient() {
+  return await getSupabaseClient();
+}
+
+// Prefer named exports; if you want a default, export the **getter**, not the instance:
+export default getSupabaseClient;
+
 ```

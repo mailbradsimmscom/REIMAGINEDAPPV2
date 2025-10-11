@@ -1,16 +1,9 @@
-# `printRoutes.js`
+---
+title: printRoutes
+description: Auto-generated code reference
+---
 
-- **Path**: `src/debug/printRoutes.js`
-- **Exports**: None
-- **Imports**:
-  - `node:path`
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 // Node 20, ESM
 import path from 'node:path';
 
@@ -40,6 +33,13 @@ export function printRoutes(appOrRouter, logger = console) {
     const stack = appOrRouter?._router?.stack ?? appOrRouter?.stack ?? [];
     const routes = collectRoutes(stack);
     logger.info?.('--- ROUTE SNAPSHOT START ---');
-    for (const r of routes) 
-...
+    for (const r of routes) {
+      logger.info?.(`${r.methods.join(',').padEnd(10)} ${r.path}`);
+    }
+    logger.info?.('--- ROUTE SNAPSHOT END ---');
+  } catch (err) {
+    logger.error?.('Failed to print routes', err);
+  }
+}
+
 ```

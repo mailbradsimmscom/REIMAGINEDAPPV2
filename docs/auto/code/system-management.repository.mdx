@@ -1,0 +1,370 @@
+---
+title: Module
+description: System Management Repository * All database operations for system management feature. Follows cursor rules - ALL DB/storage/network I/O goes here.
+---
+
+```javascript
+import { getSupabaseClient } from './supabaseClient.js';
+import { logger } from '../utils/logger.js';
+
+/**
+ * System Management Repository
+ *
+ * All database operations for system management feature.
+ * Follows cursor rules: ALL DB/storage/network I/O goes here.
+ */
+
+/**
+ * Get distinct manufacturers from systems table
+ * @returns {Promise<Array<string>>} Array of manufacturer names
+ */
+export async function getManufacturers() {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('systems')
+      .select('manufacturer_norm')
+      .not('manufacturer_norm', 'is', null)
+      .order('manufacturer_norm');
+
+    if (error) throw error;
+
+    // Get unique manufacturers
+    const manufacturers = [...new Set(data.map(row => row.manufacturer_norm))];
+    return manufacturers.sort();
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching manufacturers', { error: error.message });
+    throw error;
+  }
+}
+
+/**
+ * Get models for a specific manufacturer
+ * @param {string} manufacturer - Manufacturer name
+ * @returns {Promise<Array<string>>} Array of model names
+ */
+export async function getModelsByManufacturer(manufacturer) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('systems')
+      .select('model_norm')
+      .eq('manufacturer_norm', manufacturer)
+      .not('model_norm', 'is', null)
+      .order('model_norm');
+
+    if (error) throw error;
+
+    const models = [...new Set(data.map(row => row.model_norm))];
+    return models.sort();
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching models', {
+      error: error.message,
+      manufacturer
+    });
+    throw error;
+  }
+}
+
+/**
+ * Search for system by manufacturer and model
+ * @param {string} manufacturer - Manufacturer name
+ * @param {string} model - Model name
+ * @returns {Promise<Array<Object>>} Array of system records
+ */
+export async function findSystemByManufacturerModel(manufacturer, model) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('systems')
+      .select('asset_uid, manufacturer_norm, model_norm, description')
+      .eq('manufacturer_norm', manufacturer)
+      .eq('model_norm', model);
+
+    if (error) throw error;
+
+    return data;
+
+  } catch (error) {
+    requestLogger.error('Repository error searching systems', {
+      error: error.message,
+      manufacturer,
+      model
+    });
+    throw error;
+  }
+}
+
+/**
+ * Get instances for a system
+ * @param {string} assetUid - System asset UID
+ * @returns {Promise<Array<Object>>} Array of instance records
+ */
+export async function getInstancesByAssetUid(assetUid) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('instances')
+      .select('instance_uid, asset_uid, serial_number, location, instance_index')
+      .eq('asset_uid', assetUid)
+      .order('instance_index', { nullsFirst: false });
+
+    if (error) throw error;
+
+    return data || [];
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching instances', {
+      error: error.message,
+      assetUid
+    });
+    throw error;
+  }
+}
+
+/**
+ * Create a new system
+ * @param {Object} systemData - System data to insert
+ * @returns {Promise<Object>} Created system record
+ */
+export async function createSystem(systemData) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('systems')
+      .insert([systemData])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+
+  } catch (error) {
+    requestLogger.error('Repository error creating system', {
+      error: error.message,
+      systemData
+    });
+    throw error;
+  }
+}
+
+/**
+ * Update an existing system
+ * @param {string} assetUid - System asset UID
+ * @param {Object} systemData - System data to update
+ * @returns {Promise<Object>} Updated system record
+ */
+export async function updateSystem(assetUid, systemData) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('systems')
+      .update(systemData)
+      .eq('asset_uid', assetUid)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+
+  } catch (error) {
+    requestLogger.error('Repository error updating system', {
+      error: error.message,
+      assetUid,
+      systemData
+    });
+    throw error;
+  }
+}
+
+/**
+ * Delete a system (hard delete)
+ * @param {string} assetUid - System asset UID
+ * @returns {Promise<void>}
+ */
+export async function deleteSystem(assetUid) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { error } = await supabase
+      .from('systems')
+      .delete()
+      .eq('asset_uid', assetUid);
+
+    if (error) throw error;
+
+  } catch (error) {
+    requestLogger.error('Repository error deleting system', {
+      error: error.message,
+      assetUid
+    });
+    throw error;
+  }
+}
+
+/**
+ * Create a new instance
+ * @param {Object} instanceData - Instance data to insert
+ * @returns {Promise<Object>} Created instance record
+ */
+export async function createInstance(instanceData) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('instances')
+      .insert([instanceData])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+
+  } catch (error) {
+    requestLogger.error('Repository error creating instance', {
+      error: error.message,
+      instanceData
+    });
+    throw error;
+  }
+}
+
+/**
+ * Update an existing instance
+ * @param {string} instanceUid - Instance UID
+ * @param {Object} instanceData - Instance data to update
+ * @returns {Promise<Object>} Updated instance record
+ */
+export async function updateInstance(instanceUid, instanceData) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('instances')
+      .update(instanceData)
+      .eq('instance_uid', instanceUid)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+
+  } catch (error) {
+    requestLogger.error('Repository error updating instance', {
+      error: error.message,
+      instanceUid,
+      instanceData
+    });
+    throw error;
+  }
+}
+
+/**
+ * Archive an instance (soft delete)
+ * @param {string} instanceUid - Instance UID to archive
+ * @returns {Promise<void>}
+ */
+export async function archiveInstance(instanceUid) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    // First, get the full instance record
+    const { data: instance, error: fetchError } = await supabase
+      .from('instances')
+      .select('*')
+      .eq('instance_uid', instanceUid)
+      .single();
+
+    if (fetchError) throw fetchError;
+    if (!instance) throw new Error('Instance not found');
+
+    // Insert into archive table (only essential fields + original_data JSONB)
+    const { error: archiveError } = await supabase
+      .from('instances_archived')
+      .insert([{
+        instance_uid: instance.instance_uid,
+        asset_uid: instance.asset_uid,
+        serial_number: instance.serial_number,
+        location: instance.location,
+        instance_index: instance.instance_index,
+        archived_at: new Date().toISOString(),
+        archived_by: 'system',
+        original_data: instance
+      }]);
+
+    if (archiveError) throw archiveError;
+
+    // Delete from instances table
+    const { error: deleteError } = await supabase
+      .from('instances')
+      .delete()
+      .eq('instance_uid', instanceUid);
+
+    if (deleteError) throw deleteError;
+
+  } catch (error) {
+    requestLogger.error('Repository error archiving instance', {
+      error: error.message,
+      instanceUid
+    });
+    throw error;
+  }
+}
+
+/**
+ * Get next instance_index for a system
+ * @param {string} assetUid - System asset UID
+ * @returns {Promise<number>} Next available instance_index
+ */
+export async function getNextInstanceIndex(assetUid) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('instances')
+      .select('instance_index')
+      .eq('asset_uid', assetUid)
+      .order('instance_index', { ascending: false })
+      .limit(1);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0 || data[0].instance_index === null) {
+      return 1;
+    }
+
+    return data[0].instance_index + 1;
+
+  } catch (error) {
+    requestLogger.error('Repository error getting next instance index', {
+      error: error.message,
+      assetUid
+    });
+    throw error;
+  }
+}
+
+```

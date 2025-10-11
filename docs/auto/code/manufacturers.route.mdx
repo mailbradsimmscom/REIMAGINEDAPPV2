@@ -1,24 +1,9 @@
-# `manufacturers.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/admin/manufacturers.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../middleware/admin.js`
-  - `../../middleware/validate.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/admin.schema.js`
-  - `../../services/admin.service.js`
-  - `zod`
-
-## Express Routes
-- USE undefined
-- USE undefined
-- GET /
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
@@ -45,6 +30,33 @@ const adminManufacturersQuerySchema = z.object({
 // GET /admin/manufacturers - List manufacturers
 router.get('/', 
   validate(adminManufacturersQuerySchema, 'query'),
-  async (req, res, next) 
-...
+  async (req, res, next) => {
+  try {
+    const data = await adminService.getManufacturers();
+
+    const envelope = {
+      success: true,
+      data
+    };
+
+    return res.json(envelope);
+    
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return res.json({
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
+
+export default router;
+
 ```

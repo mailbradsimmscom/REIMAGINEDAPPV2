@@ -1,17 +1,9 @@
-# `health.schema.js`
+---
+title: BasicHealthEnvelope, ServiceStatusEnvelope, ReadinessEnvelope, healthResponseSchema, healthQuerySchema, EmptyQuery, adminHealthResponseSchema, adminHealthErrorSchema
+description: Auto-generated code reference
+---
 
-- **Path**: `src/schemas/health.schema.js`
-- **Exports**: BasicHealthEnvelope, ServiceStatusEnvelope, ReadinessEnvelope, healthResponseSchema, healthQuerySchema, EmptyQuery, adminHealthResponseSchema, adminHealthErrorSchema
-- **Imports**:
-  - `zod`
-  - `./envelope.schema.js`
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 import { z } from 'zod';
 import { EnvelopeSuccessSchema, EnvelopeErrorSchema } from './envelope.schema.js';
 
@@ -51,6 +43,47 @@ export const ServiceStatusEnvelope = z.union([
   EnvelopeErrorSchema
 ]);
 
-export
-...
+export const ReadinessEnvelope = z.union([
+  EnvelopeSuccessSchema.extend({ data: ReadinessData }),
+  EnvelopeErrorSchema
+]);
+
+// Legacy schema for backward compatibility
+export const healthResponseSchema = z.object({
+  status: z.string(),
+  timestamp: z.string(),
+  uptime: z.number().optional()
+});
+
+// Health query schema (if needed for future endpoints)
+export const healthQuerySchema = z.object({
+  // Add query parameters if needed
+}).optional();
+
+// Empty query schema for simple GET routes
+export const EmptyQuery = z.object({}).passthrough();
+
+// Admin health schemas (separate from main health domain)
+export const adminHealthResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    timestamp: z.string(),
+    uptime: z.number(),
+    memory: z.object({
+      rss: z.number(),
+      heapTotal: z.number(),
+      heapUsed: z.number(),
+      external: z.number(),
+      arrayBuffers: z.number()
+    }),
+    environment: z.string(),
+    version: z.string()
+  })
+});
+
+export const adminHealthErrorSchema = z.object({
+  error: z.string(),
+  type: z.literal('admin_health_error')
+});
+
 ```

@@ -1,25 +1,9 @@
-# `job-status.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/document/job-status.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../services/document.service.js`
-  - `../../middleware/admin.js`
-  - `../../middleware/validate.js`
-  - `../../schemas/document.schema.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/document.schema.js`
-  - `zod`
-
-## Express Routes
-- USE undefined
-- USE undefined
-- GET /jobs/:jobId
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
@@ -48,6 +32,21 @@ router.get('/jobs/:jobId',
     
     if (!job) {
       const error = new Error('Job not found');
-      error.sta
-...
+      error.status = 404;
+      throw error;
+    }
+    
+    const envelope = {
+      success: true,
+      data: job
+    };
+
+          return res.json(envelope);
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default router;
+
 ```

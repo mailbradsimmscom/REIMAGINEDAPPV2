@@ -1,25 +1,9 @@
-# `get-one.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/document/get-one.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../services/document.service.js`
-  - `../../middleware/admin.js`
-  - `../../middleware/validate.js`
-  - `../../schemas/document.schema.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/document.schema.js`
-  - `zod`
-
-## Express Routes
-- USE undefined
-- USE undefined
-- GET /documents/:docId
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
@@ -47,6 +31,22 @@ router.get('/documents/:docId',
     const document = await documentService.getDocument(docId);
     
     if (!document) {
-      const error = new Error('Documen
-...
+      const error = new Error('Document not found');
+      error.status = 404;
+      throw error;
+    }
+    
+    const envelope = {
+      success: true,
+      data: document
+    };
+
+          return res.json(envelope);
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default router;
+
 ```

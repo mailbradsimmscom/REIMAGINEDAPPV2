@@ -1,16 +1,9 @@
-# `url.js`
+---
+title: joinUrl
+description: Auto-generated code reference
+---
 
-- **Path**: `src/utils/url.js`
-- **Exports**: None
-- **Imports**:
-  - None
-
-## Express Routes
-_None detected_
-
-## Raw Content
-
-```js
+```javascript
 export function joinUrl(base, path = '') {
   // Robust join that avoids double slashes
   return new URL(path, base).toString().replace(/(?<!:)\/{2,}/g, '/');

@@ -1,0 +1,193 @@
+{
+  "workspace": {
+    "name": "REIMAGINEDAPPV2 - Python Sidecar",
+    "description": "Auto-generated from python-sidecar/ directory",
+    "model": {
+      "softwareSystems": [
+        {
+          "id": "python-sidecar",
+          "name": "Python Sidecar Service",
+          "description": "FastAPI microservice for document processing and LLM operations",
+          "location": "Internal",
+          "tags": "SoftwareSystem,Python",
+          "containers": [
+            {
+              "id": "python-processors",
+              "name": "Document Processors",
+              "description": "DIP pipeline and document analysis",
+              "technology": "Python",
+              "tags": "Container,Processors",
+              "components": [
+                {
+                  "id": "python-dip_processor",
+                  "name": "dip_processor",
+                  "description": "dip_processor.py",
+                  "technology": "Python",
+                  "tags": "Processor"
+                }
+              ]
+            },
+            {
+              "id": "python-services",
+              "name": "LLM Services",
+              "description": "Language model integration and processing",
+              "technology": "Python + OpenAI",
+              "tags": "Container,Services",
+              "components": [
+                {
+                  "id": "python-chat-services-llm_service",
+                  "name": "chat/services/llm_service",
+                  "description": "chat/services/llm_service.py",
+                  "technology": "Python",
+                  "tags": "Service"
+                },
+                {
+                  "id": "python-chat-services-dip_retriever",
+                  "name": "chat/services/dip_retriever",
+                  "description": "chat/services/dip_retriever.py",
+                  "technology": "Python",
+                  "tags": "Service"
+                },
+                {
+                  "id": "python-chat-services-base",
+                  "name": "chat/services/base",
+                  "description": "chat/services/base.py",
+                  "technology": "Python",
+                  "tags": "Service"
+                },
+                {
+                  "id": "python-chat-services-production_dip_retriever",
+                  "name": "chat/services/production_dip_retriever",
+                  "description": "chat/services/production_dip_retriever.py",
+                  "technology": "Python",
+                  "tags": "Service"
+                }
+              ]
+            },
+            {
+              "id": "python-utils",
+              "name": "Utilities",
+              "description": "Helper functions and utilities",
+              "technology": "Python",
+              "tags": "Container,Utils",
+              "components": [
+                {
+                  "id": "python-simple_main",
+                  "name": "simple_main",
+                  "description": "simple_main.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-logging_config",
+                  "name": "logging_config",
+                  "description": "logging_config.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-models",
+                  "name": "models",
+                  "description": "models.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-supabase_storage",
+                  "name": "supabase_storage",
+                  "description": "supabase_storage.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-parser",
+                  "name": "parser",
+                  "description": "parser.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-pinecone_client",
+                  "name": "pinecone_client",
+                  "description": "pinecone_client.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-main",
+                  "name": "main",
+                  "description": "main.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chat-chat_models",
+                  "name": "chat/chat_models",
+                  "description": "chat/chat_models.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chat-debug_logger",
+                  "name": "chat/debug_logger",
+                  "description": "chat/debug_logger.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chat-config-system_prompts",
+                  "name": "chat/config/system_prompts",
+                  "description": "chat/config/system_prompts.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chat-workflows-chat_workflow_sequential",
+                  "name": "chat/workflows/chat_workflow_sequential",
+                  "description": "chat/workflows/chat_workflow_sequential.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chunking-models",
+                  "name": "chunking/models",
+                  "description": "chunking/models.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chunking-chunker",
+                  "name": "chunking/chunker",
+                  "description": "chunking/chunker.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chunking-parser",
+                  "name": "chunking/parser",
+                  "description": "chunking/parser.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chunking-embeddings",
+                  "name": "chunking/embeddings",
+                  "description": "chunking/embeddings.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                },
+                {
+                  "id": "python-chunking-pipeline",
+                  "name": "chunking/pipeline",
+                  "description": "chunking/pipeline.py",
+                  "technology": "Python",
+                  "tags": "Utility"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

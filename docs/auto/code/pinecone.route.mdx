@@ -1,24 +1,9 @@
-# `pinecone.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/admin/pinecone.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../utils/logger.js`
-  - `../../middleware/admin.js`
-  - `../../middleware/validate.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/admin.schema.js`
-  - `zod`
-
-## Express Routes
-- USE undefined
-- USE undefined
-- GET /
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
 import { logger } from '../../utils/logger.js';
 import { adminGate } from '../../middleware/admin.js';
@@ -45,6 +30,93 @@ router.get('/',
   try {
     const requestLogger = logger.createRequestLogger();
     const { getEnv } = await import('../../config/env.js');
-    const { PYTHON_SIDECAR_URL = 'http://localhost:8000', PINECONE_INDEX, PINECONE_N
-...
+    const { PYTHON_SIDECAR_URL = 'http://localhost:8000', PINECONE_INDEX, PINECONE_NAMESPACE = '__default__' } = getEnv();
+    
+    // Check sidecar health
+    let sidecarHealth = { status: 'unknown', error: null };
+    try {
+      const healthResponse = await fetch(`${PYTHON_SIDECAR_URL}/health`);
+      if (healthResponse.ok) {
+        const healthData = await healthResponse.json();
+        sidecarHealth = { 
+          status: 'healthy', 
+          version: healthData.version,
+          tesseractAvailable: healthData.tesseract_available
+        };
+      } else {
+        sidecarHealth = { status: 'unhealthy', error: `HTTP ${healthResponse.status}` };
+      }
+    } catch (error) {
+      sidecarHealth = { status: 'unreachable', error: error.message };
+    }
+    
+    // First check health
+    const healthResponse = await fetch(`${PYTHON_SIDECAR_URL}/health`);
+    if (!healthResponse.ok) {
+      throw new Error(`Sidecar health check failed: ${healthResponse.status}`);
+    }
+    
+    const healthData = await healthResponse.json();
+    
+    // Then get Pinecone stats
+    const statsResponse = await fetch(`${PYTHON_SIDECAR_URL}/v1/pinecone/stats`);
+    let statsData = null;
+    
+    if (statsResponse.ok) {
+      statsData = await statsResponse.json();
+      requestLogger.debug('Pinecone stats retrieved', {
+        totalVectors: statsData?.total_vector_count,
+        dimension: statsData?.dimension
+      });
+    } else {
+      requestLogger.warn('Failed to get Pinecone stats', { 
+        status: statsResponse.status,
+        statusText: statsResponse.statusText 
+      });
+    }
+    
+    // Get basic Pinecone info from environment
+    const pineconeData = {
+      status: healthData.status === 'healthy' ? 'Connected' : 'Disconnected',
+      index: PINECONE_INDEX,
+      namespace: PINECONE_NAMESPACE,
+      vectors: statsData?.total_vector_count || 'N/A',
+      totalVectors: statsData?.total_vector_count || 0,
+      dimension: statsData?.dimension || 'N/A',
+      indexFullness: '0.0%',
+      lastChecked: new Date().toISOString(),
+      sidecarHealth: sidecarHealth
+    };
+
+    const envelope = {
+      success: true,
+      data: pineconeData
+    };
+
+    return res.json(envelope);
+    
+    requestLogger.info('Pinecone status retrieved', { 
+      status: pineconeData.status,
+      index: pineconeData.index,
+      vectorCount: pineconeData.vectors
+    });
+    
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Method not allowed for all other methods
+router.all('/', (req, res) => {
+  return res.json({
+    success: false,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed`
+    }
+  }, 405);
+});
+
+export default router;
+
 ```

@@ -1,0 +1,660 @@
+{
+  "pages": [
+    {
+      "name": "Module",
+      "path": "/auto/code/app"
+    },
+    {
+      "name": "truncateContent",
+      "path": "/auto/code/openai.client"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/python-sidecar.client"
+    },
+    {
+      "name": "getEnv, ENV",
+      "path": "/auto/code/env"
+    },
+    {
+      "name": "personality, stylePresets",
+      "path": "/auto/code/personality"
+    },
+    {
+      "name": "ERR",
+      "path": "/auto/code/errorCodes"
+    },
+    {
+      "name": "attachConfigInspector",
+      "path": "/auto/code/config"
+    },
+    {
+      "name": "printRoutes",
+      "path": "/auto/code/printRoutes"
+    },
+    {
+      "name": "attachRouteDebugger",
+      "path": "/auto/code/routes"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/index"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pdfPreview"
+    },
+    {
+      "name": "adminGate, adminOnly",
+      "path": "/auto/code/admin"
+    },
+    {
+      "name": "errorHandler, notFoundHandler, methodNotAllowed",
+      "path": "/auto/code/error"
+    },
+    {
+      "name": "methodNotAllowed",
+      "path": "/auto/code/methodNotAllowed"
+    },
+    {
+      "name": "requestLoggingMiddleware, getRequestMetrics, getAllRequestMetrics",
+      "path": "/auto/code/requestLogging"
+    },
+    {
+      "name": "securityHeaders, basicRateLimit",
+      "path": "/auto/code/security"
+    },
+    {
+      "name": "requireSupabase, requireOpenAI, requirePinecone, requireSidecar, requireServices",
+      "path": "/auto/code/serviceGuards"
+    },
+    {
+      "name": "trace404",
+      "path": "/auto/code/trace404"
+    },
+    {
+      "name": "validate",
+      "path": "/auto/code/validate"
+    },
+    {
+      "name": "validateResponse",
+      "path": "/auto/code/validateResponse"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/app"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/loadChatThread"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/boot"
+    },
+    {
+      "name": "initRouter",
+      "path": "/auto/code/router"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/chunks"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/dashboard"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/dip"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/doc-upload"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/health"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/jobs"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/metrics"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/suggestions"
+    },
+    {
+      "name": "init",
+      "path": "/auto/code/systems"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/shared-utils"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/dashboard"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/include-loader"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/intent-router"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/playbooks"
+    },
+    {
+      "name": "anthropicExtractionRepository",
+      "path": "/auto/code/anthropic.extraction.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/chat.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/document-chunks.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/document.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/example.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/intent.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/introspect.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/jobs.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/knowledge.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/sidecar.client"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/supabaseClient"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/system-management.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/systems.repository"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/dashboard.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/golden-tests.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/health.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/index"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/jobs.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/logs.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/manufacturers.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/metrics.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/models.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone-admin.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/playbooks.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/snapshots.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/suggestions.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/systems-minimal.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/systems.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/testing.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/text-extraction.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/upload.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/context.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/delete.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/history.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/index"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/list.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/messages.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/process.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/session-delete.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/sessions.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/thread-by-session.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/threads.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/chat.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/documents.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/get-one.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/index"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/ingest.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/job-status.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/jobs.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/health.router"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone.router"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/system-management.route"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/systems.router"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/test-normalizer.route"
+    },
+    {
+      "name": "adminHealthResponseSchema, adminManufacturersResponseSchema, adminModelsQuerySchema, adminModelsResponseSchema, adminLogsQuerySchema, adminLogsResponseSchema, adminSystemsResponseSchema, adminPineconeResponseSchema, adminJobsResponseSchema, adminDocumentsResponseSchema, AdminHealthEnvelope, AdminManufacturersEnvelope, AdminModelsEnvelope, AdminLogsEnvelope, AdminSystemsEnvelope, AdminPineconeEnvelope, AdminMetricsEnvelope",
+      "path": "/auto/code/admin.schema"
+    },
+    {
+      "name": "chatHistoryQuerySchema, chatHistoryResponseSchema, chatDeleteRequestSchema, chatDeleteResponseSchema, chatListQuerySchema, chatProcessRequestSchema, chatProcessResponseSchema, chatListResponseSchema, chatContextQuerySchema, chatContextResponseSchema, chatDeletePathSchema, ChatDeleteEnvelope, ChatHistoryEnvelope, ChatContextEnvelope, ChatProcessEnvelope, ChatListEnvelope",
+      "path": "/auto/code/chat.schema"
+    },
+    {
+      "name": "paginationQuerySchema, searchQuerySchema, uuidParamSchema, documentIdParamSchema, sessionIdParamSchema, threadIdParamSchema",
+      "path": "/auto/code/common.schema"
+    },
+    {
+      "name": "documentIngestMetadataSchema, documentJobsQuerySchema, documentJobsResponseSchema, documentDocumentsQuerySchema, documentDocumentsResponseSchema, documentGetQuerySchema, documentGetResponseSchema, documentJobStatusPathSchema, documentJobStatusResponseSchema, JobStatusEnvelope, DocumentGetOneEnvelope, DocumentIngestEnvelope, DocumentJobsEnvelope, DocumentDocumentsEnvelope",
+      "path": "/auto/code/document.schema"
+    },
+    {
+      "name": "ErrorObjectSchema, EnvelopeBase, EnvelopeSuccessSchema, EnvelopeErrorSchema, EnvelopeSchema",
+      "path": "/auto/code/envelope.schema"
+    },
+    {
+      "name": "BasicHealthEnvelope, ServiceStatusEnvelope, ReadinessEnvelope, healthResponseSchema, healthQuerySchema, EmptyQuery, adminHealthResponseSchema, adminHealthErrorSchema",
+      "path": "/auto/code/health.schema"
+    },
+    {
+      "name": "SystemUid, HashOrUuid",
+      "path": "/auto/code/id.schema"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/index"
+    },
+    {
+      "name": "DIPSchema, SuggestionsSchema, ApplyRequestSchema, ApplyResponseSchema, RollbackRequestSchema, RollbackResponseSchema, validateDIP, validateSuggestions, validateApplyRequest, validateRollbackRequest, createDefaultDIP, createDefaultSuggestions",
+      "path": "/auto/code/ingestion.schema"
+    },
+    {
+      "name": "pineconeStatsQuerySchema, pineconeStatsResponseSchema, pineconeSearchRequestSchema, pineconeSearchResponseSchema, pineconeDocumentChunksPathSchema, pineconeDocumentChunksResponseSchema, pineconeQueryRequestSchema, pineconeQueryResponseSchema",
+      "path": "/auto/code/pinecone.schema"
+    },
+    {
+      "name": "SpecKeywordSchema, AcceptSpecPayload",
+      "path": "/auto/code/suggestions.schema"
+    },
+    {
+      "name": "systemsListQuerySchema, systemsGetPathSchema, UUIDParam, systemsListResponseSchema, systemsSearchQuerySchema, systemsSearchResponseSchema, systemsGetResponseSchema, SystemsListEnvelope, SystemsSearchEnvelope, SystemsGetEnvelope",
+      "path": "/auto/code/systems.schema"
+    },
+    {
+      "name": "uploadDocumentSchema, flexibleUploadDocumentSchema, documentUploadRequestSchema, systemMetadataSchema, documentCreationSchema",
+      "path": "/auto/code/uploadDocument.schema"
+    },
+    {
+      "name": "AdminService, adminService",
+      "path": "/auto/code/admin.service"
+    },
+    {
+      "name": "anthropicExtractionService",
+      "path": "/auto/code/anthropic.extraction.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/assistant-response.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/chat-completion.service"
+    },
+    {
+      "name": "handleUserQuery",
+      "path": "/auto/code/chat-orchestrator.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/chat-proxy.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/colloquial-extraction.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/conversation-context.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/dip-retriever.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/dip.ingest.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/dip.service"
+    },
+    {
+      "name": "getTextExtractionMetrics, clearTextCache, getCacheStats",
+      "path": "/auto/code/document-text.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/document.service"
+    },
+    {
+      "name": "handleUserQuery",
+      "path": "/auto/code/enhanced-chat.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/equipment-extraction.service"
+    },
+    {
+      "name": "quickReferenceCheck",
+      "path": "/auto/code/equipment-relationship-inference.service"
+    },
+    {
+      "name": "shouldAttemptFactFirst",
+      "path": "/auto/code/fact-first.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/index"
+    },
+    {
+      "name": "isOpenAIConfigured",
+      "path": "/auto/code/openai.guard"
+    },
+    {
+      "name": "isPineconeConfigured",
+      "path": "/auto/code/pinecone.guard"
+    },
+    {
+      "name": "isSidecarConfigured",
+      "path": "/auto/code/sidecar.guard"
+    },
+    {
+      "name": "isSupabaseConfigured",
+      "path": "/auto/code/supabase.guard"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/intent-router.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/introspect.service"
+    },
+    {
+      "name": "processUserMessage",
+      "path": "/auto/code/langgraph-chat.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/llm.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/logs.service"
+    },
+    {
+      "name": "SupabaseMemoryManager, createMemoryManager",
+      "path": "/auto/code/memory.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone-rag.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone-retrieval.service"
+    },
+    {
+      "name": "isPineconeConfigured",
+      "path": "/auto/code/pinecone.guard"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/pinecone.service"
+    },
+    {
+      "name": "normalizeQuery",
+      "path": "/auto/code/query-normalizer"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/rerank.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/intent.suggestions"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/suggestions.apply.service"
+    },
+    {
+      "name": "shouldSummarizeThread, getSummarizationMetadata",
+      "path": "/auto/code/summarization.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/system-management.service"
+    },
+    {
+      "name": "systemsService",
+      "path": "/auto/code/systems.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/thread-naming.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/thread-summary.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/viewRefresh.service"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/start"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/configGuard.service"
+    },
+    {
+      "name": "chatDebug, timed",
+      "path": "/auto/code/chat-debug-logger"
+    },
+    {
+      "name": "isFollowUpQuestion, containsAmbiguousPronoun, extractEquipmentTerms, hasExistingSystemsContext, getExistingSystemsContext, contextRewrite, withTimeout",
+      "path": "/auto/code/context-utils"
+    },
+    {
+      "name": "formatFactAnswer, createFactResponse, formatMultipleFacts",
+      "path": "/auto/code/formatter"
+    },
+    {
+      "name": "FuzzyMatcher, fuzzyMatcher",
+      "path": "/auto/code/fuzzyMatcher"
+    },
+    {
+      "name": "decideStyle, getStyleOpening",
+      "path": "/auto/code/intent-style"
+    },
+    {
+      "name": "logger",
+      "path": "/auto/code/logger"
+    },
+    {
+      "name": "methodNotAllowed",
+      "path": "/auto/code/methodNotAllowed"
+    },
+    {
+      "name": "MetricsCollector, metrics",
+      "path": "/auto/code/metrics"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/snapshots.service"
+    },
+    {
+      "name": "SPEC_RX",
+      "path": "/auto/code/specFilter"
+    },
+    {
+      "name": "Module",
+      "path": "/auto/code/units.normalizer"
+    },
+    {
+      "name": "joinUrl",
+      "path": "/auto/code/url"
+    },
+    {
+      "name": "isValidUrl, isValidJson, isRequired, sanitizeText, validateSystemData, validateInstanceData, sanitizeSystemData",
+      "path": "/auto/code/validation"
+    }
+  ]
+}

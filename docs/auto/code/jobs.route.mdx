@@ -1,24 +1,9 @@
-# `jobs.route.js`
+---
+title: Module
+description: Auto-generated code reference
+---
 
-- **Path**: `src/routes/document/jobs.route.js`
-- **Exports**: default
-- **Imports**:
-  - `express`
-  - `../../services/document.service.js`
-  - `../../middleware/admin.js`
-  - `../../middleware/validate.js`
-  - `../../middleware/validateResponse.js`
-  - `../../schemas/document.schema.js`
-  - `../../schemas/document.schema.js`
-
-## Express Routes
-- USE undefined
-- USE undefined
-- GET /
-
-## Raw Content
-
-```js
+```javascript
 import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
@@ -49,6 +34,23 @@ router.get('/',
       
       const jobs = await documentService.listJobs(limit, offset, status);
       
-   
-...
+      const envelope = {
+        success: true,
+        data: {
+          jobs,
+          count: jobs.length,
+          limit,
+          offset
+        }
+      };
+
+      return res.json(envelope);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+export default router;
+
 ```
