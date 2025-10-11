@@ -15,6 +15,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 import logging
 import os
+import asyncio
 
 from ..debug_logger import chat_debug
 
@@ -215,7 +216,7 @@ class ChatWorkflowSequential:
                             "model": eq.get("model", ""),
                             "rank": eq.get("rank", 0)
                         }
-                        for eq in systems_context[:3]  # Top 3 equipment
+                        for eq in systems_context[:7]  # Top 7 equipment
                     ],
                     "token_usage": state.get("synthesis_token_usage", {}),
                     "model_used": state.get("synthesis_model_used", "unknown")
@@ -324,7 +325,10 @@ class ChatWorkflowSequential:
             if state["systems_context"]:
                 if classification.get("primary_equipment_index") is not None:
                     idx = classification["primary_equipment_index"]
-                    if 0 <= idx < len(state["systems_context"]):
+                    # Handle both single int and array formats (LLM may return array for multi-equipment)
+                    if isinstance(idx, list):
+                        idx = idx[0] if idx else None
+                    if idx is not None and 0 <= idx < len(state["systems_context"]):
                         state["primary_equipment"] = state["systems_context"][idx]
                         state["secondary_equipment"] = [
                             eq for i, eq in enumerate(state["systems_context"]) if i != idx
@@ -448,7 +452,8 @@ class ChatWorkflowSequential:
             pinecone_results = await self._query_pinecone_for_equipment(
                 query=pinecone_query,
                 equipment_context=state["systems_context"],
-                original_query=state["user_query"]
+                original_query=state["user_query"],
+                complexity_score=state["classification"].get("complexity_score", 0.5)
             )
             pinecone_duration = (datetime.now() - pinecone_start).total_seconds() * 1000
 
@@ -725,12 +730,13 @@ class ChatWorkflowSequential:
             }
 
     async def _query_pinecone_for_equipment(self, query: str, equipment_context: List[Dict[str, Any]],
-                                           original_query: str = None) -> Optional[Dict[str, Any]]:
+                                           original_query: str = None, complexity_score: float = 0.5) -> Optional[Dict[str, Any]]:
         """
-        INTELLIGENCE: Query Pinecone with equipment name repetition for semantic emphasis
+        INTELLIGENCE: Multi-system Pinecone search with parallel execution
 
-        This is a KEY intelligence feature from the original Python workflow.
-        Equipment names are repeated 3x to bias results toward specific equipment manuals.
+        Searches Pinecone for ALL equipment in context (not just first).
+        Each equipment gets its own search with metadata filter.
+        Results are combined, deduplicated, ranked, and capped at 20 chunks.
         """
         if not self.pinecone_client:
             chat_debug.step('PINECONE_SKIP', {'reason': 'client_not_available'})
@@ -738,10 +744,28 @@ class ChatWorkflowSequential:
             return None
 
         try:
-            # Build equipment-aware search query and metadata filter
-            equipment_names = []
-            metadata_filter = None
+            # ===== MULTI-SYSTEM PINECONE SEARCH =====
+            logger.info("🔀 Starting MULTI-SYSTEM Pinecone search")
+            logger.info(f"  → Equipment count: {len(equipment_context)}")
+            logger.info(f"  → Complexity score: {complexity_score}")
 
+            # Adaptive top_k based on query complexity
+            top_k_per_system = 100 if complexity_score >= 0.7 else 50
+
+            logger.info(f"  → Top-k per system: {top_k_per_system}")
+
+            # Build equipment list for logging (avoid nested f-string escaping issues)
+            equipment_list_str = [f"{eq.get('manufacturer', '')} {eq.get('model', '')}".strip() for eq in equipment_context]
+            logger.info(f"  → Equipment list: {equipment_list_str}")
+
+            chat_debug.step('MULTI_SYSTEM_PINECONE_START', {
+                'equipment_count': len(equipment_context),
+                'complexity_score': complexity_score,
+                'top_k_per_system': top_k_per_system
+            })
+
+            # Build equipment-aware search query (SAME AS CURRENT)
+            equipment_names = []
             for eq in equipment_context:
                 manufacturer = eq.get('manufacturer', '')
                 model = eq.get('model', '')
@@ -752,20 +776,7 @@ class ChatWorkflowSequential:
                 elif model:
                     equipment_names.append(model)
 
-            # Build metadata filter for first equipment (most relevant)
-            if equipment_context:
-                eq = equipment_context[0]
-                manufacturer = eq.get('manufacturer', '').strip()
-                model = eq.get('model', '').strip()
-
-                if manufacturer or model:
-                    metadata_filter = {}
-                    if manufacturer:
-                        metadata_filter['manufacturer'] = manufacturer
-                    if model:
-                        metadata_filter['model'] = model
-
-            # INTELLIGENCE: Repeat equipment names 3x for semantic emphasis
+            # Build enhanced query with equipment emphasis (SAME AS CURRENT)
             enhanced_query = query
             if equipment_names:
                 equipment_emphasis = " ".join([name for name in equipment_names for _ in range(3)])
@@ -776,84 +787,252 @@ class ChatWorkflowSequential:
                     f"enhanced={enhanced_query[:100]}..."
                 )
 
-            # INTELLIGENCE: Adaptive top_k based on metadata filter
-            if metadata_filter:
-                top_k = int(os.getenv('PINECONE_TOP_K_FILTERED', '100'))
-            else:
-                top_k = int(os.getenv('PINECONE_TOP_K', '30'))
+            # ===== PARALLEL SEARCH IMPLEMENTATION =====
+            async def search_single_equipment(idx: int, eq: Dict[str, Any]):
+                """
+                Search Pinecone for single equipment with metadata filter
+                Returns dict with success, matches, duration, and error info
+                """
+                equipment_start = datetime.now()
+                manufacturer = eq.get('manufacturer', '').strip()
+                model = eq.get('model', '').strip()
 
-            chat_debug.step('PINECONE_SEARCH', {
-                'query': query,
-                'enhanced_query_length': len(enhanced_query),
-                'equipment': equipment_names[0] if equipment_names else 'none',
-                'has_metadata_filter': metadata_filter is not None,
-                'top_k': top_k
+                logger.info(f"🔍 [PINECONE_SEARCH_{idx+1}] START")
+                logger.info(f"  → Manufacturer: {manufacturer}")
+                logger.info(f"  → Model: {model}")
+                logger.info(f"  → Top-k: {top_k_per_system}")
+
+                # Build metadata filter for THIS equipment (not first, THIS one)
+                metadata_filter = {}
+                if manufacturer:
+                    metadata_filter['manufacturer'] = manufacturer
+                if model:
+                    metadata_filter['model'] = model
+
+                logger.info(f"  → Metadata filter: {metadata_filter}")
+
+                try:
+                    # Search Pinecone with THIS equipment's filter
+                    search_result = self.pinecone_client.search_vectors(
+                        query=enhanced_query,
+                        top_k=top_k_per_system,
+                        include_metadata=True,
+                        include_values=False,
+                        filter_dict=metadata_filter if metadata_filter else None
+                    )
+
+                    duration_ms = (datetime.now() - equipment_start).total_seconds() * 1000
+
+                    if search_result.get("success"):
+                        matches = search_result.get("matches", [])
+                        logger.info(f"✅ [PINECONE_SEARCH_{idx+1}] SUCCESS")
+                        logger.info(f"  → Duration: {duration_ms:.2f}ms")
+                        logger.info(f"  → Matches: {len(matches)}")
+                        if matches:
+                            logger.info(f"  → Score range: {matches[0].get('score', 0):.3f} - {matches[-1].get('score', 0):.3f}")
+                        else:
+                            logger.info(f"  → No matches")
+
+                        chat_debug.timing(f'pinecone_search_{idx+1}', duration_ms, {
+                            'equipment': f"{manufacturer} {model}",
+                            'matches': len(matches)
+                        })
+
+                        return {
+                            'success': True,
+                            'equipment_index': idx,
+                            'equipment': f"{manufacturer} {model}",
+                            'matches': matches,
+                            'duration_ms': duration_ms
+                        }
+                    else:
+                        error_msg = search_result.get('error', 'Unknown error')
+                        logger.warning(f"⚠️  [PINECONE_SEARCH_{idx+1}] FAILED")
+                        logger.warning(f"  → Error: {error_msg}")
+                        logger.warning(f"  → Duration: {duration_ms:.2f}ms")
+
+                        return {
+                            'success': False,
+                            'equipment_index': idx,
+                            'equipment': f"{manufacturer} {model}",
+                            'error': error_msg,
+                            'duration_ms': duration_ms
+                        }
+
+                except Exception as e:
+                    duration_ms = (datetime.now() - equipment_start).total_seconds() * 1000
+                    logger.error(f"❌ [PINECONE_SEARCH_{idx+1}] EXCEPTION")
+                    logger.error(f"  → Error: {str(e)}")
+                    logger.error(f"  → Duration: {duration_ms:.2f}ms")
+
+                    chat_debug.error(f'pinecone_search_{idx+1}', e, {
+                        'equipment': f"{manufacturer} {model}"
+                    })
+
+                    return {
+                        'success': False,
+                        'equipment_index': idx,
+                        'equipment': f"{manufacturer} {model}",
+                        'error': str(e),
+                        'duration_ms': duration_ms
+                    }
+
+            # Launch parallel searches for ALL equipment
+            search_tasks = [
+                search_single_equipment(idx, eq)
+                for idx, eq in enumerate(equipment_context)
+            ]
+            parallel_start = datetime.now()
+
+            logger.info(f"🚀 Launching {len(search_tasks)} parallel Pinecone searches")
+
+            search_results = await asyncio.gather(*search_tasks, return_exceptions=True)
+
+            parallel_duration = (datetime.now() - parallel_start).total_seconds() * 1000
+
+            logger.info(f"✅ Parallel searches COMPLETE")
+            logger.info(f"  → Total duration: {parallel_duration:.2f}ms")
+            logger.info(f"  → Avg per search: {parallel_duration / len(search_tasks):.2f}ms")
+
+            # ===== COLLECT AND ANALYZE RESULTS =====
+            all_matches = []
+            search_stats = {
+                'total_searches': len(search_results),
+                'successful': 0,
+                'failed': 0,
+                'exceptions': 0,
+                'total_matches': 0,
+                'per_equipment': []
+            }
+
+            for idx, result in enumerate(search_results):
+                if isinstance(result, Exception):
+                    search_stats['exceptions'] += 1
+                    logger.error(f"❌ Search {idx+1} raised exception: {result}")
+                    continue
+
+                equipment_stat = {
+                    'index': idx,
+                    'equipment': result.get('equipment', 'unknown'),
+                    'success': result.get('success', False),
+                    'matches': 0,
+                    'duration_ms': result.get('duration_ms', 0)
+                }
+
+                if result.get("success"):
+                    search_stats['successful'] += 1
+                    matches = result.get("matches", [])
+                    equipment_stat['matches'] = len(matches)
+                    search_stats['total_matches'] += len(matches)
+                    all_matches.extend(matches)
+
+                    logger.info(f"  → Search {idx+1}: {len(matches)} matches ({result.get('equipment')})")
+                else:
+                    search_stats['failed'] += 1
+                    logger.warning(f"  → Search {idx+1}: FAILED ({result.get('equipment')})")
+
+                search_stats['per_equipment'].append(equipment_stat)
+
+            logger.info(f"📊 Search statistics:")
+            logger.info(f"  → Successful: {search_stats['successful']}/{search_stats['total_searches']}")
+            logger.info(f"  → Failed: {search_stats['failed']}")
+            logger.info(f"  → Exceptions: {search_stats['exceptions']}")
+            logger.info(f"  → Total matches (before filter): {search_stats['total_matches']}")
+
+            # ===== THRESHOLD FILTERING =====
+            threshold = 0.2
+            before_threshold = len(all_matches)
+            threshold_filtered = [m for m in all_matches if m.get('score', 0) >= threshold]
+            filtered_count = before_threshold - len(threshold_filtered)
+
+            logger.info(f"🔍 Threshold filtering (>= {threshold})")
+            logger.info(f"  → Before: {before_threshold}")
+            logger.info(f"  → After: {len(threshold_filtered)}")
+            logger.info(f"  → Filtered out: {filtered_count}")
+
+            if len(threshold_filtered) > 0:
+                scores = [m.get('score', 0) for m in threshold_filtered]
+                logger.info(f"  → Score range: {min(scores):.3f} - {max(scores):.3f}")
+                logger.info(f"  → Avg score: {sum(scores)/len(scores):.3f}")
+
+            # ===== DEDUPLICATION BY VECTOR ID =====
+            seen_ids = set()
+            deduped_matches = []
+            duplicate_count = 0
+            dedup_details = []
+
+            for match in threshold_filtered:
+                vector_id = match.get('id')
+                if vector_id and vector_id not in seen_ids:
+                    seen_ids.add(vector_id)
+                    deduped_matches.append(match)
+                elif vector_id:
+                    duplicate_count += 1
+                    dedup_details.append({
+                        'vector_id': vector_id,
+                        'score': match.get('score', 0),
+                        'manufacturer': match.get('metadata', {}).get('manufacturer'),
+                        'model': match.get('metadata', {}).get('model')
+                    })
+
+            logger.info(f"🔄 Deduplication (by vector ID)")
+            logger.info(f"  → Before: {len(threshold_filtered)}")
+            logger.info(f"  → After: {len(deduped_matches)}")
+            logger.info(f"  → Duplicates removed: {duplicate_count}")
+
+            if duplicate_count > 0 and duplicate_count <= 5:
+                logger.debug(f"  → Duplicate details: {dedup_details}")
+
+            # ===== RANKING BY SEMANTIC SCORE =====
+            ranked_matches = sorted(deduped_matches, key=lambda m: m.get('score', 0), reverse=True)
+
+            logger.info(f"📊 Ranking (by semantic score)")
+            logger.info(f"  → Total ranked: {len(ranked_matches)}")
+            if len(ranked_matches) > 0:
+                logger.info(f"  → Top score: {ranked_matches[0].get('score', 0):.3f}")
+                logger.info(f"  → Bottom score: {ranked_matches[-1].get('score', 0):.3f}")
+
+            # ===== CAP AT 20 CHUNKS =====
+            final_matches = ranked_matches[:20]
+            capped_count = len(ranked_matches) - len(final_matches)
+
+            logger.info(f"✂️  Final cap (max 20 chunks)")
+            logger.info(f"  → Before cap: {len(ranked_matches)}")
+            logger.info(f"  → After cap: {len(final_matches)}")
+            logger.info(f"  → Capped: {capped_count}")
+
+            # ===== FINAL SUMMARY =====
+            logger.info(f"🎯 MULTI-SYSTEM PINECONE COMPLETE")
+            logger.info(f"  → Total searches: {search_stats['total_searches']}")
+            logger.info(f"  → Successful: {search_stats['successful']}")
+            logger.info(f"  → Raw matches: {search_stats['total_matches']}")
+            logger.info(f"  → After threshold: {len(threshold_filtered)}")
+            logger.info(f"  → After dedup: {len(deduped_matches)}")
+            logger.info(f"  → Final chunks: {len(final_matches)}")
+            logger.info(f"  → Total duration: {parallel_duration:.2f}ms")
+
+            chat_debug.step('MULTI_SYSTEM_PINECONE_COMPLETE', {
+                'total_searches': search_stats['total_searches'],
+                'successful_searches': search_stats['successful'],
+                'final_chunks': len(final_matches),
+                'duration_ms': parallel_duration
             })
 
-            logger.info(
-                f"🔍 Pinecone Search Query: '{query}' "
-                f"(keywords={original_query != query if original_query else False}, "
-                f"equipment={equipment_names[0] if equipment_names else 'none'}, "
-                f"original='{original_query or query}')"
-            )
-
-            # Log exact Pinecone search parameters
-            logger.info("📤 PINECONE SEARCH PARAMETERS:")
-            logger.info(f"  → Query: '{enhanced_query}'")
-            logger.info(f"  → Top K: {top_k}")
-            logger.info(f"  → Metadata Filter: {metadata_filter}")
-            logger.info(f"  → Include Metadata: True")
-            logger.info(f"  → Include Values: False")
-
-            # Search Pinecone
-            search_result = self.pinecone_client.search_vectors(
-                query=enhanced_query,
-                top_k=top_k,
-                include_metadata=True,
-                include_values=False,
-                filter_dict=metadata_filter
-            )
-
-            if search_result.get("success"):
-                matches = search_result.get("matches", [])
-
-                # INTELLIGENCE: Adaptive score threshold
-                threshold = 0.2
-                filtered_matches = [m for m in matches if m.get('score', 0) >= threshold]
-
-                logger.info(
-                    f"🔍 Pinecone Results: {len(matches)} total, {len(filtered_matches)} above threshold {threshold} "
-                    f"(metadata_filter={'applied' if metadata_filter else 'none'})"
-                )
-
-                chat_debug.step('PINECONE_RESULTS', {
-                    'total_matches': len(matches),
-                    'filtered_matches': len(filtered_matches),
-                    'threshold': threshold,
-                    'has_filter': metadata_filter is not None
-                })
-
-                return {
-                    "success": True,
-                    "matches": filtered_matches,
-                    "enhanced_query": enhanced_query,
-                    "equipment_context": equipment_names,
-                    "match_count": len(filtered_matches),
-                    "metadata_filter": metadata_filter,
-                    "threshold": threshold,
-                    "total_matches": len(matches)
-                }
-            else:
-                error_msg = search_result.get('error', 'Unknown error')
-                chat_debug.error('pinecone_search', Exception(error_msg), {
-                    'query': query
-                })
-                logger.warning(f"Pinecone search failed: {error_msg}")
-                return {
-                    "success": False,
-                    "error": error_msg,
-                    "enhanced_query": enhanced_query
-                }
+            # ===== RETURN RESULT =====
+            return {
+                "success": True,
+                "matches": final_matches,
+                "enhanced_query": enhanced_query,
+                "equipment_context": equipment_names,
+                "match_count": len(final_matches),
+                "metadata_filter": "multi_system",  # Indicate we searched multiple systems
+                "threshold": threshold,
+                "total_matches": search_stats['total_matches'],
+                "searches_performed": search_stats['total_searches'],
+                "successful_searches": search_stats['successful'],
+                "after_threshold": len(threshold_filtered),
+                "after_dedup": len(deduped_matches)
+            }
 
         except Exception as e:
             chat_debug.error('pinecone_query', e, {'query': query})

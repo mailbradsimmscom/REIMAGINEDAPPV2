@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
-const EXTRACTION_PROMPT = `You are a marine expert looking at a colloquial sentence and trying to extract the systems. As you know the marine environment is complex because states and conditions can also be equipment, such as GPS which is a thing and a system, or wind sensor which is a state but also there is a wind sensor. You need to be crafty and careful to parse apart a sentence and pull from it what could be the systems.
+const EXTRACTION_PROMPT = `You are a marine expert looking at a colloquial sentence and trying to extract the systems. As you know the marine environment is complex because states and conditions can also be equipment, such as GPS which is a thing and a system, or wind sensor which is a state but also there is a wind sensor. You need to be crafty and careful to parse apart a sentence and pull from it what could be the systems. The questions will be all over the place as this is the lead in from a chat application. the goal is to find the marine item in the sentence and surface it - from trouble shooting, to general inqury, to asking about what equipment or supplies we have, to random questions, we need to be on our toes and find that marine item. Returning a few options is not a bad thing as this response flows into query our systems and supplies tables.
 
 OUTPUT FORMAT: Return JSON array only.
 
@@ -33,6 +33,16 @@ Query: "autopilot not responding to wind data"
 Query: "tell me about fortress anchor"
 [
   {"name": "fortress anchor", "confidence": 1.0, "role": "equipment"}
+]
+
+Query: "tell me the models of harken winches I have?"
+[
+  {"name": "harken winches", "confidence": 0.9, "role": "equipment"}
+]
+
+Query: "what types of anchors do I have"
+[
+  {"name": "anchors", "confidence": 0.9, "role": "equipment"}
 ]
 
 Query: "how do I navigate"

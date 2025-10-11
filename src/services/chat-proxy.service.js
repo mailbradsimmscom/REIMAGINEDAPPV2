@@ -162,108 +162,250 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
       }
 
     } else {
-      // Traditional keyword-based equipment search
-      const searchQuery = extractKeywords(query) || query;
+      // ===== PARALLEL EQUIPMENT SEARCH =====
+      // Run BOTH keyword search AND LLM extraction simultaneously
+      // Merge results to never miss multi-equipment or implicit systems
 
-      requestLogger.debug('🔍 Keyword search path', {
-        originalQuery: query,
-        extractedKeywords: searchQuery,
-        willSearch: searchQuery && searchQuery !== query
+      requestLogger.info('🔀 Starting PARALLEL equipment search', {
+        query: query.substring(0, 100),
+        paths: ['keyword_search', 'llm_extraction']
       });
 
-      if (searchQuery && searchQuery !== query) {
-        requestLogger.info('🔍 Searching systems table for new equipment', {
-          originalQuery: query.substring(0, 100),
-          searchQuery: searchQuery.substring(0, 100)
+      chatDebug.step('PARALLEL_SEARCH_START', {
+        query: query.substring(0, 100),
+        paths: 2
+      });
+
+      const parallelStart = Date.now();
+
+      // Extract keywords for search
+      const searchQuery = extractKeywords(query) || query;
+
+      // Launch both searches in parallel with error handling
+      let keywordResults = [];
+      let llmExtraction = { equipment: [] };
+
+      try {
+        const results = await Promise.all([
+          // Path 1: Keyword search (fast, exact matches)
+          searchSystems(searchQuery, { limit: 10 }).catch(err => {
+            requestLogger.error('❌ Keyword search FAILED', {
+              error: err.message,
+              query: searchQuery
+            });
+            return []; // Graceful degradation
+          }),
+
+          // Path 2: LLM extraction (semantic understanding)
+          extractEquipmentName(query).catch(err => {
+            requestLogger.error('❌ LLM extraction FAILED', {
+              error: err.message,
+              query: query.substring(0, 100)
+            });
+            return { equipment: [] }; // Graceful degradation
+          })
+        ]);
+
+        keywordResults = results[0];
+        llmExtraction = results[1];
+
+        const parallelDuration = Date.now() - parallelStart;
+
+        requestLogger.info('✅ Parallel execution COMPLETE', {
+          duration_ms: parallelDuration,
+          keywordResultsCount: keywordResults.length,
+          llmExtractedCount: llmExtraction.equipment?.length || 0,
+          bothSucceeded: true
         });
 
-        currentEquipmentSearch = await searchSystems(searchQuery, { limit: 10 });
-
-        requestLogger.debug('🔍 searchSystems result', {
-          searchQuery,
-          resultsCount: currentEquipmentSearch.length,
-          results: currentEquipmentSearch
+        chatDebug.timing('PARALLEL_SEARCH_COMPLETE', parallelDuration, {
+          keyword_count: keywordResults.length,
+          llm_count: llmExtraction.equipment?.length || 0
         });
+
+      } catch (error) {
+        requestLogger.error('❌ Parallel search CATASTROPHIC FAILURE', {
+          error: error.message,
+          stack: error.stack
+        });
+        // Complete failure - will fallback to existing equipment blob below
       }
 
-      // NEW: If no equipment found, try LLM extraction ONCE as fallback
-      if (currentEquipmentSearch.length === 0) {
-        requestLogger.debug('🔍 No equipment found, trying LLM extraction');
+      // ===== DETAILED BREAKDOWN =====
+      requestLogger.info('📊 Parallel search BREAKDOWN', {
+        keyword: {
+          count: keywordResults.length,
+          asset_uids: keywordResults.map(eq => eq.asset_uid),
+          models: keywordResults.map(eq => `${eq.manufacturer} ${eq.model}`)
+        },
+        llm: {
+          extracted_count: llmExtraction.equipment?.length || 0,
+          extracted_names: llmExtraction.equipment?.map(e => e.name) || [],
+          extracted_confidence: llmExtraction.equipment?.map(e => e.confidence) || []
+        }
+      });
 
-        requestLogger.info('🤖 No equipment found with keywords, trying LLM extraction', {
-          originalQuery: query.substring(0, 100)
+      // ===== MERGE AND DEDUPLICATE =====
+      const allEquipment = [];
+      const seenAssetUids = new Set();
+      const dedupLog = {
+        keyword_added: 0,
+        llm_added: 0,
+        llm_duplicates: 0,
+        llm_not_found: 0
+      };
+
+      // Step 1: Add keyword results
+      for (const eq of keywordResults) {
+        if (!seenAssetUids.has(eq.asset_uid)) {
+          seenAssetUids.add(eq.asset_uid);
+          allEquipment.push({
+            ...eq,
+            search_source: 'keyword'
+          });
+          dedupLog.keyword_added++;
+        }
+      }
+
+      requestLogger.debug('🔑 Keyword results added', {
+        total: keywordResults.length,
+        unique: dedupLog.keyword_added,
+        duplicates: keywordResults.length - dedupLog.keyword_added
+      });
+
+      // Step 2: Search for each LLM-extracted equipment
+      if (llmExtraction.equipment && llmExtraction.equipment.length > 0) {
+        const llmSearchStart = Date.now();
+
+        requestLogger.info('🔬 Searching for LLM-extracted equipment', {
+          count: llmExtraction.equipment.length,
+          equipment: llmExtraction.equipment.map(e => e.name)
         });
 
-        const extraction = await extractEquipmentName(query);
+        for (const eq of llmExtraction.equipment) {
+          const searchStart = Date.now();
 
-        requestLogger.debug('🔍 LLM extraction result', {
-          count: extraction.equipment?.length || 0,
-          equipment: extraction.equipment
-        });
-
-        if (extraction.equipment && extraction.equipment.length > 0) {
-          requestLogger.info('🔬 [KEYWORD_FALLBACK] Extracted multiple equipment', {
-            count: extraction.equipment.length,
-            equipment: extraction.equipment.map(e => e.name)
+          requestLogger.info('🔍 [LLM_SEARCH_START]', {
+            name: eq.name,
+            confidence: eq.confidence,
+            role: eq.role
           });
 
-          // Search each equipment separately
-          for (const eq of extraction.equipment) {
-            requestLogger.info('🔍 [SEARCH_START]', {
-              name: eq.name,
-              confidence: eq.confidence,
-              role: eq.role
-            });
+          const results = await searchSystems(eq.name, { limit: 10 });
+          const searchDuration = Date.now() - searchStart;
 
-            const results = await searchSystems(eq.name, { limit: 10 });
+          requestLogger.info('🔍 [LLM_SEARCH_RESULT]', {
+            name: eq.name,
+            found: results.length,
+            duration_ms: searchDuration,
+            asset_uids: results.map(r => r.asset_uid)
+          });
 
-            requestLogger.info('🔍 [SEARCH_RESULT]', {
-              name: eq.name,
-              found: results.length
-            });
+          chatDebug.timing(`SEARCH_${eq.name}`, searchDuration, {
+            found: results.length
+          });
 
-            if (results.length > 0) {
-              currentEquipmentSearch.push(...results);
+          // Track new vs duplicate
+          let newCount = 0;
+          let dupCount = 0;
+
+          for (const result of results) {
+            if (!seenAssetUids.has(result.asset_uid)) {
+              seenAssetUids.add(result.asset_uid);
+              allEquipment.push({
+                ...result,
+                search_source: 'llm',
+                llm_confidence: eq.confidence,
+                llm_role: eq.role
+              });
+              newCount++;
+              dedupLog.llm_added++;
+            } else {
+              dupCount++;
+              dedupLog.llm_duplicates++;
             }
           }
 
-          requestLogger.debug('🔍 Combined search results', {
-            totalSearched: extraction.equipment.length,
-            totalFound: currentEquipmentSearch.length
-          });
-
-          requestLogger.info('✅ [COMBINED_RESULTS]', {
-            totalSearched: extraction.equipment.length,
-            totalFound: currentEquipmentSearch.length
-          });
-
-          // If STILL no results after all searches, return clarification request
-          if (currentEquipmentSearch.length === 0) {
-            const extractedNames = extraction.equipment.map(e => e.name).join(', ');
-
-            requestLogger.info('❓ Equipment not found after extraction, requesting user clarification', {
-              extracted: extractedNames,
-              count: extraction.equipment.length
-            });
-
-            return {
-              response: `I couldn't find "${extractedNames}" in your equipment inventory. Could you provide the manufacturer and model number? Or would you like me to answer generally about ${extractedNames}?`,
-              systems_context: [],
-              sources: [],
-              classification: { primary: 'clarification_needed' },
-              metadata: {
-                extraction_attempted: true,
-                extracted_equipment: extractedNames,
-                needs_user_input: true
-              },
-              processing_time_ms: 0
-            };
+          if (results.length === 0) {
+            dedupLog.llm_not_found++;
           }
-        } else {
-          requestLogger.info('⚠️ LLM extraction returned no equipment', {
-            query: query.substring(0, 100)
+
+          requestLogger.debug('🔍 [LLM_SEARCH_DEDUP]', {
+            name: eq.name,
+            total_found: results.length,
+            new_added: newCount,
+            duplicates: dupCount
           });
         }
+
+        const llmSearchDuration = Date.now() - llmSearchStart;
+
+        requestLogger.info('✅ [LLM_SEARCHES_COMPLETE]', {
+          duration_ms: llmSearchDuration,
+          total_searched: llmExtraction.equipment.length,
+          total_found: dedupLog.llm_added,
+          not_found: dedupLog.llm_not_found,
+          avg_search_ms: llmExtraction.equipment.length > 0
+            ? Math.round(llmSearchDuration / llmExtraction.equipment.length)
+            : 0
+        });
+      }
+
+      // ===== FINAL MERGE SUMMARY =====
+      requestLogger.info('✅ [MERGE_COMPLETE]', {
+        total_unique: allEquipment.length,
+        breakdown: {
+          from_keyword: dedupLog.keyword_added,
+          from_llm: dedupLog.llm_added,
+          llm_duplicates: dedupLog.llm_duplicates,
+          llm_not_found: dedupLog.llm_not_found
+        },
+        final_equipment: allEquipment.map(eq => ({
+          asset_uid: eq.asset_uid,
+          source: eq.search_source,
+          manufacturer: eq.manufacturer,
+          model: eq.model
+        }))
+      });
+
+      chatDebug.step('EQUIPMENT_MERGE_COMPLETE', {
+        total_unique: allEquipment.length,
+        keyword_count: dedupLog.keyword_added,
+        llm_count: dedupLog.llm_added,
+        duplicates: dedupLog.llm_duplicates
+      });
+
+      currentEquipmentSearch = allEquipment;
+
+      // ===== CLARIFICATION IF NOTHING FOUND =====
+      if (currentEquipmentSearch.length === 0) {
+        // Check if LLM extracted anything but didn't find in systems table
+        if (llmExtraction.equipment && llmExtraction.equipment.length > 0) {
+          const extractedNames = llmExtraction.equipment.map(e => e.name).join(', ');
+
+          requestLogger.info('❓ Equipment extracted but not found in inventory', {
+            extracted: extractedNames,
+            count: llmExtraction.equipment.length
+          });
+
+          return {
+            response: `I couldn't find "${extractedNames}" in your equipment inventory. Could you provide the manufacturer and model number? Or would you like me to answer generally about ${extractedNames}?`,
+            systems_context: [],
+            sources: [],
+            classification: { primary: 'clarification_needed' },
+            metadata: {
+              extraction_attempted: true,
+              extracted_equipment: extractedNames,
+              needs_user_input: true
+            },
+            processing_time_ms: 0
+          };
+        }
+
+        requestLogger.info('⚠️ No equipment found via keyword or LLM', {
+          query: query.substring(0, 100),
+          keywordQuery: searchQuery
+        });
       }
 
       // IMPORTANT: If no equipment found but we have equipment in blob, use blob as fallback
@@ -307,6 +449,11 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
     systemsContext = [];
     const newEquipmentFound = [];
 
+    console.log('\n🔍 DEBUG: rawEquipmentContext sample:');
+    rawEquipmentContext.slice(0, 3).forEach((eq, i) => {
+      console.log(`  ${i+1}. llm_confidence: ${eq.llm_confidence}, llm_role: ${eq.llm_role}`);
+    });
+
     for (let i = 0; i < Math.min(rawEquipmentContext.length, 20); i++) {
       const equipment = rawEquipmentContext[i];
       try {
@@ -315,6 +462,9 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
         // Check if equipment exists in blob - avoid re-fetch
         if (existingEquipmentMap.has(equipment.asset_uid)) {
           fullSystem = existingEquipmentMap.get(equipment.asset_uid);
+          // Preserve llm_confidence and llm_role from current search even if using cached equipment
+          fullSystem.llm_confidence = equipment.llm_confidence;
+          fullSystem.llm_role = equipment.llm_role;
 
           requestLogger.info('♻️  Using cached equipment from blob', {
             assetUid: equipment.asset_uid,
@@ -344,7 +494,10 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
           source: equipment.source || 'current',
           // Add inference metadata if available
           // First equipment from current query gets 'main' relationship type
-          relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null)
+          relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null),
+          llm_confidence: equipment.llm_confidence || null,
+          llm_role: equipment.llm_role || null,
+          rank: equipment.rank || null
         });
       } catch (error) {
         requestLogger.warn('Failed to fetch full system details', {
@@ -360,25 +513,38 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
           rank: equipment.rank || equipment.weight || 0.5,
           source: equipment.source || 'current',
           relationship_type: equipment.relationship_type || null,
-          inference_confidence: equipment.inference_confidence || null
+          inference_confidence: equipment.inference_confidence || null,
+          llm_confidence: equipment.llm_confidence || null,
+          llm_role: equipment.llm_role || null
         });
       }
     }
 
-    // STEP 6: Update equipment context blob if NEW equipment found
-    if (newEquipmentFound.length > 0) {
+    // STEP 6: Update equipment context blob (always update to persist confidence scores)
+    if (systemsContext.length > 0) {
       try {
         await updateChatThread(threadId, {
           equipment_context: systemsContext
         });
 
-        requestLogger.info('💾 Updated equipment context with NEW equipment', {
+        // TEMP DEBUG: Log confidence scores to console
+        console.log('\n🔍 CONFIDENCE SCORES FOR ALL EQUIPMENT:');
+        systemsContext.forEach((eq, idx) => {
+          console.log(`  ${idx + 1}. ${eq.manufacturer} ${eq.model}`);
+          console.log(`     confidence: ${eq.llm_confidence}, role: ${eq.llm_role}, source: ${eq.source}`);
+        });
+        console.log('');
+
+        requestLogger.info('💾 Updated equipment context', {
           threadId,
           totalEquipment: systemsContext.length,
           newEquipmentCount: newEquipmentFound.length,
-          newEquipment: newEquipmentFound.map(eq => ({
+          systemsContextSample: systemsContext.slice(0, 3).map(eq => ({
             manufacturer: eq.manufacturer,
-            model: eq.model
+            model: eq.model,
+            llm_confidence: eq.llm_confidence,
+            llm_role: eq.llm_role,
+            source: eq.source
           }))
         });
 
