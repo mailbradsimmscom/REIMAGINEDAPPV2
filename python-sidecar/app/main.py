@@ -84,7 +84,7 @@ if USE_SEMANTIC_CHUNKING:
 
 # Initialize Supabase client
 supabase_url = os.getenv('SUPABASE_URL')
-supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+supabase_key = os.getenv('PY_SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
 supabase: Optional[Client] = None
 
 if supabase_url and supabase_key:
