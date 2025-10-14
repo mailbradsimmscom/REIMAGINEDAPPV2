@@ -1,0 +1,8 @@
+asset_uid,manufacturer_norm,model_norm,system_norm,subsystem_norm,description
+736a7b73-3d9f-a851-89f3-e98dded6357c,Yanmar,port_engine,Propulsion,Engines,"Port Engine 4HJ57"
+7d66254e-d860-46ce-81f8-43647fbb1cac,Yanmar,shift_actuator,Propulsion,Uncategorized,"Shift actuator"
+4dbf0c41-a3ac-4993-b5d4-b591a6365c72,Yanmar,stbd_sail_drive,Propulsion,Uncategorized,"Stbd Sail Drive"
+cc5de4bb-7061-479d-b030-da179a35a430,Yanmar,port_sail_drive,Propulsion,Uncategorized,"Port Sail Drive"
+641b18cf-e9de-4ebe-a37e-4e48c19aaaaf,Yanmar,v20,Propulsion,Engine Controls,"Dual Yanmar V20 electronic throttle"
+4be6e417-1b27-42bf-951a-e10cb2b970e8,Yanmar,stbd_engine,Propulsion,Engines,"Stbd Engine 4HJ57"
+6747bcaf-5c31-e12f-8947-37fce290ab47,Yanmar,4jh57,Propulsion,Engines,"57 hp diesel engine (PORT)"

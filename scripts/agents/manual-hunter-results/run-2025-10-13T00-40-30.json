@@ -1,0 +1,203 @@
+{
+  "timestamp": "2025-10-13T00-40-30",
+  "summary": {
+    "total_systems": 7,
+    "pdfs_downloaded": 0,
+    "serpapi_calls": 7,
+    "duration_seconds": 76,
+    "status_breakdown": {
+      "validation_failed": 6,
+      "found": 1
+    },
+    "success_rate": "14.3%"
+  },
+  "results": [
+    {
+      "asset_uid": "736a7b73-3d9f-a851-89f3-e98dded6357c",
+      "manufacturer": "Yanmar",
+      "model": "port_engine",
+      "system": "Propulsion",
+      "subsystem": "Engines",
+      "status": "validation_failed",
+      "manual_url": "http://yazz.wassili.nl/documents/User%20Manual%20Yanmar%20GM%20Engines.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Validation REJECT (0%): PDF text extraction failed or too short",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Yanmar_port_engine.pdf",
+      "file_size": 8152575,
+      "validation": {
+        "confidence": 0,
+        "reasoning": "PDF text extraction failed or too short",
+        "concerns": [
+          "Could not extract sufficient text from PDF"
+        ]
+      }
+    },
+    {
+      "asset_uid": "7d66254e-d860-46ce-81f8-43647fbb1cac",
+      "manufacturer": "Yanmar",
+      "model": "shift_actuator",
+      "system": "Propulsion",
+      "subsystem": "Uncategorized",
+      "status": "validation_failed",
+      "manual_url": "https://mosa.com.au/inventory/manuals/CN4F4051.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Validation REJECT (0%): PDF text extraction failed or too short",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Yanmar_shift_actuator.pdf",
+      "file_size": 5954248,
+      "validation": {
+        "confidence": 0,
+        "reasoning": "PDF text extraction failed or too short",
+        "concerns": [
+          "Could not extract sufficient text from PDF"
+        ]
+      }
+    },
+    {
+      "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+      "manufacturer": "Yanmar",
+      "model": "stbd_sail_drive",
+      "system": "Propulsion",
+      "subsystem": "Uncategorized",
+      "status": "validation_failed",
+      "manual_url": "http://yazz.wassili.nl/documents/User%20Manual%20Yanmar%20GM%20Engines.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Validation REJECT (0%): PDF text extraction failed or too short",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Yanmar_stbd_sail_drive.pdf",
+      "file_size": 8152575,
+      "validation": {
+        "confidence": 0,
+        "reasoning": "PDF text extraction failed or too short",
+        "concerns": [
+          "Could not extract sufficient text from PDF"
+        ]
+      }
+    },
+    {
+      "asset_uid": "cc5de4bb-7061-479d-b030-da179a35a430",
+      "manufacturer": "Yanmar",
+      "model": "port_sail_drive",
+      "system": "Propulsion",
+      "subsystem": "Uncategorized",
+      "status": "validation_failed",
+      "manual_url": "http://yazz.wassili.nl/documents/User%20Manual%20Yanmar%20GM%20Engines.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Validation REJECT (0%): PDF text extraction failed or too short",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Yanmar_port_sail_drive.pdf",
+      "file_size": 8152575,
+      "validation": {
+        "confidence": 0,
+        "reasoning": "PDF text extraction failed or too short",
+        "concerns": [
+          "Could not extract sufficient text from PDF"
+        ]
+      }
+    },
+    {
+      "asset_uid": "641b18cf-e9de-4ebe-a37e-4e48c19aaaaf",
+      "manufacturer": "Yanmar",
+      "model": "v20",
+      "system": "Propulsion",
+      "subsystem": "Engine Controls",
+      "status": "validation_failed",
+      "manual_url": "https://www.elmodan.dk/media/com_reditem/files/customfield/306/5d88f153b5441e4a391e43b1b584d67b2f5927ee.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Validation REJECT (0%): PDF text extraction failed or too short",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Yanmar_v20.pdf",
+      "file_size": 10930938,
+      "validation": {
+        "confidence": 0,
+        "reasoning": "PDF text extraction failed or too short",
+        "concerns": [
+          "Could not extract sufficient text from PDF"
+        ]
+      }
+    },
+    {
+      "asset_uid": "4be6e417-1b27-42bf-951a-e10cb2b970e8",
+      "manufacturer": "Yanmar",
+      "model": "stbd_engine",
+      "system": "Propulsion",
+      "subsystem": "Engines",
+      "status": "validation_failed",
+      "manual_url": "http://yazz.wassili.nl/documents/User%20Manual%20Yanmar%20GM%20Engines.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Validation REJECT (0%): PDF text extraction failed or too short",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Yanmar_stbd_engine.pdf",
+      "file_size": 8152575,
+      "validation": {
+        "confidence": 0,
+        "reasoning": "PDF text extraction failed or too short",
+        "concerns": [
+          "Could not extract sufficient text from PDF"
+        ]
+      }
+    },
+    {
+      "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+      "manufacturer": "Yanmar",
+      "model": "4jh57",
+      "system": "Propulsion",
+      "subsystem": "Engines",
+      "status": "found",
+      "manual_url": "https://b.mou.ir/pglancek/nnoticeh/jselectx/995013F33Y/yanmar+4jh+hte+parts+manual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "Downloaded file too small: 1026 bytes",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ]
+    }
+  ]
+}

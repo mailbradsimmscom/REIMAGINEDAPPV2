@@ -1,0 +1,2805 @@
+[
+  {
+    "filename": "Acuva_uv_led_water_purification_system.pdf",
+    "asset_uid": "87517a2e-8bc4-8379-5718-e88bb81cb796",
+    "manufacturer": "Acuva",
+    "model": "uv_led_water_purification_system",
+    "system": "Hull/Plumbing",
+    "subsystem": "Water Filter",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (Acuva) and model (Eco NX-Silver). It is a user manual specifically designed for the Eco NX-Silver UV-LED water purification system, which is suitable for marine use as indicated in the content. The content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Airmar_dst810_smart_multisensor.pdf",
+    "asset_uid": "d969d27a-4dc8-d308-e47f-ee6f09567571",
+    "manufacturer": "Airmar",
+    "model": "dst810_smart_multisensor",
+    "system": "Hull/Plumbing",
+    "subsystem": "Transducers",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF is from Airmar, matches the expected model dst810_smart_multisensor, is categorized as a user manual, is specifically for marine use, and the content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Airmar_triducer_multisensor_airmar_dst810.pdf",
+    "asset_uid": "b3552f33-36c4-c3ba-043b-486b7e985dba",
+    "manufacturer": "Airmar",
+    "model": "triducer_multisensor_airmar_dst810",
+    "system": "Navigation",
+    "subsystem": "Sonar/forwardscan",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF explicitly mentions Airmar as the manufacturer and the model DST810, which matches the expected values. The content is a user manual for the Airmar CAST Application related to the DST810 multisensor, confirming its relevance to marine use and navigation/sonar systems.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Antal_roller_cleat.pdf",
+    "asset_uid": "c5dca824-4b60-5c33-a3d8-ecfec0bce4ff",
+    "manufacturer": "Antal",
+    "model": "roller_cleat",
+    "system": "Rigging/Deck",
+    "subsystem": "Deck Hardware",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF contains information about Antal, including the roller cleat, which matches the expected manufacturer and model. The content is relevant to marine use, specifically rigging and deck hardware. However, the exact type of manual is not specified, leading to an 'unknown' classification.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_camera.pdf",
+    "asset_uid": "25a4fe5f-d6bc-4eb6-9cb9-93c04f3d6f1b",
+    "manufacturer": "B&G",
+    "model": "camera",
+    "system": "Navigation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content matches the expected manufacturer (B&G) and model (camera). It is an installation guide specifically for marine use, detailing the installation and specifications of a camera designed for navigation. All content is relevant to the expected system description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_halo24.pdf",
+    "asset_uid": "8de5dc59-9f90-d596-98c8-a9b5a39a2c4d",
+    "manufacturer": "B&G",
+    "model": "halo24",
+    "system": "Navigation",
+    "subsystem": "Radar",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer B&G and the model Halo24, confirming both matches. The document is an installation manual, which aligns with the expected type. It is clearly intended for marine use, as it discusses radar installation for navigation. The content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_halo24_plus.pdf",
+    "asset_uid": "dced0407-7762-9022-097a-bd0d30ea2509",
+    "manufacturer": "B&G",
+    "model": "halo24_plus",
+    "system": "Navigation",
+    "subsystem": "Radar",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer B&G and the model Halo24, which matches the expected values. The document is an installation manual, which is appropriate for the equipment type. Additionally, the content is relevant to marine use, confirming its context.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_nac_3_autopilot_computer.pdf",
+    "asset_uid": "19dcd795-9f7e-0aaf-93ca-e668771cd2d3",
+    "manufacturer": "B&G",
+    "model": "nac_3_autopilot_computer",
+    "system": "Navigation",
+    "subsystem": "Autopilot",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF is an operation manual for the B&G H5000 system, which matches the expected manufacturer and model. It is specifically designed for marine use and contains relevant content for navigation and autopilot systems.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_nemesis_9.pdf",
+    "asset_uid": "3726411d-ce98-42da-a858-849a5ae98717",
+    "manufacturer": "B&G",
+    "model": "nemesis_9",
+    "system": "Navigation",
+    "subsystem": "Instruments",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (B&G) and model (nemesis_9) perfectly. It is a user manual specifically designed for marine use, providing relevant content about navigation and instrument functionalities. All criteria are met with high confidence.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_nrs_2.pdf",
+    "asset_uid": "ba7a6a3f-293d-e30e-34be-a23fc1740980",
+    "manufacturer": "B&G",
+    "model": "nrs_2",
+    "system": "Communications",
+    "subsystem": "VHF",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer B&G and the model NRS-2, which matches the expected values. The document is a user manual for marine VHF radio systems, confirming its relevance to marine use. All aspects align perfectly with the expected marine equipment description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_precision_9.pdf",
+    "asset_uid": "02192834-87c3-9d3a-f556-ca736b284338",
+    "manufacturer": "B&G",
+    "model": "precision_9",
+    "system": "Navigation",
+    "subsystem": "Compass",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (B&G) and model (precision_9) perfectly. It is an installation guide specifically designed for marine use, detailing the installation and calibration of the Precision 9 compass, which aligns with the expected system description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_triton2.pdf",
+    "asset_uid": "0d4388cd-8459-b091-6a62-fd65d4b49959",
+    "manufacturer": "B&G",
+    "model": "triton2",
+    "system": "Navigation",
+    "subsystem": "Instruments",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer B&G and the model Triton2, confirming a perfect match. The document is identified as an operator manual, which aligns with the expected type. The content is specifically designed for marine use, focusing on navigation and instruments, and is highly relevant to the described system.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_triton_display.pdf",
+    "asset_uid": "db75b0f4-79fe-220d-15f4-da65e22e8531",
+    "manufacturer": "B&G",
+    "model": "triton_display",
+    "system": "Navigation",
+    "subsystem": "Instruments",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the B&G Triton display, confirming the manufacturer and model match. The document is a user manual intended for operating the Triton instrument, which is designed for marine use, thus aligning perfectly with the expected system description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "B_G_zeus_12_evo3.pdf",
+    "asset_uid": "d9b15880-2f9c-4fce-259d-ee8c8ad20244",
+    "manufacturer": "B&G",
+    "model": "zeus_12_evo3",
+    "system": "Navigation",
+    "subsystem": "Displays/mfds",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer B&G and the model zeus_12_evo3 is consistent with the Zeus3 Installation Manual. The document is an installation guide specifically for marine navigation equipment, aligning perfectly with the expected system type. All criteria are met with high relevance.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "CZone_czone_gateway.pdf",
+    "asset_uid": "9d399ee5-6ac1-2a60-d55c-a22b5a28cd36",
+    "manufacturer": "CZone",
+    "model": "czone_gateway",
+    "system": "Control/automation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content is specifically about the CZone Configuration Tool, which is directly related to the CZone manufacturer and the czone_gateway model. The content is relevant to marine control and automation systems, confirming its marine context. The manual type is identified as an installation guide, which aligns with the expected documentation type for such equipment.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "CZone_wproof_keypad_6x2.pdf",
+    "asset_uid": "4bb7d4ee-c30c-4c20-b1b7-e2a4329bd10e",
+    "manufacturer": "CZone",
+    "model": "wproof_keypad_6x2",
+    "system": "Control/automation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (CZone) and model (wproof_keypad_6x2). It is a user manual specifically designed for marine use, detailing the installation and operation of the waterproof keypad, which aligns perfectly with the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Cyclops_Marine_bg03_smartfittings_gateway.pdf",
+    "asset_uid": "8de1b8c0-e84f-56f9-7593-7d8690617ea8",
+    "manufacturer": "Cyclops Marine",
+    "model": "bg03_smartfittings_gateway",
+    "system": "Rigging/Deck",
+    "subsystem": "Load Sensors",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content matches the expected manufacturer (Cyclops Marine) and model (bg03_smartfittings_gateway). It is an installation guide specifically for marine use, and the content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Cyclops_Marine_smarttune_guide_7_8.pdf",
+    "asset_uid": "9e0a3f72-a2f3-0acd-8d2a-b1aded605fea",
+    "manufacturer": "Cyclops Marine",
+    "model": "smarttune_guide_7_8",
+    "system": "Rigging/Deck",
+    "subsystem": "Load Sensors",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions Cyclops Marine as the manufacturer and the model smarttune_guide_7_8 aligns with the description provided. The content is relevant to marine use, specifically focusing on rigging and load sensors, which matches the expected system type. The document appears to be a user manual based on its instructional nature.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Fusion_6_5_xs_speakers.pdf",
+    "asset_uid": "fd32badc-12e6-32a0-1225-e54cd20d8b6d",
+    "manufacturer": "Fusion",
+    "model": "6_5_xs_speakers",
+    "system": "Interior/Comfort",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content clearly identifies the manufacturer as Fusion and the model as 6.5 XS Speakers, matching the expected details. The document is an installation guide specifically for marine use, and the content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Fusion_radio_stereo.pdf",
+    "asset_uid": "cc01cf4d-5c29-efc5-3f90-099f8a8a74f0",
+    "manufacturer": "Fusion",
+    "model": "radio_stereo",
+    "system": "Interior/Comfort",
+    "subsystem": "Audio/entertainment",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer 'Fusion' and the model 'MS-RA70/MS-RA70N', which matches the expected values. The document is a user manual for a marine entertainment system, confirming its marine context. The content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Integrel_Solutions_hybrid_marine_power_generation_system_integrated_with_main_engine.pdf",
+    "asset_uid": "35832e6e-2324-5aef-b1c7-4b2f9c4e2d42",
+    "manufacturer": "Integrel Solutions",
+    "model": "hybrid_marine_power_generation_system_integrated_with_main_engine",
+    "system": "Electrical (DC)",
+    "subsystem": "Alternators/regulators",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content clearly identifies the manufacturer as Integrel Solutions and describes a hybrid marine power generation system integrated with the main engine, matching the expected model and description. The content is relevant to marine use, providing user guidance for operating the system on boats.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Integrel_charging_system.pdf",
+    "asset_uid": "91b3675a-9470-4e86-fe09-f5132102cfc8",
+    "manufacturer": "Integrel",
+    "model": "charging_system",
+    "system": "Propulsion",
+    "subsystem": "Alternators/regulator",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content clearly identifies the manufacturer as Integrel and describes a charging system that aligns with the expected model and system type. The content is specifically tailored for marine use, providing relevant information for operating the Integrel system on boats.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Isotemp_marine_water_heater.pdf",
+    "asset_uid": "515ce54a-09f5-1830-ef07-ff3db98422ad",
+    "manufacturer": "Isotemp",
+    "model": "marine_water_heater",
+    "system": "Hull/Plumbing",
+    "subsystem": "Water Heater",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer Isotemp and the model marine_water_heater. It is a user manual designed for marine use, providing relevant installation and operational instructions for a marine water heater. All aspects align perfectly with the expected details.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Marco_self_priming_transfer_pump.pdf",
+    "asset_uid": "ea9260bb-f8ee-f895-84e8-0e9651f0c027",
+    "manufacturer": "Marco",
+    "model": "self_priming_transfer_pump",
+    "system": "Electrical (AC)",
+    "subsystem": "Transfer/ats",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (Marco) and model (self_priming_transfer_pump). It is a user manual specifically for a self-priming electric pump used in transferring liquids, which aligns with the marine context. The content is highly relevant to the expected system description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Ocean_Safety_inflatable_danbuoy.pdf",
+    "asset_uid": "f3f11660-4800-54ad-0a5a-0aae71b6592c",
+    "manufacturer": "Ocean Safety",
+    "model": "inflatable_danbuoy",
+    "system": "Safety",
+    "subsystem": "Erirb/plb",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer Ocean Safety and the model Inflatable Danbuoy, confirming a perfect match. The document is an installation guide specifically for marine use, detailing the installation and maintenance of the inflatable danbuoy, which aligns with the expected system description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Parker_Hannifin_marine_fuel_filter_water_separators.pdf",
+    "asset_uid": "9661132b-d880-e7e0-6c09-bff7349270e6",
+    "manufacturer": "Parker Hannifin",
+    "model": "marine_fuel_filter_water_separators",
+    "system": "Hull/Plumbing",
+    "subsystem": "Fuel Seperator",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content matches the expected manufacturer (Parker Hannifin) and model (marine_fuel_filter_water_separators). The document is an installation manual, which aligns with the expected type. It is specifically for marine use, as indicated by the context of fuel filter/water separators. The content is highly relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Quick_hector_hc3_series_windlass_1500w.pdf",
+    "asset_uid": "0c39acac-1782-59e4-f323-891c0ead61b7",
+    "manufacturer": "Quick",
+    "model": "hector_hc3_series_windlass_1500w",
+    "system": "Rigging/Deck",
+    "subsystem": "Windlass",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer 'Quick' and the model 'Hector HC3 series windlass 1500W', which matches the expected values. The document is a user's manual for horizontal windlasses, confirming its relevance to marine use. All content aligns with the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Ritchie_Navigation_compass_with_key.pdf",
+    "asset_uid": "54b8266d-d920-7abb-9026-48017198414c",
+    "manufacturer": "Ritchie Navigation",
+    "model": "compass_with_key",
+    "system": "Navigation",
+    "subsystem": "Compass",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "service_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF explicitly mentions E.S. Ritchie & Sons, Inc. as the manufacturer, and the model is consistent with the expected 'compass_with_key'. The document is a service manual, which aligns with the expected type for maintenance and repair of marine navigation equipment. The content is relevant to marine use, specifically for compass systems.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Thetford_tecma.pdf",
+    "asset_uid": "33618d37-ceca-54ae-4290-e38b4d54920b",
+    "manufacturer": "Thetford",
+    "model": "tecma",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (Thetford) and model (Tecma). It is a user manual specifically designed for marine use, detailing the operation and features of the Tecma EasyFit marine toilet, which aligns perfectly with the expected system description.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Vetus_extractor_fan.pdf",
+    "asset_uid": "08ca0278-7202-4d3b-8824-64e36ad31488",
+    "manufacturer": "Vetus",
+    "model": "extractor_fan",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF clearly identifies the manufacturer as Vetus and the model as an extractor fan, which matches the expected details. The document is an installation guide specifically for marine use, and the content is relevant to the hull/plumbing and venting system type.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Vetus_fuel_filter_water_separators.pdf",
+    "asset_uid": "45f47c43-98cf-4396-a3c0-ddd9b9ea58b0",
+    "manufacturer": "Vetus",
+    "model": "fuel_filter_water_separators",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF matches the expected manufacturer (Vetus) and model (fuel_filter_water_separators). It is an installation guide specifically for marine use, detailing fuel filter/water separators, which aligns perfectly with the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Victron_cerbo_gx.pdf",
+    "asset_uid": "5480345b-3ecf-fa1b-0cfc-659fe978dc4a",
+    "manufacturer": "Victron",
+    "model": "cerbo_gx",
+    "system": "Electrical (DC)",
+    "subsystem": "Monitoring",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF explicitly mentions the manufacturer Victron and the model Cerbo GX, confirming a perfect match. The content is relevant to the expected system type of electrical monitoring, and it is categorized as a user manual. However, it does not pertain specifically to marine use, which slightly affects the marine context score.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Zerojet_on_oc_tender.pdf",
+    "asset_uid": "ca3b9f2f-f06f-4294-8540-dcbb20730da9",
+    "manufacturer": "Zerojet",
+    "model": "on_oc_tender",
+    "system": "Rigging/Deck",
+    "subsystem": "Tender",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 100,
+      "reasoning": "The PDF content explicitly mentions the manufacturer Zerojet and the model on OC Tender, confirming both matches. The document is a user manual, which is appropriate for the expected type. It is clearly intended for marine use, as it discusses an electric jet propulsion system for boats. All content is relevant to the system description provided.",
+      "concerns": [],
+      "recommendation": "APPROVED"
+    }
+  },
+  {
+    "filename": "Franke_flexi_faucet.pdf",
+    "asset_uid": "af9a3816-26ee-e2b1-ecef-62d64098b451",
+    "manufacturer": "Franke",
+    "model": "flexi_faucet",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "installation_guide",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 90,
+      "reasoning": "The PDF matches the expected manufacturer (Franke) and model (flexi_faucet) perfectly. The content is relevant to the system type (Hull/Plumbing/Shower) and provides installation instructions, which classify it as an installation guide. However, it explicitly states that the product is not warranted for marine and outdoor installations, which slightly affects the overall confidence.",
+      "concerns": [
+        "The warranty explicitly states that the product is not suitable for marine use."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Peplink_ap_one_ax.pdf",
+    "asset_uid": "940b9d2f-6c80-7a1b-067c-9865fae75589",
+    "manufacturer": "Peplink",
+    "model": "ap_one_ax",
+    "system": "Communications",
+    "subsystem": "Wi-Fi/cell/sat",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 90,
+      "reasoning": "The PDF matches the expected manufacturer (Peplink) and model (ap_one_ax) perfectly. The content is relevant to the system type (Communications / Wi-Fi/cell/sat) and appears to be a user manual. However, there is no indication that it is specifically for marine use.",
+      "concerns": [],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Peplink_balance_20x_2_wan.pdf",
+    "asset_uid": "5c359768-a7bf-4aa1-8b56-79cba419f881",
+    "manufacturer": "Peplink",
+    "model": "balance_20x_2_wan",
+    "system": "Communications",
+    "subsystem": "Wi-Fi",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 90,
+      "reasoning": "The PDF matches the expected manufacturer (Peplink) and model (Balance 20X - 2 WAN). It is a user manual, which is appropriate for the equipment type. However, there is no specific mention of marine or boat use, which slightly lowers the confidence score.",
+      "concerns": [],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Pepwave_max_hd1_dome_pro_5g.pdf",
+    "asset_uid": "0443ce63-8971-4ccb-bf5a-d0b09d868d6f",
+    "manufacturer": "Pepwave",
+    "model": "max_hd1_dome_pro_5g",
+    "system": "Communications",
+    "subsystem": "Wi-Fi",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 90,
+      "reasoning": "The PDF matches the expected manufacturer (Pepwave) and model (max_hd1_dome_pro_5g) perfectly. It is identified as a user manual, which aligns with the expected documentation type. However, there is no specific mention of marine or boat use in the provided content, which slightly lowers the overall confidence score.",
+      "concerns": [],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Hansgrohe_shower_head.pdf",
+    "asset_uid": "cdcb9764-0cad-4116-8560-ed32a55c9a5d",
+    "manufacturer": "Hansgrohe",
+    "model": "shower_head",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 80,
+      "reasoning": "The PDF matches the expected manufacturer (Hansgrohe) and model (shower_head). The content is relevant to the system description as it discusses shower heads and their features. However, there is no indication that this product is specifically for marine use, which slightly lowers the overall confidence.",
+      "concerns": [],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Samsung_tv.pdf",
+    "asset_uid": "47c20c93-45bb-e1a3-d2c7-40d1d28eda44",
+    "manufacturer": "Samsung",
+    "model": "tv",
+    "system": "Interior/Comfort",
+    "subsystem": "Audio/entertainment",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 100,
+      "overall_confidence": 80,
+      "reasoning": "The PDF matches the expected manufacturer (Samsung) and model (TV). It is classified as a user manual, which aligns with the expected documentation type. However, there is no indication that this product is specifically designed for marine use, which affects the overall confidence score.",
+      "concerns": [],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Victron_smart_solar_mppt.pdf",
+    "asset_uid": "b3c33da6-405e-4dda-5eee-75fe259df4ef",
+    "manufacturer": "Victron",
+    "model": "smart_solar_mppt",
+    "system": "Electrical (DC)",
+    "subsystem": "Solar/mppt",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 100,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 50,
+      "overall_confidence": 80,
+      "reasoning": "The PDF matches the expected manufacturer (Victron) and model (smart_solar_mppt) perfectly. It is identified as a user manual, which aligns with the expected documentation type. However, the content primarily discusses battery operation and does not explicitly mention marine applications, leading to a lower score in marine context. The relevance to the system description is moderate as it does not directly address solar MPPT systems.",
+      "concerns": [
+        "Content does not explicitly mention marine applications.",
+        "Limited relevance to solar MPPT systems."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Flexiteek_material_guarantee.pdf",
+    "asset_uid": "2e5d375c-f030-5a86-a6a2-91902193b68a",
+    "manufacturer": "Flexiteek",
+    "model": "material_guarantee",
+    "system": "Interior/Comfort",
+    "subsystem": "Flooring",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 70,
+      "reasoning": "The PDF is from the expected manufacturer, Flexiteek, and is relevant to marine use, specifically addressing care and maintenance of Flexiteek decking. However, it does not mention a model number that matches the expected 'material_guarantee', leading to a low score in that category. The content is highly relevant to the system description.",
+      "concerns": [
+        "Model number does not match expected value."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_50_2sta.pdf",
+    "asset_uid": "46020346-2f50-628b-bddc-6e8a331f1915",
+    "manufacturer": "Harken",
+    "model": "50_2sta",
+    "system": "Rigging/Deck",
+    "subsystem": "Winches",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 70,
+      "reasoning": "The manufacturer matches the expected value, but the model number in the PDF does not match the expected model. The document is a user manual and is relevant to marine use, specifically for winches. However, the mismatch in the model number significantly affects the overall confidence.",
+      "concerns": [
+        "Model number in the PDF does not match the expected model."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_black_magic_loop_block.pdf",
+    "asset_uid": "0fb0acae-1585-6393-94d1-889aa4088d35",
+    "manufacturer": "Harken",
+    "model": "black_magic_loop_block",
+    "system": "Rigging/Deck",
+    "subsystem": "Deck Hardware",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 70,
+      "reasoning": "The PDF matches the expected manufacturer (Harken) and is relevant to marine use, specifically rigging and deck hardware. However, the model number 'black_magic_loop_block' is not explicitly mentioned in the provided content, leading to a low model match score. The content is highly relevant to the expected system description.",
+      "concerns": [
+        "Model number 'black_magic_loop_block' is not found in the PDF."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Jabsco_electric_toilet.pdf",
+    "asset_uid": "0dbf0a1a-13d2-7877-1e81-70bd0f58c5ad",
+    "manufacturer": "Jabsco",
+    "model": "electric_toilet",
+    "system": "Hull/Plumbing",
+    "subsystem": "Heads",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 70,
+      "reasoning": "The PDF matches the expected manufacturer (Jabsco) and is specifically for marine use, indicating a strong relevance to the marine context. However, the model mentioned in the PDF does not match the expected model (electric_toilet), leading to a low score in model match. The manual type is identified as an installation guide, which is appropriate for the context.",
+      "concerns": [
+        "Model number does not match the expected model."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_gps_antenna.pdf",
+    "asset_uid": "3f998133-962b-4a49-88fb-98191a8cfeac",
+    "manufacturer": "B&G",
+    "model": "gps_antenna",
+    "system": "Communications",
+    "subsystem": "Antennas/splitters",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 50,
+      "overall_confidence": 60,
+      "reasoning": "The PDF is from the correct manufacturer (B&G) but does not match the expected model (gps_antenna). It is an installation guide relevant to marine use, but the content does not specifically address the GPS antenna as described in the expected system type.",
+      "concerns": [
+        "Model number does not match the expected gps_antenna.",
+        "Content does not specifically address GPS antenna installation."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_nep_2_network_expansion_port.pdf",
+    "asset_uid": "32dfefc3-59eb-1055-6b68-870d2821bf4c",
+    "manufacturer": "B&G",
+    "model": "nep_2_network_expansion_port",
+    "system": "Navigation",
+    "subsystem": "Networking",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 60,
+      "reasoning": "The PDF is from B&G, matching the expected manufacturer, but the model number 'nep_2_network_expansion_port' is not explicitly mentioned in the provided content. The manual is a user manual for marine equipment, confirming its marine context. The content is relevant to navigation and networking systems, but the lack of model match lowers the overall confidence.",
+      "concerns": [
+        "Model number 'nep_2_network_expansion_port' is not found in the PDF content."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_t2_ram_and_rf25_mounted_in_starboard_engine_room.pdf",
+    "asset_uid": "8130c5ae-e20f-4c51-bd56-addc884b0b06",
+    "manufacturer": "B&G",
+    "model": "t2_ram_and_rf25_mounted_in_starboard_engine_room",
+    "system": "Navigation",
+    "subsystem": "Autopilot",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 50,
+      "overall_confidence": 60,
+      "reasoning": "The PDF content mentions B&G as the manufacturer, which matches the expected manufacturer. However, there is no specific mention of the model 't2_ram_and_rf25_mounted_in_starboard_engine_room', leading to a score of 0 for model match. The content is relevant to marine use, but it does not specifically address the described autopilot system, resulting in a moderate relevance score.",
+      "concerns": [
+        "No specific mention of the expected model.",
+        "Content does not directly relate to the described autopilot system."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_32mm_big_boat_cb_traveler_car.pdf",
+    "asset_uid": "d989bc6c-bab9-a001-2889-f4e83e47b28f",
+    "manufacturer": "Harken",
+    "model": "32mm_big_boat_cb_traveler_car",
+    "system": "Rigging/Deck",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 50,
+      "overall_confidence": 60,
+      "reasoning": "The PDF is from Harken, matching the expected manufacturer, but the model does not match the expected model number. The document is an installation guide specifically for marine use, but the content is only partially relevant to the expected system description.",
+      "concerns": [
+        "Model number in the PDF does not match the expected model.",
+        "Content relevance is only partial as it focuses on a different product."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_analogic_switch.pdf",
+    "asset_uid": "4dfca1c2-9aa7-4f69-893a-131fc9405612",
+    "manufacturer": "Harken",
+    "model": "analogic_switch",
+    "system": "Control/automation",
+    "subsystem": "Relays/switching",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 50,
+      "overall_confidence": 60,
+      "reasoning": "The PDF is from Harken, matching the expected manufacturer. However, the model 'analogic_switch' is not mentioned in the content, leading to a score of 0 for model match. The document is an installation guide for a battcar switch system, which is relevant to marine use but does not directly relate to the specified system description of an analogic switch. This results in a moderate overall confidence score.",
+      "concerns": [
+        "Model number 'analogic_switch' is not found in the PDF.",
+        "Content primarily focuses on battcar switch system rather than the expected analogic switch."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_black_magic_footblock.pdf",
+    "asset_uid": "e7505403-03a3-43ad-8e64-5fdf42f573c4",
+    "manufacturer": "Harken",
+    "model": "black_magic_footblock",
+    "system": "Rigging/Deck",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 50,
+      "overall_confidence": 60,
+      "reasoning": "The PDF matches the expected manufacturer (Harken) but does not match the expected model (black_magic_footblock). It is an installation guide relevant to marine use, but the content is not specifically about the expected model, which affects relevance.",
+      "concerns": [
+        "Model number in the PDF does not match the expected model.",
+        "Content is not specifically about the black_magic_footblock."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_high_load_snatch_block.pdf",
+    "asset_uid": "d7958a7c-7fd5-4458-a071-95bfcc75b6d3",
+    "manufacturer": "Harken",
+    "model": "high_load_snatch_block",
+    "system": "Rigging/Deck",
+    "subsystem": "Deck Hardware",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 50,
+      "overall_confidence": 60,
+      "reasoning": "The PDF is from Harken, matching the expected manufacturer, but it does not mention the specific model 'high_load_snatch_block'. The content is relevant to marine use, but it primarily discusses various blocks without focusing on the expected model. Therefore, the content relevance is moderate.",
+      "concerns": [
+        "Specific model 'high_load_snatch_block' is not mentioned in the PDF.",
+        "Content is generic and covers multiple products rather than focusing on the expected item."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Vitrifrigo_fridge_freezer.pdf",
+    "asset_uid": "ce903d80-61d9-07dc-8e87-5105d4aa472f",
+    "manufacturer": "Vitrifrigo",
+    "model": "fridge_freezer",
+    "system": "Interior/Comfort",
+    "subsystem": "Fridge/freezer",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 100,
+      "overall_confidence": 60,
+      "reasoning": "The PDF content matches the expected manufacturer (Vitrifrigo) and is relevant to marine use, but it does not specify the expected model (fridge_freezer). The content is a user manual type and is highly relevant to the system description. However, the lack of a specific model match lowers the overall confidence.",
+      "concerns": [
+        "No specific mention of the expected model 'fridge_freezer'."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Hansgrohe_mixer_tap.pdf",
+    "asset_uid": "67f3c4a4-3811-0d7f-a316-bb6c9e434c7d",
+    "manufacturer": "Hansgrohe",
+    "model": "mixer_tap",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 80,
+      "overall_confidence": 52,
+      "reasoning": "The PDF matches the expected manufacturer (Hansgrohe) but does not specify the model 'mixer_tap'. The content is relevant to plumbing and shower systems but lacks a clear marine context. The manual type is not explicitly defined.",
+      "concerns": [
+        "Model number not found in the PDF.",
+        "No indication of marine-specific applications."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Hansgrohe_mixer_tap_showers.pdf",
+    "asset_uid": "45711cb3-7a32-4553-8375-e347663f6f78",
+    "manufacturer": "Hansgrohe",
+    "model": "mixer_tap_showers",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 80,
+      "overall_confidence": 52,
+      "reasoning": "The PDF matches the expected manufacturer (Hansgrohe) but does not mention the specific model (mixer_tap_showers). The content is relevant to shower systems but lacks a clear marine context. The manual type is not explicitly defined in the provided content.",
+      "concerns": [
+        "Model number not found in the PDF.",
+        "No indication of marine-specific applications."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Sunpower_solar_panel.pdf",
+    "asset_uid": "b3470a55-8290-25b9-f407-85b5652b8788",
+    "manufacturer": "Sunpower",
+    "model": "solar_panel",
+    "system": "Electrical (DC)",
+    "subsystem": "Solar/mppt",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 50,
+      "overall_confidence": 50,
+      "reasoning": "The PDF matches the expected manufacturer (Sunpower) but does not match the expected model (solar_panel). The content is a user manual for a solar battery, which is related to solar power but not specifically for marine use or the expected solar panel system. Therefore, the relevance to the expected system description is moderate.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content is not specifically for marine use."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Victron_lynx_distributor.pdf",
+    "asset_uid": "d1101b51-d5e1-4ecb-8822-cb60ad8eb6cf",
+    "manufacturer": "Victron",
+    "model": "lynx_distributor",
+    "system": "Electrical (DC)",
+    "subsystem": "Distribution/busbars",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 50,
+      "overall_confidence": 50,
+      "reasoning": "The PDF matches the expected manufacturer (Victron) but does not match the expected model (lynx_distributor). The document is identified as a user manual, which is appropriate, but it does not specifically indicate marine use. The content relevance is moderate as it discusses a different product (MultiPlus) rather than the Lynx Distributor.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not specifically address marine applications."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Victron_orion_tr_smart_24_48_8_5_dc_dc_converter.pdf",
+    "asset_uid": "3126bdbe-e88b-2def-e3cf-1c0ff8bfd018",
+    "manufacturer": "Victron",
+    "model": "orion_tr_smart_24_48_8_5_dc_dc_converter",
+    "system": "Electrical (DC)",
+    "subsystem": "Converters",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 50,
+      "overall_confidence": 50,
+      "reasoning": "The PDF matches the expected manufacturer (Victron) but does not contain the expected model (orion_tr_smart_24_48_8_5_dc_dc_converter). The content is a user manual, which is relevant but not specifically for marine use, and the relevance to the system description is moderate as it discusses a different product (MultiPlus).",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content is not specifically for marine applications."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Victron_quattro_48_5000_70_100_100_230v.pdf",
+    "asset_uid": "67878acc-3376-eac0-f306-c6aea5240d39",
+    "manufacturer": "Victron",
+    "model": "quattro_48_5000_70_100_100_230v",
+    "system": "Electrical (DC)",
+    "subsystem": "Inverter/charger",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 50,
+      "overall_confidence": 50,
+      "reasoning": "The PDF is from Victron, matching the expected manufacturer, but it does not mention the expected model 'quattro_48_5000_70_100_100_230v'. The content primarily discusses other models (Phoenix series) and does not specifically address marine applications. The relevance to the system description is moderate as it discusses inverters but not the specific model or marine context.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not specifically address marine applications."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Victron_smartshunt_500a_50mv.pdf",
+    "asset_uid": "3b28ed48-8448-39da-553b-72cea85ee6c0",
+    "manufacturer": "Victron",
+    "model": "smartshunt_500a_50mv",
+    "system": "Electrical (DC)",
+    "subsystem": "Monitoring",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 50,
+      "overall_confidence": 50,
+      "reasoning": "The PDF is from Victron, matching the expected manufacturer, but it refers to the BMV-600 model instead of the smartshunt_500a_50mv. The content is somewhat relevant as it discusses battery monitoring, but it does not specifically address the expected equipment. The manual type is correctly identified as a user manual, but there is no indication that it is specifically for marine use.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not specifically address marine applications."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_ais_vhf_antenna_splitter.pdf",
+    "asset_uid": "18ebb84d-9981-3a60-5a38-0cf23da9e370",
+    "manufacturer": "B&G",
+    "model": "ais_vhf_antenna_splitter",
+    "system": "Communications",
+    "subsystem": "VHF",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from B&G, matching the expected manufacturer, but the model mentioned is V60/V60-B and H60, which does not match the expected model ais_vhf_antenna_splitter. The content is relevant to marine use, but it does not pertain to the AIS/VHF antenna splitter as described. Therefore, the overall confidence is low.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not pertain to the AIS/VHF antenna splitter."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_forwardscan_transducers.pdf",
+    "asset_uid": "99f63852-706e-e912-f856-5e4319422726",
+    "manufacturer": "B&G",
+    "model": "forwardscan_transducers",
+    "system": "Navigation",
+    "subsystem": "Sonar/forwardscan",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF matches the expected manufacturer (B&G) but does not mention the expected model (forwardscan_transducers). The content is related to various marine equipment but does not specifically address ForwardScan Sonar, leading to low relevance. The type of manual is unclear based on the provided content.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not specifically address ForwardScan Sonar."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_gps_500_gps_antenna_for_nais_500_ais_transceiver.pdf",
+    "asset_uid": "a0bb27fe-88aa-fb1f-9ed8-d8497e562600",
+    "manufacturer": "B&G",
+    "model": "gps_500_gps_antenna_for_nais_500_ais_transceiver",
+    "system": "Navigation",
+    "subsystem": "GPS/gnss",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from B&G, matching the expected manufacturer, but the model does not match the expected gps_500_gps_antenna_for_nais_500_ais_transceiver. The document is a user manual for VHF radio systems, which is not relevant to the specified GPS antenna. It is specifically for marine use, but the content does not align with the expected system description.",
+      "concerns": [
+        "Model number does not match the expected model.",
+        "Content is not relevant to the specified GPS antenna."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_h100_handset.pdf",
+    "asset_uid": "1cc45fe2-1f14-5809-5fcb-e0da2eb0db21",
+    "manufacturer": "B&G",
+    "model": "h100_handset",
+    "system": "Communications",
+    "subsystem": "Handsets/intercom",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The manufacturer matches the expected value (B&G), but the model number does not match (expected 'h100_handset' but the content refers to 'V60/V60-B and H60'). The document is a user manual and is relevant to marine use, but the content does not match the specific system description provided.",
+      "concerns": [
+        "Model number mismatch",
+        "Content does not match the expected system description"
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_sonarhub.pdf",
+    "asset_uid": "b3cea2e4-8739-dbe0-9197-60a2301ce360",
+    "manufacturer": "B&G",
+    "model": "sonarhub",
+    "system": "Navigation",
+    "subsystem": "Sonar/forwardscan",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the correct manufacturer (B&G) but does not match the expected model (sonarhub). It is an installation guide relevant to marine use, but the content does not pertain to the specified system type (Navigation / Sonar/forwardscan).",
+      "concerns": [
+        "Model number does not match expected model (sonarhub).",
+        "Content does not specifically address the sonarhub module."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_vhf_antenna_splitter.pdf",
+    "asset_uid": "b24e777b-faa6-429d-afca-6dbfc3d4eb3e",
+    "manufacturer": "B&G",
+    "model": "vhf_antenna_splitter",
+    "system": "Communications",
+    "subsystem": "VHF",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from B&G, matching the expected manufacturer, but the model mentioned is V60/V60-B and H60, which does not match the expected model of vhf_antenna_splitter. The document is a user manual and is relevant to marine use, but the content does not pertain to the specific equipment described (VHF antenna splitter).",
+      "concerns": [
+        "Model number does not match the expected vhf_antenna_splitter.",
+        "Content does not specifically address the VHF antenna splitter."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "B_G_zg100_gps_dome.pdf",
+    "asset_uid": "2bc39990-2681-6814-08d8-3e1d222e1abb",
+    "manufacturer": "B&G",
+    "model": "zg100_gps_dome",
+    "system": "Navigation",
+    "subsystem": "GPS/gnss",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from B&G, matching the expected manufacturer, but the model number does not match the expected zg100_gps_dome. The manual is a user manual and is relevant to marine use, but the content does not pertain to the specific GPS system described.",
+      "concerns": [
+        "Model number mismatch",
+        "Content does not relate to the zg100_gps_dome"
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_60_3_stea_winch.pdf",
+    "asset_uid": "85683d4d-bd10-d20b-76c8-39f862ac311d",
+    "manufacturer": "Harken",
+    "model": "60_3_stea_winch",
+    "system": "Rigging/Deck",
+    "subsystem": "Winches",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from Harken, matching the expected manufacturer, but the model number does not match the expected model (60_3_stea_winch). The manual type is identified as an installation guide, which is appropriate for the context. The content is relevant to marine use, but it specifically discusses a different winch model (40.2 ST) rather than the expected model. This leads to a low overall confidence score.",
+      "concerns": [
+        "Model number in the PDF does not match the expected model.",
+        "Content is focused on a different winch model."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_dual_function_control_box.pdf",
+    "asset_uid": "f0845b51-0568-4e99-81bc-eb00fd689971",
+    "manufacturer": "Harken",
+    "model": "dual_function_control_box",
+    "system": "Propulsion",
+    "subsystem": "Controls",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF matches the expected manufacturer (Harken) but does not match the expected model (dual_function_control_box). The content is relevant to marine use, and the document is identified as an installation guide. However, the lack of model match significantly lowers the overall confidence score.",
+      "concerns": [
+        "Model number does not match the expected model.",
+        "Content does not specifically address the dual function control box."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Harken_winch_60_3_stea_24v_h_motor.pdf",
+    "asset_uid": "623391a4-cd7d-0a2e-eeef-f75cd26b55b3",
+    "manufacturer": "Harken",
+    "model": "winch_60_3_stea_24v_h_motor",
+    "system": "Rigging/Deck",
+    "subsystem": "Winches",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the correct manufacturer (Harken), but the model does not match the expected model (winch_60_3_stea_24v_h_motor). The manual type is identified as an installation guide, which is appropriate for the context. The content is relevant to marine use, but it does not pertain to the specific winch model expected, leading to low relevance scores.",
+      "concerns": [
+        "Model number in the PDF does not match the expected model.",
+        "Content does not specifically address the expected winch model."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Quick_remote_control_hrc1002_2vie.pdf",
+    "asset_uid": "fd57895b-e0fa-d735-6cb4-1cb88a65e92c",
+    "manufacturer": "Quick",
+    "model": "remote_control_hrc1002_2vie",
+    "system": "Propulsion",
+    "subsystem": "Controls",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF matches the expected manufacturer (Quick) but does not match the expected model (remote_control_hrc1002_2vie). The content is relevant to marine use, specifically discussing windlasses, but does not pertain to the expected system description of a remote control. Therefore, the overall confidence is low.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not relate to remote control systems."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Vetus_airvent_v_airvent_h.pdf",
+    "asset_uid": "374cc1c4-da31-416b-9426-decee31b2851",
+    "manufacturer": "Vetus",
+    "model": "airvent_v_airvent_h",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the expected manufacturer (Vetus) but does not match the expected model (airvent_v_airvent_h). The content is related to an electric diaphragm pump, which is not relevant to the specified air vent models. It is an installation guide for marine use, but the specific equipment described does not align with the expected system type.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content is not relevant to the specified air vent equipment."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_cooling_water_strainer.pdf",
+    "asset_uid": "29ec59da-2e52-48b9-ad8a-7474efeea0ad",
+    "manufacturer": "Vetus",
+    "model": "cooling_water_strainer",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the expected manufacturer (Vetus) and is a user manual, which is appropriate for marine use. However, there is no mention of the specific model 'cooling_water_strainer', leading to a low score for model match and content relevance.",
+      "concerns": [
+        "Model number 'cooling_water_strainer' is not mentioned in the PDF.",
+        "Content does not appear to be relevant to the expected system description."
+      ],
+      "recommendation": "REVIEW"
+    }
+  },
+  {
+    "filename": "Vetus_louvred_air_vents.pdf",
+    "asset_uid": "3f072505-a5df-1084-4298-269c2b5cdbe0",
+    "manufacturer": "Vetus",
+    "model": "louvred_air_vents",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The manufacturer matches the expected value (Vetus), but the model does not match as the PDF content refers to mechanical remote engine controls rather than louvred air vents. The document is an installation guide and is relevant to marine use, but the specific content does not pertain to the expected system description.",
+      "concerns": [
+        "Model mismatch: The PDF does not contain information about louvred air vents.",
+        "Content does not match the expected system description."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_no_smell_filter.pdf",
+    "asset_uid": "1dced2ef-c7e8-4a0b-a4a1-4ce10385d014",
+    "manufacturer": "Vetus",
+    "model": "no_smell_filter",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the expected manufacturer (Vetus), but the model does not match the expected 'no_smell_filter'. The document is an installation guide, which is relevant to marine contexts, but the content does not pertain to the specified equipment. Therefore, the overall confidence is low.",
+      "concerns": [
+        "Model number does not match the expected model.",
+        "Content does not relate to the specified no smell filter."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_stainless_steel_breather_nipples.pdf",
+    "asset_uid": "6f7842bd-58cf-4bc7-9e1e-7da88b74edc2",
+    "manufacturer": "Vetus",
+    "model": "stainless_steel_breather_nipples",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the expected manufacturer (Vetus), but the model does not match the expected stainless steel breather nipples. The document is an installation guide for flexible waste water tanks, which is not relevant to the specified system type of hull/plumbing/venting. While it is for marine use, the content does not pertain to the expected equipment.",
+      "concerns": [
+        "Model number does not match expected.",
+        "Content is not relevant to the specified equipment."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_vented_loops.pdf",
+    "asset_uid": "e3d12cb9-377d-456d-b322-24fd20edc595",
+    "manufacturer": "Vetus",
+    "model": "vented_loops",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 40,
+      "reasoning": "The PDF is from the expected manufacturer (Vetus), but the model does not match the expected 'vented_loops'. The content primarily discusses mechanical remote engine controls, which does not align with the expected system type of vented loops. The document is relevant to marine use, but the lack of model match and content relevance significantly lowers the overall score.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content does not relate to vented loops."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Caframo_sirocco_fan.pdf",
+    "asset_uid": "c74030c0-012c-6b59-bc78-d46c570702b7",
+    "manufacturer": "Caframo",
+    "model": "sirocco_fan",
+    "system": "Interior/Comfort",
+    "subsystem": "Hvac",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF is from Caframo, matching the expected manufacturer, but it discusses a different product (Ecofan) rather than the Sirocco fan. The content is not relevant to marine use or the specified system type.",
+      "concerns": [
+        "The model mentioned in the PDF does not match the expected model.",
+        "The content is not related to marine applications or the specified interior comfort system."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Gewiss_disposal_guide.pdf",
+    "asset_uid": "995f4ace-1042-dbad-9d2d-4d46fe9dc4cb",
+    "manufacturer": "Gewiss",
+    "model": "disposal_guide",
+    "system": "Hull/Plumbing",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF content is primarily a user guide for CAD software related to electrical systems, which does not match the expected model of a disposal guide for marine equipment. The manufacturer matches, but the model does not, and the content is not relevant to marine use.",
+      "concerns": [
+        "The model number in the PDF does not match the expected model.",
+        "The content is not related to marine equipment or disposal guides."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Hy-Prodrive_linear_actuator.pdf",
+    "asset_uid": "667332e7-8d3b-d2bd-7cc3-56495f56ce53",
+    "manufacturer": "Hy-Prodrive",
+    "model": "linear_actuator",
+    "system": "Hull/Plumbing",
+    "subsystem": "Actuator",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF content pertains to a hydraulic pump from Hydraulic Projects Ltd, which does not match the expected manufacturer Hy-Prodrive or the model linear_actuator. The manual is an installation guide for a different type of equipment, although it is relevant to marine use. The content does not match the expected system description of a linear actuator.",
+      "concerns": [
+        "Incorrect manufacturer and model",
+        "Content does not match expected system description"
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_splash_stop.pdf",
+    "asset_uid": "cd0e4aa5-ca0a-42f1-bfba-12e43b11dfa3",
+    "manufacturer": "Vetus",
+    "model": "splash_stop",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF is from the manufacturer Vetus, but the model 'splash_stop' is not mentioned in the content provided. The document is a user manual, which is appropriate for marine use, but the content does not relate to the expected system description of 'Hull/Plumbing / Venting'.",
+      "concerns": [
+        "Model number 'splash_stop' is not found in the PDF content.",
+        "Content does not match the expected system description."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_waste_water_tank.pdf",
+    "asset_uid": "dbc18825-eebc-43b0-b511-c0b7204b5d5c",
+    "manufacturer": "Vetus",
+    "model": "waste_water_tank",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "installation_guide",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF is from the expected manufacturer (Vetus), but it pertains to a connection kit for fuel tanks, not a waste water tank. Therefore, the model does not match, and the content is not relevant to the expected marine equipment description.",
+      "concerns": [
+        "Model does not match expected waste water tank.",
+        "Content is not relevant to marine plumbing or venting systems."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Victron_lynx_smart_bms_500.pdf",
+    "asset_uid": "27ae3e55-fc52-7fb0-439d-7907543fe5b2",
+    "manufacturer": "Victron",
+    "model": "lynx_smart_bms_500",
+    "system": "Electrical (DC)",
+    "subsystem": "Bms",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF is from Victron, matching the expected manufacturer, but it does not mention the Lynx Smart BMS500 model, focusing instead on Phoenix inverters. The content does not relate to the specified system type of Electrical (DC) / BMS, and there is no indication of marine-specific applications.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content is not relevant to the specified system type.",
+        "No marine context found."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Victron_orion_tr_smart_24_12_30a.pdf",
+    "asset_uid": "b8d26f26-3f0e-3c96-3e28-349e1d1f7060",
+    "manufacturer": "Victron",
+    "model": "orion_tr_smart_24_12_30a",
+    "system": "Electrical (DC)",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF is from Victron Energy, matching the expected manufacturer. However, it discusses the Skylla-TG series, which does not match the expected model 'orion_tr_smart_24_12_30a'. The content is not relevant to the specified equipment, and there is no indication that it is specifically for marine use.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content is not relevant to the specified equipment.",
+        "No marine context found."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Victron_smart_solar_mppt_250_100_tr.pdf",
+    "asset_uid": "4cd0906c-b5e2-9783-1b39-ffa94a2497d8",
+    "manufacturer": "Victron",
+    "model": "smart_solar_mppt_250_100_tr",
+    "system": "Electrical (DC)",
+    "subsystem": "Solar/mppt",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 100,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 20,
+      "reasoning": "The PDF is from Victron, matching the manufacturer, but it discusses the Skylla battery charger models, which do not match the expected model of Smart Solar MPPT 250/100 Tr. The content is not relevant to the expected system type of solar MPPT equipment, and there is no indication of marine-specific use.",
+      "concerns": [
+        "Model number does not match expected model.",
+        "Content is not relevant to the expected system type.",
+        "No marine context found."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_o_ring_kit_for_thru_hull_fitting.pdf",
+    "asset_uid": "363c8d2b-2bb5-4bb6-b691-a9c3b19cabf0",
+    "manufacturer": "B&G",
+    "model": "o_ring_kit_for_thru_hull_fitting",
+    "system": "Hull/Plumbing",
+    "subsystem": "Thru‑hulls",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF does not mention the expected manufacturer B&G or the specific model o_ring_kit_for_thru_hull_fitting. The content appears to be related to a pump installation, which does not directly relate to the expected O-ring kit for thru hull fittings. However, it is noted that the context is marine-related.",
+      "concerns": [
+        "Manufacturer and model do not match expectations.",
+        "Content does not appear relevant to the expected product description."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_rf25n_rudder_feedback_unit.pdf",
+    "asset_uid": "c8fa8549-d68d-ca0e-8cd2-75cfce49ec5b",
+    "manufacturer": "B&G",
+    "model": "rf25n_rudder_feedback_unit",
+    "system": "Navigation",
+    "subsystem": "Autopilot",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content refers to the IS40 PRO Operator Manual, which is not related to the expected B&G RF25N Rudder Feedback Unit. Therefore, the manufacturer and model do not match, and the content relevance is low despite being in a marine context.",
+      "concerns": [
+        "The manufacturer is Navico, not B&G.",
+        "The model referenced is IS40 PRO, not RF25N.",
+        "Content does not pertain to the expected rudder feedback unit."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_zeus_s_12mfd.pdf",
+    "asset_uid": "d6abc8c6-0039-9846-6a49-faf0e2cb8c34",
+    "manufacturer": "B&G",
+    "model": "zeus_s_12mfd",
+    "system": "Navigation",
+    "subsystem": "Displays/mfds",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF does not mention the expected manufacturer (B&G) or model (zeus_s_12mfd), indicating a complete mismatch. The content appears to be a survey report rather than a manual related to the specified navigation equipment, which further reduces relevance.",
+      "concerns": [
+        "No mention of B&G or the specified model.",
+        "Content is a survey report, not a manual.",
+        "Lack of specific information related to navigation displays or MFDS."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "CZone_touch_7.pdf",
+    "asset_uid": "329c5200-e0c6-d03e-3dea-9cdff7591070",
+    "manufacturer": "CZone",
+    "model": "touch_7",
+    "system": "Control/automation",
+    "subsystem": "Displays/controls",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content refers to the CZone Touch 10 User Guide, which does not match the expected manufacturer (CZone) and model (touch_7). The manual type is identified as a user manual, and it is relevant to marine use. However, the lack of match for both manufacturer and model significantly lowers the overall confidence.",
+      "concerns": [
+        "Manufacturer does not match expected (CZone vs. Mastervolt)",
+        "Model does not match expected (touch_7 vs. Touch 10)",
+        "Content is not relevant to the expected system description"
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Cyclops_Marine_smarttoggle_4_5t_12mm.pdf",
+    "asset_uid": "9ee9c355-25f6-575f-d5ca-14602d329c57",
+    "manufacturer": "Cyclops Marine",
+    "model": "smarttoggle_4_5t_12mm",
+    "system": "Rigging/Deck",
+    "subsystem": "Load Sensors",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF does not mention the expected manufacturer (Cyclops Marine) or model (smarttoggle_4_5t_12mm). The content primarily focuses on stainless steel wire rope and fittings, which does not align with the specific load sensor described. However, it is relevant to marine use.",
+      "concerns": [
+        "No mention of Cyclops Marine as the manufacturer.",
+        "No reference to the model smarttoggle_4_5t_12mm.",
+        "Content does not relate to load sensors."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Frigomar_airconditioners.pdf",
+    "asset_uid": "b478c2fd-8991-b329-57c8-b973bc8c863d",
+    "manufacturer": "Frigomar",
+    "model": "airconditioners",
+    "system": "Interior/Comfort",
+    "subsystem": "Hvac",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Frigomar) or the specific model (airconditioners). The content primarily discusses lighting products and does not provide relevant information about air conditioning systems. While the context is marine-related, the lack of relevant content significantly lowers the confidence score.",
+      "concerns": [
+        "No mention of Frigomar as the manufacturer.",
+        "No reference to air conditioning models or systems.",
+        "Content primarily focused on lighting, not HVAC systems."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Harken_46_2stea.pdf",
+    "asset_uid": "69688a2c-2660-4f9e-974a-7794bf459d4d",
+    "manufacturer": "Harken",
+    "model": "46_2stea",
+    "system": "Rigging/Deck",
+    "subsystem": "Winches",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF does not mention the expected manufacturer (Harken) or model (46_2stea), and the content primarily focuses on yacht specifications rather than winches or rigging systems. The context is marine-related, but the specific equipment is not addressed.",
+      "concerns": [
+        "No mention of Harken as the manufacturer.",
+        "No reference to the model 46_2stea.",
+        "Content does not relate to winches or rigging systems."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Harken_50_2stea_24v_horizontal.pdf",
+    "asset_uid": "69055764-ebc7-d985-b1ab-72afaf3dd695",
+    "manufacturer": "Harken",
+    "model": "50_2stea_24v_horizontal",
+    "system": "Rigging/Deck",
+    "subsystem": "Winches",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF does not mention the expected manufacturer (Harken) or model (50_2stea_24v_horizontal). The content primarily discusses the specifications of a yacht, which does not relate to the expected winch system. While it is marine-related, it does not provide relevant information about the specific equipment requested.",
+      "concerns": [
+        "No mention of Harken as the manufacturer.",
+        "Model number does not match.",
+        "Content does not pertain to winches or rigging systems."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Vetus_waterlock.pdf",
+    "asset_uid": "19a35aad-36ac-48a6-981e-c61b5cf2fc64",
+    "manufacturer": "Vetus",
+    "model": "waterlock",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": true,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Vetus) or model (waterlock). It appears to be a user manual for a different boat model (MAREX 373 Aft Cabin Cruiser) and does not specifically address the waterlock system or its installation. However, it is relevant to marine use.",
+      "concerns": [
+        "Manufacturer and model do not match expectations.",
+        "Content does not reference the waterlock system."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Victron_gx_touch_70.pdf",
+    "asset_uid": "9bde01d7-0d79-c0c0-f8a4-5b48f9646a49",
+    "manufacturer": "Victron",
+    "model": "gx_touch_70",
+    "system": "Electrical (DC)",
+    "subsystem": "Monitoring",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content pertains to a 6.4kWh Lithium-ion battery, which does not match the expected manufacturer (Victron) or model (gx_touch_70). The content is not relevant to the specified marine equipment, and there is no indication that it is specifically for marine use.",
+      "concerns": [
+        "Manufacturer and model do not match expectations.",
+        "Content is unrelated to the specified marine equipment.",
+        "No marine context found in the document."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Victron_life_p04_battery_25_6v_200a.pdf",
+    "asset_uid": "ea03110e-598d-7430-eb5a-0e745cd7f340",
+    "manufacturer": "Victron",
+    "model": "life_p04_battery_25_6v_200a",
+    "system": "Electrical (DC)",
+    "subsystem": "Batteries",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content refers to a Pytes V series LFP battery, which does not match the expected manufacturer (Victron) or model (life_p04_battery_25_6v_200a). The manual type is correctly identified as a user manual, but it is not relevant to marine applications. Overall, the content does not align with the expected specifications.",
+      "concerns": [
+        "Incorrect manufacturer and model information.",
+        "Not relevant to marine applications."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Whale_gusher_titan_bilge_pumps.pdf",
+    "asset_uid": "1a5d8140-f5b1-4a02-b516-1eb39f3b766c",
+    "manufacturer": "Whale",
+    "model": "gusher_titan_bilge_pumps",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Whale) or the model (gusher_titan_bilge_pumps). The content appears to be related to a control panel user manual, which does not align with marine equipment. Therefore, the scores for manufacturer match, model match, and content relevance are all low.",
+      "concerns": [
+        "No mention of the expected manufacturer (Whale).",
+        "No mention of the expected model (gusher_titan_bilge_pumps).",
+        "Content is not relevant to marine equipment."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Yanmar_shift_actuator.pdf",
+    "asset_uid": "7d66254e-d860-46ce-81f8-43647fbb1cac",
+    "manufacturer": "Yanmar",
+    "model": "shift_actuator",
+    "system": "Propulsion",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "parts_catalog",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 10,
+      "reasoning": "The PDF content does not mention the expected manufacturer Yanmar or the model shift_actuator. The content primarily discusses a TS 200 engine driven welder, which is unrelated to marine equipment. The manual type is identified as a parts catalog, but it does not pertain to marine use.",
+      "concerns": [
+        "No mention of Yanmar as the manufacturer.",
+        "Model shift_actuator is not referenced.",
+        "Content is focused on a welding machine, not marine equipment.",
+        "No marine context found."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Acr_epirb_beacon_programming_certificate.pdf",
+    "asset_uid": "00dc82b0-b0ae-6688-3969-601d22f7bc62",
+    "manufacturer": "Acr",
+    "model": "epirb_beacon_programming_certificate",
+    "system": "Safety",
+    "subsystem": "Epirb/plb",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not match the expected manufacturer (Acr) or model (epirb_beacon_programming_certificate). The content is focused on greenhouse gas emissions reductions and does not pertain to marine equipment or safety systems. Therefore, all scores are low.",
+      "concerns": [
+        "PDF content is unrelated to marine equipment.",
+        "No mention of EPIRB or PLB systems.",
+        "Does not provide any relevant information for the expected model."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_gps_antenna_module_pack.pdf",
+    "asset_uid": "9f5f2089-589c-4010-a0dc-54f3a0626842",
+    "manufacturer": "B&G",
+    "model": "gps_antenna_module_pack",
+    "system": "Communications",
+    "subsystem": "Antennas/splitters",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (B&G) or model (gps_antenna_module_pack). The content appears to be related to a pump, which does not align with the expected marine equipment description. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of B&G as the manufacturer.",
+        "Model number does not match.",
+        "Content appears unrelated to GPS antenna module.",
+        "No clear indication of marine context."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_h100_kit.pdf",
+    "asset_uid": "d0eaea4e-573b-fede-f90c-42c079bcde25",
+    "manufacturer": "B&G",
+    "model": "h100_kit",
+    "system": "Communications",
+    "subsystem": "Handsets/intercom",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (B&G) or model (h100_kit). The content appears to be related to equipment repair manuals for spray systems, which do not align with marine communications equipment. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of B&G as the manufacturer.",
+        "No reference to the model h100_kit.",
+        "Content is unrelated to marine communications or handsets/intercoms."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_ip_cam_1_installation_guide.pdf",
+    "asset_uid": "f5a259ed-9f28-4cda-affd-821d632a97e6",
+    "manufacturer": "B&G",
+    "model": "ip_cam_1_installation_guide",
+    "system": "Navigation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not match the expected manufacturer (B&G) or model (ip_cam_1_installation_guide). The content appears to be related to equipment repair manuals for spray systems, which is unrelated to marine equipment. Therefore, all scores are low.",
+      "concerns": [
+        "PDF content does not match expected manufacturer.",
+        "PDF content does not match expected model.",
+        "Content is unrelated to marine systems.",
+        "Manual type is not identifiable as installation guide."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_micro_c_backbone_kit.pdf",
+    "asset_uid": "9d2fe5d7-e323-4a8d-a718-f937fd1e683b",
+    "manufacturer": "B&G",
+    "model": "micro_c_backbone_kit",
+    "system": "Navigation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (B&G) or model (micro_c_backbone_kit). The content appears to be related to equipment repair for spray systems, which is unrelated to marine navigation systems. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of B&G as the manufacturer.",
+        "No reference to the model micro_c_backbone_kit.",
+        "Content is focused on spray equipment, not marine systems.",
+        "Manual type is unclear and does not fit expected categories."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_silicone_and_safety_wire_kit.pdf",
+    "asset_uid": "20e4f32f-bf13-43a8-8ccb-6a3ff762f10f",
+    "manufacturer": "B&G",
+    "model": "silicone_and_safety_wire_kit",
+    "system": "Navigation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (B&G) or model (silicone_and_safety_wire_kit). The content appears to be related to equipment repair for spray systems, which is not relevant to marine use. Therefore, all scores are zero.",
+      "concerns": [
+        "No mention of B&G as the manufacturer.",
+        "No reference to the expected model silicone_and_safety_wire_kit.",
+        "Content is unrelated to marine systems.",
+        "Manual type cannot be determined from the content provided."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_t2_ram_24v.pdf",
+    "asset_uid": "b22eaf1a-2334-bcca-b748-f3a13cf3f092",
+    "manufacturer": "B&G",
+    "model": "t2_ram_24v",
+    "system": "Navigation",
+    "subsystem": "Autopilot",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (B&G) or model (t2_ram_24v). The content appears to be related to a TechnoForce e-MT Pump Controller, which does not align with the expected navigation/autopilot system. Additionally, there is no indication that the content is specifically for marine use.",
+      "concerns": [
+        "Manufacturer and model do not match expectations.",
+        "Content is unrelated to the expected navigation/autopilot system.",
+        "No marine context found in the provided content."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "B_G_yellow_o_ring.pdf",
+    "asset_uid": "277fd70d-2c8a-46ce-b749-9ea77eb3515e",
+    "manufacturer": "B&G",
+    "model": "yellow_o_ring",
+    "system": "Navigation",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (B&G) or model (yellow_o_ring). The content appears to focus on equipment repair for spray systems, which does not align with marine applications. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of B&G as the manufacturer.",
+        "No reference to the model yellow_o_ring.",
+        "Content is unrelated to marine systems.",
+        "Type of manual is unclear based on provided content."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Bosch_induction_hob.pdf",
+    "asset_uid": "9a8661fb-f7b2-fb6e-c0e9-41b74ed822af",
+    "manufacturer": "Bosch",
+    "model": "induction_hob",
+    "system": "Interior/Comfort",
+    "subsystem": "Cooking",
+    "download_source": "websearch",
+    "status": "extraction_failed",
+    "validation": {
+      "overall_confidence": 0,
+      "recommendation": "REJECT",
+      "concerns": [
+        "PDF text extraction failed"
+      ]
+    }
+  },
+  {
+    "filename": "Bosch_oven.pdf",
+    "asset_uid": "fccb8822-ff20-4757-aedb-8ce7e3765f39",
+    "manufacturer": "Bosch",
+    "model": "oven",
+    "system": "Interior/Comfort",
+    "subsystem": "Cooking",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not contain any recognizable information related to the expected manufacturer (Bosch) or model (oven). The text appears to be garbled and lacks clarity, making it impossible to determine the type of manual or its relevance to marine equipment. Therefore, all scores are low.",
+      "concerns": [
+        "PDF content is garbled and unreadable.",
+        "No identifiable manufacturer or model information.",
+        "No clear indication of marine context or relevance."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Iriduim_satellite_kit.pdf",
+    "asset_uid": "45c06cdd-28d7-9497-8507-0f26628c2cf2",
+    "manufacturer": "Iriduim",
+    "model": "satellite_kit",
+    "system": "Communications",
+    "subsystem": "Wi-Fi/cell/sat",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Iridium) or model (satellite_kit). The content appears to be related to a nuclear regulatory application, which is unrelated to marine equipment. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of the expected manufacturer or model.",
+        "Content is unrelated to marine equipment.",
+        "Document type is not identifiable as a user manual or related to marine systems."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Pan_World_magnetic_driven_pump_aircons.pdf",
+    "asset_uid": "d7bef66f-c51e-35d7-b801-69f4553db17a",
+    "manufacturer": "Pan World",
+    "model": "magnetic_driven_pump_aircons",
+    "system": "Hull/Plumbing",
+    "subsystem": "Pumps",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Pan World) or model (magnetic_driven_pump_aircons). The content is focused on a corporate overview and annual report, which is unrelated to marine equipment. Therefore, all scores are zero.",
+      "concerns": [
+        "No mention of the expected manufacturer.",
+        "No mention of the expected model.",
+        "Content is not relevant to marine equipment.",
+        "Document type is not identifiable as a manual."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Peplink_b_one.pdf",
+    "asset_uid": "48e83cfd-94a3-4dfb-9953-387a3da8f95b",
+    "manufacturer": "Peplink",
+    "model": "b_one",
+    "system": "Communications",
+    "subsystem": "Wi-Fi/cell/sat",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content provided does not mention the expected manufacturer (Peplink) or model (b_one). The content appears to focus on Pepwave AP One and AP Pro series, which are not related to the expected equipment. Additionally, there is no indication that the content is specific to marine use or relevant to the described system type.",
+      "concerns": [
+        "No mention of Peplink or model b_one in the content.",
+        "Content does not relate to marine applications.",
+        "Type of manual is unclear and does not match expected categories."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Register_Your_Device__register_your_device.pdf",
+    "asset_uid": "8e541a9e-8096-f02f-6437-8f22f423b8b5",
+    "manufacturer": "Register Your Device:",
+    "model": "register_your_device",
+    "system": "Hull/Plumbing",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention any marine equipment or context. It focuses on registering devices for a Wi-Fi network, which is unrelated to marine systems. Therefore, both manufacturer and model do not match, and the content is irrelevant to the expected system description.",
+      "concerns": [
+        "Content is not related to marine equipment.",
+        "No mention of manufacturer or model relevant to marine systems."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Rule_standard_drain_box.pdf",
+    "asset_uid": "6b101a00-e08f-d3a2-6ba8-4d8d5c7ade42",
+    "manufacturer": "Rule",
+    "model": "standard_drain_box",
+    "system": "Hull/Plumbing",
+    "subsystem": "Venting",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Rule) or model (standard_drain_box). The manual appears to be for a different device (NRE User Manual) and does not relate to marine equipment. Therefore, all scores are low.",
+      "concerns": [
+        "PDF content does not match expected manufacturer and model.",
+        "The manual is not related to marine equipment.",
+        "Content is irrelevant to the specified system type."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Samsung_washer_dryer.pdf",
+    "asset_uid": "3a49c8f2-44de-4940-9b3c-be32d80e1b5d",
+    "manufacturer": "Samsung",
+    "model": "washer_dryer",
+    "system": "Interior/Comfort",
+    "subsystem": "Audio/entertainment",
+    "download_source": "websearch",
+    "status": "extraction_failed",
+    "validation": {
+      "overall_confidence": 0,
+      "recommendation": "REJECT",
+      "concerns": [
+        "PDF text extraction failed"
+      ]
+    }
+  },
+  {
+    "filename": "Schenker_zen_150_watermaker_48v.pdf",
+    "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+    "manufacturer": "Schenker",
+    "model": "zen_150_watermaker_48v",
+    "system": "Hull/Plumbing",
+    "subsystem": "Watermaker",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer (Schenker) or model (zen_150_watermaker_48v). The content appears to be related to a robotics competition, which is unrelated to marine equipment. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of Schenker or the specified model.",
+        "Content is focused on robotics, not marine systems.",
+        "Type of manual cannot be determined from the content."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Seaai_sea_ai.pdf",
+    "asset_uid": "dbd7b74f-2b5b-41dd-b369-6c80d9253e6e",
+    "manufacturer": "Seaai",
+    "model": "sea_ai",
+    "system": "Navigation",
+    "subsystem": "AI Camera",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention the expected manufacturer 'Seaai' or the model 'sea_ai'. The content appears to be related to a corporate notice and does not pertain to marine equipment or systems. Therefore, all scores are low.",
+      "concerns": [
+        "No mention of the expected manufacturer or model.",
+        "Content is unrelated to marine systems or equipment.",
+        "Document type is not identifiable as a manual."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Spinlock_tsr_aft_organiser.pdf",
+    "asset_uid": "793a9915-0404-0b63-c7aa-3670be9b469a",
+    "manufacturer": "Spinlock",
+    "model": "tsr_aft_organiser",
+    "system": "Hull/Plumbing",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content is focused on veterinary instruments and education, with no mention of marine equipment or the specified manufacturer and model. Therefore, it does not match any of the expected criteria.",
+      "concerns": [
+        "PDF content is unrelated to marine equipment.",
+        "No mention of the manufacturer Spinlock or model tsr_aft_organiser."
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Whale_swin_n_rinse_shower.pdf",
+    "asset_uid": "f876f1dd-3fda-7cdb-5200-9c9f89e271c1",
+    "manufacturer": "Whale",
+    "model": "swin_n_rinse_shower",
+    "system": "Hull/Plumbing",
+    "subsystem": "Shower",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "user_manual",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content is related to a VTech product, specifically a storytelling soother, which does not match the expected manufacturer (Whale) or model (swin_n_rinse_shower). The content is not relevant to marine equipment or systems.",
+      "concerns": [
+        "Incorrect manufacturer and model",
+        "Content is not related to marine equipment",
+        "Not relevant to the expected system type (Hull/Plumbing/Shower)"
+      ],
+      "recommendation": "REJECT"
+    }
+  },
+  {
+    "filename": "Yanmar_port_engine.pdf",
+    "asset_uid": "736a7b73-3d9f-a851-89f3-e98dded6357c",
+    "manufacturer": "Yanmar",
+    "model": "port_engine",
+    "system": "Propulsion",
+    "subsystem": "Engines",
+    "download_source": "websearch",
+    "status": "extraction_failed",
+    "validation": {
+      "overall_confidence": 0,
+      "recommendation": "REJECT",
+      "concerns": [
+        "PDF text extraction failed"
+      ]
+    }
+  },
+  {
+    "filename": "Yanmar_port_sail_drive.pdf",
+    "asset_uid": "cc5de4bb-7061-479d-b030-da179a35a430",
+    "manufacturer": "Yanmar",
+    "model": "port_sail_drive",
+    "system": "Propulsion",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "extraction_failed",
+    "validation": {
+      "overall_confidence": 0,
+      "recommendation": "REJECT",
+      "concerns": [
+        "PDF text extraction failed"
+      ]
+    }
+  },
+  {
+    "filename": "Yanmar_stbd_engine.pdf",
+    "asset_uid": "4be6e417-1b27-42bf-951a-e10cb2b970e8",
+    "manufacturer": "Yanmar",
+    "model": "stbd_engine",
+    "system": "Propulsion",
+    "subsystem": "Engines",
+    "download_source": "websearch",
+    "status": "extraction_failed",
+    "validation": {
+      "overall_confidence": 0,
+      "recommendation": "REJECT",
+      "concerns": [
+        "PDF text extraction failed"
+      ]
+    }
+  },
+  {
+    "filename": "Yanmar_stbd_sail_drive.pdf",
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "manufacturer": "Yanmar",
+    "model": "stbd_sail_drive",
+    "system": "Propulsion",
+    "subsystem": "Uncategorized",
+    "download_source": "websearch",
+    "status": "extraction_failed",
+    "validation": {
+      "overall_confidence": 0,
+      "recommendation": "REJECT",
+      "concerns": [
+        "PDF text extraction failed"
+      ]
+    }
+  },
+  {
+    "filename": "Yanmar_v20.pdf",
+    "asset_uid": "641b18cf-e9de-4ebe-a37e-4e48c19aaaaf",
+    "manufacturer": "Yanmar",
+    "model": "v20",
+    "system": "Propulsion",
+    "subsystem": "Engine Controls",
+    "download_source": "websearch",
+    "status": "validated",
+    "validation": {
+      "manufacturer_match": 0,
+      "model_match": 0,
+      "manual_type": "unknown",
+      "marine_context": false,
+      "content_relevance": 0,
+      "overall_confidence": 0,
+      "reasoning": "The PDF content does not mention Yanmar or the V20 model, nor does it relate to marine equipment. It focuses on Generac Mobile Products and light towers, which are unrelated to the expected marine equipment.",
+      "concerns": [
+        "No mention of Yanmar as the manufacturer.",
+        "No reference to the V20 model.",
+        "Content is focused on light towers, not marine propulsion or engine controls.",
+        "No indication of marine context."
+      ],
+      "recommendation": "REJECT"
+    }
+  }
+]

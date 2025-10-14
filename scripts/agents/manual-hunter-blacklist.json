@@ -1,0 +1,17 @@
+{
+  "00dc82b0-b0ae-6688-3969-601d22f7bc62": {
+    "asset_uid": "00dc82b0-b0ae-6688-3969-601d22f7bc62",
+    "manufacturer": "Acr",
+    "model": "epirb_beacon_programming_certificate",
+    "rejected_urls": [
+      "https://www.nauticast.com/Themes/Nauticast/Content/downloads/AIS/ENY1-03-0211G.pdf",
+      "https://archive.org/download/manualsonline-id-684fb7f5-ddaf-4825-92c7-363b7d742119/684fb7f5-ddaf-4825-92c7-363b7d742119.pdf",
+      "https://iacratraining.faa.gov/IACRA/PDFFiles/IACRA%20User%20Guide.pdf",
+      "https://usermanual.wiki/Document/aisuserman.203225178.pdf",
+      "https://itnetworks.softing.com/fileadmin/media/documents/products/copper/WireXpert/EN/Softing_IT_Networks_UserManual_WireXpert4500_Copper.pdf"
+    ],
+    "attempts": 5,
+    "last_attempt": "2025-10-12T01:45:04.997Z",
+    "last_rejection_reason": "Download failed: The \"path\" argument must be of type string or an instance of Buffer or URL. Received an instance of Object"
+  }
+}

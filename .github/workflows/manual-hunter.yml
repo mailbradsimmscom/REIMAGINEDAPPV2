@@ -1,0 +1,127 @@
+name: Manual Hunter Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_pdfs:
+        description: 'Maximum PDFs to download'
+        required: false
+        default: '40'
+        type: string
+
+  # Optional: Schedule to run weekly
+  # schedule:
+  #   - cron: '0 0 * * 0'  # Every Sunday at midnight UTC
+
+jobs:
+  hunt-manuals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120  # 2 hour timeout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify input CSV exists
+        run: |
+          if [ ! -f scripts/agents/systems-needing-manuals.csv ]; then
+            echo "Error: systems-needing-manuals.csv not found"
+            echo "Run: node scripts/export-systems-needing-manuals.js first"
+            exit 1
+          fi
+          echo "✅ Found CSV with $(wc -l < scripts/agents/systems-needing-manuals.csv) lines"
+
+      - name: Configure max PDFs
+        run: |
+          MAX_PDFS=${{ github.event.inputs.max_pdfs || '40' }}
+          echo "MAX_PDFS=${MAX_PDFS}" >> $GITHUB_ENV
+          echo "📊 Will download maximum ${MAX_PDFS} PDFs"
+
+      - name: Run Manual Hunter Agent
+        env:
+          LOG_LEVEL: info
+        run: |
+          echo "🚀 Starting Manual Hunter Agent..."
+          node scripts/agents/manual-hunter.js
+        continue-on-error: true
+        id: hunt
+
+      - name: List results
+        if: always()
+        run: |
+          echo "📁 Results directory contents:"
+          ls -lah scripts/agents/manual-hunter-results/ || echo "No results directory"
+
+          if [ -d scripts/agents/manual-hunter-results/pdfs ]; then
+            echo "📄 Downloaded PDFs:"
+            ls -lh scripts/agents/manual-hunter-results/pdfs/ || echo "No PDFs downloaded"
+          fi
+
+      - name: Create results archive
+        if: always()
+        run: |
+          cd scripts/agents/manual-hunter-results
+
+          # Create separate archives for results and PDFs
+          if [ -d pdfs ] && [ "$(ls -A pdfs)" ]; then
+            echo "📦 Zipping PDFs..."
+            zip -r pdfs.zip pdfs/
+            echo "✅ PDFs zipped: $(du -h pdfs.zip | cut -f1)"
+          fi
+
+          # Zip JSON and markdown reports
+          if ls *.json *.md 1> /dev/null 2>&1; then
+            echo "📦 Zipping reports..."
+            zip -r reports.zip *.json *.md
+            echo "✅ Reports zipped"
+          fi
+
+      - name: Upload PDFs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-hunter-pdfs-${{ github.run_number }}
+          path: scripts/agents/manual-hunter-results/pdfs.zip
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload reports artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-hunter-reports-${{ github.run_number }}
+          path: scripts/agents/manual-hunter-results/reports.zip
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Display summary
+        if: always()
+        run: |
+          echo "## Manual Hunter Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f scripts/agents/manual-hunter-results/run-*-report.md ]; then
+            REPORT=$(ls -t scripts/agents/manual-hunter-results/run-*-report.md | head -1)
+            cat "$REPORT" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No report generated" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Job status
+        if: always()
+        run: |
+          if [ "${{ steps.hunt.outcome }}" == "success" ]; then
+            echo "✅ Manual Hunter completed successfully"
+          else
+            echo "⚠️ Manual Hunter completed with errors (check logs)"
+            exit 0  # Don't fail the workflow, just warn
+          fi

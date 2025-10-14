@@ -1,0 +1,77 @@
+{
+  "timestamp": "2025-10-11T17-17-01",
+  "summary": {
+    "total_systems": 3,
+    "pdfs_downloaded": 3,
+    "duration_seconds": 5,
+    "status_breakdown": {
+      "found": 3
+    },
+    "success_rate": "100.0%"
+  },
+  "results": [
+    {
+      "asset_uid": "00dc82b0-b0ae-6688-3969-601d22f7bc62",
+      "manufacturer": "Acr",
+      "model": "epirb_beacon_programming_certificate",
+      "system": "Safety",
+      "subsystem": "Epirb/plb",
+      "status": "found",
+      "manual_url": "https://acrcarbon.org/wp-content/uploads/2023/10/ACR-Standard-v8.0.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Acr_epirb_beacon_programming_certificate.pdf",
+      "file_size": 2874991
+    },
+    {
+      "asset_uid": "87517a2e-8bc4-8379-5718-e88bb81cb796",
+      "manufacturer": "Acuva",
+      "model": "uv_led_water_purification_system",
+      "system": "Hull/Plumbing",
+      "subsystem": "Water Filter",
+      "status": "found",
+      "manual_url": "https://www.vanislewater.com/site/supporting_docs/A/ACU-600080001-OM.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Acuva_uv_led_water_purification_system.pdf",
+      "file_size": 987078
+    },
+    {
+      "asset_uid": "b3552f33-36c4-c3ba-043b-486b7e985dba",
+      "manufacturer": "Airmar",
+      "model": "triducer_multisensor_airmar_dst810",
+      "system": "Navigation",
+      "subsystem": "Sonar/forwardscan",
+      "status": "found",
+      "manual_url": "https://media1.svb-media.de/media/snr/519374/pdf/manual_2022-09-12_09-48-55_0f940d6b2907c7aeeb9eaf2108ea86cd.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Airmar_triducer_multisensor_airmar_dst810.pdf",
+      "file_size": 5581964
+    }
+  ]
+}

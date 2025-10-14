@@ -1,0 +1,4 @@
+asset_uid,manufacturer_norm,model_norm,system_norm,subsystem_norm,description
+00dc82b0-b0ae-6688-3969-601d22f7bc62,Acr,epirb_beacon_programming_certificate,Safety,Epirb/plb,"EPIRB beacon programming certificate"
+87517a2e-8bc4-8379-5718-e88bb81cb796,Acuva,uv_led_water_purification_system,Hull/Plumbing,Water Filter,"UV-LED Water purification system"
+b3552f33-36c4-c3ba-043b-486b7e985dba,Airmar,triducer_multisensor_airmar_dst810,Navigation,Sonar/forwardscan,""

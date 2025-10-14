@@ -1,0 +1,953 @@
+{
+  "timestamp": "2025-10-11T18-24-26",
+  "summary": {
+    "total_systems": 45,
+    "pdfs_downloaded": 41,
+    "serpapi_calls": 45,
+    "duration_seconds": 91,
+    "status_breakdown": {
+      "found": 42,
+      "invalid": 3
+    },
+    "success_rate": "93.3%"
+  },
+  "results": [
+    {
+      "asset_uid": "4bb7d4ee-c30c-4c20-b1b7-e2a4329bd10e",
+      "manufacturer": "CZone",
+      "model": "wproof_keypad_6x2",
+      "system": "Control/automation",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://assets-7484b3de52.cdn.insitecloud.net/b14d10aa83be808/80-911-0165-01-Installation-2.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/CZone_wproof_keypad_6x2.pdf",
+      "file_size": 3393731
+    },
+    {
+      "asset_uid": "9d399ee5-6ac1-2a60-d55c-a22b5a28cd36",
+      "manufacturer": "CZone",
+      "model": "czone_gateway",
+      "system": "Control/automation",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://www.mvs.se/wp-content/uploads/2022/11/CZone-Configuration-Tool-Instructions-R20.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/CZone_czone_gateway.pdf",
+      "file_size": 5130399
+    },
+    {
+      "asset_uid": "329c5200-e0c6-d03e-3dea-9cdff7591070",
+      "manufacturer": "CZone",
+      "model": "touch_7",
+      "system": "Control/automation",
+      "subsystem": "Displays/controls",
+      "status": "found",
+      "manual_url": "https://assets-7484b3de52.cdn.insitecloud.net/7ee4b3d3e9c4950/80-911-0216-00-Installation.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/CZone_touch_7.pdf",
+      "file_size": 2840437
+    },
+    {
+      "asset_uid": "2e5d375c-f030-5a86-a6a2-91902193b68a",
+      "manufacturer": "Flexiteek",
+      "model": "material_guarantee",
+      "system": "Interior/Comfort",
+      "subsystem": "Flooring",
+      "status": "found",
+      "manual_url": "https://www.flexiteek.com/wp-content/uploads/2024/03/Care_and_Maintenance_-_Text_Only_Document.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Flexiteek_material_guarantee.pdf",
+      "file_size": 2925494
+    },
+    {
+      "asset_uid": "603ed86f-0d7a-4ee9-a681-d3a97b600764",
+      "manufacturer": "Fortress",
+      "model": "fx_37",
+      "system": "Rigging/Deck",
+      "subsystem": "Anchor",
+      "status": "invalid",
+      "manual_url": "https://www.manualslib.com/manual/1037065/3m-Mp7640i.html",
+      "source": "manualslib",
+      "confidence": "medium",
+      "verified": false,
+      "downloaded": false,
+      "error": "Wrong content type: text/html; charset=UTF-8",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ]
+    },
+    {
+      "asset_uid": "af9a3816-26ee-e2b1-ecef-62d64098b451",
+      "manufacturer": "Franke",
+      "model": "flexi_faucet",
+      "system": "Hull/Plumbing",
+      "subsystem": "Shower",
+      "status": "found",
+      "manual_url": "https://www.franke.com/content/dam/franke/us/en/home-solutions/documents/installation-manuals/faucets-/Absinthe%20FF5200-FF5220-FF5270-FF5280%20Manual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Franke_flexi_faucet.pdf",
+      "file_size": 4103612
+    },
+    {
+      "asset_uid": "b478c2fd-8991-b329-57c8-b973bc8c863d",
+      "manufacturer": "Frigomar",
+      "model": "airconditioners",
+      "system": "Interior/Comfort",
+      "subsystem": "Hvac",
+      "status": "found",
+      "manual_url": "https://service.belship.com/download/BelshipCatalogus_lr.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Frigomar_airconditioners.pdf",
+      "file_size": 34452759
+    },
+    {
+      "asset_uid": "fd32badc-12e6-32a0-1225-e54cd20d8b6d",
+      "manufacturer": "Fusion",
+      "model": "6_5_xs_speakers",
+      "system": "Interior/Comfort",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://static.garmin.com/pumac/Fusion_XS_Series_Speaker_Install_EN-US.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Fusion_6_5_xs_speakers.pdf",
+      "file_size": 331877
+    },
+    {
+      "asset_uid": "cc01cf4d-5c29-efc5-3f90-099f8a8a74f0",
+      "manufacturer": "Fusion",
+      "model": "radio_stereo",
+      "system": "Interior/Comfort",
+      "subsystem": "Audio/entertainment",
+      "status": "found",
+      "manual_url": "https://static.garmin.com/pumac/Fusion_RA70_OM_EN.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Fusion_radio_stereo.pdf",
+      "file_size": 1868957
+    },
+    {
+      "asset_uid": "995f4ace-1042-dbad-9d2d-4d46fe9dc4cb",
+      "manufacturer": "Gewiss",
+      "model": "disposal_guide",
+      "system": "Hull/Plumbing",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://www.gewiss.com/content/dam/gewiss/softwares/software/tech-suite/cadpro/cadpro_manuale/GWCADpro_IN.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Gewiss_disposal_guide.pdf",
+      "file_size": 14091776
+    },
+    {
+      "asset_uid": "cdcb9764-0cad-4116-8560-ed32a55c9a5d",
+      "manufacturer": "Hansgrohe",
+      "model": "shower_head",
+      "system": "Hull/Plumbing",
+      "subsystem": "Shower",
+      "status": "found",
+      "manual_url": "https://assets.hansgrohe.com/celum/web/hg_salesbook_bath_2019_en.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Hansgrohe_shower_head.pdf",
+      "file_size": 26366839
+    },
+    {
+      "asset_uid": "67f3c4a4-3811-0d7f-a316-bb6c9e434c7d",
+      "manufacturer": "Hansgrohe",
+      "model": "mixer_tap",
+      "system": "Hull/Plumbing",
+      "subsystem": "Shower",
+      "status": "found",
+      "manual_url": "https://assets.hansgrohe.com/celum/web/hg_salesbook_bath_2019_en.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Hansgrohe_mixer_tap.pdf",
+      "file_size": 26366839
+    },
+    {
+      "asset_uid": "45711cb3-7a32-4553-8375-e347663f6f78",
+      "manufacturer": "Hansgrohe",
+      "model": "mixer_tap_showers",
+      "system": "Hull/Plumbing",
+      "subsystem": "Shower",
+      "status": "found",
+      "manual_url": "https://assets.hansgrohe.com/celum/web/hg_salesbook_bath_2019_en.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Hansgrohe_mixer_tap_showers.pdf",
+      "file_size": 26366839
+    },
+    {
+      "asset_uid": "46020346-2f50-628b-bddc-6e8a331f1915",
+      "manufacturer": "Harken",
+      "model": "50_2sta",
+      "system": "Rigging/Deck",
+      "subsystem": "Winches",
+      "status": "found",
+      "manual_url": "https://gallery.harkenindustrial.com/gallery/1826825e-4ff1-408c-b547-527e1ee12ef7.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_50_2sta.pdf",
+      "file_size": 6379556
+    },
+    {
+      "asset_uid": "f0845b51-0568-4e99-81bc-eb00fd689971",
+      "manufacturer": "Harken",
+      "model": "dual_function_control_box",
+      "system": "Propulsion",
+      "subsystem": "Controls",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/ad375e8b-da5e-408a-8b44-c4094ea8a96a.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_dual_function_control_box.pdf",
+      "file_size": 4243476
+    },
+    {
+      "asset_uid": "e7505403-03a3-43ad-8e64-5fdf42f573c4",
+      "manufacturer": "Harken",
+      "model": "black_magic_footblock",
+      "system": "Rigging/Deck",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/52903c9a-44e8-4172-97f6-e6184da3cb69.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_black_magic_footblock.pdf",
+      "file_size": 480579
+    },
+    {
+      "asset_uid": "d989bc6c-bab9-a001-2889-f4e83e47b28f",
+      "manufacturer": "Harken",
+      "model": "32mm_big_boat_cb_traveler_car",
+      "system": "Rigging/Deck",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/d591ba71-0a8f-477c-b59e-c4bd96843430.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_32mm_big_boat_cb_traveler_car.pdf",
+      "file_size": 3407674
+    },
+    {
+      "asset_uid": "4dfca1c2-9aa7-4f69-893a-131fc9405612",
+      "manufacturer": "Harken",
+      "model": "analogic_switch",
+      "system": "Control/automation",
+      "subsystem": "Relays/switching",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/f93eb1a6-2f7d-4bc8-ba97-a514de7d2370.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_analogic_switch.pdf",
+      "file_size": 4301214
+    },
+    {
+      "asset_uid": "d7958a7c-7fd5-4458-a071-95bfcc75b6d3",
+      "manufacturer": "Harken",
+      "model": "high_load_snatch_block",
+      "system": "Rigging/Deck",
+      "subsystem": "Deck Hardware",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/7c7f1dc8-dc5d-46a6-9726-9bbab6b892e6.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_high_load_snatch_block.pdf",
+      "file_size": 1552092
+    },
+    {
+      "asset_uid": "0fb0acae-1585-6393-94d1-889aa4088d35",
+      "manufacturer": "Harken",
+      "model": "black_magic_loop_block",
+      "system": "Rigging/Deck",
+      "subsystem": "Deck Hardware",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/7c7f1dc8-dc5d-46a6-9726-9bbab6b892e6.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_black_magic_loop_block.pdf",
+      "file_size": 1552092
+    },
+    {
+      "asset_uid": "623391a4-cd7d-0a2e-eeef-f75cd26b55b3",
+      "manufacturer": "Harken",
+      "model": "winch_60_3_stea_24v_h_motor",
+      "system": "Rigging/Deck",
+      "subsystem": "Winches",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/7f8881bf-1e41-482e-9003-d400ae1f0db7.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_winch_60_3_stea_24v_h_motor.pdf",
+      "file_size": 4718509
+    },
+    {
+      "asset_uid": "85683d4d-bd10-d20b-76c8-39f862ac311d",
+      "manufacturer": "Harken",
+      "model": "60_3_stea_winch",
+      "system": "Rigging/Deck",
+      "subsystem": "Winches",
+      "status": "found",
+      "manual_url": "https://gallery.harken.com/gallery/5c292d06-9312-4ebd-aa9e-29a21a1609cf.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_60_3_stea_winch.pdf",
+      "file_size": 2041800
+    },
+    {
+      "asset_uid": "69688a2c-2660-4f9e-974a-7794bf459d4d",
+      "manufacturer": "Harken",
+      "model": "46_2stea",
+      "system": "Rigging/Deck",
+      "subsystem": "Winches",
+      "status": "found",
+      "manual_url": "https://jeffbrownyachts.com/assets/pdf/Y7_TechnicalSpecifications.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_46_2stea.pdf",
+      "file_size": 3354582
+    },
+    {
+      "asset_uid": "69055764-ebc7-d985-b1ab-72afaf3dd695",
+      "manufacturer": "Harken",
+      "model": "50_2stea_24v_horizontal",
+      "system": "Rigging/Deck",
+      "subsystem": "Winches",
+      "status": "found",
+      "manual_url": "https://jeffbrownyachts.com/assets/pdf/Y7_TechnicalSpecifications.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Harken_50_2stea_24v_horizontal.pdf",
+      "file_size": 3354582
+    },
+    {
+      "asset_uid": "667332e7-8d3b-d2bd-7cc3-56495f56ce53",
+      "manufacturer": "Hy-Prodrive",
+      "model": "linear_actuator",
+      "system": "Hull/Plumbing",
+      "subsystem": "Actuator",
+      "status": "found",
+      "manual_url": "https://www.hypro.co.uk/wp-content/uploads/2021/03/R4508-m23-PRRU-MANUAL-1.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Hy-Prodrive_linear_actuator.pdf",
+      "file_size": 879711
+    },
+    {
+      "asset_uid": "91b3675a-9470-4e86-fe09-f5132102cfc8",
+      "manufacturer": "Integrel",
+      "model": "charging_system",
+      "system": "Propulsion",
+      "subsystem": "Alternators/regulator",
+      "status": "found",
+      "manual_url": "https://integrelsolutions.com/wp-content/uploads/2024/08/Integrel-E-Power-User-Guide.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Integrel_charging_system.pdf",
+      "file_size": 1896400
+    },
+    {
+      "asset_uid": "35832e6e-2324-5aef-b1c7-4b2f9c4e2d42",
+      "manufacturer": "Integrel Solutions",
+      "model": "hybrid_marine_power_generation_system_integrated_with_main_engine",
+      "system": "Electrical (DC)",
+      "subsystem": "Alternators/regulators",
+      "status": "found",
+      "manual_url": "https://integrelsolutions.com/wp-content/uploads/2024/08/Integrel-E-Power-User-Guide.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Integrel_Solutions_hybrid_marine_power_generation_system_integrated_with_main_engine.pdf",
+      "file_size": 1896400
+    },
+    {
+      "asset_uid": "45c06cdd-28d7-9497-8507-0f26628c2cf2",
+      "manufacturer": "Iriduim",
+      "model": "satellite_kit",
+      "system": "Communications",
+      "subsystem": "Wi-Fi/cell/sat",
+      "status": "found",
+      "manual_url": "https://www.nrc.gov/docs/ML0500/ML050030208.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Iriduim_satellite_kit.pdf",
+      "file_size": 11835737
+    },
+    {
+      "asset_uid": "515ce54a-09f5-1830-ef07-ff3db98422ad",
+      "manufacturer": "Isotemp",
+      "model": "marine_water_heater",
+      "system": "Hull/Plumbing",
+      "subsystem": "Water Heater",
+      "status": "found",
+      "manual_url": "https://www.nationalluna.com/wp-content/uploads/2017/09/basic-manual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Isotemp_marine_water_heater.pdf",
+      "file_size": 112792
+    },
+    {
+      "asset_uid": "0dbf0a1a-13d2-7877-1e81-70bd0f58c5ad",
+      "manufacturer": "Jabsco",
+      "model": "electric_toilet",
+      "system": "Hull/Plumbing",
+      "subsystem": "Heads",
+      "status": "found",
+      "manual_url": "https://www.comstedt.se/wp-content/uploads/2018/04/43000_0905_201712_web.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Jabsco_electric_toilet.pdf",
+      "file_size": 1787908
+    },
+    {
+      "asset_uid": "ea9260bb-f8ee-f895-84e8-0e9651f0c027",
+      "manufacturer": "Marco",
+      "model": "self_priming_transfer_pump",
+      "system": "Electrical (AC)",
+      "subsystem": "Transfer/ats",
+      "status": "found",
+      "manual_url": "https://items.marco.it/media//attach/booklet/UP12-E-BR_00_US.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Marco_self_priming_transfer_pump.pdf",
+      "file_size": 6023828
+    },
+    {
+      "asset_uid": "f3f11660-4800-54ad-0a5a-0aae71b6592c",
+      "manufacturer": "Ocean Safety",
+      "model": "inflatable_danbuoy",
+      "system": "Safety",
+      "subsystem": "Erirb/plb",
+      "status": "found",
+      "manual_url": "https://www.maristo.pl/pl/p/file/64688dc5851f41f6801f1668b8e7808c/ARTOS022-DIGITAL-JonBuoy-Danbuoy-Marker-Installation-Instructions-Rev01.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Ocean_Safety_inflatable_danbuoy.pdf",
+      "file_size": 1508779
+    },
+    {
+      "asset_uid": "023f1935-8b29-7c39-056b-72cb034ba9eb",
+      "manufacturer": "Oceanled",
+      "model": "underwater_lights",
+      "system": "Interior/Comfort",
+      "subsystem": "Lighting",
+      "status": "invalid",
+      "manual_url": "https://www.oceanled.com/wp-content/uploads/2018/08/OceanLED_INSTALLMAN_SPORT_DOCKLIGHT_V8.3.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": false,
+      "downloaded": false,
+      "error": "HTTP 404",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ]
+    },
+    {
+      "asset_uid": "15dd9fc5-a98c-e6e4-a524-60b59c114c32",
+      "manufacturer": "Osculati",
+      "model": "quick_lock_deck_filler",
+      "system": "Rigging/Deck",
+      "subsystem": "Deck Hardware",
+      "status": "invalid",
+      "manual_url": "https://www.osculati.com/document-handler.ashx?itemno=50.243.10&contentrefno=FILE&docpath=DAMST/MASE_SCHEDA%20TECNICA_VS_10.5-10.6_ENG.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": false,
+      "downloaded": false,
+      "error": "HTTP 403",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ]
+    },
+    {
+      "asset_uid": "d7bef66f-c51e-35d7-b801-69f4553db17a",
+      "manufacturer": "Pan World",
+      "model": "magnetic_driven_pump_aircons",
+      "system": "Hull/Plumbing",
+      "subsystem": "Pumps",
+      "status": "found",
+      "manual_url": "https://gvt.com.sg/wp-content/uploads/2023/04/GVT-Limited_AR2022.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Pan_World_magnetic_driven_pump_aircons.pdf",
+      "file_size": 2604244
+    },
+    {
+      "asset_uid": "9661132b-d880-e7e0-6c09-bff7349270e6",
+      "manufacturer": "Parker Hannifin",
+      "model": "marine_fuel_filter_water_separators",
+      "system": "Hull/Plumbing",
+      "subsystem": "Fuel Seperator",
+      "status": "found",
+      "manual_url": "https://www.parker.com/content/dam/Parker-com/Literature/IGFG/PDF-Files/PKR_Water-Separator-User-Guide.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Parker_Hannifin_marine_fuel_filter_water_separators.pdf",
+      "file_size": 554810
+    },
+    {
+      "asset_uid": "48e83cfd-94a3-4dfb-9953-387a3da8f95b",
+      "manufacturer": "Peplink",
+      "model": "b_one",
+      "system": "Communications",
+      "subsystem": "Wi-Fi/cell/sat",
+      "status": "found",
+      "manual_url": "https://download.peplink.com/manual/pepwave_ap_v3.5.4_user_manual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Peplink_b_one.pdf",
+      "file_size": 3919110
+    },
+    {
+      "asset_uid": "b73c5c16-0377-4a89-af95-23b1fa8f4373",
+      "manufacturer": "Peplink",
+      "model": "sim_projector",
+      "system": "Communications",
+      "subsystem": "Wi-Fi/cell/sat",
+      "status": "found",
+      "manual_url": "https://blr-h017.sfhomegateway.peplink.com/50321JX/$KINDLE/27367J003X/40+Fiabe+di+H.+C.+Anderson.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": false,
+      "error": "fetch failed",
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ]
+    },
+    {
+      "asset_uid": "940b9d2f-6c80-7a1b-067c-9865fae75589",
+      "manufacturer": "Peplink",
+      "model": "ap_one_ax",
+      "system": "Communications",
+      "subsystem": "Wi-Fi/cell/sat",
+      "status": "found",
+      "manual_url": "https://download.peplink.com/manual/pepwave_ap_v3.5.4_user_manual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Peplink_ap_one_ax.pdf",
+      "file_size": 3919110
+    },
+    {
+      "asset_uid": "5c359768-a7bf-4aa1-8b56-79cba419f881",
+      "manufacturer": "Peplink",
+      "model": "balance_20x_2_wan",
+      "system": "Communications",
+      "subsystem": "Wi-Fi",
+      "status": "found",
+      "manual_url": "https://download.peplink.com/manual/Peplink_Balance_v6.1_user_manual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Peplink_balance_20x_2_wan.pdf",
+      "file_size": 10166084
+    },
+    {
+      "asset_uid": "0443ce63-8971-4ccb-bf5a-d0b09d868d6f",
+      "manufacturer": "Pepwave",
+      "model": "max_hd1_dome_pro_5g",
+      "system": "Communications",
+      "subsystem": "Wi-Fi",
+      "status": "found",
+      "manual_url": "https://download.peplink.com/manual/pepwave-max-user-manual-8.1.3.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Pepwave_max_hd1_dome_pro_5g.pdf",
+      "file_size": 14031150
+    },
+    {
+      "asset_uid": "0c39acac-1782-59e4-f323-891c0ead61b7",
+      "manufacturer": "Quick",
+      "model": "hector_hc3_series_windlass_1500w",
+      "system": "Rigging/Deck",
+      "subsystem": "Windlass",
+      "status": "found",
+      "manual_url": "https://www.combinoord.nl/files/hc3-7-10-15-rev-08a.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Quick_hector_hc3_series_windlass_1500w.pdf",
+      "file_size": 3039688
+    },
+    {
+      "asset_uid": "fd57895b-e0fa-d735-6cb4-1cb88a65e92c",
+      "manufacturer": "Quick",
+      "model": "remote_control_hrc1002_2vie",
+      "system": "Propulsion",
+      "subsystem": "Controls",
+      "status": "found",
+      "manual_url": "https://www.navinordic.com/pub_docs/files/Ladda_ner/Quick/Ankarspel/DP2E_6_10_11_GB.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Quick_remote_control_hrc1002_2vie.pdf",
+      "file_size": 627278
+    },
+    {
+      "asset_uid": "8e541a9e-8096-f02f-6437-8f22f423b8b5",
+      "manufacturer": "Register Your Device:",
+      "model": "register_your_device",
+      "system": "Hull/Plumbing",
+      "subsystem": "Uncategorized",
+      "status": "found",
+      "manual_url": "https://it.hanover.edu/tech_docs/getconnected/ManualRegistration.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Register_Your_Device__register_your_device.pdf",
+      "file_size": 848992
+    },
+    {
+      "asset_uid": "54b8266d-d920-7abb-9026-48017198414c",
+      "manufacturer": "Ritchie Navigation",
+      "model": "compass_with_key",
+      "system": "Navigation",
+      "subsystem": "Compass",
+      "status": "found",
+      "manual_url": "https://www.ritchienavigation.com/wp-content/uploads/2019/11/ritchinavigation-servicemanual.pdf",
+      "source": "websearch",
+      "confidence": "high",
+      "verified": true,
+      "downloaded": true,
+      "error": null,
+      "strategies_tried": [
+        "websearch",
+        "manualslib",
+        "archive"
+      ],
+      "local_path": "scripts/agents/manual-hunter-results/pdfs/Ritchie_Navigation_compass_with_key.pdf",
+      "file_size": 6587948
+    }
+  ]
+}
