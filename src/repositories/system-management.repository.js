@@ -360,3 +360,29 @@ export async function getNextInstanceIndex(assetUid) {
     throw error;
   }
 }
+
+/**
+ * Get systems that need manuals (from systems_to_fetch view)
+ * @returns {Promise<Array<Object>>} Array of systems needing manuals
+ */
+export async function getSystemsToFetch() {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('systems_to_fetch')
+      .select('asset_uid, manufacturer_norm, model_norm, description');
+
+    if (error) throw error;
+
+    requestLogger.info('Fetched systems needing manuals', { count: data?.length || 0 });
+    return data || [];
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching systems to fetch', {
+      error: error.message
+    });
+    throw error;
+  }
+}

@@ -4,6 +4,7 @@ import { setTimeout } from 'timers/promises';
 import { config } from './manual-hunter-config.js';
 import { executeStrategies } from './manual-hunter-strategies.js';
 import { extractPdfTextWithPython } from './manual-hunter-python-parser.js';
+import { getSystemsToFetch } from '../../src/repositories/system-management.repository.js';
 
 /**
  * Manual Hunter Agent
@@ -762,9 +763,10 @@ Return ONLY valid JSON, no markdown.`;
       this.logger.info('\n🚀 Manual Hunter Agent Started\n');
       this.logger.info(`Config: Max PDFs = ${config.maxPdfs}, Batch Size = ${config.batchSize}`);
 
-      // Parse input CSV
-      const systems = this.parseCsv(config.paths.input);
-      this.logger.info(`Loaded ${systems.length} systems from CSV\n`);
+      // Query systems from Supabase (replaces CSV input)
+      this.logger.info('Querying systems_to_fetch from database...');
+      const systems = await getSystemsToFetch();
+      this.logger.info(`Loaded ${systems.length} systems from database\n`);
 
       // Process systems
       const results = await this.processBatch(systems);
