@@ -1,0 +1,533 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_specifications_extracted": 9,
+  "unique_specifications": 9,
+  "category_breakdown": {
+    "Installation": 7,
+    "Performance": 2
+  },
+  "specifications": [
+    {
+      "parameter": "Straight Connector Bore Size",
+      "normalized_parameter": "connector_bore_diameter",
+      "parameter_aliases": [
+        "hose fitting size",
+        "connector diameter",
+        "bore diameter"
+      ],
+      "value": "0.5",
+      "range": null,
+      "units": "inches",
+      "normalized_units": "mm",
+      "converted_value": "12.7",
+      "models": [
+        "AS0314"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "connector size",
+        "hose fitting",
+        "bore size",
+        "connector diameter",
+        "AS0314 bore"
+      ],
+      "concept_group": "connectors",
+      "references": [
+        "Optional Connectors section"
+      ]
+    },
+    {
+      "parameter": "Pipework Connector O.D.",
+      "normalized_parameter": "pipe_outer_diameter",
+      "parameter_aliases": [
+        "pipe size",
+        "outer diameter",
+        "OD"
+      ],
+      "value": "15",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "15",
+      "models": [
+        "WX1532"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "pipe diameter",
+        "OD",
+        "outer diameter",
+        "WX1532 size",
+        "pipe size"
+      ],
+      "concept_group": "connectors",
+      "references": [
+        "Optional Connectors section"
+      ]
+    },
+    {
+      "parameter": "Warranty Period",
+      "normalized_parameter": "warranty_duration",
+      "parameter_aliases": [
+        "guarantee period",
+        "warranty coverage"
+      ],
+      "value": "1",
+      "range": null,
+      "units": "years",
+      "normalized_units": "years",
+      "converted_value": "1",
+      "models": [
+        "all"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "warranty",
+        "guarantee",
+        "coverage period",
+        "warranty length"
+      ],
+      "concept_group": "warranty",
+      "references": [
+        "warranty section"
+      ]
+    },
+    {
+      "parameter": "Maximum Hose Length",
+      "normalized_parameter": "max_hose_length",
+      "parameter_aliases": [
+        "hose reach",
+        "shower hose length",
+        "effective length"
+      ],
+      "value": "6 ft",
+      "range": null,
+      "units": "ft",
+      "normalized_units": "meters",
+      "converted_value": "1.8",
+      "models": [
+        "Swim 'n' Rinse Shower"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "hose length",
+        "reach",
+        "extension",
+        "how far does hose reach",
+        "shower length"
+      ],
+      "concept_group": "dimensions",
+      "references": [
+        "Before Installation Section"
+      ]
+    },
+    {
+      "parameter": "Maximum Operating Pressure",
+      "normalized_parameter": "max_operating_pressure",
+      "parameter_aliases": [
+        "pressure limit",
+        "working pressure",
+        "max pressure"
+      ],
+      "value": "50",
+      "range": "0-50",
+      "units": "psi",
+      "normalized_units": "bar",
+      "converted_value": "3.45",
+      "models": [
+        "Swim 'n' Rinse Shower"
+      ],
+      "category": "Performance",
+      "search_terms": [
+        "pressure rating",
+        "max pressure",
+        "operating pressure",
+        "psi limit"
+      ],
+      "concept_group": "operational_limits",
+      "references": [
+        "Safety Section"
+      ]
+    },
+    {
+      "parameter": "Mounting Hole Size",
+      "normalized_parameter": "mounting_cutout_dimensions",
+      "parameter_aliases": [
+        "installation hole",
+        "cutout size",
+        "mounting dimensions"
+      ],
+      "value": "244.5 x 130.5",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "244.5 x 130.5",
+      "models": [
+        "Swim 'n' Rinse Shower"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "mounting hole",
+        "cutout dimensions",
+        "installation size",
+        "hole size"
+      ],
+      "concept_group": "mounting_specifications",
+      "references": [
+        "Before Installation Section"
+      ]
+    },
+    {
+      "parameter": "Mounting Hole Count",
+      "normalized_parameter": "mounting_hole_count",
+      "parameter_aliases": [
+        "screw holes",
+        "fixing points"
+      ],
+      "value": "6",
+      "range": null,
+      "units": "holes",
+      "normalized_units": "count",
+      "converted_value": "6",
+      "models": [
+        "Swim 'n' Rinse Shower"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "how many holes",
+        "mounting holes",
+        "screw holes",
+        "installation holes"
+      ],
+      "concept_group": "mounting_specifications",
+      "references": [
+        "Before Installation Section"
+      ]
+    },
+    {
+      "parameter": "Mounting Hole Diameter",
+      "normalized_parameter": "mounting_hole_diameter",
+      "parameter_aliases": [
+        "screw hole size",
+        "drill size"
+      ],
+      "value": "4.4",
+      "range": null,
+      "units": "mm",
+      "normalized_units": "mm",
+      "converted_value": "4.4",
+      "models": [
+        "Swim 'n' Rinse Shower"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "hole diameter",
+        "drill bit size",
+        "mounting hole size"
+      ],
+      "concept_group": "mounting_specifications",
+      "references": [
+        "Before Installation Section"
+      ]
+    },
+    {
+      "parameter": "Pipe Thread Size",
+      "normalized_parameter": "pipe_thread_size",
+      "parameter_aliases": [
+        "connection size",
+        "fitting size",
+        "thread specification"
+      ],
+      "value": "1/2",
+      "range": null,
+      "units": "NPT",
+      "normalized_units": "NPT",
+      "converted_value": "1/2",
+      "models": [
+        "Swim 'n' Rinse Shower"
+      ],
+      "category": "Installation",
+      "search_terms": [
+        "pipe size",
+        "thread size",
+        "connection type",
+        "NPT size"
+      ],
+      "concept_group": "plumbing_specifications",
+      "references": [
+        "Flexible Hose Section"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Straight Connector Bore Size",
+            "normalized_parameter": "connector_bore_diameter",
+            "parameter_aliases": [
+              "hose fitting size",
+              "connector diameter",
+              "bore diameter"
+            ],
+            "value": "0.5",
+            "range": null,
+            "units": "inches",
+            "normalized_units": "mm",
+            "converted_value": "12.7",
+            "models": [
+              "AS0314"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "connector size",
+              "hose fitting",
+              "bore size",
+              "connector diameter",
+              "AS0314 bore"
+            ],
+            "concept_group": "connectors",
+            "references": [
+              "Optional Connectors section"
+            ]
+          },
+          {
+            "parameter": "Pipework Connector O.D.",
+            "normalized_parameter": "pipe_outer_diameter",
+            "parameter_aliases": [
+              "pipe size",
+              "outer diameter",
+              "OD"
+            ],
+            "value": "15",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "15",
+            "models": [
+              "WX1532"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "pipe diameter",
+              "OD",
+              "outer diameter",
+              "WX1532 size",
+              "pipe size"
+            ],
+            "concept_group": "connectors",
+            "references": [
+              "Optional Connectors section"
+            ]
+          },
+          {
+            "parameter": "Warranty Period",
+            "normalized_parameter": "warranty_duration",
+            "parameter_aliases": [
+              "guarantee period",
+              "warranty coverage"
+            ],
+            "value": "1",
+            "range": null,
+            "units": "years",
+            "normalized_units": "years",
+            "converted_value": "1",
+            "models": [
+              "all"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "warranty",
+              "guarantee",
+              "coverage period",
+              "warranty length"
+            ],
+            "concept_group": "warranty",
+            "references": [
+              "warranty section"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "specifications": [
+          {
+            "parameter": "Maximum Hose Length",
+            "normalized_parameter": "max_hose_length",
+            "parameter_aliases": [
+              "hose reach",
+              "shower hose length",
+              "effective length"
+            ],
+            "value": "6 ft",
+            "range": null,
+            "units": "ft",
+            "normalized_units": "meters",
+            "converted_value": "1.8",
+            "models": [
+              "Swim 'n' Rinse Shower"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "hose length",
+              "reach",
+              "extension",
+              "how far does hose reach",
+              "shower length"
+            ],
+            "concept_group": "dimensions",
+            "references": [
+              "Before Installation Section"
+            ]
+          },
+          {
+            "parameter": "Maximum Operating Pressure",
+            "normalized_parameter": "max_operating_pressure",
+            "parameter_aliases": [
+              "pressure limit",
+              "working pressure",
+              "max pressure"
+            ],
+            "value": "50",
+            "range": "0-50",
+            "units": "psi",
+            "normalized_units": "bar",
+            "converted_value": "3.45",
+            "models": [
+              "Swim 'n' Rinse Shower"
+            ],
+            "category": "Performance",
+            "search_terms": [
+              "pressure rating",
+              "max pressure",
+              "operating pressure",
+              "psi limit"
+            ],
+            "concept_group": "operational_limits",
+            "references": [
+              "Safety Section"
+            ]
+          },
+          {
+            "parameter": "Mounting Hole Size",
+            "normalized_parameter": "mounting_cutout_dimensions",
+            "parameter_aliases": [
+              "installation hole",
+              "cutout size",
+              "mounting dimensions"
+            ],
+            "value": "244.5 x 130.5",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "244.5 x 130.5",
+            "models": [
+              "Swim 'n' Rinse Shower"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "mounting hole",
+              "cutout dimensions",
+              "installation size",
+              "hole size"
+            ],
+            "concept_group": "mounting_specifications",
+            "references": [
+              "Before Installation Section"
+            ]
+          },
+          {
+            "parameter": "Mounting Hole Count",
+            "normalized_parameter": "mounting_hole_count",
+            "parameter_aliases": [
+              "screw holes",
+              "fixing points"
+            ],
+            "value": "6",
+            "range": null,
+            "units": "holes",
+            "normalized_units": "count",
+            "converted_value": "6",
+            "models": [
+              "Swim 'n' Rinse Shower"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "how many holes",
+              "mounting holes",
+              "screw holes",
+              "installation holes"
+            ],
+            "concept_group": "mounting_specifications",
+            "references": [
+              "Before Installation Section"
+            ]
+          },
+          {
+            "parameter": "Mounting Hole Diameter",
+            "normalized_parameter": "mounting_hole_diameter",
+            "parameter_aliases": [
+              "screw hole size",
+              "drill size"
+            ],
+            "value": "4.4",
+            "range": null,
+            "units": "mm",
+            "normalized_units": "mm",
+            "converted_value": "4.4",
+            "models": [
+              "Swim 'n' Rinse Shower"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "hole diameter",
+              "drill bit size",
+              "mounting hole size"
+            ],
+            "concept_group": "mounting_specifications",
+            "references": [
+              "Before Installation Section"
+            ]
+          },
+          {
+            "parameter": "Pipe Thread Size",
+            "normalized_parameter": "pipe_thread_size",
+            "parameter_aliases": [
+              "connection size",
+              "fitting size",
+              "thread specification"
+            ],
+            "value": "1/2",
+            "range": null,
+            "units": "NPT",
+            "normalized_units": "NPT",
+            "converted_value": "1/2",
+            "models": [
+              "Swim 'n' Rinse Shower"
+            ],
+            "category": "Installation",
+            "search_terms": [
+              "pipe size",
+              "thread size",
+              "connection type",
+              "NPT size"
+            ],
+            "concept_group": "plumbing_specifications",
+            "references": [
+              "Flexible Hose Section"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

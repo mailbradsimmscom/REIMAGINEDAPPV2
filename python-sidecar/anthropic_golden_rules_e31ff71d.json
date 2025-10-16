@@ -1,0 +1,255 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_golden_rules_extracted": 9,
+  "unique_golden_rules": 9,
+  "golden_rules": [
+    {
+      "query": "Is the warranty period valid?",
+      "expected_value": "1 year from purchase date",
+      "test_method": "Check warranty documentation and purchase date",
+      "failure_indication": "Warranty period has expired",
+      "models": [
+        "All Whale products"
+      ],
+      "related_procedures": [
+        "Warranty claim process"
+      ]
+    },
+    {
+      "query": "Is AS0314 connector compatible with hose?",
+      "expected_value": "Fits 1/2 inch bore flexible hose",
+      "test_method": "Verify hose diameter measurement",
+      "failure_indication": "Connector does not fit hose properly",
+      "models": [
+        "AS0314"
+      ],
+      "related_procedures": [
+        "Hose connection installation"
+      ]
+    },
+    {
+      "query": "Is WX1532 connector compatible with pipe?",
+      "expected_value": "Fits 15mm O.D. semi rigid pipe",
+      "test_method": "Verify pipe outer diameter measurement",
+      "failure_indication": "Connector does not fit pipe properly",
+      "models": [
+        "WX1532"
+      ],
+      "related_procedures": [
+        "Pipe connection installation"
+      ]
+    },
+    {
+      "query": "Is the shower head pressure within safe limits?",
+      "expected_value": "Maximum 50 psi operating pressure",
+      "test_method": "Check pressure gauge reading at shower supply line",
+      "failure_indication": "Pressure exceeding 50 psi risks damage to unit",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "related_procedures": [
+        "Pressure testing",
+        "Installation verification"
+      ]
+    },
+    {
+      "query": "Is the shower hose length within specification?",
+      "expected_value": "Maximum 6 ft (1.8 metres) effective length",
+      "test_method": "Measure extended hose length",
+      "failure_indication": "Hose exceeding max length may not retract properly",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "related_procedures": [
+        "Installation measurements",
+        "Hose assembly"
+      ]
+    },
+    {
+      "query": "Are mounting holes correctly sized?",
+      "expected_value": "6 holes of 4.4mm diameter",
+      "test_method": "Measure hole diameter with caliper",
+      "failure_indication": "Incorrect hole size may compromise mounting security",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "related_procedures": [
+        "Installation template usage",
+        "Mounting procedure"
+      ]
+    },
+    {
+      "query": "Is the mounting cutout correctly sized?",
+      "expected_value": "244.5 x 130.5 mm rectangular hole",
+      "test_method": "Measure cutout dimensions",
+      "failure_indication": "Incorrect cutout size will prevent proper fitting",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "related_procedures": [
+        "Template usage",
+        "Installation preparation"
+      ]
+    },
+    {
+      "query": "Is the hinged cover properly engaged before mounting?",
+      "expected_value": "Cover must be engaged in hinges before fixing shower in position",
+      "test_method": "Visual inspection of hinge engagement",
+      "failure_indication": "Cover won't function properly if installed after mounting",
+      "models": [
+        "Whale Swim 'n' Rinse Shower with hinged cover"
+      ],
+      "related_procedures": [
+        "Cover installation",
+        "Unit mounting"
+      ]
+    },
+    {
+      "query": "Is the system properly winterized?",
+      "expected_value": "System completely drained with flow selector in open position",
+      "test_method": "Verify drainage and selector position",
+      "failure_indication": "Risk of freeze damage if not properly drained",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "related_procedures": [
+        "Winterization",
+        "Seasonal maintenance"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the warranty period valid?",
+            "expected_value": "1 year from purchase date",
+            "test_method": "Check warranty documentation and purchase date",
+            "failure_indication": "Warranty period has expired",
+            "models": [
+              "All Whale products"
+            ],
+            "related_procedures": [
+              "Warranty claim process"
+            ]
+          },
+          {
+            "query": "Is AS0314 connector compatible with hose?",
+            "expected_value": "Fits 1/2 inch bore flexible hose",
+            "test_method": "Verify hose diameter measurement",
+            "failure_indication": "Connector does not fit hose properly",
+            "models": [
+              "AS0314"
+            ],
+            "related_procedures": [
+              "Hose connection installation"
+            ]
+          },
+          {
+            "query": "Is WX1532 connector compatible with pipe?",
+            "expected_value": "Fits 15mm O.D. semi rigid pipe",
+            "test_method": "Verify pipe outer diameter measurement",
+            "failure_indication": "Connector does not fit pipe properly",
+            "models": [
+              "WX1532"
+            ],
+            "related_procedures": [
+              "Pipe connection installation"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "golden_rules": [
+          {
+            "query": "Is the shower head pressure within safe limits?",
+            "expected_value": "Maximum 50 psi operating pressure",
+            "test_method": "Check pressure gauge reading at shower supply line",
+            "failure_indication": "Pressure exceeding 50 psi risks damage to unit",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "related_procedures": [
+              "Pressure testing",
+              "Installation verification"
+            ]
+          },
+          {
+            "query": "Is the shower hose length within specification?",
+            "expected_value": "Maximum 6 ft (1.8 metres) effective length",
+            "test_method": "Measure extended hose length",
+            "failure_indication": "Hose exceeding max length may not retract properly",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "related_procedures": [
+              "Installation measurements",
+              "Hose assembly"
+            ]
+          },
+          {
+            "query": "Are mounting holes correctly sized?",
+            "expected_value": "6 holes of 4.4mm diameter",
+            "test_method": "Measure hole diameter with caliper",
+            "failure_indication": "Incorrect hole size may compromise mounting security",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "related_procedures": [
+              "Installation template usage",
+              "Mounting procedure"
+            ]
+          },
+          {
+            "query": "Is the mounting cutout correctly sized?",
+            "expected_value": "244.5 x 130.5 mm rectangular hole",
+            "test_method": "Measure cutout dimensions",
+            "failure_indication": "Incorrect cutout size will prevent proper fitting",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "related_procedures": [
+              "Template usage",
+              "Installation preparation"
+            ]
+          },
+          {
+            "query": "Is the hinged cover properly engaged before mounting?",
+            "expected_value": "Cover must be engaged in hinges before fixing shower in position",
+            "test_method": "Visual inspection of hinge engagement",
+            "failure_indication": "Cover won't function properly if installed after mounting",
+            "models": [
+              "Whale Swim 'n' Rinse Shower with hinged cover"
+            ],
+            "related_procedures": [
+              "Cover installation",
+              "Unit mounting"
+            ]
+          },
+          {
+            "query": "Is the system properly winterized?",
+            "expected_value": "System completely drained with flow selector in open position",
+            "test_method": "Verify drainage and selector position",
+            "failure_indication": "Risk of freeze damage if not properly drained",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "related_procedures": [
+              "Winterization",
+              "Seasonal maintenance"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

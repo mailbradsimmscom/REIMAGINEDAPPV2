@@ -1180,7 +1180,7 @@
                         display: inline-flex;
                         align-items: center;
                         gap: 4px;
-                        padding: 4px 8px;
+                        padding: 8px 12px;
                         border-radius: 8px;
                         font-size: 12px;
                         font-weight: 600;
@@ -1273,16 +1273,17 @@
                 }
             }
 
-            // Processing stages configuration (9 stages)
+            // Processing stages configuration (10 stages)
             STAGES = [
-                { name: 'uploading', label: 'Uploading', color: '#007AFF', progress: 11.11 },
-                { name: 'verifying', label: 'Verifying', color: '#007AFF', progress: 22.22 },
-                { name: 'parsing', label: 'Parsing', color: '#5856D6', progress: 33.33 },
-                { name: 'chunking', label: 'Chunking', color: '#5856D6', progress: 44.44 },
-                { name: 'embedding', label: 'Embedding', color: '#FF9500', progress: 55.55 },
-                { name: 'indexing', label: 'Indexing', color: '#FF9500', progress: 66.66 },
-                { name: 'extracting', label: 'Extracting', color: '#5AC8FA', progress: 77.77 },
-                { name: 'storing', label: 'Storing', color: '#5AC8FA', progress: 88.88 },
+                { name: 'uploading', label: 'Uploading', color: '#007AFF', progress: 10 },
+                { name: 'verifying', label: 'Verifying', color: '#007AFF', progress: 20 },
+                { name: 'parsing', label: 'Parsing', color: '#5856D6', progress: 30 },
+                { name: 'chunking', label: 'Chunking', color: '#5856D6', progress: 40 },
+                { name: 'embedding', label: 'Embedding', color: '#FF9500', progress: 50 },
+                { name: 'indexing', label: 'Indexing', color: '#FF9500', progress: 60 },
+                { name: 'colloquial_extraction', label: 'Colloquial Extraction', color: '#5AC8FA', progress: 70 },
+                { name: 'extracting', label: 'Extracting', color: '#5AC8FA', progress: 80 },
+                { name: 'storing', label: 'Storing', color: '#5AC8FA', progress: 90 },
                 { name: 'completed', label: 'Completed', color: '#34C759', progress: 100 }
             ];
 
@@ -1361,6 +1362,21 @@
                     if (stage === 'completed') {
                         statusIndicator.classList.add('completed');
                         statusIndicator.innerHTML = '<span>✓ Completed</span>';
+
+                        // Show metrics on completion
+                        const counters = jobData.counters || {};
+                        const metricsHTML = `
+                            <div style="margin-top: 20px; padding: 16px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.8;">
+                                <div><strong>Chunks:</strong> ${counters.chunks_total || 0}</div>
+                                <div><strong>Vectors:</strong> ${counters.vectors_upserted || 0}</div>
+                                <div><strong>Specs:</strong> ${counters.specs_count || 0}</div>
+                                <div><strong>Golden Rules:</strong> ${counters.golden_count || 0}</div>
+                                <div><strong>Q&A Pairs:</strong> ${counters.intent_count || 0}</div>
+                                <div><strong>Procedures:</strong> ${counters.procedures_count || 0}</div>
+                                <div><strong>Cost:</strong> $${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
+                            </div>
+                        `;
+                        statusIndicator.innerHTML += metricsHTML;
                     } else if (isFailed) {
                         statusIndicator.classList.add('error');
                         statusIndicator.innerHTML = '<span>✗ Failed</span>';

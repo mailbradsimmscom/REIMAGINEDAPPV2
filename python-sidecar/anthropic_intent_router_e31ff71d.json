@@ -1,0 +1,322 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_intent_routes_extracted": 9,
+  "unique_intent_routes": 9,
+  "question_type_breakdown": {
+    "What": 6,
+    "How": 2,
+    "Where": 1
+  },
+  "intent_routes": [
+    {
+      "question": "What connectors are available for the system?",
+      "question_variations": [
+        "Which connectors can I use?",
+        "What are the optional connector types?",
+        "What connector options do I have?"
+      ],
+      "answer": "Two optional connectors are available: AS0314 (Straight Connector & Elbow Connector for \u00bd\" Bore Flexible Hose) and WX1532 (Pipework Connector for 15 mm O.D. semi rigid pipe)",
+      "question_type": "What",
+      "models": [
+        "AS0314",
+        "WX1532"
+      ],
+      "references": [
+        "Optional Connectors section"
+      ]
+    },
+    {
+      "question": "How do I contact Whale support?",
+      "question_variations": [
+        "What is Whale's contact information?",
+        "How can I reach Whale?",
+        "Where do I get support from Whale?"
+      ],
+      "answer": "Contact Whale at Munster Simms Engineering Ltd, 2 Enterprise Road, Bangor, BT19 7TA. Phone: +44 (0)28 9127 0531, Fax: +44 (0)28 9146 6421, Email: info@whalepumps.com, Website: www.whalepumps.com",
+      "question_type": "How",
+      "models": [
+        "All models"
+      ],
+      "references": [
+        "Contact information section"
+      ]
+    },
+    {
+      "question": "What warranty comes with this product?",
+      "question_variations": [
+        "How long is the warranty?",
+        "Is there a warranty on this product?",
+        "What is the warranty coverage?"
+      ],
+      "answer": "The product comes with a 1 year limited warranty. Details are provided in the enclosed warranty statement document.",
+      "question_type": "What",
+      "models": [
+        "All models"
+      ],
+      "references": [
+        "Warranty section, Ref. No: 181.29 v3 0314"
+      ]
+    },
+    {
+      "question": "What is the maximum operating pressure for the Swim 'n' Rinse Shower?",
+      "question_variations": [
+        "What's the pressure limit for the shower?",
+        "How much pressure can the shower handle?",
+        "What PSI rating does the shower have?"
+      ],
+      "answer": "The maximum operating pressure is 50 psi",
+      "question_type": "What",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "references": [
+        "Safety Section"
+      ]
+    },
+    {
+      "question": "How do I winterize the shower?",
+      "question_variations": [
+        "What's the process for winterizing?",
+        "How do I prevent freeze damage?",
+        "How should I prepare the shower for winter?"
+      ],
+      "answer": "Drain the entire water system with the flow selector in one of the open positions to avoid freeze damage",
+      "question_type": "How",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "references": [
+        "Winterizing Section"
+      ]
+    },
+    {
+      "question": "What size hole do I need to cut for installation?",
+      "question_variations": [
+        "What are the installation hole dimensions?",
+        "How big should the mounting hole be?",
+        "What's the cut-out size for installing?"
+      ],
+      "answer": "Cut a rectangular hole measuring 244.5 x 130.5 mm, plus 6 holes of 4.4 mm diameter using the provided template",
+      "question_type": "What",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "references": [
+        "Before Installation Section, Point 5-6"
+      ]
+    },
+    {
+      "question": "What is the maximum length of the shower hose?",
+      "question_variations": [
+        "How long is the shower hose?",
+        "What's the hose reach?",
+        "How far does the shower hose extend?"
+      ],
+      "answer": "The maximum effective length of shower hose is 6 ft or 1.8 metres",
+      "question_type": "What",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "references": [
+        "Before Installation Section, Point 2"
+      ]
+    },
+    {
+      "question": "Where should the Swim 'n' Rinse Shower be installed?",
+      "question_variations": [
+        "What are the recommended installation locations?",
+        "Where can I mount the shower?",
+        "Which boat locations work for installation?"
+      ],
+      "answer": "The shower should be installed in a boat's transom, cockpit or near the swim platform",
+      "question_type": "Where",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "references": [
+        "Application Section"
+      ]
+    },
+    {
+      "question": "Is the shower waterproof?",
+      "question_variations": [
+        "What is the water resistance rating?",
+        "Can the shower get wet?",
+        "How water resistant is the unit?"
+      ],
+      "answer": "The product is splash proof, not water proof",
+      "question_type": "What",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "references": [
+        "Opening Warning"
+      ]
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What connectors are available for the system?",
+            "question_variations": [
+              "Which connectors can I use?",
+              "What are the optional connector types?",
+              "What connector options do I have?"
+            ],
+            "answer": "Two optional connectors are available: AS0314 (Straight Connector & Elbow Connector for \u00bd\" Bore Flexible Hose) and WX1532 (Pipework Connector for 15 mm O.D. semi rigid pipe)",
+            "question_type": "What",
+            "models": [
+              "AS0314",
+              "WX1532"
+            ],
+            "references": [
+              "Optional Connectors section"
+            ]
+          },
+          {
+            "question": "How do I contact Whale support?",
+            "question_variations": [
+              "What is Whale's contact information?",
+              "How can I reach Whale?",
+              "Where do I get support from Whale?"
+            ],
+            "answer": "Contact Whale at Munster Simms Engineering Ltd, 2 Enterprise Road, Bangor, BT19 7TA. Phone: +44 (0)28 9127 0531, Fax: +44 (0)28 9146 6421, Email: info@whalepumps.com, Website: www.whalepumps.com",
+            "question_type": "How",
+            "models": [
+              "All models"
+            ],
+            "references": [
+              "Contact information section"
+            ]
+          },
+          {
+            "question": "What warranty comes with this product?",
+            "question_variations": [
+              "How long is the warranty?",
+              "Is there a warranty on this product?",
+              "What is the warranty coverage?"
+            ],
+            "answer": "The product comes with a 1 year limited warranty. Details are provided in the enclosed warranty statement document.",
+            "question_type": "What",
+            "models": [
+              "All models"
+            ],
+            "references": [
+              "Warranty section, Ref. No: 181.29 v3 0314"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "intent_routes": [
+          {
+            "question": "What is the maximum operating pressure for the Swim 'n' Rinse Shower?",
+            "question_variations": [
+              "What's the pressure limit for the shower?",
+              "How much pressure can the shower handle?",
+              "What PSI rating does the shower have?"
+            ],
+            "answer": "The maximum operating pressure is 50 psi",
+            "question_type": "What",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "references": [
+              "Safety Section"
+            ]
+          },
+          {
+            "question": "How do I winterize the shower?",
+            "question_variations": [
+              "What's the process for winterizing?",
+              "How do I prevent freeze damage?",
+              "How should I prepare the shower for winter?"
+            ],
+            "answer": "Drain the entire water system with the flow selector in one of the open positions to avoid freeze damage",
+            "question_type": "How",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "references": [
+              "Winterizing Section"
+            ]
+          },
+          {
+            "question": "What size hole do I need to cut for installation?",
+            "question_variations": [
+              "What are the installation hole dimensions?",
+              "How big should the mounting hole be?",
+              "What's the cut-out size for installing?"
+            ],
+            "answer": "Cut a rectangular hole measuring 244.5 x 130.5 mm, plus 6 holes of 4.4 mm diameter using the provided template",
+            "question_type": "What",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "references": [
+              "Before Installation Section, Point 5-6"
+            ]
+          },
+          {
+            "question": "What is the maximum length of the shower hose?",
+            "question_variations": [
+              "How long is the shower hose?",
+              "What's the hose reach?",
+              "How far does the shower hose extend?"
+            ],
+            "answer": "The maximum effective length of shower hose is 6 ft or 1.8 metres",
+            "question_type": "What",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "references": [
+              "Before Installation Section, Point 2"
+            ]
+          },
+          {
+            "question": "Where should the Swim 'n' Rinse Shower be installed?",
+            "question_variations": [
+              "What are the recommended installation locations?",
+              "Where can I mount the shower?",
+              "Which boat locations work for installation?"
+            ],
+            "answer": "The shower should be installed in a boat's transom, cockpit or near the swim platform",
+            "question_type": "Where",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "references": [
+              "Application Section"
+            ]
+          },
+          {
+            "question": "Is the shower waterproof?",
+            "question_variations": [
+              "What is the water resistance rating?",
+              "Can the shower get wet?",
+              "How water resistant is the unit?"
+            ],
+            "answer": "The product is splash proof, not water proof",
+            "question_type": "What",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "references": [
+              "Opening Warning"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -99,9 +99,9 @@ class DocumentRepository {
   async updateJobProgress(jobId, counters) {
     const supabase = await this.checkSupabaseAvailability();
     try {
-      const { data, error } = await supabase
+      const { data, error} = await supabase
         .from('jobs')
-        .update({ 
+        .update({
           counters,
           updated_at: new Date().toISOString()
         })

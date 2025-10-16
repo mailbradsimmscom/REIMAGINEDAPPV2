@@ -1,0 +1,307 @@
+{
+  "total_chunks_processed": 2,
+  "successful_chunks": 2,
+  "failed_chunks": 0,
+  "total_procedures_extracted": 8,
+  "unique_procedures": 8,
+  "procedures": [
+    {
+      "title": "Contact Technical Support",
+      "preconditions": [
+        "Problem cannot be resolved through standard troubleshooting"
+      ],
+      "steps": [
+        "Contact Whale at +44 (0)28 9127 0531",
+        "Or email info@whalepumps.com",
+        "Or visit www.whalepumps.com"
+      ],
+      "expected_outcome": "Technical support assistance received",
+      "models": [
+        "All Whale products"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Installing Optional Connectors",
+      "preconditions": [
+        "Need to connect plumbing components"
+      ],
+      "steps": [
+        "For \u00bd\" Bore Flexible Hose: Use AS0314 Straight Connector or Elbow Connector",
+        "For 15mm O.D. semi rigid pipe: Use WX1532 Pipework Connector"
+      ],
+      "expected_outcome": "Proper connection of plumbing components",
+      "models": [
+        "AS0314",
+        "WX1532"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Warranty Claim Procedure",
+      "preconditions": [
+        "Product is within 1 year warranty period",
+        "Have warranty documentation available"
+      ],
+      "steps": [
+        "Review warranty statement documentation",
+        "Contact Whale with warranty claim details"
+      ],
+      "expected_outcome": "Warranty claim processed",
+      "models": [
+        "All Whale products"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Plumbing Installation",
+      "preconditions": [
+        "Access to existing water system pipework",
+        "Installation tools available"
+      ],
+      "steps": [
+        "Locate the existing water system pipework",
+        "Plumb appropriate supply into transom shower unit",
+        "Feed unattached end of hose through hole in housing from the front",
+        "Fit the small washer",
+        "Tighten onto the tee-piece in the rear of the unit",
+        "Check for potential water drip damage to electrical equipment and furnishings"
+      ],
+      "expected_outcome": "Properly plumbed shower unit with no risk of water damage",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Pre-Installation Checks",
+      "preconditions": [
+        "Installation template available",
+        "Installation tools ready"
+      ],
+      "steps": [
+        "Check room for shower hose retraction behind mounting surface",
+        "Verify maximum effective hose length of 6 ft (1.8 metres)",
+        "Check hose stretch capability to required height and distance",
+        "Verify plumbing accessibility",
+        "Place large washer into ferrule on hose assembly",
+        "Tighten onto shower handset",
+        "Cut rectangular hole (244.5 x 130.5 mm) using template",
+        "Drill 6 holes (4.4 mm diameter)",
+        "For hinged cover units, engage cover in hinges before fixing",
+        "Secure using six screws",
+        "Conceal screw heads with provided covers"
+      ],
+      "expected_outcome": "Properly prepared installation site and mounted shower unit",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Flexible Hose Installation",
+      "preconditions": [
+        "\u00bd\" NPT male threaded tail pieces",
+        "Stainless steel hose clips"
+      ],
+      "steps": [
+        "For \u00bd\" (13 mm) hose, attach Whale \u00bd\" NPT straight connector or elbow (AS0314)",
+        "Secure using stainless steel hose clips"
+      ],
+      "expected_outcome": "Securely connected flexible hose",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Semi-Rigid Pipework Installation",
+      "preconditions": [
+        "Whale female \u00bd\" threaded WX1532 pipework connector"
+      ],
+      "steps": [
+        "Screw on Whale female \u00bd\" threaded WX1532 pipework connector",
+        "Ensure pipework is fully pushed home"
+      ],
+      "expected_outcome": "Properly connected semi-rigid pipework",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "error_codes": []
+    },
+    {
+      "title": "Winterization Procedure",
+      "preconditions": [
+        "Shower system ready for winter storage"
+      ],
+      "steps": [
+        "Set flow selector to one of the open positions",
+        "Drain the entire water system",
+        "Contact dealer if assistance needed"
+      ],
+      "expected_outcome": "Winterized shower system protected from freeze damage",
+      "models": [
+        "Whale Swim 'n' Rinse Shower"
+      ],
+      "error_codes": []
+    }
+  ],
+  "chunk_results": [
+    {
+      "chunk_num": 2,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Contact Technical Support",
+            "preconditions": [
+              "Problem cannot be resolved through standard troubleshooting"
+            ],
+            "steps": [
+              "Contact Whale at +44 (0)28 9127 0531",
+              "Or email info@whalepumps.com",
+              "Or visit www.whalepumps.com"
+            ],
+            "expected_outcome": "Technical support assistance received",
+            "models": [
+              "All Whale products"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Installing Optional Connectors",
+            "preconditions": [
+              "Need to connect plumbing components"
+            ],
+            "steps": [
+              "For \u00bd\" Bore Flexible Hose: Use AS0314 Straight Connector or Elbow Connector",
+              "For 15mm O.D. semi rigid pipe: Use WX1532 Pipework Connector"
+            ],
+            "expected_outcome": "Proper connection of plumbing components",
+            "models": [
+              "AS0314",
+              "WX1532"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Warranty Claim Procedure",
+            "preconditions": [
+              "Product is within 1 year warranty period",
+              "Have warranty documentation available"
+            ],
+            "steps": [
+              "Review warranty statement documentation",
+              "Contact Whale with warranty claim details"
+            ],
+            "expected_outcome": "Warranty claim processed",
+            "models": [
+              "All Whale products"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    },
+    {
+      "chunk_num": 1,
+      "pages": "None-None",
+      "result": {
+        "procedures": [
+          {
+            "title": "Plumbing Installation",
+            "preconditions": [
+              "Access to existing water system pipework",
+              "Installation tools available"
+            ],
+            "steps": [
+              "Locate the existing water system pipework",
+              "Plumb appropriate supply into transom shower unit",
+              "Feed unattached end of hose through hole in housing from the front",
+              "Fit the small washer",
+              "Tighten onto the tee-piece in the rear of the unit",
+              "Check for potential water drip damage to electrical equipment and furnishings"
+            ],
+            "expected_outcome": "Properly plumbed shower unit with no risk of water damage",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Pre-Installation Checks",
+            "preconditions": [
+              "Installation template available",
+              "Installation tools ready"
+            ],
+            "steps": [
+              "Check room for shower hose retraction behind mounting surface",
+              "Verify maximum effective hose length of 6 ft (1.8 metres)",
+              "Check hose stretch capability to required height and distance",
+              "Verify plumbing accessibility",
+              "Place large washer into ferrule on hose assembly",
+              "Tighten onto shower handset",
+              "Cut rectangular hole (244.5 x 130.5 mm) using template",
+              "Drill 6 holes (4.4 mm diameter)",
+              "For hinged cover units, engage cover in hinges before fixing",
+              "Secure using six screws",
+              "Conceal screw heads with provided covers"
+            ],
+            "expected_outcome": "Properly prepared installation site and mounted shower unit",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Flexible Hose Installation",
+            "preconditions": [
+              "\u00bd\" NPT male threaded tail pieces",
+              "Stainless steel hose clips"
+            ],
+            "steps": [
+              "For \u00bd\" (13 mm) hose, attach Whale \u00bd\" NPT straight connector or elbow (AS0314)",
+              "Secure using stainless steel hose clips"
+            ],
+            "expected_outcome": "Securely connected flexible hose",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Semi-Rigid Pipework Installation",
+            "preconditions": [
+              "Whale female \u00bd\" threaded WX1532 pipework connector"
+            ],
+            "steps": [
+              "Screw on Whale female \u00bd\" threaded WX1532 pipework connector",
+              "Ensure pipework is fully pushed home"
+            ],
+            "expected_outcome": "Properly connected semi-rigid pipework",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "error_codes": []
+          },
+          {
+            "title": "Winterization Procedure",
+            "preconditions": [
+              "Shower system ready for winter storage"
+            ],
+            "steps": [
+              "Set flow selector to one of the open positions",
+              "Drain the entire water system",
+              "Contact dealer if assistance needed"
+            ],
+            "expected_outcome": "Winterized shower system protected from freeze damage",
+            "models": [
+              "Whale Swim 'n' Rinse Shower"
+            ],
+            "error_codes": []
+          }
+        ]
+      }
+    }
+  ]
+}

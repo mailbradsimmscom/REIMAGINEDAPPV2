@@ -535,6 +535,34 @@ class DocumentService {
         }
       );
 
+      // Update job counters with DIP stats (if available)
+      if (extractionResult.extractionResults?.stats) {
+        try {
+          const dipStats = extractionResult.extractionResults.stats;
+
+          // Get current job to merge counters (don't replace!)
+          const currentJob = await documentRepository.getJob(jobId);
+          const mergedCounters = {
+            ...(currentJob.counters || {}),
+            ...dipStats
+          };
+
+          await documentRepository.updateJobProgress(jobId, mergedCounters);
+
+          this.requestLogger.info('Updated job counters with DIP stats', {
+            jobId,
+            dipStats,
+            mergedCounters
+          });
+        } catch (statsError) {
+          // Log warning but don't fail the job
+          this.requestLogger.warn('Failed to update job counters with DIP stats', {
+            jobId,
+            error: statsError.message
+          });
+        }
+      }
+
       // Store Anthropic extraction results in database
       this.requestLogger.info('Starting Anthropic extraction storage', {
         jobId,
