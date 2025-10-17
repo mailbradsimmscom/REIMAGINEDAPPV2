@@ -50,14 +50,28 @@ router.get('/',
       const { count: jobCount, error: jobError } = await supabase
         .from('jobs')
         .select('*', { count: 'exact', head: true });
-      
+
       if (!jobError) {
         jobsCount = jobCount || 0;
       }
     } catch (error) {
       // Table might not exist, that's ok
     }
-    
+
+    // Get chunk count
+    let chunksCount = 0;
+    try {
+      const { count: chunkCount, error: chunkError } = await supabase
+        .from('document_chunks')
+        .select('*', { count: 'exact', head: true });
+
+      if (!chunkError) {
+        chunksCount = chunkCount || 0;
+      }
+    } catch (error) {
+      // Table might not exist, that's ok
+    }
+
     const data = await adminService.getSystems();
 
     const envelope = {
@@ -67,7 +81,8 @@ router.get('/',
         lastUpdated: data.lastUpdated,
         databaseStatus: 'connected',
         documentsCount: documentsCount,
-        jobsCount: jobsCount
+        jobsCount: jobsCount,
+        chunksCount: chunksCount
       }
     };
 

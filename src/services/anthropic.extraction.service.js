@@ -87,11 +87,44 @@ class AnthropicExtractionService {
 
       // Parse DIP stats from stdout (if available)
       let dipStats = null;
+      let partialSuccess = false;
+
       try {
         const statsMatch = stdout.match(/__DIP_STATS__(.+?)__END_STATS__/);
         if (statsMatch && statsMatch[1]) {
           dipStats = JSON.parse(statsMatch[1]);
-          this.requestLogger.info('Parsed DIP stats', { docId, dipStats });
+          partialSuccess = dipStats.partial_success || false;
+
+          if (partialSuccess) {
+            this.requestLogger.warn('DIP extraction completed with partial success', {
+              docId,
+              errors: dipStats.errors,
+              successfulExtractions: [
+                dipStats.specs_count > 0 ? 'specs' : null,
+                dipStats.golden_count > 0 ? 'golden' : null,
+                dipStats.intent_count > 0 ? 'intent' : null,
+                dipStats.procedures_count > 0 ? 'procedures' : null
+              ].filter(Boolean),
+              failedCount: dipStats.errors?.length || 0,
+              successCount: [
+                dipStats.specs_count > 0,
+                dipStats.golden_count > 0,
+                dipStats.intent_count > 0,
+                dipStats.procedures_count > 0
+              ].filter(Boolean).length
+            });
+          } else {
+            this.requestLogger.info('DIP extraction completed successfully', {
+              docId,
+              stats: {
+                specs: dipStats.specs_count,
+                golden: dipStats.golden_count,
+                intent: dipStats.intent_count,
+                procedures: dipStats.procedures_count,
+                cost: dipStats.estimated_cost_usd
+              }
+            });
+          }
         }
       } catch (parseError) {
         this.requestLogger.warn('Failed to parse DIP stats from stdout', {
@@ -100,15 +133,26 @@ class AnthropicExtractionService {
         });
       }
 
-      this.requestLogger.info('Cached DIP extraction completed', { docId, dipStats });
-
       // Return in same format as before for compatibility, plus stats
       return {
-        spec_suggestions: { success: true, message: 'Cached extraction completed' },
-        golden_rules: { success: true, message: 'Cached extraction completed' },
-        intent_router: { success: true, message: 'Cached extraction completed' },
-        playbook_hints: { success: true, message: 'Cached extraction completed' },
-        stats: dipStats  // NEW: Include parsed stats
+        spec_suggestions: {
+          success: dipStats?.specs_count > 0,
+          message: dipStats?.errors?.find(e => e.includes('Specifications')) || 'Extraction completed'
+        },
+        golden_rules: {
+          success: dipStats?.golden_count > 0,
+          message: dipStats?.errors?.find(e => e.includes('Golden')) || 'Extraction completed'
+        },
+        intent_router: {
+          success: dipStats?.intent_count > 0,
+          message: dipStats?.errors?.find(e => e.includes('Intent')) || 'Extraction completed'
+        },
+        playbook_hints: {
+          success: dipStats?.procedures_count > 0,
+          message: dipStats?.errors?.find(e => e.includes('Procedures')) || 'Extraction completed'
+        },
+        stats: dipStats,
+        partial_success: partialSuccess  // NEW: Flag for downstream handling
       };
 
     } catch (error) {

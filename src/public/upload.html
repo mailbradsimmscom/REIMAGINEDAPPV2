@@ -897,7 +897,10 @@
                 document.getElementById('uploadForm').reset();
                 document.getElementById('model').disabled = true;
                 document.getElementById('model').innerHTML = '<option value="">Select Model</option>';
-                
+
+                // Hide asset UID display
+                this.hideAssetUidDisplay();
+
                 // Clear file
                 this.removeFile();
             }
@@ -1086,12 +1089,9 @@
                             </div>
                         </div>
                         
-                        <div class="status-indicator" id="popup-status-indicator">
-                            <div class="loading-spinner"></div>
-                            <span>Processing</span>
-                        </div>
-                        
                         <div id="popup-error-message" class="error-message" style="display: none;"></div>
+
+                        <div id="popup-completion-metrics" style="display: none; margin-top: 20px; padding: 16px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.8;"></div>
 
                         <button class="close-button" onclick="closeProgressPopup()">OK</button>
                     </div>
@@ -1354,39 +1354,30 @@
                     this.updateProgressRing(progress, color);
                 }
 
-                // Update status indicator
-                const statusIndicator = document.getElementById('popup-status-indicator');
-                if (statusIndicator) {
-                    statusIndicator.className = 'status-indicator';
-
+                // Show completion metrics when job is done
+                const metricsEl = document.getElementById('popup-completion-metrics');
+                if (metricsEl) {
                     if (stage === 'completed') {
-                        statusIndicator.classList.add('completed');
-                        statusIndicator.innerHTML = '<span>✓ Completed</span>';
-
-                        // Show metrics on completion
                         const counters = jobData.counters || {};
                         const metricsHTML = `
-                            <div style="margin-top: 20px; padding: 16px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.8;">
-                                <div><strong>Chunks:</strong> ${counters.chunks_total || 0}</div>
-                                <div><strong>Vectors:</strong> ${counters.vectors_upserted || 0}</div>
-                                <div><strong>Specs:</strong> ${counters.specs_count || 0}</div>
-                                <div><strong>Golden Rules:</strong> ${counters.golden_count || 0}</div>
-                                <div><strong>Q&A Pairs:</strong> ${counters.intent_count || 0}</div>
-                                <div><strong>Procedures:</strong> ${counters.procedures_count || 0}</div>
-                                <div><strong>Cost:</strong> $${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
-                            </div>
+                            <div><strong>Chunks:</strong> ${counters.chunks_total || 0}</div>
+                            <div><strong>Vectors:</strong> ${counters.vectors_upserted || 0}</div>
+                            <div><strong>Specs:</strong> ${counters.specs_count || 0}</div>
+                            <div><strong>Golden Rules:</strong> ${counters.golden_count || 0}</div>
+                            <div><strong>Q&A Pairs:</strong> ${counters.intent_count || 0}</div>
+                            <div><strong>Procedures:</strong> ${counters.procedures_count || 0}</div>
+                            <div><strong>Cost:</strong> $${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
                         `;
-                        statusIndicator.innerHTML += metricsHTML;
-                    } else if (isFailed) {
-                        statusIndicator.classList.add('error');
-                        statusIndicator.innerHTML = '<span>✗ Failed</span>';
-
-                        // Update stage text to show "Failed"
-                        if (stageEl) stageEl.textContent = 'Failed';
+                        metricsEl.innerHTML = metricsHTML;
+                        metricsEl.style.display = 'block';
                     } else {
-                        statusIndicator.classList.add('active');
-                        statusIndicator.innerHTML = '<div class="loading-spinner"></div><span>Processing</span>';
+                        metricsEl.style.display = 'none';
                     }
+                }
+
+                // Update stage text for failed state
+                if (isFailed && stageEl) {
+                    stageEl.textContent = 'Failed';
                 }
 
                 // Hide error message if job is processing successfully

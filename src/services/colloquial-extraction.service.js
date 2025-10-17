@@ -62,7 +62,7 @@ async function fetchPineconeChunks(manufacturer, model) {
         },
         body: JSON.stringify({
           query: `${manufacturer} ${model}`,
-          top_k: 10,
+          top_k: 15,
           filter: {
             manufacturer: manufacturer,
             model: model
@@ -110,7 +110,7 @@ async function extractTermsWithLLM(chunks) {
   try {
     // Combine chunks into a single text, limit to reasonable size
     const combinedText = chunks
-      .slice(0, 5) // Use top 5 chunks to stay within token limits
+      .slice(0, 15) // Use top 15 chunks to stay within token limits
       .map(chunk => chunk.metadata?.text || '')
       .join('\n\n---\n\n')
       .substring(0, 8000); // Limit to ~2k tokens worth of text
@@ -122,7 +122,7 @@ async function extractTermsWithLLM(chunks) {
 
     requestLogger.debug('Calling LLM for colloquial extraction', {
       model,
-      chunkCount: chunks.slice(0, 5).length,
+      chunkCount: chunks.slice(0, 15).length,
       textLength: combinedText.length
     });
 

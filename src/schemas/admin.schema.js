@@ -103,7 +103,8 @@ const AdminSystemsOkSchema = z.object({
     lastUpdated: z.string(),
     databaseStatus: z.string(),
     documentsCount: z.number(),
-    jobsCount: z.number()
+    jobsCount: z.number(),
+    chunksCount: z.number()
   })
 });
 
@@ -245,7 +246,8 @@ const AdminSystemsData = z.object({
   lastUpdated: z.string(),
   databaseStatus: z.string(),
   documentsCount: z.number(),
-  jobsCount: z.number()
+  jobsCount: z.number(),
+  chunksCount: z.number()
 });
 
 export const AdminSystemsEnvelope = z.union([

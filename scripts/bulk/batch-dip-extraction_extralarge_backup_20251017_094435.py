@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 """
-DIP Extraction with Prompt Caching - Batch Processing Script
+DIP Extraction with Prompt Caching - EXTRALARGE Document Processing
 
-Processes documents one at a time using Anthropic's prompt caching feature.
-Reads from CSV, updates status after each document.
+FOR DOCUMENTS >180K TOKENS ONLY (167+ chunks)
+Uses sliding window approach to process documents that exceed 200K context limit.
+
+STRATEGY:
+- Splits document into overlapping windows (140K tokens each, 20 chunk overlap)
+- Processes each window separately (cache write + 5 reads per window)
+- Merges results from all windows (keeps duplicates)
+- 2-3x cost vs regular script, but handles any document size
+
+TRIGGER: MANUAL ONLY
+Only use this script when regular batch-dip-extraction.py fails with "prompt too long" error.
 
 Usage:
-    python scripts/bulk/batch-dip-extraction.py [options]
+    python scripts/bulk/batch-dip-extraction_extralarge.py [options]
 
 Options:
     --batch-size N   Process N documents at a time (default: 5)
@@ -17,10 +26,8 @@ Options:
     --help           Show this help message
 
 Examples:
-    python scripts/bulk/batch-dip-extraction.py --batch-size 10
-    python scripts/bulk/batch-dip-extraction.py --test
-    python scripts/bulk/batch-dip-extraction.py --dry-run
-    python scripts/bulk/batch-dip-extraction.py --status
+    python scripts/bulk/batch-dip-extraction_extralarge.py --test
+    python scripts/bulk/batch-dip-extraction_extralarge.py --batch-size 2
 """
 
 import os
@@ -34,6 +41,7 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 from anthropic import Anthropic
+import tiktoken
 
 # Load environment variables
 load_dotenv()
@@ -238,8 +246,115 @@ RULES:
 - No markdown code blocks"""
 
 # ============================================================================
+# WINDOWING CONFIGURATION
+# ============================================================================
+
+WINDOW_SIZE_TOKENS = 140000  # 140K tokens per window (30% buffer from 200K limit)
+OVERLAP_CHUNKS = 20  # 20 chunks overlap between windows
+
+# ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
+
+def count_tokens(text):
+    """Count tokens in text using fast character-based estimate (4 chars per token)"""
+    # Note: Using fast estimate instead of tiktoken for performance
+    # tiktoken is extremely slow for large documents (15+ minutes for 210K tokens)
+    # Character-based estimate is accurate enough for windowing strategy
+    return len(text) // 4
+
+def create_windows(chunks_data):
+    """
+    Split chunks into overlapping windows for processing.
+
+    Returns list of windows, each containing:
+    - window_chunks: List of chunk data
+    - window_text: Combined text for this window
+    - window_number: 1-indexed window number
+    - start_chunk: Starting chunk index (0-indexed)
+    - end_chunk: Ending chunk index (0-indexed, inclusive)
+    """
+    windows = []
+    current_idx = 0
+    window_num = 1
+
+    while current_idx < len(chunks_data):
+        window_chunks = []
+        window_token_count = 0
+
+        # Add chunks until we hit token limit
+        for i in range(current_idx, len(chunks_data)):
+            chunk = chunks_data[i]
+            chunk_text = chunk.get('text', '')
+            chunk_tokens = count_tokens(chunk_text)
+
+            # Check if adding this chunk would exceed limit
+            if window_token_count + chunk_tokens > WINDOW_SIZE_TOKENS and len(window_chunks) > 0:
+                break
+
+            window_chunks.append(chunk)
+            window_token_count += chunk_tokens
+
+        if not window_chunks:
+            # Safety: if single chunk exceeds limit, include it anyway
+            window_chunks = [chunks_data[current_idx]]
+            current_idx += 1
+        else:
+            # Move to next window with overlap
+            current_idx = current_idx + len(window_chunks) - OVERLAP_CHUNKS
+            if current_idx >= len(chunks_data):
+                current_idx = len(chunks_data)  # Last window
+
+        # Create window
+        start_chunk = window_chunks[0].get('chunk_index', 0)
+        end_chunk = window_chunks[-1].get('chunk_index', len(window_chunks)-1)
+        window_text = combine_chunks(window_chunks)
+
+        windows.append({
+            'window_number': window_num,
+            'window_chunks': window_chunks,
+            'window_text': window_text,
+            'start_chunk': start_chunk,
+            'end_chunk': end_chunk,
+            'token_count': window_token_count,
+            'chunk_count': len(window_chunks)
+        })
+
+        window_num += 1
+
+        # Safety: prevent infinite loop
+        if current_idx == 0:
+            current_idx = 1
+
+    return windows
+
+def merge_specifications(spec_lists):
+    """Merge specifications from multiple windows (keep all, including duplicates)"""
+    merged = []
+    for specs in spec_lists:
+        merged.extend(specs.get('specifications', []))
+    return {"specifications": merged}
+
+def merge_golden_rules(golden_lists):
+    """Merge golden rules from multiple windows (keep all, including duplicates)"""
+    merged = []
+    for golden in golden_lists:
+        merged.extend(golden.get('golden_rules', []))
+    return {"golden_rules": merged}
+
+def merge_intent_routes(intent_lists):
+    """Merge intent routes from multiple windows (keep all, including duplicates)"""
+    merged = []
+    for intent in intent_lists:
+        merged.extend(intent.get('intent_routes', []))
+    return {"intent_routes": merged}
+
+def merge_procedures(procedure_lists):
+    """Merge procedures from multiple windows (keep all, including duplicates)"""
+    merged = []
+    for procedures in procedure_lists:
+        merged.extend(procedures.get('procedures', []))
+    return {"procedures": merged}
 
 def fetch_chunks_from_supabase(doc_id):
     """Fetch document chunks from Supabase database"""
@@ -438,21 +553,21 @@ def show_status(rows):
 # ============================================================================
 
 def process_document_with_caching(doc_id, manufacturer, model, doc_index, total_docs):
-    """Process one document with prompt caching"""
+    """Process one document with sliding window approach for extralarge documents"""
 
     print(f"\n{'='*80}")
     print(f"[{doc_index}/{total_docs}] {manufacturer} {model}")
-    print(f"Doc ID: {doc_id[:16]}...")
+    print(f"Doc ID: {doc_id[:16]}... (EXTRALARGE PROCESSING)")
     print(f"{'='*80}")
 
-    # Track token usage
+    # Track global token usage
     total_cache_write = 0
     total_cache_read = 0
     total_input = 0
     total_output = 0
 
     try:
-        # Step 1: Fetch chunks
+        # Step 1: Fetch chunks (critical - fail if this fails)
         print("📥 Fetching chunks from Supabase...")
         chunks_data = fetch_chunks_from_supabase(doc_id)
 
@@ -461,209 +576,258 @@ def process_document_with_caching(doc_id, manufacturer, model, doc_index, total_
 
         print(f"   ✓ Found {len(chunks_data)} chunks")
 
-        # Step 2: Combine chunks for caching
-        print("🔗 Combining chunks...")
-        combined_text = combine_chunks(chunks_data)
-        print(f"   ✓ Combined text: {len(combined_text):,} characters")
+        # Step 2: Calculate total tokens
+        total_text = combine_chunks(chunks_data)
+        total_tokens = count_tokens(total_text)
+        print(f"   ✓ Total tokens: {total_tokens:,}")
 
-        # Prepare cached system content
-        cached_system = [
-            {
-                "type": "text",
-                "text": combined_text,
-                "cache_control": {"type": "ephemeral"}
-            }
-        ]
+        # Step 3: Check if document actually needs windowing
+        if total_tokens < 180000:
+            print(f"\n⚠️  Warning: Document has only {total_tokens:,} tokens")
+            print(f"   This is under the 180K threshold for extralarge processing.")
+            print(f"   Consider using regular batch-dip-extraction.py instead.")
+            print(f"   Continuing with windowed processing anyway...\n")
 
-        # Step 3: Extraction 1 - Specifications (CACHE WRITE)
-        print("\n1️⃣  Extracting specifications (cache write)...")
-        start_time = time.time()
+        # Step 4: Create windows
+        print("🪟 Creating windows...")
+        windows = create_windows(chunks_data)
+        num_windows = len(windows)
+        print(f"   ✓ Created {num_windows} windows")
+        for w in windows:
+            print(f"      Window {w['window_number']}: Chunks {w['start_chunk']}-{w['end_chunk']} ({w['chunk_count']} chunks, {w['token_count']:,} tokens)")
 
-        spec_response = client.messages.create(
-            model=ANTHROPIC_MODEL,
-            max_tokens=8000,
-            system=cached_system + [{"type": "text", "text": SPEC_PROMPT}],
-            messages=[{"role": "user", "content": "Extract all specifications from the document chunks above."}],
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
-        )
+        # Step 5: Process each window
+        all_specs = []
+        all_golden = []
+        all_intent = []
+        all_install_procs = []
+        all_operation_procs = []
 
-        spec_time = time.time() - start_time
+        for window in windows:
+            window_num = window['window_number']
+            window_text = window['window_text']
 
-        # Track tokens
-        total_cache_write += spec_response.usage.cache_creation_input_tokens
-        total_input += spec_response.usage.input_tokens
-        total_output += spec_response.usage.output_tokens
+            print(f"\n{'─'*80}")
+            print(f"WINDOW {window_num}/{num_windows}")
+            print(f"{'─'*80}")
 
-        # Validate and parse response
-        spec_content = spec_response.content[0].text
-        is_valid, result = validate_json_response(spec_content, "specifications")
-        if not is_valid:
-            raise Exception(f"Specs validation failed: {result}")
-        specs_json = result
+            # Prepare cached system for this window
+            cached_system = [
+                {
+                    "type": "text",
+                    "text": window_text,
+                    "cache_control": {"type": "ephemeral"}
+                }
+            ]
 
-        # Upload to storage
-        success, path = upload_to_supabase_storage(doc_id, "spec_suggestions_an.json", specs_json)
+            # Extraction 1: Specifications (CACHE WRITE)
+            print(f"\n[W{window_num}] 1️⃣  Extracting specifications (cache write)...")
+            try:
+                start_time = time.time()
+                spec_response = client.messages.create(
+                    model=ANTHROPIC_MODEL,
+                    max_tokens=8000,
+                    system=cached_system + [{"type": "text", "text": SPEC_PROMPT}],
+                    messages=[{"role": "user", "content": "Extract all specifications from the document chunks above."}],
+                    extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
+                )
+                spec_time = time.time() - start_time
+
+                # Track tokens
+                total_cache_write += spec_response.usage.cache_creation_input_tokens
+                total_input += spec_response.usage.input_tokens
+                total_output += spec_response.usage.output_tokens
+
+                # Validate and parse
+                spec_content = spec_response.content[0].text
+                is_valid, result = validate_json_response(spec_content, "specifications")
+                if not is_valid:
+                    raise Exception(f"Validation failed: {result}")
+
+                specs_json = result
+                all_specs.append(specs_json)
+                specs_count = len(specs_json.get('specifications', []))
+                print(f"   ✓ Extracted {specs_count} specs in {spec_time:.1f}s")
+            except Exception as e:
+                print(f"   ❌ Specs extraction failed: {str(e)}")
+                all_specs.append({"specifications": []})
+
+            # Extraction 2: Golden Rules (CACHE READ)
+            print(f"\n[W{window_num}] 2️⃣  Extracting golden rules (cache read)...")
+            try:
+                start_time = time.time()
+                golden_response = client.messages.create(
+                    model=ANTHROPIC_MODEL,
+                    max_tokens=8000,
+                    system=cached_system + [{"type": "text", "text": GOLDEN_PROMPT}],
+                    messages=[{"role": "user", "content": "Extract all golden rules from the document chunks above."}],
+                    extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
+                )
+                golden_time = time.time() - start_time
+
+                # Track tokens
+                total_cache_read += golden_response.usage.cache_read_input_tokens
+                total_input += golden_response.usage.input_tokens
+                total_output += golden_response.usage.output_tokens
+
+                # Validate and parse
+                golden_content = golden_response.content[0].text
+                is_valid, result = validate_json_response(golden_content, "golden_rules")
+                if not is_valid:
+                    raise Exception(f"Validation failed: {result}")
+
+                golden_json = result
+                all_golden.append(golden_json)
+                golden_count = len(golden_json.get('golden_rules', []))
+                print(f"   ✓ Extracted {golden_count} rules in {golden_time:.1f}s")
+            except Exception as e:
+                print(f"   ❌ Golden rules extraction failed: {str(e)}")
+                all_golden.append({"golden_rules": []})
+
+            # Extraction 3: Intent Router (CACHE READ)
+            print(f"\n[W{window_num}] 3️⃣  Extracting intent router (cache read)...")
+            try:
+                start_time = time.time()
+                intent_response = client.messages.create(
+                    model=ANTHROPIC_MODEL,
+                    max_tokens=8000,
+                    system=cached_system + [{"type": "text", "text": INTENT_PROMPT}],
+                    messages=[{"role": "user", "content": "Extract all Q&A pairs from the document chunks above."}],
+                    extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
+                )
+                intent_time = time.time() - start_time
+
+                # Track tokens
+                total_cache_read += intent_response.usage.cache_read_input_tokens
+                total_input += intent_response.usage.input_tokens
+                total_output += intent_response.usage.output_tokens
+
+                # Validate and parse
+                intent_content = intent_response.content[0].text
+                is_valid, result = validate_json_response(intent_content, "intent_routes")
+                if not is_valid:
+                    raise Exception(f"Validation failed: {result}")
+
+                intent_json = result
+                all_intent.append(intent_json)
+                intent_count = len(intent_json.get('intent_routes', []))
+                print(f"   ✓ Extracted {intent_count} Q&A pairs in {intent_time:.1f}s")
+            except Exception as e:
+                print(f"   ❌ Intent router extraction failed: {str(e)}")
+                all_intent.append({"intent_routes": []})
+
+            # Extraction 4a: Installation Procedures (CACHE READ)
+            print(f"\n[W{window_num}] 4️⃣a Extracting installation procedures (cache read)...")
+            try:
+                start_time = time.time()
+                proc_install_response = client.messages.create(
+                    model=ANTHROPIC_MODEL,
+                    max_tokens=8000,
+                    system=cached_system + [{"type": "text", "text": PROCEDURES_INSTALL_PROMPT}],
+                    messages=[{"role": "user", "content": "Extract installation and setup procedures from the document chunks above."}],
+                    extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
+                )
+                proc_install_time = time.time() - start_time
+
+                # Track tokens
+                total_cache_read += proc_install_response.usage.cache_read_input_tokens
+                total_input += proc_install_response.usage.input_tokens
+                total_output += proc_install_response.usage.output_tokens
+
+                # Validate and parse
+                proc_install_content = proc_install_response.content[0].text
+                is_valid, result = validate_json_response(proc_install_content, "procedures")
+                if not is_valid:
+                    raise Exception(f"Validation failed: {result}")
+
+                proc_install_json = result
+                all_install_procs.append(proc_install_json)
+                install_count = len(proc_install_json.get('procedures', []))
+                print(f"   ✓ Extracted {install_count} installation procedures in {proc_install_time:.1f}s")
+            except Exception as e:
+                print(f"   ❌ Installation procedures extraction failed: {str(e)}")
+                all_install_procs.append({"procedures": []})
+
+            # Extraction 4b: Operation/Maintenance Procedures (CACHE READ)
+            print(f"\n[W{window_num}] 4️⃣b Extracting operation/maintenance procedures (cache read)...")
+            try:
+                start_time = time.time()
+                proc_operation_response = client.messages.create(
+                    model=ANTHROPIC_MODEL,
+                    max_tokens=8000,
+                    system=cached_system + [{"type": "text", "text": PROCEDURES_OPERATION_PROMPT}],
+                    messages=[{"role": "user", "content": "Extract operation, maintenance, and troubleshooting procedures from the document chunks above."}],
+                    extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
+                )
+                proc_operation_time = time.time() - start_time
+
+                # Track tokens
+                total_cache_read += proc_operation_response.usage.cache_read_input_tokens
+                total_input += proc_operation_response.usage.input_tokens
+                total_output += proc_operation_response.usage.output_tokens
+
+                # Validate and parse
+                proc_operation_content = proc_operation_response.content[0].text
+                is_valid, result = validate_json_response(proc_operation_content, "procedures")
+                if not is_valid:
+                    raise Exception(f"Validation failed: {result}")
+
+                proc_operation_json = result
+                all_operation_procs.append(proc_operation_json)
+                operation_count = len(proc_operation_json.get('procedures', []))
+                print(f"   ✓ Extracted {operation_count} operation procedures in {proc_operation_time:.1f}s")
+            except Exception as e:
+                print(f"   ❌ Operation procedures extraction failed: {str(e)}")
+                all_operation_procs.append({"procedures": []})
+
+        # Step 6: Merge results from all windows
+        print(f"\n{'='*80}")
+        print(f"MERGING RESULTS FROM {num_windows} WINDOWS")
+        print(f"{'='*80}")
+
+        merged_specs = merge_specifications(all_specs)
+        merged_golden = merge_golden_rules(all_golden)
+        merged_intent = merge_intent_routes(all_intent)
+
+        # Merge procedures (both install and operation from all windows)
+        all_procedures_combined = all_install_procs + all_operation_procs
+        merged_procedures = merge_procedures(all_procedures_combined)
+
+        specs_count = len(merged_specs.get('specifications', []))
+        golden_count = len(merged_golden.get('golden_rules', []))
+        intent_count = len(merged_intent.get('intent_routes', []))
+        procedures_count = len(merged_procedures.get('procedures', []))
+
+        print(f"\n📊 Merged Results:")
+        print(f"   Specs: {specs_count} total")
+        print(f"   Golden Rules: {golden_count} total")
+        print(f"   Intent Routes: {intent_count} total")
+        print(f"   Procedures: {procedures_count} total")
+
+        # Step 7: Upload merged files
+        print(f"\n💾 Uploading merged results...")
+
+        success, path = upload_to_supabase_storage(doc_id, "spec_suggestions_an.json", merged_specs)
         if not success:
             raise Exception(f"Failed to upload specs: {path}")
+        print(f"   ✓ Saved specs to: {path}")
 
-        specs_count = len(specs_json.get('specifications', []))
-        print(f"   ✓ Extracted {specs_count} specs")
-        print(f"   ✓ Time: {spec_time:.1f}s")
-        print(f"   ✓ Cache created: {spec_response.usage.cache_creation_input_tokens:,} tokens")
-        print(f"   ✓ Saved to: {path}")
-
-        # Step 4: Extraction 2 - Golden Rules (CACHE READ)
-        print("\n2️⃣  Extracting golden rules (cache read)...")
-        start_time = time.time()
-
-        golden_response = client.messages.create(
-            model=ANTHROPIC_MODEL,
-            max_tokens=8000,
-            system=cached_system + [{"type": "text", "text": GOLDEN_PROMPT}],
-            messages=[{"role": "user", "content": "Extract all golden rules from the document chunks above."}],
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
-        )
-
-        golden_time = time.time() - start_time
-
-        # Track tokens
-        total_cache_read += golden_response.usage.cache_read_input_tokens
-        total_input += golden_response.usage.input_tokens
-        total_output += golden_response.usage.output_tokens
-
-        # Validate and parse
-        golden_content = golden_response.content[0].text
-        is_valid, result = validate_json_response(golden_content, "golden_rules")
-        if not is_valid:
-            raise Exception(f"Golden rules validation failed: {result}")
-        golden_json = result
-
-        success, path = upload_to_supabase_storage(doc_id, "golden_rules_an.json", golden_json)
+        success, path = upload_to_supabase_storage(doc_id, "golden_rules_an.json", merged_golden)
         if not success:
             raise Exception(f"Failed to upload golden rules: {path}")
+        print(f"   ✓ Saved golden rules to: {path}")
 
-        golden_count = len(golden_json.get('golden_rules', []))
-        print(f"   ✓ Extracted {golden_count} rules")
-        print(f"   ✓ Time: {golden_time:.1f}s")
-        print(f"   ✓ Cache read: {golden_response.usage.cache_read_input_tokens:,} tokens")
-        print(f"   ✓ Saved to: {path}")
-
-        # Step 5: Extraction 3 - Intent Router (CACHE READ)
-        print("\n3️⃣  Extracting intent router (cache read)...")
-        start_time = time.time()
-
-        intent_response = client.messages.create(
-            model=ANTHROPIC_MODEL,
-            max_tokens=8000,
-            system=cached_system + [{"type": "text", "text": INTENT_PROMPT}],
-            messages=[{"role": "user", "content": "Extract all Q&A pairs from the document chunks above."}],
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
-        )
-
-        intent_time = time.time() - start_time
-
-        # Track tokens
-        total_cache_read += intent_response.usage.cache_read_input_tokens
-        total_input += intent_response.usage.input_tokens
-        total_output += intent_response.usage.output_tokens
-
-        # Validate and parse
-        intent_content = intent_response.content[0].text
-        is_valid, result = validate_json_response(intent_content, "intent_routes")
-        if not is_valid:
-            raise Exception(f"Intent router validation failed: {result}")
-        intent_json = result
-
-        success, path = upload_to_supabase_storage(doc_id, "intent_router_an.json", intent_json)
+        success, path = upload_to_supabase_storage(doc_id, "intent_router_an.json", merged_intent)
         if not success:
             raise Exception(f"Failed to upload intent router: {path}")
+        print(f"   ✓ Saved intent router to: {path}")
 
-        intent_count = len(intent_json.get('intent_routes', []))
-        print(f"   ✓ Extracted {intent_count} Q&A pairs")
-        print(f"   ✓ Time: {intent_time:.1f}s")
-        print(f"   ✓ Cache read: {intent_response.usage.cache_read_input_tokens:,} tokens")
-        print(f"   ✓ Saved to: {path}")
-
-        # Step 6a: Extraction 4a - Installation Procedures (CACHE READ)
-        print("\n4️⃣a Extracting installation procedures (cache read)...")
-        start_time = time.time()
-
-        proc_install_response = client.messages.create(
-            model=ANTHROPIC_MODEL,
-            max_tokens=8000,
-            system=cached_system + [{"type": "text", "text": PROCEDURES_INSTALL_PROMPT}],
-            messages=[{"role": "user", "content": "Extract installation and setup procedures from the document chunks above."}],
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
-        )
-
-        proc_install_time = time.time() - start_time
-
-        # Track tokens
-        total_cache_read += proc_install_response.usage.cache_read_input_tokens
-        total_input += proc_install_response.usage.input_tokens
-        total_output += proc_install_response.usage.output_tokens
-
-        # Validate and parse
-        proc_install_content = proc_install_response.content[0].text
-        is_valid, result = validate_json_response(proc_install_content, "procedures")
-        if not is_valid:
-            raise Exception(f"Installation procedures validation failed: {result}")
-        proc_install_json = result
-
-        install_count = len(proc_install_json.get('procedures', []))
-        print(f"   ✓ Extracted {install_count} installation procedures")
-        print(f"   ✓ Time: {proc_install_time:.1f}s")
-        print(f"   ✓ Cache read: {proc_install_response.usage.cache_read_input_tokens:,} tokens")
-
-        # Step 6b: Extraction 4b - Operation/Maintenance Procedures (CACHE READ)
-        print("\n4️⃣b Extracting operation/maintenance procedures (cache read)...")
-        start_time = time.time()
-
-        proc_operation_response = client.messages.create(
-            model=ANTHROPIC_MODEL,
-            max_tokens=8000,
-            system=cached_system + [{"type": "text", "text": PROCEDURES_OPERATION_PROMPT}],
-            messages=[{"role": "user", "content": "Extract operation, maintenance, and troubleshooting procedures from the document chunks above."}],
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
-        )
-
-        proc_operation_time = time.time() - start_time
-
-        # Track tokens
-        total_cache_read += proc_operation_response.usage.cache_read_input_tokens
-        total_input += proc_operation_response.usage.input_tokens
-        total_output += proc_operation_response.usage.output_tokens
-
-        # Validate and parse
-        proc_operation_content = proc_operation_response.content[0].text
-        is_valid, result = validate_json_response(proc_operation_content, "procedures")
-        if not is_valid:
-            raise Exception(f"Operation procedures validation failed: {result}")
-        proc_operation_json = result
-
-        operation_count = len(proc_operation_json.get('procedures', []))
-        print(f"   ✓ Extracted {operation_count} operation procedures")
-        print(f"   ✓ Time: {proc_operation_time:.1f}s")
-        print(f"   ✓ Cache read: {proc_operation_response.usage.cache_read_input_tokens:,} tokens")
-
-        # Merge both procedure lists
-        merged_procedures = {
-            "procedures": proc_install_json.get('procedures', []) + proc_operation_json.get('procedures', [])
-        }
-        procedures_count = len(merged_procedures['procedures'])
-
-        # Upload merged procedures
         success, path = upload_to_supabase_storage(doc_id, "playbook_hints_an.json", merged_procedures)
         if not success:
-            raise Exception(f"Failed to upload merged procedures: {path}")
+            raise Exception(f"Failed to upload procedures: {path}")
+        print(f"   ✓ Saved procedures to: {path}")
 
-        proc_time = proc_install_time + proc_operation_time
-        print(f"\n   ✓ Total procedures: {procedures_count} ({install_count} install + {operation_count} operation)")
-        print(f"   ✓ Total time: {proc_time:.1f}s")
-        print(f"   ✓ Saved to: {path}")
-
-        # Calculate cost (Claude Sonnet 4 pricing with caching)
-        # Input: $3 per 1M tokens, Cache write: $3.75 per 1M, Cache read: $0.30 per 1M, Output: $15 per 1M
+        # Step 8: Calculate cost
         cost_input = (total_input / 1_000_000) * 3.00
         cost_cache_write = (total_cache_write / 1_000_000) * 3.75
         cost_cache_read = (total_cache_read / 1_000_000) * 0.30
@@ -671,14 +835,14 @@ def process_document_with_caching(doc_id, manufacturer, model, doc_index, total_
         total_cost = cost_input + cost_cache_write + cost_cache_read + cost_output
 
         # Summary
-        total_time = spec_time + golden_time + intent_time + proc_time
         print(f"\n💰 Token Usage & Cost:")
-        print(f"   Cache write: {total_cache_write:,} tokens (${cost_cache_write:.4f})")
-        print(f"   Cache read:  {total_cache_read:,} tokens (${cost_cache_read:.4f})")
-        print(f"   Input:       {total_input:,} tokens (${cost_input:.4f})")
-        print(f"   Output:      {total_output:,} tokens (${cost_output:.4f})")
-        print(f"   Total cost:  ${total_cost:.4f}")
-        print(f"\n✅ Document complete! 5 API calls, Total time: {total_time:.1f}s")
+        print(f"   Windows processed: {num_windows}")
+        print(f"   Cache writes: {total_cache_write:,} tokens (${cost_cache_write:.4f})")
+        print(f"   Cache reads:  {total_cache_read:,} tokens (${cost_cache_read:.4f})")
+        print(f"   Input:        {total_input:,} tokens (${cost_input:.4f})")
+        print(f"   Output:       {total_output:,} tokens (${cost_output:.4f})")
+        print(f"   Total cost:   ${total_cost:.4f}")
+        print(f"\n✅ Document complete! {num_windows} windows, {num_windows * 5} API calls")
 
         return {
             'success': True,

@@ -85,15 +85,17 @@ class Dashboard {
                     });
                     const systemsData = await systemsResponse.json();
                     if (systemsData.success) {
-                        // Systems endpoint returns totalSystems, documentsCount, and jobsCount
-                        this.updateMetric('total-systems', systemsData.data?.totalSystems || 0);
-                        this.updateMetric('documents-count', systemsData.data?.documentsCount || 0);
-                        this.updateMetric('jobs-count', systemsData.data?.jobsCount || 0);
+                        // Systems endpoint returns totalSystems, documentsCount, jobsCount, and chunksCount
+                        this.updateMetric('total-systems', (systemsData.data?.totalSystems || 0).toLocaleString());
+                        this.updateMetric('documents-count', (systemsData.data?.documentsCount || 0).toLocaleString());
+                        this.updateMetric('jobs-count', (systemsData.data?.jobsCount || 0).toLocaleString());
+                        this.updateMetric('chunks-count', (systemsData.data?.chunksCount || 0).toLocaleString());
                     }
                 } catch {
                     this.updateMetric('total-systems', '-');
                     this.updateMetric('documents-count', '-');
                     this.updateMetric('jobs-count', '-');
+                    this.updateMetric('chunks-count', '-');
                 }
             }
         } catch (error) {
@@ -101,6 +103,7 @@ class Dashboard {
             this.updateMetric('documents-count', '-');
             this.updateMetric('jobs-count', '-');
             this.updateMetric('total-systems', '-');
+            this.updateMetric('chunks-count', '-');
         }
     }
 
@@ -117,7 +120,7 @@ class Dashboard {
                     data.data?.status === 'Connected' ? 'success' : '');
                 this.updateMetric('sidecar-status', data.data?.sidecarHealth?.status || 'Unknown',
                     data.data?.sidecarHealth?.status === 'healthy' ? 'success' : '');
-                this.updateMetric('pinecone-vectors', this.formatNumber(data.data?.totalVectors || 0));
+                this.updateMetric('pinecone-vectors', (data.data?.totalVectors || 0).toLocaleString());
                 this.updateMetric('pinecone-fullness', data.data?.indexFullness || '0.0%');
             }
         } catch (error) {

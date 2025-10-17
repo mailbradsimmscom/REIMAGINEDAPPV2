@@ -3,7 +3,17 @@
 DIP Extraction with Prompt Caching - Single Document Processing
 
 Processes a single document using Anthropic's prompt caching feature.
-Replaces 4 separate scripts with 1 cached call for 67% cost savings.
+Uses 5 API calls (1 cache write + 4 cache reads) to extract 4 DIP files.
+
+Extractions:
+    1. Specifications (cache write)
+    2. Golden Rules (cache read)
+    3. Intent Router (cache read)
+    4a. Installation Procedures (cache read)
+    4b. Operation/Maintenance Procedures (cache read)
+
+Procedures are split into two focused extractions to avoid token truncation
+on large documents, then merged into a single playbook_hints_an.json file.
 
 Usage:
     DOC_ID=abc123... venv/bin/python3 scripts/dip_extraction_cached.py
@@ -169,26 +179,56 @@ RULES:
 - No explanatory text after JSON
 - No markdown code blocks"""
 
-PROCEDURES_PROMPT = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
+PROCEDURES_INSTALL_PROMPT = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
 FORMAT REQUIREMENT: Output must start with { and end with }. Nothing else.
 If you add ANY text outside the JSON brackets, the system will fail.
 
-TASK: Extract ALL procedures, error codes, and maintenance steps from technical manuals.
-INCLUDE EVERYTHING: setup, operation, troubleshooting, maintenance, cleaning, error resolution, safety procedures.
+TASK: Extract INSTALLATION and SETUP procedures ONLY from technical manuals.
+FOCUS ON:
+- Unpacking and initial setup
+- Physical installation and mounting
+- Electrical connections and wiring
+- Initial configuration and commissioning
+- Pre-installation requirements
+
 OUTPUT FORMAT (copy exactly):
 {"procedures":[{"title":"string","preconditions":["string"],"steps":["string"],"expected_outcome":"string","models":["string"],"error_codes":["string"]}]}
 
 RULES:
-- Extract ALL procedures found in the manual
-- Include installation, operation, maintenance, troubleshooting, cleaning procedures
+- Extract ONLY installation and setup procedures
+- Maximum 15 procedures total
+- Merge similar installation steps (cap at 2-3 procedures total if possible)
+- Exclude operation, maintenance, and troubleshooting procedures
+- Start response with { character
+- End response with } character
+- No explanatory text before JSON
+- No explanatory text after JSON
+- No markdown code blocks"""
+
+PROCEDURES_OPERATION_PROMPT = """CRITICAL: You MUST respond with ONLY pure JSON. No explanations, no text before or after JSON.
+FORMAT REQUIREMENT: Output must start with { and end with }. Nothing else.
+If you add ANY text outside the JSON brackets, the system will fail.
+
+TASK: Extract OPERATION, MAINTENANCE, and TROUBLESHOOTING procedures from technical manuals.
+FOCUS ON:
+- Normal operation procedures
+- Maintenance and cleaning routines
+- Troubleshooting and diagnostics
+- Error codes and their resolution
+- Safety procedures and warnings
+- Feature-specific operations
+
+OUTPUT FORMAT (copy exactly):
+{"procedures":[{"title":"string","preconditions":["string"],"steps":["string"],"expected_outcome":"string","models":["string"],"error_codes":["string"]}]}
+
+RULES:
+- Extract ALL operation, maintenance, and troubleshooting procedures
+- Maximum 20 procedures total
 - Include all error codes and their resolution steps
-- Extract every procedure or sub-procedure as its own entry
-- If a section has multiple modes or features (such as cooking modes), create separate procedures for each. Do not merge them
-- Safety and lock features must always be their own procedure
-- Cleaning and maintenance routines must always be their own procedure
-- Error codes and their resolutions must be included as their own procedure
-- For installation content: merge and cap at 2 procedures total (Unpacking/Setup and Countertop/Connections)
-- Exclude recipes or non-technical content
+- If a section has multiple modes or features, create separate procedures for each
+- Safety and lock features must be their own procedure
+- Cleaning and maintenance routines must be their own procedure
+- Exclude installation and setup procedures
 - Start response with { character
 - End response with } character
 - No explanatory text before JSON
@@ -244,12 +284,69 @@ def combine_chunks(chunks_data):
 
     return "\n\n---CHUNK SEPARATOR---\n\n".join(combined)
 
+def repair_json(content):
+    """
+    Attempt to repair common JSON formatting errors from LLM responses.
+
+    Common issues fixed:
+    1. Text before/after JSON (extract between first { and last })
+    2. Missing trailing }
+    3. Trailing commas in arrays/objects
+    4. Single quotes instead of double quotes (carefully)
+    5. Unescaped newlines and special characters
+    """
+    import re
+
+    # Strip leading/trailing whitespace
+    content = content.strip()
+
+    # 1. Extract JSON from response (remove text before/after)
+    json_start = content.find('{')
+    json_end = content.rfind('}')
+
+    if json_start == -1 or json_end == -1:
+        raise ValueError("No JSON object found in response")
+
+    content = content[json_start:json_end + 1]
+
+    # 2. Fix trailing commas in arrays/objects
+    content = re.sub(r',(\s*[\]}])', r'\1', content)
+
+    # 3. Replace single quotes with double quotes (carefully)
+    # Only replace single quotes that are clearly for strings, not apostrophes
+    content = re.sub(r"'([^']*)'(\s*:)", r'"\1"\2', content)  # Keys
+    content = re.sub(r":\s*'([^']*)'", r': "\1"', content)  # Values
+
+    # 4. Ensure proper closing brackets
+    # Count opening and closing brackets
+    open_braces = content.count('{')
+    close_braces = content.count('}')
+    open_brackets = content.count('[')
+    close_brackets = content.count(']')
+
+    # Add missing closing brackets
+    if close_braces < open_braces:
+        content += '}' * (open_braces - close_braces)
+    if close_brackets < open_brackets:
+        content += ']' * (open_brackets - close_brackets)
+
+    return content
+
 def validate_json_response(content, expected_key):
     """Validate that response is valid JSON with expected structure"""
     try:
-        # Try to parse JSON
+        # Try to parse JSON directly
         data = json.loads(content)
+    except json.JSONDecodeError as e:
+        # Attempt to repair JSON
+        try:
+            repaired = repair_json(content)
+            data = json.loads(repaired)
+            print(f"   ⚠️  JSON repaired successfully (original error: {str(e)})")
+        except Exception as repair_error:
+            return False, f"Invalid JSON (repair failed): {str(e)}"
 
+    try:
         # Check if expected key exists
         if expected_key not in data:
             raise ValueError(f"Missing expected key '{expected_key}' in response")
@@ -259,8 +356,6 @@ def validate_json_response(content, expected_key):
             raise ValueError(f"Expected '{expected_key}' to be a list, got {type(data[expected_key])}")
 
         return True, data
-    except json.JSONDecodeError as e:
-        return False, f"Invalid JSON: {str(e)}"
     except Exception as e:
         return False, str(e)
 
@@ -325,8 +420,8 @@ def process_document_with_caching(doc_id):
     print(f"Doc ID: {doc_id[:16]}...")
     print(f"{'='*80}")
 
+    # Step 1: Fetch chunks (critical - fail if this fails)
     try:
-        # Step 1: Fetch chunks
         print("📥 Fetching chunks from Supabase...")
         chunks_data = fetch_chunks_from_supabase(doc_id)
 
@@ -348,11 +443,18 @@ def process_document_with_caching(doc_id):
                 "cache_control": {"type": "ephemeral"}
             }
         ]
+    except Exception as e:
+        print(f"\n❌ Failed to fetch/prepare chunks: {str(e)}", file=sys.stderr)
+        sys.exit(1)
 
-        # Step 3: Extraction 1 - Specifications (CACHE WRITE)
-        print("\n1️⃣  Extracting specifications (cache write)...")
+    # Initialize results and errors tracking
+    results = {}
+    errors = []
+
+    # Step 3: Extraction 1 - Specifications (CACHE WRITE)
+    print("\n1️⃣  Extracting specifications (cache write)...")
+    try:
         start_time = time.time()
-
         spec_response = client.messages.create(
             model=ANTHROPIC_MODEL,
             max_tokens=8000,
@@ -360,29 +462,38 @@ def process_document_with_caching(doc_id):
             messages=[{"role": "user", "content": "Extract all specifications from the document chunks above."}],
             extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
         )
-
         spec_time = time.time() - start_time
 
         # Validate and parse response
         spec_content = spec_response.content[0].text
         is_valid, result = validate_json_response(spec_content, "specifications")
         if not is_valid:
-            raise Exception(f"Specs validation failed: {result}")
+            raise Exception(f"Validation failed: {result}")
         specs_json = result
 
         # Upload to storage
         success, path = upload_to_supabase_storage(doc_id, "spec_suggestions_an.json", specs_json)
         if not success:
-            raise Exception(f"Failed to upload specs: {path}")
+            raise Exception(f"Upload failed: {path}")
 
         specs_count = len(specs_json.get('specifications', []))
         print(f"   ✓ Extracted {specs_count} specs in {spec_time:.1f}s")
         print(f"   ✓ Saved to: {path}")
 
-        # Step 4: Extraction 2 - Golden Rules (CACHE READ)
-        print("\n2️⃣  Extracting golden rules (cache read)...")
-        start_time = time.time()
+        results['specs'] = {
+            'success': True,
+            'count': specs_count,
+            'response': spec_response
+        }
+    except Exception as e:
+        print(f"   ❌ Specifications extraction failed: {str(e)}")
+        errors.append(f"Specifications: {str(e)}")
+        results['specs'] = {'success': False, 'error': str(e), 'count': 0}
 
+    # Step 4: Extraction 2 - Golden Rules (CACHE READ)
+    print("\n2️⃣  Extracting golden rules (cache read)...")
+    try:
+        start_time = time.time()
         golden_response = client.messages.create(
             model=ANTHROPIC_MODEL,
             max_tokens=8000,
@@ -390,28 +501,37 @@ def process_document_with_caching(doc_id):
             messages=[{"role": "user", "content": "Extract all golden rules from the document chunks above."}],
             extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
         )
-
         golden_time = time.time() - start_time
 
         # Validate and parse
         golden_content = golden_response.content[0].text
         is_valid, result = validate_json_response(golden_content, "golden_rules")
         if not is_valid:
-            raise Exception(f"Golden rules validation failed: {result}")
+            raise Exception(f"Validation failed: {result}")
         golden_json = result
 
         success, path = upload_to_supabase_storage(doc_id, "golden_rules_an.json", golden_json)
         if not success:
-            raise Exception(f"Failed to upload golden rules: {path}")
+            raise Exception(f"Upload failed: {path}")
 
         golden_count = len(golden_json.get('golden_rules', []))
         print(f"   ✓ Extracted {golden_count} rules in {golden_time:.1f}s")
         print(f"   ✓ Saved to: {path}")
 
-        # Step 5: Extraction 3 - Intent Router (CACHE READ)
-        print("\n3️⃣  Extracting intent router (cache read)...")
-        start_time = time.time()
+        results['golden'] = {
+            'success': True,
+            'count': golden_count,
+            'response': golden_response
+        }
+    except Exception as e:
+        print(f"   ❌ Golden rules extraction failed: {str(e)}")
+        errors.append(f"Golden Rules: {str(e)}")
+        results['golden'] = {'success': False, 'error': str(e), 'count': 0}
 
+    # Step 5: Extraction 3 - Intent Router (CACHE READ)
+    print("\n3️⃣  Extracting intent router (cache read)...")
+    try:
+        start_time = time.time()
         intent_response = client.messages.create(
             model=ANTHROPIC_MODEL,
             max_tokens=8000,
@@ -419,112 +539,216 @@ def process_document_with_caching(doc_id):
             messages=[{"role": "user", "content": "Extract all Q&A pairs from the document chunks above."}],
             extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
         )
-
         intent_time = time.time() - start_time
 
         # Validate and parse
         intent_content = intent_response.content[0].text
         is_valid, result = validate_json_response(intent_content, "intent_routes")
         if not is_valid:
-            raise Exception(f"Intent router validation failed: {result}")
+            raise Exception(f"Validation failed: {result}")
         intent_json = result
 
         success, path = upload_to_supabase_storage(doc_id, "intent_router_an.json", intent_json)
         if not success:
-            raise Exception(f"Failed to upload intent router: {path}")
+            raise Exception(f"Upload failed: {path}")
 
         intent_count = len(intent_json.get('intent_routes', []))
         print(f"   ✓ Extracted {intent_count} Q&A pairs in {intent_time:.1f}s")
         print(f"   ✓ Saved to: {path}")
 
-        # Step 6: Extraction 4 - Procedures (CACHE READ)
-        print("\n4️⃣  Extracting procedures (cache read)...")
-        start_time = time.time()
+        results['intent'] = {
+            'success': True,
+            'count': intent_count,
+            'response': intent_response
+        }
+    except Exception as e:
+        print(f"   ❌ Intent router extraction failed: {str(e)}")
+        errors.append(f"Intent Router: {str(e)}")
+        results['intent'] = {'success': False, 'error': str(e), 'count': 0}
 
-        proc_response = client.messages.create(
+    # Step 6a: Extraction 4a - Installation Procedures (CACHE READ)
+    print("\n4️⃣a Extracting installation procedures (cache read)...")
+    proc_install_json = None
+    proc_install_response = None
+    install_count = 0
+    try:
+        start_time = time.time()
+        proc_install_response = client.messages.create(
             model=ANTHROPIC_MODEL,
             max_tokens=8000,
-            system=cached_system + [{"type": "text", "text": PROCEDURES_PROMPT}],
-            messages=[{"role": "user", "content": "Extract all procedures from the document chunks above."}],
+            system=cached_system + [{"type": "text", "text": PROCEDURES_INSTALL_PROMPT}],
+            messages=[{"role": "user", "content": "Extract installation and setup procedures from the document chunks above."}],
             extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
         )
-
-        proc_time = time.time() - start_time
+        proc_install_time = time.time() - start_time
 
         # Validate and parse
-        proc_content = proc_response.content[0].text
-        is_valid, result = validate_json_response(proc_content, "procedures")
+        proc_install_content = proc_install_response.content[0].text
+        is_valid, result = validate_json_response(proc_install_content, "procedures")
         if not is_valid:
-            raise Exception(f"Procedures validation failed: {result}")
-        proc_json = result
+            raise Exception(f"Validation failed: {result}")
+        proc_install_json = result
 
-        success, path = upload_to_supabase_storage(doc_id, "playbook_hints_an.json", proc_json)
+        install_count = len(proc_install_json.get('procedures', []))
+        print(f"   ✓ Extracted {install_count} installation procedures in {proc_install_time:.1f}s")
+    except Exception as e:
+        print(f"   ❌ Installation procedures extraction failed: {str(e)}")
+        errors.append(f"Installation Procedures: {str(e)}")
+        proc_install_json = {"procedures": []}
+
+    # Step 6b: Extraction 4b - Operation/Maintenance Procedures (CACHE READ)
+    print("\n4️⃣b Extracting operation/maintenance procedures (cache read)...")
+    proc_operation_json = None
+    proc_operation_response = None
+    operation_count = 0
+    try:
+        start_time = time.time()
+        proc_operation_response = client.messages.create(
+            model=ANTHROPIC_MODEL,
+            max_tokens=8000,
+            system=cached_system + [{"type": "text", "text": PROCEDURES_OPERATION_PROMPT}],
+            messages=[{"role": "user", "content": "Extract operation, maintenance, and troubleshooting procedures from the document chunks above."}],
+            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"}
+        )
+        proc_operation_time = time.time() - start_time
+
+        # Validate and parse
+        proc_operation_content = proc_operation_response.content[0].text
+        is_valid, result = validate_json_response(proc_operation_content, "procedures")
+        if not is_valid:
+            raise Exception(f"Validation failed: {result}")
+        proc_operation_json = result
+
+        operation_count = len(proc_operation_json.get('procedures', []))
+        print(f"   ✓ Extracted {operation_count} operation procedures in {proc_operation_time:.1f}s")
+    except Exception as e:
+        print(f"   ❌ Operation procedures extraction failed: {str(e)}")
+        errors.append(f"Operation Procedures: {str(e)}")
+        proc_operation_json = {"procedures": []}
+
+    # Merge both procedure lists and upload
+    try:
+        merged_procedures = {
+            "procedures": proc_install_json.get('procedures', []) + proc_operation_json.get('procedures', [])
+        }
+        procedures_count = len(merged_procedures['procedures'])
+
+        success, path = upload_to_supabase_storage(doc_id, "playbook_hints_an.json", merged_procedures)
         if not success:
-            raise Exception(f"Failed to upload procedures: {path}")
+            raise Exception(f"Upload failed: {path}")
 
-        procedures_count = len(proc_json.get('procedures', []))
-        print(f"   ✓ Extracted {procedures_count} procedures in {proc_time:.1f}s")
+        print(f"   ✓ Merged {procedures_count} total procedures ({install_count} install + {operation_count} operation)")
         print(f"   ✓ Saved to: {path}")
 
-        # Collect token usage from all responses
-        cache_tokens_written = getattr(spec_response.usage, 'cache_creation_input_tokens', 0)
-        cache_tokens_read = (
-            getattr(golden_response.usage, 'cache_read_input_tokens', 0) +
-            getattr(intent_response.usage, 'cache_read_input_tokens', 0) +
-            getattr(proc_response.usage, 'cache_read_input_tokens', 0)
-        )
-        total_input_tokens = (
-            spec_response.usage.input_tokens +
-            golden_response.usage.input_tokens +
-            intent_response.usage.input_tokens +
-            proc_response.usage.input_tokens
-        )
-        total_output_tokens = (
-            spec_response.usage.output_tokens +
-            golden_response.usage.output_tokens +
-            intent_response.usage.output_tokens +
-            proc_response.usage.output_tokens
-        )
-
-        # Calculate cost (Sonnet 4.5 pricing)
-        input_cost = (total_input_tokens / 1_000_000) * 3.0  # $3 per 1M tokens
-        output_cost = (total_output_tokens / 1_000_000) * 15.0  # $15 per 1M tokens
-        cache_write_cost = (cache_tokens_written / 1_000_000) * 3.75  # $3.75 per 1M tokens
-        cache_read_cost = (cache_tokens_read / 1_000_000) * 0.30  # $0.30 per 1M tokens
-        total_cost = input_cost + output_cost + cache_write_cost + cache_read_cost
-
-        # Summary
-        total_time = spec_time + golden_time + intent_time + proc_time
-        print(f"\n✅ Document extraction complete!")
-        print(f"   Total time: {total_time:.1f}s")
-        print(f"   Specs: {specs_count} | Golden: {golden_count} | Q&A: {intent_count} | Procedures: {procedures_count}")
-        print(f"   Cost: ${total_cost:.2f}")
-
-        # Output JSON stats for Node.js to parse
-        try:
-            stats_json = json.dumps({
-                "specs_count": specs_count,
-                "golden_count": golden_count,
-                "intent_count": intent_count,
-                "procedures_count": procedures_count,
-                "cache_tokens_written": cache_tokens_written,
-                "cache_tokens_read": cache_tokens_read,
-                "total_input_tokens": total_input_tokens,
-                "total_output_tokens": total_output_tokens,
-                "estimated_cost_usd": round(total_cost, 2)
-            })
-            print(f"\n__DIP_STATS__{stats_json}__END_STATS__")
-        except Exception as json_error:
-            print(f"\n⚠️  Warning: Failed to generate stats JSON: {json_error}", file=sys.stderr)
-
-        # Exit successfully
-        sys.exit(0)
-
+        # Mark as success if at least one extraction succeeded
+        if install_count > 0 or operation_count > 0:
+            results['procedures'] = {
+                'success': True,
+                'count': procedures_count,
+                'response': proc_operation_response  # Use last response for token tracking
+            }
+            # Add install response for token tracking if it exists
+            if proc_install_response:
+                results['procedures_install'] = {
+                    'success': True,
+                    'count': install_count,
+                    'response': proc_install_response
+                }
+        else:
+            raise Exception("Both installation and operation extractions failed")
     except Exception as e:
-        error_type = type(e).__name__
-        error_msg = str(e)
-        print(f"\n❌ {error_type}: {error_msg}", file=sys.stderr)
+        print(f"   ❌ Procedures merge/upload failed: {str(e)}")
+        errors.append(f"Procedures Merge: {str(e)}")
+        results['procedures'] = {'success': False, 'error': str(e), 'count': 0}
+
+    # Collect token usage from successful responses only
+    cache_tokens_written = 0
+    cache_tokens_read = 0
+    total_input_tokens = 0
+    total_output_tokens = 0
+
+    if results['specs']['success'] and results['specs'].get('response'):
+        spec_response = results['specs']['response']
+        cache_tokens_written = getattr(spec_response.usage, 'cache_creation_input_tokens', 0)
+        total_input_tokens += spec_response.usage.input_tokens
+        total_output_tokens += spec_response.usage.output_tokens
+
+    if results['golden']['success'] and results['golden'].get('response'):
+        golden_response = results['golden']['response']
+        cache_tokens_read += getattr(golden_response.usage, 'cache_read_input_tokens', 0)
+        total_input_tokens += golden_response.usage.input_tokens
+        total_output_tokens += golden_response.usage.output_tokens
+
+    if results['intent']['success'] and results['intent'].get('response'):
+        intent_response = results['intent']['response']
+        cache_tokens_read += getattr(intent_response.usage, 'cache_read_input_tokens', 0)
+        total_input_tokens += intent_response.usage.input_tokens
+        total_output_tokens += intent_response.usage.output_tokens
+
+    if results['procedures']['success'] and results['procedures'].get('response'):
+        proc_response = results['procedures']['response']
+        cache_tokens_read += getattr(proc_response.usage, 'cache_read_input_tokens', 0)
+        total_input_tokens += proc_response.usage.input_tokens
+        total_output_tokens += proc_response.usage.output_tokens
+
+    # Add install procedures token tracking
+    if results.get('procedures_install', {}).get('success') and results.get('procedures_install', {}).get('response'):
+        proc_install_response = results['procedures_install']['response']
+        cache_tokens_read += getattr(proc_install_response.usage, 'cache_read_input_tokens', 0)
+        total_input_tokens += proc_install_response.usage.input_tokens
+        total_output_tokens += proc_install_response.usage.output_tokens
+
+    # Calculate cost (Sonnet 4.5 pricing)
+    input_cost = (total_input_tokens / 1_000_000) * 3.0  # $3 per 1M tokens
+    output_cost = (total_output_tokens / 1_000_000) * 15.0  # $15 per 1M tokens
+    cache_write_cost = (cache_tokens_written / 1_000_000) * 3.75  # $3.75 per 1M tokens
+    cache_read_cost = (cache_tokens_read / 1_000_000) * 0.30  # $0.30 per 1M tokens
+    total_cost = input_cost + output_cost + cache_write_cost + cache_read_cost
+
+    # Summary
+    success_count = sum(1 for r in results.values() if r.get('success'))
+    print(f"\n{'='*80}")
+    if success_count == 4:
+        print(f"✅ All extractions completed successfully!")
+    elif success_count > 0:
+        print(f"⚠️  Partial success: {success_count}/4 extractions completed")
+        for error in errors:
+            print(f"   - {error}")
+    else:
+        print(f"❌ All extractions failed")
+        for error in errors:
+            print(f"   - {error}")
+
+    print(f"   Specs: {results['specs']['count']} | Golden: {results['golden']['count']} | Q&A: {results['intent']['count']} | Procedures: {results['procedures']['count']}")
+    print(f"   Cost: ${total_cost:.2f}")
+    print(f"{'='*80}")
+
+    # Output JSON stats for Node.js to parse
+    try:
+        stats_json = json.dumps({
+            "specs_count": results['specs']['count'],
+            "golden_count": results['golden']['count'],
+            "intent_count": results['intent']['count'],
+            "procedures_count": results['procedures']['count'],
+            "cache_tokens_written": cache_tokens_written,
+            "cache_tokens_read": cache_tokens_read,
+            "total_input_tokens": total_input_tokens,
+            "total_output_tokens": total_output_tokens,
+            "estimated_cost_usd": round(total_cost, 2),
+            "partial_success": len(errors) > 0,
+            "errors": errors
+        })
+        print(f"\n__DIP_STATS__{stats_json}__END_STATS__")
+    except Exception as json_error:
+        print(f"\n⚠️  Warning: Failed to generate stats JSON: {json_error}", file=sys.stderr)
+
+    # Exit with appropriate code
+    if success_count == 0:
+        print(f"\n❌ All extractions failed", file=sys.stderr)
         sys.exit(1)
+    else:
+        # Exit 0 for partial or full success (Node will handle missing files gracefully)
+        sys.exit(0)
 
 # ============================================================================
 # MAIN EXECUTION
