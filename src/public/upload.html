@@ -650,16 +650,6 @@
             </div>
         </form>
 
-        <!-- Document List -->
-        <div class="document-list">
-            <h3>Uploaded Documents</h3>
-            <div id="documentListContent">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <div>Loading documents...</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -668,7 +658,6 @@
                 this.selectedFile = null;
                 this.manufacturers = [];
                 this.models = [];
-                this.documents = [];
                 this.currentAssetUid = null;
                 this.init();
             }
@@ -676,7 +665,6 @@
             async init() {
                 this.setupEventListeners();
                 await this.loadManufacturers();
-                await this.loadDocuments();
             }
 
             setupEventListeners() {
@@ -797,38 +785,6 @@
                 }
             }
 
-            async loadDocuments() {
-                try {
-                    const response = await fetch('/admin/api/upload/documents', {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    
-                    const result = await response.json();
-                    
-                    // Format documents for display
-                    this.documents = result.data.documents.map(doc => ({
-                        id: doc.id,
-                        name: doc.title || doc.filename || 'Unknown Document',
-                        manufacturer: doc.manufacturer || 'Unknown',
-                        model: doc.model || 'Unknown',
-                        size: this.formatFileSize(doc.size),
-                        status: this.getStatusDisplay(doc.status),
-                        uploadedAt: this.formatDate(doc.created_at),
-                        progress: doc.status === 'processing' ? 50 : null
-                    }));
-
-                    this.renderDocumentList();
-                } catch (error) {
-                    console.error('Failed to load documents:', error);
-                    // Fallback to empty list
-                    this.documents = [];
-                    this.renderDocumentList();
-                }
-            }
 
             onManufacturerChange(manufacturerId) {
                 if (!manufacturerId) {
@@ -1003,9 +959,6 @@
 
                         // Clear the form
                         this.clearForm();
-
-                        // Refresh the document list
-                        await this.loadDocuments();
                     } else {
                         throw new Error(result.error?.message || 'Upload failed');
                     }
@@ -1440,42 +1393,6 @@
                 }, 2000);
             }
 
-            renderDocumentList() {
-                const content = document.getElementById('documentListContent');
-                
-                if (this.documents.length === 0) {
-                    content.innerHTML = `
-                        <div class="empty">
-                            <div class="empty-icon">📄</div>
-                            <div>No documents uploaded yet</div>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const documentsHtml = this.documents.map(doc => `
-                    <div class="document-item">
-                        <div class="document-header">
-                            <div>
-                                <div class="document-name">${doc.manufacturer} ${doc.model} • ${doc.size}</div>
-                                <div class="document-meta">
-                                    ${doc.name}
-                                </div>
-                            </div>
-                        </div>
-                        ${doc.status === 'uploading' && doc.progress !== undefined ? `
-                            <div class="document-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${doc.progress}%"></div>
-                                </div>
-                                <div class="progress-text">${doc.progress}% uploaded</div>
-                            </div>
-                        ` : ''}
-                    </div>
-                `).join('');
-
-                content.innerHTML = documentsHtml;
-            }
 
             formatFileSize(bytes) {
                 if (bytes === 0) return '0 Bytes';

@@ -38,7 +38,7 @@ cd python-sidecar
 venv/bin/python3 -m app.main > ../logs/python.log 2>&1 &
 PYTHON_PID=$!
 cd ..
-sleep 8
+sleep 14
 
 # Check if Python started successfully
 if lsof -i :8000 >/dev/null 2>&1; then

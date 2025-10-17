@@ -21,3 +21,7 @@ These were replaced by Anthropic LLM-based extraction. The code still runs but t
 
 **Impact:** Cleanup only - removes dead code that doesn't affect functionality.
 
+we  need to add a trigger to the new and changed system functionality to populate the other fields in the systems table 
+
+add collequial stats to doc upload status ending page
+
