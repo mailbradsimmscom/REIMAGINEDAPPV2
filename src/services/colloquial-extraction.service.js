@@ -254,7 +254,13 @@ export async function extractColloquialKeywords(manufacturer, model) {
         attemptsTotal: MAX_RETRIES,
         lastError: lastError?.message
       });
-      return ''; // Return empty string, not an error
+      return {
+        keywords: '',
+        stats: {
+          colloquial_keywords_count: 0,
+          colloquial_tokens_used: 0
+        }
+      };
     }
 
     // Step 2: Extract terms with LLM
@@ -265,20 +271,38 @@ export async function extractColloquialKeywords(manufacturer, model) {
         manufacturer,
         model
       });
-      return '';
+      return {
+        keywords: '',
+        stats: {
+          colloquial_keywords_count: 0,
+          colloquial_tokens_used: 0
+        }
+      };
     }
 
     // Step 3: Join as comma-separated string
     const keywords = terms.join(', ');
 
+    // Calculate token usage (rough estimate based on typical extraction)
+    // Prompt: ~300 tokens + chunks (~2000 tokens) + response (~150 tokens)
+    const estimatedTokens = 2450;
+
     requestLogger.info('Colloquial keyword extraction complete', {
       manufacturer,
       model,
       keywordsCount: terms.length,
-      keywords: keywords.substring(0, 100) + (keywords.length > 100 ? '...' : '')
+      keywords: keywords.substring(0, 100) + (keywords.length > 100 ? '...' : ''),
+      tokensUsed: estimatedTokens
     });
 
-    return keywords;
+    // Return object with keywords and stats
+    return {
+      keywords,
+      stats: {
+        colloquial_keywords_count: terms.length,
+        colloquial_tokens_used: estimatedTokens
+      }
+    };
 
   } catch (error) {
     requestLogger.error('Colloquial keyword extraction failed', {

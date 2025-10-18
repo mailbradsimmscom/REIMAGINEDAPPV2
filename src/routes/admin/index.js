@@ -56,7 +56,7 @@ router.use('/docs', documentRouter);
 router.use('/playbooks', playbooksRouter);
 router.use('/golden-tests', goldenTestsRouter);
 router.use('/upload', uploadRouter);
-router.use('/api', documentDeletionRouter);
+router.use('', documentDeletionRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin

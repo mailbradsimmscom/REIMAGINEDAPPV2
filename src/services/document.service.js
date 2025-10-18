@@ -507,11 +507,35 @@ class DocumentService {
         // Update status to colloquial_extraction
         await documentRepository.updateJobStatusV2(jobId, 'colloquial_extraction');
 
-        await this.extractAndUpdateColloquialKeywords(
+        const colloquialStats = await this.extractAndUpdateColloquialKeywords(
           document.asset_uid,
           document.manufacturer_norm,
           document.model_norm
         );
+
+        // Update job counters with colloquial stats
+        if (colloquialStats) {
+          try {
+            const currentJob = await documentRepository.getJob(jobId);
+            const mergedCounters = {
+              ...(currentJob.counters || {}),
+              ...colloquialStats
+            };
+
+            await documentRepository.updateJobProgress(jobId, mergedCounters);
+
+            this.requestLogger.info('Updated job counters with colloquial stats', {
+              jobId,
+              colloquialStats,
+              mergedCounters
+            });
+          } catch (statsError) {
+            this.requestLogger.warn('Failed to update job counters with colloquial stats', {
+              jobId,
+              error: statsError.message
+            });
+          }
+        }
       }
 
       // Step 7: Extracting
@@ -703,25 +727,27 @@ class DocumentService {
         model
       });
 
-      const keywords = await extractColloquialKeywords(manufacturer, model);
+      const result = await extractColloquialKeywords(manufacturer, model);
 
-      if (!keywords || keywords.trim().length === 0) {
+      if (!result.keywords || result.keywords.trim().length === 0) {
         this.requestLogger.warn('No colloquial keywords extracted, skipping update', {
           assetUid,
           manufacturer,
           model
         });
-        return;
+        return result.stats; // Return stats even if no keywords
       }
 
       // Update systems table
-      await documentRepository.updateSystemColloquialKeywords(assetUid, keywords);
+      await documentRepository.updateSystemColloquialKeywords(assetUid, result.keywords);
 
       this.requestLogger.info('Colloquial keywords updated successfully', {
         assetUid,
-        keywordsCount: keywords.split(',').length,
-        preview: keywords.substring(0, 100) + (keywords.length > 100 ? '...' : '')
+        keywordsCount: result.stats.colloquial_keywords_count,
+        preview: result.keywords.substring(0, 100) + (result.keywords.length > 100 ? '...' : '')
       });
+
+      return result.stats; // Return stats for job counter update
 
     } catch (error) {
       // Log but don't fail the job - this is a non-critical enhancement
@@ -731,6 +757,12 @@ class DocumentService {
         model,
         error: error.message
       });
+
+      // Return empty stats on error
+      return {
+        colloquial_keywords_count: 0,
+        colloquial_tokens_used: 0
+      };
     }
   }
 

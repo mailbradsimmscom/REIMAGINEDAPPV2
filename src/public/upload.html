@@ -1315,11 +1315,13 @@
                         const metricsHTML = `
                             <div><strong>Chunks:</strong> ${counters.chunks_total || 0}</div>
                             <div><strong>Vectors:</strong> ${counters.vectors_upserted || 0}</div>
+                            <div><strong>Colloquial Keywords:</strong> ${counters.colloquial_keywords_count || 0}</div>
                             <div><strong>Specs:</strong> ${counters.specs_count || 0}</div>
                             <div><strong>Golden Rules:</strong> ${counters.golden_count || 0}</div>
                             <div><strong>Q&A Pairs:</strong> ${counters.intent_count || 0}</div>
                             <div><strong>Procedures:</strong> ${counters.procedures_count || 0}</div>
-                            <div><strong>Cost:</strong> $${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
+                            <div><strong>Colloquial Tokens:</strong> ${(counters.colloquial_tokens_used || 0).toLocaleString()}</div>
+                            <div><strong>Total Cost:</strong> $${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
                         `;
                         metricsEl.innerHTML = metricsHTML;
                         metricsEl.style.display = 'block';

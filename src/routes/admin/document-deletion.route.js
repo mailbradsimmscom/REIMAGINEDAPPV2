@@ -33,7 +33,7 @@ const deletionOptionsSchema = z.object({
 const deletionRequestSchema = z.object({
   deletionOptions: deletionOptionsSchema,
   confirmation: z.string(),
-  reason: z.string().optional()
+  reason: z.string().nullish()
 });
 
 /**

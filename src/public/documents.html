@@ -1047,6 +1047,10 @@
 
                 // Get confirmation
                 const confirmation = document.getElementById('deletionConfirmation').value;
+                if (!confirmation || confirmation.trim() === '') {
+                    alert('Please enter the document ID to confirm deletion');
+                    return;
+                }
                 if (confirmation.toUpperCase() !== this.currentDeleteDoc.toUpperCase()) {
                     alert('Confirmation code does not match document ID');
                     return;

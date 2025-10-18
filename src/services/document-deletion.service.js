@@ -1,6 +1,5 @@
 import { getSupabaseClient } from '../repositories/supabaseClient.js';
 import { logger } from '../utils/logger.js';
-import { Pinecone } from '@pinecone-database/pinecone';
 import { getEnv } from '../config/env.js';
 
 const env = getEnv();
@@ -11,10 +10,6 @@ const env = getEnv();
 export class DocumentDeletionService {
   constructor() {
     this.requestLogger = logger.createRequestLogger();
-    this.pinecone = new Pinecone({
-      apiKey: env.PINECONE_API_KEY
-    });
-    this.index = this.pinecone.index(env.PINECONE_INDEX_NAME);
   }
 
   /**
@@ -28,7 +23,7 @@ export class DocumentDeletionService {
       const { data: doc, error: docError } = await supabase
         .from('documents')
         .select('*')
-        .eq('id', docId)
+        .eq('doc_id', docId)
         .single();
 
       if (docError || !doc) {
@@ -54,7 +49,7 @@ export class DocumentDeletionService {
       const productionCounts = await this.countDipEntries(supabase, 'production', docId, doc.asset_uid);
 
       // Check Pinecone vectors
-      const pineconeCount = await this.countPineconeVectors(doc.asset_uid);
+      const pineconeCount = await this.countPineconeVectors(docId);
 
       // Check storage files
       const storageInfo = await this.getStorageInfo(supabase, docId);
@@ -146,6 +141,24 @@ export class DocumentDeletionService {
         };
       }
 
+      // 4.5. Clear last_job_id reference BEFORE deleting jobs (to avoid FK constraint violation)
+      if (options.jobs) {
+        const { error: clearError } = await supabase
+          .from('documents')
+          .update({ last_job_id: null })
+          .eq('doc_id', docId);
+
+        if (clearError) {
+          this.requestLogger.warn('Failed to clear last_job_id before job deletion', {
+            docId,
+            error: clearError.message
+          });
+          // Don't throw - let jobs deletion attempt proceed and fail with better error
+        } else {
+          this.requestLogger.info('Cleared last_job_id reference', { docId });
+        }
+      }
+
       // 5. Delete jobs
       if (options.jobs) {
         const { error } = await supabase
@@ -158,8 +171,8 @@ export class DocumentDeletionService {
       }
 
       // 6. Delete Pinecone vectors
-      if (options.pinecone && preview.asset_uid) {
-        const deleteCount = await this.deletePineconeVectors(preview.asset_uid);
+      if (options.pinecone) {
+        const deleteCount = await this.deletePineconeVectors(docId);
         deletionRecord.deletion_actions.pinecone = {
           vectors_deleted: deleteCount
         };
@@ -244,7 +257,7 @@ export class DocumentDeletionService {
         const { error } = await supabase
           .from('documents')
           .delete()
-          .eq('id', docId);
+          .eq('doc_id', docId);
 
         if (error) throw error;
         deletionRecord.deletion_actions.documents_table_deleted = true;
@@ -263,17 +276,14 @@ export class DocumentDeletionService {
    * Archive storage files (soft delete)
    */
   async archiveStorage(supabase, docId, assetUid, options) {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const archivePath = `deleted/${year}/${month}/${day}/${assetUid}`;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const archivePath = `deleted/${assetUid}-${timestamp}`;
 
     const result = {
       original_path: `manuals/${docId}/`,
       archive_path: archivePath,
       manual_moved: false,
-      dip_moved: false
+      dip_moved: { total: 0, moved: 0, failed: 0 }
     };
 
     try {
@@ -297,12 +307,37 @@ export class DocumentDeletionService {
 
           if (!moveError) result.manual_moved = true;
         } else if (file.name === 'DIP' && (options.storage_all || options.storage_dip)) {
-          // Move entire DIP directory
-          const { error: moveError } = await supabase.storage
+          // List all files inside DIP directory
+          const { data: dipFiles, error: listError } = await supabase.storage
             .from('documents')
-            .move(`manuals/${docId}/DIP`, `${archivePath}/DIP`);
+            .list(`manuals/${docId}/DIP`);
 
-          if (!moveError) result.dip_moved = true;
+          if (listError) {
+            this.requestLogger.error('Failed to list DIP files', { docId, error: listError.message });
+          } else if (dipFiles && dipFiles.length > 0) {
+            result.dip_moved.total = dipFiles.length;
+
+            // Move each file individually
+            for (const dipFile of dipFiles) {
+              const sourcePath = `manuals/${docId}/DIP/${dipFile.name}`;
+              const destPath = `${archivePath}/DIP/${dipFile.name}`;
+
+              const { error: moveError } = await supabase.storage
+                .from('documents')
+                .move(sourcePath, destPath);
+
+              if (moveError) {
+                this.requestLogger.error('Failed to move DIP file', {
+                  docId,
+                  file: dipFile.name,
+                  error: moveError.message
+                });
+                result.dip_moved.failed++;
+              } else {
+                result.dip_moved.moved++;
+              }
+            }
+          }
         }
       }
 
@@ -333,31 +368,46 @@ export class DocumentDeletionService {
   /**
    * Delete Pinecone vectors
    */
-  async deletePineconeVectors(assetUid) {
+  async deletePineconeVectors(docId) {
     try {
-      // Query vectors with this asset_uid
-      const queryResponse = await this.index.query({
-        filter: { asset_uid: assetUid },
-        topK: 10000,
-        includeValues: false
+      const namespace = env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS';
+      const pythonUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+
+      // Query vectors with this doc_id using Python sidecar
+      const searchResponse = await fetch(`${pythonUrl}/v1/pinecone/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'test',
+          topK: 10000,
+          namespace: namespace,
+          filter: { doc_id: docId },
+          includeMetadata: false,
+          includeValues: false
+        })
       });
 
-      if (queryResponse.matches && queryResponse.matches.length > 0) {
-        const ids = queryResponse.matches.map(match => match.id);
+      const searchData = await searchResponse.json();
 
-        // Delete in batches of 100
-        const batchSize = 100;
-        for (let i = 0; i < ids.length; i += batchSize) {
-          const batch = ids.slice(i, i + batchSize);
-          await this.index.deleteMany(batch);
-        }
+      if (searchData.matches && searchData.matches.length > 0) {
+        const ids = searchData.matches.map(match => match.id);
+
+        // Delete using Python sidecar
+        await fetch(`${pythonUrl}/v1/pinecone/delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ids: ids,
+            namespace: namespace
+          })
+        });
 
         return ids.length;
       }
 
       return 0;
     } catch (error) {
-      this.requestLogger.error('Pinecone deletion failed', { assetUid, error: error.message });
+      this.requestLogger.error('Pinecone deletion failed', { docId, error: error.message });
       return 0;
     }
   }
@@ -502,29 +552,32 @@ export class DocumentDeletionService {
   /**
    * Count Pinecone vectors
    */
-  async countPineconeVectors(assetUid) {
-    if (!assetUid) return 0;
+  async countPineconeVectors(docId) {
+    if (!docId) return 0;
 
     try {
-      const stats = await this.index.describeIndexStats({
-        filter: { asset_uid: assetUid }
+      const namespace = env.PINECONE_NAMESPACE || 'REIMAGINEDDOCS';
+      const pythonUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+
+      // Query to get all matching vectors (up to 10k) using Python sidecar
+      const response = await fetch(`${pythonUrl}/v1/pinecone/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'test',
+          topK: 10000,
+          namespace: namespace,
+          filter: { doc_id: docId },
+          includeMetadata: false,
+          includeValues: false
+        })
       });
 
-      return stats.totalRecordCount || 0;
+      const data = await response.json();
+      return data.matches?.length || 0;
     } catch (error) {
-      // Try query approach if stats don't work
-      try {
-        const queryResponse = await this.index.query({
-          filter: { asset_uid: assetUid },
-          topK: 1,
-          includeValues: false
-        });
-
-        // This gives us an estimate
-        return queryResponse.matches?.length > 0 ? '1+' : 0;
-      } catch (queryError) {
-        return 0;
-      }
+      this.requestLogger.error('Pinecone count failed', { docId, error: error.message });
+      return 0;
     }
   }
 }

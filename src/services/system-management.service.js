@@ -3,6 +3,7 @@ import * as repo from '../repositories/system-management.repository.js';
 import { logger } from '../utils/logger.js';
 import { validateSystemData, validateInstanceData, sanitizeSystemData } from '../utils/validation.js';
 import { randomUUID } from 'crypto';
+import { generateAndSaveKeywordsSynonyms } from './keywords-synonyms-generation.service.js';
 
 /**
  * System Management Service
@@ -155,6 +156,23 @@ export async function createSystem(systemData) {
 
     // Create in database
     const created = await repo.createSystem(sanitized);
+
+    // Generate keywords and synonyms (synchronous - user waits)
+    requestLogger.info('Generating keywords and synonyms', { assetUid });
+    const generationResult = await generateAndSaveKeywordsSynonyms(assetUid);
+
+    if (!generationResult.success) {
+      requestLogger.warn('Failed to generate keywords/synonyms for new system', {
+        assetUid,
+        error: generationResult.error
+      });
+      // Don't fail the system creation - just log the warning
+    } else {
+      requestLogger.info('Keywords and synonyms generated successfully', {
+        assetUid,
+        duration: generationResult.duration
+      });
+    }
 
     return {
       success: true,

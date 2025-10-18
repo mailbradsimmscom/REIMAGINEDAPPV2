@@ -449,11 +449,6 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
     systemsContext = [];
     const newEquipmentFound = [];
 
-    console.log('\n🔍 DEBUG: rawEquipmentContext sample:');
-    rawEquipmentContext.slice(0, 3).forEach((eq, i) => {
-      console.log(`  ${i+1}. llm_confidence: ${eq.llm_confidence}, llm_role: ${eq.llm_role}`);
-    });
-
     for (let i = 0; i < Math.min(rawEquipmentContext.length, 20); i++) {
       const equipment = rawEquipmentContext[i];
       try {
@@ -526,14 +521,6 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
         await updateChatThread(threadId, {
           equipment_context: systemsContext
         });
-
-        // TEMP DEBUG: Log confidence scores to console
-        console.log('\n🔍 CONFIDENCE SCORES FOR ALL EQUIPMENT:');
-        systemsContext.forEach((eq, idx) => {
-          console.log(`  ${idx + 1}. ${eq.manufacturer} ${eq.model}`);
-          console.log(`     confidence: ${eq.llm_confidence}, role: ${eq.llm_role}, source: ${eq.source}`);
-        });
-        console.log('');
 
         requestLogger.info('💾 Updated equipment context', {
           threadId,
