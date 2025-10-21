@@ -176,6 +176,82 @@
         .badge-condition { background: #e8f5e9; color: #388e3c; }
         .badge-unknown { background: #f5f5f5; color: #666; }
 
+        /* Category badges */
+        .badge-MAINTENANCE { background: #c8e6c9; color: #2e7d32; }
+        .badge-INSTALLATION { background: #fff9c4; color: #f57f17; }
+        .badge-PRE_USE_CHECK { background: #b3e5fc; color: #0277bd; }
+        .badge-VAGUE { background: #ffccbc; color: #d84315; }
+        .badge-null { background: #e0e0e0; color: #616161; }
+
+        /* Category select */
+        .category-select {
+            padding: 6px 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: white;
+        }
+
+        .category-select option[value="MAINTENANCE"] { background: #c8e6c9; }
+        .category-select option[value="INSTALLATION"] { background: #fff9c4; }
+        .category-select option[value="PRE_USE_CHECK"] { background: #b3e5fc; }
+        .category-select option[value="VAGUE"] { background: #ffccbc; }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s;
+        }
+
+        .save-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #45a049;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Editable inputs */
+        .freq-value-input,
+        .freq-type-select,
+        .freq-basis-select,
+        .task-type-select {
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .freq-value-input:focus,
+        .freq-type-select:focus,
+        .freq-basis-select:focus,
+        .task-type-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         .loading {
             text-align: center;
             padding: 60px;
@@ -202,6 +278,321 @@
 
         .empty-state h2 {
             margin-bottom: 10px;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .view-btn {
+            padding: 12px 24px;
+            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .view-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .view-container {
+            display: none;
+        }
+
+        .view-container.active {
+            display: block;
+        }
+
+        /* Timeline Styles */
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .frequency-group {
+            margin-bottom: 40px;
+        }
+
+        .frequency-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .frequency-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .frequency-count {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .timeline-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-track {
+            flex: 1;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #667eea;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .timeline-label {
+            font-size: 11px;
+            color: #999;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .timeline-tasks {
+            padding-left: 20px;
+        }
+
+        .timeline-task {
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .timeline-task:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .timeline-task-freq {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Color coding by frequency */
+        .freq-usage { border-left-color: #00bcd4; }
+        .freq-daily { border-left-color: #f44336; }
+        .freq-weekly { border-left-color: #ff9800; }
+        .freq-biweekly { border-left-color: #ffc107; }
+        .freq-monthly { border-left-color: #4caf50; }
+        .freq-quarterly { border-left-color: #2196f3; }
+        .freq-semiannual { border-left-color: #9c27b0; }
+        .freq-annual { border-left-color: #607d8b; }
+        .freq-multiyear { border-left-color: #795548; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 22px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-field {
+            margin-bottom: 20px;
+        }
+
+        .modal-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .modal-description {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            padding: 10px 0;
+        }
+
+        .modal-readonly {
+            font-size: 14px;
+            color: #666;
+            padding: 10px 0;
+        }
+
+        .modal-inline {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-field input,
+        .modal-field select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .modal-field input:focus,
+        .modal-field select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px 30px;
+            border-top: 1px solid #eee;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-save {
+            background: #4caf50;
+            color: white;
+        }
+
+        .modal-btn-save:hover {
+            background: #45a049;
+        }
+
+        .modal-btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .modal-btn-delete {
+            background: #f44336;
+            color: white;
+            margin-right: auto;
+        }
+
+        .modal-btn-delete:hover {
+            background: #da190b;
+        }
+
+        /* Make timeline tasks clickable */
+        .timeline-task {
+            cursor: pointer;
+        }
+
+        .timeline-task:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
         }
     </style>
 </head>
@@ -258,10 +649,132 @@
                     <option value="">All Types</option>
                 </select>
             </div>
+
+            <div class="filter-group">
+                <label>Category</label>
+                <select id="category-filter">
+                    <option value="">All Categories</option>
+                    <option value="MAINTENANCE">✅ Maintenance</option>
+                    <option value="INSTALLATION">🔧 Installation</option>
+                    <option value="PRE_USE_CHECK">🔍 Pre-Use Check</option>
+                    <option value="VAGUE">⚠️ Vague</option>
+                    <option value="null">❓ Unclassified</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="sort-filter">
+                    <option value="frequency-asc">⏰ Frequency (Soonest First)</option>
+                    <option value="frequency-desc">⏰ Frequency (Furthest First)</option>
+                    <option value="none">Default</option>
+                </select>
+            </div>
         </div>
 
-        <div id="task-list-container">
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="table" onclick="switchView('table')">📋 Table View</button>
+            <button class="view-btn" data-view="timeline" onclick="switchView('timeline')">📅 Timeline View</button>
+        </div>
+
+        <!-- Table View Container -->
+        <div id="task-list-container" class="view-container active">
             <div class="loading">Loading tasks...</div>
+        </div>
+
+        <!-- Timeline View Container -->
+        <div id="timeline-container" class="view-container">
+            <div class="timeline-content"></div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-field">
+                    <label>Description</label>
+                    <div id="modal-description" class="modal-description"></div>
+                </div>
+
+                <div class="modal-field">
+                    <label>System</label>
+                    <div id="modal-system" class="modal-readonly"></div>
+                </div>
+
+                <div class="modal-field">
+                    <label>Frequency</label>
+                    <div class="modal-inline">
+                        <input type="number" id="modal-freq-value" placeholder="Value" min="0" style="width: 100px;">
+                        <select id="modal-freq-type" style="width: 120px;">
+                            <option value="hours">hours</option>
+                            <option value="days">days</option>
+                            <option value="weeks">weeks</option>
+                            <option value="months">months</option>
+                            <option value="years">years</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-field">
+                    <label>Basis</label>
+                    <select id="modal-freq-basis" style="width: 100%;">
+                        <option value="calendar">Calendar</option>
+                        <option value="usage">Usage</option>
+                        <option value="event">Event</option>
+                        <option value="condition">Condition</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+
+                <div class="modal-field">
+                    <label>Type</label>
+                    <select id="modal-task-type" style="width: 100%;">
+                        <option value="inspection">Inspection</option>
+                        <option value="cleaning">Cleaning</option>
+                        <option value="parts_replacement">Parts Replacement</option>
+                        <option value="filter_replacement">Filter Replacement</option>
+                        <option value="visual_inspection">Visual Inspection</option>
+                        <option value="testing">Testing</option>
+                        <option value="adjustment">Adjustment</option>
+                        <option value="monitoring">Monitoring</option>
+                        <option value="condition_based">Condition Based</option>
+                        <option value="installation">Installation</option>
+                    </select>
+                </div>
+
+                <div class="modal-field">
+                    <label>Category</label>
+                    <select id="modal-category" style="width: 100%;">
+                        <option value="MAINTENANCE">✅ Maintenance</option>
+                        <option value="INSTALLATION">🔧 Installation</option>
+                        <option value="PRE_USE_CHECK">🔍 Pre-Use Check</option>
+                        <option value="VAGUE">⚠️ Vague</option>
+                    </select>
+                </div>
+
+                <div class="modal-field">
+                    <label>Source</label>
+                    <div id="modal-source" class="modal-readonly"></div>
+                </div>
+
+                <div class="modal-field">
+                    <label>Task ID</label>
+                    <div id="modal-task-id" class="modal-readonly"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-delete" onclick="deleteTaskFromModal()">Delete</button>
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn modal-btn-save" onclick="saveTaskFromModal()">Save</button>
+            </div>
         </div>
     </div>
 
@@ -271,6 +784,18 @@
 
         let allTasks = [];
         let filteredTasks = [];
+
+        // Helper function to format category labels
+        function getCategoryLabel(category) {
+            const labels = {
+                'MAINTENANCE': '✅ Maintenance',
+                'INSTALLATION': '🔧 Installation',
+                'PRE_USE_CHECK': '🔍 Pre-Use Check',
+                'VAGUE': '⚠️ Vague',
+                'null': '❓ Unclassified'
+            };
+            return labels[category] || labels['null'];
+        }
 
         // Load tasks on page load
         async function loadTasks() {
@@ -342,6 +867,8 @@
             const systemFilter = document.getElementById('system-filter').value;
             const basisFilter = document.getElementById('basis-filter').value;
             const typeFilter = document.getElementById('type-filter').value;
+            const categoryFilter = document.getElementById('category-filter').value;
+            const sortFilter = document.getElementById('sort-filter').value;
 
             filteredTasks = allTasks.filter(task => {
                 const matchesSearch = !searchTerm ||
@@ -350,8 +877,27 @@
                 const matchesBasis = !basisFilter || task.frequency_basis === basisFilter;
                 const matchesType = !typeFilter || task.task_type === typeFilter;
 
-                return matchesSearch && matchesSystem && matchesBasis && matchesType;
+                // Handle category filter (including null/"unclassified")
+                const matchesCategory = !categoryFilter ||
+                    (categoryFilter === 'null' ? !task.task_category : task.task_category === categoryFilter);
+
+                return matchesSearch && matchesSystem && matchesBasis && matchesType && matchesCategory;
             });
+
+            // Apply sorting
+            if (sortFilter === 'frequency-asc') {
+                filteredTasks.sort((a, b) => {
+                    const aHours = a.frequency_hours || Infinity;
+                    const bHours = b.frequency_hours || Infinity;
+                    return aHours - bHours;
+                });
+            } else if (sortFilter === 'frequency-desc') {
+                filteredTasks.sort((a, b) => {
+                    const aHours = a.frequency_hours || 0;
+                    const bHours = b.frequency_hours || 0;
+                    return bHours - aHours;
+                });
+            }
 
             renderTasks();
         }
@@ -388,20 +934,46 @@
                         <div class="meta-item">
                             <div class="meta-label">Frequency</div>
                             <div class="meta-value">
-                                ${task.frequency_value ? `${task.frequency_value} ${task.frequency_type}` : 'N/A'}
+                                <input type="number" class="freq-value-input" data-task-id="${task.id}" value="${task.frequency_value || ''}" placeholder="Value" min="0" style="width: 80px;">
+                                <select class="freq-type-select" data-task-id="${task.id}" style="width: 100px; margin-left: 5px;">
+                                    <option value="hours" ${task.frequency_type === 'hours' ? 'selected' : ''}>hours</option>
+                                    <option value="days" ${task.frequency_type === 'days' ? 'selected' : ''}>days</option>
+                                    <option value="weeks" ${task.frequency_type === 'weeks' ? 'selected' : ''}>weeks</option>
+                                    <option value="months" ${task.frequency_type === 'months' ? 'selected' : ''}>months</option>
+                                    <option value="years" ${task.frequency_type === 'years' ? 'selected' : ''}>years</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="meta-item">
                             <div class="meta-label">Basis</div>
                             <div class="meta-value">
-                                <span class="badge badge-${task.frequency_basis}">${task.frequency_basis}</span>
+                                <select class="freq-basis-select" data-task-id="${task.id}">
+                                    <option value="calendar" ${task.frequency_basis === 'calendar' ? 'selected' : ''}>Calendar</option>
+                                    <option value="usage" ${task.frequency_basis === 'usage' ? 'selected' : ''}>Usage</option>
+                                    <option value="event" ${task.frequency_basis === 'event' ? 'selected' : ''}>Event</option>
+                                    <option value="condition" ${task.frequency_basis === 'condition' ? 'selected' : ''}>Condition</option>
+                                    <option value="unknown" ${task.frequency_basis === 'unknown' ? 'selected' : ''}>Unknown</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="meta-item">
                             <div class="meta-label">Type</div>
-                            <div class="meta-value">${task.task_type.replace(/_/g, ' ')}</div>
+                            <div class="meta-value">
+                                <select class="task-type-select" data-task-id="${task.id}">
+                                    <option value="inspection" ${task.task_type === 'inspection' ? 'selected' : ''}>Inspection</option>
+                                    <option value="cleaning" ${task.task_type === 'cleaning' ? 'selected' : ''}>Cleaning</option>
+                                    <option value="parts_replacement" ${task.task_type === 'parts_replacement' ? 'selected' : ''}>Parts Replacement</option>
+                                    <option value="filter_replacement" ${task.task_type === 'filter_replacement' ? 'selected' : ''}>Filter Replacement</option>
+                                    <option value="visual_inspection" ${task.task_type === 'visual_inspection' ? 'selected' : ''}>Visual Inspection</option>
+                                    <option value="testing" ${task.task_type === 'testing' ? 'selected' : ''}>Testing</option>
+                                    <option value="adjustment" ${task.task_type === 'adjustment' ? 'selected' : ''}>Adjustment</option>
+                                    <option value="monitoring" ${task.task_type === 'monitoring' ? 'selected' : ''}>Monitoring</option>
+                                    <option value="condition_based" ${task.task_type === 'condition_based' ? 'selected' : ''}>Condition Based</option>
+                                    <option value="installation" ${task.task_type === 'installation' ? 'selected' : ''}>Installation</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="meta-item">
@@ -413,11 +985,147 @@
                             <div class="meta-label">Confidence</div>
                             <div class="meta-value">${task.confidence ? (task.confidence * 100).toFixed(0) + '%' : 'N/A'}</div>
                         </div>
+
+                        <div class="meta-item">
+                            <div class="meta-label">Category</div>
+                            <div class="meta-value">
+                                <select class="category-select" data-task-id="${task.id}" data-original="${task.task_category || ''}">
+                                    <option value="MAINTENANCE" ${task.task_category === 'MAINTENANCE' ? 'selected' : ''}>✅ Maintenance</option>
+                                    <option value="INSTALLATION" ${task.task_category === 'INSTALLATION' ? 'selected' : ''}>🔧 Installation</option>
+                                    <option value="PRE_USE_CHECK" ${task.task_category === 'PRE_USE_CHECK' ? 'selected' : ''}>🔍 Pre-Use Check</option>
+                                    <option value="VAGUE" ${task.task_category === 'VAGUE' ? 'selected' : ''}>⚠️ Vague</option>
+                                </select>
+                                <button class="action-btn save-btn" onclick="saveCategory('${task.id}')" disabled>Save</button>
+                                <button class="action-btn delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
+                            </div>
+                        </div>
+
+                        <div class="meta-item">
+                            <div class="meta-label">Source</div>
+                            <div class="meta-value">${task.source || 'manual'}</div>
+                        </div>
                     </div>
                 </div>
             `).join('');
 
             container.innerHTML = `<div class="task-list">${tasksHTML}</div>`;
+
+            // Add change listeners to all editable fields
+            const addChangeListener = (selector) => {
+                document.querySelectorAll(selector).forEach(element => {
+                    element.addEventListener('change', function() {
+                        const taskId = this.dataset.taskId;
+                        const saveBtn = document.querySelector(`.save-btn[onclick="saveCategory('${taskId}')"]`);
+                        if (saveBtn) saveBtn.disabled = false;
+                    });
+
+                    if (element.tagName === 'INPUT') {
+                        element.addEventListener('input', function() {
+                            const taskId = this.dataset.taskId;
+                            const saveBtn = document.querySelector(`.save-btn[onclick="saveCategory('${taskId}')"]`);
+                            if (saveBtn) saveBtn.disabled = false;
+                        });
+                    }
+                });
+            };
+
+            addChangeListener('.category-select');
+            addChangeListener('.freq-value-input');
+            addChangeListener('.freq-type-select');
+            addChangeListener('.freq-basis-select');
+            addChangeListener('.task-type-select');
+        }
+
+        async function saveCategory(taskId) {
+            const saveBtn = document.querySelector(`.save-btn[onclick="saveCategory('${taskId}')"]`);
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                // Gather all editable values for this task
+                const updates = {};
+
+                const categorySelect = document.querySelector(`.category-select[data-task-id="${taskId}"]`);
+                if (categorySelect) {
+                    updates.task_category = categorySelect.value;
+                }
+
+                const freqValueInput = document.querySelector(`.freq-value-input[data-task-id="${taskId}"]`);
+                if (freqValueInput && freqValueInput.value) {
+                    updates.frequency_value = parseInt(freqValueInput.value, 10);
+                }
+
+                const freqTypeSelect = document.querySelector(`.freq-type-select[data-task-id="${taskId}"]`);
+                if (freqTypeSelect) {
+                    updates.frequency_type = freqTypeSelect.value;
+                }
+
+                const freqBasisSelect = document.querySelector(`.freq-basis-select[data-task-id="${taskId}"]`);
+                if (freqBasisSelect) {
+                    updates.frequency_basis = freqBasisSelect.value;
+                }
+
+                const taskTypeSelect = document.querySelector(`.task-type-select[data-task-id="${taskId}"]`);
+                if (taskTypeSelect) {
+                    updates.task_type = taskTypeSelect.value;
+                }
+
+                const response = await fetch(`${API_BASE}/${taskId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': ADMIN_TOKEN
+                    },
+                    body: JSON.stringify(updates)
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error?.message || 'Update failed');
+                }
+
+                saveBtn.textContent = '✓ Saved';
+
+                setTimeout(() => {
+                    saveBtn.textContent = 'Save';
+                    saveBtn.disabled = true;
+                }, 2000);
+
+                // Update stats
+                await loadTasks();
+            } catch (error) {
+                alert('Failed to update task: ' + error.message);
+                saveBtn.textContent = 'Save';
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (!confirm('Are you sure you want to delete this task? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${taskId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error?.message || 'Delete failed');
+                }
+
+                // Reload tasks
+                await loadTasks();
+                alert('Task deleted successfully');
+            } catch (error) {
+                alert('Failed to delete task: ' + error.message);
+            }
         }
 
         function showError(message) {
@@ -428,11 +1136,311 @@
             `;
         }
 
+        // View switching
+        function switchView(view) {
+            // Update button states
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+
+            // Update container visibility
+            document.getElementById('task-list-container').classList.toggle('active', view === 'table');
+            document.getElementById('timeline-container').classList.toggle('active', view === 'timeline');
+
+            // Render timeline if switching to it
+            if (view === 'timeline') {
+                renderTimeline();
+            }
+        }
+
+        // Render timeline view
+        function renderTimeline() {
+            const container = document.querySelector('#timeline-container .timeline-content');
+
+            // Filter to only MAINTENANCE tasks with valid frequency
+            const maintenanceTasks = filteredTasks.filter(t =>
+                t.task_category === 'MAINTENANCE' && t.frequency_hours && t.frequency_hours > 0
+            );
+
+            if (maintenanceTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No maintenance tasks found</h2>
+                        <p>Only MAINTENANCE category tasks with valid frequencies are shown in timeline view</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Separate usage-based from calendar-based tasks
+            const usageTasks = maintenanceTasks.filter(t => t.frequency_basis === 'usage');
+            const calendarTasks = maintenanceTasks.filter(t => t.frequency_basis !== 'usage');
+
+            // Sort usage tasks by hours (soonest first)
+            usageTasks.sort((a, b) => a.frequency_hours - b.frequency_hours);
+
+            // Group calendar tasks by frequency buckets
+            const frequencyGroups = {
+                daily: { label: 'Daily', min: 0, max: 24, tasks: [], color: '#f44336', occurrences: 365 },
+                weekly: { label: 'Weekly', min: 24, max: 168, tasks: [], color: '#ff9800', occurrences: 52 },
+                biweekly: { label: 'Bi-Weekly', min: 168, max: 336, tasks: [], color: '#ffc107', occurrences: 26 },
+                monthly: { label: 'Monthly', min: 336, max: 1460, tasks: [], color: '#4caf50', occurrences: 12 },
+                quarterly: { label: 'Quarterly', min: 1460, max: 2920, tasks: [], color: '#2196f3', occurrences: 4 },
+                semiannual: { label: 'Semi-Annual', min: 2920, max: 5040, tasks: [], color: '#9c27b0', occurrences: 2 },
+                annual: { label: 'Annual', min: 5040, max: 9600, tasks: [], color: '#607d8b', occurrences: 1 },
+                multiyear: { label: 'Multi-Year', min: 9600, max: Infinity, tasks: [], color: '#795548', occurrences: 0.5 }
+            };
+
+            // Categorize calendar tasks
+            calendarTasks.forEach(task => {
+                for (const [key, group] of Object.entries(frequencyGroups)) {
+                    if (task.frequency_hours > group.min && task.frequency_hours <= group.max) {
+                        group.tasks.push(task);
+                        break;
+                    }
+                }
+            });
+
+            // Render usage section first
+            let html = '';
+            if (usageTasks.length > 0) {
+                const usageColor = '#00bcd4'; // Cyan for usage
+                html += `
+                    <div class="frequency-group">
+                        <div class="frequency-header">
+                            <div class="frequency-label" style="color: ${usageColor};">[Usage]</div>
+                            <div class="frequency-count">${usageTasks.length} task${usageTasks.length !== 1 ? 's' : ''}</div>
+                            <div style="font-size: 12px; color: #666; margin-left: 10px;">Based on operating hours</div>
+                        </div>
+
+                        <div class="timeline-bar">
+                            <div class="timeline-label">0 hours</div>
+                            <div class="timeline-track" style="background: ${usageColor}20;">
+                                ${renderUsageDots(usageTasks, usageColor)}
+                            </div>
+                            <div class="timeline-label">${Math.max(...usageTasks.map(t => t.frequency_hours))}h</div>
+                        </div>
+
+                        <div class="timeline-tasks">
+                            ${usageTasks.map(task => `
+                                <div class="timeline-task freq-usage" style="border-left-color: ${usageColor};" onclick="openTaskModal('${task.id}')">
+                                    <div>${task.description}</div>
+                                    <div class="timeline-task-freq">
+                                        Every ${task.frequency_value} ${task.frequency_type} (${task.frequency_hours}h)
+                                        ${task.system_name ? `• ${task.system_name}` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Render calendar-based frequency groups
+            for (const [key, group] of Object.entries(frequencyGroups)) {
+                if (group.tasks.length === 0) continue;
+
+                html += `
+                    <div class="frequency-group">
+                        <div class="frequency-header">
+                            <div class="frequency-label" style="color: ${group.color};">[${group.label}]</div>
+                            <div class="frequency-count">${group.tasks.length} task${group.tasks.length !== 1 ? 's' : ''}</div>
+                        </div>
+
+                        <div class="timeline-bar">
+                            <div class="timeline-label">Start</div>
+                            <div class="timeline-track" style="background: ${group.color}20;">
+                                ${renderTimelineDots(group.occurrences, group.color)}
+                            </div>
+                            <div class="timeline-label">1 Year</div>
+                        </div>
+
+                        <div class="timeline-tasks">
+                            ${group.tasks.map(task => `
+                                <div class="timeline-task freq-${key}" onclick="openTaskModal('${task.id}')">
+                                    <div>${task.description}</div>
+                                    <div class="timeline-task-freq">
+                                        Every ${task.frequency_value} ${task.frequency_type}
+                                        ${task.system_name ? `• ${task.system_name}` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html || '<div class="empty-state"><h2>No tasks to display</h2></div>';
+        }
+
+        // Render dots on timeline
+        function renderTimelineDots(count, color) {
+            if (count === 0) count = 1; // Multi-year tasks show at least 1 dot
+            const maxDots = Math.min(count, 12); // Cap at 12 dots for visual clarity
+            let dots = '';
+
+            for (let i = 0; i < maxDots; i++) {
+                const position = (i / (maxDots - 1)) * 100;
+                dots += `<div class="timeline-dot" style="left: ${position}%; background: ${color};"></div>`;
+            }
+
+            return dots;
+        }
+
+        // Render dots for usage-based timeline
+        function renderUsageDots(tasks, color) {
+            if (tasks.length === 0) return '';
+
+            const maxHours = Math.max(...tasks.map(t => t.frequency_hours));
+            let dots = '';
+
+            // Place a dot for each unique frequency value
+            const uniqueFrequencies = [...new Set(tasks.map(t => t.frequency_hours))].sort((a, b) => a - b);
+
+            uniqueFrequencies.forEach(hours => {
+                const position = (hours / maxHours) * 100;
+                dots += `<div class="timeline-dot" style="left: ${position}%; background: ${color};"></div>`;
+            });
+
+            return dots;
+        }
+
+        // Modal functions
+        let currentTaskId = null;
+
+        function openTaskModal(taskId) {
+            // Find the task
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) {
+                alert('Task not found');
+                return;
+            }
+
+            currentTaskId = taskId;
+
+            // Populate modal
+            document.getElementById('modal-description').textContent = task.description;
+            document.getElementById('modal-system').textContent = task.system_name || 'N/A';
+            document.getElementById('modal-freq-value').value = task.frequency_value || '';
+            document.getElementById('modal-freq-type').value = task.frequency_type || 'hours';
+            document.getElementById('modal-freq-basis').value = task.frequency_basis || 'calendar';
+            document.getElementById('modal-task-type').value = task.task_type || 'inspection';
+            document.getElementById('modal-category').value = task.task_category || 'MAINTENANCE';
+            document.getElementById('modal-source').textContent = task.source || 'manual';
+            document.getElementById('modal-task-id').textContent = task.id;
+
+            // Show modal
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+            currentTaskId = null;
+        }
+
+        async function saveTaskFromModal() {
+            if (!currentTaskId) return;
+
+            const saveBtn = document.querySelector('.modal-btn-save');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                const updates = {
+                    task_category: document.getElementById('modal-category').value,
+                    frequency_value: parseInt(document.getElementById('modal-freq-value').value, 10) || null,
+                    frequency_type: document.getElementById('modal-freq-type').value,
+                    frequency_basis: document.getElementById('modal-freq-basis').value,
+                    task_type: document.getElementById('modal-task-type').value
+                };
+
+                const response = await fetch(`${API_BASE}/${currentTaskId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': ADMIN_TOKEN
+                    },
+                    body: JSON.stringify(updates)
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error?.message || 'Update failed');
+                }
+
+                // Close modal and reload tasks
+                closeModal();
+                await loadTasks();
+
+                // Re-render timeline if in timeline view
+                const timelineContainer = document.getElementById('timeline-container');
+                if (timelineContainer.classList.contains('active')) {
+                    renderTimeline();
+                }
+            } catch (error) {
+                alert('Failed to update task: ' + error.message);
+                saveBtn.textContent = 'Save';
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function deleteTaskFromModal() {
+            if (!currentTaskId) return;
+
+            if (!confirm('Are you sure you want to delete this task? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${currentTaskId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error?.message || 'Delete failed');
+                }
+
+                // Close modal and reload tasks
+                closeModal();
+                await loadTasks();
+
+                // Re-render timeline if in timeline view
+                const timelineContainer = document.getElementById('timeline-container');
+                if (timelineContainer.classList.contains('active')) {
+                    renderTimeline();
+                }
+            } catch (error) {
+                alert('Failed to delete task: ' + error.message);
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('edit-modal').classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Close modal when clicking overlay
+        document.getElementById('edit-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
         // Event listeners
         document.getElementById('search-input').addEventListener('input', applyFilters);
         document.getElementById('system-filter').addEventListener('change', applyFilters);
         document.getElementById('basis-filter').addEventListener('change', applyFilters);
         document.getElementById('type-filter').addEventListener('change', applyFilters);
+        document.getElementById('category-filter').addEventListener('change', applyFilters);
+        document.getElementById('sort-filter').addEventListener('change', applyFilters);
 
         // Load tasks on page load
         loadTasks();
