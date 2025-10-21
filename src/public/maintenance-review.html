@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duplicate Review - Maintenance Tasks</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            font-size: 17px;
+            color: var(--text-secondary);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .progress-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .progress-count {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--background-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        /* Comparison Container */
+        .comparison-container {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Similarity Score */
+        .similarity-score {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+        }
+
+        .similarity-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .similarity-value.high { color: var(--success-color); }
+        .similarity-value.medium { color: var(--warning-color); }
+        .similarity-value.low { color: var(--text-secondary); }
+
+        .similarity-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Side-by-side comparison */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .task-panel {
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+        }
+
+        .task-panel.primary {
+            border: 2px solid var(--primary-color);
+        }
+
+        .task-panel.secondary {
+            border: 2px solid var(--secondary-color);
+        }
+
+        .panel-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .task-description {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .task-metadata {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .metadata-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm);
+            background: var(--surface-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .metadata-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .metadata-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Feature Comparison */
+        .feature-comparison {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .feature-row:last-child {
+            border-bottom: none;
+        }
+
+        .feature-label {
+            flex: 0 0 200px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .feature-status {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .feature-status.match {
+            color: var(--success-color);
+        }
+
+        .feature-status.mismatch {
+            color: var(--error-color);
+        }
+
+        /* Action Buttons */
+        .action-container {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border: none;
+            border-radius: var(--border-radius-small);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 200px;
+        }
+
+        .btn-duplicate {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-duplicate:hover {
+            background: #E6342B;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-keep {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-keep:hover {
+            background: #2FB34E;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading/Empty States */
+        .loading, .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl) * 2;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .empty-state p {
+            font-size: 17px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: var(--spacing-xl);
+            right: var(--spacing-xl);
+            background: var(--surface-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+            min-width: 300px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Duplicate Task Review</h1>
+            <p>Review potential duplicate maintenance tasks and decide if they should be merged</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <div class="progress-label">Review Progress</div>
+                <div class="progress-count">
+                    <span id="progress-text">Loading...</span>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="comparison-area">
+            <div class="loading">Loading duplicate pairs...</div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div id="toast-message"></div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = '/admin/api/duplicate-review';
+        const ADMIN_TOKEN = localStorage.getItem('adminToken') || '';
+
+        // State
+        let currentPairs = [];
+        let currentIndex = 0;
+        let stats = { total: 0, reviewed: 0, remaining: 0 };
+
+        // Initialize
+        async function init() {
+            await loadCandidates();
+            showCurrentPair();
+        }
+
+        // Load candidates from API
+        async function loadCandidates() {
+            try {
+                const response = await fetch(`${API_BASE}/candidates`, {
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    showError(result.error?.message || 'Failed to load candidates');
+                    return;
+                }
+
+                currentPairs = result.data.pairs || [];
+                stats = {
+                    total: result.data.total,
+                    reviewed: result.data.reviewed,
+                    remaining: result.data.remaining
+                };
+
+                updateProgress();
+
+                if (currentPairs.length === 0) {
+                    showEmptyState();
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        }
+
+        // Show current pair
+        function showCurrentPair() {
+            if (currentIndex >= currentPairs.length) {
+                showEmptyState();
+                return;
+            }
+
+            const pair = currentPairs[currentIndex];
+            const taskA = pair.taskA;
+            const taskB = pair.taskB;
+            const similarity = pair.similarity_score;
+
+            // Determine similarity class
+            let similarityClass = 'low';
+            if (similarity >= 0.85) similarityClass = 'high';
+            else if (similarity >= 0.70) similarityClass = 'medium';
+
+            document.getElementById('comparison-area').innerHTML = `
+                <div class="comparison-container">
+                    <div class="similarity-score">
+                        <div class="similarity-value ${similarityClass}">${(similarity * 100).toFixed(1)}%</div>
+                        <div class="similarity-label">Similarity Score</div>
+                    </div>
+
+                    <div class="comparison-grid">
+                        <div class="task-panel primary">
+                            <div class="panel-header">Task A (Primary)</div>
+                            <div class="task-description">${escapeHtml(taskA.description)}</div>
+                            <div class="task-metadata">
+                                <div class="metadata-row">
+                                    <span class="metadata-label">System</span>
+                                    <span class="metadata-value">${escapeHtml(taskA.system_name || 'N/A')}</span>
+                                </div>
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Frequency</span>
+                                    <span class="metadata-value">${formatFrequency(taskA)}</span>
+                                </div>
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Basis</span>
+                                    <span class="metadata-value">${escapeHtml(taskA.frequency_basis || 'N/A')}</span>
+                                </div>
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Type</span>
+                                    <span class="metadata-value">${escapeHtml(taskA.task_type || 'N/A')}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-panel secondary">
+                            <div class="panel-header">Task B (Potential Duplicate)</div>
+                            <div class="task-description">${escapeHtml(taskB.description)}</div>
+                            <div class="task-metadata">
+                                <div class="metadata-row">
+                                    <span class="metadata-label">System</span>
+                                    <span class="metadata-value">${escapeHtml(taskB.system_name || 'N/A')}</span>
+                                </div>
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Frequency</span>
+                                    <span class="metadata-value">${formatFrequency(taskB)}</span>
+                                </div>
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Basis</span>
+                                    <span class="metadata-value">${escapeHtml(taskB.frequency_basis || 'N/A')}</span>
+                                </div>
+                                <div class="metadata-row">
+                                    <span class="metadata-label">Type</span>
+                                    <span class="metadata-value">${escapeHtml(taskB.task_type || 'N/A')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-comparison">
+                        ${generateFeatureComparison(taskA, taskB)}
+                    </div>
+
+                    <div class="action-container">
+                        <button class="btn btn-duplicate" onclick="deleteTaskA()">
+                            ❌ Delete Task A (Left)
+                        </button>
+                        <button class="btn btn-duplicate" onclick="deleteTaskB()">
+                            ❌ Delete Task B (Right)
+                        </button>
+                        <button class="btn btn-duplicate" onclick="deleteBoth()">
+                            ❌❌ Delete Both Tasks
+                        </button>
+                        <button class="btn btn-keep" onclick="keepBoth()">
+                            ✅ Keep Both Tasks
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate feature comparison
+        function generateFeatureComparison(taskA, taskB) {
+            const features = [
+                { label: 'Frequency Basis', match: taskA.frequency_basis === taskB.frequency_basis },
+                { label: 'Task Type', match: taskA.task_type === taskB.task_type },
+                { label: 'System', match: taskA.system_name === taskB.system_name },
+                { label: 'Asset', match: taskA.asset_uid === taskB.asset_uid }
+            ];
+
+            return features.map(f => `
+                <div class="feature-row">
+                    <div class="feature-label">${f.label}</div>
+                    <div class="feature-status ${f.match ? 'match' : 'mismatch'}">
+                        ${f.match ? '✓ Match' : '✗ Different'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Submit decision
+        async function submitDecision(decision, deleteWhich = null) {
+            const pair = currentPairs[currentIndex];
+
+            try {
+                const payload = {
+                    task_a_id: pair.taskA.id,
+                    task_b_id: pair.taskB.id,
+                    human_decision: decision,
+                    confidence: 'high'
+                };
+
+                // Add which task to delete if it's a duplicate decision
+                if (decision === 'duplicate' && deleteWhich) {
+                    payload.delete_which = deleteWhich;
+                }
+
+                const response = await fetch(`${API_BASE}/decision`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': ADMIN_TOKEN
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    showError(result.error?.message || 'Failed to submit decision');
+                    return;
+                }
+
+                // Update stats
+                stats.reviewed++;
+                stats.remaining = result.data.remaining_pairs || stats.remaining - 1;
+
+                // Move to next pair
+                currentIndex++;
+                showCurrentPair();
+                updateProgress();
+
+                let message;
+                if (decision === 'duplicate') {
+                    if (deleteWhich === 'both') {
+                        message = 'Both tasks deleted';
+                    } else {
+                        message = `Task ${deleteWhich === 'task_a' ? 'A' : 'B'} deleted`;
+                    }
+                } else {
+                    message = 'Both tasks kept';
+                }
+                showToast(message, 'success');
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        }
+
+        // Button handlers
+        function deleteTaskA() {
+            submitDecision('duplicate', 'task_a');
+        }
+
+        function deleteTaskB() {
+            submitDecision('duplicate', 'task_b');
+        }
+
+        function deleteBoth() {
+            submitDecision('duplicate', 'both');
+        }
+
+        function keepBoth() {
+            submitDecision('keep_both');
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const percentage = stats.total > 0 ? ((stats.reviewed / stats.total) * 100) : 0;
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+            document.getElementById('progress-text').textContent =
+                `${stats.reviewed} of ${stats.total} reviewed (${stats.remaining} remaining)`;
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            document.getElementById('comparison-area').innerHTML = `
+                <div class="empty-state">
+                    <h2>✨ All Done!</h2>
+                    <p>No more duplicate pairs to review.</p>
+                </div>
+            `;
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const messageEl = document.getElementById('toast-message');
+
+            messageEl.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        function showError(message) {
+            showToast(message, 'error');
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatFrequency(task) {
+            if (task.frequency_value && task.frequency_type) {
+                return `Every ${task.frequency_value} ${task.frequency_type}`;
+            }
+            if (task.frequency_hours) {
+                return `${task.frequency_hours} hours`;
+            }
+            return 'N/A';
+        }
+
+        // Start app
+        init();
+    </script>
+</body>
+</html>
