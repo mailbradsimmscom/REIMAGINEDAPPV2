@@ -817,11 +817,10 @@
                 }
 
                 allTasks = result.data.tasks || [];
-                filteredTasks = [...allTasks];
 
                 renderStats();
                 populateFilters();
-                renderTasks();
+                applyFilters(); // Re-apply current filters and render active view
             } catch (error) {
                 showError('Failed to load tasks: ' + error.message);
             }
@@ -899,7 +898,15 @@
                 });
             }
 
-            renderTasks();
+            // Render the active view
+            const activeViewBtn = document.querySelector('.view-btn.active');
+            const activeView = activeViewBtn ? activeViewBtn.dataset.view : 'table';
+
+            if (activeView === 'timeline') {
+                renderTimeline();
+            } else {
+                renderTasks();
+            }
         }
 
         function renderTasks() {
@@ -1157,24 +1164,24 @@
         function renderTimeline() {
             const container = document.querySelector('#timeline-container .timeline-content');
 
-            // Filter to only MAINTENANCE tasks with valid frequency
-            const maintenanceTasks = filteredTasks.filter(t =>
-                t.task_category === 'MAINTENANCE' && t.frequency_hours && t.frequency_hours > 0
+            // Show tasks with valid frequency (respects current filters)
+            const tasksWithFrequency = filteredTasks.filter(t =>
+                t.frequency_hours && t.frequency_hours > 0
             );
 
-            if (maintenanceTasks.length === 0) {
+            if (tasksWithFrequency.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <h2>No maintenance tasks found</h2>
-                        <p>Only MAINTENANCE category tasks with valid frequencies are shown in timeline view</p>
+                        <h2>No tasks with frequency data</h2>
+                        <p>Timeline view requires tasks with valid frequency values. Try adjusting your filters.</p>
                     </div>
                 `;
                 return;
             }
 
             // Separate usage-based from calendar-based tasks
-            const usageTasks = maintenanceTasks.filter(t => t.frequency_basis === 'usage');
-            const calendarTasks = maintenanceTasks.filter(t => t.frequency_basis !== 'usage');
+            const usageTasks = tasksWithFrequency.filter(t => t.frequency_basis === 'usage');
+            const calendarTasks = tasksWithFrequency.filter(t => t.frequency_basis !== 'usage');
 
             // Sort usage tasks by hours (soonest first)
             usageTasks.sort((a, b) => a.frequency_hours - b.frequency_hours);
@@ -1369,15 +1376,9 @@
                     throw new Error(result.error?.message || 'Update failed');
                 }
 
-                // Close modal and reload tasks
+                // Close modal and reload tasks (loadTasks will re-render active view)
                 closeModal();
                 await loadTasks();
-
-                // Re-render timeline if in timeline view
-                const timelineContainer = document.getElementById('timeline-container');
-                if (timelineContainer.classList.contains('active')) {
-                    renderTimeline();
-                }
             } catch (error) {
                 alert('Failed to update task: ' + error.message);
                 saveBtn.textContent = 'Save';
@@ -1406,15 +1407,9 @@
                     throw new Error(result.error?.message || 'Delete failed');
                 }
 
-                // Close modal and reload tasks
+                // Close modal and reload tasks (loadTasks will re-render active view)
                 closeModal();
                 await loadTasks();
-
-                // Re-render timeline if in timeline view
-                const timelineContainer = document.getElementById('timeline-container');
-                if (timelineContainer.classList.contains('active')) {
-                    renderTimeline();
-                }
             } catch (error) {
                 alert('Failed to delete task: ' + error.message);
             }
