@@ -1,21 +1,20 @@
 /**
  * Maintenance Tasks Routes
  * API endpoints for browsing maintenance tasks
+ *
+ * Architecture: Route → Service → Repository
+ * This file handles HTTP concerns only (validation, responses)
  */
 
 import express from 'express';
-import { Pinecone } from '@pinecone-database/pinecone';
 import { logger } from '../../utils/logger.js';
-import { getEnv } from '../../config/env.js';
+import maintenanceTasksService from '../../services/maintenance-tasks.service.js';
 
 const router = express.Router();
 
-const env = getEnv();
-const pinecone = new Pinecone({ apiKey: env.PINECONE_API_KEY });
-
 /**
  * GET /admin/api/maintenance-tasks/list
- * Get all maintenance tasks from Pinecone
+ * Get all maintenance tasks
  */
 router.get('/list', async (req, res, next) => {
   const requestLogger = logger.createRequestLogger();
@@ -23,58 +22,11 @@ router.get('/list', async (req, res, next) => {
   try {
     requestLogger.info('Fetching all maintenance tasks');
 
-    // Fetch all tasks from Pinecone directly
-    const index = pinecone.index(env.PINECONE_INDEX);
-    const namespace = index.namespace('MAINTENANCE_TASKS');
-
-    let allVectors = [];
-    let paginationToken = undefined;
-
-    // Paginate through all vectors
-    do {
-      const listResponse = await namespace.listPaginated({
-        prefix: 'task-',
-        limit: 100,
-        paginationToken
-      });
-
-      if (listResponse.vectors) {
-        allVectors.push(...listResponse.vectors);
-      }
-
-      paginationToken = listResponse.pagination?.next;
-    } while (paginationToken);
-
-    // Fetch full records with embeddings
-    const fetchResponse = await namespace.fetch(allVectors.map(v => v.id));
-    const records = Object.values(fetchResponse.records || {});
-
-    // Transform to simpler format
-    const tasks = records.map(record => ({
-      id: record.id,
-      description: record.metadata.description,
-      asset_uid: record.metadata.asset_uid,
-      system_name: record.metadata.system_name,
-      frequency_basis: record.metadata.frequency_basis,
-      frequency_type: record.metadata.frequency_type ?? null,
-      frequency_value: record.metadata.frequency_value ?? null,
-      frequency_hours: record.metadata.frequency_hours ?? null,
-      task_type: record.metadata.task_type,
-      criticality: record.metadata.criticality ?? null,
-      confidence: record.metadata.confidence ?? null,
-      source: record.metadata.source ?? null,
-      task_category: record.metadata.task_category ?? null,
-      task_category_confidence: record.metadata.task_category_confidence ?? null
-    }));
-
-    requestLogger.info('Fetched tasks', { count: tasks.length });
+    const result = await maintenanceTasksService.getAllTasks();
 
     return res.json({
       success: true,
-      data: {
-        tasks,
-        total: tasks.length
-      }
+      data: result
     });
   } catch (error) {
     requestLogger.error('Error fetching tasks', { error: error.message });
@@ -83,74 +35,19 @@ router.get('/list', async (req, res, next) => {
 });
 
 /**
- * PATCH /admin/api/maintenance-tasks/:taskId
- * Update task metadata (category, frequency, basis, type)
+ * GET /admin/api/maintenance-tasks/:taskId
+ * Get a single task by ID
  */
-router.patch('/:taskId', async (req, res, next) => {
+router.get('/:taskId', async (req, res, next) => {
   const requestLogger = logger.createRequestLogger();
   const { taskId } = req.params;
-  const {
-    task_category,
-    frequency_value,
-    frequency_type,
-    frequency_basis,
-    task_type
-  } = req.body;
 
   try {
-    requestLogger.info('Updating task metadata', { taskId, updates: req.body });
+    requestLogger.info('Fetching single task', { taskId });
 
-    // Validate category if provided
-    if (task_category) {
-      const validCategories = ['MAINTENANCE', 'INSTALLATION', 'PRE_USE_CHECK', 'VAGUE'];
-      if (!validCategories.includes(task_category)) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'INVALID_CATEGORY',
-            message: `Invalid category. Must be one of: ${validCategories.join(', ')}`
-          }
-        });
-      }
-    }
+    const task = await maintenanceTasksService.getTask(taskId);
 
-    // Validate frequency_basis if provided
-    if (frequency_basis) {
-      const validBasis = ['calendar', 'usage', 'event', 'condition', 'unknown'];
-      if (!validBasis.includes(frequency_basis)) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'INVALID_BASIS',
-            message: `Invalid basis. Must be one of: ${validBasis.join(', ')}`
-          }
-        });
-      }
-    }
-
-    // Validate frequency_type if provided
-    if (frequency_type) {
-      const validTypes = ['hours', 'days', 'weeks', 'months', 'years'];
-      if (!validTypes.includes(frequency_type)) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'INVALID_FREQUENCY_TYPE',
-            message: `Invalid frequency type. Must be one of: ${validTypes.join(', ')}`
-          }
-        });
-      }
-    }
-
-    // Get the index
-    const index = pinecone.index(env.PINECONE_INDEX);
-    const namespace = index.namespace('MAINTENANCE_TASKS');
-
-    // Fetch existing task
-    const fetchResponse = await namespace.fetch([taskId]);
-    const existing = fetchResponse.records[taskId];
-
-    if (!existing) {
+    if (!task) {
       return res.status(404).json({
         success: false,
         error: {
@@ -160,55 +57,77 @@ router.patch('/:taskId', async (req, res, next) => {
       });
     }
 
-    // Build updates object (only include provided fields)
-    const updates = {};
-    if (task_category !== undefined) updates.task_category = task_category;
-    if (frequency_value !== undefined) updates.frequency_value = frequency_value;
-    if (frequency_type !== undefined) updates.frequency_type = frequency_type;
-    if (frequency_basis !== undefined) updates.frequency_basis = frequency_basis;
-    if (task_type !== undefined) updates.task_type = task_type;
+    return res.json({
+      success: true,
+      data: task
+    });
+  } catch (error) {
+    requestLogger.error('Error fetching task', { taskId, error: error.message });
+    return next(error);
+  }
+});
 
-    // Calculate frequency_hours if frequency changed
-    if (frequency_value !== undefined || frequency_type !== undefined) {
-      const val = frequency_value !== undefined ? frequency_value : existing.metadata.frequency_value;
-      const type = frequency_type !== undefined ? frequency_type : existing.metadata.frequency_type;
+/**
+ * PATCH /admin/api/maintenance-tasks/:taskId
+ * Update task metadata (category, frequency, basis, type, description)
+ */
+router.patch('/:taskId', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { taskId } = req.params;
+  const {
+    description,
+    task_category,
+    frequency_value,
+    frequency_type,
+    frequency_basis,
+    task_type,
+    is_recurring,
+    review_status
+  } = req.body;
 
-      if (val && type) {
-        const conversions = {
-          'hours': 1,
-          'days': 24,
-          'weeks': 168,
-          'months': 730,
-          'years': 8760
-        };
-        updates.frequency_hours = val * (conversions[type] || 1);
-      }
-    }
+  try {
+    requestLogger.info('Updating task metadata', { taskId, updates: req.body });
 
-    // Update metadata
-    const updatedMetadata = {
-      ...existing.metadata,
-      ...updates,
-      updated_at: new Date().toISOString()
-    };
-
-    // Upsert with updated metadata
-    await namespace.upsert([{
-      id: taskId,
-      values: existing.values,
-      metadata: updatedMetadata
-    }]);
-
-    requestLogger.info('Task metadata updated', { taskId, updates });
+    const result = await maintenanceTasksService.updateTask(taskId, {
+      description,
+      task_category,
+      frequency_value,
+      frequency_type,
+      frequency_basis,
+      task_type,
+      is_recurring,
+      review_status
+    });
 
     return res.json({
       success: true,
-      data: {
-        taskId,
-        updates
-      }
+      data: result
     });
   } catch (error) {
+    // Handle validation errors with 400
+    if (error.message.includes('Invalid') || error.message.includes('must be') || error.message.includes('cannot be')) {
+      requestLogger.warn('Validation error', { taskId, error: error.message });
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: error.message
+        }
+      });
+    }
+
+    // Handle not found errors with 404
+    if (error.message.includes('not found')) {
+      requestLogger.warn('Task not found', { taskId });
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'TASK_NOT_FOUND',
+          message: `Task ${taskId} not found`
+        }
+      });
+    }
+
     requestLogger.error('Error updating task', { taskId, error: error.message });
     return next(error);
   }
@@ -216,7 +135,7 @@ router.patch('/:taskId', async (req, res, next) => {
 
 /**
  * DELETE /admin/api/maintenance-tasks/:taskId
- * Delete a task from Pinecone
+ * Delete a task
  */
 router.delete('/:taskId', async (req, res, next) => {
   const requestLogger = logger.createRequestLogger();
@@ -225,24 +144,71 @@ router.delete('/:taskId', async (req, res, next) => {
   try {
     requestLogger.info('Deleting task', { taskId });
 
-    // Get the index
-    const index = pinecone.index(env.PINECONE_INDEX);
-    const namespace = index.namespace('MAINTENANCE_TASKS');
-
-    // Delete the task
-    await namespace.deleteOne(taskId);
-
-    requestLogger.info('Task deleted', { taskId });
+    const result = await maintenanceTasksService.deleteTask(taskId);
 
     return res.json({
       success: true,
-      data: {
-        taskId,
-        deleted: true
-      }
+      data: result
     });
   } catch (error) {
     requestLogger.error('Error deleting task', { taskId, error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * POST /admin/api/maintenance-tasks/bulk-update-status
+ * Bulk update review status for multiple tasks
+ */
+router.post('/bulk-update-status', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { task_ids, review_status } = req.body;
+
+  try {
+    requestLogger.info('Bulk updating task status', { count: task_ids?.length, status: review_status });
+
+    const result = await maintenanceTasksService.bulkUpdateStatus(task_ids, review_status);
+
+    return res.json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    // Handle validation errors with 400
+    if (error.message.includes('must be') || error.message.includes('Invalid')) {
+      requestLogger.warn('Validation error', { error: error.message });
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: error.message
+        }
+      });
+    }
+
+    requestLogger.error('Error bulk updating status', { error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * GET /admin/api/maintenance-tasks/stats
+ * Get review status statistics
+ */
+router.get('/stats', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    requestLogger.info('Fetching task statistics');
+
+    const stats = await maintenanceTasksService.getStats();
+
+    return res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    requestLogger.error('Error fetching stats', { error: error.message });
     return next(error);
   }
 });
