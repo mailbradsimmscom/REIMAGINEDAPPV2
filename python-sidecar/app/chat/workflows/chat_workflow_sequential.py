@@ -249,7 +249,7 @@ class ChatWorkflowSequential:
             result = {
                 "response": state["final_response"],
                 "classification": state["classification"],
-                "sources": self._format_sources(state["dip_results"]),
+                "sources": self._format_sources(state),
                 "score": state["response_score"],
                 "processing_time_ms": processing_time,
                 "detailed_metrics": detailed_metrics,  # NEW: Comprehensive metrics
@@ -639,9 +639,12 @@ class ChatWorkflowSequential:
 
     # ========== HELPER METHODS (Keep from original) ==========
 
-    def _format_sources(self, dip_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Format DIP results for API response"""
+    def _format_sources(self, state: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Format DIP results AND Pinecone chunks for API response"""
         sources = []
+
+        # Add DIP table sources
+        dip_results = state.get("dip_results", [])
         for result in dip_results:
             sources.append({
                 'type': result.get('table_type', 'unknown'),
@@ -649,6 +652,26 @@ class ChatWorkflowSequential:
                 'equipment': result.get('equipment', {}),
                 'data': result.get('results', [])[:3]  # Limit to top 3
             })
+
+        # Add Pinecone chunks as a source
+        pinecone_results = state.get("pinecone_results", {})
+        if pinecone_results and pinecone_results.get("matches"):
+            matches = pinecone_results["matches"]
+            sources.append({
+                'type': 'PINECONE',
+                'count': len(matches),
+                'equipment': {
+                    'names': pinecone_results.get('equipment_context', [])
+                },
+                'data': [{
+                    'score': m.get('score', 0),
+                    'manufacturer': m.get('metadata', {}).get('manufacturer', ''),
+                    'model': m.get('metadata', {}).get('model', ''),
+                    'doc_type': m.get('metadata', {}).get('doc_type', 'unknown'),
+                    'text_preview': str(m.get('metadata', {}).get('text', ''))[:100]
+                } for m in matches[:3]]  # Limit to top 3
+            })
+
         return sources
 
     def _generate_fallback_response(self, state: Dict[str, Any]) -> str:
@@ -707,7 +730,7 @@ class ChatWorkflowSequential:
             return {
                 "response": response,
                 "classification": None,
-                "sources": self._format_sources(dip_results),
+                "sources": self._format_sources({"dip_results": dip_results, "pinecone_results": {}}),
                 "score": None,
                 "processing_time_ms": 0,
                 "metadata": {

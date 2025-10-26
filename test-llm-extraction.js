@@ -1,30 +1,43 @@
+#!/usr/bin/env node
+/**
+ * Test LLM extraction to see why "grill" returns 0 equipment
+ */
+
 import { extractEquipmentName } from './src/services/equipment-extraction.service.js';
 
-const testQuery = process.argv[2] || 'tell me the models of harken winches I have?';
+console.log('🤖 Testing LLM Equipment Extraction\n');
+console.log('='.repeat(80));
 
-console.log(`\n🤖 Testing LLM extraction with query: "${testQuery}"\n`);
+const testQueries = [
+  'have a question about my grill',
+  'tell me about my grill',
+  'my grill is not working',
+  'grill',
+  'BBQ grill',
+  'marine grill',
+  'Kenyon grill',
+  'question about the Marco pump'  // Known to work
+];
 
-try {
-  console.log('⏳ Calling LLM...\n');
-  const result = await extractEquipmentName(testQuery);
+for (const query of testQueries) {
+  console.log(`\n📝 Query: "${query}"`);
+  console.log('-'.repeat(80));
 
-  console.log('✅ LLM Response:\n');
-  console.log(JSON.stringify(result, null, 2));
+  try {
+    const result = await extractEquipmentName(query);
 
-  if (result.equipment && result.equipment.length > 0) {
-    console.log('\n📊 Extracted Equipment:');
-    result.equipment.forEach((eq, i) => {
-      console.log(`\n${i + 1}. Name: "${eq.name}"`);
-      console.log(`   Confidence: ${eq.confidence}`);
-      console.log(`   Role: ${eq.role || 'N/A'}`);
-    });
-  } else {
-    console.log('\n❌ No equipment extracted');
+    if (result.equipment && result.equipment.length > 0) {
+      console.log(`✅ Extracted ${result.equipment.length} equipment:`);
+      for (const eq of result.equipment) {
+        console.log(`   - ${eq.name} (confidence: ${eq.confidence}, role: ${eq.role})`);
+      }
+    } else {
+      console.log(`❌ No equipment extracted (returned empty array)`);
+    }
+  } catch (err) {
+    console.log(`❌ ERROR: ${err.message}`);
   }
-
-} catch (error) {
-  console.error('❌ Error:', error.message);
-  console.error('Stack:', error.stack);
 }
 
-process.exit(0);
+console.log('\n' + '='.repeat(80));
+console.log('✅ Test complete\n');

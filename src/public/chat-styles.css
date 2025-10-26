@@ -859,3 +859,48 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
 }
+
+/* Source tag styling */
+.source-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    background: rgba(0, 122, 255, 0.08);
+    border: 1px solid rgba(0, 122, 255, 0.2);
+    font-size: 12px;
+    font-weight: 500;
+    color: #007aff;
+}
+
+.source-tag.source-warning {
+    background: rgba(255, 59, 48, 0.08);
+    border-color: rgba(255, 59, 48, 0.3);
+    color: #ff3b30;
+}
+
+.source-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.source-text {
+    line-height: 1;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .source-tag {
+        background: rgba(10, 132, 255, 0.15);
+        border-color: rgba(10, 132, 255, 0.3);
+        color: #0a84ff;
+    }
+
+    .source-tag.source-warning {
+        background: rgba(255, 69, 58, 0.15);
+        border-color: rgba(255, 69, 58, 0.3);
+        color: #ff453a;
+    }
+}

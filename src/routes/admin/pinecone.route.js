@@ -69,13 +69,16 @@ router.get('/',
       });
     }
     
+    // Get vector count for active namespace only (not total across all namespaces)
+    const namespaceVectorCount = statsData?.namespaces?.[PINECONE_NAMESPACE]?.vector_count || 0;
+
     // Get basic Pinecone info from environment
     const pineconeData = {
       status: healthData.status === 'healthy' ? 'Connected' : 'Disconnected',
       index: PINECONE_INDEX,
       namespace: PINECONE_NAMESPACE,
-      vectors: statsData?.total_vector_count || 'N/A',
-      totalVectors: statsData?.total_vector_count || 0,
+      vectors: namespaceVectorCount > 0 ? namespaceVectorCount : 'N/A',
+      totalVectors: namespaceVectorCount,
       dimension: statsData?.dimension || 'N/A',
       indexFullness: '0.0%',
       lastChecked: new Date().toISOString(),

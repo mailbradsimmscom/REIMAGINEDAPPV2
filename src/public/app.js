@@ -481,8 +481,33 @@ function addEnhancedMessage(text, sources = []) {
   // Parse markdown to HTML
   const htmlContent = parseMarkdown(mainContent);
 
-  // Create main content
-  let content = `<div class="bubble"><div class="content">${htmlContent}</div>`;
+  // Generate source tag based on source types
+  let sourceTag = '';
+  if (sources.length > 0) {
+    const sourceTypes = [...new Set(sources.map(s => s.type))];
+    const hasDIP = sourceTypes.some(t => t !== 'PINECONE');
+    const hasPinecone = sourceTypes.includes('PINECONE');
+
+    let icon, label;
+    if (hasDIP && hasPinecone) {
+      icon = '📚';
+      label = 'Manuals (DIP + Semantic)';
+    } else if (hasDIP) {
+      icon = '⚙️';
+      label = 'Manuals (DIP)';
+    } else if (hasPinecone) {
+      icon = '📘';
+      label = 'Manuals (Semantic)';
+    }
+
+    sourceTag = `<div class="source-tag"><span class="source-icon">${icon}</span> <span class="source-text">${label}</span></div>`;
+  } else {
+    // No sources - red warning
+    sourceTag = `<div class="source-tag source-warning"><span class="source-icon">⚠️</span> <span class="source-text">No source data found</span></div>`;
+  }
+
+  // Create main content with source tag at top
+  let content = `<div class="bubble">${sourceTag}<div class="content">${htmlContent}</div>`;
   
   // Add source bubbles if sources exist
   if (sources.length > 0) {
@@ -528,6 +553,7 @@ function parseMainContent(text) {
 function getSourceBubbleClass(sourceType) {
   switch (sourceType) {
     case 'pinecone':
+    case 'PINECONE':
       return 'source-pinecone';
     case 'system':
       return 'source-system';
@@ -543,9 +569,15 @@ function detectSourceType(source) {
 
 // Get display label for source
 function getSourceLabel(source) {
-  if (source.type === 'pinecone') {
-    const pages = source.pages && source.pages.length > 0 ? ` (Pages: ${source.pages.join(', ')})` : '';
-    return `${source.manufacturer} ${source.model}${pages}`;
+  if (source.type === 'pinecone' || source.type === 'PINECONE') {
+    // For PINECONE sources, extract manufacturer/model from data array
+    if (source.data && source.data.length > 0) {
+      const firstChunk = source.data[0];
+      const manufacturer = firstChunk.manufacturer || '';
+      const model = firstChunk.model || '';
+      return `${manufacturer} ${model}`.trim() || 'Pinecone Semantic Search';
+    }
+    return 'Pinecone Semantic Search';
   } else if (source.type === 'system') {
     return `${source.manufacturer} ${source.model}`;
   }
@@ -558,8 +590,8 @@ function showSourceDetails(source, sourceNumber) {
   
   // Detect source type by structure if type is missing
   const sourceType = source.type || (source.pages && source.score ? 'pinecone' : source.id ? 'system' : 'unknown');
-  
-  if (sourceType === 'pinecone') {
+
+  if (sourceType === 'pinecone' || sourceType === 'PINECONE') {
     content = `<h3>Source ${sourceNumber}: ${source.manufacturer} ${source.model}</h3>`;
     content += `<p><strong>Relevance Score:</strong> ${typeof source.score === 'number' ? source.score.toFixed(3) : 'N/A'}</p>`;
     if (source.pages && source.pages.length > 0) {

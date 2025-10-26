@@ -492,7 +492,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
           relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null),
           llm_confidence: equipment.llm_confidence || null,
           llm_role: equipment.llm_role || null,
-          rank: equipment.rank || null
+          rank: equipment.rank ?? 0
         });
       } catch (error) {
         requestLogger.warn('Failed to fetch full system details', {
@@ -505,7 +505,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
           manufacturer: equipment.manufacturer || 'Unknown',
           model: equipment.model || 'Unknown',
           description: equipment.description || 'Equipment details unavailable',
-          rank: equipment.rank || equipment.weight || 0.5,
+          rank: equipment.rank ?? equipment.weight ?? 0.5,
           source: equipment.source || 'current',
           relationship_type: equipment.relationship_type || null,
           inference_confidence: equipment.inference_confidence || null,

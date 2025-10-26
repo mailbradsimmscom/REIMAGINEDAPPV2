@@ -92,8 +92,9 @@ class LLMService:
         # Format equipment context for LLM
         equipment_list = []
         for i, eq in enumerate(systems_context):
+            rank = eq.get('rank', 0) or 0  # Handle None values
             equipment_list.append(f"{i+1}. {eq.get('manufacturer', '')} {eq.get('model', '')} "
-                                f"(rank: {eq.get('rank', 0):.2f}, description: {eq.get('description', '')})")
+                                f"(rank: {rank:.2f}, description: {eq.get('description', '')})")
 
         equipment_text = "\n".join(equipment_list)
 
