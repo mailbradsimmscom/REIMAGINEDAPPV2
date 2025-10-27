@@ -18,6 +18,7 @@ import os
 import asyncio
 
 from ..debug_logger import chat_debug
+from ..services.perplexity_service import PerplexityService
 
 logger = logging.getLogger(__name__)
 
@@ -144,23 +145,34 @@ class ChatWorkflowSequential:
                     'query': user_query[:100]
                 })
 
-            # ===== STEP 3: Response Synthesis =====
-            logger.info("📌 STEP 3: Starting Response Synthesis")
-            step_start = datetime.now()
-            state = await self._synthesize_response(state)
-            step_duration = (datetime.now() - step_start).total_seconds() * 1000
-            state["synthesis_duration_ms"] = step_duration  # Store for metrics
-            logger.info(f"✅ STEP 3 Complete: Synthesis took {step_duration:.2f}ms")
-            chat_debug.timing('synthesize_response', step_duration, {
-                'response_length': len(state.get('final_response', ''))
-            })
+            # ===== STEP 3: Parallel OpenAI + Perplexity =====
+            logger.info("📌 STEP 3: Starting Parallel OpenAI + Perplexity")
+            parallel_start = datetime.now()
+
+            # Launch both tasks in parallel
+            openai_task = asyncio.create_task(self._synthesize_response(state))
+            perplexity_task = asyncio.create_task(self._query_perplexity(state))
+
+            # Wait for both to complete (return_exceptions prevents one failure from breaking both)
+            openai_result, perplexity_result = await asyncio.gather(
+                openai_task,
+                perplexity_task,
+                return_exceptions=True
+            )
+
+            parallel_duration = (datetime.now() - parallel_start).total_seconds() * 1000
+            logger.info(f"✅ STEP 3 Complete: Parallel execution took {parallel_duration:.2f}ms")
+
+            # ===== STEP 4: Assemble Response =====
+            logger.info("📌 STEP 4: Assembling Response")
+            state = await self._assemble_response(openai_result, perplexity_result, state)
 
             if not state.get("final_response"):
-                chat_debug.error('SYNTHESIS_FAILED', Exception('No response generated'), {
+                chat_debug.error('ASSEMBLY_FAILED', Exception('No response generated'), {
                     'query': user_query[:100]
                 })
 
-            # ===== STEP 4: Response Scoring ===== DISABLED
+            # ===== STEP 5: Response Scoring ===== DISABLED
             # step_start = datetime.now()
             # state = await self._score_response(state)
             # step_duration = (datetime.now() - step_start).total_seconds() * 1000
@@ -637,10 +649,157 @@ class ChatWorkflowSequential:
 
         return state
 
+    # ========== PERPLEXITY INTEGRATION ==========
+    async def _query_perplexity(self, state: Dict[str, Any]) -> Optional[Dict]:
+        """
+        Query Perplexity for real-world troubleshooting insights
+
+        Returns None if disabled, API key missing, or on failure.
+        All failures are graceful (no exceptions propagate).
+        """
+        # Check if enabled via feature flag
+        if not os.getenv("PERPLEXITY_ENABLED", "false").lower() == "true":
+            logger.info("⏭️  Perplexity disabled via PERPLEXITY_ENABLED flag, skipping")
+            return None
+
+        # Check if API key exists
+        api_key = os.getenv("PERPLEXITY_API_KEY")
+        if not api_key:
+            logger.warning("⚠️  PERPLEXITY_API_KEY not set, skipping Perplexity search")
+            return None
+
+        try:
+            # Initialize service
+            timeout = int(os.getenv("PERPLEXITY_TIMEOUT", "45"))
+            model = os.getenv("PERPLEXITY_MODEL", "sonar-pro")
+
+            service = PerplexityService(
+                api_key=api_key,
+                model=model,
+                timeout=timeout
+            )
+
+            # Build enhanced query from state
+            enhanced_query = service.build_enhanced_query(
+                user_query=state.get("user_query", ""),
+                equipment=state.get("systems_context", []),
+                pinecone_chunks=state.get("pinecone_results", {}).get("matches", []),
+                system_context={
+                    "vessel_type": "catamaran"  # TODO: Get from user profile or config
+                }
+            )
+
+            logger.info(f"🌐 Perplexity enhanced query: {enhanced_query[:100]}...")
+
+            # Query Perplexity API
+            start_time = datetime.now()
+            result = await service.query(enhanced_query)
+            duration = (datetime.now() - start_time).total_seconds() * 1000
+
+            if result:
+                logger.info(f"✅ Perplexity success: {len(result['citations'])} citations in {duration:.0f}ms")
+                return result
+            else:
+                logger.warning("⚠️  Perplexity returned no results")
+                return None
+
+        except Exception as e:
+            logger.error(f"❌ Perplexity error: {str(e)}")
+            return None
+
+    async def _assemble_response(
+        self,
+        openai_result: Any,
+        perplexity_result: Any,
+        state: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Assemble final response from OpenAI + Perplexity
+
+        Handles 4 cases:
+        1. Both succeeded → Combine responses
+        2. Only OpenAI succeeded → Use OpenAI only
+        3. Only Perplexity succeeded → Use Perplexity only
+        4. Both failed → Fallback message
+        """
+        # Handle exceptions from asyncio.gather(return_exceptions=True)
+        if isinstance(openai_result, Exception):
+            logger.error(f"OpenAI failed: {openai_result}")
+            openai_result = None
+        elif isinstance(openai_result, dict):
+            # OpenAI returns state dict, extract response
+            openai_response = openai_result.get("final_response")
+            openai_metrics = {
+                "duration_ms": openai_result.get("synthesis_duration_ms", 0),
+                "model_used": openai_result.get("synthesis_model_used", "unknown"),
+                "reasoning_effort": openai_result.get("reasoning_effort", "unknown")
+            }
+        else:
+            openai_response = None
+            openai_metrics = {}
+
+        if isinstance(perplexity_result, Exception):
+            logger.error(f"Perplexity failed: {perplexity_result}")
+            perplexity_result = None
+
+        # CASE 1: Both succeeded (ideal case)
+        if openai_response and perplexity_result:
+            logger.info("✅ Both OpenAI and Perplexity succeeded")
+
+            # Append Perplexity section with actual answer
+            perplexity_answer = perplexity_result.get("answer", "")
+            perplexity_section = (
+                "\n\n───────────────────────────────\n\n"
+                "💡 **Real-World Resources from Boat Owners**\n\n"
+                f"{perplexity_answer}\n\n"
+                "───────────────────────────────\n\n"
+                "*(View citations in sources below)*"
+            )
+
+            state["final_response"] = openai_response + perplexity_section
+            state["perplexity_citations"] = perplexity_result.get("citations", [])
+            state["perplexity_metrics"] = {
+                "citations": len(perplexity_result.get("citations", [])),
+                "model": perplexity_result.get("model", ""),
+                "usage": perplexity_result.get("usage", {})
+            }
+
+            return state
+
+        # CASE 2: Only OpenAI succeeded (Perplexity failed/disabled)
+        elif openai_response:
+            logger.warning("⚠️  Using OpenAI only (Perplexity failed or disabled)")
+            state["final_response"] = openai_response
+            state["perplexity_citations"] = []
+            return state
+
+        # CASE 3: Only Perplexity succeeded (OpenAI failed)
+        elif perplexity_result:
+            logger.warning("⚠️  Using Perplexity only (OpenAI failed)")
+            state["final_response"] = perplexity_result.get("answer", "")
+            state["perplexity_citations"] = perplexity_result.get("citations", [])
+            state["perplexity_metrics"] = {
+                "citations": len(perplexity_result.get("citations", [])),
+                "model": perplexity_result.get("model", ""),
+                "usage": perplexity_result.get("usage", {})
+            }
+            return state
+
+        # CASE 4: Both failed (fallback message)
+        else:
+            logger.error("❌ Both OpenAI and Perplexity failed - using fallback")
+            state["final_response"] = (
+                "I apologize, but I'm having trouble processing your request "
+                "right now. Please try again in a moment, or contact support "
+                "if the issue persists."
+            )
+            state["perplexity_citations"] = []
+            return state
+
     # ========== HELPER METHODS (Keep from original) ==========
 
     def _format_sources(self, state: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Format DIP results AND Pinecone chunks for API response"""
+        """Format DIP results, Pinecone chunks, AND Perplexity citations for API response"""
         sources = []
 
         # Add DIP table sources
@@ -670,6 +829,18 @@ class ChatWorkflowSequential:
                     'doc_type': m.get('metadata', {}).get('doc_type', 'unknown'),
                     'text_preview': str(m.get('metadata', {}).get('text', ''))[:100]
                 } for m in matches[:3]]  # Limit to top 3
+            })
+
+        # Add Perplexity citations as a source
+        perplexity_citations = state.get("perplexity_citations", [])
+        if perplexity_citations and len(perplexity_citations) > 0:
+            sources.append({
+                'type': 'PERPLEXITY',
+                'count': len(perplexity_citations),
+                'equipment': {},  # Not equipment-specific
+                'data': [
+                    {'url': url} for url in perplexity_citations
+                ]
             })
 
         return sources

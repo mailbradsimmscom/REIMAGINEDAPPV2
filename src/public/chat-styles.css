@@ -566,11 +566,46 @@ body {
 
 /* Mirror all the content formatting styles */
 .bubble .content p {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 4px;  /* Reduced from 8px to 4px */
 }
 
 .bubble .content p:last-child {
     margin-bottom: 0;
+}
+
+/* Reduce spacing for list items */
+.bubble .content ul,
+.bubble .content ol {
+    margin: 4px 0;  /* Reduced from 6px */
+    padding-left: 20px;
+}
+
+.bubble .content li {
+    margin-bottom: 2px;  /* Reduced from 4px */
+}
+
+.bubble .content li:last-child {
+    margin-bottom: 0;
+}
+
+/* Spacing between sections (icons) */
+.bubble .content h2,
+.bubble .content h3,
+.bubble .content h4 {
+    margin: 12px 0 6px 0;  /* Normal space before section, small after */
+}
+
+.bubble .content h2:first-child,
+.bubble .content h3:first-child,
+.bubble .content h4:first-child {
+    margin-top: 0;
+}
+
+/* Detect emoji section headers (🔧 📊 💡) and add spacing before them */
+.bubble .content p > strong:first-child {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
 }
 
 .bubble .content code {
@@ -890,6 +925,132 @@ body {
     line-height: 1;
 }
 
+/* Source bubbles (numbered indicators at bottom) */
+.source-bubbles {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    align-items: center;
+}
+
+.source-bubble {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1.5px solid;
+}
+
+.source-bubble:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Pinecone sources - blue */
+.source-bubble.source-pinecone {
+    background: rgba(0, 122, 255, 0.1);
+    border-color: rgba(0, 122, 255, 0.4);
+    color: #007aff;
+}
+
+.source-bubble.source-pinecone:hover {
+    background: rgba(0, 122, 255, 0.2);
+    border-color: #007aff;
+}
+
+/* System/DIP sources - green */
+.source-bubble.source-system {
+    background: rgba(52, 199, 89, 0.1);
+    border-color: rgba(52, 199, 89, 0.4);
+    color: #34c759;
+}
+
+.source-bubble.source-system:hover {
+    background: rgba(52, 199, 89, 0.2);
+    border-color: #34c759;
+}
+
+/* Perplexity sources - purple/web theme */
+.source-bubble.source-perplexity {
+    background: rgba(147, 51, 234, 0.1);
+    border-color: rgba(147, 51, 234, 0.4);
+    color: #9333ea;
+}
+
+.source-bubble.source-perplexity:hover {
+    background: rgba(147, 51, 234, 0.2);
+    border-color: #9333ea;
+}
+
+/* Perplexity links in modal */
+.perplexity-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.perplexity-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+.perplexity-link:hover {
+    background-color: rgba(147, 51, 234, 0.05);
+    border-color: #9333ea;
+}
+
+.perplexity-link .link-number {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.perplexity-link .link-url {
+    flex: 1;
+    word-break: break-all;
+    font-size: 13px;
+}
+
+.perplexity-link .link-icon {
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.perplexity-note {
+    margin-top: 16px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* Unknown sources - gray */
+.source-bubble.source-unknown {
+    background: rgba(142, 142, 147, 0.1);
+    border-color: rgba(142, 142, 147, 0.4);
+    color: #8e8e93;
+}
+
+.source-bubble.source-unknown:hover {
+    background: rgba(142, 142, 147, 0.2);
+    border-color: #8e8e93;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
     .source-tag {
@@ -902,5 +1063,131 @@ body {
         background: rgba(255, 69, 58, 0.15);
         border-color: rgba(255, 69, 58, 0.3);
         color: #ff453a;
+    }
+
+    /* Source bubbles dark mode */
+    .source-bubble.source-pinecone {
+        background: rgba(10, 132, 255, 0.15);
+        border-color: rgba(10, 132, 255, 0.4);
+        color: #0a84ff;
+    }
+
+    .source-bubble.source-pinecone:hover {
+        background: rgba(10, 132, 255, 0.25);
+        border-color: #0a84ff;
+    }
+
+    .source-bubble.source-system {
+        background: rgba(50, 215, 75, 0.15);
+        border-color: rgba(50, 215, 75, 0.4);
+        color: #32d74b;
+    }
+
+    .source-bubble.source-system:hover {
+        background: rgba(50, 215, 75, 0.25);
+        border-color: #32d74b;
+    }
+
+    .source-bubble.source-unknown {
+        background: rgba(174, 174, 178, 0.15);
+        border-color: rgba(174, 174, 178, 0.4);
+        color: #aeaeb2;
+    }
+
+    .source-bubble.source-unknown:hover {
+        background: rgba(174, 174, 178, 0.25);
+        border-color: #aeaeb2;
+    }
+}
+
+/* Source details modal */
+.source-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+}
+
+.source-modal-content {
+    background: var(--surface-color);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.source-modal-content h3 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.source-modal-content p {
+    margin: 8px 0;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.source-modal-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.source-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    cursor: pointer;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.source-modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+.source-content {
+    margin-top: 16px;
+}
+
+.source-chunk {
+    padding: 12px;
+    background: var(--background-color);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.source-chunk:last-child {
+    margin-bottom: 0;
+}
+
+/* Dark mode modal */
+@media (prefers-color-scheme: dark) {
+    .source-modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
     }
 }

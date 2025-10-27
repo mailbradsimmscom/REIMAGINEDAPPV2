@@ -391,80 +391,34 @@ function addMessage(text, type, metadata = {}, autoScroll = true) {
   }
 }
 
-// Simple markdown parser for chat messages
+// Markdown parser using marked.js
 function parseMarkdown(text) {
   if (!text) return '';
 
-  // Escape HTML first
-  let html = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  // Configure marked for security and formatting
+  if (typeof marked !== 'undefined') {
+    marked.setOptions({
+      breaks: true,          // Convert \n to <br>
+      gfm: true,            // GitHub Flavored Markdown
+      headerIds: false,     // Don't add IDs to headers
+      mangle: false,        // Don't escape email addresses
+      sanitize: false,      // We trust our LLM output
+      smartLists: true,     // Use smarter list behavior
+      smartypants: false    // Don't convert quotes/dashes
+    });
 
-  // Bold: **text** or __text__
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
-
-  // Italic: *text* or _text_
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  html = html.replace(/_(.+?)_/g, '<em>$1</em>');
-
-  // Headers
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-
-  // Line breaks - convert double newlines to paragraphs
-  const paragraphs = html.split(/\n\n+/);
-  html = paragraphs.map(p => {
-    // Don't wrap if already a heading
-    if (p.trim().startsWith('<h')) return p;
-
-    // Handle lists (numbered or bulleted)
-    const lines = p.split('\n');
-    let inList = false;
-    let listType = null;
-    let result = [];
-
-    for (let line of lines) {
-      const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
-      const bulletMatch = line.match(/^[-*]\s+(.+)$/);
-
-      if (numberedMatch) {
-        if (!inList || listType !== 'ol') {
-          if (inList) result.push(`</${listType}>`);
-          result.push('<ol>');
-          listType = 'ol';
-          inList = true;
-        }
-        result.push(`<li>${numberedMatch[2]}</li>`);
-      } else if (bulletMatch) {
-        if (!inList || listType !== 'ul') {
-          if (inList) result.push(`</${listType}>`);
-          result.push('<ul>');
-          listType = 'ul';
-          inList = true;
-        }
-        result.push(`<li>${bulletMatch[1]}</li>`);
-      } else {
-        if (inList) {
-          result.push(`</${listType}>`);
-          inList = false;
-          listType = null;
-        }
-        if (line.trim()) result.push(line);
-      }
+    try {
+      return marked.parse(text);
+    } catch (error) {
+      console.error('Markdown parsing error:', error);
+      // Fallback to escaped text
+      return text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
     }
+  }
 
-    if (inList) result.push(`</${listType}>`);
-
-    return result.length ? result.join('\n') : `<p>${p}</p>`;
-  }).join('\n');
-
-  // Single line breaks become <br>
-  html = html.replace(/\n/g, '<br>');
-
-  return html;
+  // Fallback if marked.js not loaded
+  console.warn('marked.js not loaded, using basic text rendering');
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
 }
 
 // Add enhanced message with source bubbles
@@ -587,39 +541,99 @@ function getSourceLabel(source) {
 // Show source details in modal
 function showSourceDetails(source, sourceNumber) {
   let content = '';
-  
-  // Detect source type by structure if type is missing
-  const sourceType = source.type || (source.pages && source.score ? 'pinecone' : source.id ? 'system' : 'unknown');
+
+  const sourceType = source.type || 'unknown';
 
   if (sourceType === 'pinecone' || sourceType === 'PINECONE') {
-    content = `<h3>Source ${sourceNumber}: ${source.manufacturer} ${source.model}</h3>`;
-    content += `<p><strong>Relevance Score:</strong> ${typeof source.score === 'number' ? source.score.toFixed(3) : 'N/A'}</p>`;
-    if (source.pages && source.pages.length > 0) {
-      content += `<p><strong>Pages:</strong> ${source.pages.join(', ')}</p>`;
+    // Handle Pinecone sources - data is in source.data array
+    const chunks = source.data || [];
+    const equipment = source.equipment || {};
+    const equipmentNames = equipment.names || [];
+
+    // Get equipment info from first chunk if available
+    const firstChunk = chunks[0] || {};
+    const manufacturer = firstChunk.manufacturer || 'Unknown';
+    const model = firstChunk.model || 'Unknown';
+
+    content = `<h3>Source ${sourceNumber}: Pinecone Semantic Search</h3>`;
+    content += `<p><strong>Equipment:</strong> ${manufacturer} ${model}</p>`;
+    content += `<p><strong>Total Matches:</strong> ${source.count || chunks.length}</p>`;
+    content += `<p><strong>Chunks Shown:</strong> ${chunks.length}</p>`;
+
+    if (chunks.length > 0) {
+      content += `<div class="source-content">`;
+      chunks.forEach((chunk, idx) => {
+        content += `<div class="source-chunk">`;
+        content += `<p><strong>Chunk ${idx + 1}</strong></p>`;
+        content += `<p><strong>Score:</strong> ${typeof chunk.score === 'number' ? chunk.score.toFixed(3) : 'N/A'}</p>`;
+        content += `<p><strong>Equipment:</strong> ${chunk.manufacturer || ''} ${chunk.model || ''}</p>`;
+        if (chunk.doc_type && chunk.doc_type !== 'unknown') {
+          content += `<p><strong>Type:</strong> ${chunk.doc_type}</p>`;
+        }
+        if (chunk.text_preview) {
+          content += `<p><strong>Preview:</strong> ${chunk.text_preview}</p>`;
+        }
+        content += `</div>`;
+      });
+      content += `</div>`;
     }
-    if (source.filename) {
-      content += `<p><strong>Document:</strong> ${source.filename}</p>`;
+  } else if (sourceType === 'procedure' || sourceType === 'spec' || sourceType === 'troubleshooting' || sourceType === 'routing') {
+    // Handle DIP table sources
+    content = `<h3>Source ${sourceNumber}: DIP Table (${sourceType})</h3>`;
+    content += `<p><strong>Table Type:</strong> ${sourceType}</p>`;
+    content += `<p><strong>Total Entries:</strong> ${source.count || 0}</p>`;
+
+    const equipment = source.equipment || {};
+    if (equipment.manufacturer && equipment.model) {
+      content += `<p><strong>Equipment:</strong> ${equipment.manufacturer} ${equipment.model}</p>`;
     }
-    // Note: source.content is not available in the current response, so we show basic info
+
+    const data = source.data || [];
+    if (data.length > 0) {
+      content += `<div class="source-content">`;
+      content += `<p><strong>Sample Entries (top ${data.length}):</strong></p>`;
+      data.forEach((entry, idx) => {
+        content += `<div class="source-chunk">`;
+        content += `<p><strong>Entry ${idx + 1}</strong></p>`;
+        content += `<pre>${JSON.stringify(entry, null, 2)}</pre>`;
+        content += `</div>`;
+      });
+      content += `</div>`;
+    }
+  } else if (sourceType === 'PERPLEXITY') {
+    // Handle Perplexity web search citations
+    content = `<h3>Source ${sourceNumber}: Real-World Resources 🌐</h3>`;
+    content += `<p><strong>Web Search Results:</strong> ${source.count || 0} sources from marine forums and troubleshooting communities</p>`;
+
+    const citations = source.data || [];
+    if (citations.length > 0) {
+      content += `<div class="source-content">`;
+      content += `<div class="perplexity-links">`;
+      citations.forEach((citation, idx) => {
+        const url = citation.url || '';
+        content += `<a href="${url}" target="_blank" rel="noopener noreferrer" class="perplexity-link">`;
+        content += `<span class="link-number">${idx + 1}.</span>`;
+        content += `<span class="link-url">${url}</span>`;
+        content += `<span class="link-icon">🔗</span>`;
+        content += `</a>`;
+      });
+      content += `</div>`;
+      content += `<p class="perplexity-note"><em>(Links open in new tab)</em></p>`;
+      content += `</div>`;
+    }
+  } else {
+    // Unknown source type - show debug info
+    content = `<h3>Source ${sourceNumber}: ${sourceType}</h3>`;
+    content += `<p><strong>Type:</strong> ${sourceType}</p>`;
+    content += `<p><strong>Count:</strong> ${source.count || 'N/A'}</p>`;
     content += `<div class="source-content">`;
     content += `<div class="source-chunk">`;
-    content += `<p><strong>Document Information:</strong></p>`;
-    content += `<p>This source contains ${source.pages.length} pages from the ${source.manufacturer} ${source.model} documentation.</p>`;
-    content += `<p>Relevance score: ${typeof source.score === 'number' ? source.score.toFixed(3) : 'N/A'}</p>`;
+    content += `<p><strong>Debug Info:</strong></p>`;
+    content += `<pre>${JSON.stringify(source, null, 2)}</pre>`;
     content += `</div>`;
     content += `</div>`;
-  } else if (sourceType === 'system') {
-    content = `<h3>Source ${sourceNumber}: System Information</h3>`;
-    content += `<p><strong>System ID:</strong> ${source.id}</p>`;
-    content += `<p><strong>Manufacturer:</strong> ${source.manufacturer}</p>`;
-    content += `<p><strong>Model:</strong> ${source.model}</p>`;
-    content += `<p><strong>Relevance Rank:</strong> ${typeof source.rank === 'number' ? source.rank.toFixed(2) : 'N/A'}</p>`;
-  } else {
-    content = `<h3>Source ${sourceNumber}: Unknown Source</h3>`;
-    content += `<p>Source type: ${sourceType}</p>`;
-    content += `<p>Source object: ${JSON.stringify(source, null, 2)}</p>`;
   }
-  
+
   // Create and show modal
   const modal = document.createElement('div');
   modal.className = 'source-modal';
@@ -629,14 +643,14 @@ function showSourceDetails(source, sourceNumber) {
       ${content}
     </div>
   `;
-  
+
   document.body.appendChild(modal);
-  
+
   // Close modal functionality
   modal.querySelector('.source-modal-close').addEventListener('click', () => {
     modal.remove();
   });
-  
+
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.remove();
@@ -785,7 +799,9 @@ async function processMessage(message) {
       const formattedSources = sources.map(source => ({
         type: source.type,
         content: source.data,
+        data: source.data,  // Keep original data field for modal
         count: source.count,
+        equipment: source.equipment,  // Keep equipment field for modal
         icon: getSourceIcon(source.type)
       }));
 
