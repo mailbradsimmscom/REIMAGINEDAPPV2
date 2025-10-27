@@ -10,17 +10,6 @@ from typing import Dict, List, Optional, Any
 
 logger = logging.getLogger(__name__)
 
-# Intent to natural language mapping for Perplexity queries
-INTENT_PHRASES = {
-    "general_information": "We are looking for general information",
-    "troubleshooting": "We are looking for troubleshooting information",
-    "specifications": "We are looking for technical specifications",
-    "installation": "We are looking for installation guidance",
-    "maintenance": "We are looking for maintenance procedures",
-    "how-to": "We are looking for step-by-step instructions",
-    "comparison": "We are looking for comparison information"
-}
-
 
 class PerplexityService:
     """
@@ -46,8 +35,7 @@ class PerplexityService:
         user_query: str,
         equipment: List[Dict],
         pinecone_chunks: List[Dict],
-        system_context: Dict,
-        intent: str = "general_information"
+        system_context: Dict
     ) -> str:
         """
         Build enhanced Perplexity query from context
@@ -102,7 +90,7 @@ class PerplexityService:
         features_text = ". The system has ".join(features) if features else ""
 
         # Get system context
-        vessel_type = system_context.get("vessel_type", "Balance 526 catamaran")
+        vessel_type = system_context.get("vessel_type", "catamaran")
         environment = "marine environments"
 
         # Keep user's natural language (don't translate "erroring out" to technical terms)
@@ -111,11 +99,7 @@ class PerplexityService:
         # Target audience for marine context
         target_audience = "cruisers and liveaboards"
 
-        # Get intent phrase (default to general_information if not in mapping)
-        intent_phrase = INTENT_PHRASES.get(intent, "We are looking for general information")
-
         # Build query components
-        intent_line = f"{intent_phrase}."
         base = f"{manufacturer} {model_name} {pump_type} on a {vessel_type} is {symptom}."
 
         if features_text:
@@ -123,13 +107,13 @@ class PerplexityService:
         else:
             feature_line = ""
 
-        # Ask for real-world insights from experienced boat owners
-        ask = f"\n\nWhat are the most common real-world insights and practical advice that {target_audience} share about this in {environment}?"
+        # Explicitly ask for real-world fixes beyond the manual
+        ask = f"\n\nWhat are the most common real-world causes boat owners encounter with this specific pump model in {environment}, and what fixes actually work beyond what the manual says?"
 
-        # Format instructions for concise, scannable output
-        format_instruction = "\n\nProvide 3-5 concise, actionable bullet points. Be specific but brief."
+        # Target experienced boat owners
+        audience = f"\n\nLooking for practical troubleshooting from {target_audience} who have solved this."
 
-        return f"{intent_line} {base}{feature_line}{ask}{format_instruction}"
+        return f"{base}{feature_line}{ask}{audience}"
 
     async def query(self, enhanced_query: str) -> Optional[Dict[str, Any]]:
         """
@@ -170,7 +154,7 @@ class PerplexityService:
                             "content": enhanced_query
                         }],
                         "temperature": 0.3,  # Focused, factual responses
-                        "max_tokens": 800   # Concise, actionable responses
+                        "max_tokens": 2000   # Sufficient for detailed troubleshooting
                     }
                 )
 

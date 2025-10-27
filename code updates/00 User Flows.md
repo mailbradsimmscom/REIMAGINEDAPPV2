@@ -110,7 +110,7 @@
 
   9. Step 1: Query Classification (chat_workflow_sequential.py:122-130):
     - [LLM CALL] via llm_service.classify_query()
-    - Classify intent and complexity
+    - Classify intent and complexity (7 intent types)
     - Extract search keywords
   10. Step 2: Data Retrieval (chat_workflow_sequential.py:133-143):
     - Query DIP tables (chat_workflow_sequential.py:418-429):
@@ -122,24 +122,44 @@
     - Rank chunks (chat_workflow_sequential.py:483-487):
         - [LLM CALL] via llm_service.rank_chunks()
       - Score relevance to query
-  11. Step 3: Response Synthesis (chat_workflow_sequential.py:555-563):
-    - [LLM CALL] via llm_service.synthesize_response()
-    - Model: GPT-5 or GPT-4.1-mini
-    - Include DIP data + Pinecone chunks
-    - Generate natural language response
-  12. Return to Node.js (chat-proxy.service.js:606-620):
+  11. Step 3: Parallel Response Generation (chat_workflow_sequential.py:148-164):
+    - PARALLEL EXECUTION:
+        - Path A: OpenAI Synthesis (_synthesize_response)
+            - [LLM CALL] GPT-5 or GPT-4.1-mini
+          - Generate response from DIP + Pinecone data
+        - Path B: Perplexity Search (_query_perplexity)
+            - Build enhanced query with intent + equipment + vessel context
+            - [LLM CALL] Perplexity sonar-pro model
+          - Web search for real-world marine insights
+          - Returns 3-5 concise bullet points with citations
+    - Both tasks run simultaneously (asyncio.gather)
+    - Graceful degradation if either fails
+  12. Step 4: Assemble Response (chat_workflow_sequential.py:716-798):
+    - Combine OpenAI response + Perplexity insights
+    - Format sources from all 3 data sources:
+        - DIP tables (structured manual data)
+      - Pinecone (semantic search chunks)
+      - Perplexity (web search citations)
+  13. Return to Node.js (chat-proxy.service.js:606-620):
     - Format response object
     - Include sources and metadata
 
   Frontend Post-Processing:
 
-  13. Save user message (app.js:654):
+  14. Save user message (app.js:654):
     - POST to /chat/messages
     - Store with sequence number
-  14. Save assistant message (app.js:672):
+  15. Save assistant message (app.js:672):
     - POST to /chat/messages
     - Include metadata and sources
-  15. Update thread (messages.route.js:57):
+  16. Display response with source bubbles (app.js):
+    - Render markdown with marked.js
+    - Show source bubbles by type:
+        - Blue: DIP tables
+        - Green: Pinecone chunks
+        - Purple: Perplexity web sources (NEW)
+    - User can click any bubble to view details in modal
+  17. Update thread (messages.route.js:57):
     - Increment message count
     - Check for summary generation
 
@@ -235,16 +255,42 @@
   - Colloquial Extraction - Natural language keywords
   - DIP Extraction (4x) - Specs, procedures, intent, golden
 
-  Chat Processing (4-6 LLM calls):
+  Chat Processing (5-7 LLM calls):
 
   - Equipment Extraction - Find equipment mentions
   - Equipment Inference - Find related systems (conditional)
-  - Query Classification - Intent and complexity
+  - Query Classification - Intent and complexity (7 intent types)
   - Chunk Ranking - Relevance scoring
   - Response Synthesis - Generate answer
+  - Perplexity Search - Web search for real-world insights (optional, feature flag)
 
   Total LLM Providers Used:
 
-  - OpenAI - Embeddings, chat, extraction
+  - OpenAI - Embeddings, chat, extraction, classification
   - Anthropic Claude - DIP extraction
+  - Perplexity - Web search with intent-based prompts
   - LlamaParse - Document parsing (LlamaIndex)
+
+  ---
+  DATA SOURCE ARCHITECTURE:
+
+  3-Source System:
+
+  1. DIP Tables (Structured manual data)
+    - Specifications, procedures, troubleshooting, intent routing
+    - Extracted via Anthropic Claude during document processing
+    - Stored in PostgreSQL tables (staging + production)
+
+  2. Pinecone (Vector search)
+    - Semantic search on document chunks
+    - 400-1200 token chunks with embeddings
+    - Returns top 20 most relevant chunks
+
+  3. Perplexity (Web search - NEW)
+    - Real-world marine troubleshooting insights
+    - Intent-based query construction
+    - Vessel context (Balance 526 catamaran)
+    - Returns 3-5 concise bullet points with citations
+    - Sources: Marine forums, YouTube, cruiser communities
+
+  All three sources are combined in the final response for comprehensive coverage.

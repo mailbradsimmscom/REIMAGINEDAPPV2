@@ -19,8 +19,9 @@ REIMAGINEDAPPV2 is an **AI-powered boat operating system for catamarans** that m
 - **Frontend:** Vanilla JavaScript with Apple-inspired UI
 - **Database:** Supabase (PostgreSQL)
 - **Vector Search:** Pinecone
+- **Web Search:** Perplexity (sonar-pro model for real-world marine insights)
 - **Python Sidecar:** FastAPI for heavy processing (LlamaParse, embeddings, chat workflow)
-- **LLM Providers:** OpenAI (GPT-5, GPT-4.1-mini), Anthropic Claude (DIP extraction)
+- **LLM Providers:** OpenAI (GPT-5, GPT-4.1-mini), Anthropic Claude (DIP extraction), Perplexity (web search)
 
 ---
 
@@ -125,14 +126,24 @@ REIMAGINEDAPPV2 is an **AI-powered boat operating system for catamarans** that m
    - Pinecone semantic search
    - **[LLM: OpenAI]** Rank chunks by relevance
 
-8. **Response Synthesis** (`chat_workflow_sequential.py:555`)
-   - **[LLM: GPT-5 or GPT-4.1-mini]** Generate response
-   - Include DIP data + Pinecone chunks
+8. **Parallel Response Generation** (`chat_workflow_sequential.py:148-164`)
+   - **Path A: OpenAI Synthesis** (`_synthesize_response`)
+     - **[LLM: GPT-5 or GPT-4.1-mini]** Generate response from DIP + Pinecone
+   - **Path B: Perplexity Search** (`_query_perplexity`)
+     - Build enhanced query with intent, equipment, and vessel context
+     - **[LLM: Perplexity sonar-pro]** Web search for real-world marine insights
+     - Returns 3-5 concise bullet points with citations
+   - Both run in parallel (asyncio.gather)
+   - Graceful degradation if either fails
 
-9. **Return to frontend** with metadata
+9. **Assemble Response** (`chat_workflow_sequential.py:716-798`)
+   - Combine OpenAI response + Perplexity insights
+   - Format sources from all 3 data sources (DIP, Pinecone, Perplexity)
+
+10. **Return to frontend** with metadata and sources
 
 #### Frontend Post-Processing:
-10. **Save messages** (`app.js:654, 672`)
+11. **Save messages** (`app.js:654, 672`)
     - POST to `/chat/messages`
 
 ---
@@ -178,6 +189,7 @@ REIMAGINEDAPPV2 is an **AI-powered boat operating system for catamarans** that m
 ### Search & Retrieval
 - `pinecone.service.js` - Vector search orchestration
 - `systems.service.js` - Equipment data and relationships
+- `perplexity_service.py` - Web search with intent-based prompts (Python sidecar)
 
 ### Maintenance
 - `maintenance-tasks.service.js` - CRUD for maintenance tasks
@@ -195,7 +207,7 @@ REIMAGINEDAPPV2 is an **AI-powered boat operating system for catamarans** that m
 | `/v1/chunk` | Semantic chunking | - |
 | `/v1/embed` | Generate embeddings | OpenAI embeddings |
 | `/v1/pinecone/upsert` | Store vectors | - |
-| `/v1/chat/process` | Chat workflow | GPT-5/4.1-mini + classification |
+| `/v1/chat/process` | Chat workflow | GPT-5/4.1-mini + Perplexity (parallel) |
 | `/v1/dip/process` | DIP extraction | Anthropic Claude |
 
 ---
@@ -211,8 +223,21 @@ REIMAGINEDAPPV2 is an **AI-powered boat operating system for catamarans** that m
 **Anthropic Claude (4 calls):**
 - DIP extraction: specs, procedures, intent, golden tests
 
+**Perplexity (1 call per chat - optional):**
+- Web search for real-world marine troubleshooting insights
+- Intent-based query construction with vessel context
+
 **LlamaParse (1 call):**
 - Vision-based PDF parsing
+
+### Data Source Architecture:
+
+**3-Source System:**
+1. **DIP Tables** - Structured manual data extracted via Claude (specs, procedures, troubleshooting)
+2. **Pinecone** - Vector search on document chunks for semantic relevance
+3. **Perplexity** - Web search for real-world boat owner experiences and community wisdom
+
+All three sources are combined in the final response, with Perplexity providing supplementary insights from marine forums, YouTube, and cruiser communities.
 
 ---
 
@@ -249,15 +274,20 @@ PINECONE_API_KEY=...
 PINECONE_INDEX=...
 OPENAI_API_KEY=...
 ANTHROPIC_API_KEY=...
+PERPLEXITY_API_KEY=...
 PYTHON_SIDECAR_URL=http://localhost:8000
 ADMIN_TOKEN=...
 USE_SEMANTIC_CHUNKING=true
 LLAMAPARSE_API_KEY=...
+PERPLEXITY_ENABLED=false
+PERPLEXITY_MODEL=sonar-pro
+PERPLEXITY_TIMEOUT=45
 ```
 
 ### Feature Flags:
 - `USE_SEMANTIC_CHUNKING=true` - Use LlamaParse (vs legacy pdfplumber)
 - `DIP_ENVIRONMENT=production|staging` - DIP table selection
+- `PERPLEXITY_ENABLED=false` - Enable/disable Perplexity web search (default: OFF)
 
 ---
 
@@ -305,21 +335,32 @@ Routes → Services → Repositories → External Services
 - Manual migration to production tables
 - 4 distinct data types with different purposes
 
+### Perplexity Integration:
+- Feature flag controlled (PERPLEXITY_ENABLED)
+- Parallel execution with OpenAI (both run simultaneously)
+- Intent-based query construction (7 intent types)
+- Vessel context included (Balance 526 catamaran)
+- Graceful degradation (works if Perplexity fails)
+- Returns 3-5 concise bullet points with citations
+
 ---
 
 ## 12. Performance Characteristics
 
 ### Typical Processing Times:
 - Document upload: 2-5 minutes (async)
-- Chat response: 3-8 seconds
+- Chat response (without Perplexity): 3-8 seconds
+- Chat response (with Perplexity): 10-14 seconds
 - Equipment extraction: 1-2 seconds
 - DIP extraction: 30-60 seconds
 - Embedding generation: 5-10 seconds
+- Perplexity search: 21-24 seconds (runs in parallel with OpenAI)
 
 ### Bottlenecks:
 - LlamaParse API calls (vision processing)
 - Anthropic DIP extraction (4 sequential calls)
 - Response synthesis with GPT-5 (reasoning model)
+- Perplexity web search (21-24s, mitigated by parallel execution)
 
 ---
 
@@ -329,9 +370,15 @@ Routes → Services → Repositories → External Services
 - Removed LangGraph dependency (Python sequential workflow)
 - Migrated from Docker to Python venv
 - Removed worker process (inline job processing)
-- Added colloquial keyword extraction
+- Added colloquial keyword extraction (Update #31)
 - Implemented multi-equipment extraction
 - Fixed equipment context persistence
+- Added source provenance display (Update #34)
+- Replaced custom markdown parser with marked.js (Update #35)
+- Integrated Perplexity web search (Updates #36, #37)
+  - Parallel execution with OpenAI
+  - Intent-based query construction
+  - 3-source architecture (DIP + Pinecone + Perplexity)
 
 ### Pending:
 - Remove ~3,000 lines of deprecated code

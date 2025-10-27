@@ -685,11 +685,12 @@ class ChatWorkflowSequential:
                 equipment=state.get("systems_context", []),
                 pinecone_chunks=state.get("pinecone_results", {}).get("matches", []),
                 system_context={
-                    "vessel_type": "catamaran"  # TODO: Get from user profile or config
-                }
+                    "vessel_type": "Balance 526 catamaran"
+                },
+                intent=state.get("classification", {}).get("intent", "general_information")
             )
 
-            logger.info(f"🌐 Perplexity enhanced query: {enhanced_query[:100]}...")
+            logger.info(f"🌐 Perplexity enhanced query: {enhanced_query}")
 
             # Query Perplexity API
             start_time = datetime.now()
