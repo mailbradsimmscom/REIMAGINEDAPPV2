@@ -4,6 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Enterprise Chat System</title>
+    <script>
+      // Mobile detection and redirect
+      (function() {
+        // Check if we're already on a mobile page to prevent redirect loops
+        if (window.location.pathname.includes('-mobile.html')) {
+          return;
+        }
+
+        // Detect mobile devices
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isSmallScreen = window.innerWidth <= 768;
+
+        // Redirect to mobile version if mobile device or small screen
+        if (isMobile || isSmallScreen) {
+          window.location.href = '/public/index-mobile.html';
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="/public/chat-styles.css" />
   </head>
   <body>

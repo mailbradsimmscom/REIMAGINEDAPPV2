@@ -121,12 +121,14 @@ class Dashboard {
                 this.updateMetric('sidecar-status', data.data?.sidecarHealth?.status || 'Unknown',
                     data.data?.sidecarHealth?.status === 'healthy' ? 'success' : '');
                 this.updateMetric('pinecone-vectors', (data.data?.totalVectors || 0).toLocaleString());
+                this.updateMetric('maintenance-vectors', (data.data?.maintenanceVectors || 0).toLocaleString());
                 this.updateMetric('pinecone-fullness', data.data?.indexFullness || '0.0%');
             }
         } catch (error) {
             this.updateMetric('pinecone-status', 'Error', 'error');
             this.updateMetric('sidecar-status', 'Error', 'error');
             this.updateMetric('pinecone-vectors', '-');
+            this.updateMetric('maintenance-vectors', '-');
             this.updateMetric('pinecone-fullness', '-');
         }
     }

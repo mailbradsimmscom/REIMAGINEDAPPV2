@@ -78,7 +78,7 @@ async function initializeChat() {
       console.log('🔵 Loaded thread from URL:', currentThreadId);
 
       const thread = await fetch(`/chat/threads/${currentThreadId}`).then(r => r.json());
-      currentMessageSequence = thread.thread?.message_count || 0;
+      currentMessageSequence = thread.thread?.max_sequence_number || 0;
       await loadChatHistory();
       updateChatHeader(thread.thread?.name || 'Active Conversation');
     } else {

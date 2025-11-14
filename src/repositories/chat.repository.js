@@ -267,24 +267,36 @@ export async function getThreadBySessionId(sessionId) {
 export async function getChatThread(threadId) {
   try {
     const supabase = await checkSupabaseAvailability();
-    
+
     const { data, error } = await supabase
       .from(THREADS_TABLE)
       .select('*')
       .eq('id', threadId)
       .maybeSingle();
-    
+
     if (error) {
       const err = new Error(`Failed to get chat thread: ${error.message}`);
       err.cause = error;
       err.context = { operation: 'get_thread', threadId, table: THREADS_TABLE };
       throw err;
     }
-    
+
     if (!data) {
       throw new Error(`No chat thread found for thread_id: ${threadId}`);
     }
-    
+
+    // Fetch max sequence number from actual messages (source of truth)
+    const { data: maxSeqData, error: maxSeqError } = await supabase
+      .from(MESSAGES_TABLE)
+      .select('sequence_number')
+      .eq('thread_id', threadId)
+      .order('sequence_number', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    // Add max_sequence_number to thread data (0 if no messages)
+    data.max_sequence_number = maxSeqData?.sequence_number || 0;
+
     return data;
   } catch (error) {
     if (!error.context) {

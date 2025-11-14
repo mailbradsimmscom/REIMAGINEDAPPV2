@@ -32,6 +32,7 @@ REIMAGINEDAPPV2 is an **AI-powered boat operating system for catamarans** that m
 │  Frontend (Vanilla JS)                              │
 │  - Chat Interface (/index.html)                     │
 │  - Admin Dashboard (/admin)                         │
+│  - System Dashboard (/public/dashboard.html)        │
 │  - Document Upload (/upload.html)                   │
 │  - Log Viewer (/logs-viewer.html)                   │
 │  - Maintenance Management                           │
@@ -396,7 +397,7 @@ Routes → Services → Repositories → External Services
 
 ### Data Protection:
 - Supabase service role key (not anon)
-- Namespace isolation in Pinecone (optional)
+- Namespace isolation in Pinecone (REIMAGINEDDOCS for manuals, MAINTENANCE_TASKS for schedules)
 - Request correlation IDs for tracing
 
 ### Input Validation:

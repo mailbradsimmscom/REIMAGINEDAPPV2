@@ -1,0 +1,33 @@
+{
+  "name": "Boat Chat",
+  "short_name": "Chat",
+  "description": "AI-powered chat for boat documentation and systems",
+  "start_url": "/public/chat-mobile.html",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#007AFF",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/public/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/public/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Chat",
+      "short_name": "New",
+      "description": "Start a new conversation",
+      "url": "/public/chat-mobile.html",
+      "icons": [{ "src": "/public/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

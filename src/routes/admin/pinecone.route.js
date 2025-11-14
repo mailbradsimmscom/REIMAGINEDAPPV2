@@ -71,6 +71,8 @@ router.get('/',
     
     // Get vector count for active namespace only (not total across all namespaces)
     const namespaceVectorCount = statsData?.namespaces?.[PINECONE_NAMESPACE]?.vector_count || 0;
+    // Get maintenance tasks vector count
+    const maintenanceVectorCount = statsData?.namespaces?.['MAINTENANCE_TASKS']?.vector_count || 0;
 
     // Get basic Pinecone info from environment
     const pineconeData = {
@@ -79,6 +81,7 @@ router.get('/',
       namespace: PINECONE_NAMESPACE,
       vectors: namespaceVectorCount > 0 ? namespaceVectorCount : 'N/A',
       totalVectors: namespaceVectorCount,
+      maintenanceVectors: maintenanceVectorCount,
       dimension: statsData?.dimension || 'N/A',
       indexFullness: '0.0%',
       lastChecked: new Date().toISOString(),
