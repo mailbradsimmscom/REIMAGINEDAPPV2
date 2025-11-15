@@ -85,12 +85,23 @@ class Logger {
       // Skip health checks for API logs
       const isHealthCheck = this.isHealthCheck(meta);
 
-      // ALWAYS log to console in development for visibility (except health checks)
+      // In production, ONLY log to console (Render captures console output)
+      if (env.NODE_ENV === 'production') {
+        // Log everything to console (Render will capture it)
+        if (!isHealthCheck) {
+          const timestamp = new Date().toISOString();
+          const module = meta.module || 'app';
+          console.log(`[${timestamp}] [${level.toUpperCase()}] [${module}] ${message}`, meta);
+        }
+        return; // Skip file writes in production
+      }
+
+      // Development: Log to console for visibility (except health checks)
       if ((level === 'error' || level === 'warn') && !isHealthCheck) {
         console.log(`[${level.toUpperCase()}] ${message}`, meta);
       }
 
-      // Determine log type for routing
+      // Development: Write to files
       const isChat = meta.module?.includes('chat') || meta.logType === 'CHAT';
       const isError = level === 'error';
 
