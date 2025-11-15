@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BoatOS - Command Center</title>
+    <script>
+        // Mobile detection and redirect
+        (function() {
+            if (window.location.pathname.includes('-mobile.html')) {
+                return;
+            }
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isSmallScreen = window.innerWidth <= 768;
+            if (isMobile || isSmallScreen) {
+                window.location.href = '/public/unified-mobile.html';
+            }
+        })();
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 18px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: block;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            border-color: #007AFF;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #007AFF;
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .badge.admin {
+            background: #FF3B30;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛵ BoatOS Command Center</h1>
+            <p>Unified System Management for Your Catamaran</p>
+        </div>
+
+        <!-- Chat & Documentation Section -->
+        <div class="section">
+            <h2 class="section-title">📚 Chat & Documentation</h2>
+            <div class="cards-grid">
+                <a href="/public/index.html" class="card">
+                    <div class="card-icon">💬</div>
+                    <div class="card-title">AI Chat</div>
+                    <div class="card-description">Ask questions about boat systems and get intelligent answers from manuals</div>
+                    <span class="badge">Port 3000</span>
+                </a>
+                <a href="/public/systems.html" class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-title">Systems</div>
+                    <div class="card-description">View and manage all boat systems and equipment</div>
+                    <span class="badge">Port 3000</span>
+                </a>
+                <a href="/public/documents.html" class="card">
+                    <div class="card-icon">📄</div>
+                    <div class="card-title">Documents</div>
+                    <div class="card-description">Browse uploaded manuals and documentation</div>
+                    <span class="badge">Port 3000</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Maintenance & Tasks Section -->
+        <div class="section">
+            <h2 class="section-title">🔧 Maintenance & Tasks</h2>
+            <div class="cards-grid">
+                <a href="#" class="card" data-maintenance-url="/todos.html">
+                    <div class="card-icon">📋</div>
+                    <div class="card-title">To-Do List</div>
+                    <div class="card-description">View all pending tasks including maintenance and approvals</div>
+                    <span class="badge">Port 3001</span>
+                </a>
+                <a href="#" class="card" data-maintenance-url="/task-completion.html">
+                    <div class="card-icon">✅</div>
+                    <div class="card-title">Complete Tasks</div>
+                    <div class="card-description">Mark maintenance tasks as complete with notes</div>
+                    <span class="badge">Port 3001</span>
+                </a>
+                <a href="#" class="card" data-maintenance-url="/user-tasks.html">
+                    <div class="card-icon">👤</div>
+                    <div class="card-title">My Tasks</div>
+                    <div class="card-description">Personal maintenance tasks and schedules</div>
+                    <span class="badge">Port 3001</span>
+                </a>
+                <a href="#" class="card" data-maintenance-url="/hours-update.html">
+                    <div class="card-icon">⏱️</div>
+                    <div class="card-title">Hours Update</div>
+                    <div class="card-description">Update engine and system operating hours</div>
+                    <span class="badge">Port 3001</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Admin Tools Section -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Admin Tools (Desktop Only)</h2>
+            <div class="cards-grid">
+                <a href="#" class="card" data-maintenance-url="/agent-status.html">
+                    <div class="card-icon">🤖</div>
+                    <div class="card-title">Agent Status</div>
+                    <div class="card-description">Monitor pipeline processing and system status</div>
+                    <span class="badge admin">Admin</span>
+                </a>
+                <a href="#" class="card" data-maintenance-url="/maintenance-tasks-list.html">
+                    <div class="card-icon">📝</div>
+                    <div class="card-title">Task Review</div>
+                    <div class="card-description">Review and approve maintenance tasks</div>
+                    <span class="badge admin">Admin</span>
+                </a>
+                <a href="#" class="card" data-maintenance-url="/dedup-review.html">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">Dedup Review</div>
+                    <div class="card-description">Review and resolve duplicate tasks</div>
+                    <span class="badge admin">Admin</span>
+                </a>
+                <a href="/admin" class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-title">System Admin</div>
+                    <div class="card-description">Advanced administration and configuration</div>
+                    <span class="badge admin">Admin</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>BoatOS v2.0 | Unified Dashboard</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-detect maintenance service URL based on current hostname
+        function getMaintenanceUrl() {
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol;
+
+            // Production domain
+            if (hostname === 'chat.catamaranos.com') {
+                return 'https://admin.catamaranos.com';
+            }
+
+            // Localhost
+            if (hostname === 'localhost') {
+                return 'http://localhost:3001';
+            }
+
+            // Local IP (e.g., 192.168.20.106)
+            if (hostname.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+                return `${protocol}//${hostname}:3001`;
+            }
+
+            // Fallback to localhost
+            return 'http://localhost:3001';
+        }
+
+        const MAINTENANCE_URL = getMaintenanceUrl();
+
+        // Set up all maintenance links
+        document.querySelectorAll('[data-maintenance-url]').forEach(card => {
+            const path = card.getAttribute('data-maintenance-url');
+            card.href = MAINTENANCE_URL + path;
+        });
+    </script>
+</body>
+</html>

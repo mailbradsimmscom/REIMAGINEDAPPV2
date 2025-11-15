@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>BoatOS Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-top: 4px;
+        }
+
+        .quick-actions {
+            padding: 20px 16px;
+        }
+
+        .actions-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            text-align: center;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:active {
+            transform: scale(0.97);
+        }
+
+        .action-card-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .action-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .action-card-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #007AFF;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Different card colors */
+        .action-card:nth-child(1) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .action-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .action-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .action-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .more-section {
+            padding: 0 16px 20px 16px;
+        }
+
+        .more-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .more-links {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .more-link {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            text-decoration: none;
+            color: #000;
+            border-bottom: 1px solid #F2F2F7;
+        }
+
+        .more-link:last-child {
+            border-bottom: none;
+        }
+
+        .more-link-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            width: 32px;
+            text-align: center;
+        }
+
+        .more-link-text {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .more-link-arrow {
+            color: #C7C7CC;
+        }
+
+        /* User To-Do List */
+        .user-todo-list {
+            margin-top: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #8E8E93;
+        }
+
+        .todo-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .todo-item.overdue {
+            border-left: 4px solid #FF3B30;
+        }
+
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .todo-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            flex: 1;
+        }
+
+        .todo-due {
+            font-size: 12px;
+            color: #8E8E93;
+            margin-top: 4px;
+        }
+
+        .todo-due.overdue {
+            color: #FF3B30;
+            font-weight: 600;
+        }
+
+        .todo-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .todo-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .todo-btn:active {
+            transform: scale(0.97);
+        }
+
+        .todo-btn-complete {
+            background: #34C759;
+            color: white;
+        }
+
+        .todo-btn-view {
+            background: #007AFF;
+            color: white;
+        }
+
+        .empty-todo {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8E8E93;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            color: #8E8E93;
+            font-size: 12px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⛵ BoatOS Mobile</h1>
+        <p>Quick Access Dashboard</p>
+    </div>
+
+    <div class="quick-actions">
+        <h2 class="actions-title">Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="/public/index-mobile.html" class="action-card">
+                <div class="action-card-icon">💬</div>
+                <div class="action-card-title">AI Chat</div>
+            </a>
+            <a href="#" class="action-card" data-maintenance-url="/user-tasks-mobile.html">
+                <div class="action-card-icon">➕</div>
+                <div class="action-card-title">Add Task</div>
+            </a>
+            <a href="#" class="action-card" data-maintenance-url="/app-mobile.html">
+                <div class="action-card-icon">🔧</div>
+                <div class="action-card-title">Maintenance</div>
+            </a>
+            <a href="#" class="action-card" data-maintenance-url="/edit-user-task-mobile.html">
+                <div class="action-card-icon">✏️</div>
+                <div class="action-card-title">Edit Task</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="more-section">
+        <h3 class="more-title">User To-Do</h3>
+        <div id="userTodoList" class="user-todo-list">
+            <div class="loading">Loading tasks...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>BoatOS Mobile v2.0</p>
+    </div>
+
+    <script>
+        // Auto-detect maintenance service URL based on current hostname
+        function getMaintenanceUrl() {
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol;
+
+            // Production domain
+            if (hostname === 'chat.catamaranos.com') {
+                return 'https://admin.catamaranos.com';
+            }
+
+            // Localhost
+            if (hostname === 'localhost') {
+                return 'http://localhost:3001';
+            }
+
+            // Local IP (e.g., 192.168.20.106)
+            if (hostname.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+                return `${protocol}//${hostname}:3001`;
+            }
+
+            // Fallback to localhost
+            return 'http://localhost:3001';
+        }
+
+        const MAINTENANCE_URL = getMaintenanceUrl();
+
+        // Set up maintenance links
+        document.querySelectorAll('[data-maintenance-url]').forEach(element => {
+            const path = element.getAttribute('data-maintenance-url');
+            element.href = MAINTENANCE_URL + path;
+        });
+
+        // Haptic feedback for iOS
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('click', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+
+        // Load and display user tasks
+        async function loadUserTasks() {
+            const listContainer = document.getElementById('userTodoList');
+
+            try {
+                // Fetch todos from maintenance agent API
+                const response = await fetch(`${MAINTENANCE_URL}/admin/api/todos-paginated?limit=20`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    listContainer.innerHTML = '<div class="empty-todo">✅ No pending tasks!</div>';
+                    return;
+                }
+
+                // Filter to only user-created tasks
+                let tasks = result.data.filter(task =>
+                    task.type === 'user_task' || task.source === 'User'
+                );
+
+                if (tasks.length === 0) {
+                    listContainer.innerHTML = '<div class="empty-todo">✅ No user tasks!</div>';
+                    return;
+                }
+
+                // Sort: overdue first, then by due date
+                const now = new Date();
+                tasks.sort((a, b) => {
+                    const aDate = a.dueDate ? new Date(a.dueDate) : null;
+                    const bDate = b.dueDate ? new Date(b.dueDate) : null;
+                    const aOverdue = aDate && aDate < now;
+                    const bOverdue = bDate && bDate < now;
+
+                    if (aOverdue && !bOverdue) return -1;
+                    if (!aOverdue && bOverdue) return 1;
+                    if (aDate && bDate) return aDate - bDate;
+                    return 0;
+                });
+
+                // Limit to 20 tasks
+                tasks = tasks.slice(0, 20);
+
+                // Render tasks
+                listContainer.innerHTML = tasks.map(task => renderTask(task)).join('');
+
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                listContainer.innerHTML = '<div class="empty-todo">⚠️ Failed to load tasks</div>';
+            }
+        }
+
+        function renderTask(task) {
+            const now = new Date();
+            const dueDate = task.dueDate ? new Date(task.dueDate) : null;
+            const isOverdue = dueDate && dueDate < now;
+            const dueDateStr = dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No due date';
+
+            const canComplete = task.type === 'user_task' && task.metadata?.taskId;
+            const taskId = task.metadata?.taskId || '';
+            const assetUid = task.metadata?.assetUid || '';
+
+            return `
+                <div class="todo-item ${isOverdue ? 'overdue' : ''}">
+                    <div class="todo-header">
+                        <div>
+                            <div class="todo-title">${task.title || 'Untitled Task'}</div>
+                            <div class="todo-due ${isOverdue ? 'overdue' : ''}">
+                                ${isOverdue ? '🔴 Overdue: ' : '📅 Due: '}${dueDateStr}
+                            </div>
+                        </div>
+                    </div>
+                    ${task.description ? `<div class="todo-description">${task.description}</div>` : ''}
+                    <div class="todo-actions">
+                        ${canComplete ? `
+                            <button class="todo-btn todo-btn-complete" onclick="markTaskComplete('${taskId}', '${assetUid}')">
+                                ✓ Complete
+                            </button>
+                        ` : ''}
+                        <button class="todo-btn todo-btn-view" onclick="window.location.href='${task.actionUrl || '#'}'">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function markTaskComplete(taskId, assetUid) {
+            if (!confirm('Mark this task as complete?')) return;
+
+            try {
+                const response = await fetch(`${MAINTENANCE_URL}/admin/api/task-completions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        task_id: taskId,
+                        asset_uid: assetUid,
+                        completion_notes: 'Completed from mobile dashboard'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Task marked as complete!');
+                    loadUserTasks(); // Refresh list
+                } else {
+                    throw new Error(result.error?.message || 'Failed to mark complete');
+                }
+            } catch (error) {
+                console.error('Error completing task:', error);
+                alert('❌ Failed to complete task. Please try again.');
+            }
+        }
+
+        // Load tasks when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserTasks();
+        });
+    </script>
+</body>
+</html>

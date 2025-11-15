@@ -16,14 +16,29 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false // Disable COEP for development
 }));
 
-// CORS configuration - environment-based origin allowlist
+// CORS configuration - environment-based
 const env = getEnv();
-const allowedOrigins = env.NODE_ENV === 'production'
-  ? ['https://your-production-domain.com']  // TODO: Update with actual production domain before deploying
-  : true;  // Development: allow all origins for local testing
-
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    const allowedOrigins = env.NODE_ENV === 'development'
+      ? [
+          'http://localhost:3000',
+          'http://localhost:3001',
+          'http://192.168.20.106:3000',  // Local IP for mobile testing
+          'http://192.168.20.106:3001'
+        ]
+      : [
+          'https://chat.catamaranos.com',
+          'https://admin.catamaranos.com'
+        ];
+
+    // Allow requests with no origin (same-origin) or from whitelist
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 

@@ -41,7 +41,9 @@ const EnvSchema = z.object({
   // Anthropic API delay for rate limiting (seconds)
   ANTHROPIC_API_DELAY: z.string().optional().default('1.2'),
   // Debug flag for DIP LLM extraction (set to '1' to enable verbose logging)
-  DIP_LLM_DEBUG: z.string().optional()
+  DIP_LLM_DEBUG: z.string().optional(),
+  // Cross-service URL for maintenance agent
+  MAINTENANCE_SERVICE_URL: z.string().default('http://localhost:3001')
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
