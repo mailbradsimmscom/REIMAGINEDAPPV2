@@ -29,7 +29,10 @@ app.use(cors({
         ]
       : [
           'https://chat.catamaranos.com',
-          'https://admin.catamaranos.com'
+          'https://admin.catamaranos.com',
+          'https://boatos-main.onrender.com',         // Render URL for main app
+          'https://boatos-python.onrender.com',       // Render URL for Python sidecar
+          'https://boatos-maintenance.onrender.com'   // Render URL for maintenance agent
         ];
 
     // Allow requests with no origin (same-origin) or from whitelist
