@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Anchor Watch Administration</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background: #34C759;
+            color: white;
+        }
+
+        .status-badge.inactive {
+            background: #8E8E93;
+            color: white;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            background: white;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #8E8E93;
+        }
+
+        .card {
+            background: white;
+            margin: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #F2F2F7;
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #8E8E93;
+            font-size: 14px;
+        }
+
+        .status-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .status-value.safe {
+            color: #34C759;
+        }
+
+        .status-value.warning {
+            color: #FF9500;
+        }
+
+        .status-value.dragging {
+            color: #FF3B30;
+            font-weight: 600;
+        }
+
+        .controls-section {
+            margin: 16px 0;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .button:active:not(:disabled) {
+            opacity: 0.8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button-primary {
+            background: #007AFF;
+            color: white;
+        }
+
+        .button-danger {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .button-secondary {
+            background: #8E8E93;
+            color: white;
+        }
+
+        .slider-container {
+            margin: 16px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .slider-label span {
+            font-size: 14px;
+            color: #000;
+        }
+
+        .slider-value {
+            font-weight: 600;
+            color: #007AFF;
+        }
+
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: #E5E5EA;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #007AFF;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #007AFF;
+            cursor: pointer;
+            border: none;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+            font-size: 12px;
+            color: #8E8E93;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid #E5E5EA;
+        }
+
+        td {
+            padding: 8px;
+            font-size: 14px;
+            color: #000;
+            border-bottom: 1px solid #F2F2F7;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr.safe {
+            background: rgba(52, 199, 89, 0.05);
+        }
+
+        tr.warning {
+            background: rgba(255, 149, 0, 0.05);
+        }
+
+        tr.dragging {
+            background: rgba(255, 59, 48, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: #8E8E93;
+        }
+
+        .error-message {
+            background: #FF3B30;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #8E8E93;
+        }
+
+        /* Leaflet custom icon styles */
+        .anchor-icon, .radius-handle-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+        }
+
+        .radius-handle-icon {
+            background: white;
+            border: 3px solid #007AFF;
+            border-radius: 50%;
+            width: 24px !important;
+            height: 24px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: grab;
+            font-size: 16px;
+            line-height: 18px;
+        }
+
+        .radius-handle-icon:active {
+            cursor: grabbing;
+        }
+
+        @media (max-width: 600px) {
+            .table-container {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 6px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <a href="/public/unified-mobile.html" class="back-button">←</a>
+            <h1>Anchor Watch</h1>
+        </div>
+        <span id="statusBadge" class="status-badge inactive">Inactive</span>
+    </div>
+
+    <!-- Map -->
+    <div class="map-container">
+        <div id="map">
+            <div class="map-loading">Loading map...</div>
+        </div>
+    </div>
+
+    <!-- Current Status -->
+    <div class="card">
+        <h2 class="card-title">Current Status</h2>
+        <div id="statusContent">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Anchor Watch Controls -->
+    <div class="card">
+        <h2 class="card-title">Anchor Watch Controls</h2>
+        <div id="controlsContent">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Recent Positions -->
+    <div class="card">
+        <h2 class="card-title">Recent Positions</h2>
+        <div id="positionsContent">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Configuration
+        const API_BASE = '/admin/api/anchor-watch';
+
+        // Get token from URL parameter or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
+        if (urlToken) {
+            localStorage.setItem('adminToken', urlToken);
+            // Remove token from URL for security
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        const ADMIN_TOKEN = localStorage.getItem('adminToken') || '';
+
+        const REFRESH_INTERVAL = 20000; // 20 seconds
+
+        // State
+        let map = null;
+        let markers = {
+            boat: null,
+            anchor: null,
+            zone: null,
+            trail: null
+        };
+        let anchorWatchState = {
+            active: false,
+            anchor_lat: null,
+            anchor_lon: null,
+            radius_meters: null
+        };
+        let refreshTimer = null;
+
+        // Helper function for API calls
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(API_BASE + endpoint, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Token': ADMIN_TOKEN,
+                        ...options.headers
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'API request failed');
+                }
+
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Initialize map
+        async function initMap() {
+            // Updated to actual boat location (Grenada)
+            const defaultCenter = [12.6022, -61.4503];
+
+            map = L.map('map').setView(defaultCenter, 15);
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Initialize boat marker (blue dot)
+            markers.boat = L.circleMarker(defaultCenter, {
+                radius: 8,
+                fillColor: '#007AFF',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map);
+
+            // Immediately fetch current position and update map
+            try {
+                const statusResult = await apiCall('/status');
+                if (statusResult.data.current_lat && statusResult.data.current_lon) {
+                    const currentPos = [statusResult.data.current_lat, statusResult.data.current_lon];
+                    map.setView(currentPos, 16);
+                    markers.boat.setLatLng(currentPos);
+                }
+            } catch (e) {
+                // Keep default if API fails
+                console.log('Could not fetch initial position, using default');
+            }
+        }
+
+        // Update map with current data
+        function updateMap(status, positions) {
+            if (!map) return;
+
+            // Update boat position
+            if (status.current_lat && status.current_lon) {
+                const boatPos = [status.current_lat, status.current_lon];
+                markers.boat.setLatLng(boatPos);
+            }
+
+            // Update anchor and zone if active
+            if (status.active && status.anchor_lat && status.anchor_lon) {
+                const anchorPos = [status.anchor_lat, status.anchor_lon];
+
+                // Remove preview elements (they're replaced by active elements)
+                if (markers.previewZone) {
+                    map.removeLayer(markers.previewZone);
+                    markers.previewZone = null;
+                }
+                if (markers.radiusHandle) {
+                    map.removeLayer(markers.radiusHandle);
+                    markers.radiusHandle = null;
+                }
+
+                // Add/update anchor marker
+                if (!markers.anchor) {
+                    markers.anchor = L.marker(anchorPos, {
+                        icon: L.divIcon({
+                            html: '⚓',
+                            iconSize: [30, 30],
+                            className: 'anchor-icon'
+                        }),
+                        draggable: false
+                    }).addTo(map);
+                } else {
+                    markers.anchor.setLatLng(anchorPos);
+                    // Disable dragging and update icon when anchor watch is active
+                    if (markers.anchor.dragging) {
+                        markers.anchor.dragging.disable();
+                    }
+                    markers.anchor.setIcon(L.divIcon({
+                        html: '⚓',
+                        iconSize: [30, 30],
+                        className: 'anchor-icon'
+                    }));
+                }
+
+                // Add/update zone circle
+                const zoneColor = status.status === 'safe' ? '#34C759' :
+                                 status.status === 'warning' ? '#FF9500' : '#FF3B30';
+
+                if (!markers.zone) {
+                    markers.zone = L.circle(anchorPos, {
+                        radius: status.radius_meters,
+                        fillColor: zoneColor,
+                        fillOpacity: 0.1,
+                        color: zoneColor,
+                        weight: 2
+                    }).addTo(map);
+                } else {
+                    markers.zone.setLatLng(anchorPos);
+                    markers.zone.setRadius(status.radius_meters);
+                    markers.zone.setStyle({ color: zoneColor, fillColor: zoneColor });
+                }
+
+                // Center map on anchor with good zoom level
+                const currentZoom = map.getZoom();
+                map.setView(anchorPos, Math.max(currentZoom, 16));
+            } else {
+                // Remove ACTIVE anchor and zone if inactive
+                // But preserve preview elements (previewZone and radiusHandle) if they exist
+                if (markers.anchor && !markers.previewZone) {
+                    // Only remove anchor if we're not in preview mode
+                    map.removeLayer(markers.anchor);
+                    markers.anchor = null;
+                }
+                if (markers.zone) {
+                    map.removeLayer(markers.zone);
+                    markers.zone = null;
+                }
+                // Note: previewZone and radiusHandle are deliberately NOT removed here
+                // They persist until the user activates (at which point they're replaced)
+            }
+
+            // Update trail with recent positions
+            if (positions && positions.length > 0) {
+                const trail = positions.map(p => [p.latitude, p.longitude]);
+
+                if (markers.trail) {
+                    map.removeLayer(markers.trail);
+                }
+
+                markers.trail = L.polyline(trail, {
+                    color: '#007AFF',
+                    weight: 2,
+                    opacity: 0.4,
+                    dashArray: '5, 10'
+                }).addTo(map);
+            }
+        }
+
+        // Render current status
+        function renderStatus(status) {
+            const statusBadge = document.getElementById('statusBadge');
+            const statusContent = document.getElementById('statusContent');
+
+            // Update badge
+            if (status.active) {
+                statusBadge.textContent = 'Active';
+                statusBadge.className = 'status-badge active';
+            } else {
+                statusBadge.textContent = 'Inactive';
+                statusBadge.className = 'status-badge inactive';
+            }
+
+            // Update status content
+            if (!status.active) {
+                statusContent.innerHTML = '<div class="empty-state">Anchor watch is not active</div>';
+                return;
+            }
+
+            const statusClass = status.status === 'safe' ? 'safe' :
+                               status.status === 'warning' ? 'warning' : 'dragging';
+
+            const statusText = status.status === 'safe' ? 'Within safe zone' :
+                              status.status === 'warning' ? 'Approaching limit' :
+                              status.status === 'dragging' ? 'DRAGGING DETECTED' :
+                              status.status === 'gps_lost' ? 'GPS SIGNAL LOST' : 'Unknown';
+
+            statusContent.innerHTML = `
+                <div class="status-row">
+                    <span class="status-label">Distance from Anchor</span>
+                    <span class="status-value">${status.distance_meters ? status.distance_meters + ' m' : 'N/A'}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Current Position</span>
+                    <span class="status-value">${status.current_lat ? status.current_lat.toFixed(6) + ', ' + status.current_lon.toFixed(6) : 'N/A'}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Status</span>
+                    <span class="status-value ${statusClass}">${statusText}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Last Updated</span>
+                    <span class="status-value">${status.last_updated ? new Date(status.last_updated).toLocaleTimeString() : 'N/A'}</span>
+                </div>
+            `;
+        }
+
+        // Render controls
+        function renderControls(status) {
+            const controlsContent = document.getElementById('controlsContent');
+
+            if (!status.active) {
+                // Inactive - show activation controls
+                controlsContent.innerHTML = `
+                    <div class="controls-section">
+                        <button id="inferBtn" class="button button-secondary" onclick="inferAnchorPosition()">
+                            Infer Anchor Position
+                        </button>
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Radius</span>
+                                <span class="slider-value" id="radiusValue">50 m</span>
+                            </div>
+                            <input type="range" class="slider" id="radiusSlider"
+                                   min="10" max="2000" value="50" step="10"
+                                   oninput="updateRadiusDisplay(this.value)">
+                        </div>
+                        <button id="activateBtn" class="button button-primary" disabled onclick="activateAnchorWatch()">
+                            Activate Anchor Watch
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Active - show deactivation and adjustment controls
+                controlsContent.innerHTML = `
+                    <div class="controls-section">
+                        <div class="status-row">
+                            <span class="status-label">Anchor Position</span>
+                            <span class="status-value">${status.anchor_lat.toFixed(6)}, ${status.anchor_lon.toFixed(6)}</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Watch Radius</span>
+                            <span class="status-value">${status.radius_meters} m</span>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Adjust Radius</span>
+                                <span class="slider-value" id="radiusValue">${status.radius_meters} m</span>
+                            </div>
+                            <input type="range" class="slider" id="radiusSlider"
+                                   min="10" max="2000" value="${status.radius_meters}" step="10"
+                                   oninput="updateRadiusDisplay(this.value)">
+                        </div>
+                        <button class="button button-secondary" onclick="updateRadius()">
+                            Update Radius
+                        </button>
+                        <button class="button button-danger" onclick="deactivateAnchorWatch()">
+                            Deactivate Anchor Watch
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Render positions table
+        function renderPositions(positions) {
+            const positionsContent = document.getElementById('positionsContent');
+
+            if (!positions || positions.length === 0) {
+                positionsContent.innerHTML = '<div class="empty-state">No GPS positions available</div>';
+                return;
+            }
+
+            let tableHtml = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Position</th>
+                                <th>Distance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            positions.forEach(pos => {
+                const time = new Date(pos.timestamp).toLocaleTimeString();
+                const latLon = `${pos.latitude.toFixed(4)}, ${pos.longitude.toFixed(4)}`;
+                const distance = pos.distance_from_anchor ? pos.distance_from_anchor + ' m' : '-';
+                const rowClass = pos.status || '';
+
+                tableHtml += `
+                    <tr class="${rowClass}">
+                        <td>${time}</td>
+                        <td>${latLon}</td>
+                        <td>${distance}</td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += '</tbody></table></div>';
+            positionsContent.innerHTML = tableHtml;
+        }
+
+        // Update radius display
+        function updateRadiusDisplay(value) {
+            document.getElementById('radiusValue').textContent = value + ' m';
+
+            // Update preview circle and handle if they exist (before activation)
+            if (markers.previewZone && anchorWatchState.anchor_lat && anchorWatchState.anchor_lon) {
+                const radius = parseInt(value);
+                markers.previewZone.setRadius(radius);
+
+                // Update handle position to edge of new radius
+                if (markers.radiusHandle) {
+                    const anchorPos = [anchorWatchState.anchor_lat, anchorWatchState.anchor_lon];
+                    const handlePos = calculatePointAtDistance(anchorPos, radius, 45); // 45 degrees
+                    markers.radiusHandle.setLatLng(handlePos);
+                }
+            }
+        }
+
+        // Calculate point at distance and bearing from origin
+        function calculatePointAtDistance(origin, distanceMeters, bearingDegrees) {
+            const R = 6371000; // Earth radius in meters
+            const lat1 = origin[0] * Math.PI / 180;
+            const lon1 = origin[1] * Math.PI / 180;
+            const bearing = bearingDegrees * Math.PI / 180;
+
+            const lat2 = Math.asin(Math.sin(lat1) * Math.cos(distanceMeters / R) +
+                                   Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing));
+            const lon2 = lon1 + Math.atan2(Math.sin(bearing) * Math.sin(distanceMeters / R) * Math.cos(lat1),
+                                           Math.cos(distanceMeters / R) - Math.sin(lat1) * Math.sin(lat2));
+
+            return [lat2 * 180 / Math.PI, lon2 * 180 / Math.PI];
+        }
+
+        // Infer anchor position
+        async function inferAnchorPosition() {
+            const btn = document.getElementById('inferBtn');
+            btn.disabled = true;
+            btn.textContent = 'Calculating...';
+
+            try {
+                const result = await apiCall('/infer', { method: 'POST' });
+
+                // Store inferred position
+                anchorWatchState.anchor_lat = result.data.latitude;
+                anchorWatchState.anchor_lon = result.data.longitude;
+
+                // Enable activate button
+                document.getElementById('activateBtn').disabled = false;
+
+                // Update button text
+                btn.textContent = `Position Set (${result.data.sample_size} samples)`;
+
+                // Show on map
+                const anchorPos = [result.data.latitude, result.data.longitude];
+                if (!markers.anchor) {
+                    markers.anchor = L.marker(anchorPos, {
+                        icon: L.divIcon({
+                            html: '📍',
+                            iconSize: [30, 30],
+                            className: 'anchor-icon'
+                        }),
+                        draggable: true
+                    }).addTo(map);
+
+                    // Handle marker drag to update position
+                    markers.anchor.on('dragend', function(e) {
+                        const newPos = e.target.getLatLng();
+                        anchorWatchState.anchor_lat = newPos.lat;
+                        anchorWatchState.anchor_lon = newPos.lng;
+
+                        // Update preview circle and handle to follow anchor
+                        if (markers.previewZone) {
+                            markers.previewZone.setLatLng([newPos.lat, newPos.lng]);
+                        }
+                        if (markers.radiusHandle) {
+                            const radius = parseInt(document.getElementById('radiusSlider').value);
+                            const handlePos = calculatePointAtDistance([newPos.lat, newPos.lng], radius, 45);
+                            markers.radiusHandle.setLatLng(handlePos);
+                        }
+
+                        // Show feedback
+                        const btn = document.getElementById('inferBtn');
+                        btn.textContent = `Position Adjusted (${newPos.lat.toFixed(6)}, ${newPos.lng.toFixed(6)})`;
+                    });
+                } else {
+                    markers.anchor.setLatLng(anchorPos);
+                    markers.anchor.dragging.enable();
+                }
+
+                // Create preview circle and radius handle
+                const initialRadius = parseInt(document.getElementById('radiusSlider').value);
+
+                // Remove existing preview elements if any
+                if (markers.previewZone) map.removeLayer(markers.previewZone);
+                if (markers.radiusHandle) map.removeLayer(markers.radiusHandle);
+
+                // Create preview circle
+                markers.previewZone = L.circle(anchorPos, {
+                    radius: initialRadius,
+                    fillColor: '#007AFF',
+                    fillOpacity: 0.1,
+                    color: '#007AFF',
+                    weight: 2,
+                    dashArray: '5, 5'
+                }).addTo(map);
+
+                // Create draggable radius handle
+                const handlePos = calculatePointAtDistance(anchorPos, initialRadius, 45);
+                markers.radiusHandle = L.marker(handlePos, {
+                    icon: L.divIcon({
+                        html: '⚪',
+                        iconSize: [24, 24],
+                        className: 'radius-handle-icon'
+                    }),
+                    draggable: true
+                }).addTo(map);
+
+                // Handle radius handle drag
+                markers.radiusHandle.on('drag', function(e) {
+                    const handleLatLng = e.target.getLatLng();
+                    const anchor = [anchorWatchState.anchor_lat, anchorWatchState.anchor_lon];
+
+                    // Calculate distance from anchor to handle (Haversine formula)
+                    const R = 6371000; // Earth radius in meters
+                    const lat1 = anchor[0] * Math.PI / 180;
+                    const lat2 = handleLatLng.lat * Math.PI / 180;
+                    const deltaLat = (handleLatLng.lat - anchor[0]) * Math.PI / 180;
+                    const deltaLng = (handleLatLng.lng - anchor[1]) * Math.PI / 180;
+
+                    const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+                              Math.cos(lat1) * Math.cos(lat2) *
+                              Math.sin(deltaLng/2) * Math.sin(deltaLng/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    const distance = R * c;
+
+                    // Clamp to slider limits (10-2000m)
+                    const clampedRadius = Math.max(10, Math.min(2000, Math.round(distance / 10) * 10));
+
+                    // Update preview circle
+                    markers.previewZone.setRadius(clampedRadius);
+
+                    // Update slider and display
+                    document.getElementById('radiusSlider').value = clampedRadius;
+                    document.getElementById('radiusValue').textContent = clampedRadius + ' m';
+                });
+
+                map.setView(anchorPos, 17);
+
+            } catch (error) {
+                alert('Failed to calculate anchor position: ' + error.message);
+                btn.textContent = 'Infer Anchor Position';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Activate anchor watch
+        async function activateAnchorWatch() {
+            if (!anchorWatchState.anchor_lat || !anchorWatchState.anchor_lon) {
+                alert('Please infer anchor position first');
+                return;
+            }
+
+            const radius = parseInt(document.getElementById('radiusSlider').value);
+            const btn = document.getElementById('activateBtn');
+            btn.disabled = true;
+
+            try {
+                await apiCall('/activate', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        latitude: anchorWatchState.anchor_lat,
+                        longitude: anchorWatchState.anchor_lon,
+                        radius_meters: radius
+                    })
+                });
+
+                // Refresh display
+                await loadData();
+                alert('Anchor watch activated successfully');
+
+            } catch (error) {
+                alert('Failed to activate anchor watch: ' + error.message);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Update radius
+        async function updateRadius() {
+            const radius = parseInt(document.getElementById('radiusSlider').value);
+
+            try {
+                await apiCall('/radius', {
+                    method: 'PUT',
+                    body: JSON.stringify({ radius_meters: radius })
+                });
+
+                await loadData();
+                alert('Radius updated successfully');
+
+            } catch (error) {
+                alert('Failed to update radius: ' + error.message);
+            }
+        }
+
+        // Deactivate anchor watch
+        async function deactivateAnchorWatch() {
+            if (!confirm('Are you sure you want to deactivate anchor watch?')) {
+                return;
+            }
+
+            try {
+                await apiCall('/deactivate', { method: 'POST' });
+
+                // Clear stored state
+                anchorWatchState = {
+                    active: false,
+                    anchor_lat: null,
+                    anchor_lon: null,
+                    radius_meters: null
+                };
+
+                // Clean up preview elements if they exist
+                if (markers.previewZone) {
+                    map.removeLayer(markers.previewZone);
+                    markers.previewZone = null;
+                }
+                if (markers.radiusHandle) {
+                    map.removeLayer(markers.radiusHandle);
+                    markers.radiusHandle = null;
+                }
+
+                await loadData();
+                alert('Anchor watch deactivated');
+
+            } catch (error) {
+                alert('Failed to deactivate: ' + error.message);
+            }
+        }
+
+        // Load all data
+        async function loadData() {
+            try {
+                // Fetch status and positions in parallel
+                const [statusResult, positionsResult] = await Promise.all([
+                    apiCall('/status'),
+                    apiCall('/positions?limit=20')
+                ]);
+
+                const status = statusResult.data;
+                const positions = positionsResult.data.positions;
+
+                // Update state
+                anchorWatchState = {
+                    active: status.active,
+                    anchor_lat: status.anchor_lat,
+                    anchor_lon: status.anchor_lon,
+                    radius_meters: status.radius_meters
+                };
+
+                // Update display
+                renderStatus(status);
+                renderControls(status);
+                renderPositions(positions);
+                updateMap(status, positions);
+
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                document.getElementById('statusContent').innerHTML =
+                    '<div class="error-message">Failed to load status data</div>';
+            }
+        }
+
+        // Start auto-refresh
+        function startAutoRefresh() {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+            }
+            refreshTimer = setInterval(loadData, REFRESH_INTERVAL);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check for admin token
+            if (!ADMIN_TOKEN) {
+                alert('Admin token not found. Please log in.');
+                window.location.href = '/public/unified-mobile.html';
+                return;
+            }
+
+            // Initialize map
+            await initMap();
+
+            // Load initial data
+            loadData();
+
+            // Start auto-refresh
+            startAutoRefresh();
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+            }
+        });
+    </script>
+</body>
+</html>

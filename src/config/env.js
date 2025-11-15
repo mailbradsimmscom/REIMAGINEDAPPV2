@@ -43,7 +43,12 @@ const EnvSchema = z.object({
   // Debug flag for DIP LLM extraction (set to '1' to enable verbose logging)
   DIP_LLM_DEBUG: z.string().optional(),
   // Cross-service URL for maintenance agent
-  MAINTENANCE_SERVICE_URL: z.string().default('http://localhost:3001')
+  MAINTENANCE_SERVICE_URL: z.string().default('http://localhost:3001'),
+  // Anchor Watch Configuration
+  ANCHOR_WATCH_SAFE_RATIO: z.string().optional().default('0.7'),
+  ANCHOR_WATCH_WARNING_RATIO: z.string().optional().default('0.9'),
+  ANCHOR_WATCH_CENTROID_SAMPLES: z.string().optional().default('20'),
+  ANCHOR_WATCH_STALE_THRESHOLD_SEC: z.string().optional().default('300')
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

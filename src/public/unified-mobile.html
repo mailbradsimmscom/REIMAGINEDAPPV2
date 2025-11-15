@@ -58,6 +58,49 @@
             gap: 16px;
         }
 
+        .anchor-alarm-button {
+            margin-top: 16px;
+            background: #8E8E93;
+            border-radius: 16px;
+            padding: 20px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .anchor-alarm-button:active {
+            transform: scale(0.98);
+        }
+
+        .anchor-alarm-button.inactive {
+            background: #8E8E93;
+        }
+
+        .anchor-alarm-button.safe {
+            background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+        }
+
+        .anchor-alarm-button.warning {
+            background: linear-gradient(135deg, #FF9500 0%, #FF9F0A 100%);
+        }
+
+        .anchor-alarm-button.dragging {
+            background: linear-gradient(135deg, #FF3B30 0%, #FF453A 100%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
         .action-card {
             background: white;
             border-radius: 16px;
@@ -296,6 +339,10 @@
                 <div class="action-card-title">Edit Task</div>
             </a>
         </div>
+        <a href="/public/anchor-watch-admin.html" id="anchorAlarmBtn" class="anchor-alarm-button inactive">
+            <span id="anchorAlarmIcon">⚓</span>
+            <span id="anchorAlarmText">Anchor Alarm - Not Set</span>
+        </a>
     </div>
 
     <div class="more-section">
@@ -310,6 +357,16 @@
     </div>
 
     <script>
+        // Check for admin token in URL and store it
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
+        if (urlToken) {
+            localStorage.setItem('adminToken', urlToken);
+            // Remove token from URL for security
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        const ADMIN_TOKEN = localStorage.getItem('adminToken') || '';
+
         // Auto-detect maintenance service URL based on current hostname
         function getMaintenanceUrl() {
             const hostname = window.location.hostname;
@@ -343,7 +400,7 @@
         });
 
         // Haptic feedback for iOS
-        document.querySelectorAll('.action-card').forEach(card => {
+        document.querySelectorAll('.action-card, .anchor-alarm-button').forEach(card => {
             card.addEventListener('click', () => {
                 if ('vibrate' in navigator) {
                     navigator.vibrate(10);
@@ -355,19 +412,28 @@
         async function loadUserTasks() {
             const listContainer = document.getElementById('userTodoList');
 
+            if (!ADMIN_TOKEN) {
+                listContainer.innerHTML = '<div class="empty-todo">🔒 Login required to view tasks</div>';
+                return;
+            }
+
             try {
                 // Fetch todos from maintenance agent API
-                const response = await fetch(`${MAINTENANCE_URL}/admin/api/todos-paginated?limit=20`);
+                const response = await fetch(`${MAINTENANCE_URL}/admin/api/todo`, {
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                    }
+                });
                 const result = await response.json();
 
-                if (!result.success || !result.data || result.data.length === 0) {
+                if (!result.success || !result.data || !result.data.todos || result.data.todos.length === 0) {
                     listContainer.innerHTML = '<div class="empty-todo">✅ No pending tasks!</div>';
                     return;
                 }
 
                 // Filter to only user-created tasks
-                let tasks = result.data.filter(task =>
-                    task.type === 'user_task' || task.source === 'User'
+                let tasks = result.data.todos.filter(task =>
+                    task.type === 'user_task'
                 );
 
                 if (tasks.length === 0) {
@@ -407,9 +473,15 @@
             const isOverdue = dueDate && dueDate < now;
             const dueDateStr = dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No due date';
 
-            const canComplete = task.type === 'user_task' && task.metadata?.taskId;
+            const canComplete = task.type === 'user_task' && task.metadata?.taskId && task.metadata?.assetUid;
             const taskId = task.metadata?.taskId || '';
             const assetUid = task.metadata?.assetUid || '';
+
+            // Fix localhost URLs to use correct hostname
+            let actionUrl = task.actionUrl || '#';
+            if (actionUrl.includes('localhost:3001')) {
+                actionUrl = actionUrl.replace('http://localhost:3001', MAINTENANCE_URL);
+            }
 
             return `
                 <div class="todo-item ${isOverdue ? 'overdue' : ''}">
@@ -424,11 +496,11 @@
                     ${task.description ? `<div class="todo-description">${task.description}</div>` : ''}
                     <div class="todo-actions">
                         ${canComplete ? `
-                            <button class="todo-btn todo-btn-complete" onclick="markTaskComplete('${taskId}', '${assetUid}')">
+                            <button class="todo-btn todo-btn-complete" onclick="markTaskComplete('${taskId}', '${assetUid}', '${task.type}')">
                                 ✓ Complete
                             </button>
                         ` : ''}
-                        <button class="todo-btn todo-btn-view" onclick="window.location.href='${task.actionUrl || '#'}'">
+                        <button class="todo-btn todo-btn-view" onclick="window.location.href='${actionUrl}'">
                             View Details
                         </button>
                     </div>
@@ -436,37 +508,161 @@
             `;
         }
 
-        async function markTaskComplete(taskId, assetUid) {
+        async function markTaskComplete(taskId, assetUid, taskType) {
             if (!confirm('Mark this task as complete?')) return;
 
+            if (!ADMIN_TOKEN) {
+                alert('❌ Admin token required. Please log in again.');
+                return;
+            }
+
+            // Find and fade out the task element immediately (optimistic UI)
+            const taskElements = document.querySelectorAll('.todo-item');
+            let taskElement = null;
+            taskElements.forEach(el => {
+                const completeBtn = el.querySelector('.todo-btn-complete');
+                if (completeBtn && completeBtn.getAttribute('onclick').includes(taskId)) {
+                    taskElement = el;
+                }
+            });
+
+            if (taskElement) {
+                taskElement.style.opacity = '0.5';
+                taskElement.style.pointerEvents = 'none';
+            }
+
             try {
-                const response = await fetch(`${MAINTENANCE_URL}/admin/api/task-completions`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        task_id: taskId,
-                        asset_uid: assetUid,
-                        completion_notes: 'Completed from mobile dashboard'
-                    })
-                });
+                let response;
+
+                // Route to correct endpoint based on task type
+                if (taskType === 'user_task') {
+                    // User tasks use their own completion endpoint
+                    response = await fetch(`${MAINTENANCE_URL}/admin/api/user-tasks/${taskId}/complete`, {
+                        method: 'POST',
+                        headers: {
+                            'x-admin-token': ADMIN_TOKEN
+                        }
+                    });
+                } else {
+                    // Maintenance/BoatOS tasks use task-completions endpoint
+                    response = await fetch(`${MAINTENANCE_URL}/admin/api/task-completions`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': ADMIN_TOKEN
+                        },
+                        body: JSON.stringify({
+                            taskId: taskId,
+                            assetUid: assetUid || null,
+                            completionNotes: 'Completed from mobile dashboard'
+                        })
+                    });
+                }
 
                 const result = await response.json();
 
                 if (result.success) {
-                    alert('✅ Task marked as complete!');
-                    loadUserTasks(); // Refresh list
+                    // Remove task from DOM immediately
+                    if (taskElement) {
+                        taskElement.remove();
+                    }
+
+                    // Refresh list after short delay to ensure DB is updated
+                    setTimeout(() => {
+                        loadUserTasks();
+                    }, 500);
                 } else {
+                    // Restore task visibility on error
+                    if (taskElement) {
+                        taskElement.style.opacity = '1';
+                        taskElement.style.pointerEvents = 'auto';
+                    }
                     throw new Error(result.error?.message || 'Failed to mark complete');
                 }
             } catch (error) {
                 console.error('Error completing task:', error);
+                // Restore task visibility on error
+                if (taskElement) {
+                    taskElement.style.opacity = '1';
+                    taskElement.style.pointerEvents = 'auto';
+                }
                 alert('❌ Failed to complete task. Please try again.');
+            }
+        }
+
+        // Update anchor alarm button based on status
+        async function updateAnchorAlarmStatus() {
+            const btn = document.getElementById('anchorAlarmBtn');
+            const icon = document.getElementById('anchorAlarmIcon');
+            const text = document.getElementById('anchorAlarmText');
+
+            if (!ADMIN_TOKEN) {
+                // No token - show as inactive
+                btn.className = 'anchor-alarm-button inactive';
+                icon.textContent = '⚓';
+                text.textContent = 'Anchor Alarm - Login Required';
+                return;
+            }
+
+            try {
+                const response = await fetch('/admin/api/anchor-watch/status', {
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch status');
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Unknown error');
+                }
+
+                const { active, status, distance_meters, radius_meters } = result.data;
+
+                if (!active) {
+                    // Not set
+                    btn.className = 'anchor-alarm-button inactive';
+                    icon.textContent = '⚓';
+                    text.textContent = 'Anchor Alarm - Not Set';
+                } else if (status === 'safe') {
+                    // Safe
+                    btn.className = 'anchor-alarm-button safe';
+                    icon.textContent = '✅';
+                    const distanceStr = distance_meters ? `${distance_meters.toFixed(0)}m` : 'N/A';
+                    text.textContent = `Anchor Alarm - Safe (${distanceStr})`;
+                } else if (status === 'warning') {
+                    // Warning
+                    btn.className = 'anchor-alarm-button warning';
+                    icon.textContent = '⚠️';
+                    const distanceStr = distance_meters ? `${distance_meters.toFixed(0)}m` : 'N/A';
+                    text.textContent = `Anchor Alarm - Warning (${distanceStr})`;
+                } else if (status === 'dragging') {
+                    // Dragging
+                    btn.className = 'anchor-alarm-button dragging';
+                    icon.textContent = '🚨';
+                    const distanceStr = distance_meters ? `${distance_meters.toFixed(0)}m` : 'N/A';
+                    text.textContent = `ANCHOR DRAGGING! (${distanceStr})`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching anchor watch status:', error);
+                btn.className = 'anchor-alarm-button inactive';
+                icon.textContent = '⚓';
+                text.textContent = 'Anchor Alarm - Error';
             }
         }
 
         // Load tasks when page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadUserTasks();
+            updateAnchorAlarmStatus();
+
+            // Update anchor alarm status every 20 seconds
+            setInterval(updateAnchorAlarmStatus, 20000);
         });
     </script>
 </body>

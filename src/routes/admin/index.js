@@ -25,6 +25,7 @@ import documentDeletionRouter from './document-deletion.route.js';
 import maintenanceRouter from './maintenance.route.js';
 import duplicateReviewRouter from './duplicate-review.route.js';
 import maintenanceTasksRouter from './maintenance-tasks.route.js';
+import anchorWatchRouter from './anchor-watch.route.js';
 
 const router = express.Router();
 
@@ -63,6 +64,7 @@ router.use('', documentDeletionRouter);
 router.use('/maintenance', maintenanceRouter);
 router.use('/duplicate-review', duplicateReviewRouter);
 router.use('/maintenance-tasks', maintenanceTasksRouter);
+router.use('/anchor-watch', anchorWatchRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin

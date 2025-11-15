@@ -78,6 +78,21 @@
         transform: rotate(-45deg) translate(6px, -6px);
       }
 
+      .home-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        font-size: 24px;
+        line-height: 1;
+        z-index: 1001;
+        transition: transform 0.2s;
+      }
+
+      .home-btn:active {
+        transform: scale(0.9);
+      }
+
       .header-content {
         flex: 1;
         margin-left: 12px;
@@ -301,6 +316,7 @@
           <div class="title">Chat</div>
           <div class="subtitle" id="headerSubtitle">Connected</div>
         </div>
+        <button class="home-btn" id="homeBtn" aria-label="Go to home">🏠</button>
       </header>
 
       <!-- Sidebar Overlay -->
@@ -370,8 +386,14 @@
       // Mobile-specific: Hamburger menu toggle
       document.addEventListener('DOMContentLoaded', () => {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const homeBtn = document.getElementById('homeBtn');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        // Home button - navigate to unified mobile dashboard
+        homeBtn.addEventListener('click', () => {
+          window.location.href = '/public/unified-mobile.html';
+        });
 
         function openSidebar() {
           sidebar.classList.add('open');
