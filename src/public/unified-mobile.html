@@ -377,6 +377,11 @@
                 return 'https://admin.catamaranos.com';
             }
 
+            // Render production
+            if (hostname === 'boatos-main.onrender.com') {
+                return 'https://boatos-maintenance.onrender.com';
+            }
+
             // Localhost
             if (hostname === 'localhost') {
                 return 'http://localhost:3001';
