@@ -212,6 +212,17 @@ app.get('/suggestions.html', async (req, res) => {
   }
 });
 
+// Unified mobile dashboard (no auth required for HTML page)
+app.get('/unified-mobile.html', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/unified-mobile.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(500).send('Error loading page');
+  }
+});
+
 // Performance logging middleware
 app.use((req, res, next) => {
   const originalEnd = res.end;
