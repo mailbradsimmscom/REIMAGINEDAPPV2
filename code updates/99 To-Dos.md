@@ -237,3 +237,24 @@ Multiple fallback implementations that may be unnecessary:
 - Many services were split from `enhanced-chat.service.js` but the original remains
 
 **Priority:** Start with Phase 1 (safe deletions) as these require no testing and provide immediate cleanup benefits.
+
+
+
+
+ External dependency:
+  - node-telegram-bot-api - Official Telegram bot library (npm package)
+
+  Implementation Strategy
+
+  Option A: Polling (Simpler, Recommended for Local Dev)
+  - Bot service polls Telegram API for messages
+  - Separate interval checks anchor watch status
+  - No webhook needed
+  - Works on localhost
+
+  Option B: Webhook (Production, Later)
+  - Telegram sends commands to webhook URL
+  - Requires public URL (Render)
+  - More efficient, instant responses
+
+  Recommendation: Start with Option A (Polling)

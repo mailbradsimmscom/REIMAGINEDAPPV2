@@ -48,7 +48,10 @@ const EnvSchema = z.object({
   ANCHOR_WATCH_SAFE_RATIO: z.string().optional().default('0.7'),
   ANCHOR_WATCH_WARNING_RATIO: z.string().optional().default('0.9'),
   ANCHOR_WATCH_CENTROID_SAMPLES: z.string().optional().default('20'),
-  ANCHOR_WATCH_STALE_THRESHOLD_SEC: z.string().optional().default('300')
+  ANCHOR_WATCH_STALE_THRESHOLD_SEC: z.string().optional().default('300'),
+  // Telegram Bot Configuration
+  TELEGRAM_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_CHAT_ID: z.string().optional()
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
