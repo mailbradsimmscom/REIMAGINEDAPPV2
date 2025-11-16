@@ -23,21 +23,30 @@ const server = app.listen(port, async () => {
   // Also print routes after listen to confirm final state
   printRoutes(app, logger);
 
-  // Initialize Telegram bot if configured
-  try {
-    await telegramBotService.start();
-    anchorWatchAlertsService.start();
-    logger.info('Telegram bot and alerts initialized');
-  } catch (error) {
-    logger.warn('Telegram initialization failed (continuing without it)', { error: error.message });
+  // Initialize Telegram bot and alerts in PRODUCTION ONLY
+  // This prevents polling conflicts when running multiple instances locally
+  const env = getEnv();
+  if (env.NODE_ENV === 'production') {
+    try {
+      await telegramBotService.start();
+      anchorWatchAlertsService.start();
+      logger.info('Telegram bot and alerts initialized (production mode)');
+    } catch (error) {
+      logger.warn('Telegram initialization failed (continuing without it)', { error: error.message });
+    }
+  } else {
+    logger.info('Telegram bot disabled in development mode (production only)');
   }
 });
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully');
-  await telegramBotService.stop();
-  anchorWatchAlertsService.stop();
+  const env = getEnv();
+  if (env.NODE_ENV === 'production') {
+    await telegramBotService.stop();
+    anchorWatchAlertsService.stop();
+  }
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);
@@ -46,8 +55,11 @@ process.on('SIGTERM', async () => {
 
 process.on('SIGINT', async () => {
   logger.info('SIGINT received, shutting down gracefully');
-  await telegramBotService.stop();
-  anchorWatchAlertsService.stop();
+  const env = getEnv();
+  if (env.NODE_ENV === 'production') {
+    await telegramBotService.stop();
+    anchorWatchAlertsService.stop();
+  }
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);
