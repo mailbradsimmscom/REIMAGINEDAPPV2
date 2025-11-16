@@ -229,41 +229,56 @@ IMMEDIATE ACTION REQUIRED
   - `TWILIO_SMS_TO` - Recipient phone number
 
 **6. `src/start.js`**
-- Initialize Telegram bot on server startup
-- Start anchor watch alerts monitoring
+- Initialize Telegram bot on server startup (PRODUCTION ONLY)
+- Start anchor watch alerts monitoring (PRODUCTION ONLY)
 - Graceful shutdown handlers (SIGTERM, SIGINT)
-  - Stop Telegram polling
-  - Stop alerts monitoring
+  - Stop Telegram polling (if running)
+  - Stop alerts monitoring (if running)
   - Close server
 
 **Changes:**
 ```javascript
-// Server startup
+// Server startup - PRODUCTION ONLY
 const server = app.listen(port, async () => {
   // ... existing code
 
-  // Initialize Telegram bot if configured
-  try {
-    await telegramBotService.start();
-    anchorWatchAlertsService.start();
-    logger.info('Telegram bot and alerts initialized');
-  } catch (error) {
-    logger.warn('Telegram initialization failed (continuing without it)',
-      { error: error.message });
+  // Initialize Telegram bot and alerts in PRODUCTION ONLY
+  // This prevents polling conflicts when running multiple instances locally
+  const env = getEnv();
+  if (env.NODE_ENV === 'production') {
+    try {
+      await telegramBotService.start();
+      anchorWatchAlertsService.start();
+      logger.info('Telegram bot and alerts initialized (production mode)');
+    } catch (error) {
+      logger.warn('Telegram initialization failed (continuing without it)',
+        { error: error.message });
+    }
+  } else {
+    logger.info('Telegram bot disabled in development mode (production only)');
   }
 });
 
-// Graceful shutdown
+// Graceful shutdown - also checks NODE_ENV
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully');
-  await telegramBotService.stop();
-  anchorWatchAlertsService.stop();
+  const env = getEnv();
+  if (env.NODE_ENV === 'production') {
+    await telegramBotService.stop();
+    anchorWatchAlertsService.stop();
+  }
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);
   });
 });
 ```
+
+**Why Production Only:**
+- Prevents Telegram API 409 Conflict errors ("terminated by other getUpdates request")
+- Only ONE bot instance can poll Telegram at a time
+- Developers can run localhost without interfering with production
+- Production (Render) runs with `NODE_ENV=production`, localhost runs with `NODE_ENV=development`
 
 **7. `.env`**
 - Added Telegram credentials
@@ -842,6 +857,56 @@ tail -f logs/debug/node-debug.log | grep -i telegram
 [ERROR] [telegram-bot] Telegram polling error: ...
 ```
 
+### Telegram 409 Conflict Error
+
+**Symptom:** Telegram polling error in logs: "409 Conflict: terminated by other getUpdates request"
+
+**Root Cause:** Multiple bot instances trying to poll Telegram simultaneously (only ONE allowed)
+
+**Common Scenarios:**
+1. Localhost server running + Render server running
+2. Multiple localhost instances running
+3. Forgot to stop old server before starting new one
+
+**Solution 1: Stop Extra Instances**
+```bash
+# Kill all local servers
+pkill -f "node ./src/start.js"
+pkill -f "npm run dev"
+
+# Verify stopped
+ps aux | grep "node.*start.js"
+```
+
+**Solution 2: Production-Only Bot (Implemented)**
+
+The bot now only runs when `NODE_ENV=production`:
+
+```javascript
+// Localhost (NODE_ENV=development)
+// Logs: "Telegram bot disabled in development mode (production only)"
+// No polling, no conflict
+
+// Render (NODE_ENV=production)
+// Logs: "Telegram bot and alerts initialized (production mode)"
+// Polling active
+```
+
+**Verification:**
+```bash
+# Check logs on Render
+# Should see:
+[INFO] Telegram bot started with polling enabled
+
+# Should NOT see:
+[ERROR] 409 Conflict: terminated by other getUpdates request
+```
+
+**Best Practice:**
+- Run localhost for development (bot disabled)
+- Only Render production server polls Telegram
+- No conflicts, no manual management needed
+
 ### SMS Not Sending
 
 **Symptom:** Critical alert triggered, no SMS received
@@ -1064,6 +1129,17 @@ app.post('/admin/api/telegram/webhook', async (req, res) => {
 - Update anchor-watch-alerts.service.js to blast SMS for critical statuses
 - SMS sent for: warning, dragging, gps_lost
 - Telegram handles all other updates
+```
+
+**Production-Only Bot:**
+```
+577a22a - Restrict Telegram bot to production mode only
+- Bot and alerts now only start when NODE_ENV=production
+- Prevents 409 polling conflicts (multiple instances)
+- Development mode: Bot disabled, logs "production only" message
+- Production mode: Bot starts normally with polling and alerts
+- Graceful shutdown also checks NODE_ENV before stopping services
+- Allows developers to run localhost without conflicting with Render
 ```
 
 ---

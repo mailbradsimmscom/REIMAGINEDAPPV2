@@ -869,12 +869,24 @@ IMMEDIATE ACTION REQUIRED
 
 ### Lifecycle Management
 
-**Server Startup:**
+**Server Startup (Production Only):**
 ```javascript
 // src/start.js
-await telegramBotService.start();     // Start polling
-anchorWatchAlertsService.start();     // Start monitoring
+const env = getEnv();
+if (env.NODE_ENV === 'production') {
+  await telegramBotService.start();     // Start polling (production only)
+  anchorWatchAlertsService.start();     // Start monitoring (production only)
+  logger.info('Telegram bot and alerts initialized (production mode)');
+} else {
+  logger.info('Telegram bot disabled in development mode (production only)');
+}
 ```
+
+**Why Production Only:**
+- Prevents Telegram 409 Conflict errors (only ONE bot instance can poll)
+- Localhost runs with `NODE_ENV=development` (bot disabled)
+- Render runs with `NODE_ENV=production` (bot enabled)
+- Developers can run localhost without interfering with production
 
 **Anchor Watch Activation:**
 ```javascript
@@ -910,8 +922,11 @@ await anchorWatchService.deactivate();
 **Graceful Shutdown:**
 ```javascript
 // SIGTERM or SIGINT received
-await telegramBotService.stop();      // Stop polling
-anchorWatchAlertsService.stop();      // Stop monitoring
+const env = getEnv();
+if (env.NODE_ENV === 'production') {
+  await telegramBotService.stop();      // Stop polling (if running)
+  anchorWatchAlertsService.stop();      // Stop monitoring (if running)
+}
 server.close();
 ```
 
