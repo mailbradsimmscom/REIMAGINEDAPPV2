@@ -1,7 +1,7 @@
 # BoatOS Render Architecture - Production Deployment
 
-**Document Version:** 1.0
-**Last Updated:** 2025-11-15
+**Document Version:** 1.1
+**Last Updated:** 2025-11-15 (Added Telegram/SMS notifications)
 **Status:** Production Active
 
 ---
@@ -17,7 +17,8 @@
 7. [Data Flow](#data-flow)
 8. [Deployment Process](#deployment-process)
 9. [Mobile Navigation System](#mobile-navigation-system)
-10. [External Dependencies](#external-dependencies)
+10. [Notification System](#notification-system)
+11. [External Dependencies](#external-dependencies)
 
 ---
 
@@ -702,6 +703,251 @@ if (currentPath.includes('unified-mobile.html')) {
 
 ---
 
+## Notification System
+
+### Overview
+
+BoatOS implements a **dual-channel notification system** for anchor watch monitoring with smart redundancy:
+
+- **Telegram Bot:** All updates, user commands, periodic monitoring (free)
+- **Twilio SMS:** Critical alerts only (warning, dragging, GPS lost)
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Anchor Watch Alerts Service                            │
+│  - Background monitoring (every 20 seconds)              │
+│  - Status change detection                               │
+│  - Alert routing (Telegram vs SMS)                       │
+│  - Frequency management (debouncing, periodic)           │
+└────────────────┬────────────────────────────────────────┘
+                 │
+      ┌──────────┴──────────┐
+      ↓                     ↓
+┌─────────────────┐   ┌──────────────────┐
+│  Telegram       │   │  Twilio SMS      │
+│  - All updates  │   │  - Critical only │
+│  - Commands     │   │  - Warning       │
+│  - Safe status  │   │  - Dragging      │
+│  - Periodic     │   │  - GPS lost      │
+└─────────────────┘   └──────────────────┘
+```
+
+### Services
+
+**1. telegram.service.js**
+- Send formatted messages to Telegram users
+- Markdown formatting with emojis
+- Status updates, alerts, confirmations
+
+**2. telegram-bot.service.js**
+- Poll Telegram API for commands (1 second interval)
+- Handle user commands: `/start`, `/status`, `/positions`, `/help`
+- Polling mode (works on localhost and Render without webhook)
+
+**3. twilio.service.js**
+- Send SMS via Twilio API
+- Plain text formatting (no markdown)
+- Critical alerts only
+
+**4. anchor-watch-alerts.service.js**
+- Monitor anchor watch status every 20 seconds
+- Detect status changes (safe ↔ warning ↔ dragging)
+- Route to appropriate channels
+- Debounce repeat alerts (1 minute minimum)
+- Send periodic "all good" updates (30 minutes)
+
+### Alert Strategy
+
+**Telegram (All Updates):**
+- User commands (any time): `/status`, `/positions`
+- Activation/deactivation confirmations
+- All status changes (safe, warning, dragging, GPS lost)
+- Periodic updates (every 30 min if safe)
+
+**SMS (Critical Only):**
+- ⚠️ Warning - Approaching safe zone limit
+- 🚨 Dragging - Anchor is dragging
+- 📡 GPS Lost - No position data
+
+**Cost Optimization:**
+- Normal operations: Telegram only (free)
+- Critical alerts: Both channels (redundancy for safety)
+- Estimated cost: $0-0.50/month (Twilio SMS)
+
+### Data Flow
+
+**Anchor Watch Alert Flow:**
+
+```
+1. Background Service: Check status every 20 seconds
+   ↓
+2. Anchor Watch Service: Get current status from GPS + DB
+   ↓
+3. Alerts Service: Detect status change?
+   ↓
+4a. No change → Check for periodic update (30 min)
+   ↓
+4b. Status changed → Determine if critical
+   ↓
+5a. Not critical → Telegram only
+   ↓
+5b. Critical (warning/dragging/gps_lost) → Telegram + SMS
+   ↓
+6. User receives alert(s) on phone
+```
+
+**User Command Flow:**
+
+```
+1. User sends /status to Telegram bot
+   ↓
+2. Telegram API → Bot Service (polling)
+   ↓
+3. Bot Service: Parse command
+   ↓
+4. Anchor Watch Service: Get current status
+   ↓
+5. Telegram Service: Format response
+   ↓
+6. Telegram API → User receives message
+```
+
+### Configuration
+
+**Telegram:**
+```bash
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHAT_ID=1382446578
+```
+
+**Twilio:**
+```bash
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token_here
+TWILIO_PHONE_NUMBER=+13656614969
+TWILIO_SMS_TO=+14165696940
+```
+
+### Commands Available
+
+| Command | Description | Example Response |
+|---------|-------------|------------------|
+| `/start` | Register user, get Chat ID | `Your Chat ID is: 1382446578` |
+| `/status` | Current anchor watch status | Status, distance, position, last updated |
+| `/positions` | Last 5 GPS positions | Table of recent positions with distances |
+| `/help` | Show available commands | List of all commands |
+
+### Alert Examples
+
+**Telegram Status Update:**
+```
+⚓ Anchor Watch Status
+
+✅ Status: Safe
+
+📏 Distance: 7m from anchor
+🎯 Safe Radius: 50m
+📍 Position: 12.602200, -61.450300
+⚓ Anchor: 12.602150, -61.450280
+
+⏰ Updated: 10:45:32 PM
+```
+
+**SMS Critical Alert:**
+```
+🚨 ANCHOR DRAGGING ALERT 🚨
+
+ANCHOR IS DRAGGING!
+
+Distance: 65m from anchor point
+Safe radius: 50m
+
+IMMEDIATE ACTION REQUIRED
+```
+
+### Lifecycle Management
+
+**Server Startup:**
+```javascript
+// src/start.js
+await telegramBotService.start();     // Start polling
+anchorWatchAlertsService.start();     // Start monitoring
+```
+
+**Anchor Watch Activation:**
+```javascript
+// User activates via admin page
+await anchorWatchService.activate(lat, lon, radius);
+
+// Notifications sent:
+// - Telegram: "Anchor Watch Activated..."
+// - SMS: None (not critical)
+```
+
+**Status Change (Safe → Dragging):**
+```javascript
+// Background service detects change
+const isCritical = status === 'dragging';
+
+// Alerts sent:
+// - Telegram: "ANCHOR DRAGGING ALERT..."
+// - SMS: "ANCHOR IS DRAGGING!" (critical = true)
+```
+
+**Deactivation:**
+```javascript
+// User deactivates via admin page
+await anchorWatchService.deactivate();
+
+// Notifications sent:
+// - Telegram: "Anchor Watch Deactivated"
+// - SMS: None
+// - Monitoring stops (no more alerts)
+```
+
+**Graceful Shutdown:**
+```javascript
+// SIGTERM or SIGINT received
+await telegramBotService.stop();      // Stop polling
+anchorWatchAlertsService.stop();      // Stop monitoring
+server.close();
+```
+
+### Production Considerations
+
+**Polling vs Webhook:**
+- Current: Polling mode (checks Telegram every 1 second)
+- Works on localhost and Render
+- ~60 API calls/minute (well under Telegram limits)
+- Future: Switch to webhook for production (more efficient)
+
+**Multi-User Support:**
+- Current: Single user (one chat ID, one phone number)
+- Future: Support array of recipients for crew alerts
+
+**Alert History:**
+- Current: Alerts sent but not stored
+- Future: Store in database for incident analysis
+
+### Monitoring
+
+**Logs to Watch:**
+```
+[INFO] Telegram bot started with polling enabled
+[INFO] Anchor watch alerts monitoring started
+[INFO] Status change alert sent (from: safe, to: warning, smsSent: true)
+[INFO] SMS sent successfully
+```
+
+**Health Checks:**
+- Telegram bot polling: Every 1 second
+- Anchor watch monitoring: Every 20 seconds
+- Both services restart on server restart
+
+---
+
 ## External Dependencies
 
 ### Supabase (PostgreSQL Database)
@@ -755,6 +1001,48 @@ if (currentPath.includes('unified-mobile.html')) {
 **Cloud-based PDF parsing** (no local tesseract)
 **Usage:** Parse uploaded PDF manuals into structured chunks
 **API Key Location:** Python Sidecar
+
+### Telegram Bot API
+
+**Bot Username:** `@REIMAGINEDSV_bot`
+**Bot URL:** `t.me/REIMAGINEDSV_bot`
+**Mode:** Polling (1 second intervals)
+
+**Usage:**
+- Anchor watch status updates and alerts
+- User commands (`/start`, `/status`, `/positions`, `/help`)
+- Activation/deactivation notifications
+- Periodic "all good" updates (every 30 min)
+
+**API Key Location:** Main App
+**Cost:** Free (unlimited messages)
+
+**Features:**
+- Markdown formatting with emojis
+- Command handling via polling
+- No webhook needed (works on localhost)
+- Graceful shutdown support
+
+### Twilio SMS
+
+**Account SID:** `ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+**Phone Number:** `+13656614969` (sender)
+**Recipient:** `+14165696940`
+
+**Usage:**
+- Critical anchor watch alerts only
+- Warning status (approaching limit)
+- Dragging status (anchor dragging)
+- GPS lost status (no position data)
+
+**API Key Location:** Main App
+**Cost:** ~$0.0075 per SMS (~$0-0.50/month typical use)
+
+**Features:**
+- Plain text SMS (no formatting)
+- Immediate delivery
+- Works without internet app
+- Redundancy for safety-critical alerts
 
 ---
 
