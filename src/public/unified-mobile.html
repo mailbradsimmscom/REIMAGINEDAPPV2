@@ -303,14 +303,6 @@
             padding: 40px 20px;
             color: #8E8E93;
         }
-
-        .footer {
-            padding: 20px;
-            text-align: center;
-            color: #8E8E93;
-            font-size: 12px;
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-        }
     </style>
 </head>
 <body>
@@ -350,10 +342,6 @@
         <div id="userTodoList" class="user-todo-list">
             <div class="loading">Loading tasks...</div>
         </div>
-    </div>
-
-    <div class="footer">
-        <p>BoatOS Mobile v2.0</p>
     </div>
 
     <script>
@@ -670,5 +658,8 @@
             setInterval(updateAnchorAlarmStatus, 20000);
         });
     </script>
+
+    <!-- Mobile Navigation Component -->
+    <script src="/js/mobile-nav.js"></script>
 </body>
 </html>
