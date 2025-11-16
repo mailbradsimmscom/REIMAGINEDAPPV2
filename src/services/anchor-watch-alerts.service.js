@@ -5,6 +5,7 @@
 
 import { logger } from '../utils/logger.js';
 import { telegramService } from './telegram.service.js';
+import { twilioService } from './twilio.service.js';
 import { anchorWatchService } from './anchor-watch.service.js';
 
 const moduleLogger = logger.createModuleLogger('anchor-watch-alerts');
@@ -127,11 +128,22 @@ class AnchorWatchAlertsService {
    */
   async sendStatusChangeAlert(status) {
     try {
+      // Always send Telegram alert
       await telegramService.sendAnchorWatchAlert(status, this.lastKnownStatus);
+
+      // Send SMS for CRITICAL statuses only (warning, dragging, gps_lost)
+      const isCritical = ['warning', 'dragging', 'gps_lost'].includes(status.status);
+
+      if (isCritical && twilioService.isConfigured()) {
+        await twilioService.sendCriticalAlert(status);
+        moduleLogger.info('Critical SMS alert sent', { status: status.status });
+      }
+
       moduleLogger.info('Status change alert sent', {
         from: this.lastKnownStatus,
         to: status.status,
-        distance: status.distance_meters
+        distance: status.distance_meters,
+        smsSent: isCritical
       });
     } catch (error) {
       moduleLogger.error('Failed to send status change alert', { error: error.message });

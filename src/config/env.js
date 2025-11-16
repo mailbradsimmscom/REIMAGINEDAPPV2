@@ -51,7 +51,12 @@ const EnvSchema = z.object({
   ANCHOR_WATCH_STALE_THRESHOLD_SEC: z.string().optional().default('300'),
   // Telegram Bot Configuration
   TELEGRAM_BOT_TOKEN: z.string().optional(),
-  TELEGRAM_CHAT_ID: z.string().optional()
+  TELEGRAM_CHAT_ID: z.string().optional(),
+  // Twilio SMS Configuration
+  TWILIO_ACCOUNT_SID: z.string().optional(),
+  TWILIO_AUTH_TOKEN: z.string().optional(),
+  TWILIO_PHONE_NUMBER: z.string().optional(),
+  TWILIO_SMS_TO: z.string().optional()
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
