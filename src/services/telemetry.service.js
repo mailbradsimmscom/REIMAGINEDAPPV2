@@ -223,8 +223,8 @@ class TelemetryService {
         });
       }
 
-      // Sort by device ID for consistent ordering
-      summary.solar_chargers.sort((a, b) => a.device_id.localeCompare(b.device_id));
+      // Sort alphabetically by name
+      summary.solar_chargers.sort((a, b) => a.name.localeCompare(b.name));
 
       // Use calculated total if system total not available
       if (summary.solar_power === null) {
