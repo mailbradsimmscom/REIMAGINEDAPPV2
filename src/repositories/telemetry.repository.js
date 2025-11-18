@@ -29,6 +29,7 @@ class TelemetryRepository {
         'Yield/Power',
         'Yield/User',
         'Pv/V',
+        'History/Daily/0/Yield',
         // Tank metrics
         'Level',
         'Remaining',

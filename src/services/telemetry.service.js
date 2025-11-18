@@ -103,6 +103,13 @@ class TelemetryService {
 
     // Individual battery banks
     if (grouped.battery?.devices) {
+      // Friendly name mappings from Victron config
+      const batteryNames = {
+        'battery/1': '48V Battery Bank',
+        'battery/278': '24V Service Batt',
+        'battery/279': '12V Service Batt'
+      };
+
       for (const [deviceId, device] of Object.entries(grouped.battery.devices)) {
         const voltage = device.metrics['Dc/0/Voltage']?.value;
         const soc = device.metrics['Soc']?.value;
@@ -110,13 +117,9 @@ class TelemetryService {
         const power = device.metrics['Dc/0/Power']?.value;
         const timeToGo = device.metrics['TimeToGo']?.value;
 
-        // Determine battery bank name based on voltage
-        let bankName = device.display_name || deviceId;
-        if (voltage) {
-          if (voltage >= 40) bankName = '48V Bank';
-          else if (voltage >= 20) bankName = '24V Bank';
-          else if (voltage >= 10) bankName = '12V Bank';
-        }
+        // Use display_name from DB, then our mapping, then fallback
+        const displayName = device.display_name !== deviceId ? device.display_name : null;
+        const bankName = displayName || batteryNames[deviceId] || deviceId;
 
         summary.batteries.push({
           device_id: deviceId,
@@ -146,23 +149,35 @@ class TelemetryService {
     // Individual solar chargers
     if (grouped.solarcharger?.devices) {
       let totalSolarPower = 0;
+
+      // Friendly name mappings from Victron config
+      const chargerNames = {
+        'solarcharger/289': 'Stb Fwd',
+        'solarcharger/290': 'Davit Stb',
+        'solarcharger/291': 'Port Aft',
+        'solarcharger/292': 'Port Fwd',
+        'solarcharger/293': 'Port Mid Fwd',
+        'solarcharger/294': 'Port Mid Aft',
+        'solarcharger/295': 'Davit Port',
+        'solarcharger/296': 'Stb Aft',
+        'solarcharger/297': 'Davit Mid'
+      };
+
       for (const [deviceId, device] of Object.entries(grouped.solarcharger.devices)) {
         const power = device.metrics['Yield/Power']?.value || 0;
         const pvVoltage = device.metrics['Pv/V']?.value;
         const dcVoltage = device.metrics['Dc/0/Voltage']?.value;
-        const yieldToday = device.metrics['Yield/User']?.value;
+        // Use daily yield (resets each day) instead of cumulative
+        const yieldToday = device.metrics['History/Daily/0/Yield']?.value || 0;
 
         totalSolarPower += power;
 
-        // Extract charger number from device ID (e.g., "solarcharger/289" -> "289")
-        const chargerNum = deviceId.split('/')[1] || deviceId;
-
-        // Use display_name only if it's not the same as deviceId
+        // Use display_name from DB, then our mapping, then fallback
         const displayName = device.display_name !== deviceId ? device.display_name : null;
 
         summary.solar_chargers.push({
           device_id: deviceId,
-          name: displayName || `MPPT ${chargerNum}`,
+          name: displayName || chargerNames[deviceId] || `MPPT ${deviceId.split('/')[1]}`,
           power: power,
           pv_voltage: pvVoltage,
           dc_voltage: dcVoltage,
@@ -182,12 +197,12 @@ class TelemetryService {
 
     // Tank levels - all 4 tanks
     if (grouped.tank?.devices) {
-      // Tank name mappings
+      // Tank name mappings from Victron config
       const tankNames = {
-        'tank/20': 'Port Water',
-        'tank/21': 'Starboard Water',
-        'tank/22': 'Starboard Diesel',
-        'tank/23': 'Port Diesel'
+        'tank/20': 'Port Diesel',
+        'tank/21': 'Port Water',
+        'tank/22': 'Stbd Diesel',
+        'tank/23': 'Stbd Water'
       };
 
       for (const [deviceId, device] of Object.entries(grouped.tank.devices)) {

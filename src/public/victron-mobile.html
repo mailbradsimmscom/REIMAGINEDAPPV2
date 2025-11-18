@@ -125,6 +125,12 @@
             color: var(--text-primary);
         }
 
+        .card-row-sublabel {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
         .card-row-value {
             font-size: 15px;
             font-weight: 500;
@@ -466,11 +472,14 @@
                 // Individual chargers
                 for (const charger of summary.solar_chargers) {
                     const power = charger.power ? Math.round(charger.power) : 0;
-                    const yieldToday = charger.yield_today?.toFixed(2) || '0.00';
+                    const yieldToday = charger.yield_today ? charger.yield_today.toFixed(2) : '0.00';
 
                     html += `
                         <div class="card-row">
-                            <span class="card-row-label">${charger.name}</span>
+                            <div class="card-row-label">
+                                <div>${charger.name}</div>
+                                <div class="card-row-sublabel">${yieldToday} kWh today</div>
+                            </div>
                             <span class="card-row-value ${power > 0 ? 'success' : ''}">${power}<span class="unit">W</span></span>
                         </div>
                     `;
