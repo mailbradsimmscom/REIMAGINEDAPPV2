@@ -110,6 +110,7 @@ class TelemetryService {
       solar_power: null,
       ac_consumption: null,
       temperature: null,
+      battery_capacity_kwh: null,
       // Detailed breakdowns
       batteries: [],
       solar_chargers: [],
@@ -142,10 +143,14 @@ class TelemetryService {
         const current = device.metrics['Dc/0/Current']?.value;
         const power = device.metrics['Dc/0/Power']?.value;
         const timeToGo = device.metrics['TimeToGo']?.value;
+        const capacityAh = device.metrics['Capacity']?.value;
 
         // Use display_name from DB, then our mapping, then fallback
         const displayName = device.display_name !== deviceId ? device.display_name : null;
         const bankName = displayName || batteryNames[deviceId] || deviceId;
+
+        // Calculate capacity in kWh (Ah * V / 1000)
+        const capacityKwh = (capacityAh && voltage) ? (capacityAh * voltage / 1000) : null;
 
         summary.batteries.push({
           device_id: deviceId,
@@ -155,12 +160,18 @@ class TelemetryService {
           current: current,
           power: power,
           time_to_go: timeToGo,
+          capacity_kwh: capacityKwh,
           last_ts: device.metrics['Soc']?.last_ts || device.metrics['Dc/0/Voltage']?.last_ts
         });
       }
 
       // Sort by voltage descending (48V first)
       summary.batteries.sort((a, b) => (b.voltage || 0) - (a.voltage || 0));
+
+      // Set main battery capacity (48V bank = first after sorting)
+      if (summary.batteries.length > 0 && summary.batteries[0].capacity_kwh) {
+        summary.battery_capacity_kwh = summary.batteries[0].capacity_kwh;
+      }
     }
 
     // Fallback main battery from battery/1 if system metrics not available

@@ -519,7 +519,10 @@
                                 <span class="card-row-value ${totalPower > 0 ? 'success' : ''}"><strong>${totalPower}</strong><span class="unit">W</span></span>
                             </div>
                             <div class="card-row" style="background: var(--background-color);">
-                                <span class="card-row-label">Today's Yield</span>
+                                <div class="card-row-label">
+                                    <div>Today's Yield</div>
+                                    ${summary.battery_capacity_kwh ? `<div class="card-row-sublabel">${((totalYieldToday / summary.battery_capacity_kwh) * 100).toFixed(0)}% of battery capacity</div>` : ''}
+                                </div>
                                 <span class="card-row-value">${totalYieldToday.toFixed(2)}<span class="unit">kWh</span></span>
                             </div>
                 `;

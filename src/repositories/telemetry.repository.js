@@ -25,6 +25,7 @@ class TelemetryRepository {
         'Dc/0/Current',
         'Dc/0/Power',
         'TimeToGo',
+        'Capacity',
         // Solar metrics
         'Yield/Power',
         'Yield/User',
