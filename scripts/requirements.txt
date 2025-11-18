@@ -1,0 +1,4 @@
+# Victron MQTT Test Script Dependencies
+
+# MQTT client library for Python
+paho-mqtt==1.6.1

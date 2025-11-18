@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Victron Status - BoatOS</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-color: #007AFF;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --text-tertiary: #C7C7CC;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --danger-color: #FF3B30;
+            --border-color: #E5E5EA;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .header {
+            background: var(--surface-color);
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .refresh-btn:active {
+            background: var(--background-color);
+        }
+
+        .refresh-btn.spinning {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .content {
+            padding: 16px;
+            padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding-left: 16px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-row:last-child {
+            border-bottom: none;
+        }
+
+        .card-row-label {
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .card-row-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .card-row-value.large {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .card-row-value.success {
+            color: var(--success-color);
+        }
+
+        .card-row-value.warning {
+            color: var(--warning-color);
+        }
+
+        .card-row-value.danger {
+            color: var(--danger-color);
+        }
+
+        .unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: 2px;
+        }
+
+        /* Tank level bars */
+        .tank-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tank-item:last-child {
+            border-bottom: none;
+        }
+
+        .tank-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .tank-name {
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .tank-percent {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .tank-bar {
+            height: 8px;
+            background: var(--background-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .tank-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .tank-bar-fill.water {
+            background: #007AFF;
+        }
+
+        .tank-bar-fill.fuel {
+            background: #FF9500;
+        }
+
+        .tank-bar-fill.waste {
+            background: #8E8E93;
+        }
+
+        /* Summary card at top */
+        .summary-card {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .summary-main {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 16px;
+        }
+
+        .summary-value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .summary-unit {
+            font-size: 20px;
+            margin-left: 4px;
+            opacity: 0.8;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-item-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .summary-item-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        /* Loading and error states */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: var(--danger-color);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 15px;
+            padding: 8px 0;
+        }
+
+        .back-link:before {
+            content: '‹';
+            font-size: 24px;
+            margin-right: 4px;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div>
+                <a href="/public/unified-mobile.html" class="back-link">Home</a>
+                <h1>Victron Status</h1>
+            </div>
+            <button class="refresh-btn" onclick="loadTelemetry()" title="Refresh">
+                ↻
+            </button>
+        </div>
+        <div class="last-updated" id="lastUpdated">Loading...</div>
+    </div>
+
+    <div class="content">
+        <div id="mainContent">
+            <div class="loading">Loading telemetry data...</div>
+        </div>
+    </div>
+
+    <script>
+        // Get admin token from localStorage or URL
+        let ADMIN_TOKEN = localStorage.getItem('adminToken') || '';
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
+        if (urlToken) {
+            ADMIN_TOKEN = urlToken;
+            localStorage.setItem('adminToken', urlToken);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Auto-refresh interval
+        let refreshInterval;
+        const REFRESH_INTERVAL_MS = 15000;
+
+        async function loadTelemetry() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            refreshBtn.classList.add('spinning');
+
+            try {
+                const response = await fetch('/admin/api/telemetry/current', {
+                    headers: {
+                        'x-admin-token': ADMIN_TOKEN
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load telemetry');
+                }
+
+                renderTelemetry(result.data);
+                updateLastUpdated(result.data.last_updated);
+
+            } catch (error) {
+                console.error('Error loading telemetry:', error);
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="error">
+                        <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
+                        <div>${error.message}</div>
+                        <div style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);">
+                            Check that telemetry data is being collected
+                        </div>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.classList.remove('spinning');
+            }
+        }
+
+        function renderTelemetry(data) {
+            const { summary, categories } = data;
+
+            let html = '';
+
+            // Battery summary card
+            if (summary.battery_soc !== null) {
+                const soc = Math.round(summary.battery_soc);
+                const voltage = summary.battery_voltage?.toFixed(1) || '--';
+                const current = summary.battery_current?.toFixed(1) || '--';
+                const power = summary.battery_power ? Math.round(summary.battery_power) : '--';
+
+                html += `
+                    <div class="summary-card">
+                        <div class="summary-label">Battery State of Charge</div>
+                        <div class="summary-main">
+                            <span class="summary-value">${soc}</span>
+                            <span class="summary-unit">%</span>
+                        </div>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-item-value">${voltage}V</div>
+                                <div class="summary-item-label">Voltage</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-item-value">${current}A</div>
+                                <div class="summary-item-label">Current</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-item-value">${power}W</div>
+                                <div class="summary-item-label">Power</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Solar section
+            if (summary.solar_power !== null || categories.solarcharger) {
+                const solarPower = summary.solar_power ? Math.round(summary.solar_power) : 0;
+                html += `
+                    <div class="section">
+                        <div class="section-title">Solar</div>
+                        <div class="card">
+                            <div class="card-row">
+                                <span class="card-row-label">Total PV Power</span>
+                                <span class="card-row-value ${solarPower > 0 ? 'success' : ''}">${solarPower}<span class="unit">W</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // AC Consumption
+            if (summary.ac_consumption !== null) {
+                const acPower = Math.round(summary.ac_consumption);
+                html += `
+                    <div class="section">
+                        <div class="section-title">AC Consumption</div>
+                        <div class="card">
+                            <div class="card-row">
+                                <span class="card-row-label">L1 Power</span>
+                                <span class="card-row-value">${acPower}<span class="unit">W</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Tanks section
+            if (summary.tanks && summary.tanks.length > 0) {
+                html += `
+                    <div class="section">
+                        <div class="section-title">Tanks</div>
+                        <div class="card">
+                            ${summary.tanks.map(tank => {
+                                const percent = tank.level_percent || 0;
+                                const tankType = getTankType(tank.device_id, tank.name);
+                                const colorClass = tankType === 'fuel' ? 'fuel' : tankType === 'waste' ? 'waste' : 'water';
+                                const percentClass = percent < 20 ? 'danger' : percent < 40 ? 'warning' : '';
+
+                                return `
+                                    <div class="tank-item">
+                                        <div class="tank-header">
+                                            <span class="tank-name">${formatTankName(tank.device_id, tank.name)}</span>
+                                            <span class="tank-percent ${percentClass}">${percent}%</span>
+                                        </div>
+                                        <div class="tank-bar">
+                                            <div class="tank-bar-fill ${colorClass}" style="width: ${percent}%"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // If no data at all
+            if (!html) {
+                html = `
+                    <div class="no-data">
+                        <div style="font-size: 32px; margin-bottom: 12px;">📊</div>
+                        <div>No telemetry data available</div>
+                        <div style="margin-top: 8px; font-size: 12px;">
+                            Waiting for Victron data from Pi...
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('mainContent').innerHTML = html;
+        }
+
+        function formatTankName(deviceId, displayName) {
+            if (displayName && displayName !== deviceId) {
+                return displayName;
+            }
+
+            // Parse device ID like "tank/20"
+            const match = deviceId.match(/tank\/(\d+)/);
+            if (match) {
+                const tankNum = parseInt(match[1]);
+                // Known tank mappings (from Victron discovery)
+                const tankNames = {
+                    20: 'Port Water',
+                    21: 'Starboard Water',
+                    22: 'Starboard Diesel',
+                    23: 'Port Diesel'
+                };
+                return tankNames[tankNum] || `Tank ${tankNum}`;
+            }
+            return deviceId;
+        }
+
+        function getTankType(deviceId, displayName) {
+            const name = (displayName || deviceId).toLowerCase();
+            if (name.includes('diesel') || name.includes('fuel')) return 'fuel';
+            if (name.includes('waste') || name.includes('black') || name.includes('grey')) return 'waste';
+            return 'water';
+        }
+
+        function updateLastUpdated(timestamp) {
+            const el = document.getElementById('lastUpdated');
+            if (!timestamp) {
+                el.textContent = 'No data';
+                return;
+            }
+
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffSec = Math.floor((now - date) / 1000);
+
+            if (diffSec < 60) {
+                el.textContent = `Updated ${diffSec}s ago`;
+            } else if (diffSec < 3600) {
+                el.textContent = `Updated ${Math.floor(diffSec / 60)}m ago`;
+            } else {
+                el.textContent = `Updated ${date.toLocaleTimeString()}`;
+            }
+        }
+
+        // Initial load
+        loadTelemetry();
+
+        // Set up auto-refresh
+        refreshInterval = setInterval(loadTelemetry, REFRESH_INTERVAL_MS);
+
+        // Pause refresh when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(refreshInterval);
+            } else {
+                loadTelemetry();
+                refreshInterval = setInterval(loadTelemetry, REFRESH_INTERVAL_MS);
+            }
+        });
+    </script>
+</body>
+</html>
