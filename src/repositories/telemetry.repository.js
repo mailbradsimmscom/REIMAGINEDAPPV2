@@ -16,6 +16,33 @@ class TelemetryRepository {
     try {
       const supabase = await getSupabaseClient();
 
+      // Key metrics we care about for dashboard display
+      // Using 'or' filter to get only relevant metrics
+      const dashboardMetrics = [
+        // Battery metrics
+        'Soc',
+        'Dc/0/Voltage',
+        'Dc/0/Current',
+        'Dc/0/Power',
+        'TimeToGo',
+        // Solar metrics
+        'Yield/Power',
+        'Yield/User',
+        'Pv/V',
+        // Tank metrics
+        'Level',
+        'Remaining',
+        'RawValue',
+        // System metrics
+        'Dc/Battery/Soc',
+        'Dc/Battery/Voltage',
+        'Dc/Battery/Current',
+        'Dc/Battery/Power',
+        'Dc/Pv/Power',
+        'Ac/Consumption/L1/Power'
+        // Note: Temperature uses 'RawValue' which is already included for tanks
+      ];
+
       const { data, error } = await supabase
         .from('telemetry_current_state')
         .select(`
@@ -36,6 +63,7 @@ class TelemetryRepository {
             )
           )
         `)
+        .in('telemetry_metrics.metric_name', dashboardMetrics)
         .order('last_ts', { ascending: false });
 
       if (error) {

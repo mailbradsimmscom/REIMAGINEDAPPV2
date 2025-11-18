@@ -498,6 +498,23 @@
                 `;
             }
 
+            // Temperature
+            if (summary.temperature !== null) {
+                const tempC = summary.temperature.toFixed(1);
+                const tempF = ((summary.temperature * 9/5) + 32).toFixed(1);
+                html += `
+                    <div class="section">
+                        <div class="section-title">Temperature</div>
+                        <div class="card">
+                            <div class="card-row">
+                                <span class="card-row-label">Cabin</span>
+                                <span class="card-row-value">${tempC}<span class="unit">°C</span> / ${tempF}<span class="unit">°F</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
             // Tanks section - all 4 tanks
             if (summary.tanks && summary.tanks.length > 0) {
                 html += `

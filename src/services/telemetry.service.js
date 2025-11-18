@@ -83,6 +83,7 @@ class TelemetryService {
       battery_power: null,
       solar_power: null,
       ac_consumption: null,
+      temperature: null,
       // Detailed breakdowns
       batteries: [],
       solar_chargers: [],
@@ -156,9 +157,12 @@ class TelemetryService {
         // Extract charger number from device ID (e.g., "solarcharger/289" -> "289")
         const chargerNum = deviceId.split('/')[1] || deviceId;
 
+        // Use display_name only if it's not the same as deviceId
+        const displayName = device.display_name !== deviceId ? device.display_name : null;
+
         summary.solar_chargers.push({
           device_id: deviceId,
-          name: device.display_name || `MPPT ${chargerNum}`,
+          name: displayName || `MPPT ${chargerNum}`,
           power: power,
           pv_voltage: pvVoltage,
           dc_voltage: dcVoltage,
@@ -190,13 +194,30 @@ class TelemetryService {
         const level = device.metrics['Level']?.value ?? device.metrics['Remaining']?.value;
         const rawValue = device.metrics['RawValue']?.value;
 
+        // Determine if level is 0-1 fraction or 0-100 percentage
+        // If > 1, assume it's already a percentage
+        let levelPercent = null;
+        if (level !== undefined) {
+          if (level > 1) {
+            // Already a percentage (0-100)
+            levelPercent = Math.round(level * 10) / 10;
+          } else {
+            // Fraction (0-1), convert to percentage
+            levelPercent = Math.round((level * 100) * 10) / 10;
+          }
+        }
+
+        // Use tankNames mapping, fallback to display_name only if it's not the device ID
+        const displayName = device.display_name !== deviceId ? device.display_name : null;
+        const tankName = displayName || tankNames[deviceId] || deviceId;
+
         summary.tanks.push({
           device_id: deviceId,
-          name: device.display_name || tankNames[deviceId] || deviceId,
+          name: tankName,
           level: level,
-          level_percent: level !== undefined ? Math.round((level * 100) * 10) / 10 : null,
+          level_percent: levelPercent,
           raw_value: rawValue,
-          type: this.getTankType(deviceId, device.display_name || tankNames[deviceId]),
+          type: this.getTankType(deviceId, tankName),
           last_ts: device.metrics['Level']?.last_ts || device.metrics['Remaining']?.last_ts
         });
       }
@@ -206,6 +227,12 @@ class TelemetryService {
         if (a.type === b.type) return a.device_id.localeCompare(b.device_id);
         return a.type === 'water' ? -1 : 1;
       });
+    }
+
+    // Temperature
+    if (grouped.temperature?.devices['temperature/27']?.metrics) {
+      const tempMetrics = grouped.temperature.devices['temperature/27'].metrics;
+      summary.temperature = tempMetrics['RawValue']?.value ?? null;
     }
 
     return summary;
