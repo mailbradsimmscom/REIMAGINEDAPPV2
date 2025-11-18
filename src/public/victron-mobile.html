@@ -550,6 +550,42 @@
                 `;
             }
 
+            // Alternators section
+            if (summary.alternators && summary.alternators.length > 0) {
+                const totalAltPower = summary.alternators.reduce((sum, a) => sum + (a.power || 0), 0);
+
+                html += `
+                    <div class="section">
+                        <div class="section-title">Alternators</div>
+                        <div class="card">
+                            <div class="card-row" style="background: var(--background-color);">
+                                <span class="card-row-label"><strong>Total</strong></span>
+                                <span class="card-row-value ${totalAltPower > 0 ? 'success' : ''}"><strong>${Math.round(totalAltPower)}</strong><span class="unit">W</span></span>
+                            </div>
+                `;
+
+                for (const alt of summary.alternators) {
+                    const power = alt.power ? Math.round(alt.power) : 0;
+                    const rpm = alt.rpm ? Math.round(alt.rpm) : '--';
+                    const temp = alt.engine_temp ? alt.engine_temp.toFixed(0) : '--';
+
+                    html += `
+                        <div class="card-row">
+                            <div class="card-row-label">
+                                <div>${alt.name}</div>
+                                <div class="card-row-sublabel">${rpm} RPM / ${temp}°C</div>
+                            </div>
+                            <span class="card-row-value ${power > 0 ? 'success' : ''}">${power}<span class="unit">W</span></span>
+                        </div>
+                    `;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
             // AC Consumption
             if (summary.ac_consumption !== null) {
                 const acPower = Math.round(summary.ac_consumption);

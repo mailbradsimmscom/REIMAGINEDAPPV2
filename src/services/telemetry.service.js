@@ -114,6 +114,7 @@ class TelemetryService {
       // Detailed breakdowns
       batteries: [],
       solar_chargers: [],
+      alternators: [],
       tanks: []
     };
 
@@ -230,6 +231,38 @@ class TelemetryService {
       if (summary.solar_power === null) {
         summary.solar_power = totalSolarPower;
       }
+    }
+
+    // Alternators (Integrel generators)
+    if (grouped.alternator?.devices) {
+      const alternatorNames = {
+        'alternator/0': 'Integrel Starboard',
+        'alternator/1': 'Integrel Port'
+      };
+
+      for (const [deviceId, device] of Object.entries(grouped.alternator.devices)) {
+        const voltage = device.metrics['Dc/0/Voltage']?.value;
+        const current = device.metrics['Dc/0/Current']?.value;
+        const power = device.metrics['Dc/0/Power']?.value;
+        const rpm = device.metrics['Engine/Speed']?.value;
+        const engineTemp = device.metrics['Engine/Temperature']?.value;
+
+        const displayName = device.display_name !== deviceId ? device.display_name : null;
+
+        summary.alternators.push({
+          device_id: deviceId,
+          name: displayName || alternatorNames[deviceId] || deviceId,
+          voltage: voltage,
+          current: current,
+          power: power,
+          rpm: rpm,
+          engine_temp: engineTemp,
+          last_ts: device.metrics['Dc/0/Power']?.last_ts || device.metrics['Engine/Speed']?.last_ts
+        });
+      }
+
+      // Sort by name
+      summary.alternators.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     // Tank levels - all 4 tanks

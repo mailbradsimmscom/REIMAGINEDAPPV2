@@ -41,8 +41,12 @@ class TelemetryRepository {
         'Dc/Battery/Current',
         'Dc/Battery/Power',
         'Dc/Pv/Power',
-        'Ac/Consumption/L1/Power'
+        'Ac/Consumption/L1/Power',
+        // Alternator metrics
+        'Engine/Speed',
+        'Engine/Temperature'
         // Note: Temperature uses 'RawValue' which is already included for tanks
+        // Note: Dc/0/Voltage, Dc/0/Current, Dc/0/Power already included for batteries
       ];
 
       const { data, error } = await supabase
