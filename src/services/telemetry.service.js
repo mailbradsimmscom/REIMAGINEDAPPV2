@@ -76,16 +76,20 @@ class TelemetryService {
    */
   extractSummary(grouped) {
     const summary = {
+      // Main system totals
       battery_soc: null,
       battery_voltage: null,
       battery_current: null,
       battery_power: null,
       solar_power: null,
       ac_consumption: null,
+      // Detailed breakdowns
+      batteries: [],
+      solar_chargers: [],
       tanks: []
     };
 
-    // Battery metrics (from system/0 or battery/1)
+    // System-level metrics (totals)
     if (grouped.system?.devices['system/0']?.metrics) {
       const systemMetrics = grouped.system.devices['system/0'].metrics;
       summary.battery_soc = systemMetrics['Dc/Battery/Soc']?.value ?? null;
@@ -96,32 +100,128 @@ class TelemetryService {
       summary.ac_consumption = systemMetrics['Ac/Consumption/L1/Power']?.value ?? null;
     }
 
-    // Fallback to battery/1 if system metrics not available
-    if (summary.battery_soc === null && grouped.battery?.devices['battery/1']?.metrics) {
-      const batteryMetrics = grouped.battery.devices['battery/1'].metrics;
-      summary.battery_soc = batteryMetrics['Soc']?.value ?? null;
-      summary.battery_voltage = batteryMetrics['Dc/0/Voltage']?.value ?? null;
-      summary.battery_current = batteryMetrics['Dc/0/Current']?.value ?? null;
-      summary.battery_power = batteryMetrics['Dc/0/Power']?.value ?? null;
+    // Individual battery banks
+    if (grouped.battery?.devices) {
+      for (const [deviceId, device] of Object.entries(grouped.battery.devices)) {
+        const voltage = device.metrics['Dc/0/Voltage']?.value;
+        const soc = device.metrics['Soc']?.value;
+        const current = device.metrics['Dc/0/Current']?.value;
+        const power = device.metrics['Dc/0/Power']?.value;
+        const timeToGo = device.metrics['TimeToGo']?.value;
+
+        // Determine battery bank name based on voltage
+        let bankName = device.display_name || deviceId;
+        if (voltage) {
+          if (voltage >= 40) bankName = '48V Bank';
+          else if (voltage >= 20) bankName = '24V Bank';
+          else if (voltage >= 10) bankName = '12V Bank';
+        }
+
+        summary.batteries.push({
+          device_id: deviceId,
+          name: bankName,
+          soc: soc,
+          voltage: voltage,
+          current: current,
+          power: power,
+          time_to_go: timeToGo,
+          last_ts: device.metrics['Soc']?.last_ts || device.metrics['Dc/0/Voltage']?.last_ts
+        });
+      }
+
+      // Sort by voltage descending (48V first)
+      summary.batteries.sort((a, b) => (b.voltage || 0) - (a.voltage || 0));
     }
 
-    // Tank levels
-    if (grouped.tank?.devices) {
-      for (const [deviceId, device] of Object.entries(grouped.tank.devices)) {
-        const level = device.metrics['Level']?.value ?? device.metrics['Remaining']?.value;
-        if (level !== undefined) {
-          summary.tanks.push({
-            device_id: deviceId,
-            name: device.display_name || deviceId,
-            level: level,
-            // Level is 0-1 fraction, convert to percentage
-            level_percent: Math.round((level * 100) * 10) / 10
-          });
-        }
+    // Fallback main battery from battery/1 if system metrics not available
+    if (summary.battery_soc === null && summary.batteries.length > 0) {
+      const mainBattery = summary.batteries[0];
+      summary.battery_soc = mainBattery.soc;
+      summary.battery_voltage = mainBattery.voltage;
+      summary.battery_current = mainBattery.current;
+      summary.battery_power = mainBattery.power;
+    }
+
+    // Individual solar chargers
+    if (grouped.solarcharger?.devices) {
+      let totalSolarPower = 0;
+      for (const [deviceId, device] of Object.entries(grouped.solarcharger.devices)) {
+        const power = device.metrics['Yield/Power']?.value || 0;
+        const pvVoltage = device.metrics['Pv/V']?.value;
+        const dcVoltage = device.metrics['Dc/0/Voltage']?.value;
+        const yieldToday = device.metrics['Yield/User']?.value;
+
+        totalSolarPower += power;
+
+        // Extract charger number from device ID (e.g., "solarcharger/289" -> "289")
+        const chargerNum = deviceId.split('/')[1] || deviceId;
+
+        summary.solar_chargers.push({
+          device_id: deviceId,
+          name: device.display_name || `MPPT ${chargerNum}`,
+          power: power,
+          pv_voltage: pvVoltage,
+          dc_voltage: dcVoltage,
+          yield_today: yieldToday,
+          last_ts: device.metrics['Yield/Power']?.last_ts
+        });
+      }
+
+      // Sort by device ID for consistent ordering
+      summary.solar_chargers.sort((a, b) => a.device_id.localeCompare(b.device_id));
+
+      // Use calculated total if system total not available
+      if (summary.solar_power === null) {
+        summary.solar_power = totalSolarPower;
       }
     }
 
+    // Tank levels - all 4 tanks
+    if (grouped.tank?.devices) {
+      // Tank name mappings
+      const tankNames = {
+        'tank/20': 'Port Water',
+        'tank/21': 'Starboard Water',
+        'tank/22': 'Starboard Diesel',
+        'tank/23': 'Port Diesel'
+      };
+
+      for (const [deviceId, device] of Object.entries(grouped.tank.devices)) {
+        const level = device.metrics['Level']?.value ?? device.metrics['Remaining']?.value;
+        const rawValue = device.metrics['RawValue']?.value;
+
+        summary.tanks.push({
+          device_id: deviceId,
+          name: device.display_name || tankNames[deviceId] || deviceId,
+          level: level,
+          level_percent: level !== undefined ? Math.round((level * 100) * 10) / 10 : null,
+          raw_value: rawValue,
+          type: this.getTankType(deviceId, device.display_name || tankNames[deviceId]),
+          last_ts: device.metrics['Level']?.last_ts || device.metrics['Remaining']?.last_ts
+        });
+      }
+
+      // Sort tanks: water first, then diesel
+      summary.tanks.sort((a, b) => {
+        if (a.type === b.type) return a.device_id.localeCompare(b.device_id);
+        return a.type === 'water' ? -1 : 1;
+      });
+    }
+
     return summary;
+  }
+
+  /**
+   * Determine tank type from device ID or name
+   * @param {string} deviceId - Device ID
+   * @param {string} name - Tank name
+   * @returns {string} 'water', 'fuel', or 'waste'
+   */
+  getTankType(deviceId, name) {
+    const lowerName = (name || deviceId).toLowerCase();
+    if (lowerName.includes('diesel') || lowerName.includes('fuel')) return 'fuel';
+    if (lowerName.includes('waste') || lowerName.includes('black') || lowerName.includes('grey')) return 'waste';
+    return 'water';
   }
 
   /**

@@ -206,6 +206,41 @@
             background: #8E8E93;
         }
 
+        /* Battery bank styles */
+        .battery-bank {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .battery-bank:last-child {
+            border-bottom: none;
+        }
+
+        .battery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .battery-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .battery-soc {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .battery-details {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
         /* Summary card at top */
         .summary-card {
             background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
@@ -369,53 +404,79 @@
         }
 
         function renderTelemetry(data) {
-            const { summary, categories } = data;
+            const { summary } = data;
 
             let html = '';
 
-            // Battery summary card
-            if (summary.battery_soc !== null) {
-                const soc = Math.round(summary.battery_soc);
-                const voltage = summary.battery_voltage?.toFixed(1) || '--';
-                const current = summary.battery_current?.toFixed(1) || '--';
-                const power = summary.battery_power ? Math.round(summary.battery_power) : '--';
+            // Battery Banks section - show all individual banks
+            if (summary.batteries && summary.batteries.length > 0) {
+                html += `
+                    <div class="section">
+                        <div class="section-title">Battery Banks</div>
+                        <div class="card">
+                `;
+
+                for (const battery of summary.batteries) {
+                    const soc = battery.soc !== null ? Math.round(battery.soc) : '--';
+                    const voltage = battery.voltage?.toFixed(1) || '--';
+                    const current = battery.current?.toFixed(1) || '--';
+                    const power = battery.power ? Math.round(battery.power) : '--';
+                    const socClass = soc !== '--' ? (soc < 20 ? 'danger' : soc < 40 ? 'warning' : '') : '';
+
+                    html += `
+                        <div class="battery-bank">
+                            <div class="battery-header">
+                                <span class="battery-name">${battery.name}</span>
+                                <span class="battery-soc ${socClass}">${soc}%</span>
+                            </div>
+                            <div class="battery-details">
+                                <span>${voltage}V</span>
+                                <span>${current}A</span>
+                                <span>${power}W</span>
+                            </div>
+                        </div>
+                    `;
+                }
 
                 html += `
-                    <div class="summary-card">
-                        <div class="summary-label">Battery State of Charge</div>
-                        <div class="summary-main">
-                            <span class="summary-value">${soc}</span>
-                            <span class="summary-unit">%</span>
-                        </div>
-                        <div class="summary-grid">
-                            <div class="summary-item">
-                                <div class="summary-item-value">${voltage}V</div>
-                                <div class="summary-item-label">Voltage</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-item-value">${current}A</div>
-                                <div class="summary-item-label">Current</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-item-value">${power}W</div>
-                                <div class="summary-item-label">Power</div>
-                            </div>
                         </div>
                     </div>
                 `;
             }
 
-            // Solar section
-            if (summary.solar_power !== null || categories.solarcharger) {
-                const solarPower = summary.solar_power ? Math.round(summary.solar_power) : 0;
+            // Solar section - show total and individual chargers
+            if (summary.solar_chargers && summary.solar_chargers.length > 0) {
+                const totalPower = summary.solar_power ? Math.round(summary.solar_power) : 0;
+                const totalYieldToday = summary.solar_chargers.reduce((sum, c) => sum + (c.yield_today || 0), 0);
+
                 html += `
                     <div class="section">
                         <div class="section-title">Solar</div>
                         <div class="card">
-                            <div class="card-row">
-                                <span class="card-row-label">Total PV Power</span>
-                                <span class="card-row-value ${solarPower > 0 ? 'success' : ''}">${solarPower}<span class="unit">W</span></span>
+                            <div class="card-row" style="background: var(--background-color);">
+                                <span class="card-row-label"><strong>Total</strong></span>
+                                <span class="card-row-value ${totalPower > 0 ? 'success' : ''}"><strong>${totalPower}</strong><span class="unit">W</span></span>
                             </div>
+                            <div class="card-row" style="background: var(--background-color);">
+                                <span class="card-row-label">Today's Yield</span>
+                                <span class="card-row-value">${totalYieldToday.toFixed(2)}<span class="unit">kWh</span></span>
+                            </div>
+                `;
+
+                // Individual chargers
+                for (const charger of summary.solar_chargers) {
+                    const power = charger.power ? Math.round(charger.power) : 0;
+                    const yieldToday = charger.yield_today?.toFixed(2) || '0.00';
+
+                    html += `
+                        <div class="card-row">
+                            <span class="card-row-label">${charger.name}</span>
+                            <span class="card-row-value ${power > 0 ? 'success' : ''}">${power}<span class="unit">W</span></span>
+                        </div>
+                    `;
+                }
+
+                html += `
                         </div>
                     </div>
                 `;
@@ -437,7 +498,7 @@
                 `;
             }
 
-            // Tanks section
+            // Tanks section - all 4 tanks
             if (summary.tanks && summary.tanks.length > 0) {
                 html += `
                     <div class="section">
@@ -445,14 +506,13 @@
                         <div class="card">
                             ${summary.tanks.map(tank => {
                                 const percent = tank.level_percent || 0;
-                                const tankType = getTankType(tank.device_id, tank.name);
-                                const colorClass = tankType === 'fuel' ? 'fuel' : tankType === 'waste' ? 'waste' : 'water';
+                                const colorClass = tank.type === 'fuel' ? 'fuel' : tank.type === 'waste' ? 'waste' : 'water';
                                 const percentClass = percent < 20 ? 'danger' : percent < 40 ? 'warning' : '';
 
                                 return `
                                     <div class="tank-item">
                                         <div class="tank-header">
-                                            <span class="tank-name">${formatTankName(tank.device_id, tank.name)}</span>
+                                            <span class="tank-name">${tank.name}</span>
                                             <span class="tank-percent ${percentClass}">${percent}%</span>
                                         </div>
                                         <div class="tank-bar">
