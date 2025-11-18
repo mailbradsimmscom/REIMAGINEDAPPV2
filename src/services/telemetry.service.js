@@ -19,6 +19,32 @@ class TelemetryService {
       // Extract key metrics for quick display
       const summary = this.extractSummary(grouped);
 
+      // Fetch tank history for sparklines (7 days = 168 hours)
+      const tankHistory = await telemetryRepository.getTankHistory(168);
+
+      // Add sparkline data to tanks
+      for (const tank of summary.tanks) {
+        const history = tankHistory[tank.device_id] || [];
+
+        // Determine hours based on tank type (diesel=7 days, water=2 days)
+        const hoursToShow = tank.type === 'fuel' ? 168 : 48;
+        const cutoff = Date.now() - hoursToShow * 60 * 60 * 1000;
+
+        // Filter to relevant time range and sample every 2 hours
+        const filtered = history
+          .filter(h => new Date(h.bucket_start).getTime() >= cutoff)
+          .filter((_, i) => i % 2 === 0); // Every 2 hours
+
+        // Normalize values (handle 0-1 vs 0-100 scale)
+        tank.sparkline = filtered.map(h => {
+          let val = h.value;
+          if (val !== null && val <= 1) {
+            val = val * 100; // Convert fraction to percentage
+          }
+          return val;
+        });
+      }
+
       return {
         summary,
         categories: grouped,

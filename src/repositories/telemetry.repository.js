@@ -183,7 +183,61 @@ class TelemetryRepository {
       throw error;
     }
   }
+
+  /**
+   * Get tank history for sparklines
+   * @param {number} hours - Number of hours of history
+   * @returns {Promise<Object>} Object keyed by device_id with array of {bucket_start, avg_value}
+   */
+  async getTankHistory(hours = 168) {
+    try {
+      const supabase = await getSupabaseClient();
+      const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
+
+      // Get tank metrics for Level/Remaining
+      const { data, error } = await supabase
+        .from('telemetry_agg_1h')
+        .select(`
+          bucket_start,
+          avg_value,
+          telemetry_metrics!inner (
+            metric_name,
+            telemetry_devices!inner (
+              source_device_id,
+              category
+            )
+          )
+        `)
+        .eq('telemetry_metrics.telemetry_devices.category', 'tank')
+        .in('telemetry_metrics.metric_name', ['Level', 'Remaining'])
+        .gte('bucket_start', cutoff)
+        .order('bucket_start', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      // Group by device_id
+      const byDevice = {};
+      for (const row of data || []) {
+        const deviceId = row.telemetry_metrics.telemetry_devices.source_device_id;
+        if (!byDevice[deviceId]) {
+          byDevice[deviceId] = [];
+        }
+        byDevice[deviceId].push({
+          bucket_start: row.bucket_start,
+          value: row.avg_value
+        });
+      }
+
+      return byDevice;
+    } catch (error) {
+      requestLogger.error('Error fetching tank history', { error: error.message });
+      throw error;
+    }
+  }
 }
+
 
 // Export singleton instance
 export const telemetryRepository = new TelemetryRepository();

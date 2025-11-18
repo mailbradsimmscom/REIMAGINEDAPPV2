@@ -212,6 +212,32 @@
             background: #8E8E93;
         }
 
+        /* Sparkline styles */
+        .tank-sparkline {
+            height: 24px;
+            margin-top: 8px;
+        }
+
+        .tank-sparkline svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tank-sparkline path {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .tank-sparkline.water path {
+            stroke: #007AFF;
+        }
+
+        .tank-sparkline.fuel path {
+            stroke: #FF9500;
+        }
+
         /* Battery bank styles */
         .battery-bank {
             padding: 12px 16px;
@@ -409,6 +435,35 @@
             }
         }
 
+        function generateSparkline(data, type) {
+            if (!data || data.length < 2) return '';
+
+            const width = 100;
+            const height = 24;
+            const padding = 2;
+
+            // Filter out nulls and get min/max
+            const values = data.filter(v => v !== null && v !== undefined);
+            if (values.length < 2) return '';
+
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            const range = max - min || 1;
+
+            // Generate path points
+            const points = values.map((val, i) => {
+                const x = padding + (i / (values.length - 1)) * (width - 2 * padding);
+                const y = height - padding - ((val - min) / range) * (height - 2 * padding);
+                return `${x},${y}`;
+            });
+
+            const pathD = `M ${points.join(' L ')}`;
+
+            return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                <path d="${pathD}"/>
+            </svg>`;
+        }
+
         function renderTelemetry(data) {
             const { summary } = data;
 
@@ -472,13 +527,14 @@
                 // Individual chargers
                 for (const charger of summary.solar_chargers) {
                     const power = charger.power ? Math.round(charger.power) : 0;
-                    const yieldToday = charger.yield_today ? charger.yield_today.toFixed(2) : '0.00';
+                    const yieldToday = charger.yield_today || 0;
+                    const pctOfTotal = totalYieldToday > 0 ? ((yieldToday / totalYieldToday) * 100).toFixed(0) : 0;
 
                     html += `
                         <div class="card-row">
                             <div class="card-row-label">
                                 <div>${charger.name}</div>
-                                <div class="card-row-sublabel">${yieldToday} kWh today</div>
+                                <div class="card-row-sublabel">${yieldToday.toFixed(2)} kWh (${pctOfTotal}%)</div>
                             </div>
                             <span class="card-row-value ${power > 0 ? 'success' : ''}">${power}<span class="unit">W</span></span>
                         </div>
@@ -534,6 +590,8 @@
                                 const percent = tank.level_percent || 0;
                                 const colorClass = tank.type === 'fuel' ? 'fuel' : tank.type === 'waste' ? 'waste' : 'water';
                                 const percentClass = percent < 20 ? 'danger' : percent < 40 ? 'warning' : '';
+                                const sparkline = generateSparkline(tank.sparkline || [], colorClass);
+                                const days = tank.type === 'fuel' ? '7d' : '2d';
 
                                 return `
                                     <div class="tank-item">
@@ -542,8 +600,13 @@
                                             <span class="tank-percent ${percentClass}">${percent}%</span>
                                         </div>
                                         <div class="tank-bar">
-                                            <div class="tank-bar-fill ${colorClass}" style="width: ${percent}%"></div>
+                                            <div class="tank-bar-fill ${colorClass}" style="width: ${Math.min(percent, 100)}%"></div>
                                         </div>
+                                        ${sparkline ? `
+                                            <div class="tank-sparkline ${colorClass}">
+                                                ${sparkline}
+                                            </div>
+                                        ` : ''}
                                     </div>
                                 `;
                             }).join('')}
