@@ -42,7 +42,23 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
 
     try {
       threadData = await getChatThread(threadId);
+
+      // 🔍 DIAGNOSTIC LOGGING - Remove after debugging
+      console.log('\n=== EQUIPMENT CONTEXT DEBUG START ===');
+      console.log('Thread ID:', threadId);
+      console.log('threadData exists:', !!threadData);
+      console.log('threadData keys:', threadData ? Object.keys(threadData) : 'null');
+      console.log('threadData.equipment_context:', threadData?.equipment_context);
+      console.log('Type of equipment_context:', typeof threadData?.equipment_context);
+      console.log('Is Array:', Array.isArray(threadData?.equipment_context));
+      console.log('String value:', JSON.stringify(threadData?.equipment_context));
+
       existingEquipmentContext = threadData?.equipment_context || [];
+
+      console.log('After assignment:');
+      console.log('existingEquipmentContext:', existingEquipmentContext);
+      console.log('existingEquipmentContext.length:', existingEquipmentContext.length);
+      console.log('=== EQUIPMENT CONTEXT DEBUG END ===\n');
 
       requestLogger.info('📦 Retrieved thread equipment context', {
         threadId,
@@ -70,8 +86,23 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
     });
 
     // STEP 2: Quick reference check and equipment relationship inference
-    const previousEquipment = conversationContext.accumulated_equipment;
+    // ✅ FIX #3: Use existingEquipmentContext from thread blob, not accumulated_equipment
+    const previousEquipment = existingEquipmentContext.length > 0
+      ? existingEquipmentContext
+      : conversationContext.accumulated_equipment;
+
+    // 🔍 DIAGNOSTIC LOGGING - Remove after debugging
+    console.log('\n=== REFERENCE CHECK DEBUG START ===');
+    console.log('Query:', query);
+    console.log('existingEquipmentContext.length:', existingEquipmentContext.length);
+    console.log('conversationContext.accumulated_equipment.length:', conversationContext.accumulated_equipment.length);
+    console.log('previousEquipment:', previousEquipment);
+    console.log('previousEquipment.length:', previousEquipment.length);
+
     const referenceCheck = quickReferenceCheck(query, previousEquipment);
+
+    console.log('referenceCheck result:', referenceCheck);
+    console.log('=== REFERENCE CHECK DEBUG END ===\n');
 
     requestLogger.info('🔍 Analyzing query for equipment references', {
       query: query.substring(0, 100),
@@ -116,9 +147,9 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
         inferredRelationships: equipmentInference?.relationships?.length || 0
       });
 
-      // NEW: If inference found nothing, try LLM extraction as fallback
-      if (currentEquipmentSearch.length === 0) {
-        requestLogger.info('🤖 Inference found no equipment, trying LLM extraction', {
+      // NEW: If inference found nothing AND we have no existing context, try LLM extraction as fallback
+      if (currentEquipmentSearch.length === 0 && existingEquipmentContext.length === 0) {
+        requestLogger.info('🤖 No equipment found and no context exists, trying LLM extraction', {
           originalQuery: query.substring(0, 100)
         });
 
@@ -159,6 +190,19 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
             query: query.substring(0, 100)
           });
         }
+      } else if (currentEquipmentSearch.length === 0 && existingEquipmentContext.length > 0) {
+        // ✅ FIX #2A: Inference returned empty but context exists - use existing context
+        requestLogger.warn('⚠️ Inference returned empty but context exists - using existing context', {
+          threadId,
+          existingEquipmentCount: existingEquipmentContext.length,
+          existingEquipment: existingEquipmentContext.map(eq => ({
+            manufacturer: eq.manufacturer,
+            model: eq.model
+          }))
+        });
+
+        // Use existing context instead of fallback
+        currentEquipmentSearch = [...existingEquipmentContext];
       }
 
     } else {

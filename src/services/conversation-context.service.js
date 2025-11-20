@@ -218,7 +218,7 @@ function createExchangeSummary(exchange, weight) {
     return `\n\nPREVIOUS EXCHANGE (weight: ${weight}):\n` +
            `User asked: "${userQuery}"\n` +
            `Equipment discussed: ${equipmentNames || 'None'}\n` +
-           `Response summary: ${assistantResponse.substring(0, 200)}...\n`;
+           `Response summary: ${assistantResponse.substring(0, 1000)}...\n`;
   } else if (weight >= MEMORY_WEIGHTS.last_5) {
     // Medium weight: Include key details
     const equipmentNames = equipment.map(eq => `${eq.manufacturer} ${eq.model}`).join(', ');

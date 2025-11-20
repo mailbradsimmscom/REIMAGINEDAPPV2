@@ -291,13 +291,26 @@ async function expandEquipmentContext(currentEquipmentSearch, previousEquipment,
     const expandedEquipment = [...currentEquipmentSearch];
 
     // If LLM says user is referring to previous equipment
-    if (inference.analysis.referring_to_previous && inference.primary_equipment) {
-      const primaryAssetUid = inference.primary_equipment.asset_uid;
+    if (inference.analysis.referring_to_previous) {
+      let referencedEquipment = null;
 
-      // Find the previous equipment being referenced
-      const referencedEquipment = previousEquipment.find(eq =>
-        eq.asset_uid === primaryAssetUid
-      );
+      // Try to find specific equipment if asset_uid provided
+      if (inference.primary_equipment?.asset_uid) {
+        referencedEquipment = previousEquipment.find(eq =>
+          eq.asset_uid === inference.primary_equipment.asset_uid
+        );
+      }
+
+      // ✅ FIX #1: If no specific match, use most recent equipment as fallback
+      if (!referencedEquipment && previousEquipment.length > 0) {
+        referencedEquipment = previousEquipment[0]; // Most recent in context
+
+        logger.info('🔄 Using most recent equipment as fallback (asset_uid not matched)', {
+          manufacturer: referencedEquipment.manufacturer,
+          model: referencedEquipment.model,
+          asset_uid: referencedEquipment.asset_uid
+        });
+      }
 
       if (referencedEquipment) {
         // Get full system details and add to context with high priority
@@ -307,8 +320,8 @@ async function expandEquipmentContext(currentEquipmentSearch, previousEquipment,
             ...fullSystem,
             rank: 0.95, // High confidence since it's from conversation context
             source: 'conversation_inference',
-            relationship_type: inference.primary_equipment.relationship_type,
-            inference_confidence: inference.primary_equipment.confidence
+            relationship_type: inference.primary_equipment?.relationship_type || 'contextual_reference',
+            inference_confidence: inference.primary_equipment?.confidence || 0.90
           });
         } catch (error) {
           // Fallback to basic equipment data
@@ -386,11 +399,15 @@ export function quickReferenceCheck(query, previousEquipment) {
   const equipmentTypes = ['gps', 'radar', 'sounder', 'chartplotter', 'autopilot', 'anchor', 'engine'];
   const mentionsEquipmentType = equipmentTypes.some(type => queryLower.includes(type));
 
+  // 🧪 EXPERIMENTAL FIX (2025-11-20): Bypass regex gate, trust LLM inference
+  // REVERT TO: should_infer: (hasReferencePattern || mentionsEquipmentType) && previousEquipment.length > 0
+  // REASON: Regex can't handle natural language variations ("this filter", "that component", etc.)
+  // SOLUTION: If previousEquipment exists, always try LLM inference - let LLM decide if referring to previous
   return {
     likely_reference: hasReferencePattern,
     mentions_equipment_type: mentionsEquipmentType,
     has_previous_context: previousEquipment.length > 0,
-    should_infer: (hasReferencePattern || mentionsEquipmentType) && previousEquipment.length > 0
+    should_infer: previousEquipment.length > 0  // ← Changed: Always infer when context exists
   };
 }
 
