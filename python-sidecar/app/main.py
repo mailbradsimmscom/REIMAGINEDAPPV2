@@ -818,6 +818,18 @@ if chat_enabled:
 
         logger.info("✅ Chat module enabled and initialized - endpoints registered")
 
+        # Register two-call optimization endpoints
+        try:
+            from .chat.two_call_endpoints import register_two_call_endpoints
+            from .chat.services.llm_service import LLMService
+
+            # Initialize services for two-call handler
+            llm_service = LLMService()
+            register_two_call_endpoints(app, llm_service, chat_dip_retriever, pinecone_client)
+            logger.info("✅ Two-call optimization endpoints registered")
+        except Exception as e:
+            logger.warning(f"Could not register two-call endpoints: {e}")
+
         @app.post("/v1/chat/process", response_model=ChatResponse)
         async def process_chat(request: ChatRequest):
             """

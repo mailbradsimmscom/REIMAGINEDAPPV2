@@ -11,6 +11,8 @@ import threadBySessionRouter from './thread-by-session.route.js';
 import sessionsRouter from './sessions.route.js';
 import threadsRouter from './threads.route.js';
 import messagesRouter from './messages.route.js';
+import processFastRouter from './process-fast.route.js';
+import enrichWebRouter from './enrich-web.route.js';
 
 const router = express.Router();
 
@@ -21,6 +23,8 @@ router.use(messagesRouter);
 router.use(validateResponse(EnvelopeSchema));
 
 router.use('/process', processRouter);
+router.use('/process-fast', processFastRouter);
+router.use('/enrich-web', enrichWebRouter);
 router.use('/history', historyRouter);
 router.use('/list', listRouter);
 router.use('/context', contextRouter);

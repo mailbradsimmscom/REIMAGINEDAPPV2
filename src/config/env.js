@@ -56,7 +56,12 @@ const EnvSchema = z.object({
   TWILIO_ACCOUNT_SID: z.string().optional(),
   TWILIO_AUTH_TOKEN: z.string().optional(),
   TWILIO_PHONE_NUMBER: z.string().optional(),
-  TWILIO_SMS_TO: z.string().optional()
+  TWILIO_SMS_TO: z.string().optional(),
+  // Two-Call Chat Configuration
+  TWO_CALL_MODE: z.string().optional().default('false'),
+  WEB_ENRICHMENT_TIMEOUT_MS: z.string().optional().default('60000'),
+  PINECONE_CHUNKS_FOR_CACHE: z.string().optional().default('5'),
+  PINECONE_CHUNK_SIZE: z.string().optional().default('1000')
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

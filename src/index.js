@@ -21,6 +21,7 @@ import pineconeRouter from './routes/pinecone.router.js';
 import adminRouter from './routes/admin/index.js';
 import pineconeAdminRouter from './routes/admin/pinecone-admin.route.js';
 import testNormalizerRouter from './routes/test-normalizer.route.js';
+import configRouter from './routes/config.route.js';
 // import langGraphTestRouter from './routes/langgraph-test.route.js'; // Temporarily disabled
 
 import pineconeRepository from './repositories/pinecone.repository.js';
@@ -59,6 +60,7 @@ attachConfigInspector(app);
 
 // --- mount routers ---
 safeMount('/health', healthRouter);
+safeMount('/config', configRouter);
 safeMount('/systems', systemsRouter);
 safeMount('/api/system-management', systemManagementRouter);
 safeMount('/chat', chatRouter);
