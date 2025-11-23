@@ -589,32 +589,6 @@ export async function updateChatThread(threadId, updates) {
   }
 }
 
-export async function getChatMessageById(messageId) {
-  try {
-    const supabase = await checkSupabaseAvailability();
-
-    const { data, error } = await supabase
-      .from(MESSAGES_TABLE)
-      .select('*')
-      .eq('id', messageId)
-      .single();
-
-    if (error) {
-      const err = new Error(`Failed to get chat message: ${error.message}`);
-      err.cause = error;
-      err.context = { operation: 'get_message_by_id', messageId, table: MESSAGES_TABLE };
-      throw err;
-    }
-
-    return data;
-  } catch (error) {
-    if (!error.context) {
-      error.context = { operation: 'get_message_by_id', messageId, table: MESSAGES_TABLE };
-    }
-    throw error;
-  }
-}
-
 export async function updateChatMessage(messageId, updates) {
   try {
     const supabase = await checkSupabaseAvailability();

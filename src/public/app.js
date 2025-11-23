@@ -1,17 +1,3 @@
-// Two-Call Chat Configuration
-let chatConfig = {
-  TWO_CALL_MODE: false,  // Default to single-call (safe)
-  WEB_ENRICHMENT_TIMEOUT_MS: 60000,
-  PINECONE_CHUNKS_FOR_CACHE: 5,
-  PINECONE_CHUNK_SIZE: 1000
-};
-
-// Flag to track if config is loaded
-let configLoaded = false;
-
-// Track pending web enrichments
-const pendingEnrichments = new Map();
-
 const input = document.getElementById('messageInput');
 const send = document.getElementById('sendBtn');
 const chat = document.querySelector('.chat');
@@ -42,60 +28,6 @@ function initializeModelSelector() {
 
 function getSelectedModel() {
   return localStorage.getItem(MODEL_STORAGE_KEY) || 'gpt-5';
-}
-
-// Load configuration from backend - REQUIRED before processing
-async function loadChatConfig() {
-  try {
-    const response = await fetch('/config/chat');
-    if (response.ok) {
-      const envelope = await response.json();
-      // Extract config from envelope
-      chatConfig = envelope.data || envelope; // Fallback for backward compatibility
-      configLoaded = true;
-      console.log('✅ Chat configuration loaded from backend:', chatConfig);
-
-      // Update UI to show mode
-      const modeIndicator = document.getElementById('chat-mode-indicator');
-      if (modeIndicator) {
-        modeIndicator.textContent = chatConfig.TWO_CALL_MODE ? 'Two-Call Mode' : 'Single-Call Mode';
-        modeIndicator.className = chatConfig.TWO_CALL_MODE ? 'mode-indicator two-call' : 'mode-indicator single-call';
-      }
-    } else {
-      console.error('❌ Config endpoint failed, defaulting to single-call mode');
-      chatConfig.TWO_CALL_MODE = false;  // Safe fallback
-      configLoaded = false;
-    }
-  } catch (error) {
-    console.error('❌ Failed to load config, defaulting to single-call mode:', error);
-    chatConfig.TWO_CALL_MODE = false;  // Safe fallback
-    configLoaded = false;
-  }
-}
-
-// Add visual mode indicator to UI
-function addModeIndicator() {
-  const existingIndicator = document.getElementById('chat-mode-indicator');
-  if (!existingIndicator) {
-    const indicator = document.createElement('div');
-    indicator.id = 'chat-mode-indicator';
-    indicator.className = chatConfig.TWO_CALL_MODE ? 'mode-indicator two-call' : 'mode-indicator single-call';
-    indicator.textContent = chatConfig.TWO_CALL_MODE ? 'Two-Call Mode' : 'Single-Call Mode';
-    indicator.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 8px 16px;
-      background: ${chatConfig.TWO_CALL_MODE ? '#4CAF50' : '#2196F3'};
-      color: white;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    `;
-    document.body.appendChild(indicator);
-  }
 }
 
 // Debug: expose to window for console access
@@ -142,26 +74,6 @@ function updateURL(threadId) {
 
 async function initializeChat() {
   try {
-    // Disable send button until config loaded
-    const sendButton = document.getElementById('sendBtn');
-    const messageInput = document.getElementById('messageInput');
-
-    if (sendButton) sendButton.disabled = true;
-    if (messageInput) messageInput.disabled = true;
-
-    // Load configuration first
-    await loadChatConfig();
-
-    // Re-enable UI
-    if (sendButton) sendButton.disabled = false;
-    if (messageInput) messageInput.disabled = false;
-
-    // Log final mode
-    console.log(`🚀 Chat initialized in ${chatConfig.TWO_CALL_MODE ? 'TWO-CALL' : 'SINGLE-CALL'} mode`);
-
-    // Add mode indicator to UI
-    addModeIndicator();
-
     // Initialize model selector
     initializeModelSelector();
 
@@ -829,8 +741,7 @@ async function saveAssistantMessage(threadId, message, sequenceNumber, metadata 
   return await response.json();
 }
 
-// Original single-call processMessage (preserved for backward compatibility)
-async function processMessageOriginal(message) {
+async function processMessage(message) {
   let userSequence = null;
   let assistantSequence = null;
 
@@ -951,260 +862,6 @@ async function processMessageOriginal(message) {
       currentMessageSequence--;
     }
   }
-}
-
-// NEW: Main processMessage function that routes based on config
-async function processMessage(message) {
-  // Ensure config is loaded
-  if (!configLoaded) {
-    console.warn('⚠️ Config not loaded, attempting reload...');
-    await loadChatConfig();
-  }
-
-  // Use backend-controlled flag ONLY - no window.TWO_CALL_MODE
-  if (!chatConfig.TWO_CALL_MODE) {
-    console.log('📝 Using single-call mode (backend config)');
-    return processMessageOriginal(message);
-  }
-
-  console.log('⚡ Using two-call mode (backend config)');
-  return processMessageTwoCall(message);
-}
-
-// Two-call mode implementation
-async function processMessageTwoCall(message) {
-  let userSequence = null;
-  let assistantSequence = null;
-  let assistantMessageDiv = null;
-
-  try {
-    // Ensure thread exists
-    if (!currentThreadId) {
-      currentThreadId = generateThreadId();
-      currentMessageSequence = 0;
-
-      const threadResponse = await fetch('/chat/threads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: currentThreadId,
-          name: 'New Thread',
-          metadata: { created_at: new Date().toISOString() }
-        })
-      });
-      if (!threadResponse.ok) {
-        throw new Error('Failed to create thread');
-      }
-
-      updateURL(currentThreadId);
-    }
-
-    // Display user message
-    addMessage(message, 'outbound');
-
-    // Generate session ID if needed
-    const sessionId = window.sessionId || generateThreadId();
-    if (!window.sessionId) {
-      window.sessionId = sessionId;
-    }
-
-    // Increment sequence for user message
-    userSequence = ++currentMessageSequence;
-
-    // Increment sequence for assistant message (will be created by fast endpoint)
-    assistantSequence = ++currentMessageSequence;
-
-    const selectedModel = getSelectedModel();
-    console.log('⚡ Two-Call Mode: Sending fast request with model:', selectedModel);
-
-    // CALL 1: Fast response
-    const fastResponse = await fetch('/chat/process-fast', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: message,
-        threadId: currentThreadId,
-        sessionId: sessionId,
-        sequenceNumber: userSequence,
-        synthesisModel: selectedModel
-      })
-    });
-
-    if (!fastResponse.ok) {
-      const errorData = await fastResponse.json();
-      throw new Error(errorData.error?.message || 'Fast chat request failed');
-    }
-
-    const fastData = await fastResponse.json();
-
-    if (fastData.success && fastData.data) {
-      const { userMessage, assistantMessage, cachedState } = fastData.data;
-
-      // Display initial assistant response immediately
-      assistantMessageDiv = addEnhancedMessage(assistantMessage.content, [], true); // true = isIncomplete
-
-      // Add enrichment indicator
-      const indicator = addEnrichmentIndicator(assistantMessageDiv);
-
-      // CALL 2: Web enrichment (background)
-      if (cachedState) {
-        const enrichmentKey = `${currentThreadId}-${assistantSequence}`;
-
-        // Prevent duplicate enrichments
-        if (!pendingEnrichments.has(enrichmentKey)) {
-          pendingEnrichments.set(enrichmentKey, true);
-
-          // Start web enrichment in background
-          enrichWithWeb(
-            message,
-            currentThreadId,
-            assistantSequence,
-            assistantMessage.id,
-            assistantMessageDiv,
-            indicator,
-            cachedState
-          ).catch(error => {
-            console.error('Web enrichment failed:', error);
-            removeIndicator(indicator);
-          }).finally(() => {
-            pendingEnrichments.delete(enrichmentKey);
-          });
-        }
-      }
-
-      await loadChatSessions();
-    } else {
-      throw new Error(fastData.error || 'Fast chat failed');
-    }
-  } catch (error) {
-    removeLoadingAnimation();
-    addMessage(`Error: ${error.message}`, 'inbound');
-
-    // Rollback on error
-    if (assistantSequence) {
-      currentMessageSequence--;
-    }
-    if (userSequence) {
-      currentMessageSequence--;
-    }
-  }
-}
-
-// Web enrichment function (runs in background)
-async function enrichWithWeb(message, threadId, sequenceNumber, messageId, messageDiv, indicator, cachedState) {
-  const enrichmentKey = `${threadId}-${sequenceNumber}`;
-
-  // Use backend-configured timeout
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-    console.warn(`Web enrichment timed out after ${chatConfig.WEB_ENRICHMENT_TIMEOUT_MS}ms`);
-  }, chatConfig.WEB_ENRICHMENT_TIMEOUT_MS);
-
-  try {
-    console.log('🌐 Starting web enrichment for message:', messageId);
-
-    const response = await fetch('/chat/enrich-web', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
-      body: JSON.stringify({
-        threadId: threadId,
-        sequenceNumber: sequenceNumber,
-        messageId: messageId,
-        cachedState: cachedState
-      })
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Web enrichment failed:', errorData);
-      removeIndicator(indicator);
-      return;
-    }
-
-    const enrichData = await response.json();
-
-    if (enrichData.success && enrichData.data) {
-      const { enrichedContent, webSources, isComplete } = enrichData.data;
-
-      // Update the message content
-      updateMessageContent(messageDiv, enrichedContent, webSources);
-
-      // Remove indicator
-      removeIndicator(indicator);
-
-      // Mark message as complete
-      markMessageComplete(messageDiv);
-
-      console.log('✅ Web enrichment completed for message:', messageId);
-    }
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      console.log(`Web enrichment timed out (${chatConfig.WEB_ENRICHMENT_TIMEOUT_MS}ms configured)`);
-      removeIndicator(indicator);
-      return;
-    }
-    console.error('Web enrichment error:', error);
-    removeIndicator(indicator);
-  } finally {
-    clearTimeout(timeout);
-    pendingEnrichments.delete(enrichmentKey);
-  }
-}
-
-// Helper functions for two-call mode
-function addEnrichmentIndicator(messageDiv) {
-  const indicator = document.createElement('div');
-  indicator.className = 'enrichment-indicator';
-  indicator.innerHTML = `
-    <div class="enrichment-pulse">
-      <span>🌐 Enriching with web content...</span>
-    </div>
-  `;
-  messageDiv.appendChild(indicator);
-  return indicator;
-}
-
-function removeIndicator(indicator) {
-  if (indicator && indicator.parentNode) {
-    indicator.style.opacity = '0';
-    setTimeout(() => indicator.remove(), 300);
-  }
-}
-
-function updateMessageContent(messageDiv, enrichedContent, webSources) {
-  // Find the message content area
-  const contentArea = messageDiv.querySelector('.message-content') || messageDiv;
-
-  // Update with enriched content (assuming marked is available)
-  if (typeof marked !== 'undefined') {
-    contentArea.innerHTML = marked.parse(enrichedContent || '');
-  } else {
-    contentArea.textContent = enrichedContent || '';
-  }
-
-  // Add web sources if available
-  if (webSources && webSources.length > 0) {
-    const sourcesDiv = document.createElement('div');
-    sourcesDiv.className = 'web-sources';
-    sourcesDiv.innerHTML = `
-      <div class="sources-header">🌐 Web Sources</div>
-      ${webSources.map(source => `
-        <div class="source-item">
-          <a href="${source.url}" target="_blank">${source.title || source.url}</a>
-        </div>
-      `).join('')}
-    `;
-    messageDiv.appendChild(sourcesDiv);
-  }
-}
-
-function markMessageComplete(messageDiv) {
-  messageDiv.classList.remove('incomplete');
-  messageDiv.classList.add('complete');
 }
 
 // Handle send button click
@@ -1334,9 +991,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeChat();
   initializeStatsPanel();
 });
-
-// Export for debugging
-window.chatConfig = chatConfig;
-window.reloadConfig = loadChatConfig;
 
 
