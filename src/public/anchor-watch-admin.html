@@ -647,7 +647,7 @@
                                 <span class="slider-value" id="radiusValue">50 m</span>
                             </div>
                             <input type="range" class="slider" id="radiusSlider"
-                                   min="10" max="2000" value="50" step="10"
+                                   min="10" max="100" value="50" step="10"
                                    oninput="updateRadiusDisplay(this.value)">
                         </div>
                         <button id="activateBtn" class="button button-primary" disabled onclick="activateAnchorWatch()">
@@ -673,7 +673,7 @@
                                 <span class="slider-value" id="radiusValue">${status.radius_meters} m</span>
                             </div>
                             <input type="range" class="slider" id="radiusSlider"
-                                   min="10" max="2000" value="${status.radius_meters}" step="10"
+                                   min="10" max="100" value="${status.radius_meters}" step="10"
                                    oninput="updateRadiusDisplay(this.value)">
                         </div>
                         <button class="button button-secondary" onclick="updateRadius()">
@@ -863,8 +863,8 @@
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                     const distance = R * c;
 
-                    // Clamp to slider limits (10-2000m)
-                    const clampedRadius = Math.max(10, Math.min(2000, Math.round(distance / 10) * 10));
+                    // Clamp to slider limits (10-100m)
+                    const clampedRadius = Math.max(10, Math.min(100, Math.round(distance / 10) * 10));
 
                     // Update preview circle
                     markers.previewZone.setRadius(clampedRadius);
