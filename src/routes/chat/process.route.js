@@ -29,7 +29,6 @@ router.post(
       // Accept both message/threadId (UI) and query/thread_id (Python format)
       const message = req.body.message || req.body.query;
       const threadId = req.body.threadId || req.body.thread_id;
-      const synthesisModel = req.body.synthesis_model || 'gpt-5'; // Default to gpt-5
 
       if (!message) {
         throw new Error('Message or query is required');
@@ -56,8 +55,7 @@ router.post(
       // Call chat-proxy service (handles all intelligence and Python workflow)
       const result = await processChatMessage({
         query: message,
-        threadId,
-        synthesisModel
+        threadId
       });
 
       // Build envelope response

@@ -554,8 +554,8 @@ class ChatWorkflowSequential:
             # Determine reasoning_effort/temperature for metrics display
             complexity_score = (state.get("classification") or {}).get("complexity_score", 0.5)
             if "gpt-5" in synthesis_model_used.lower():
-                # GPT-5: Show reasoning effort
-                state["reasoning_effort"] = "high" if complexity_score >= 0.7 else "medium"
+                # GPT-5.1: Show temperature (no reasoning_effort used)
+                state["reasoning_effort"] = "temp=1"
             elif "gpt-4.1-mini" in synthesis_model_used.lower():
                 # GPT-4.1-mini: Show temperature
                 state["reasoning_effort"] = f"temp={os.getenv('OPENAI_TEMPERATURE', '0')}"

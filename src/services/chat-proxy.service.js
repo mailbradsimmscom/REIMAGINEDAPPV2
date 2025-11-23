@@ -25,7 +25,7 @@ function extractKeywords(query) {
 }
 
 
-export async function processChatMessage({ query, threadId, synthesisModel = 'gpt-5' }) {
+export async function processChatMessage({ query, threadId }) {
   const requestLogger = logger.createRequestLogger();
   const env = getEnv();
   let systemsContext = [];
@@ -615,8 +615,7 @@ export async function processChatMessage({ query, threadId, synthesisModel = 'gp
         accumulated_equipment: conversationContext.accumulated_equipment,
         total_exchanges: conversationContext.total_exchanges,
         equipment_inference: equipmentInference
-      },
-      synthesisModel
+      }
     });
     const workflowDuration = Date.now() - workflowStart;
 

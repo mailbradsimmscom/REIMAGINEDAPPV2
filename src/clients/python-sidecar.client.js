@@ -14,7 +14,6 @@ const requestLogger = logger.createRequestLogger();
  * @param {string} params.threadId - Conversation thread ID
  * @param {string} params.conversationSummary - Summary of conversation history
  * @param {Object} params.memoryContext - Memory context (weighted equipment tracking)
- * @param {string} params.synthesisModel - LLM model for synthesis (gpt-5 or gpt-4.1-mini)
  * @returns {Promise<Object>} - Chat response with classification, sources, and metadata
  */
 export async function processChatWorkflow({
@@ -22,8 +21,7 @@ export async function processChatWorkflow({
   systemsContext = [],
   threadId = null,
   conversationSummary = null,
-  memoryContext = null,
-  synthesisModel = 'gpt-5'
+  memoryContext = null
 }) {
   const env = getEnv();
 
@@ -37,8 +35,7 @@ export async function processChatWorkflow({
     systems_context: systemsContext,
     thread_id: threadId,
     conversation_summary: conversationSummary,
-    memory_context: memoryContext,
-    synthesis_model: synthesisModel
+    memory_context: memoryContext
   };
 
   return await makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAttempts);
