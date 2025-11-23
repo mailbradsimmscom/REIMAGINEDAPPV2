@@ -93,6 +93,10 @@
                     <div class="mobile-nav-icon">⚓</div>
                     <div class="mobile-nav-label">Anchor</div>
                 </a>
+                <a href="/public/victron-mobile.html" class="mobile-nav-item" data-page="system">
+                    <div class="mobile-nav-icon">🔌</div>
+                    <div class="mobile-nav-label">System</div>
+                </a>
                 <a href="#" id="mobileNavMaintenance" class="mobile-nav-item" data-page="maintenance">
                     <div class="mobile-nav-icon">🔧</div>
                     <div class="mobile-nav-label">Maintenance</div>
@@ -149,6 +153,8 @@
             document.querySelector('[data-page="home"]')?.classList.add('active');
         } else if (currentPath.includes('anchor-watch')) {
             document.querySelector('[data-page="anchor"]')?.classList.add('active');
+        } else if (currentPath.includes('victron-mobile')) {
+            document.querySelector('[data-page="system"]')?.classList.add('active');
         } else if (currentPath.includes('index-mobile.html')) {
             document.querySelector('[data-page="chat"]')?.classList.add('active');
         }
