@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Supplies Management | BoatOS</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/supplies.css">
+  <link rel="stylesheet" href="/css/supplies-wizard.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <h1>Supplies</h1>
+    <button class="add-btn-mobile" id="addBtnMobile">+</button>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Sidebar Navigation (Desktop) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>BoatOS</h2>
+        <button class="close-sidebar" id="closeSidebar">✕</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-item">🏠 Dashboard</a>
+        <a href="/supplies.html" class="nav-item active">📦 Supplies</a>
+        <a href="/admin.htm" class="nav-item">⚙️ Admin</a>
+      </nav>
+
+      <div class="sidebar-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="totalItems">-</div>
+          <div class="stat-label">Total Items</div>
+        </div>
+        <div class="stat-card alert">
+          <div class="stat-value" id="lowStockItems">-</div>
+          <div class="stat-label">Low Stock</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Supplies Inventory</h1>
+          <p class="page-subtitle">Manage your boat's supplies and equipment</p>
+        </div>
+        <button class="btn btn-primary" id="addBtn">
+          <span class="btn-icon">+</span>
+          <span class="btn-text">Add Supply</span>
+        </button>
+      </div>
+
+      <!-- Type Filter Tabs -->
+      <div class="type-tabs">
+        <button class="type-tab active" data-type="">
+          <span class="tab-icon">📦</span>
+          <span class="tab-label">All</span>
+          <span class="tab-count" id="countAll">-</span>
+        </button>
+        <button class="type-tab" data-type="supply">
+          <span class="tab-icon">🔄</span>
+          <span class="tab-label">Supplies</span>
+          <span class="tab-count" id="countSupplies">-</span>
+        </button>
+        <button class="type-tab" data-type="tool">
+          <span class="tab-icon">🔧</span>
+          <span class="tab-label">Tools</span>
+          <span class="tab-count" id="countTools">-</span>
+        </button>
+        <button class="type-tab" data-type="item">
+          <span class="tab-icon">📌</span>
+          <span class="tab-label">Items</span>
+          <span class="tab-count" id="countItems">-</span>
+        </button>
+      </div>
+
+      <!-- Filters & Search -->
+      <div class="toolbar">
+        <div class="search-box">
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search supplies..."
+            class="search-input"
+          >
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="filters">
+          <select id="categoryFilter" class="filter-select">
+            <option value="">All Categories</option>
+            <!-- Populated dynamically -->
+          </select>
+
+          <select id="locationFilter" class="filter-select">
+            <option value="">All Locations</option>
+            <!-- Populated dynamically -->
+          </select>
+
+          <label class="toggle-filter">
+            <input type="checkbox" id="lowStockFilter">
+            <span>Low Stock Only</span>
+          </label>
+
+          <button class="btn btn-secondary" id="clearFilters">Clear</button>
+        </div>
+      </div>
+
+      <!-- Results Summary -->
+      <div class="results-summary" id="resultsSummary">
+        <span id="resultsCount">Loading...</span>
+        <div class="view-options">
+          <button class="view-btn active" data-view="table">📋 Table</button>
+          <button class="view-btn" data-view="grid">🎴 Grid</button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <p>Loading supplies...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">📦</div>
+        <h3>No supplies found</h3>
+        <p>Add your first supply item to get started</p>
+        <button class="btn btn-primary" onclick="document.getElementById('addBtn').click()">
+          Add First Supply
+        </button>
+      </div>
+
+      <!-- Table View -->
+      <div class="table-container" id="tableView">
+        <table class="supplies-table" id="suppliesTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="item_type">Type</th>
+              <th class="sortable" data-sort="item_name">Item Name</th>
+              <th class="sortable" data-sort="category">Category</th>
+              <th class="sortable" data-sort="location">Location</th>
+              <th class="sortable" data-sort="current_stock">Stock</th>
+              <th class="sortable" data-sort="unit">Unit</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="suppliesTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Grid View (Mobile-friendly) -->
+      <div class="grid-container" id="gridView" style="display: none;">
+        <div class="supplies-grid" id="suppliesGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination">
+        <button class="btn btn-secondary" id="prevBtn" disabled>← Previous</button>
+        <span class="pagination-info" id="paginationInfo">Page 1 of 1</span>
+        <button class="btn btn-secondary" id="nextBtn" disabled>Next →</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal" id="supplyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Supply</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+
+      <form id="supplyForm" class="supply-form">
+        <input type="hidden" id="supplyId">
+
+        <!-- Basic Info -->
+        <div class="form-section">
+          <h3>Basic Information</h3>
+
+          <div class="form-group">
+            <label for="itemName">Item Name *</label>
+            <input type="text" id="itemName" required placeholder="e.g., Oil Filter WIX 51515">
+          </div>
+
+          <div class="form-group">
+            <label for="itemType">Item Type *</label>
+            <select id="itemType" required>
+              <option value="supply">🔄 Supply (Consumable)</option>
+              <option value="tool">🔧 Tool (Reusable Equipment)</option>
+              <option value="item">📌 Item (Trackable Asset)</option>
+            </select>
+            <small class="form-help">
+              Supply: needs reordering • Tool: reusable equipment • Item: tracked asset
+            </small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category *</label>
+              <select id="category" required>
+                <option value="">Select category...</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="unit">Unit</label>
+              <select id="unit">
+                <option value="">Select unit...</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="currentStock">Current Stock *</label>
+              <input type="number" id="currentStock" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group" id="reorderThresholdGroup">
+              <label for="reorderThreshold">Reorder Threshold</label>
+              <input type="number" id="reorderThreshold" step="0.01" min="0">
+              <small class="form-help">Alert when stock falls below this level</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="form-section">
+          <h3>Location</h3>
+
+          <div class="form-group">
+            <label for="location">Storage Location</label>
+            <input type="text" id="location" placeholder="e.g., Port Storage 2" list="locationsList">
+            <datalist id="locationsList">
+              <!-- Populated dynamically -->
+            </datalist>
+          </div>
+
+          <div class="form-group">
+            <label for="locationDetails">Location Details</label>
+            <input type="text" id="locationDetails" placeholder="Additional location info">
+          </div>
+        </div>
+
+        <!-- Photos -->
+        <div class="form-section">
+          <h3>Photos</h3>
+
+          <div class="form-group">
+            <label for="photoInput">Upload Photos</label>
+            <input
+              type="file"
+              id="photoInput"
+              accept="image/*"
+              capture="environment"
+              class="photo-input"
+            >
+            <button type="button" class="btn btn-secondary btn-sm" id="takePhotoBtn">
+              📷 Take Photo
+            </button>
+          </div>
+
+          <div class="photo-preview-container" id="photoPreviewContainer">
+            <!-- Uploaded photos will appear here -->
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="form-section">
+          <h3>Product Details</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="brand">Brand</label>
+              <input type="text" id="brand" placeholder="e.g., WIX">
+            </div>
+
+            <div class="form-group">
+              <label for="partNumber">Part Number</label>
+              <input type="text" id="partNumber" placeholder="e.g., 51515">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="supplier">Supplier</label>
+            <input type="text" id="supplier" placeholder="e.g., Amazon">
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-section">
+          <h3>Additional Information</h3>
+
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" rows="3" placeholder="Any additional notes..."></textarea>
+          </div>
+
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">
+            <span class="btn-text">Save Supply</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Photo Gallery Overlay -->
+  <div class="photo-gallery-overlay" id="photoGallery">
+    <div class="photo-gallery-content">
+      <button class="photo-gallery-close" id="galleryClose">✕</button>
+      <button class="photo-gallery-nav prev" id="galleryPrev">‹</button>
+      <button class="photo-gallery-nav next" id="galleryNext">›</button>
+      <img class="photo-gallery-image" id="galleryImage" src="" alt="Supply photo">
+    </div>
+  </div>
+
+  <!-- Mobile Wizard (Add New Supply) -->
+  <div class="wizard-overlay" id="supplyWizard">
+    <div class="wizard-container">
+      <!-- Wizard Header -->
+      <div class="wizard-header">
+        <button class="wizard-back-btn" id="wizardBackBtn">←</button>
+        <span class="wizard-step-indicator" id="wizardStepIndicator">Step 1 of 3</span>
+        <button class="wizard-close-btn" id="wizardCloseBtn">✕</button>
+      </div>
+
+      <!-- Screen 1: Photo Capture -->
+      <div class="wizard-screen active" id="wizardScreen1" data-step="1">
+        <div class="wizard-screen-content">
+          <h2>Take a Photo</h2>
+          <p class="wizard-subtitle">Snap a photo and AI will help identify the item</p>
+
+          <div class="wizard-photo-area" id="wizardPhotoArea">
+            <div class="wizard-photo-placeholder" id="wizardPhotoPlaceholder">
+              <span class="wizard-photo-icon">📷</span>
+              <span>Tap to take photo</span>
+            </div>
+            <img class="wizard-photo-preview" id="wizardPhotoPreview" style="display: none;">
+            <input type="file" id="wizardPhotoInput" accept="image/*" capture="environment" class="photo-input">
+          </div>
+
+          <div class="wizard-ai-status" id="wizardAiStatus" style="display: none;">
+            <div class="wizard-ai-analyzing">
+              <div class="spinner"></div>
+              <span>Analyzing photo...</span>
+            </div>
+            <div class="wizard-ai-result" style="display: none;">
+              <span class="wizard-ai-detected" id="wizardAiDetected"></span>
+            </div>
+          </div>
+
+          <button type="button" class="wizard-skip-link" id="wizardSkipPhoto">
+            Skip photo →
+          </button>
+        </div>
+
+        <div class="wizard-footer">
+          <button type="button" class="btn btn-secondary" id="wizardCancel1">Cancel</button>
+          <button type="button" class="btn btn-primary" id="wizardNext1" disabled>Next →</button>
+        </div>
+      </div>
+
+      <!-- Screen 2: Item Details -->
+      <div class="wizard-screen" id="wizardScreen2" data-step="2">
+        <div class="wizard-screen-content">
+          <h2>Item Details</h2>
+
+          <form id="wizardForm" class="wizard-form">
+            <div class="form-group">
+              <label for="wizardItemName">Item Name *</label>
+              <input type="text" id="wizardItemName" required placeholder="e.g., Oil Filter WIX 51515">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="wizardItemType">Type *</label>
+                <select id="wizardItemType" required>
+                  <option value="supply">Supply</option>
+                  <option value="tool">Tool</option>
+                  <option value="item">Item</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="wizardCategory">Category *</label>
+                <select id="wizardCategory" required>
+                  <option value="">Select...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="wizardCurrentStock">Stock *</label>
+                <input type="number" id="wizardCurrentStock" step="0.01" min="0" required placeholder="0">
+              </div>
+
+              <div class="form-group">
+                <label for="wizardUnit">Unit</label>
+                <select id="wizardUnit">
+                  <option value="">Select...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group" id="wizardReorderGroup">
+              <label for="wizardReorderThreshold">Reorder At</label>
+              <input type="number" id="wizardReorderThreshold" step="0.01" min="0" placeholder="Alert when below...">
+            </div>
+
+            <div class="form-group">
+              <label for="wizardLocation">Location</label>
+              <input type="text" id="wizardLocation" placeholder="e.g., Port Storage 2" list="wizardLocationsList">
+              <datalist id="wizardLocationsList"></datalist>
+            </div>
+
+            <div class="form-group">
+              <label for="wizardLocationDetails">Location Details</label>
+              <input type="text" id="wizardLocationDetails" placeholder="Additional location info">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="wizardBrand">Brand</label>
+                <input type="text" id="wizardBrand" placeholder="e.g., WIX">
+              </div>
+
+              <div class="form-group">
+                <label for="wizardPartNumber">Part #</label>
+                <input type="text" id="wizardPartNumber" placeholder="e.g., 51515">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="wizardSupplier">Supplier</label>
+              <input type="text" id="wizardSupplier" placeholder="e.g., Amazon">
+            </div>
+
+            <div class="form-group">
+              <label for="wizardNotes">Notes</label>
+              <textarea id="wizardNotes" rows="2" placeholder="Any additional notes..."></textarea>
+            </div>
+          </form>
+        </div>
+
+        <div class="wizard-footer">
+          <button type="button" class="btn btn-secondary" id="wizardBack2">← Back</button>
+          <button type="button" class="btn btn-primary" id="wizardNext2">Next →</button>
+        </div>
+      </div>
+
+      <!-- Screen 3: Associated Systems -->
+      <div class="wizard-screen" id="wizardScreen3" data-step="3">
+        <div class="wizard-screen-content">
+          <h2>Related Systems</h2>
+          <p class="wizard-subtitle">Link this item to boat systems from your documentation</p>
+
+          <div class="wizard-systems-loading" id="wizardSystemsLoading">
+            <div class="spinner"></div>
+            <span>Finding related systems...</span>
+          </div>
+
+          <div class="wizard-systems-empty" id="wizardSystemsEmpty" style="display: none;">
+            <span class="wizard-systems-empty-icon">🔍</span>
+            <p>No related systems found</p>
+            <small>This item may not match any documented boat systems</small>
+          </div>
+
+          <div class="wizard-systems-list" id="wizardSystemsList" style="display: none;">
+            <!-- System cards will be populated here -->
+          </div>
+        </div>
+
+        <div class="wizard-footer">
+          <button type="button" class="btn btn-secondary" id="wizardBack3">← Back</button>
+          <button type="button" class="btn btn-primary" id="wizardSave">Save Supply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Recommendations Modal -->
+  <div class="system-recommendations-modal" id="systemRecommendationsModal">
+    <div class="system-recommendations-content">
+      <div class="system-recommendations-header">
+        <h2>System Recommendations</h2>
+        <button class="modal-close-btn" id="systemRecsClose">✕</button>
+      </div>
+      <div class="system-recommendations-body">
+        <p class="system-recommendations-intro">
+          Based on this item's details, here are relevant boat systems found in your documentation:
+        </p>
+        <div class="system-recommendations-list" id="systemRecsContainer">
+          <!-- Recommendations will be loaded here -->
+        </div>
+      </div>
+      <div class="system-recommendations-footer">
+        <button type="button" class="btn btn-primary" id="acceptSystemsBtn">
+          Accept Selected Systems
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="/js/supplies/supplies-api.js"></script>
+  <script type="module" src="/js/supplies/supplies-photos.js"></script>
+  <script type="module" src="/js/supplies/supplies-list.js"></script>
+  <script type="module" src="/js/supplies/supplies-form.js"></script>
+  <script type="module" src="/js/supplies/supplies-ai.js"></script>
+  <script type="module" src="/js/supplies/supplies-wizard.js"></script>
+  <script type="module">
+    // Initialize app
+    import { SuppliesList } from '/js/supplies/supplies-list.js';
+    import { SuppliesForm } from '/js/supplies/supplies-form.js';
+    import { SuppliesPhotos } from '/js/supplies/supplies-photos.js';
+    import { SuppliesAI } from '/js/supplies/supplies-ai.js';
+    import { SuppliesWizard } from '/js/supplies/supplies-wizard.js';
+
+    // Mobile detection
+    function isMobile() {
+      return window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    }
+
+    // Wait for DOM
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize components
+      window.suppliesList = new SuppliesList();
+      window.suppliesForm = new SuppliesForm();
+      window.suppliesPhotos = new SuppliesPhotos();
+      window.suppliesAI = new SuppliesAI();
+      window.suppliesWizard = new SuppliesWizard();
+
+      // Mobile menu
+      document.getElementById('menuBtn')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+      });
+
+      document.getElementById('closeSidebar')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+      });
+
+      document.getElementById('overlay')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+        document.getElementById('supplyModal').classList.remove('active');
+      });
+
+      // Desktop Add button - uses modal
+      document.getElementById('addBtn')?.addEventListener('click', () => {
+        window.suppliesForm.openModal();
+      });
+
+      // Mobile Add button - uses wizard
+      document.getElementById('addBtnMobile')?.addEventListener('click', () => {
+        if (isMobile()) {
+          window.suppliesWizard.open();
+        } else {
+          window.suppliesForm.openModal();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -172,6 +172,53 @@ async function makeOpenAICall(requestBody, openaiApiKey, timeoutMs, retryAttempt
 }
 
 /**
+ * Makes a vision API call to OpenAI (GPT-4V)
+ * @param {Object} params - Configuration object
+ * @param {string} params.system - System prompt
+ * @param {string} params.user - User prompt
+ * @param {string} params.imageUrl - URL to the image to analyze
+ * @param {string} params.model - OpenAI model to use (default: gpt-4-vision-preview)
+ * @param {number} params.maxOutputTokens - Maximum tokens to generate
+ * @returns {Promise<string>} - Generated text response
+ */
+export async function oaiVision({ system, user, imageUrl, model, maxOutputTokens }) {
+  const { getEnv } = await import('../config/env.js');
+  const env = getEnv();
+
+  const openaiApiKey = env.OPENAI_API_KEY;
+  const openaiModel = model || 'gpt-4o';
+  const maxTokens = maxOutputTokens || 500;
+  const temperature = 0; // Deterministic for vision analysis
+  const timeoutMs = parseInt(env.OPENAI_TIMEOUT_SECONDS || '30') * 1000; // Longer timeout for vision
+  const retryAttempts = parseInt(env.OPENAI_RETRY_ATTEMPTS || '3');
+
+  const requestBody = {
+    model: openaiModel,
+    messages: [
+      { role: 'system', content: system },
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: user },
+          {
+            type: 'image_url',
+            image_url: {
+              url: imageUrl,
+              detail: 'high'
+            }
+          }
+        ]
+      }
+    ],
+    max_tokens: maxTokens,
+    temperature
+  };
+
+  const response = await makeOpenAICall(requestBody, openaiApiKey, timeoutMs, retryAttempts);
+  return response.choices[0].message.content.trim();
+}
+
+/**
  * Truncates text content to specified length
  * @param {string} text - Text to truncate
  * @param {number} maxLength - Maximum length
@@ -187,5 +234,6 @@ export function truncateContent(text, maxLength = 600) {
 export default {
   oaiJson,
   oaiText,
+  oaiVision,
   truncateContent
 };

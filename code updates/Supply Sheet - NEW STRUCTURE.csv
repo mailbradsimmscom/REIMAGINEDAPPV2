@@ -1,0 +1,21 @@
+Main Category,Item Type,Item Name,Quantity,Unit,Brand,Part Number,Subcategory,Supplier,Location,Reorder Threshold,Condition,Notes,Critical Item,In Stock
+"INSTRUCTIONS: Delete these instruction rows before importing. Fill in data starting at row 6.",,,,,,,,,,,,,,
+"Main Category: Plumbing, Engine Service/Spares, Tools, Safety, Deck Equipment, Electrical, Cleaning, etc.",,,,,,,,,,,,,,
+"Item Type: Supply, Tool, or Item",,,,,,,,,,,,,,
+"Unit: piece, meter, liter, foot, roll, bag, bottle, can, pack, etc. (standardized)",,,,,,,,,,,,,,
+"EXAMPLE ROWS BELOW - Replace with your actual data:",,,,,,,,,,,,,,
+Engine Service/Spares,Supply,Oil Filter (50hr Service Kit),2,piece,WIX,51515,Engine,Seascape Marine,Strbd bath above toilet,1,,For routine maintenance,Yes,Yes
+Plumbing,Supply,RO tubing (0.25 inch),20,foot,,,,Plumblink,Port storage 0,5,,For drinking water system,Yes,Yes
+Tools,Tool,Bolt cutters,1,piece,,,Hand Tools,,Stern bench,,,Heavy duty,Yes,Yes
+Deck Equipment,Item,Hatch cover (grey cloth),10,piece,,,Covers,,Under Brad's outside seat,,Good,Spare covers for hatches,No,Yes
+Engine Service/Spares,Supply,Fuel Filter (Racor 10 micron),4,piece,Racor,,Engine,,Strbd bath above toilet,2,,Spare filters,Yes,Yes
+Watermaker,Supply,5 micron filters,3,piece,Schenker,,Watermaker,,Watermaker Box: Strbd bath above toilet,1,,Replacement filters,Yes,Yes
+General,Supply,Gorilla tape (extra wide 4 inch),2,roll,Gorilla,,,Commercial Marine,Portside watermaker cupboard,1,,Heavy duty tape,No,Yes
+Plumbing,Supply,16mm hose coupler,4,piece,Agrico,,Hosetail fittings,,Port storage 2,2,,Plumbing connections,No,Yes
+Tools,Tool,Multi meter,1,piece,Fluke,,,,,,,Electronic testing,Yes,Yes
+Electrical,Supply,AAA batteries,19,piece,Duracell,,,,,5,,Navigation equipment,Yes,Yes
+Lines and Rigging,Item,Soft shackles (small),2,piece,,,Rigging,,Saloon starboard drawer,,Good,For rigging,No,Yes
+Safety,Item,Life jacket,6,piece,Mustang,,,Marine Store,Port storage 1,,Good,Inspect annually,Yes,Yes
+Adhesives,Supply,Sika 591 (white),1,tube,Sika,591,Sealant,Commercial Marine,Portside watermaker cupboard,1,,Marine sealant,No,Yes
+Hose,Supply,16mm DW Hose,5,meter,Vetus,,Pipe,,Portside watermaker cupboard,2,,Drinking water hose,Yes,Yes
+Clamps,Supply,Hose clamps (20-32mm),6,piece,Wurth,,Hose Clamps,,AquaMend box: Strbd bath above toilet,2,,Stainless steel,No,Yes

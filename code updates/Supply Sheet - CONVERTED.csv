@@ -1,0 +1,232 @@
+Main Category,Item Type,Item Name,Quantity,Unit,Brand,Part Number,Subcategory,Supplier,Location,Reorder Threshold,Condition,Notes,Critical Item,In Stock,NEEDS_REVIEW,Original Row
+Plumbing,Supply,"16 90 degree connection",4,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,3
+Plumbing,Supply,"16mm Couplers",4,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,4
+Plumbing,Supply,"16mm Tee",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,5
+Plumbing,Supply,"1/2 Male x 16mm hose",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,6
+Plumbing,Supply,"1/2 Female x Female",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,1 req'd,STOCK_UNCLEAR,7
+Plumbing,Supply,"20mm 90 degree fitting",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,8
+Plumbing,Supply,"3/4 Male x 20mm hose",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,9
+Plumbing,Supply,"1/2 female x 3/4female",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,10
+Plumbing,Supply,"20mm Coupler",2,piece,,,Hosetail fittings,Agrico,"",2,,,,No,NO_LOCATION,11
+Plumbing,Supply,"25mm 90 Degree Fitting",2,piece,,,Hosetail fittings,Agrico,"Port storage2",2,,,,Yes,,12
+Plumbing,Supply,"25mm Coupler",2,piece,,,Hosetail fittings,Agrico,"",2,,,,No,NO_LOCATION,13
+Plumbing,Supply,"1 inch blackwater tank value",1,piece,,,,,"Port storage2",2,,,,UNKNOWN,STOCK_UNKNOWN,14
+Plumbing,Supply,"1 inch blakcwater tank coupling",1,piece,,,,,"Port storage2",2,,,,UNKNOWN,STOCK_UNKNOWN,15
+Bilge pump & Gori Props,UNKNOWN,"Bilge Pump BE1454 Orca bilge pump 1300gph 24V",1,piece,,BE1454,Bilges,Central Boating,"Port storage1",,,,,Yes,TYPE_UNKNOWN,17
+Bilge pump & Gori Props,UNKNOWN,"Float switch",1,piece,,,Bilges,Central Boating,"Port storage1",,,,,Yes,TYPE_UNKNOWN,18
+Bilge pump & Gori Props,UNKNOWN,"Bilge pump 24 volts",1,piece,,,,,"Port storage1",,,,,x (added),TYPE_UNKNOWN; STOCK_UNCLEAR,19
+Bilge pump & Gori Props,Item,"Anode for Gori Propeller ends",2,piece,,,Gori Props,Central Boating,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,20
+Bilge pump & Gori Props,Item,"1/2 moon Gori Propeller",2,piece,,,Gori Props,Central Boating,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,21
+General,Supply,"White Sika",1,piece,Sika,,kit,Commercial Marine,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,,23
+General,Supply,"Grey Sika",1,piece,Sika,,kit,Commercial Marine,"Portside watermaker cupboard (astern of stairs)",2,,,,x (also have black),STOCK_UNCLEAR,24
+General,Supply,"Clear Sika",1,piece,Sika,,kit,Commercial Marine,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,,25
+General,UNKNOWN,"Epoxy Quickset Liquid",1,piece,,,Kit,Commercial Marine,"AquaMend box: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,26
+General,UNKNOWN,"2 part Epoxy Putty",1,piece,,,Kit,Commercial Marine,"AquaMend box: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,27
+General,UNKNOWN,"2 part Aqua Underwater Putty",1,piece,,,Kit,Commercial Marine,"AquaMend box: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,28
+General,Supply,"Corrosion Black Grease",1,piece,,,Kit,Commercial Marine,"AquaMend box: Strbd bath above toilet",2,,,,Yes,,29
+General,UNKNOWN,"3mm S/S Wire",1,piece,,,Kit,Commercial Marine,"",,,,,No,TYPE_UNKNOWN; NO_LOCATION,30
+General,Supply,"Self Amalgamating tape",1,piece,,,Kit,Buco,"AquaMend box: Strbd bath above toilet",2,,,,Yes,,31
+General,UNKNOWN,"8mm Straight connection",2,piece,,,Fuel Connection,Meikles,"AquaMend box: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,32
+General,Supply,"Manuel oil changing pump (QuickSilver Gear Lube Pump)",1,piece,,,,Commercial Marine,"Portside watermaker cupboard (astern of stairs)",1,,,,Yes,,33
+General,Item,"self-fusing recovery tape",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,34
+General,Supply,"double-side tape",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,,35
+General,Supply,"Gorilla tape - extra wide (4) and wide",2,piece,Gorilla,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Nov 10, 2025,STOCK_UNCLEAR,36
+General,Supply,"Gorilla double-sided tape (narrow)",1,piece,Gorilla,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Nov 10, 2025,STOCK_UNCLEAR,37
+General,Supply,"duct tape",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,QTY_BLANK,38
+General,Supply,"painters tape - 1/4 inch and 1 inch",2,piece,,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,,39
+General,Supply,"thick blue masking tape",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,,40
+General,Supply,"reg yellow masking tape",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",2,,,,Yes,,41
+General,UNKNOWN,"Starbrite moisture absorber refill",3/4 bag,Bag,,,,,"Portside food cupboard' (at bottom of stairs)",,,,,Yes,QTY_UNCLEAR; TYPE_UNKNOWN,42
+General,UNKNOWN,"Paper towels",3,roll,,,,,"Portside food cupboard' (at bottom of stairs)",,,,,Yes,TYPE_UNKNOWN,43
+General,Item,"Non-slip shelf liner",many,roll,,,,,"Portside food cupboard' (at bottom of stairs)",,,,,Yes,QTY_UNCLEAR,44
+General,UNKNOWN,"sheets of plastic (leftover from packages)",1,piece,,,,,"black bin - port forepeak",,,,,Nov 9, 2025,QTY_BLANK; TYPE_UNKNOWN; STOCK_UNCLEAR,45
+Nuts & Bolts,UNKNOWN,"Assorted M6 - M10 Hex/CSK",1,piece,,,Nuts & Bolts,Fastenright,"BoltsBox: Strbd bath above toilet",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,47
+Nuts & Bolts,UNKNOWN,"Washers/Nyloc/Nuts/Splipins/SS Pins",1,piece,,,Nuts & Bolts,Fastenright,"BoltsBox: Strbd bath above toilet",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,48
+Nuts & Bolts,UNKNOWN,"Assorted 3.5/4.2/5.5/4.8 Pan head & CSK",1,piece,,,Screws,Fastenright,"BoltsBox: Strbd bath above toilet",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,49
+Integrel,Supply,"Spare set of belts",3,piece,,,Integrel,Integral,"",1,,,,Yes,NO_LOCATION,51
+Integrel,UNKNOWN,"Straight edge",1,piece,,,,Integral,"Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,52
+Integrel,UNKNOWN,"Vented smooth pulleys",2,piece,,,,Integral,"Strbd bath above toilet",,,,,April 11, 2025,TYPE_UNKNOWN; STOCK_UNCLEAR,53
+Integrel,Supply,"Belts - 8PK1330HD",2,piece,,8PK1330HD,,,"Strbd bath above toilet",1,,,,April 11, 2025,STOCK_UNCLEAR,54
+Fresh & Salt water pump and throttle cable,UNKNOWN,"UP6/E 24V 3,5 bar high pressure",1,piece,,UP6/E,Pump,Manex,"Port storage2",,,,,Yes,TYPE_UNKNOWN,56
+Fresh & Salt water pump and throttle cable,UNKNOWN,"9ft ZF Throttle",1,piece,,,Morse Cable,Manex,"Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,57
+Fresh & Salt water pump and throttle cable,UNKNOWN,"Larger Seawater Strainer Full Unit",1,piece,,,,,"Port storage2",,,,,UNKNOWN,TYPE_UNKNOWN; STOCK_UNKNOWN,58
+Fresh & Salt water pump and throttle cable,UNKNOWN,"Small Seawater Strainer Full Unit",1,piece,,,,,"Port storage2",,,,,UNKNOWN,TYPE_UNKNOWN; STOCK_UNKNOWN,59
+Plumbing Fittings,Supply,"90 degree elbows",5,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,61
+Plumbing Fittings,Supply,"Straight Connectors",4,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,62
+Plumbing Fittings,Supply,"Stop Ends",2,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,63
+Plumbing Fittings,Supply,"Male iron",2,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,64
+Plumbing Fittings,Supply,"Female Iron",2,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,65
+Plumbing Fittings,Supply,"Tee's",2,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,66
+Plumbing Fittings,Supply,"Pipe",10,meter,,,Plumbing,Plumblink,"",2,,,,no?,STOCK_UNCLEAR; NO_LOCATION,67
+Plumbing Fittings,Supply,"Valves",2,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,68
+Plumbing Fittings,Supply,"Non-return Valves",1,piece,,,Plumbing,Plumblink,"Port storage2",2,,,,Yes,,69
+Plumbing Fittings,Supply,"0.25 RO tubing (for drinking water)",20,foot,,,Plumbing,,"Port storage 0",2,,,,April 11, 2025,STOCK_UNCLEAR,70
+Plumbing Fittings,Supply,"Assorted 0.25 RO quick release fittings",1,pack,,,Plumbing,,"Port storage 0",2,,,,April 11, 2025,STOCK_UNCLEAR,71
+Plumbing Fittings,Supply,"Orange foam cone",1,piece,,,,,"Port storage",2,,,,UNKNOWN,QTY_BLANK; STOCK_UNKNOWN,72
+Electrical,UNKNOWN,"Electric fuses and breakers",1,piece,,,,,"AquaMend box: Strbd bath above toilet",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,74
+Engine Service/Spares,Supply,"50hr Service Kit: Oil Filter",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,x (with washers),STOCK_UNCLEAR,78
+Engine Service/Spares,Supply,"250hr Service Kit: Oil Filter",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,79
+Engine Service/Spares,Supply,"250hr Service Kit: Fuel Filter",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,80
+Engine Service/Spares,Supply,"250hr Service Kit: Filter Separator",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,81
+Engine Service/Spares,Supply,"250hr Service Kit: Impeller Kit",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",2,,,,Yes,,82
+Engine Service/Spares,Supply,"250hr Service Kit: Belt water Pump",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,83
+Engine Service/Spares,Supply,"250hr Service Kit: Oil & Coolant",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,84
+Engine Service/Spares,Supply,"Additional Spare Kit: Fuel Filter",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,85
+Engine Service/Spares,Supply,"Additional Spare Kit: Filter Separator",2,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,86
+Engine Service/Spares,Supply,"Additional Spare Kit: Belt Water Pump",1,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,87
+Engine Service/Spares,Supply,"Additional Spare Kit: Impeller Kit",1,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",2,,,,Yes,,88
+Engine Service/Spares,Supply,"Additional Spare Kit: Coolant",4,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",2,,,,Yes,,89
+Engine Service/Spares,Supply,"Additional Spare Kit: Oil",6,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,90
+Engine Service/Spares,Supply,"Fuel filter spares",4,piece,,,Engine,Seascape Marine,"Strbd bath above toilet",1,,,,Yes,,91
+Engine Service/Spares,Supply,"1/2 Moon Anodes Saildrive Props",2,piece,,,Engine,Seascape Marine,"Portside watermaker cupboard",2,,,,Yes,,92
+Engine Service/Spares,Supply,"Rose Anodes",2,piece,,,Engine,Seascape Marine,"Portside watermaker cupboard",2,,,,Yes,,93
+Engine Service/Spares,Supply,"Racor spare filters (10 microns)",4,piece,Racor,,Engine,Racor,"Strbd bath above toilet",1,,,,Yes,,94
+Engine Service/Spares,Tool,"1/2 pint funnels (sail drive and engine oil)",2,piece,,,Engine,,"Strbd bath above toilet",,,,,Yes,,95
+Sails,UNKNOWN,"Sail Repair kit",1,piece,,,Sails,Ullman Sails,"Strbd bathroom above black water",,,,,Yes,TYPE_UNKNOWN,97
+Sails,Tool,"Set of Splice/Fids",1,piece,,,Sails,Ullman Sails,"Strbd bathroom above black water",,,,,Yes,,98
+Hose,Supply,"8mm Fuel Hose",5,meter,,,Pipe,Vetus,"Outdoor front locker",2,,,,Yes,,100
+Hose,Supply,"10mm Fuel hose",5,meter,,,Pipe,Vetus,"Outdoor front locker",2,,,,Yes,,101
+Hose,Supply,"16mm DW Hose",5,meter,,,Pipe,Vetus,"Portside watermaker cupboard",2,,,,Yes,,102
+Hose,Supply,"19mm DW Hose",3,meter,,,Pipe,Vetus,"",2,,,,Yes,NO_LOCATION,103
+Hose,Supply,"25mm DW Hose",3,meter,,,Pipe,Vetus,"Portside watermaker cupboard",2,,,,Yes,,104
+Clamps,Supply,"8-16mm Clamps",6,piece,,,Hose Clamps,Wurth,"AquaMend box: Strbd bath above toilet",2,,,,Yes,,106
+Clamps,Supply,"16-27mm Clamps",5,piece,,,Hose Clamps,Wurth,"AquaMend box: Strbd bath above toilet",2,,,,Yes,,107
+Clamps,Supply,"20-32mm Clamps",6,piece,,,Hose Clamps,Wurth,"AquaMend box: Strbd bath above toilet",2,,,,Yes,,108
+Clamps,Supply,"32-50mm Clamps",6,piece,,,Hose Clamps,Wurth,"AquaMend box: Strbd bath above toilet",2,,,,Yes,,109
+Steering Rope,UNKNOWN,"Pre-cut lengths 7.5m pre run in boat",1,piece,,,Spare Steering,,"Installed",,,,,Yes,TYPE_UNKNOWN,111
+Steering Rope,UNKNOWN,"Pre-cut lengths 6.2m pre run in boat",1,piece,,,Spare Steering,,"Installed",,,,,Yes,TYPE_UNKNOWN,112
+Steering Rope,UNKNOWN,"Pre-cut Lengths 10.5m pre run in boat",1,piece,,,Spare Steering,,"Installed",,,,,Yes,TYPE_UNKNOWN,113
+Steering Rope,UNKNOWN,"Precut Lengths 11.5m pre run in boat",1,piece,,,Spare Steering,,"Installed",,,,,Yes,TYPE_UNKNOWN,114
+Watermaker,Supply,"5 micron filters",3,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",1,,,,Yes,,116
+Watermaker,Supply,"10 micron carbon filters",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",1,,,,Yes,,117
+Watermaker,Supply,"RO quick-release 1/4 water filter",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",1,,,,April 11, 2025,STOCK_UNCLEAR,118
+Watermaker,Supply,"motor coupling",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,119
+Watermaker,Supply,"PSP 15 (coupling?)",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,120
+Watermaker,Supply,"PSSM 152 (coupling)",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,121
+Watermaker,Supply,"Schneker Cleaning 1",2,piece,Schneker,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,122
+Watermaker,Supply,"Schneker Cleaning 2",1,piece,Schneker,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,123
+Watermaker,Supply,"tube of silicone paste",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,124
+Watermaker,Supply,"Schsp 10 pump head",1,piece,,,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,125
+Watermaker,Supply,"Schdpm16 (cables and sensor?)",1,piece,,Schdpm16,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,126
+Watermaker,Supply,"SchSsZ15 (assorted washers)",1,piece,,SchSsZ15,Watermaker,,"Watermaker Box: Strbd bath above toilet",2,,,,Yes,,127
+Watermaker,Supply,"Schneker water maker tubing compression nut",1,piece,Schneker,,Watermaker,,"Nav Station Stbd Top (grey battery bag)",2,,,,April 11, 2025,QTY_BLANK; STOCK_UNCLEAR,128
+FASTENER,Tool,"Grommets Punch",1,piece,,,,,"Ziplock bag: Strbd bath above toilet",,,,,Yes,,130
+FASTENER,UNKNOWN,"Grommets 10mm 3/8 inch",1,piece,,,,,"Ziplock bag: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,131
+FASTENER,UNKNOWN,"Grommets 8mm 5/16 inch",1,piece,,,,,"Ziplock bag: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,132
+FASTENER,UNKNOWN,"Grommets 12mm 1/2 inch",1,piece,,,,,"Ziplock bag: Strbd bath above toilet",,,,,Yes,TYPE_UNKNOWN,133
+FASTENER,Supply,"1 micron filters",4,piece,,,,,"Strbd bath above toilet",1,,,,Yes,,134
+FASTENER,Supply,"5 micron filter",1,piece,,,,,"Strbd bath above toilet",1,,,,Yes,,135
+FASTENER,UNKNOWN,"hinges",20,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,136
+FASTENER,UNKNOWN,"Small zip-ties",15,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,137
+Adhesives & Ties,UNKNOWN,"Bungee Cords",6,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,139
+Adhesives & Ties,Item,"Cargo Nets",3,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,140
+Adhesives & Ties,UNKNOWN,"small open tube Sike 591",1.5,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,142
+Adhesives & Ties,UNKNOWN,"Wooden mixing sticks (small)",10,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,143
+Adhesives & Ties,UNKNOWN,"Gloves (thin working)",100,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,144
+Adhesives & Ties,UNKNOWN,"Marine Weld (25ml)",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,145
+Adhesives & Ties,Item,"Self Adhensive Hooks",12,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,146
+Adhesives & Ties,UNKNOWN,"2 m long tiedowns",4,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,147
+Adhesives & Ties,UNKNOWN,"Locktight (20g)",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,148
+Adhesives & Ties,Item,"Fasteners (or outside window covers and enclosure)",6,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,149
+many,UNKNOWN,"Portable cord ties",10,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,151
+many,UNKNOWN,"M2 3/8 Anchor strap",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,152
+many,UNKNOWN,"M2 1/2 Anchor strap",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,153
+many,Item,"long bag",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,,154
+many,UNKNOWN,"Tikka Yatching Repair Kit",1,piece,,,,,"Portside watermaker cupboard (astern of stairs)",,,,,Yes,TYPE_UNKNOWN,155
+Tools (not in tool drawer),UNKNOWN,"Small mallet",1,piece,,,,,"Gym cupboard",,,,,Yes,TYPE_UNKNOWN,158
+Tools (not in tool drawer),UNKNOWN,"Digital caliper",1,piece,,,,,"Gym cupboard",,,,,Yes,TYPE_UNKNOWN,159
+Tools (not in tool drawer),Tool,"Strap wrench",1,piece,,,,,"Gym cupboard",,,,,Yes,,160
+Tools (not in tool drawer),UNKNOWN,"salination tester",1,piece,,,,,"Gym cupboard",,,,,Yes,TYPE_UNKNOWN,161
+Tools (not in tool drawer),Tool,"Dremel drill and parts",1,piece,,,,,"Gym cupboard",,,,,Yes,,162
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Set of Spanners sz 6-19",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,165
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Set of Allen keys sz 1,5 - 10",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,166
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Hacksaw",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,167
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Crimper",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,168
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Hammer",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,169
+Tool Kit for CNC Tool Drawer,Supply,"3m measuring tape",1,piece,,,Tools,,"tool drawer (saloon)",2,,,,Yes,,170
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Stanley knife",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,171
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Stanley Blades",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,172
+Tool Kit for CNC Tool Drawer,Tool,"Set of drill bits sz 1-10",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,,173
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Bosch Ratchet set sz 6, 7, 8, 10, 13",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,174
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Silicone gun",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,175
+Tool Kit for CNC Tool Drawer,Supply,"Filter spanner key",1,piece,,,Tools,,"tool drawer (saloon)",1,,,,Yes,,176
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Set of screwdrivers",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,177
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Socket set sz 10-32",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,178
+Tool Kit for CNC Tool Drawer,UNKNOWN,"Adjustable spanner 10-250mm",1,piece,,,Tools,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,179
+Tool Kit for CNC Tool Drawer,Tool,"9 pcs 2-10mm metal drill bit",1,piece,,,,,"tool drawer (saloon)",,,,,Yes,,180
+Tool Kit for CNC Tool Drawer,UNKNOWN,"random yellow case of screws and hex bolts",1,piece,,,,,"tool drawer (saloon)",,,,,Yes,TYPE_UNKNOWN,181
+Rudder,UNKNOWN,"Gaitors",2,piece,,,Rudder Boot,Jefa Rudder,"Portside watermaker cupboard",,,,,Yes,TYPE_UNKNOWN,183
+Tender/dingy,UNKNOWN,"Spares for Tender",1,piece,,,Tender,,"",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN; NO_LOCATION,185
+Tender/dingy,UNKNOWN,"Straps to secure tender for long passages",1,piece,,,Tender,,"Stern shallow cupboard - behind helm",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,186
+Tender/dingy,UNKNOWN,"Dingy anchor",1,piece,,,,,"Stern cupboard - behind helm",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,187
+Tender/dingy,Item,"Dingy swim ladder",1,piece,,,,,"Stern cupboard - behind helm",,,,,Yes,QTY_BLANK,188
+Outdoor cleaning, smelly spray cans, boat hooks, brushes & misc,UNKNOWN,"Ethanol (spray bottle)",500,ml,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,190
+Outdoor cleaning, smelly spray cans, boat hooks, brushes & misc,UNKNOWN,"Deck master dek reiniger",1,liter,,,,,"",,,,,UNKNOWN,TYPE_UNKNOWN; STOCK_UNKNOWN; NO_LOCATION,191
+Outdoor cleaning, smelly spray cans, boat hooks, brushes & misc,UNKNOWN,"flexiteek.",(colorless organic quickcleaner for varnished/unvarnished surfaces,a strong alkaline degreaser to clean ship decks incl painted/varnished,,,,,"",,,,,UNKNOWN,QTY_UNCLEAR; TYPE_UNKNOWN; STOCK_UNKNOWN; NO_LOCATION,192
+,https://masteryachtcare.com/en/product/deckmaster/,,,x,Stern bench,,,Supply,"Empty bottle of deck master support mater (highly concentrated multi-cleaner for streak-free cleaning of the inside and outside of your yacht)",1,piece,,,,,"",2,,,,UNKNOWN,QTY_BLANK; STOCK_UNKNOWN; NO_LOCATION,194
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"500 ml deck master bright master",1,piece,,,,,"Stern bench",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,196
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Star Clean stainless polish",2,tubes,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,197
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Alva stainless cleaner",500,ml,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,198
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Starbrite teak cleaner",1,liter,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,199
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Starbrite boat wash",1,liter,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,200
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Windex (vinegar version)",1,bottle,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,201
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Vinegar",3,piece,,,,,"2 under kitchen sink, 1 by milk cupboard",,,,,Nov 9, 2025,TYPE_UNKNOWN; STOCK_UNCLEAR,202
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Paintbrush",1,piece,,,,,"Stern bench",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,203
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Tooth brushes",2,piece,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,204
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Large sponges",2,piece,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,205
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Various bungee cords",1,piece,,,,,"Stern bench",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,206
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,Tool,"Bolt cutters",1,piece,,,,,"Stern bench",,,,,Yes,QTY_BLANK,207
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,Item,"Boat hook #1: yellow and white brush",1,piece,,,,,"Stern bench",,,,,Yes,QTY_BLANK,208
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,Item,"Boat hook #2: Stick, hook, yellow and blue brushes",1,piece,,,,,"Stern bench",,,,,Yes,QTY_BLANK,209
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"McLube",1,can,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,210
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"WD40",1,can (small),,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,211
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Silicone Spray",1,can,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,212
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Tectyl Spray",1,can,,,kit,Commercial Marine,"Stern bench",,,,,UNKNOWN,TYPE_UNKNOWN; STOCK_UNKNOWN,213
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"CorrosionX",1,can,,,,,"Stern bench",,,,,Yes,TYPE_UNKNOWN,214
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Baracle buster",2,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,TYPE_UNKNOWN,215
+,https://masteryachtcare.com/en/product/supportmaster/,,,x,Stern bench,,,UNKNOWN,"Bilge cleaner + 2 brushes",1,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,TYPE_UNKNOWN,216
+Eletrical and gadgets,UNKNOWN,"6 ft NEMA cable",1,piece,,,,,"Stbd top draw forward of bathroom",,,,,Yes,TYPE_UNKNOWN,218
+Eletrical and gadgets,UNKNOWN,"NEMA splitter / 3way",1,piece,,,,,"Stbd top draw forward of bathroom",,,,,Yes,TYPE_UNKNOWN,219
+Eletrical and gadgets,UNKNOWN,"20 ft RJ45 cable",1,piece,,,,,"Stbd top draw forward of bathroom",,,,,Yes,TYPE_UNKNOWN,220
+Eletrical and gadgets,Tool,"multi meter",1,piece,,,,,"",,,,,Yes,NO_LOCATION,221
+Eletrical and gadgets,UNKNOWN,"Power adaptors",1,piece,,,,,"Stbd top draw forward of bathroom",,,,,Yes,TYPE_UNKNOWN,222
+Eletrical and gadgets,UNKNOWN,"Power transform",1,piece,,,,,"Stbd top draw forward of bathroom",,,,,Yes,TYPE_UNKNOWN,223
+Eletrical and gadgets,UNKNOWN,"EU plugs",3,piece,,,,,"Port storage 0",,,,,Yes,TYPE_UNKNOWN,224
+Eletrical and gadgets,UNKNOWN,"4 gauge 4 wire electrical cord",4,foot,,,,,"Port storage 0",,,,,Yes,TYPE_UNKNOWN,225
+Eletrical and gadgets,UNKNOWN,"14 awg 3 wire",1,meter,,,,,"Port storage 0",,,,,Yes,TYPE_UNKNOWN,226
+Eletrical and gadgets,UNKNOWN,"Electric extension cord - 15 ft and 9 ft",2,piece,,,,,"Port storage",,,,,Yes,TYPE_UNKNOWN,227
+Eletrical and gadgets,UNKNOWN,"Shore power cord - 125/50 amp",1,piece,,,,,"black bin - port forepeak",,,,,Yes,QTY_BLANK; TYPE_UNKNOWN,228
+Other,UNKNOWN,"AAA batteries",19,piece,,,,,"Nav Station Stbd Top",,,,,Yes,TYPE_UNKNOWN,231
+Other,UNKNOWN,"AA batteries",6,piece,,,,,"Nav Station Stbd Top",,,,,Yes,TYPE_UNKNOWN,232
+Other,UNKNOWN,"C batteries",2,piece,,,,,"Nav Station Stbd Top",,,,,Yes,TYPE_UNKNOWN,233
+Other,UNKNOWN,"Air Horn",1,piece,,,,,"Upper Helm",,,,,Yes,TYPE_UNKNOWN,234
+Other,UNKNOWN,"CR1632",8,piece,,CR1632,,,"Nav Station Stbd Top",,,,,Yes,TYPE_UNKNOWN,235
+Other,UNKNOWN,"CR2032",1,piece,,CR2032,,,"Nav Station Stbd Top",,,,,Yes,TYPE_UNKNOWN,236
+Other,UNKNOWN,"AG13/LR44 for caliper",2,piece,,,,,"Nav Station Stbd Top",,,,,Yes,TYPE_UNKNOWN,237
+Other,Item,"Hatch covers (grey cloth)",10,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,,238
+Other,Item,"Winch covers (grey cloth) - 1 is larger",6,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,,239
+Other,Item,"Dagger board covers (grey cloth) and straps",2,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,,240
+Other,Item,"snap covers for helm station",2,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,,241
+Other,Item,"dingy cover",1,piece,,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,,242
+Other,UNKNOWN,"air pumps - 1 from Suzemar dingy, one BOTE",2,piece,Bote,,,,"Under Brad's outside seat (in front of galley window)",,,,,Yes,TYPE_UNKNOWN,243
+Other,Item,"BOTE manual air pumps (2 for SUP and 2 for chairs in mesh BOTE bag)",4,piece,Bote,,,,"STBD forepeak",,,,,Yes,,244
+Lines and line-related,Item,"Small soft shackles",2,piece,,,,,"Saloon starboard drawer (below sofa)",,,,,Yes,,248
+Lines and line-related,Item,"medium soft shackles",2,piece,,,,,"Saloon starboard drawer (below sofa)",,,,,Yes,,249
+Lines and line-related,Item,"black supplemental ropes with loop on end",4,piece,,,,,"2 in black bin in port forepeak; 2 more...we left near stern bench?",,,,,Yes,,250
+Multiple,UNKNOWN,"heavy loops to secure corners of boat to cement blocks in boatyard",4,piece,,,Decommissioning/boatyard,,"black bin - port forepeak",,,,,Yes,TYPE_UNKNOWN,252
+Multiple,Item,"black utility lines",2,piece,,,,,"black bin - port forepeak",,,,,Yes,,253
+Multiple,Item,"lines to secure boom in boatyard",2,piece,,,Decommissioning/boatyard,,"black bin - port forepeak",,,,,Yes,,254
+Multiple,Item,"straps for Tiki board - with carabiners on ends",2,piece,,,,,"black bin - port forepeak",,,,,Yes,,255
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"BOTE manual air pumps (2 for SUP and 2 for chairs in mesh BOTE bag)",4,piece,Bote,,,,"STBD forepeak",,,,,Yes,,259
+As of Nov 13, 2025, what is in STBD forepeak?,UNKNOWN,"white awning",1,piece,,,,,"STBD forepeak",,,,,Yes,TYPE_UNKNOWN,260
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"STBD enclosure we're not using (for beside helm)",1,piece,,,,,"STBD forepeak",,,,,Yes,,261
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"long bag (for enclosures) - grey tarp like material",1,piece,,,,,"STBD forepeak",,,,,Yes,,262
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"Mantus diving - 2 large dry bags; regulators (inside one bag); 2 mini tanks; 2 vests for tanks",2,piece,Mantus,,,,"STBD forepeak",,,,,Yes,,263
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"swim ladder (when not in use)",1,piece,,,,,"STBD forepeak",,,,,Yes,,264
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"back boards",4,piece,,,,,"STBD forepeak",,,,,Yes,,265
+As of Nov 13, 2025, what is in STBD forepeak?,UNKNOWN,"knee pads",2,piece,,,,,"STBD forepeak",,,,,Yes,TYPE_UNKNOWN,266
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"Yeti cooler",1,piece,Yeti,,,,"STBD forepeak",,,,,Yes,,267
+As of Nov 13, 2025, what is in STBD forepeak?,UNKNOWN,"shore power cords",2,piece,,,,,"STBD forepeak",,,,,Yes,TYPE_UNKNOWN,268
+As of Nov 13, 2025, what is in STBD forepeak?,UNKNOWN,"shore power extension/adapters",2,piece,,,,,"STBD forepeak",,,,,Yes,TYPE_UNKNOWN,269
+As of Nov 13, 2025, what is in STBD forepeak?,UNKNOWN,"flat grey fender for stern of boat in marinas",1,piece,,,,,"STBD forepeak",,,,,Yes,TYPE_UNKNOWN,270
+As of Nov 13, 2025, what is in STBD forepeak?,Item,"anchor marker - white triangle",1,piece,,,,,"STBD forepeak",,,,,Yes,QTY_BLANK,271

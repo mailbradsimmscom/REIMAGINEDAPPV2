@@ -1,0 +1,433 @@
+/**
+ * Supplies Wizard Styles
+ * Mobile-first 3-screen wizard for adding supplies
+ */
+
+/* ===== Overlay & Container ===== */
+
+.wizard-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary, #ffffff);
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+}
+
+.wizard-overlay.active {
+  display: flex;
+}
+
+.wizard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ===== Header ===== */
+
+.wizard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  background: var(--bg-primary, #ffffff);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.wizard-back-btn,
+.wizard-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text-primary, #333);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.wizard-back-btn:hover,
+.wizard-close-btn:hover {
+  background: var(--bg-secondary, #f5f5f5);
+}
+
+.wizard-step-indicator {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary, #666);
+}
+
+/* ===== Screens ===== */
+
+.wizard-screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.wizard-screen.active {
+  display: flex;
+}
+
+.wizard-screen-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wizard-screen-content h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary, #333);
+}
+
+.wizard-subtitle {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: var(--text-secondary, #666);
+}
+
+/* ===== Screen Transitions (Slide) ===== */
+
+.wizard-screen.slide-out-left {
+  animation: slideOutLeft 0.15s ease-out forwards;
+}
+
+.wizard-screen.slide-out-right {
+  animation: slideOutRight 0.15s ease-out forwards;
+}
+
+.wizard-screen.slide-in-left {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.wizard-screen.slide-in-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-30px); opacity: 0; }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(30px); opacity: 0; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ===== Footer ===== */
+
+.wizard-footer {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  background: var(--bg-primary, #ffffff);
+}
+
+.wizard-footer .btn {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+/* ===== Screen 1: Photo Capture ===== */
+
+.wizard-photo-area {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px dashed var(--border-color, #ccc);
+  transition: border-color 0.2s;
+}
+
+.wizard-photo-area:hover {
+  border-color: var(--primary-color, #007bff);
+}
+
+.wizard-photo-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-secondary, #666);
+}
+
+.wizard-photo-icon {
+  font-size: 48px;
+}
+
+.wizard-photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wizard-ai-status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 8px;
+}
+
+.wizard-ai-analyzing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary, #666);
+}
+
+.wizard-ai-analyzing .spinner {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.wizard-ai-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wizard-ai-detected {
+  color: var(--success-color, #28a745);
+  font-weight: 500;
+}
+
+.wizard-skip-link {
+  display: block;
+  margin-top: 24px;
+  background: none;
+  border: none;
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.wizard-skip-link:hover {
+  color: var(--primary-color, #007bff);
+}
+
+/* ===== Screen 2: Form ===== */
+
+.wizard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wizard-form .form-group {
+  margin-bottom: 0;
+}
+
+.wizard-form .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #333);
+}
+
+.wizard-form .form-group input,
+.wizard-form .form-group select,
+.wizard-form .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 8px;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #333);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.wizard-form .form-group input:focus,
+.wizard-form .form-group select:focus,
+.wizard-form .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #007bff);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.wizard-form .form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.wizard-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ===== Screen 3: Systems ===== */
+
+.wizard-systems-loading,
+.wizard-systems-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-secondary, #666);
+  gap: 12px;
+}
+
+.wizard-systems-loading .spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.wizard-systems-empty-icon {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.wizard-systems-empty p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.wizard-systems-empty small {
+  font-size: 14px;
+}
+
+.wizard-systems-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wizard-system-card {
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+
+.wizard-system-card:hover {
+  background: var(--bg-hover, #ebebeb);
+}
+
+.wizard-system-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.wizard-system-checkbox input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.wizard-system-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wizard-system-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary, #333);
+  margin-bottom: 4px;
+}
+
+.wizard-system-path {
+  font-size: 13px;
+  color: var(--text-secondary, #666);
+  margin-bottom: 4px;
+}
+
+.wizard-system-confidence {
+  font-size: 12px;
+  color: var(--success-color, #28a745);
+  font-weight: 500;
+}
+
+/* ===== Spinner ===== */
+
+.wizard-overlay .spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-color, #e0e0e0);
+  border-top-color: var(--primary-color, #007bff);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 480px) {
+  .wizard-screen-content {
+    padding: 20px 12px;
+  }
+
+  .wizard-footer {
+    padding: 12px;
+  }
+
+  .wizard-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Dark Mode Support ===== */
+
+@media (prefers-color-scheme: dark) {
+  .wizard-overlay {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --bg-hover: #333;
+    --text-primary: #e0e0e0;
+    --text-secondary: #999;
+    --border-color: #444;
+  }
+}

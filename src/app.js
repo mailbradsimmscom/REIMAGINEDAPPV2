@@ -6,6 +6,7 @@ import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
 import { getEnv } from './config/env.js';
 import adminRouter from './routes/admin/index.js';
+import suppliesRouter from './routes/supplies/index.js';
 
 // Create Express app
 const app = express();
@@ -103,8 +104,16 @@ app.get('/index.html', async (req, res) => {
 // Static file serving for /public path
 app.use('/public', express.static(join(process.cwd(), 'src/public')));
 
+// Root-level static file serving for CSS, JS, and other assets
+app.use('/css', express.static(join(process.cwd(), 'src/public/css')));
+app.use('/js', express.static(join(process.cwd(), 'src/public/js')));
+app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
+
 // Admin API routes
 app.use('/admin/api', adminRouter);
+
+// Supplies API routes
+app.use('/api/supplies', suppliesRouter);
 
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {
@@ -114,6 +123,17 @@ app.get('/admin', async (req, res) => {
     res.end(content);
   } catch (error) {
     res.status(404).json({ error: 'Admin dashboard not found' });
+  }
+});
+
+// Supplies management route (no auth required for HTML page)
+app.get('/supplies', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/supplies.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Supplies page not found' });
   }
 });
 

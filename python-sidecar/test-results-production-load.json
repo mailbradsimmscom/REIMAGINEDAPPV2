@@ -1,0 +1,153 @@
+{
+  "timestamp": "2025-11-23T12:18:45.446232",
+  "test_type": "production_load",
+  "payload_size": 8372,
+  "equipment_count": 2,
+  "pinecone_chunks": 5,
+  "total_tests": 7,
+  "successful": 2,
+  "failed": 5,
+  "results": [
+    {
+      "name": "GPT-5.1: reasoning=none, temp=1, verbosity=high (RECOMMENDED)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "text": {
+          "verbosity": "high"
+        },
+        "temperature": 1,
+        "max_completion_tokens": 8000
+      },
+      "success": false,
+      "duration_seconds": 0.10872,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'reasoning'",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "prompt_size_chars": 8372
+    },
+    {
+      "name": "GPT-5.1: reasoning=none, temp=1, verbosity=low",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "text": {
+          "verbosity": "low"
+        },
+        "temperature": 1,
+        "max_completion_tokens": 8000
+      },
+      "success": false,
+      "duration_seconds": 5.6e-05,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'reasoning'",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "prompt_size_chars": 8372
+    },
+    {
+      "name": "GPT-5.1: reasoning=none, temp=0.7, verbosity=high",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "reasoning": {
+          "effort": "none"
+        },
+        "text": {
+          "verbosity": "high"
+        },
+        "temperature": 0.7,
+        "max_completion_tokens": 8000
+      },
+      "success": false,
+      "duration_seconds": 6.4e-05,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'reasoning'",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "prompt_size_chars": 8372
+    },
+    {
+      "name": "GPT-5.1: reasoning=medium, verbosity=high (WILL THIS WORK?)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "reasoning": {
+          "effort": "medium"
+        },
+        "text": {
+          "verbosity": "high"
+        },
+        "max_completion_tokens": 8000
+      },
+      "success": false,
+      "duration_seconds": 5.5e-05,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'reasoning'",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "prompt_size_chars": 8372
+    },
+    {
+      "name": "GPT-5.1: reasoning=medium, verbosity=low",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "reasoning": {
+          "effort": "medium"
+        },
+        "text": {
+          "verbosity": "low"
+        },
+        "max_completion_tokens": 8000
+      },
+      "success": false,
+      "duration_seconds": 7.4e-05,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'reasoning'",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "prompt_size_chars": 8372
+    },
+    {
+      "name": "GPT-5.1: NO reasoning param, temp=1 (CURRENT PRODUCTION)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "temperature": 1,
+        "max_completion_tokens": 8000
+      },
+      "success": true,
+      "duration_seconds": 4.201673,
+      "error": null,
+      "response_length": 1427,
+      "tokens_used": {
+        "prompt": 1862,
+        "completion": 313,
+        "total": 2175
+      },
+      "response_preview": "\ud83d\udcca Your DST810 is a very capable little powerhouse on your boat. Based on what you have, it\u2019s the Airmar DST810 Smart Multisensor (also branded in some systems as B&G DST810), giving you depth, speed, and temperature all in one housing. It uses the Gen2 paddlewheel, which activates as low as 0.15 kno...",
+      "prompt_size_chars": 8372
+    },
+    {
+      "name": "GPT-4.1-mini (BASELINE - No reasoning support)",
+      "model": "gpt-4.1-mini",
+      "params": {
+        "temperature": 0,
+        "max_completion_tokens": 4000
+      },
+      "success": true,
+      "duration_seconds": 5.824006,
+      "error": null,
+      "response_length": 1730,
+      "tokens_used": {
+        "prompt": 1863,
+        "completion": 384,
+        "total": 2247
+      },
+      "response_preview": "\ud83d\udcca Your DST810 is a Smart\u2122 Multisensor from Airmar, equipped with the advanced Gen2 paddlewheel technology. It measures depth, speed, and temperature with high precision. The depth range is from 0.5 to 200 meters (1.5 to 650 feet), speed range up to 45 knots, and temperature range from -10\u00b0C to +50\u00b0C...",
+      "prompt_size_chars": 8372
+    }
+  ]
+}

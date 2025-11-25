@@ -1,0 +1,100 @@
+{
+  "timestamp": "2025-11-23T12:22:05.560559",
+  "test_type": "logprobs_exploration",
+  "total_tests": 5,
+  "successful": 1,
+  "failed": 4,
+  "results": [
+    {
+      "name": "BASELINE: No logprobs (Current Production)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "temperature": 1,
+        "max_completion_tokens": 8000
+      },
+      "success": true,
+      "duration_seconds": 4.625901,
+      "error": null,
+      "response_length": 1203,
+      "tokens_used": {
+        "prompt": 567,
+        "completion": 276,
+        "total": 843
+      },
+      "response_preview": "\ud83d\udcca From the data you\u2019ve got onboard, your DST810 is a Smart Multisensor that delivers depth, speed, and temperature using Airmar\u2019s Gen2 paddlewheel. It\u2019s Bluetooth\u2011enabled and is designed to be configu...",
+      "has_logprobs": false,
+      "logprobs_sample": null
+    },
+    {
+      "name": "logprobs=True (Boolean)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "temperature": 1,
+        "max_completion_tokens": 8000,
+        "logprobs": true
+      },
+      "success": false,
+      "duration_seconds": 0.341481,
+      "error": "Error code: 403 - {'error': {'message': 'You are not allowed to request logprobs from this model', 'type': 'invalid_request_error', 'param': None, 'code': None}}",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "has_logprobs": false,
+      "logprobs_sample": null
+    },
+    {
+      "name": "top_logprobs=1 (Minimal)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "temperature": 1,
+        "max_completion_tokens": 8000,
+        "logprobs": true,
+        "top_logprobs": 1
+      },
+      "success": false,
+      "duration_seconds": 0.376218,
+      "error": "Error code: 403 - {'error': {'message': 'You are not allowed to request logprobs from this model', 'type': 'invalid_request_error', 'param': None, 'code': None}}",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "has_logprobs": false,
+      "logprobs_sample": null
+    },
+    {
+      "name": "top_logprobs=3 (Moderate)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "temperature": 1,
+        "max_completion_tokens": 8000,
+        "logprobs": true,
+        "top_logprobs": 3
+      },
+      "success": false,
+      "duration_seconds": 0.796521,
+      "error": "Error code: 403 - {'error': {'message': 'You are not allowed to request logprobs from this model', 'type': 'invalid_request_error', 'param': None, 'code': None}}",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "has_logprobs": false,
+      "logprobs_sample": null
+    },
+    {
+      "name": "top_logprobs=5 (Maximum)",
+      "model": "gpt-5.1-chat-latest",
+      "params": {
+        "temperature": 1,
+        "max_completion_tokens": 8000,
+        "logprobs": true,
+        "top_logprobs": 5
+      },
+      "success": false,
+      "duration_seconds": 0.185045,
+      "error": "Error code: 403 - {'error': {'message': 'You are not allowed to request logprobs from this model', 'type': 'invalid_request_error', 'param': None, 'code': None}}",
+      "response_length": 0,
+      "tokens_used": {},
+      "response_preview": "",
+      "has_logprobs": false,
+      "logprobs_sample": null
+    }
+  ]
+}
