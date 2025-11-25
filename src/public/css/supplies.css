@@ -88,7 +88,7 @@ body {
   font-weight: 600;
 }
 
-.menu-btn, .add-btn-mobile {
+.menu-btn, .back-btn, .add-btn-mobile {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -100,6 +100,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 }
 
 .add-btn-mobile {

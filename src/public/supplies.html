@@ -17,39 +17,13 @@
 <body>
   <!-- Mobile Header -->
   <header class="mobile-header">
-    <button class="menu-btn" id="menuBtn">☰</button>
+    <a href="/public/unified-mobile.html" class="back-btn">←</a>
     <h1>Supplies</h1>
     <button class="add-btn-mobile" id="addBtnMobile">+</button>
   </header>
 
   <!-- Main Container -->
   <div class="container">
-
-    <!-- Sidebar Navigation (Desktop) -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <h2>BoatOS</h2>
-        <button class="close-sidebar" id="closeSidebar">✕</button>
-      </div>
-
-      <nav class="sidebar-nav">
-        <a href="/" class="nav-item">🏠 Dashboard</a>
-        <a href="/supplies.html" class="nav-item active">📦 Supplies</a>
-        <a href="/admin.htm" class="nav-item">⚙️ Admin</a>
-      </nav>
-
-      <div class="sidebar-stats">
-        <div class="stat-card">
-          <div class="stat-value" id="totalItems">-</div>
-          <div class="stat-label">Total Items</div>
-        </div>
-        <div class="stat-card alert">
-          <div class="stat-value" id="lowStockItems">-</div>
-          <div class="stat-label">Low Stock</div>
-        </div>
-      </div>
-    </aside>
-
     <!-- Main Content -->
     <main class="main-content">
 
@@ -566,21 +540,10 @@
       window.suppliesAI = new SuppliesAI();
       window.suppliesWizard = new SuppliesWizard();
 
-      // Mobile menu
-      document.getElementById('menuBtn')?.addEventListener('click', () => {
-        document.getElementById('sidebar').classList.add('active');
-        document.getElementById('overlay').classList.add('active');
-      });
-
-      document.getElementById('closeSidebar')?.addEventListener('click', () => {
-        document.getElementById('sidebar').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-      });
-
+      // Overlay click to close modal
       document.getElementById('overlay')?.addEventListener('click', () => {
-        document.getElementById('sidebar').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
         document.getElementById('supplyModal').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
       });
 
       // Desktop Add button - uses modal
@@ -598,5 +561,8 @@
       });
     });
   </script>
+
+  <!-- Mobile Navigation Component -->
+  <script src="/public/js/mobile-nav.js"></script>
 </body>
 </html>
