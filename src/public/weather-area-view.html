@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Details</title>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header .coords {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+            margin-top: var(--spacing-xs);
+        }
+
+        .header .last-update {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-sm);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5ea;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .current-conditions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .condition-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .condition-item .icon {
+            font-size: 24px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .condition-item .value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .condition-item .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            font-weight: 600;
+            background: var(--background-color);
+        }
+
+        .comparison-table .agree {
+            color: var(--success-color);
+        }
+
+        .comparison-table .disagree {
+            color: var(--warning-color);
+        }
+
+        .marine-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .marine-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .marine-item:last-child {
+            border-bottom: none;
+        }
+
+        .marine-item .label {
+            color: var(--text-secondary);
+        }
+
+        .marine-item .value {
+            font-weight: 500;
+        }
+
+        .douglas-scale {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--spacing-xs);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .douglas-0, .douglas-1 { background: #E8F5E9; color: #2E7D32; }
+        .douglas-2, .douglas-3 { background: #FFF3E0; color: #EF6C00; }
+        .douglas-4, .douglas-5 { background: #FFEBEE; color: #C62828; }
+        .douglas-6, .douglas-7, .douglas-8, .douglas-9 { background: #880E4F; color: white; }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            background: #FFE5E5;
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: var(--spacing-lg);
+        }
+
+        .forecast-7day {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--spacing-sm);
+        }
+
+        .forecast-day {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .forecast-day .day-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .forecast-day .icon {
+            font-size: 28px;
+            margin: var(--spacing-sm) 0;
+        }
+
+        .forecast-day .temp {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .forecast-day .wind {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <h1 id="area-name">Loading...</h1>
+                    <div id="area-coords" class="coords">--</div>
+                    <div id="last-update" class="last-update">--</div>
+                </div>
+                <div class="header-actions">
+                    <a href="weather-areas.html" class="btn btn-secondary">← Back</a>
+                    <button id="update-btn" onclick="triggerFetch()" class="btn btn-primary">🔄 Update Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="error-container" class="error-message" style="display: none;"></div>
+        <div id="loading" class="loading">Loading weather data...</div>
+
+        <div id="content" style="display: none;">
+            <!-- Current Conditions -->
+            <div class="card">
+                <h2>🌡️ Current Conditions</h2>
+                <div id="current-conditions" class="current-conditions">
+                    <div class="no-data">No data available</div>
+                </div>
+            </div>
+
+            <!-- Model Comparison -->
+            <div class="card">
+                <h2>📊 Model Comparison (Wind Speed)</h2>
+                <div id="model-comparison">
+                    <div class="no-data">No comparison data</div>
+                </div>
+            </div>
+
+            <!-- Marine Data -->
+            <div class="card">
+                <h2>🌊 Marine Data</h2>
+                <div id="marine-data" class="marine-data">
+                    <div class="no-data">No marine data</div>
+                </div>
+            </div>
+
+            <!-- Meteoblue Premium -->
+            <div class="card" id="meteoblue-card" style="display: none;">
+                <h2>⭐ Premium Marine Data (Meteoblue)</h2>
+                <div id="meteoblue-data" class="marine-data"></div>
+            </div>
+
+            <!-- 7-Day Forecast -->
+            <div class="card">
+                <h2>📅 7-Day Forecast</h2>
+                <div id="forecast-7day" class="forecast-7day">
+                    <div class="no-data">No forecast data</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+            ? 'http://localhost:3001/api/weather'
+            : 'https://boatos-maintenance.onrender.com/api/weather';
+
+        // Get area ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const areaId = urlParams.get('id');
+
+        if (!areaId) {
+            window.location.href = 'weather-areas.html';
+        }
+
+        // Douglas Sea State descriptions
+        const douglasDescriptions = {
+            0: 'Calm (glassy)',
+            1: 'Calm (rippled)',
+            2: 'Smooth',
+            3: 'Slight',
+            4: 'Moderate',
+            5: 'Rough',
+            6: 'Very rough',
+            7: 'High',
+            8: 'Very high',
+            9: 'Phenomenal'
+        };
+
+        // Weather code to icon
+        const weatherIcons = {
+            0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+            45: '🌫️', 48: '🌫️',
+            51: '🌧️', 53: '🌧️', 55: '🌧️',
+            61: '🌧️', 63: '🌧️', 65: '🌧️',
+            80: '🌦️', 81: '🌦️', 82: '🌦️',
+            95: '⛈️', 96: '⛈️', 99: '⛈️'
+        };
+
+        async function loadArea() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}`);
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load area');
+                }
+
+                const area = result.data;
+                document.getElementById('area-name').textContent = `🌊 ${area.name}`;
+                document.getElementById('area-coords').textContent = formatCoords(area.latitude, area.longitude);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function loadCurrentConditions() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/current`);
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    return;
+                }
+
+                const conditions = result.data;
+                const container = document.getElementById('current-conditions');
+
+                container.innerHTML = `
+                    <div class="condition-item">
+                        <div class="icon">🌡️</div>
+                        <div class="value">${conditions.temperature_2m?.toFixed(1) || '--'}°C</div>
+                        <div class="label">Temperature</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">💨</div>
+                        <div class="value">${conditions.wind_speed_10m?.toFixed(0) || '--'} km/h</div>
+                        <div class="label">Wind Speed</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">🧭</div>
+                        <div class="value">${formatWindDirection(conditions.wind_direction_10m)}</div>
+                        <div class="label">Wind Dir</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">🌊</div>
+                        <div class="value">${conditions.wave_height?.toFixed(1) || '--'} m</div>
+                        <div class="label">Wave Height</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">🌡️</div>
+                        <div class="value">${conditions.sea_surface_temperature?.toFixed(1) || '--'}°C</div>
+                        <div class="label">Sea Temp</div>
+                    </div>
+                `;
+
+                document.getElementById('last-update').textContent = `Forecast time: ${formatDateTime(conditions.forecast_time)}`;
+
+            } catch (error) {
+                console.error('Failed to load current conditions:', error);
+            }
+        }
+
+        async function loadModelComparison() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/comparison`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                const comparison = result.data.slice(0, 8); // First 8 time points
+                const container = document.getElementById('model-comparison');
+
+                container.innerHTML = `
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>GFS</th>
+                                <th>ICON</th>
+                                <th>Spread</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${comparison.map(c => `
+                                <tr>
+                                    <td>${formatTime(c.forecast_time)}</td>
+                                    <td>${c.gfs_seamless?.wind_speed_10m?.toFixed(0) || '--'} km/h</td>
+                                    <td>${c.icon_global?.wind_speed_10m?.toFixed(0) || '--'} km/h</td>
+                                    <td class="${c.models_agree ? 'agree' : 'disagree'}">
+                                        ±${c.wind_spread?.toFixed(1) || '--'} ${c.models_agree ? '✓' : '⚠️'}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: var(--spacing-md);">
+                        ✓ = Models agree (spread &lt; 3 km/h) &nbsp; ⚠️ = Models disagree
+                    </p>
+                `;
+
+                // Check for Meteoblue data
+                const meteoblueData = comparison.find(c => c.meteoblue);
+                if (meteoblueData && meteoblueData.meteoblue) {
+                    displayMeteoblueData(meteoblueData.meteoblue);
+                }
+
+            } catch (error) {
+                console.error('Failed to load model comparison:', error);
+            }
+        }
+
+        async function loadMarineData() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/current`);
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    return;
+                }
+
+                const data = result.data;
+                const container = document.getElementById('marine-data');
+
+                container.innerHTML = `
+                    <div>
+                        <div class="marine-item">
+                            <span class="label">Wave Height</span>
+                            <span class="value">${data.wave_height?.toFixed(1) || '--'} m</span>
+                        </div>
+                        <div class="marine-item">
+                            <span class="label">Wave Direction</span>
+                            <span class="value">${formatWindDirection(data.wave_direction)}</span>
+                        </div>
+                        <div class="marine-item">
+                            <span class="label">Wave Period</span>
+                            <span class="value">${data.wave_period?.toFixed(1) || '--'} s</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="marine-item">
+                            <span class="label">Sea Surface Temp</span>
+                            <span class="value">${data.sea_surface_temperature?.toFixed(1) || '--'}°C</span>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Failed to load marine data:', error);
+            }
+        }
+
+        function displayMeteoblueData(data) {
+            const container = document.getElementById('meteoblue-data');
+            const card = document.getElementById('meteoblue-card');
+
+            if (!data.douglas_sea_state && !data.salinity) {
+                return;
+            }
+
+            card.style.display = 'block';
+
+            const douglasClass = `douglas-${data.douglas_sea_state || 0}`;
+            const douglasDesc = douglasDescriptions[data.douglas_sea_state] || 'Unknown';
+
+            container.innerHTML = `
+                <div>
+                    <div class="marine-item">
+                        <span class="label">Douglas Sea State</span>
+                        <span class="value">
+                            <span class="douglas-scale ${douglasClass}">
+                                ${data.douglas_sea_state || '--'} - ${douglasDesc}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="marine-item">
+                        <span class="label">Salinity</span>
+                        <span class="value">${data.salinity?.toFixed(1) || '--'} g/kg</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="marine-item">
+                        <span class="label">Current (East)</span>
+                        <span class="value">${data.current_velocity_u?.toFixed(2) || '--'} m/s</span>
+                    </div>
+                    <div class="marine-item">
+                        <span class="label">Current (North)</span>
+                        <span class="value">${data.current_velocity_v?.toFixed(2) || '--'} m/s</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function load7DayForecast() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/7day`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                const forecast = result.data;
+                const container = document.getElementById('forecast-7day');
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                container.innerHTML = forecast.map(day => {
+                    const date = new Date(day.date);
+                    const dayName = dayNames[date.getDay()];
+                    const icon = weatherIcons[day.weather_code] || '☁️';
+
+                    return `
+                        <div class="forecast-day">
+                            <div class="day-name">${dayName}</div>
+                            <div class="icon">${icon}</div>
+                            <div class="temp">${day.temp_high?.toFixed(0) || '--'}°/${day.temp_low?.toFixed(0) || '--'}°</div>
+                            <div class="wind">${day.wind_avg?.toFixed(0) || '--'} km/h</div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Failed to load 7-day forecast:', error);
+            }
+        }
+
+        async function triggerFetch() {
+            const btn = document.getElementById('update-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Updating...';
+
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/fetch`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to update');
+                }
+
+                // Reload all data
+                await loadAllData();
+
+                btn.textContent = '✓ Updated';
+                setTimeout(() => {
+                    btn.textContent = '🔄 Update Now';
+                    btn.disabled = false;
+                }, 2000);
+
+            } catch (error) {
+                showError(error.message);
+                btn.textContent = '🔄 Update Now';
+                btn.disabled = false;
+            }
+        }
+
+        async function loadAllData() {
+            await Promise.all([
+                loadCurrentConditions(),
+                loadModelComparison(),
+                loadMarineData(),
+                load7DayForecast()
+            ]);
+        }
+
+        function showError(message) {
+            const container = document.getElementById('error-container');
+            container.textContent = message;
+            container.style.display = 'block';
+        }
+
+        function formatCoords(lat, lon) {
+            const latDir = lat >= 0 ? 'N' : 'S';
+            const lonDir = lon >= 0 ? 'E' : 'W';
+            return `${Math.abs(lat).toFixed(4)}°${latDir}, ${Math.abs(lon).toFixed(4)}°${lonDir}`;
+        }
+
+        function formatWindDirection(deg) {
+            if (deg === null || deg === undefined) return '--';
+            const dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const index = Math.round(deg / 22.5) % 16;
+            return `${deg}° (${dirs[index]})`;
+        }
+
+        function formatDateTime(timestamp) {
+            if (!timestamp) return '--';
+            const date = new Date(timestamp);
+            return date.toLocaleString();
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return '--';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffHours = Math.round((date - now) / (1000 * 60 * 60));
+
+            if (diffHours === 0) return 'Now';
+            if (diffHours > 0) return `+${diffHours}h`;
+            return `${diffHours}h`;
+        }
+
+        // Initialize
+        async function init() {
+            await loadArea();
+            await loadAllData();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }
+
+        init();
+    </script>
+</body>
+</html>
