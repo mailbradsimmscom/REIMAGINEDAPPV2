@@ -285,7 +285,10 @@ export class SuppliesWizard {
 
       const uploadResult = await uploadResponse.json();
       if (!uploadResult.success) {
-        throw new Error(uploadResult.error || 'Upload failed');
+        const errorMsg = typeof uploadResult.error === 'string'
+          ? uploadResult.error
+          : (uploadResult.error?.message || 'Upload failed');
+        throw new Error(errorMsg);
       }
 
       this.state.photo.url = uploadResult.data.url;
@@ -330,7 +333,12 @@ export class SuppliesWizard {
     } catch (error) {
       console.error('Photo upload/analysis error:', error);
       if (this.aiStatus) this.aiStatus.style.display = 'none';
-      this.showToast('Failed to process photo: ' + error.message, 'error');
+
+      // Extract error message properly
+      const errorMsg = typeof error === 'string'
+        ? error
+        : (error?.message || JSON.stringify(error) || 'Unknown error');
+      this.showToast('Failed to process photo: ' + errorMsg, 'error');
 
       // Still enable next if we have a preview
       if (this.photoPreview?.src) {
