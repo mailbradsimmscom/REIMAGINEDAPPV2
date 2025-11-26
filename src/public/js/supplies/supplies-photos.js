@@ -6,8 +6,53 @@
 export class SuppliesPhotos {
   constructor() {
     this.uploadedPhotos = []; // Array of photo URLs
+    this.pendingBase64Photos = []; // Base64 photos waiting to be uploaded (for new items)
     this.currentGalleryIndex = 0;
+    this.currentSupplyId = null; // Set when editing existing supply
     this.init();
+  }
+
+  setSupplyId(id) {
+    this.currentSupplyId = id;
+  }
+
+  /**
+   * Get pending base64 photos (for new items that need upload after save)
+   */
+  getPendingPhotos() {
+    return this.pendingBase64Photos;
+  }
+
+  /**
+   * Upload pending photos after supply creation
+   * @param {string} supplyId - The newly created supply ID
+   */
+  async uploadPendingPhotos(supplyId) {
+    if (this.pendingBase64Photos.length === 0) return [];
+
+    const uploadedUrls = [];
+    for (let i = 0; i < this.pendingBase64Photos.length; i++) {
+      try {
+        const response = await fetch(`/api/supplies/${supplyId}/photo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: this.pendingBase64Photos[i],
+            photoIndex: i + 1
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          uploadedUrls.push(result.data.url);
+        }
+      } catch (error) {
+        console.error('Failed to upload pending photo:', error);
+      }
+    }
+
+    this.pendingBase64Photos = [];
+    return uploadedUrls;
   }
 
   init() {
@@ -75,21 +120,36 @@ export class SuppliesPhotos {
       previewId = `preview-${Date.now()}`;
       this.addPhotoPreview(previewId, null, true);
 
-      // Upload to server
-      const formData = new FormData();
-      formData.append('photo', file);
+      let photoUrl;
 
-      const response = await fetch('/api/supplies/upload-photo', {
-        method: 'POST',
-        body: formData,
-      });
+      // If we have a supply ID, upload to Supabase Storage
+      if (this.currentSupplyId) {
+        // Convert file to base64
+        const base64Data = await this.fileToBase64(file);
+        const photoIndex = this.uploadedPhotos.length + 1;
 
-      if (!response.ok) {
-        throw new Error('Upload failed');
+        const response = await fetch(`/api/supplies/${this.currentSupplyId}/photo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: base64Data,
+            photoIndex: photoIndex
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const result = await response.json();
+        photoUrl = result.data.url;
+      } else {
+        // No supply ID yet - store base64 for upload after save (Render-compatible)
+        const base64Data = await this.fileToBase64(file);
+        this.pendingBase64Photos.push(base64Data);
+        // Use base64 as preview URL
+        photoUrl = base64Data;
       }
-
-      const result = await response.json();
-      const photoUrl = result.data.url;
 
       // Update preview with actual URL
       this.uploadedPhotos.push(photoUrl);
@@ -104,6 +164,15 @@ export class SuppliesPhotos {
         document.getElementById(previewId)?.remove();
       }
     }
+  }
+
+  fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   }
 
   addPhotoPreview(id, url, loading = false) {
@@ -275,6 +344,8 @@ export class SuppliesPhotos {
 
   clearPhotos() {
     this.uploadedPhotos = [];
+    this.pendingBase64Photos = [];
+    this.currentSupplyId = null;
     const container = document.getElementById('photoPreviewContainer');
     if (container) {
       container.innerHTML = '';

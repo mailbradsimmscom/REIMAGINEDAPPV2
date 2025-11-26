@@ -4,6 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import * as suppliesService from '../../services/supplies/supplies.service.js';
 import * as aiAnalysisService from '../../services/supplies/ai-analysis.service.js';
+import * as photoStorageService from '../../services/supplies/photo-storage.service.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
@@ -387,7 +388,7 @@ router.post('/suggest-systems', async (req, res) => {
 
 /**
  * POST /api/supplies/upload-photo
- * Upload a photo for a supply item
+ * Upload a photo for a supply item (disk-based, legacy)
  */
 router.post('/upload-photo', upload.single('photo'), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
@@ -421,6 +422,73 @@ router.post('/upload-photo', upload.single('photo'), async (req, res) => {
     });
   } catch (error) {
     requestLogger.error('Error uploading photo', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * POST /api/supplies/:id/photo
+ * Upload a photo to Supabase Storage for a supply item
+ * Body: { imageBase64: "data:image/jpeg;base64,..." }
+ */
+router.post('/:id/photo', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id } = req.params;
+    const { imageBase64, photoIndex = 1 } = req.body;
+
+    if (!imageBase64) {
+      return res.status(400).json({
+        success: false,
+        error: 'imageBase64 is required',
+        requestId: res.locals.requestId
+      });
+    }
+
+    requestLogger.info('Uploading photo to Supabase Storage', {
+      supplyId: id,
+      photoIndex,
+      hasBase64: !!imageBase64
+    });
+
+    // Upload to Supabase Storage
+    const photoUrl = await photoStorageService.uploadSupplyPhoto(id, imageBase64, photoIndex);
+
+    // Update supply with photo URL
+    const supply = await suppliesService.getSupplyById(id);
+    const existingPhotos = supply.data?.photos || [];
+
+    // Replace photo at index or append
+    const updatedPhotos = [...existingPhotos];
+    updatedPhotos[photoIndex - 1] = photoUrl;
+
+    await suppliesService.updateSupply(id, { photos: updatedPhotos });
+
+    requestLogger.info('Photo uploaded and supply updated', {
+      supplyId: id,
+      photoUrl,
+      totalPhotos: updatedPhotos.length
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        url: photoUrl,
+        photos: updatedPhotos
+      },
+      requestId: res.locals.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Error uploading photo to storage', {
+      error: error.message,
+      supplyId: req.params.id
+    });
     return res.status(500).json({
       success: false,
       error: error.message,

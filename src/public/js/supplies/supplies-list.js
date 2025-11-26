@@ -313,7 +313,14 @@ export class SuppliesList {
                 class="photo-thumbnail"
                 onclick="window.suppliesPhotos?.viewPhoto('${supply.photos[0]}')"
               >
-            ` : ''}
+            ` : `
+              <div
+                class="photo-placeholder"
+                onclick="window.suppliesForm.openModal('${supply.id}')"
+                title="Add photo"
+                style="width: 40px; height: 40px; background: var(--bg-secondary); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0.5;"
+              >📷</div>
+            `}
             <div>
               <strong>${this.escapeHtml(supply.item_name)}</strong>
               ${supply.brand ? `<small>${this.escapeHtml(supply.brand)}</small>` : ''}
@@ -360,7 +367,13 @@ export class SuppliesList {
             onclick="window.suppliesPhotos?.viewPhoto('${supply.photos[0]}')"
             style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--border-radius); margin-bottom: var(--spacing-md); cursor: pointer;"
           >
-        ` : ''}
+        ` : `
+          <div
+            onclick="window.suppliesForm.openModal('${supply.id}')"
+            title="Add photo"
+            style="width: 100%; height: 150px; background: var(--bg-secondary); border-radius: var(--border-radius); margin-bottom: var(--spacing-md); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0.6; font-size: 2rem;"
+          >📷</div>
+        `}
         <div class="card-header">
           <h3>${this.escapeHtml(supply.item_name)}</h3>
           ${this.getStatusBadge(supply)}

@@ -149,9 +149,10 @@ export class SuppliesForm {
     // Reset form
     document.getElementById('supplyForm').reset();
 
-    // Clear photos
+    // Clear photos and set supply ID for edit mode
     if (window.suppliesPhotos) {
       window.suppliesPhotos.clearPhotos();
+      window.suppliesPhotos.setSupplyId(supplyId); // null for new, ID for edit
     }
 
     if (this.isEditMode) {
@@ -224,7 +225,19 @@ export class SuppliesForm {
         await SuppliesAPI.update(this.currentSupplyId, formData);
         this.showToast('Supply updated successfully', 'success');
       } else {
-        await SuppliesAPI.create(formData);
+        // Create the supply first
+        const result = await SuppliesAPI.create(formData);
+        const newSupplyId = result.data.id;
+
+        // Upload any pending photos to Supabase Storage
+        if (window.suppliesPhotos) {
+          const pendingPhotos = window.suppliesPhotos.getPendingPhotos();
+          if (pendingPhotos.length > 0) {
+            saveBtn.querySelector('.btn-text').textContent = 'Uploading photos...';
+            await window.suppliesPhotos.uploadPendingPhotos(newSupplyId);
+          }
+        }
+
         this.showToast('Supply created successfully', 'success');
       }
 

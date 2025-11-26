@@ -509,6 +509,7 @@ export class SuppliesWizard {
         ai_analysis_timestamp: this.state.selectedSystems.length > 0 ? new Date().toISOString() : null
       };
 
+      // Step 1: Create the supply
       const response = await fetch('/api/supplies', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -517,16 +518,47 @@ export class SuppliesWizard {
 
       const result = await response.json();
 
-      if (result.success) {
-        this.showToast('Supply added successfully!', 'success');
-        this.close();
-
-        // Refresh the list
-        if (window.suppliesList) {
-          window.suppliesList.loadSupplies();
-        }
-      } else {
+      if (!result.success) {
         throw new Error(result.error || 'Failed to save supply');
+      }
+
+      const supplyId = result.data.id;
+
+      // Step 2: Upload photo if present
+      if (this.state.photo.base64) {
+        this.saveBtn.textContent = 'Uploading photo...';
+
+        try {
+          const photoResponse = await fetch(`/api/supplies/${supplyId}/photo`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageBase64: this.state.photo.base64,
+              photoIndex: 1
+            })
+          });
+
+          const photoResult = await photoResponse.json();
+
+          if (photoResult.success) {
+            console.log('Photo uploaded:', photoResult.data.url);
+          } else {
+            // Photo upload failed but supply was created
+            console.error('Photo upload failed:', photoResult.error);
+            this.showToast('Supply saved, but photo upload failed', 'warning');
+          }
+        } catch (photoError) {
+          console.error('Photo upload error:', photoError);
+          this.showToast('Supply saved, but photo upload failed', 'warning');
+        }
+      }
+
+      this.showToast('Supply added successfully!', 'success');
+      this.close();
+
+      // Refresh the list
+      if (window.suppliesList) {
+        window.suppliesList.loadSupplies();
       }
 
     } catch (error) {
