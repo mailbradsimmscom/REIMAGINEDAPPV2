@@ -307,24 +307,31 @@ router.delete('/:id', async (req, res) => {
 /**
  * POST /api/supplies/analyze-photo
  * Analyze a supply photo using GPT-4V
+ * Accepts either imageBase64 (data URL) or photoUrl (file path)
  */
 router.post('/analyze-photo', async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
-    const { photoUrl } = req.body;
+    const { imageBase64, photoUrl } = req.body;
 
-    if (!photoUrl) {
+    if (!imageBase64 && !photoUrl) {
       return res.status(400).json({
         success: false,
-        error: 'Photo URL is required',
+        error: 'Either imageBase64 or photoUrl is required',
         requestId: res.locals.requestId
       });
     }
 
-    requestLogger.info('Analyzing photo', { photoUrl });
+    requestLogger.info('Analyzing photo', {
+      hasBase64: !!imageBase64,
+      photoUrl: photoUrl || 'N/A'
+    });
 
-    const result = await aiAnalysisService.analyzeSupplyPhoto(photoUrl);
+    // Use base64 directly if provided, otherwise fall back to file path
+    const result = imageBase64
+      ? await aiAnalysisService.analyzeSupplyPhotoBase64(imageBase64)
+      : await aiAnalysisService.analyzeSupplyPhoto(photoUrl);
 
     return res.json({
       success: result.success,
@@ -332,7 +339,7 @@ router.post('/analyze-photo', async (req, res) => {
       requestId: res.locals.requestId
     });
   } catch (error) {
-    requestLogger.error('Error analyzing photo', { error: error.message, photoUrl: req.body.photoUrl });
+    requestLogger.error('Error analyzing photo', { error: error.message });
     return res.status(500).json({
       success: false,
       error: error.message,

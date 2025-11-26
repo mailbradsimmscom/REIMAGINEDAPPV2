@@ -129,6 +129,103 @@ Return your analysis in this exact JSON format:
 }
 
 /**
+ * Analyze a photo using base64 data directly (no file system needed)
+ * @param {string} imageBase64 - Base64 data URL (data:image/jpeg;base64,...)
+ * @returns {Promise<Object>} Extracted item details
+ */
+export async function analyzeSupplyPhotoBase64(imageBase64) {
+  try {
+    requestLogger.info('Analyzing supply photo from base64');
+
+    // Validate base64 data
+    if (!imageBase64 || typeof imageBase64 !== 'string') {
+      throw new Error('Invalid base64 image data provided');
+    }
+
+    if (!imageBase64.startsWith('data:image/')) {
+      throw new Error('Invalid image format - expected data URL');
+    }
+
+    const systemPrompt = `You are an expert at analyzing marine equipment and supply items from photos.
+Your task is to extract key information from the image and return it in a structured format.
+
+Focus on identifying:
+- Item name (what is this item?)
+- Brand/manufacturer (if visible)
+- Part number or model number (if visible)
+- Suggested category (where would this item belong in a boat inventory?)
+
+Be specific and accurate. If you cannot determine something with confidence, use null.`;
+
+    const userPrompt = `Analyze this supply item photo and extract:
+
+1. Item name (e.g., "Oil Filter", "Bilge Pump", "Shackle")
+2. Brand (e.g., "Racor", "Rule", "Harken")
+3. Part number (e.g., "2010PM", "500GPH", "H2161")
+4. Suggested category (choose from: Engine Parts & Service, Electrical, Plumbing & Water Systems, Rigging & Deck Hardware, Safety Equipment, General Supplies, Tools, Consumables, Other)
+
+Return your analysis in this exact JSON format:
+{
+  "item_name": "extracted name or null",
+  "brand": "extracted brand or null",
+  "part_number": "extracted part number or null",
+  "suggested_category": "best matching category",
+  "confidence": 0.0-1.0,
+  "notes": "brief explanation of what you see and your reasoning"
+}`;
+
+    const response = await oaiVision({
+      system: systemPrompt,
+      user: userPrompt,
+      imageUrl: imageBase64,
+      maxOutputTokens: 500
+    });
+
+    requestLogger.info('GPT-4V raw response', { response: response.substring(0, 200) });
+
+    // Parse JSON response
+    let analysisResult;
+    try {
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        analysisResult = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('No JSON found in response');
+      }
+    } catch (parseError) {
+      requestLogger.error('Failed to parse GPT-4V response', { error: parseError.message, response });
+      throw new Error('Failed to parse AI response. Please try again.');
+    }
+
+    if (!analysisResult.suggested_category) {
+      analysisResult.suggested_category = 'Other';
+    }
+
+    requestLogger.info('Photo analysis completed (base64)', {
+      item_name: analysisResult.item_name,
+      brand: analysisResult.brand,
+      confidence: analysisResult.confidence
+    });
+
+    return {
+      success: true,
+      data: {
+        item_name: analysisResult.item_name,
+        brand: analysisResult.brand,
+        part_number: analysisResult.part_number,
+        suggested_category: analysisResult.suggested_category,
+        confidence: analysisResult.confidence || 0,
+        notes: analysisResult.notes || ''
+      }
+    };
+
+  } catch (error) {
+    requestLogger.error('Photo analysis failed (base64)', { error: error.message });
+    throw new Error(`Photo analysis failed: ${error.message}`);
+  }
+}
+
+/**
  * Suggest boat systems relevant to a supply item
  * Uses Pinecone semantic search + systems table lookup
  * @param {Object} itemData - Supply item details
@@ -282,5 +379,6 @@ export async function suggestSystemsForSupply(itemData) {
 
 export default {
   analyzeSupplyPhoto,
+  analyzeSupplyPhotoBase64,
   suggestSystemsForSupply
 };

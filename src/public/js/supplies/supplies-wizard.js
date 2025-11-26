@@ -246,26 +246,30 @@ export class SuppliesWizard {
       return;
     }
 
-    // Show preview
+    // Show preview and get base64 for AI analysis
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
+      const base64Data = e.target.result;
+
       if (this.photoPreview) {
-        this.photoPreview.src = e.target.result;
+        this.photoPreview.src = base64Data;
         this.photoPreview.style.display = 'block';
       }
       if (this.photoPlaceholder) {
         this.photoPlaceholder.style.display = 'none';
       }
+
+      // Store file for later upload when saving
+      this.state.photo.file = file;
+      this.state.photo.base64 = base64Data;
+
+      // Analyze with AI using base64 directly (no disk storage needed)
+      await this.analyzePhotoWithAI(base64Data);
     };
     reader.readAsDataURL(file);
-
-    this.state.photo.file = file;
-
-    // Upload and analyze
-    await this.uploadAndAnalyzePhoto(file);
   }
 
-  async uploadAndAnalyzePhoto(file) {
+  async analyzePhotoWithAI(base64Data) {
     try {
       // Show analyzing state
       if (this.aiStatus) {
@@ -274,30 +278,11 @@ export class SuppliesWizard {
         this.aiStatus.querySelector('.wizard-ai-result').style.display = 'none';
       }
 
-      // Upload photo
-      const formData = new FormData();
-      formData.append('photo', file);
-
-      const uploadResponse = await fetch('/api/supplies/upload-photo', {
-        method: 'POST',
-        body: formData
-      });
-
-      const uploadResult = await uploadResponse.json();
-      if (!uploadResult.success) {
-        const errorMsg = typeof uploadResult.error === 'string'
-          ? uploadResult.error
-          : (uploadResult.error?.message || 'Upload failed');
-        throw new Error(errorMsg);
-      }
-
-      this.state.photo.url = uploadResult.data.url;
-
-      // Analyze photo with AI
+      // Send base64 directly to analyze endpoint
       const analyzeResponse = await fetch('/api/supplies/analyze-photo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ photoUrl: uploadResult.data.url })
+        body: JSON.stringify({ imageBase64: base64Data })
       });
 
       const analyzeResult = await analyzeResponse.json();
@@ -320,30 +305,29 @@ export class SuppliesWizard {
           this.aiDetected.textContent = `✓ ${detectedText}${confidence}`;
         }
       } else {
-        // AI analysis failed but photo uploaded
+        // AI analysis failed
         if (this.aiStatus) {
           this.aiStatus.style.display = 'none';
         }
-        this.showToast('Photo uploaded - AI analysis unavailable', 'info');
+        const errorMsg = analyzeResult.error || 'AI analysis unavailable';
+        this.showToast('Photo ready - ' + errorMsg, 'info');
       }
 
       // Enable next button
       if (this.next1Btn) this.next1Btn.disabled = false;
 
     } catch (error) {
-      console.error('Photo upload/analysis error:', error);
+      console.error('Photo analysis error:', error);
       if (this.aiStatus) this.aiStatus.style.display = 'none';
 
       // Extract error message properly
       const errorMsg = typeof error === 'string'
         ? error
         : (error?.message || JSON.stringify(error) || 'Unknown error');
-      this.showToast('Failed to process photo: ' + errorMsg, 'error');
+      this.showToast('Photo ready - AI analysis failed: ' + errorMsg, 'info');
 
-      // Still enable next if we have a preview
-      if (this.photoPreview?.src) {
-        if (this.next1Btn) this.next1Btn.disabled = false;
-      }
+      // Still enable next - photo is ready even if AI failed
+      if (this.next1Btn) this.next1Btn.disabled = false;
     }
   }
 
