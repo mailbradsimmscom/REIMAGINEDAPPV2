@@ -47,8 +47,8 @@ app.use(cors({
 }));
 
 // Body parsing middleware with size limits
-app.use(express.json({ 
-  limit: '2mb' // 2MB limit for JSON payloads
+app.use(express.json({
+  limit: '10mb' // 10MB limit for JSON payloads (needed for base64 images)
 }));
 
 app.use(express.urlencoded({ 
