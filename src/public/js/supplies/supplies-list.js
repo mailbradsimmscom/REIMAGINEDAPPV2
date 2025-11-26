@@ -246,10 +246,6 @@ export class SuppliesList {
 
   async loadStats() {
     try {
-      const stats = await SuppliesAPI.getStats();
-      document.getElementById('totalItems').textContent = stats.total;
-      document.getElementById('lowStockItems').textContent = stats.lowStock;
-
       // Build filter params for type counts (respects active filters except itemType and lowStock)
       const filterParams = {
         categoryId: this.filters.categoryId || undefined,
