@@ -5,10 +5,11 @@ import configRoute from './config.route.js';
 
 const router = express.Router();
 
-// Mount supplies routes
-router.use('/', suppliesRoute);
-
 // Config routes for managing dropdowns (categories, units, locations)
+// Mount BEFORE the catch-all supplies route
 router.use('/config', configRoute);
+
+// Mount supplies routes (catch-all)
+router.use('/', suppliesRoute);
 
 export default router;
