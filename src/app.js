@@ -137,6 +137,17 @@ app.get('/supplies', async (req, res) => {
   }
 });
 
+// Supplies admin page (manage categories, units, locations)
+app.get('/supplies/admin', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/supplies-admin.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Supplies admin page not found' });
+  }
+});
+
 // Testing pages (no auth required for HTML pages)
 app.get('/admin/testing', async (req, res) => {
   try {

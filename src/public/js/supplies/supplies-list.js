@@ -172,7 +172,9 @@ export class SuppliesList {
 
     let html = '<option value="">All Locations</option>';
     this.locations.forEach(loc => {
-      html += `<option value="${loc}">${loc}</option>`;
+      // Handle both string (legacy) and object (new) format
+      const name = typeof loc === 'string' ? loc : loc.name;
+      html += `<option value="${this.escapeHtml(name)}">${this.escapeHtml(name)}</option>`;
     });
 
     select.innerHTML = html;

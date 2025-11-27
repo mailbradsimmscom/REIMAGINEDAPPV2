@@ -193,19 +193,21 @@ export const SuppliesAPI = {
   },
 
   /**
-   * Get unique locations from existing supplies
+   * Get all locations from supply_locations table
    */
   async getLocations() {
-    const { data } = await this.list({ limit: 1000 });
-    const locations = new Set();
-
-    data.forEach(supply => {
-      if (supply.location) {
-        locations.add(supply.location);
+    try {
+      const response = await fetch('/api/supplies/config/locations');
+      if (response.ok) {
+        const result = await response.json();
+        return result.data || [];
       }
-    });
+    } catch (e) {
+      console.error('Error fetching locations:', e);
+    }
 
-    return Array.from(locations).sort();
+    // Fallback: return empty array
+    return [];
   },
 
   /**

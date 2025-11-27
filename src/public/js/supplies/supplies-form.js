@@ -40,7 +40,7 @@ export class SuppliesForm {
 
       this.populateCategorySelect();
       this.populateUnitSelect();
-      this.populateLocationsDatalist();
+      this.populateLocationSelect();
     } catch (error) {
       console.error('Error loading form data:', error);
     }
@@ -126,13 +126,18 @@ export class SuppliesForm {
     select.innerHTML = html;
   }
 
-  populateLocationsDatalist() {
-    const datalist = document.getElementById('locationsList');
-    if (!datalist) return;
+  populateLocationSelect() {
+    const select = document.getElementById('location');
+    if (!select) return;
 
-    datalist.innerHTML = this.locations.map(loc =>
-      `<option value="${this.escapeHtml(loc)}">`
-    ).join('');
+    let html = '<option value="">Select location...</option>';
+    this.locations.forEach(loc => {
+      // loc is now an object with id, name, description
+      const name = typeof loc === 'string' ? loc : loc.name;
+      html += `<option value="${this.escapeHtml(name)}">${this.escapeHtml(name)}</option>`;
+    });
+
+    select.innerHTML = html;
   }
 
   async openModal(supplyId = null) {

@@ -603,9 +603,14 @@ export class SuppliesWizard {
   async loadLocations() {
     try {
       const locations = await SuppliesAPI.getLocations();
-      const datalist = document.getElementById('wizardLocationsList');
-      if (datalist && locations.length > 0) {
-        datalist.innerHTML = locations.map(loc => `<option value="${loc}">`).join('');
+      const select = document.getElementById('wizardLocation');
+      if (select && locations.length > 0) {
+        select.innerHTML = '<option value="">Select location...</option>' +
+          locations.map(loc => {
+            // loc is now an object with id, name, description
+            const name = typeof loc === 'string' ? loc : loc.name;
+            return `<option value="${this.escapeHtml(name)}">${this.escapeHtml(name)}</option>`;
+          }).join('');
       }
     } catch (error) {
       console.error('Error loading locations:', error);

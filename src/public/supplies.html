@@ -63,6 +63,13 @@
         </button>
       </div>
 
+      <!-- Admin Link -->
+      <div style="margin-bottom: 1rem;">
+        <a href="/supplies/admin" style="color: var(--text-secondary, #666); font-size: 0.9rem; text-decoration: none;">
+          ⚙️ Manage Categories, Units & Locations
+        </a>
+      </div>
+
       <!-- Filters & Search -->
       <div class="toolbar">
         <div class="search-box">
@@ -228,10 +235,10 @@
 
           <div class="form-group">
             <label for="location">Storage Location</label>
-            <input type="text" id="location" placeholder="e.g., Port Storage 2" list="locationsList">
-            <datalist id="locationsList">
+            <select id="location" class="form-select">
+              <option value="">Select location...</option>
               <!-- Populated dynamically -->
-            </datalist>
+            </select>
           </div>
 
           <div class="form-group">
@@ -419,8 +426,10 @@
 
             <div class="form-group">
               <label for="wizardLocation">Location</label>
-              <input type="text" id="wizardLocation" placeholder="e.g., Port Storage 2" list="wizardLocationsList">
-              <datalist id="wizardLocationsList"></datalist>
+              <select id="wizardLocation" class="form-select">
+                <option value="">Select location...</option>
+                <!-- Populated dynamically -->
+              </select>
             </div>
 
             <div class="form-group">
