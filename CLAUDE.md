@@ -310,6 +310,74 @@ curl http://localhost:8000/health
 
 ---
 
+## 🚀 Render Deployment Sync
+
+### Services on Render (US East)
+| Service | URL | Purpose |
+|---------|-----|---------|
+| **boatos-main** | boatos-main.onrender.com | Node.js backend |
+| **boatos-python** | boatos-python.onrender.com | Python sidecar (chat, LLM) |
+| **boatos-maintenance** | boatos-maintenance.onrender.com | Maintenance agent |
+
+### ⚠️ Environment Variables - MUST MATCH LOCAL
+
+When changing these locally, **UPDATE RENDER TOO**:
+
+| Variable | Local (.env) | Render Service | Impact if Wrong |
+|----------|--------------|----------------|-----------------|
+| `OPENAI_MODEL` | `gpt-5.1-chat-latest` | boatos-python | Wrong model = slow/different responses |
+| `PYTHON_SIDECAR_URL` | `http://localhost:8000` | boatos-main | Use `http://boatos-python:10000` on Render (internal URL) |
+| `SUPABASE_URL` | same | both | DB connection fails |
+| `SUPABASE_SERVICE_KEY` | same | both | DB auth fails |
+| `OPENAI_API_KEY` | same | boatos-python | LLM calls fail |
+| `PINECONE_API_KEY` | same | boatos-python | Vector search fails |
+| `ADMIN_TOKEN` | same | both | Admin auth fails |
+
+### Render Internal Networking
+
+**IMPORTANT:** Services should communicate via internal URLs, not public:
+
+```
+# ❌ WRONG (adds 100-300ms per call)
+PYTHON_SIDECAR_URL=https://boatos-python.onrender.com
+
+# ✅ CORRECT (internal network, ~1ms)
+PYTHON_SIDECAR_URL=http://boatos-python:10000
+```
+
+### Deployment Checklist
+
+Before/after making changes that affect production:
+
+1. **Check env var sync:**
+   ```bash
+   # Compare local model config
+   grep -E "OPENAI_MODEL|PYTHON_SIDECAR" .env
+   ```
+   Then verify Render Dashboard → Service → Environment matches
+
+2. **Check deployed commit:**
+   ```bash
+   git log --oneline -1
+   ```
+   Compare with Render Dashboard → Service → Events (last deploy commit)
+
+3. **Test after deploy:**
+   ```bash
+   curl -w "\nTime: %{time_total}s\n" https://boatos-main.onrender.com/health
+   ```
+
+### Common Issues
+
+| Symptom | Likely Cause |
+|---------|--------------|
+| Chat 3-5x slower on Render than local | Wrong `PYTHON_SIDECAR_URL` (using public URL) or wrong `OPENAI_MODEL` |
+| "Route not found" errors | Code not deployed, check git commit match |
+| LLM responses different | `OPENAI_MODEL` mismatch between local and Render |
+| Timeout errors | Service cold start, or wrong internal URL |
+
+---
+
 ## Documentation
 
 - **Code Standards:** `.cursorrules`
