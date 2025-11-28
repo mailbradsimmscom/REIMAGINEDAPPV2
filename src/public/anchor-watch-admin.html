@@ -242,6 +242,42 @@
             border: none;
         }
 
+        .coord-inputs {
+            margin: 16px 0;
+            padding: 12px;
+            background: #F2F2F7;
+            border-radius: 8px;
+        }
+
+        .coord-inputs label {
+            display: block;
+            font-size: 12px;
+            color: #8E8E93;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .coord-inputs input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'SF Mono', Monaco, monospace;
+            margin-bottom: 12px;
+            background: white;
+        }
+
+        .coord-inputs input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .coord-inputs input:last-of-type {
+            margin-bottom: 0;
+        }
+
         .table-container {
             overflow-x: auto;
         }
@@ -636,11 +672,23 @@
 
             if (!status.active) {
                 // Inactive - show activation controls
+                const hasInferredPosition = anchorWatchState.anchor_lat && anchorWatchState.anchor_lon;
+
                 controlsContent.innerHTML = `
                     <div class="controls-section">
                         <button id="inferBtn" class="button button-secondary" onclick="inferAnchorPosition()">
                             Infer Anchor Position
                         </button>
+                        ${hasInferredPosition ? `
+                        <div class="coord-inputs">
+                            <label>Latitude</label>
+                            <input type="text" id="anchorLatInput" value="${anchorWatchState.anchor_lat.toFixed(5)}"
+                                   onchange="updateAnchorFromInputs()" onkeyup="updateAnchorFromInputs()">
+                            <label>Longitude</label>
+                            <input type="text" id="anchorLonInput" value="${anchorWatchState.anchor_lon.toFixed(5)}"
+                                   onchange="updateAnchorFromInputs()" onkeyup="updateAnchorFromInputs()">
+                        </div>
+                        ` : ''}
                         <div class="slider-container">
                             <div class="slider-label">
                                 <span>Radius</span>
@@ -650,7 +698,7 @@
                                    min="10" max="100" value="50" step="10"
                                    oninput="updateRadiusDisplay(this.value)">
                         </div>
-                        <button id="activateBtn" class="button button-primary" disabled onclick="activateAnchorWatch()">
+                        <button id="activateBtn" class="button button-primary" ${hasInferredPosition ? '' : 'disabled'} onclick="activateAnchorWatch()">
                             Activate Anchor Watch
                         </button>
                     </div>
@@ -761,6 +809,51 @@
             return [lat2 * 180 / Math.PI, lon2 * 180 / Math.PI];
         }
 
+        // Update anchor position from input fields (input → map sync)
+        function updateAnchorFromInputs() {
+            const latInput = document.getElementById('anchorLatInput');
+            const lonInput = document.getElementById('anchorLonInput');
+
+            if (!latInput || !lonInput) return;
+
+            const lat = parseFloat(latInput.value);
+            const lon = parseFloat(lonInput.value);
+
+            // Validate inputs are valid numbers
+            if (isNaN(lat) || isNaN(lon)) return;
+            if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return;
+
+            // Update state
+            anchorWatchState.anchor_lat = lat;
+            anchorWatchState.anchor_lon = lon;
+
+            // Update map marker
+            if (markers.anchor) {
+                markers.anchor.setLatLng([lat, lon]);
+            }
+
+            // Update preview circle
+            if (markers.previewZone) {
+                markers.previewZone.setLatLng([lat, lon]);
+            }
+
+            // Update radius handle
+            if (markers.radiusHandle) {
+                const radius = parseInt(document.getElementById('radiusSlider').value);
+                const handlePos = calculatePointAtDistance([lat, lon], radius, 45);
+                markers.radiusHandle.setLatLng(handlePos);
+            }
+        }
+
+        // Update input fields from map marker (map → input sync)
+        function updateInputsFromMarker(lat, lon) {
+            const latInput = document.getElementById('anchorLatInput');
+            const lonInput = document.getElementById('anchorLonInput');
+
+            if (latInput) latInput.value = lat.toFixed(5);
+            if (lonInput) lonInput.value = lon.toFixed(5);
+        }
+
         // Infer anchor position
         async function inferAnchorPosition() {
             const btn = document.getElementById('inferBtn');
@@ -808,9 +901,12 @@
                             markers.radiusHandle.setLatLng(handlePos);
                         }
 
+                        // Update input fields (map → input sync)
+                        updateInputsFromMarker(newPos.lat, newPos.lng);
+
                         // Show feedback
                         const btn = document.getElementById('inferBtn');
-                        btn.textContent = `Position Adjusted (${newPos.lat.toFixed(6)}, ${newPos.lng.toFixed(6)})`;
+                        btn.textContent = `Position Adjusted`;
                     });
                 } else {
                     markers.anchor.setLatLng(anchorPos);
@@ -875,6 +971,9 @@
                 });
 
                 map.setView(anchorPos, 17);
+
+                // Re-render controls to show lat/lon input fields
+                renderControls({ active: false });
 
             } catch (error) {
                 alert('Failed to calculate anchor position: ' + error.message);
