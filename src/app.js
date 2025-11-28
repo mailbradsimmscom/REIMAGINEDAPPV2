@@ -109,6 +109,32 @@ app.use('/css', express.static(join(process.cwd(), 'src/public/css')));
 app.use('/js', express.static(join(process.cwd(), 'src/public/js')));
 app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
+// PIN authentication endpoint (public - no auth required)
+app.post('/api/auth/pin', (req, res) => {
+  const { pin } = req.body;
+  const env = getEnv();
+
+  if (!env.ADMIN_PIN) {
+    return res.status(500).json({
+      success: false,
+      error: 'PIN authentication not configured'
+    });
+  }
+
+  if (!pin || pin !== env.ADMIN_PIN) {
+    return res.status(401).json({
+      success: false,
+      error: 'Invalid PIN'
+    });
+  }
+
+  // PIN valid - return the admin token
+  return res.json({
+    success: true,
+    token: env.ADMIN_TOKEN
+  });
+});
+
 // Admin API routes
 app.use('/admin/api', adminRouter);
 

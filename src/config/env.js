@@ -26,6 +26,7 @@ const EnvSchema = z.object({
   SERVICE_ROLE_KEY: z.string().optional(),
   PY_SUPABASE_SERVICE_KEY: z.string().optional(),
   ADMIN_TOKEN: z.string().optional(),
+  ADMIN_PIN: z.string().optional(),
   PYTHON_SIDECAR_URL: z.string().optional(),
   PYTHON_CHAT_TIMEOUT_MS: z.string().optional(),
   APP_VERSION: z.string().optional(),
