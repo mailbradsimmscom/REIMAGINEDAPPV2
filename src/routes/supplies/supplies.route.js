@@ -5,6 +5,7 @@ import path from 'path';
 import * as suppliesService from '../../services/supplies/supplies.service.js';
 import * as aiAnalysisService from '../../services/supplies/ai-analysis.service.js';
 import * as photoStorageService from '../../services/supplies/photo-storage.service.js';
+import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
@@ -329,10 +330,20 @@ router.post('/analyze-photo', async (req, res) => {
       photoUrl: photoUrl || 'N/A'
     });
 
+    // Fetch real categories and units from database for AI prompt
+    const supabase = await getSupabaseClient();
+    const [categoriesResult, unitsResult] = await Promise.all([
+      supabase.from('supply_categories').select('category_name, category_path').order('category_path'),
+      supabase.from('supply_units').select('unit_name, abbreviation').order('unit_name')
+    ]);
+
+    const categories = (categoriesResult.data || []).map(c => c.category_name);
+    const units = (unitsResult.data || []).map(u => `${u.unit_name} (${u.abbreviation})`);
+
     // Use base64 directly if provided, otherwise fall back to file path
     const result = imageBase64
-      ? await aiAnalysisService.analyzeSupplyPhotoBase64(imageBase64)
-      : await aiAnalysisService.analyzeSupplyPhoto(photoUrl);
+      ? await aiAnalysisService.analyzeSupplyPhotoBase64(imageBase64, { categories, units })
+      : await aiAnalysisService.analyzeSupplyPhoto(photoUrl, { categories, units });
 
     return res.json({
       success: result.success,

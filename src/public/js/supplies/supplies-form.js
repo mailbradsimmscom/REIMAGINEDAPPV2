@@ -322,8 +322,23 @@ export class SuppliesForm {
       for (const option of options) {
         const optionText = option.textContent.trim().toLowerCase();
         const suggestedCategory = analysisResult.suggested_category.toLowerCase();
-        if (optionText.includes(suggestedCategory)) {
+        if (optionText.includes(suggestedCategory) || suggestedCategory.includes(optionText)) {
           categorySelect.value = option.value;
+          break;
+        }
+      }
+    }
+
+    // Try to match unit if suggested_unit is provided
+    if (analysisResult.suggested_unit) {
+      const unitSelect = document.getElementById('unit');
+      const options = unitSelect.querySelectorAll('option');
+      const suggestedUnit = analysisResult.suggested_unit.toLowerCase();
+      for (const option of options) {
+        const optionText = option.textContent.trim().toLowerCase();
+        // Match on unit name (e.g., "Each" matches "Each (ea)")
+        if (optionText.includes(suggestedUnit) || suggestedUnit.includes(optionText.split(' ')[0])) {
+          unitSelect.value = option.value;
           break;
         }
       }

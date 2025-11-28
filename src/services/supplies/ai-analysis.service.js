@@ -16,9 +16,12 @@ const requestLogger = logger.createRequestLogger();
 /**
  * Analyze a photo of a supply item using GPT-4V
  * @param {string} photoUrl - URL to the photo (must be publicly accessible)
+ * @param {Object} options - Optional categories and units from database
+ * @param {string[]} options.categories - List of category names
+ * @param {string[]} options.units - List of unit names with abbreviations
  * @returns {Promise<Object>} Extracted item details
  */
-export async function analyzeSupplyPhoto(photoUrl) {
+export async function analyzeSupplyPhoto(photoUrl, options = {}) {
   try {
     requestLogger.info('Analyzing supply photo', { photoUrl });
 
@@ -47,6 +50,15 @@ export async function analyzeSupplyPhoto(photoUrl) {
       mimeType
     });
 
+    // Use provided categories/units or defaults
+    const categories = options.categories?.length > 0
+      ? options.categories.join(', ')
+      : 'Engine Parts & Service, Electrical, Plumbing & Water Systems, Rigging & Deck Hardware, Safety Equipment, General Supplies, Tools, Consumables, Other';
+
+    const units = options.units?.length > 0
+      ? options.units.join(', ')
+      : 'Each (ea), Box (box), Gallon (gal), Quart (qt), Liter (L), Feet (ft), Meter (m), Set (set), Pair (pr), Pack (pk)';
+
     const systemPrompt = `You are an expert at analyzing marine equipment and supply items from photos.
 Your task is to extract key information from the image and return it in a structured format.
 
@@ -55,6 +67,7 @@ Focus on identifying:
 - Brand/manufacturer (if visible)
 - Part number or model number (if visible)
 - Suggested category (where would this item belong in a boat inventory?)
+- Suggested unit of measure (how would this item typically be counted/measured?)
 
 Be specific and accurate. If you cannot determine something with confidence, use null.`;
 
@@ -63,14 +76,16 @@ Be specific and accurate. If you cannot determine something with confidence, use
 1. Item name (e.g., "Oil Filter", "Bilge Pump", "Shackle")
 2. Brand (e.g., "Racor", "Rule", "Harken")
 3. Part number (e.g., "2010PM", "500GPH", "H2161")
-4. Suggested category (choose from: Engine Parts & Service, Electrical, Plumbing & Water Systems, Rigging & Deck Hardware, Safety Equipment, General Supplies, Tools, Consumables, Other)
+4. Suggested category - choose the BEST match from: ${categories}
+5. Suggested unit - choose the BEST match from: ${units}
 
 Return your analysis in this exact JSON format:
 {
   "item_name": "extracted name or null",
   "brand": "extracted brand or null",
   "part_number": "extracted part number or null",
-  "suggested_category": "best matching category",
+  "suggested_category": "best matching category from the list",
+  "suggested_unit": "best matching unit from the list (just the name, not abbreviation)",
   "confidence": 0.0-1.0,
   "notes": "brief explanation of what you see and your reasoning"
 }`;
@@ -107,6 +122,7 @@ Return your analysis in this exact JSON format:
     requestLogger.info('Photo analysis completed', {
       item_name: analysisResult.item_name,
       brand: analysisResult.brand,
+      suggested_unit: analysisResult.suggested_unit,
       confidence: analysisResult.confidence
     });
 
@@ -117,6 +133,7 @@ Return your analysis in this exact JSON format:
         brand: analysisResult.brand,
         part_number: analysisResult.part_number,
         suggested_category: analysisResult.suggested_category,
+        suggested_unit: analysisResult.suggested_unit || null,
         confidence: analysisResult.confidence || 0,
         notes: analysisResult.notes || ''
       }
@@ -131,9 +148,12 @@ Return your analysis in this exact JSON format:
 /**
  * Analyze a photo using base64 data directly (no file system needed)
  * @param {string} imageBase64 - Base64 data URL (data:image/jpeg;base64,...)
+ * @param {Object} options - Optional categories and units from database
+ * @param {string[]} options.categories - List of category names
+ * @param {string[]} options.units - List of unit names with abbreviations
  * @returns {Promise<Object>} Extracted item details
  */
-export async function analyzeSupplyPhotoBase64(imageBase64) {
+export async function analyzeSupplyPhotoBase64(imageBase64, options = {}) {
   try {
     requestLogger.info('Analyzing supply photo from base64');
 
@@ -146,6 +166,15 @@ export async function analyzeSupplyPhotoBase64(imageBase64) {
       throw new Error('Invalid image format - expected data URL');
     }
 
+    // Use provided categories/units or defaults
+    const categories = options.categories?.length > 0
+      ? options.categories.join(', ')
+      : 'Engine Parts & Service, Electrical, Plumbing & Water Systems, Rigging & Deck Hardware, Safety Equipment, General Supplies, Tools, Consumables, Other';
+
+    const units = options.units?.length > 0
+      ? options.units.join(', ')
+      : 'Each (ea), Box (box), Gallon (gal), Quart (qt), Liter (L), Feet (ft), Meter (m), Set (set), Pair (pr), Pack (pk)';
+
     const systemPrompt = `You are an expert at analyzing marine equipment and supply items from photos.
 Your task is to extract key information from the image and return it in a structured format.
 
@@ -154,6 +183,7 @@ Focus on identifying:
 - Brand/manufacturer (if visible)
 - Part number or model number (if visible)
 - Suggested category (where would this item belong in a boat inventory?)
+- Suggested unit of measure (how would this item typically be counted/measured?)
 
 Be specific and accurate. If you cannot determine something with confidence, use null.`;
 
@@ -162,14 +192,16 @@ Be specific and accurate. If you cannot determine something with confidence, use
 1. Item name (e.g., "Oil Filter", "Bilge Pump", "Shackle")
 2. Brand (e.g., "Racor", "Rule", "Harken")
 3. Part number (e.g., "2010PM", "500GPH", "H2161")
-4. Suggested category (choose from: Engine Parts & Service, Electrical, Plumbing & Water Systems, Rigging & Deck Hardware, Safety Equipment, General Supplies, Tools, Consumables, Other)
+4. Suggested category - choose the BEST match from: ${categories}
+5. Suggested unit - choose the BEST match from: ${units}
 
 Return your analysis in this exact JSON format:
 {
   "item_name": "extracted name or null",
   "brand": "extracted brand or null",
   "part_number": "extracted part number or null",
-  "suggested_category": "best matching category",
+  "suggested_category": "best matching category from the list",
+  "suggested_unit": "best matching unit from the list (just the name, not abbreviation)",
   "confidence": 0.0-1.0,
   "notes": "brief explanation of what you see and your reasoning"
 }`;
@@ -204,6 +236,7 @@ Return your analysis in this exact JSON format:
     requestLogger.info('Photo analysis completed (base64)', {
       item_name: analysisResult.item_name,
       brand: analysisResult.brand,
+      suggested_unit: analysisResult.suggested_unit,
       confidence: analysisResult.confidence
     });
 
@@ -214,6 +247,7 @@ Return your analysis in this exact JSON format:
         brand: analysisResult.brand,
         part_number: analysisResult.part_number,
         suggested_category: analysisResult.suggested_category,
+        suggested_unit: analysisResult.suggested_unit || null,
         confidence: analysisResult.confidence || 0,
         notes: analysisResult.notes || ''
       }
