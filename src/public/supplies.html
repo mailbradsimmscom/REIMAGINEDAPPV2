@@ -200,10 +200,13 @@
           <div class="form-row">
             <div class="form-group">
               <label for="category">Category *</label>
-              <select id="category" required>
-                <option value="">Select category...</option>
-                <!-- Populated dynamically -->
-              </select>
+              <div class="select-with-add">
+                <select id="category" required>
+                  <option value="">Select category...</option>
+                  <!-- Populated dynamically -->
+                </select>
+                <button type="button" class="btn-quick-add" onclick="window.openQuickAdd('category')" title="Add new category">+</button>
+              </div>
             </div>
 
             <div class="form-group">
@@ -235,10 +238,13 @@
 
           <div class="form-group">
             <label for="location">Storage Location</label>
-            <select id="location" class="form-select">
-              <option value="">Select location...</option>
-              <!-- Populated dynamically -->
-            </select>
+            <div class="select-with-add">
+              <select id="location" class="form-select">
+                <option value="">Select location...</option>
+                <!-- Populated dynamically -->
+              </select>
+              <button type="button" class="btn-quick-add" onclick="window.openQuickAdd('location')" title="Add new location">+</button>
+            </div>
           </div>
 
           <div class="form-group">
@@ -399,9 +405,12 @@
 
               <div class="form-group">
                 <label for="wizardCategory">Category *</label>
-                <select id="wizardCategory" required>
-                  <option value="">Select...</option>
-                </select>
+                <div class="select-with-add">
+                  <select id="wizardCategory" required>
+                    <option value="">Select...</option>
+                  </select>
+                  <button type="button" class="btn-quick-add" onclick="window.openQuickAdd('category', 'wizard')" title="Add new category">+</button>
+                </div>
               </div>
             </div>
 
@@ -426,10 +435,13 @@
 
             <div class="form-group">
               <label for="wizardLocation">Location</label>
-              <select id="wizardLocation" class="form-select">
-                <option value="">Select location...</option>
-                <!-- Populated dynamically -->
-              </select>
+              <div class="select-with-add">
+                <select id="wizardLocation" class="form-select">
+                  <option value="">Select location...</option>
+                  <!-- Populated dynamically -->
+                </select>
+                <button type="button" class="btn-quick-add" onclick="window.openQuickAdd('location', 'wizard')" title="Add new location">+</button>
+              </div>
             </div>
 
             <div class="form-group">
@@ -497,19 +509,57 @@
     </div>
   </div>
 
+  <!-- Quick Add Modal (for categories/locations) -->
+  <div class="quick-add-modal" id="quickAddModal">
+    <div class="quick-add-content">
+      <div class="quick-add-header">
+        <h3 id="quickAddTitle">Add New</h3>
+        <button class="modal-close-btn" id="quickAddClose">✕</button>
+      </div>
+      <div class="quick-add-body">
+        <div class="form-group">
+          <label for="quickAddName" id="quickAddLabel">Name</label>
+          <input type="text" id="quickAddName" placeholder="Enter name..." autofocus>
+        </div>
+      </div>
+      <div class="quick-add-footer">
+        <button type="button" class="btn btn-secondary" id="quickAddCancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="quickAddSave">Add</button>
+      </div>
+    </div>
+  </div>
+
   <!-- System Recommendations Modal -->
   <div class="system-recommendations-modal" id="systemRecommendationsModal">
     <div class="system-recommendations-content">
       <div class="system-recommendations-header">
-        <h2>System Recommendations</h2>
+        <h2>Related Systems</h2>
         <button class="modal-close-btn" id="systemRecsClose">✕</button>
       </div>
       <div class="system-recommendations-body">
-        <p class="system-recommendations-intro">
-          Based on this item's details, here are relevant boat systems found in your documentation:
-        </p>
-        <div class="system-recommendations-list" id="systemRecsContainer">
-          <!-- Recommendations will be loaded here -->
+        <!-- AI Suggestions Section -->
+        <div class="system-section">
+          <h3 class="system-section-title">🤖 AI Suggestions</h3>
+          <p class="system-section-intro">
+            Based on this item's details, here are relevant systems found in your documentation:
+          </p>
+          <div class="system-recommendations-list" id="systemRecsContainer">
+            <!-- AI recommendations will be loaded here -->
+          </div>
+        </div>
+
+        <!-- Browse All Systems Section -->
+        <div class="system-section">
+          <h3 class="system-section-title">📋 Browse All Systems</h3>
+          <p class="system-section-intro">
+            Search and select additional systems manually:
+          </p>
+          <div class="system-search-box">
+            <input type="text" id="systemSearchInput" placeholder="Search systems..." autocomplete="off">
+          </div>
+          <div class="all-systems-list" id="allSystemsContainer">
+            <!-- All systems will be loaded here -->
+          </div>
         </div>
       </div>
       <div class="system-recommendations-footer">
@@ -568,7 +618,132 @@
           window.suppliesForm.openModal();
         }
       });
+
+      // Quick Add Modal handlers
+      setupQuickAddModal();
     });
+
+    // ============================================
+    // Quick Add Modal (for categories/locations)
+    // ============================================
+    let quickAddType = null;  // 'category' or 'location'
+    let quickAddTarget = null; // 'main' or 'wizard'
+
+    function setupQuickAddModal() {
+      const modal = document.getElementById('quickAddModal');
+      const closeBtn = document.getElementById('quickAddClose');
+      const cancelBtn = document.getElementById('quickAddCancel');
+      const saveBtn = document.getElementById('quickAddSave');
+      const input = document.getElementById('quickAddName');
+
+      // Close handlers
+      closeBtn?.addEventListener('click', closeQuickAdd);
+      cancelBtn?.addEventListener('click', closeQuickAdd);
+      modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeQuickAdd();
+      });
+
+      // Save handler
+      saveBtn?.addEventListener('click', saveQuickAdd);
+
+      // Enter key to save
+      input?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          saveQuickAdd();
+        }
+        if (e.key === 'Escape') {
+          closeQuickAdd();
+        }
+      });
+    }
+
+    window.openQuickAdd = function(type, target = 'main') {
+      quickAddType = type;
+      quickAddTarget = target;
+
+      const modal = document.getElementById('quickAddModal');
+      const title = document.getElementById('quickAddTitle');
+      const label = document.getElementById('quickAddLabel');
+      const input = document.getElementById('quickAddName');
+
+      // Set title and label based on type
+      if (type === 'category') {
+        title.textContent = 'Add New Category';
+        label.textContent = 'Category Name';
+        input.placeholder = 'e.g., Engine Parts';
+      } else {
+        title.textContent = 'Add New Location';
+        label.textContent = 'Location Name';
+        input.placeholder = 'e.g., Engine Room';
+      }
+
+      // Clear and show
+      input.value = '';
+      modal.classList.add('active');
+      setTimeout(() => input.focus(), 100);
+    };
+
+    function closeQuickAdd() {
+      document.getElementById('quickAddModal').classList.remove('active');
+      quickAddType = null;
+      quickAddTarget = null;
+    }
+
+    async function saveQuickAdd() {
+      const input = document.getElementById('quickAddName');
+      const name = input.value.trim();
+
+      if (!name) {
+        input.focus();
+        return;
+      }
+
+      const saveBtn = document.getElementById('quickAddSave');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Adding...';
+
+      try {
+        const endpoint = quickAddType === 'category'
+          ? '/api/supplies/config/categories'
+          : '/api/supplies/config/locations';
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.error || 'Failed to add');
+        }
+
+        const result = await response.json();
+        const newItem = result.data;
+
+        // Refresh the dropdown(s) and select the new item
+        if (quickAddType === 'category') {
+          await window.suppliesForm.refreshCategories(newItem.id);
+          if (window.suppliesWizard) {
+            window.suppliesWizard.refreshCategories(newItem.id);
+          }
+        } else {
+          await window.suppliesForm.refreshLocations(newItem.id);
+          if (window.suppliesWizard) {
+            window.suppliesWizard.refreshLocations(newItem.id);
+          }
+        }
+
+        closeQuickAdd();
+
+      } catch (error) {
+        alert('Error: ' + error.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Add';
+      }
+    }
   </script>
 
   <!-- Mobile Navigation Component -->

@@ -1,14 +1,14 @@
 # Supplies Admin Page - Dropdown Management
 
-**Date:** 2025-11-27
-**Status:** In Progress (90% complete)
+**Date:** 2025-11-29 (Updated)
+**Status:** In Progress
 **Branch:** Stable-v4-Working
 
 ---
 
 ## Overview
 
-Creating an admin page to manage supply dropdown options (Categories, Units, Locations) and converting Location from text autocomplete to a proper dropdown.
+Creating an admin page to manage supply dropdown options (Categories, Units, Locations) and converting Location from text autocomplete to a proper dropdown. Also adding inline "quick-add" buttons so users can add new categories/locations without leaving the form.
 
 ---
 
@@ -76,138 +76,76 @@ Functions:
 ### 5. Route in app.js
 **Status:** ✅ DONE
 
-**File:** `src/app.js` (MODIFIED)
-
-Added route:
-```javascript
-app.get('/supplies/admin', async (req, res) => {
-  // serves supplies-admin.html
-});
-```
-
 ### 6. Admin Link on Supplies Page
 **Status:** ✅ DONE
-
-**File:** `src/public/supplies.html` (MODIFIED)
-
-Added under type tabs:
-```html
-<div style="margin-bottom: 1rem;">
-  <a href="/supplies/admin">⚙️ Manage Categories, Units & Locations</a>
-</div>
-```
 
 ### 7. Update supplies-api.js for Locations
 **Status:** ✅ DONE
 
-**File:** `src/public/js/supplies/supplies-api.js` (MODIFIED)
-
-Changed `getLocations()` to fetch from new endpoint:
-```javascript
-async getLocations() {
-  const response = await fetch('/api/supplies/config/locations');
-  // returns array of {id, name, description} objects
-}
-```
-
 ### 8. Update Location Fields to Select Dropdowns
-**Status:** ⚠️ PARTIALLY DONE
+**Status:** ✅ DONE (all forms converted)
 
-#### supplies.html - Desktop Modal
-**Status:** ✅ DONE
-- Changed from `<input type="text" list="locationsList">` + `<datalist>`
-- To: `<select id="location" class="form-select">`
+### 9. Quick-Add "+" Buttons for Dropdowns
+**Status:** ✅ DONE (2025-11-29)
 
-#### supplies.html - Mobile Wizard
-**Status:** ✅ DONE
-- Changed from `<input type="text" list="wizardLocationsList">` + `<datalist>`
-- To: `<select id="wizardLocation" class="form-select">`
+Added inline quick-add buttons next to Category and Location dropdowns so users can add new items without leaving the form.
 
-#### supplies-form.js
-**Status:** ✅ DONE
-- Renamed `populateLocationsDatalist()` to `populateLocationSelect()`
-- Updated to populate `<select>` with options
+**Files Modified:**
+- `src/public/supplies.html` - Added quick-add modal + "+" buttons next to dropdowns
+- `src/public/css/supplies.css` - Added styles for `.select-with-add`, `.btn-quick-add`, `.quick-add-modal`
+- `src/public/js/supplies/supplies-form.js` - Added `refreshCategories()` and `refreshLocations()` methods
+- `src/public/js/supplies/supplies-wizard.js` - Added `refreshCategories()` and `refreshLocations()` methods
 
-#### supplies-wizard.js
-**Status:** ✅ DONE
-- Updated `loadLocations()` to populate `<select>` instead of `<datalist>`
-
-#### supplies-list.js - Location Filter
-**Status:** ❌ NOT DONE - NEEDS UPDATE
-
-**File:** `src/public/js/supplies/supplies-list.js`
-**Line ~169:** `populateLocationFilter()` needs update to handle object format
-
-Current code:
-```javascript
-populateLocationFilter() {
-  const select = document.getElementById('locationFilter');
-  if (!select) return;
-
-  let html = '<option value="">All Locations</option>';
-  this.locations.forEach(loc => {
-    html += `<option value="${loc}">${loc}</option>`;  // <-- expects string
-  });
-
-  select.innerHTML = html;
-}
-```
-
-**Needs to be:**
-```javascript
-populateLocationFilter() {
-  const select = document.getElementById('locationFilter');
-  if (!select) return;
-
-  let html = '<option value="">All Locations</option>';
-  this.locations.forEach(loc => {
-    const name = typeof loc === 'string' ? loc : loc.name;
-    html += `<option value="${name}">${name}</option>`;
-  });
-
-  select.innerHTML = html;
-}
-```
+**How it works:**
+1. User taps "+" next to Category or Location dropdown
+2. Modal pops up (form data preserved underneath)
+3. User enters name and taps "Add"
+4. API saves new item
+5. Dropdown refreshes and auto-selects the new item
+6. User continues filling out form
 
 ---
 
-## What's Left To Do
+## What's IN PROGRESS
 
-### 1. Fix `populateLocationFilter()` in supplies-list.js
-**Priority:** HIGH
+### 10. Manual System Selection in Related Systems Modal
+**Status:** 🔄 IN PROGRESS (2025-11-29)
 
-Update line ~169-178 to handle object format from API.
+The "Related Systems" modal currently only shows AI-suggested systems. Need to add ability to browse and manually select from all available systems.
 
-### 2. Test Locally
-- Visit `/supplies` - verify admin link appears
-- Visit `/supplies/admin` - test all CRUD operations
-- Add/Edit supply - verify location dropdown works
-- Verify location filter on list page works
+**Files Modified So Far:**
+- `src/routes/supplies/supplies.route.js` - Added `GET /api/supplies/systems` endpoint
+- `src/public/supplies.html` - Updated modal with two sections (AI Suggestions + Browse All)
+- `src/public/css/supplies.css` - Added styles for browse section
 
-### 3. Push to Git
-```bash
-git add .
-git commit -m "Add supplies admin page for managing dropdowns"
-git push
-```
+**What's Left To Do:**
+1. Update `src/public/js/supplies/supplies-ai.js`:
+   - Load all systems from `/api/supplies/systems` when modal opens
+   - Render systems in `#allSystemsContainer`
+   - Add search/filter functionality for the search box
+   - Track manual selections separately from AI suggestions
+   - Combine both when "Accept Selected Systems" is clicked
+
+2. Test the complete flow:
+   - AI suggestions should still work
+   - Browse All should load and be searchable
+   - Both types of selections should be accepted
 
 ---
 
-## Files Changed (Summary)
+## What's Left To Do (Summary)
 
-### New Files:
-1. `src/routes/supplies/config.route.js` - CRUD API for categories, units, locations
-2. `src/public/supplies-admin.html` - Admin page HTML
-3. `src/public/js/supplies/supplies-admin.js` - Admin page JS
+### HIGH PRIORITY:
+1. **Finish Manual System Selection** (in `supplies-ai.js`):
+   - Fetch all systems when modal opens
+   - Render in browse list with checkboxes
+   - Implement search filtering
+   - Merge manual + AI selections on accept
 
-### Modified Files:
-1. `src/routes/supplies/index.js` - Mount config routes
-2. `src/app.js` - Add /supplies/admin route
-3. `src/public/supplies.html` - Admin link + location selects
-4. `src/public/js/supplies/supplies-api.js` - getLocations() uses new endpoint
-5. `src/public/js/supplies/supplies-form.js` - populateLocationSelect()
-6. `src/public/js/supplies/supplies-wizard.js` - loadLocations() for select
-7. `src/public/js/supplies/supplies-list.js` - **NEEDS FIX** for populateLocationFilter()
+### LOWER PRIORITY:
+2. Fix `populateLocationFilter()` in supplies-list.js if not already done
+3. Full end-to-end testing
+4. Push to git
 
 ---
 
@@ -230,22 +168,51 @@ git push
 | PUT | /locations/:id | Update location |
 | DELETE | /locations/:id | Delete location |
 
----
+### Systems Endpoint (for Related Systems modal)
 
-## Data Model Notes
-
-- `supply_categories` table: id, category_name, category_path
-- `supply_units` table: id, unit_name, abbreviation
-- `supply_locations` table: id, name, description (NEW)
-- `supplies.location` is still TEXT field (stores location name, not FK)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/supplies/systems | List all boat systems for manual selection |
+| POST | /api/supplies/suggest-systems | AI-powered system suggestions |
 
 ---
 
 ## Resume After Compact
 
-1. Open `src/public/js/supplies/supplies-list.js`
-2. Find `populateLocationFilter()` around line 169
-3. Update to handle object format (see code above)
-4. Test locally at `http://192.168.20.106:3000/supplies`
-5. Test admin at `http://192.168.20.106:3000/supplies/admin`
-6. Push to git when working
+To continue implementing Manual System Selection:
+
+1. Open `src/public/js/supplies/supplies-ai.js`
+
+2. Find `showSystemRecommendationsModal()` function
+
+3. Add code to:
+   - Fetch all systems: `const allSystems = await fetch('/api/supplies/systems').then(r => r.json())`
+   - Store systems: `this.allSystems = allSystems.data`
+   - Render in `#allSystemsContainer` with checkboxes
+   - Set up search input listener on `#systemSearchInput`
+
+4. Update `acceptSelectedSystems()` to include both:
+   - AI suggestions (from `#systemRecsContainer` checkboxes)
+   - Manual selections (from `#allSystemsContainer` checkboxes)
+
+5. Test at `http://localhost:3000/supplies`
+
+---
+
+## Files Changed (Summary)
+
+### New Files:
+1. `src/routes/supplies/config.route.js` - CRUD API for categories, units, locations
+2. `src/public/supplies-admin.html` - Admin page HTML
+3. `src/public/js/supplies/supplies-admin.js` - Admin page JS
+
+### Modified Files:
+1. `src/routes/supplies/index.js` - Mount config routes
+2. `src/routes/supplies/supplies.route.js` - Added `/systems` endpoint
+3. `src/app.js` - Add /supplies/admin route
+4. `src/public/supplies.html` - Admin link + location selects + quick-add modal + system sections
+5. `src/public/css/supplies.css` - Quick-add styles + browse systems styles
+6. `src/public/js/supplies/supplies-api.js` - getLocations() uses new endpoint
+7. `src/public/js/supplies/supplies-form.js` - populateLocationSelect() + refresh methods
+8. `src/public/js/supplies/supplies-wizard.js` - loadLocations() + refresh methods
+9. `src/public/js/supplies/supplies-ai.js` - **NEEDS UPDATE** for browse all systems

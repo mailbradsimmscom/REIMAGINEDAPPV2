@@ -617,6 +617,26 @@ export class SuppliesWizard {
     }
   }
 
+  // Refresh categories and optionally select a new one
+  async refreshCategories(selectId = null) {
+    await this.loadCategories();
+    if (selectId) {
+      const select = document.getElementById('wizardCategory');
+      if (select) select.value = selectId;
+    }
+  }
+
+  // Refresh locations and optionally select a new one
+  async refreshLocations(selectName = null) {
+    await this.loadLocations();
+    if (selectName) {
+      const select = document.getElementById('wizardLocation');
+      const locations = await SuppliesAPI.getLocations();
+      const loc = locations.find(l => l.id === selectName || l.name === selectName);
+      if (select && loc) select.value = loc.name;
+    }
+  }
+
   showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
     if (!container) return;

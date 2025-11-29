@@ -140,6 +140,38 @@ export class SuppliesForm {
     select.innerHTML = html;
   }
 
+  // Refresh categories from API and optionally select a new one
+  async refreshCategories(selectId = null) {
+    try {
+      this.categories = await SuppliesAPI.getCategories();
+      this.populateCategorySelect();
+
+      if (selectId) {
+        const select = document.getElementById('category');
+        if (select) select.value = selectId;
+      }
+    } catch (error) {
+      console.error('Failed to refresh categories:', error);
+    }
+  }
+
+  // Refresh locations from API and optionally select a new one
+  async refreshLocations(selectName = null) {
+    try {
+      this.locations = await SuppliesAPI.getLocations();
+      this.populateLocationSelect();
+
+      if (selectName) {
+        const select = document.getElementById('location');
+        // For locations, selectName might be the name string
+        const loc = this.locations.find(l => l.id === selectName || l.name === selectName);
+        if (select && loc) select.value = loc.name;
+      }
+    } catch (error) {
+      console.error('Failed to refresh locations:', error);
+    }
+  }
+
   async openModal(supplyId = null) {
     this.isEditMode = !!supplyId;
     this.currentSupplyId = supplyId;
