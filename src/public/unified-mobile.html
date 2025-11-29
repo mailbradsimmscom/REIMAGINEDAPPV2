@@ -177,6 +177,21 @@
             color: #333;
         }
 
+        .action-card:nth-child(7) {
+            background: linear-gradient(135deg, #667eea 0%, #00d4ff 100%);
+            color: white;
+        }
+
+        .action-card:nth-child(8) {
+            background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+            color: #757575;
+            cursor: default;
+        }
+
+        .action-card:nth-child(8):active {
+            transform: none;
+        }
+
         .more-section {
             padding: 0 16px 20px 16px;
         }
@@ -348,6 +363,14 @@
                 <div class="action-card-icon">🌤️</div>
                 <div class="action-card-title">Weather</div>
             </a>
+            <a href="/trips" class="action-card">
+                <div class="action-card-icon">⛵</div>
+                <div class="action-card-title">Trips</div>
+            </a>
+            <div class="action-card">
+                <div class="action-card-icon">🔜</div>
+                <div class="action-card-title">Coming Soon</div>
+            </div>
         </div>
         <a href="/public/anchor-watch-admin.html" id="anchorAlarmBtn" class="anchor-alarm-button inactive">
             <span id="anchorAlarmIcon">⚓</span>

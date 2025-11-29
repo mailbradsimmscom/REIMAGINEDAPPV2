@@ -6,6 +6,7 @@ import { logger } from './utils/logger.js';
 import { printRoutes } from './debug/printRoutes.js';
 import { telegramBotService } from './services/telegram-bot.service.js';
 import { anchorWatchAlertsService } from './services/anchor-watch-alerts.service.js';
+import { startWeatherCollector, stopWeatherCollector } from './services/trips/weather-collector.service.js';
 
 function getPort() {
   const { PORT } = getEnv({ loose: true });
@@ -23,25 +24,35 @@ const server = app.listen(port, async () => {
   // Also print routes after listen to confirm final state
   printRoutes(app, logger);
 
-  // Initialize Telegram bot and alerts in PRODUCTION ONLY
-  // This prevents polling conflicts when running multiple instances locally
+  // Initialize background services
   const env = getEnv();
+
+  // Weather collector runs in ALL environments
+  try {
+    startWeatherCollector();
+    logger.info('Weather collector started');
+  } catch (error) {
+    logger.warn('Weather collector failed to start', { error: error.message });
+  }
+
+  // Other services run in PRODUCTION ONLY (prevents polling conflicts locally)
   if (env.NODE_ENV === 'production') {
     try {
       await telegramBotService.start();
       anchorWatchAlertsService.start();
-      logger.info('Telegram bot and alerts initialized (production mode)');
+      logger.info('Background services initialized (production mode)');
     } catch (error) {
-      logger.warn('Telegram initialization failed (continuing without it)', { error: error.message });
+      logger.warn('Background service initialization failed (continuing without it)', { error: error.message });
     }
   } else {
-    logger.info('Telegram bot disabled in development mode (production only)');
+    logger.info('Telegram/Anchor services disabled in development mode');
   }
 });
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully');
+  stopWeatherCollector();
   const env = getEnv();
   if (env.NODE_ENV === 'production') {
     await telegramBotService.stop();
@@ -55,6 +66,7 @@ process.on('SIGTERM', async () => {
 
 process.on('SIGINT', async () => {
   logger.info('SIGINT received, shutting down gracefully');
+  stopWeatherCollector();
   const env = getEnv();
   if (env.NODE_ENV === 'production') {
     await telegramBotService.stop();

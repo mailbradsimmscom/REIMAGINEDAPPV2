@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Trip Details | BoatOS</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .delete-btn {
+            color: #FF3B30;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 300px;
+            background: white;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .card {
+            background: white;
+            margin: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: #F2F2F7;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #8E8E93;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .stat-unit {
+            font-size: 12px;
+            color: #8E8E93;
+            font-weight: 400;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #E5E5EA;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 16px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -20px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #007AFF;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            color: #8E8E93;
+            margin-bottom: 2px;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: #000;
+        }
+
+        /* Weather Summary */
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .weather-item {
+            text-align: center;
+            padding: 8px;
+        }
+
+        .weather-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .weather-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .weather-label {
+            font-size: 10px;
+            color: #8E8E93;
+            text-transform: uppercase;
+        }
+
+        /* Comments */
+        .comment-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #F2F2F7;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .comment-time {
+            font-size: 11px;
+            color: #8E8E93;
+        }
+
+        .add-comment-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .add-comment-btn {
+            padding: 10px 16px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-comment-btn:disabled {
+            opacity: 0.5;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: #8E8E93;
+            font-size: 14px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1C1C1E;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Delete Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            margin: 20px;
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-btn.cancel {
+            background: #E5E5EA;
+            color: #000;
+        }
+
+        .modal-btn.danger {
+            background: #FF3B30;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="/trips" class="back-button">&#8249;</a>
+            <h1 id="tripTitle">Loading...</h1>
+        </div>
+        <button class="delete-btn" id="deleteBtn">Delete</button>
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <div>Loading trip details...</div>
+    </div>
+
+    <!-- Content (hidden until loaded) -->
+    <div id="contentContainer" style="display: none;">
+        <!-- Map -->
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="card">
+            <div class="card-title">Summary</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Distance</div>
+                    <div class="stat-value" id="statDistance">0.0 <span class="stat-unit">nm</span></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Duration</div>
+                    <div class="stat-value" id="statDuration">0h 0m</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Avg Speed</div>
+                    <div class="stat-value" id="statAvgSpeed">0.0 <span class="stat-unit">kts</span></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Max Speed</div>
+                    <div class="stat-value" id="statMaxSpeed">0.0 <span class="stat-unit">kts</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sail Events -->
+        <div class="card" id="sailEventsCard">
+            <div class="card-title">Sail Events</div>
+            <div class="timeline" id="sailEventsTimeline">
+                <div class="empty-state">No sail events recorded</div>
+            </div>
+        </div>
+
+        <!-- Weather Summary -->
+        <div class="card" id="weatherCard">
+            <div class="card-title">Weather Conditions</div>
+            <div class="weather-grid" id="weatherGrid">
+                <div class="weather-item">
+                    <div class="weather-icon">💨</div>
+                    <div class="weather-value" id="weatherWind">--</div>
+                    <div class="weather-label">Wind</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-icon">🌊</div>
+                    <div class="weather-value" id="weatherWaves">--</div>
+                    <div class="weather-label">Waves</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-icon">🌡️</div>
+                    <div class="weather-value" id="weatherTemp">--</div>
+                    <div class="weather-label">Temp</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments -->
+        <div class="card">
+            <div class="card-title">Notes</div>
+            <div id="commentsList">
+                <div class="empty-state">No notes yet</div>
+            </div>
+            <div class="add-comment-form">
+                <input type="text" class="comment-input" id="commentInput" placeholder="Add a note...">
+                <button class="add-comment-btn" id="addCommentBtn">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-title">Delete Trip?</div>
+            <div class="modal-text">This will permanently delete this trip and all its data.</div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="cancelDelete">Cancel</button>
+                <button class="modal-btn danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Trip Detail JS -->
+    <script src="/js/trips/trip-detail.js"></script>
+
+    <!-- Mobile Navigation -->
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

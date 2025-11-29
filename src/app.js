@@ -7,6 +7,7 @@ import { logger } from './utils/logger.js';
 import { getEnv } from './config/env.js';
 import adminRouter from './routes/admin/index.js';
 import suppliesRouter from './routes/supplies/index.js';
+import tripsRouter from './routes/trips/index.js';
 
 // Create Express app
 const app = express();
@@ -141,6 +142,9 @@ app.use('/admin/api', adminRouter);
 // Supplies API routes
 app.use('/api/supplies', suppliesRouter);
 
+// Trips API routes
+app.use('/api/trips', tripsRouter);
+
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {
   try {
@@ -171,6 +175,28 @@ app.get('/supplies/admin', async (req, res) => {
     res.end(content);
   } catch (error) {
     res.status(404).json({ error: 'Supplies admin page not found' });
+  }
+});
+
+// Trips tracking page
+app.get('/trips', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/trips.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Trips page not found' });
+  }
+});
+
+// Trip detail page
+app.get('/trips/detail', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/trip-detail.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Trip detail page not found' });
   }
 });
 
