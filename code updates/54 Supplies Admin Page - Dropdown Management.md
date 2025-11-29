@@ -1,8 +1,8 @@
 # Supplies Admin Page - Dropdown Management
 
 **Date:** 2025-11-29 (Updated)
-**Status:** In Progress
-**Branch:** Stable-v4-Working
+**Status:** ✅ Complete
+**Branch:** Agent-Enablement
 
 ---
 
@@ -104,48 +104,32 @@ Added inline quick-add buttons next to Category and Location dropdowns so users 
 5. Dropdown refreshes and auto-selects the new item
 6. User continues filling out form
 
----
-
-## What's IN PROGRESS
-
 ### 10. Manual System Selection in Related Systems Modal
-**Status:** 🔄 IN PROGRESS (2025-11-29)
+**Status:** ✅ DONE (2025-11-29)
 
-The "Related Systems" modal currently only shows AI-suggested systems. Need to add ability to browse and manually select from all available systems.
+Added ability to browse and manually select from all available systems alongside AI suggestions.
 
-**Files Modified So Far:**
-- `src/routes/supplies/supplies.route.js` - Added `GET /api/supplies/systems` endpoint
+**Files Modified:**
+- `src/routes/supplies/supplies.route.js` - Added `GET /api/supplies/systems` endpoint (moved before `/:id` to fix routing)
 - `src/public/supplies.html` - Updated modal with two sections (AI Suggestions + Browse All)
-- `src/public/css/supplies.css` - Added styles for browse section
+- `src/public/css/supplies.css` - Added styles for browse section (`.system-browse-item`, `.system-browse-checkbox`, etc.)
+- `src/public/js/supplies/supplies-ai.js` - Added `loadAllSystems()`, `renderAllSystems()`, `filterSystems()` methods
 
-**What's Left To Do:**
-1. Update `src/public/js/supplies/supplies-ai.js`:
-   - Load all systems from `/api/supplies/systems` when modal opens
-   - Render systems in `#allSystemsContainer`
-   - Add search/filter functionality for the search box
-   - Track manual selections separately from AI suggestions
-   - Combine both when "Accept Selected Systems" is clicked
-
-2. Test the complete flow:
-   - AI suggestions should still work
-   - Browse All should load and be searchable
-   - Both types of selections should be accepted
+**How it works:**
+1. Modal opens and loads AI suggestions + all systems in parallel
+2. AI suggestions appear at top with confidence scores
+3. "Browse All Systems" section shows searchable list of all boat systems
+4. User can select from either section (checkboxes work independently)
+5. "Accept Selected Systems" combines all selections and passes to form
 
 ---
 
 ## What's Left To Do (Summary)
 
-### HIGH PRIORITY:
-1. **Finish Manual System Selection** (in `supplies-ai.js`):
-   - Fetch all systems when modal opens
-   - Render in browse list with checkboxes
-   - Implement search filtering
-   - Merge manual + AI selections on accept
-
 ### LOWER PRIORITY:
-2. Fix `populateLocationFilter()` in supplies-list.js if not already done
-3. Full end-to-end testing
-4. Push to git
+1. Fix `populateLocationFilter()` in supplies-list.js if not already done
+2. Full end-to-end testing
+3. Push to git
 
 ---
 
@@ -177,28 +161,6 @@ The "Related Systems" modal currently only shows AI-suggested systems. Need to a
 
 ---
 
-## Resume After Compact
-
-To continue implementing Manual System Selection:
-
-1. Open `src/public/js/supplies/supplies-ai.js`
-
-2. Find `showSystemRecommendationsModal()` function
-
-3. Add code to:
-   - Fetch all systems: `const allSystems = await fetch('/api/supplies/systems').then(r => r.json())`
-   - Store systems: `this.allSystems = allSystems.data`
-   - Render in `#allSystemsContainer` with checkboxes
-   - Set up search input listener on `#systemSearchInput`
-
-4. Update `acceptSelectedSystems()` to include both:
-   - AI suggestions (from `#systemRecsContainer` checkboxes)
-   - Manual selections (from `#allSystemsContainer` checkboxes)
-
-5. Test at `http://localhost:3000/supplies`
-
----
-
 ## Files Changed (Summary)
 
 ### New Files:
@@ -208,11 +170,11 @@ To continue implementing Manual System Selection:
 
 ### Modified Files:
 1. `src/routes/supplies/index.js` - Mount config routes
-2. `src/routes/supplies/supplies.route.js` - Added `/systems` endpoint
+2. `src/routes/supplies/supplies.route.js` - Added `/systems` endpoint (before `/:id` route)
 3. `src/app.js` - Add /supplies/admin route
 4. `src/public/supplies.html` - Admin link + location selects + quick-add modal + system sections
 5. `src/public/css/supplies.css` - Quick-add styles + browse systems styles
 6. `src/public/js/supplies/supplies-api.js` - getLocations() uses new endpoint
 7. `src/public/js/supplies/supplies-form.js` - populateLocationSelect() + refresh methods
 8. `src/public/js/supplies/supplies-wizard.js` - loadLocations() + refresh methods
-9. `src/public/js/supplies/supplies-ai.js` - **NEEDS UPDATE** for browse all systems
+9. `src/public/js/supplies/supplies-ai.js` - Added browse all systems functionality

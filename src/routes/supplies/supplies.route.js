@@ -202,6 +202,41 @@ router.get('/system/:assetUid', async (req, res) => {
 });
 
 /**
+ * GET /api/supplies/systems
+ * Get all boat systems for manual selection
+ */
+router.get('/systems', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const systems = await listMinimalSystems();
+
+    // Transform to a user-friendly format with display name
+    const formatted = systems.map(s => ({
+      asset_uid: s.asset_uid,
+      display_name: s.system_norm || `${s.manufacturer_norm} ${s.model_norm}`.trim(),
+      manufacturer: s.manufacturer_norm,
+      model: s.model_norm
+    }));
+
+    requestLogger.info('Listed systems for supplies', { count: formatted.length });
+
+    return res.json({
+      success: true,
+      data: formatted,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error listing systems', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
  * GET /api/supplies/:id
  * Get single supply by ID
  */
@@ -390,41 +425,6 @@ router.post('/suggest-systems', async (req, res) => {
     });
   } catch (error) {
     requestLogger.error('Error suggesting systems', { error: error.message, itemData: req.body });
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-      requestId: res.locals.requestId
-    });
-  }
-});
-
-/**
- * GET /api/supplies/systems
- * Get all boat systems for manual selection
- */
-router.get('/systems', async (req, res) => {
-  const requestLogger = logger.createRequestLogger();
-
-  try {
-    const systems = await listMinimalSystems();
-
-    // Transform to a user-friendly format with display name
-    const formatted = systems.map(s => ({
-      asset_uid: s.asset_uid,
-      display_name: s.system_norm || `${s.manufacturer_norm} ${s.model_norm}`.trim(),
-      manufacturer: s.manufacturer_norm,
-      model: s.model_norm
-    }));
-
-    requestLogger.info('Listed systems for supplies', { count: formatted.length });
-
-    return res.json({
-      success: true,
-      data: formatted,
-      requestId: res.locals.requestId
-    });
-  } catch (error) {
-    requestLogger.error('Error listing systems', { error: error.message });
     return res.status(500).json({
       success: false,
       error: error.message,

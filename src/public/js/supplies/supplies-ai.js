@@ -7,6 +7,8 @@ export class SuppliesAI {
   constructor() {
     this.selectedSystems = [];
     this.currentSuggestions = [];
+    this.allSystems = [];
+    this.filteredSystems = [];
     this.init();
   }
 
@@ -33,6 +35,11 @@ export class SuppliesAI {
           this.closeSystemRecommendationsModal();
         }
       }
+    });
+
+    // Search input for browsing all systems
+    document.getElementById('systemSearchInput')?.addEventListener('input', (e) => {
+      this.filterSystems(e.target.value);
     });
   }
 
@@ -113,11 +120,15 @@ export class SuppliesAI {
     try {
       const modal = document.getElementById('systemRecommendationsModal');
       const container = document.getElementById('systemRecsContainer');
+      const allSystemsContainer = document.getElementById('allSystemsContainer');
 
       if (!modal || !container) {
         console.error('System recommendations modal not found');
         return;
       }
+
+      // Reset selections
+      this.selectedSystems = [];
 
       // Show loading state
       container.innerHTML = `
@@ -126,12 +137,27 @@ export class SuppliesAI {
           <p>Searching documentation for relevant systems...</p>
         </div>
       `;
+      if (allSystemsContainer) {
+        allSystemsContainer.innerHTML = `
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading systems...</p>
+          </div>
+        `;
+      }
       modal.classList.add('active');
 
-      // Get recommendations from API
-      const data = await this.getSystemRecommendations(itemData);
+      // Clear search input
+      const searchInput = document.getElementById('systemSearchInput');
+      if (searchInput) searchInput.value = '';
 
-      this.currentSuggestions = data.suggestions || [];
+      // Load AI recommendations and all systems in parallel
+      const [aiData] = await Promise.all([
+        this.getSystemRecommendations(itemData),
+        this.loadAllSystems()
+      ]);
+
+      this.currentSuggestions = aiData.suggestions || [];
 
       if (this.currentSuggestions.length === 0) {
         container.innerHTML = `
@@ -200,6 +226,85 @@ export class SuppliesAI {
       modal.classList.remove('active');
     }
     this.selectedSystems = [];
+  }
+
+  /**
+   * Load all systems for manual browsing
+   */
+  async loadAllSystems() {
+    try {
+      const response = await fetch('/api/supplies/systems');
+      if (!response.ok) {
+        throw new Error(`Failed to load systems: ${response.status}`);
+      }
+      const result = await response.json();
+      this.allSystems = result.data || [];
+      this.filteredSystems = [...this.allSystems];
+      this.renderAllSystems();
+    } catch (error) {
+      console.error('Error loading all systems:', error);
+      const container = document.getElementById('allSystemsContainer');
+      if (container) {
+        container.innerHTML = `
+          <div class="error-state">
+            <p>Failed to load systems</p>
+          </div>
+        `;
+      }
+    }
+  }
+
+  /**
+   * Render all systems list
+   */
+  renderAllSystems() {
+    const container = document.getElementById('allSystemsContainer');
+    if (!container) return;
+
+    if (this.filteredSystems.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <p>No systems found</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = this.filteredSystems.map(system => {
+      const isSelected = this.selectedSystems.includes(system.asset_uid);
+      return `
+        <div class="system-browse-item ${isSelected ? 'selected' : ''}">
+          <label class="system-browse-checkbox">
+            <input
+              type="checkbox"
+              data-asset-uid="${system.asset_uid}"
+              ${isSelected ? 'checked' : ''}
+              onchange="window.suppliesAI.toggleSystemSelection('${system.asset_uid}'); this.closest('.system-browse-item').classList.toggle('selected')"
+            >
+            <span class="system-browse-name">${this.escapeHtml(system.display_name)}</span>
+            ${system.manufacturer ? `<span class="system-browse-mfr">${this.escapeHtml(system.manufacturer)}</span>` : ''}
+          </label>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /**
+   * Filter systems by search query
+   */
+  filterSystems(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) {
+      this.filteredSystems = [...this.allSystems];
+    } else {
+      this.filteredSystems = this.allSystems.filter(system => {
+        const displayName = (system.display_name || '').toLowerCase();
+        const manufacturer = (system.manufacturer || '').toLowerCase();
+        const model = (system.model || '').toLowerCase();
+        return displayName.includes(q) || manufacturer.includes(q) || model.includes(q);
+      });
+    }
+    this.renderAllSystems();
   }
 
   /**
