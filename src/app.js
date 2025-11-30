@@ -8,6 +8,7 @@ import { getEnv } from './config/env.js';
 import adminRouter from './routes/admin/index.js';
 import suppliesRouter from './routes/supplies/index.js';
 import tripsRouter from './routes/trips/index.js';
+import gpsRouter from './routes/gps.route.js';
 
 // Create Express app
 const app = express();
@@ -144,6 +145,9 @@ app.use('/api/supplies', suppliesRouter);
 
 // Trips API routes
 app.use('/api/trips', tripsRouter);
+
+// GPS API routes (public, for position monitor)
+app.use('/api/gps', gpsRouter);
 
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {

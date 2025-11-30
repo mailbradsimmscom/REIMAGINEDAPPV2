@@ -92,14 +92,19 @@
         }
 
         .position-display {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .position-item {
             text-align: center;
         }
+
+        .position-line {
+            font-size: 28px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+            margin-bottom: 8px;
+        }
+
+        .position-line.less { color: var(--primary-color); }
+        .position-line.more { color: #FF9500; }
 
         .position-label {
             font-size: 12px;
@@ -107,14 +112,11 @@
             margin-bottom: 4px;
         }
 
-        .position-value {
-            font-size: 28px;
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
+        .position-timestamp {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 12px;
         }
-
-        .position-value.less { color: var(--primary-color); }
-        .position-value.more { color: #FF9500; }
 
         .input-group {
             margin-bottom: 16px;
@@ -229,12 +231,6 @@
         .comparison-value.match { color: var(--success-color); }
         .comparison-value.mismatch { color: var(--error-color); }
 
-        .no-reference {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-secondary);
-        }
-
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -243,6 +239,13 @@
             text-decoration: none;
             font-size: 16px;
             margin-bottom: 16px;
+        }
+
+        .error-message {
+            text-align: center;
+            color: var(--error-color);
+            font-size: 14px;
+            padding: 12px;
         }
     </style>
 </head>
@@ -260,26 +263,23 @@
     <div class="card">
         <div class="card-title">Current Position</div>
         <div class="position-display">
-            <div class="position-item">
-                <div class="position-label">Latitude</div>
-                <div class="position-value" id="currentLat">---.---</div>
-            </div>
-            <div class="position-item">
-                <div class="position-label">Longitude</div>
-                <div class="position-value" id="currentLon">---.---</div>
-            </div>
+            <div class="position-label">Latitude</div>
+            <div class="position-line" id="currentLat">N --°--.---'</div>
+            <div class="position-label">Longitude</div>
+            <div class="position-line" id="currentLon">W --°--.---'</div>
+            <div class="position-timestamp" id="positionTimestamp">Last update: --</div>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-title">Reference Position</div>
+        <div class="card-title">Reference Position (Decimal Degrees)</div>
         <div class="input-group">
             <label>Latitude</label>
-            <input type="number" step="0.001" id="refLat" placeholder="0.000">
+            <input type="number" step="0.0001" id="refLat" placeholder="13.2962">
         </div>
         <div class="input-group">
             <label>Longitude</label>
-            <input type="number" step="0.001" id="refLon" placeholder="0.000">
+            <input type="number" step="0.0001" id="refLon" placeholder="-61.2356">
         </div>
         <div class="button-row">
             <button class="btn btn-secondary" id="fillCurrentBtn">Fill Current</button>
@@ -307,14 +307,15 @@
 
     <script>
         // State
-        let currentPosition = { lat: null, lon: null };
+        let currentPosition = { lat: null, lon: null, timestamp: null };
         let referencePosition = { lat: null, lon: null };
         let expectation = 'less'; // 'less' or 'more'
-        let watchId = null;
+        let pollInterval = null;
 
         // DOM elements
         const currentLatEl = document.getElementById('currentLat');
         const currentLonEl = document.getElementById('currentLon');
+        const positionTimestampEl = document.getElementById('positionTimestamp');
         const refLatInput = document.getElementById('refLat');
         const refLonInput = document.getElementById('refLon');
         const fillCurrentBtn = document.getElementById('fillCurrentBtn');
@@ -326,6 +327,31 @@
         const comparisonSection = document.getElementById('comparisonSection');
         const latComparison = document.getElementById('latComparison');
         const lonComparison = document.getElementById('lonComparison');
+
+        /**
+         * Convert decimal degrees to degrees and decimal minutes (DDM)
+         * @param {number} decimal - Decimal degrees
+         * @param {boolean} isLat - True for latitude, false for longitude
+         * @returns {string} Formatted string like "N 13°17.773'" or "W 61°14.135'"
+         */
+        function toDDM(decimal, isLat) {
+            if (decimal === null || decimal === undefined || isNaN(decimal)) {
+                return isLat ? "N --°--.---'" : "W --°--.---'";
+            }
+
+            const abs = Math.abs(decimal);
+            const degrees = Math.floor(abs);
+            const minutes = (abs - degrees) * 60;
+
+            let direction;
+            if (isLat) {
+                direction = decimal >= 0 ? 'N' : 'S';
+            } else {
+                direction = decimal >= 0 ? 'E' : 'W';
+            }
+
+            return `${direction} ${degrees}°${minutes.toFixed(3)}'`;
+        }
 
         // Load saved state from localStorage
         function loadState() {
@@ -352,11 +378,40 @@
             }));
         }
 
+        // Fetch current GPS position from API
+        async function fetchGpsPosition() {
+            try {
+                const response = await fetch('/api/gps/current');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    currentPosition.lat = result.data.latitude;
+                    currentPosition.lon = result.data.longitude;
+                    currentPosition.timestamp = result.data.timestamp;
+                    updatePositionDisplay();
+                } else {
+                    currentLatEl.textContent = "N --°--.---'";
+                    currentLonEl.textContent = "W --°--.---'";
+                    positionTimestampEl.textContent = 'No GPS data available';
+                }
+            } catch (error) {
+                console.error('Error fetching GPS position:', error);
+                currentLatEl.textContent = 'Error';
+                currentLonEl.textContent = 'Error';
+                positionTimestampEl.textContent = 'Connection error';
+            }
+        }
+
         // Update position display
         function updatePositionDisplay() {
             if (currentPosition.lat !== null) {
-                currentLatEl.textContent = currentPosition.lat.toFixed(3);
-                currentLonEl.textContent = currentPosition.lon.toFixed(3);
+                currentLatEl.textContent = toDDM(currentPosition.lat, true);
+                currentLonEl.textContent = toDDM(currentPosition.lon, false);
+
+                if (currentPosition.timestamp) {
+                    const ts = new Date(currentPosition.timestamp);
+                    positionTimestampEl.textContent = `Last update: ${ts.toLocaleTimeString()}`;
+                }
             }
             updateStatus();
         }
@@ -373,6 +428,8 @@
                 statusIndicator.className = 'status-indicator neutral';
                 statusText.textContent = 'No Reference Set';
                 comparisonSection.style.display = 'none';
+                currentLatEl.className = 'position-line';
+                currentLonEl.className = 'position-line';
                 return;
             }
 
@@ -402,8 +459,8 @@
             lonComparison.className = 'comparison-value ' + (lonMatches ? 'match' : 'mismatch');
 
             // Update current position styling
-            currentLatEl.className = 'position-value ' + (latIsLess ? 'less' : 'more');
-            currentLonEl.className = 'position-value ' + (lonIsLess ? 'less' : 'more');
+            currentLatEl.className = 'position-line ' + (latIsLess ? 'less' : 'more');
+            currentLonEl.className = 'position-line ' + (lonIsLess ? 'less' : 'more');
 
             // Overall status
             if (latMatches && lonMatches) {
@@ -415,37 +472,21 @@
             }
         }
 
-        // Start watching position
-        function startWatchingPosition() {
-            if ('geolocation' in navigator) {
-                watchId = navigator.geolocation.watchPosition(
-                    (position) => {
-                        currentPosition.lat = position.coords.latitude;
-                        currentPosition.lon = position.coords.longitude;
-                        updatePositionDisplay();
-                    },
-                    (error) => {
-                        console.error('Geolocation error:', error);
-                        currentLatEl.textContent = 'Error';
-                        currentLonEl.textContent = 'Error';
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 5000
-                    }
-                );
-            } else {
-                currentLatEl.textContent = 'N/A';
-                currentLonEl.textContent = 'N/A';
-            }
+        // Start polling for GPS position
+        function startPolling() {
+            // Initial fetch
+            fetchGpsPosition();
+
+            // Poll every 5 seconds
+            pollInterval = setInterval(fetchGpsPosition, 5000);
         }
 
         // Event listeners
         fillCurrentBtn.addEventListener('click', () => {
             if (currentPosition.lat !== null) {
-                refLatInput.value = currentPosition.lat.toFixed(3);
-                refLonInput.value = currentPosition.lon.toFixed(3);
+                // Store as decimal degrees (full precision)
+                refLatInput.value = currentPosition.lat.toFixed(6);
+                refLonInput.value = currentPosition.lon.toFixed(6);
             }
         });
 
@@ -477,7 +518,7 @@
 
         // Initialize
         loadState();
-        startWatchingPosition();
+        startPolling();
     </script>
 
     <!-- Mobile Navigation Component -->

@@ -691,7 +691,7 @@
         }
 
         // Update position monitor icon color based on status
-        function updatePositionMonitorStatus() {
+        async function updatePositionMonitorStatus() {
             const card = document.getElementById('positionMonitorCard');
             const icon = document.getElementById('positionMonitorIcon');
             if (!card || !icon) return;
@@ -708,39 +708,42 @@
                 return;
             }
 
-            // Get current position and check status
-            if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const currentLat = position.coords.latitude;
-                        const currentLon = position.coords.longitude;
-                        const refLat = state.reference.lat;
-                        const refLon = state.reference.lon;
-                        const expectation = state.expectation || 'less';
+            // Get current position from GPS API
+            try {
+                const response = await fetch('/api/gps/current');
+                const result = await response.json();
 
-                        const latIsLess = currentLat < refLat;
-                        const lonIsLess = currentLon < refLon;
+                if (!result.success || !result.data) {
+                    icon.textContent = '📍';
+                    return;
+                }
 
-                        let latMatches, lonMatches;
-                        if (expectation === 'less') {
-                            latMatches = latIsLess;
-                            lonMatches = lonIsLess;
-                        } else {
-                            latMatches = !latIsLess;
-                            lonMatches = !lonIsLess;
-                        }
+                const currentLat = result.data.latitude;
+                const currentLon = result.data.longitude;
+                const refLat = state.reference.lat;
+                const refLon = state.reference.lon;
+                const expectation = state.expectation || 'less';
 
-                        if (latMatches && lonMatches) {
-                            icon.textContent = '🟢';
-                        } else {
-                            icon.textContent = '🔴';
-                        }
-                    },
-                    () => {
-                        icon.textContent = '📍';
-                    },
-                    { timeout: 5000 }
-                );
+                const latIsLess = currentLat < refLat;
+                const lonIsLess = currentLon < refLon;
+
+                let latMatches, lonMatches;
+                if (expectation === 'less') {
+                    latMatches = latIsLess;
+                    lonMatches = lonIsLess;
+                } else {
+                    latMatches = !latIsLess;
+                    lonMatches = !lonIsLess;
+                }
+
+                if (latMatches && lonMatches) {
+                    icon.textContent = '🟢';
+                } else {
+                    icon.textContent = '🔴';
+                }
+            } catch (error) {
+                console.error('Error fetching GPS position:', error);
+                icon.textContent = '📍';
             }
         }
 
