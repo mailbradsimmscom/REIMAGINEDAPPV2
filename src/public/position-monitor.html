@@ -118,32 +118,57 @@
             margin-top: 12px;
         }
 
-        .input-group {
-            margin-bottom: 16px;
+        .ddm-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
-        .input-group label {
-            display: block;
+        .ddm-input-row label {
             font-size: 14px;
             font-weight: 500;
-            margin-bottom: 8px;
             color: var(--text-secondary);
+            width: 30px;
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 14px 16px;
+        .direction-select {
+            padding: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--surface-color);
+            width: 60px;
+            text-align: center;
+        }
+
+        .degrees-input {
+            padding: 12px;
             font-size: 18px;
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 10px;
             background: var(--surface-color);
+            width: 70px;
+            text-align: center;
             font-variant-numeric: tabular-nums;
         }
 
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        .minutes-input {
+            padding: 12px;
+            font-size: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--surface-color);
+            width: 110px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .ddm-symbol {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         .button-row {
@@ -241,11 +266,10 @@
             margin-bottom: 16px;
         }
 
-        .error-message {
-            text-align: center;
-            color: var(--error-color);
-            font-size: 14px;
-            padding: 12px;
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
         }
     </style>
 </head>
@@ -272,14 +296,28 @@
     </div>
 
     <div class="card">
-        <div class="card-title">Reference Position (Decimal Degrees)</div>
-        <div class="input-group">
-            <label>Latitude</label>
-            <input type="number" step="0.0001" id="refLat" placeholder="13.2962">
+        <div class="card-title">Reference Position</div>
+        <div class="ddm-input-row">
+            <label>Lat</label>
+            <select class="direction-select" id="refLatDir">
+                <option value="N">N</option>
+                <option value="S">S</option>
+            </select>
+            <input type="number" class="degrees-input" id="refLatDeg" placeholder="13" min="0" max="90">
+            <span class="ddm-symbol">°</span>
+            <input type="number" class="minutes-input" id="refLatMin" placeholder="17.775" step="0.001" min="0" max="59.999">
+            <span class="ddm-symbol">'</span>
         </div>
-        <div class="input-group">
-            <label>Longitude</label>
-            <input type="number" step="0.0001" id="refLon" placeholder="-61.2356">
+        <div class="ddm-input-row">
+            <label>Lon</label>
+            <select class="direction-select" id="refLonDir">
+                <option value="E">E</option>
+                <option value="W" selected>W</option>
+            </select>
+            <input type="number" class="degrees-input" id="refLonDeg" placeholder="61" min="0" max="180">
+            <span class="ddm-symbol">°</span>
+            <input type="number" class="minutes-input" id="refLonMin" placeholder="14.135" step="0.001" min="0" max="59.999">
+            <span class="ddm-symbol">'</span>
         </div>
         <div class="button-row">
             <button type="button" class="btn btn-secondary" id="fillCurrentBtn">Fill Current</button>
@@ -309,15 +347,19 @@
         // State
         let currentPosition = { lat: null, lon: null, timestamp: null };
         let referencePosition = { lat: null, lon: null };
-        let expectation = 'less'; // 'less' or 'more'
+        let expectation = 'less';
         let pollInterval = null;
 
         // DOM elements
         const currentLatEl = document.getElementById('currentLat');
         const currentLonEl = document.getElementById('currentLon');
         const positionTimestampEl = document.getElementById('positionTimestamp');
-        const refLatInput = document.getElementById('refLat');
-        const refLonInput = document.getElementById('refLon');
+        const refLatDir = document.getElementById('refLatDir');
+        const refLatDeg = document.getElementById('refLatDeg');
+        const refLatMin = document.getElementById('refLatMin');
+        const refLonDir = document.getElementById('refLonDir');
+        const refLonDeg = document.getElementById('refLonDeg');
+        const refLonMin = document.getElementById('refLonMin');
         const fillCurrentBtn = document.getElementById('fillCurrentBtn');
         const saveBtn = document.getElementById('saveBtn');
         const expectLessBtn = document.getElementById('expectLess');
@@ -329,27 +371,40 @@
         const lonComparison = document.getElementById('lonComparison');
 
         /**
-         * Convert decimal degrees to degrees and decimal minutes (DDM)
-         * @param {number} decimal - Decimal degrees
-         * @param {boolean} isLat - True for latitude, false for longitude
-         * @returns {string} Formatted string like "N 13°17.773'" or "W 61°14.135'"
+         * Convert decimal degrees to DDM components
          */
-        function toDDM(decimal, isLat) {
-            if (decimal === null || decimal === undefined || isNaN(decimal)) {
-                return isLat ? "N --°--.---'" : "W --°--.---'";
-            }
-
+        function decimalToDDM(decimal, isLat) {
             const abs = Math.abs(decimal);
             const degrees = Math.floor(abs);
             const minutes = (abs - degrees) * 60;
-
             let direction;
             if (isLat) {
                 direction = decimal >= 0 ? 'N' : 'S';
             } else {
                 direction = decimal >= 0 ? 'E' : 'W';
             }
+            return { direction, degrees, minutes };
+        }
 
+        /**
+         * Convert DDM to decimal degrees
+         */
+        function ddmToDecimal(direction, degrees, minutes) {
+            const decimal = parseFloat(degrees) + parseFloat(minutes) / 60;
+            if (direction === 'S' || direction === 'W') {
+                return -decimal;
+            }
+            return decimal;
+        }
+
+        /**
+         * Format decimal degrees as DDM string
+         */
+        function toDDM(decimal, isLat) {
+            if (decimal === null || decimal === undefined || isNaN(decimal)) {
+                return isLat ? "N --°--.---'" : "W --°--.---'";
+            }
+            const { direction, degrees, minutes } = decimalToDDM(decimal, isLat);
             return `${direction} ${degrees}°${minutes.toFixed(3)}'`;
         }
 
@@ -362,8 +417,15 @@
                 expectation = state.expectation || 'less';
 
                 if (referencePosition.lat !== null) {
-                    refLatInput.value = referencePosition.lat;
-                    refLonInput.value = referencePosition.lon;
+                    const latDDM = decimalToDDM(referencePosition.lat, true);
+                    refLatDir.value = latDDM.direction;
+                    refLatDeg.value = latDDM.degrees;
+                    refLatMin.value = latDDM.minutes.toFixed(3);
+
+                    const lonDDM = decimalToDDM(referencePosition.lon, false);
+                    refLonDir.value = lonDDM.direction;
+                    refLonDeg.value = lonDDM.degrees;
+                    refLonMin.value = lonDDM.minutes.toFixed(3);
                 }
 
                 updateExpectationUI();
@@ -474,29 +536,34 @@
 
         // Start polling for GPS position
         function startPolling() {
-            // Initial fetch
             fetchGpsPosition();
-
-            // Poll every 5 seconds
             pollInterval = setInterval(fetchGpsPosition, 5000);
         }
 
         // Event listeners
         fillCurrentBtn.addEventListener('click', () => {
             if (currentPosition.lat !== null) {
-                // Store as decimal degrees (full precision)
-                refLatInput.value = currentPosition.lat.toFixed(6);
-                refLonInput.value = currentPosition.lon.toFixed(6);
+                const latDDM = decimalToDDM(currentPosition.lat, true);
+                refLatDir.value = latDDM.direction;
+                refLatDeg.value = latDDM.degrees;
+                refLatMin.value = latDDM.minutes.toFixed(3);
+
+                const lonDDM = decimalToDDM(currentPosition.lon, false);
+                refLonDir.value = lonDDM.direction;
+                refLonDeg.value = lonDDM.degrees;
+                refLonMin.value = lonDDM.minutes.toFixed(3);
             }
         });
 
         saveBtn.addEventListener('click', () => {
-            const lat = parseFloat(refLatInput.value);
-            const lon = parseFloat(refLonInput.value);
+            const latDeg = parseFloat(refLatDeg.value);
+            const latMin = parseFloat(refLatMin.value);
+            const lonDeg = parseFloat(refLonDeg.value);
+            const lonMin = parseFloat(refLonMin.value);
 
-            if (!isNaN(lat) && !isNaN(lon)) {
-                referencePosition.lat = lat;
-                referencePosition.lon = lon;
+            if (!isNaN(latDeg) && !isNaN(latMin) && !isNaN(lonDeg) && !isNaN(lonMin)) {
+                referencePosition.lat = ddmToDecimal(refLatDir.value, latDeg, latMin);
+                referencePosition.lon = ddmToDecimal(refLonDir.value, lonDeg, lonMin);
                 saveState();
                 updateStatus();
             }
