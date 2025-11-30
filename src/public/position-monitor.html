@@ -485,6 +485,7 @@
         }
 
         // Update status indicator and comparison
+        // Compare absolute values so "less" means smaller displayed number
         function updateStatus() {
             if (referencePosition.lat === null || currentPosition.lat === null) {
                 statusIndicator.className = 'status-indicator neutral';
@@ -497,8 +498,9 @@
 
             comparisonSection.style.display = 'grid';
 
-            const latDiff = currentPosition.lat - referencePosition.lat;
-            const lonDiff = currentPosition.lon - referencePosition.lon;
+            // Compare absolute values (displayed numbers, not signed decimals)
+            const latDiff = Math.abs(currentPosition.lat) - Math.abs(referencePosition.lat);
+            const lonDiff = Math.abs(currentPosition.lon) - Math.abs(referencePosition.lon);
 
             const latIsLess = latDiff < 0;
             const lonIsLess = lonDiff < 0;

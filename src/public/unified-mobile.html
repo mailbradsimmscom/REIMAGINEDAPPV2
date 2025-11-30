@@ -724,8 +724,9 @@
                 const refLon = state.reference.lon;
                 const expectation = state.expectation || 'less';
 
-                const latIsLess = currentLat < refLat;
-                const lonIsLess = currentLon < refLon;
+                // Compare absolute values (displayed numbers, not signed decimals)
+                const latIsLess = Math.abs(currentLat) < Math.abs(refLat);
+                const lonIsLess = Math.abs(currentLon) < Math.abs(refLon);
 
                 let latMatches, lonMatches;
                 if (expectation === 'less') {
