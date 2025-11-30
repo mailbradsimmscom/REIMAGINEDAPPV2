@@ -367,10 +367,10 @@
                 <div class="action-card-icon">⛵</div>
                 <div class="action-card-title">Trips</div>
             </a>
-            <div class="action-card">
-                <div class="action-card-icon">🔜</div>
-                <div class="action-card-title">Coming Soon</div>
-            </div>
+            <a href="/public/position-monitor.html" class="action-card" id="positionMonitorCard">
+                <div class="action-card-icon" id="positionMonitorIcon">📍</div>
+                <div class="action-card-title">Position</div>
+            </a>
         </div>
         <a href="/public/anchor-watch-admin.html" id="anchorAlarmBtn" class="anchor-alarm-button inactive">
             <span id="anchorAlarmIcon">⚓</span>
@@ -690,13 +690,70 @@
             }
         }
 
+        // Update position monitor icon color based on status
+        function updatePositionMonitorStatus() {
+            const card = document.getElementById('positionMonitorCard');
+            const icon = document.getElementById('positionMonitorIcon');
+            if (!card || !icon) return;
+
+            const saved = localStorage.getItem('positionMonitor');
+            if (!saved) {
+                icon.textContent = '📍';
+                return;
+            }
+
+            const state = JSON.parse(saved);
+            if (!state.reference || state.reference.lat === null) {
+                icon.textContent = '📍';
+                return;
+            }
+
+            // Get current position and check status
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const currentLat = position.coords.latitude;
+                        const currentLon = position.coords.longitude;
+                        const refLat = state.reference.lat;
+                        const refLon = state.reference.lon;
+                        const expectation = state.expectation || 'less';
+
+                        const latIsLess = currentLat < refLat;
+                        const lonIsLess = currentLon < refLon;
+
+                        let latMatches, lonMatches;
+                        if (expectation === 'less') {
+                            latMatches = latIsLess;
+                            lonMatches = lonIsLess;
+                        } else {
+                            latMatches = !latIsLess;
+                            lonMatches = !lonIsLess;
+                        }
+
+                        if (latMatches && lonMatches) {
+                            icon.textContent = '🟢';
+                        } else {
+                            icon.textContent = '🔴';
+                        }
+                    },
+                    () => {
+                        icon.textContent = '📍';
+                    },
+                    { timeout: 5000 }
+                );
+            }
+        }
+
         // Load tasks when page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadUserTasks();
             updateAnchorAlarmStatus();
+            updatePositionMonitorStatus();
 
             // Update anchor alarm status every 20 seconds
             setInterval(updateAnchorAlarmStatus, 20000);
+            // Update position monitor status every 30 seconds
+            setInterval(updatePositionMonitorStatus, 30000);
         });
     </script>
 

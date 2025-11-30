@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Monitor</title>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --success-color: #34C759;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        .status-indicator.green {
+            background: rgba(52, 199, 89, 0.15);
+            color: var(--success-color);
+        }
+
+        .status-indicator.red {
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--error-color);
+        }
+
+        .status-indicator.neutral {
+            background: rgba(142, 142, 147, 0.15);
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.green .status-dot { background: var(--success-color); }
+        .status-indicator.red .status-dot { background: var(--error-color); }
+        .status-indicator.neutral .status-dot { background: var(--text-secondary); }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .position-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .position-item {
+            text-align: center;
+        }
+
+        .position-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .position-value {
+            font-size: 28px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .position-value.less { color: var(--primary-color); }
+        .position-value.more { color: #FF9500; }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--surface-color);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .expectation-toggle {
+            display: flex;
+            background: var(--background-color);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .expectation-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .expectation-btn.active {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .comparison-item {
+            text-align: center;
+        }
+
+        .comparison-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .comparison-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .comparison-value.match { color: var(--success-color); }
+        .comparison-value.mismatch { color: var(--error-color); }
+
+        .no-reference {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/public/unified-mobile.html" class="back-link">← Back</a>
+
+    <div class="header">
+        <h1>Position Monitor</h1>
+        <div id="statusIndicator" class="status-indicator neutral">
+            <div class="status-dot"></div>
+            <span id="statusText">No Reference Set</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Current Position</div>
+        <div class="position-display">
+            <div class="position-item">
+                <div class="position-label">Latitude</div>
+                <div class="position-value" id="currentLat">---.---</div>
+            </div>
+            <div class="position-item">
+                <div class="position-label">Longitude</div>
+                <div class="position-value" id="currentLon">---.---</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Reference Position</div>
+        <div class="input-group">
+            <label>Latitude</label>
+            <input type="number" step="0.001" id="refLat" placeholder="0.000">
+        </div>
+        <div class="input-group">
+            <label>Longitude</label>
+            <input type="number" step="0.001" id="refLon" placeholder="0.000">
+        </div>
+        <div class="button-row">
+            <button class="btn btn-secondary" id="fillCurrentBtn">Fill Current</button>
+            <button class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Expectation</div>
+        <div class="expectation-toggle">
+            <button class="expectation-btn active" id="expectLess" data-expect="less">Less</button>
+            <button class="expectation-btn" id="expectMore" data-expect="more">More</button>
+        </div>
+        <div class="comparison" id="comparisonSection" style="display: none;">
+            <div class="comparison-item">
+                <div class="comparison-label">Lat vs Ref</div>
+                <div class="comparison-value" id="latComparison">--</div>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-label">Lon vs Ref</div>
+                <div class="comparison-value" id="lonComparison">--</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentPosition = { lat: null, lon: null };
+        let referencePosition = { lat: null, lon: null };
+        let expectation = 'less'; // 'less' or 'more'
+        let watchId = null;
+
+        // DOM elements
+        const currentLatEl = document.getElementById('currentLat');
+        const currentLonEl = document.getElementById('currentLon');
+        const refLatInput = document.getElementById('refLat');
+        const refLonInput = document.getElementById('refLon');
+        const fillCurrentBtn = document.getElementById('fillCurrentBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const expectLessBtn = document.getElementById('expectLess');
+        const expectMoreBtn = document.getElementById('expectMore');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const comparisonSection = document.getElementById('comparisonSection');
+        const latComparison = document.getElementById('latComparison');
+        const lonComparison = document.getElementById('lonComparison');
+
+        // Load saved state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('positionMonitor');
+            if (saved) {
+                const state = JSON.parse(saved);
+                referencePosition = state.reference || { lat: null, lon: null };
+                expectation = state.expectation || 'less';
+
+                if (referencePosition.lat !== null) {
+                    refLatInput.value = referencePosition.lat;
+                    refLonInput.value = referencePosition.lon;
+                }
+
+                updateExpectationUI();
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('positionMonitor', JSON.stringify({
+                reference: referencePosition,
+                expectation: expectation
+            }));
+        }
+
+        // Update position display
+        function updatePositionDisplay() {
+            if (currentPosition.lat !== null) {
+                currentLatEl.textContent = currentPosition.lat.toFixed(3);
+                currentLonEl.textContent = currentPosition.lon.toFixed(3);
+            }
+            updateStatus();
+        }
+
+        // Update expectation UI
+        function updateExpectationUI() {
+            expectLessBtn.classList.toggle('active', expectation === 'less');
+            expectMoreBtn.classList.toggle('active', expectation === 'more');
+        }
+
+        // Update status indicator and comparison
+        function updateStatus() {
+            if (referencePosition.lat === null || currentPosition.lat === null) {
+                statusIndicator.className = 'status-indicator neutral';
+                statusText.textContent = 'No Reference Set';
+                comparisonSection.style.display = 'none';
+                return;
+            }
+
+            comparisonSection.style.display = 'grid';
+
+            const latDiff = currentPosition.lat - referencePosition.lat;
+            const lonDiff = currentPosition.lon - referencePosition.lon;
+
+            const latIsLess = latDiff < 0;
+            const lonIsLess = lonDiff < 0;
+
+            // Update comparison display
+            latComparison.textContent = latIsLess ? 'Less' : 'More';
+            lonComparison.textContent = lonIsLess ? 'Less' : 'More';
+
+            // Check if both match expectation
+            let latMatches, lonMatches;
+            if (expectation === 'less') {
+                latMatches = latIsLess;
+                lonMatches = lonIsLess;
+            } else {
+                latMatches = !latIsLess;
+                lonMatches = !lonIsLess;
+            }
+
+            latComparison.className = 'comparison-value ' + (latMatches ? 'match' : 'mismatch');
+            lonComparison.className = 'comparison-value ' + (lonMatches ? 'match' : 'mismatch');
+
+            // Update current position styling
+            currentLatEl.className = 'position-value ' + (latIsLess ? 'less' : 'more');
+            currentLonEl.className = 'position-value ' + (lonIsLess ? 'less' : 'more');
+
+            // Overall status
+            if (latMatches && lonMatches) {
+                statusIndicator.className = 'status-indicator green';
+                statusText.textContent = 'Both ' + (expectation === 'less' ? 'Less' : 'More');
+            } else {
+                statusIndicator.className = 'status-indicator red';
+                statusText.textContent = 'Mismatch';
+            }
+        }
+
+        // Start watching position
+        function startWatchingPosition() {
+            if ('geolocation' in navigator) {
+                watchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        currentPosition.lat = position.coords.latitude;
+                        currentPosition.lon = position.coords.longitude;
+                        updatePositionDisplay();
+                    },
+                    (error) => {
+                        console.error('Geolocation error:', error);
+                        currentLatEl.textContent = 'Error';
+                        currentLonEl.textContent = 'Error';
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 5000
+                    }
+                );
+            } else {
+                currentLatEl.textContent = 'N/A';
+                currentLonEl.textContent = 'N/A';
+            }
+        }
+
+        // Event listeners
+        fillCurrentBtn.addEventListener('click', () => {
+            if (currentPosition.lat !== null) {
+                refLatInput.value = currentPosition.lat.toFixed(3);
+                refLonInput.value = currentPosition.lon.toFixed(3);
+            }
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const lat = parseFloat(refLatInput.value);
+            const lon = parseFloat(refLonInput.value);
+
+            if (!isNaN(lat) && !isNaN(lon)) {
+                referencePosition.lat = lat;
+                referencePosition.lon = lon;
+                saveState();
+                updateStatus();
+            }
+        });
+
+        expectLessBtn.addEventListener('click', () => {
+            expectation = 'less';
+            updateExpectationUI();
+            saveState();
+            updateStatus();
+        });
+
+        expectMoreBtn.addEventListener('click', () => {
+            expectation = 'more';
+            updateExpectationUI();
+            saveState();
+            updateStatus();
+        });
+
+        // Initialize
+        loadState();
+        startWatchingPosition();
+    </script>
+
+    <!-- Mobile Navigation Component -->
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>
