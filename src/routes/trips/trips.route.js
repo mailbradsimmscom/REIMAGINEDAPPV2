@@ -369,6 +369,34 @@ router.get('/:id/sail-config', async (req, res) => {
 });
 
 /**
+ * GET /api/trips/:id/telemetry-samples
+ * Get telemetry data sampled at intervals for table display
+ */
+router.get('/:id/telemetry-samples', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id } = req.params;
+    const interval = req.query.interval ? parseInt(req.query.interval, 10) : 15;
+
+    const samples = await tripsService.getTelemetrySamples(id, interval);
+
+    return res.json({
+      success: true,
+      data: samples,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error getting telemetry samples', { error: error.message, tripId: req.params.id });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
  * POST /api/trips/collect-weather
  * Manually trigger weather collection for active trips (admin/testing)
  */

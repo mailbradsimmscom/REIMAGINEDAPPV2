@@ -53,6 +53,10 @@ class TripDetail {
     this.commentInput = document.getElementById('commentInput');
     this.addCommentBtn = document.getElementById('addCommentBtn');
 
+    // Telemetry table
+    this.telemetryTableContainer = document.getElementById('telemetryTableContainer');
+    this.signalkJsonContainer = document.getElementById('signalkJsonContainer');
+
     // Delete modal
     this.deleteModal = document.getElementById('deleteModal');
     this.cancelDelete = document.getElementById('cancelDelete');
@@ -118,6 +122,248 @@ class TripDetail {
 
     // Comments
     this.renderComments(comments);
+
+    // Load telemetry samples for table
+    this.loadTelemetrySamples();
+  }
+
+  async loadTelemetrySamples() {
+    try {
+      const response = await fetch(`/api/trips/${this.tripId}/telemetry-samples?interval=15`);
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        this.renderTelemetryTable(result.data.samples, result.data.columns, result.data.units || {});
+      } else {
+        this.telemetryTableContainer.innerHTML = '<div class="empty-state">Failed to load data</div>';
+      }
+    } catch (error) {
+      console.error('Failed to load telemetry samples:', error);
+      this.telemetryTableContainer.innerHTML = '<div class="empty-state">Error loading data</div>';
+    }
+  }
+
+  renderTelemetryTable(samples, columns, units = {}) {
+    if (!samples || samples.length === 0) {
+      this.telemetryTableContainer.innerHTML = '<div class="empty-state">No telemetry data</div>';
+      return;
+    }
+
+    this.telemetrySamples = samples;
+    this.columnUnits = units;
+
+    // Filter out internal fields
+    const displayColumns = columns.filter(c => !c.startsWith('_'));
+
+    // Build table header
+    const headerCells = displayColumns.map(col => {
+      const displayName = this.generateColumnName(col);
+      return `<th title="${col}">${displayName}</th>`;
+    }).join('') + '<th>JSON</th>';
+
+    // Build table rows
+    const rows = samples.map((sample, index) => {
+      const cells = displayColumns.map(col => {
+        const val = sample[col];
+        const unit = units[col] || null;
+        return `<td class="number">${this.formatValueWithUnit(col, val, unit)}</td>`;
+      }).join('');
+      return `<tr>${cells}<td><button class="expand-btn" onclick="tripDetail.showSignalkJson(${index})">View</button></td></tr>`;
+    }).join('');
+
+    this.telemetryTableContainer.innerHTML = `
+      <table class="telemetry-table">
+        <thead><tr>${headerCells}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  /**
+   * Generate a readable column name from a dot-notation path
+   * Algorithmic - no hardcoding
+   */
+  generateColumnName(path) {
+    // Split path into segments
+    const segments = path.split('.');
+
+    // Process each segment
+    const processed = segments.map((seg, idx) => {
+      // Handle numeric indices (array elements)
+      if (/^\d+$/.test(seg)) {
+        return seg; // Keep as number
+      }
+
+      // Split camelCase: "rudderAngle" -> "Rudder Angle"
+      let words = seg.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+      // Split underscores: "wind_speed" -> "wind speed"
+      words = words.replace(/_/g, ' ');
+
+      // Capitalize first letter of each word
+      words = words.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+      return words;
+    });
+
+    // Filter out common redundant words
+    const filtered = processed.filter((seg, idx) => {
+      // Remove 'value' as it's always the value
+      if (seg.toLowerCase() === 'value') return false;
+      return true;
+    });
+
+    // Collapse path intelligently
+    // If path is like "Propulsion Port Revolutions", keep key parts
+    if (filtered.length <= 2) {
+      return filtered.join(' ');
+    }
+
+    // For longer paths, try to create concise name
+    // e.g., "Electrical Batteries 0 Voltage" -> "Batteries 0 Voltage"
+    // e.g., "Navigation Gnss Satellites" -> "Gnss Satellites"
+    const skipFirst = ['electrical', 'navigation', 'environment', 'sensors', 'propulsion', 'steering'];
+    if (skipFirst.includes(filtered[0].toLowerCase()) && filtered.length > 2) {
+      return filtered.slice(1).join(' ');
+    }
+
+    return filtered.join(' ');
+  }
+
+  /**
+   * Format a value based on its SI unit
+   * Converts from SI to display units algorithmically
+   */
+  formatValueWithUnit(col, val, unit) {
+    if (val === null || val === undefined) return '--';
+
+    // Special handling for timestamp
+    if (col === 'recorded_at') {
+      return this.formatTimeShort(val);
+    }
+
+    // Lat/lon formatting
+    if (col === 'latitude' || col === 'longitude') {
+      return typeof val === 'number' ? val.toFixed(4) : val;
+    }
+
+    // If no unit or non-numeric, return as-is
+    if (typeof val !== 'number') {
+      if (typeof val === 'string' && val.length > 12) {
+        return val.substring(0, 10) + '...';
+      }
+      return val;
+    }
+
+    // Unit-based conversions (SI to display)
+    if (unit) {
+      switch (unit) {
+        // Angular measurements
+        case 'rad':
+          // Radians to degrees
+          return Math.round(val * 180 / Math.PI) + '°';
+        case 'deg':
+          return Math.round(val) + '°';
+
+        // Temperature
+        case 'K':
+          // Kelvin to Celsius
+          return Math.round(val - 273.15) + '°C';
+        case 'C':
+          return Math.round(val) + '°C';
+
+        // Pressure
+        case 'Pa':
+          // Pascal to PSI
+          return (val / 6894.76).toFixed(1) + ' psi';
+        case 'hPa':
+          return Math.round(val) + ' hPa';
+
+        // Speed
+        case 'm/s':
+          // m/s to knots
+          return (val * 1.94384).toFixed(1) + ' kts';
+        case 'kn':
+          return val.toFixed(1) + ' kts';
+
+        // Distance
+        case 'm':
+          if (val > 10000) {
+            // Large distances in km
+            return (val / 1000).toFixed(1) + ' km';
+          } else if (val > 1852) {
+            // Nautical miles for sea distances
+            return (val / 1852).toFixed(1) + ' nm';
+          }
+          return val.toFixed(1) + ' m';
+
+        // Time
+        case 's':
+          if (val > 3600) {
+            // Hours for large time values
+            return Math.round(val / 3600) + ' h';
+          }
+          return val.toFixed(1) + ' s';
+
+        // Electrical
+        case 'V':
+          return val.toFixed(1) + ' V';
+        case 'A':
+          return val.toFixed(1) + ' A';
+
+        // Frequency (revolutions)
+        case 'Hz':
+          // Hz to RPM
+          return Math.round(val * 60) + ' RPM';
+
+        // Volume rate
+        case 'm3/s':
+          // m³/s to L/hr
+          return (val * 3600000).toFixed(1) + ' L/h';
+
+        // Ratio/percentage
+        case 'ratio':
+          return Math.round(val * 100) + '%';
+        case '%':
+          return Math.round(val) + '%';
+
+        default:
+          // Unknown unit - show value with unit
+          return val.toFixed(2) + ' ' + unit;
+      }
+    }
+
+    // No unit - format based on value characteristics
+    if (Number.isInteger(val)) {
+      return val.toString();
+    }
+    return val.toFixed(2);
+  }
+
+  showSignalkJson(index) {
+    const sample = this.telemetrySamples[index];
+    if (!sample || !sample._raw) {
+      this.signalkJsonContainer.innerHTML = '<div class="signalk-json show">No SignalK data available</div>';
+      return;
+    }
+
+    const jsonStr = JSON.stringify(sample._raw, null, 2);
+    this.signalkJsonContainer.innerHTML = `
+      <div class="signalk-json show">
+        <strong>Full SignalK Data @ ${this.formatTimeShort(sample.recorded_at)}</strong>
+        <hr style="border-color:#444;margin:8px 0;">
+        ${this.escapeHtml(jsonStr)}
+      </div>
+    `;
+  }
+
+  formatTimeShort(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit'
+    });
   }
 
   initMap(track, trip) {

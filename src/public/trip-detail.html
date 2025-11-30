@@ -217,6 +217,74 @@
             text-transform: uppercase;
         }
 
+        /* Telemetry Table */
+        .telemetry-table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .telemetry-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .telemetry-table th,
+        .telemetry-table td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid #E5E5EA;
+            white-space: nowrap;
+        }
+
+        .telemetry-table th {
+            background: #F2F2F7;
+            font-weight: 600;
+            color: #8E8E93;
+            text-transform: uppercase;
+            font-size: 10px;
+            position: sticky;
+            top: 0;
+        }
+
+        .telemetry-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .telemetry-table .number {
+            text-align: right;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #007AFF;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 2px 6px;
+        }
+
+        .signalk-json {
+            display: none;
+            background: #1C1C1E;
+            color: #34C759;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .signalk-json.show {
+            display: block;
+        }
+
         /* Comments */
         .comment-item {
             padding: 12px 0;
@@ -465,6 +533,15 @@
                     <div class="weather-label">Temp</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Trip Details Table -->
+        <div class="card" id="telemetryCard">
+            <div class="card-title">Trip Details (15 min samples)</div>
+            <div class="telemetry-table-container" id="telemetryTableContainer">
+                <div class="empty-state">Loading telemetry data...</div>
+            </div>
+            <div id="signalkJsonContainer"></div>
         </div>
 
         <!-- Comments -->

@@ -275,6 +275,12 @@ export async function stopTrip(tripId) {
     };
   }
 
+  // Generate title from GPS start/end locations
+  const generatedTitle = await generateTripTitle(tripId);
+  if (generatedTitle) {
+    summary.title = generatedTitle;
+  }
+
   // Update trip
   const { data: updatedTrip, error: updateError } = await supabase
     .from('trips')
@@ -289,6 +295,7 @@ export async function stopTrip(tripId) {
 
   requestLogger.info('Trip stopped', {
     tripId,
+    title: summary.title,
     distance_nm: summary.distance_nm,
     duration_minutes: summary.duration_minutes
   });
@@ -642,6 +649,364 @@ export async function deleteComment(tripId, commentId) {
   return { success: true };
 }
 
+/**
+ * Extract values from SignalK data structure
+ * Only extracts .value properties that are primitives (not objects/arrays)
+ * Also captures units from sibling meta.units
+ *
+ * @param {Object} obj - SignalK data object
+ * @param {string} prefix - Current path prefix
+ * @param {Object} result - Accumulated results { values: {}, units: {} }
+ * @returns {Object} { values: { path: value }, units: { path: unit } }
+ */
+function extractSignalKValues(obj, prefix = '', result = { values: {}, units: {} }) {
+  if (!obj || typeof obj !== 'object') return result;
+
+  for (const key of Object.keys(obj)) {
+    // Skip metadata fields we don't want to display
+    if (['$source', 'timestamp', 'values', 'pgn', 'meta'].includes(key)) continue;
+
+    const val = obj[key];
+    const path = prefix ? `${prefix}.${key}` : key;
+
+    // Skip switch data entirely - not useful for trip analysis
+    if (key === 'switches' || path.includes('.switches.')) continue;
+
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      // Check if this is a SignalK value node (has 'value' property)
+      if ('value' in val) {
+        const actualValue = val.value;
+
+        // Only include primitive values (string, number, boolean)
+        if (actualValue !== null && actualValue !== undefined &&
+            typeof actualValue !== 'object') {
+          result.values[path] = actualValue;
+
+          // Capture unit if available from meta
+          if (val.meta && val.meta.units) {
+            result.units[path] = val.meta.units;
+          }
+        }
+        // Skip if value is object/array (not displayable as single cell)
+      } else {
+        // Recurse into nested objects
+        extractSignalKValues(val, path, result);
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Filter out columns with low variance (all same value or mostly null)
+ *
+ * @param {Array} samples - Array of sample objects
+ * @param {Array} columns - Array of column names
+ * @returns {Array} Filtered column names
+ */
+function filterLowVarianceColumns(samples, columns) {
+  if (samples.length === 0) return columns;
+
+  return columns.filter(col => {
+    // Always keep core navigation columns
+    const coreColumns = ['recorded_at', 'latitude', 'longitude', 'sog', 'cog', 'heading'];
+    if (coreColumns.includes(col)) return true;
+
+    // Always keep weather columns (they have inherent value even if similar)
+    const weatherColumns = ['wind_speed_kts', 'wind_direction', 'wind_gusts_kts',
+      'wave_height_m', 'wave_period_s', 'swell_height_m', 'swell_period_s',
+      'air_temp_c', 'pressure_hpa'];
+    if (weatherColumns.includes(col)) return true;
+
+    // Get all values for this column
+    const values = samples.map(s => s[col]);
+
+    // Filter out columns where all values are objects (shows as [object Object])
+    const allObjects = values.every(v => v !== null && v !== undefined && typeof v === 'object');
+    if (allObjects) return false;
+
+    // Count nulls/undefined
+    const nullCount = values.filter(v => v === null || v === undefined).length;
+    const nullRatio = nullCount / values.length;
+
+    // Filter if >80% null
+    if (nullRatio > 0.8) return false;
+
+    // Check variance (are all non-null values the same?)
+    const nonNullValues = values.filter(v => v !== null && v !== undefined);
+    if (nonNullValues.length === 0) return false;
+
+    // Get unique values (stringify for comparison)
+    const uniqueValues = new Set(nonNullValues.map(v => String(v)));
+
+    // Filter if all values are identical (no variance)
+    if (uniqueValues.size === 1) return false;
+
+    return true;
+  });
+}
+
+/**
+ * Get combined telemetry + weather data sampled at intervals
+ * Returns data flattened for table display, with units metadata
+ * Filters out low-variance columns automatically
+ */
+export async function getTelemetrySamples(tripId, intervalMinutes = 15) {
+  const supabase = await getSupabaseClient();
+
+  // Fetch telemetry and weather in parallel
+  const [telemetryResult, weatherResult] = await Promise.all([
+    supabase
+      .from('trip_telemetry')
+      .select('recorded_at, latitude, longitude, sog, cog, heading, signalk_data')
+      .eq('trip_id', tripId)
+      .order('recorded_at', { ascending: true }),
+    supabase
+      .from('trip_weather')
+      .select('recorded_at, wind_speed_kts, wind_direction, wind_gusts_kts, wave_height_m, wave_period_s, wave_direction, swell_height_m, swell_period_s, swell_direction, air_temp_c, pressure_hpa, cloud_cover_pct, visibility_m')
+      .eq('trip_id', tripId)
+      .order('recorded_at', { ascending: true })
+  ]);
+
+  if (telemetryResult.error) {
+    throw new Error(`Failed to get telemetry: ${telemetryResult.error.message}`);
+  }
+
+  const telemetry = telemetryResult.data || [];
+  const weather = weatherResult.data || [];
+
+  if (telemetry.length === 0) {
+    return { samples: [], columns: [], units: {} };
+  }
+
+  // Sample at intervals
+  const intervalMs = intervalMinutes * 60 * 1000;
+  const samples = [];
+  let lastSampleTime = null;
+  const allColumns = new Set(['recorded_at', 'latitude', 'longitude', 'sog', 'cog', 'heading']);
+  const allUnits = {
+    // Core navigation units
+    sog: 'kn',
+    cog: 'deg',
+    heading: 'deg',
+    // Weather units (from Open-Meteo)
+    wind_speed_kts: 'kn',
+    wind_direction: 'deg',
+    wind_gusts_kts: 'kn',
+    wave_height_m: 'm',
+    wave_period_s: 's',
+    wave_direction: 'deg',
+    swell_height_m: 'm',
+    swell_period_s: 's',
+    swell_direction: 'deg',
+    air_temp_c: 'C',
+    pressure_hpa: 'hPa',
+    cloud_cover_pct: '%',
+    visibility_m: 'm'
+  };
+
+  // Weather columns
+  const weatherColumns = ['wind_speed_kts', 'wind_direction', 'wind_gusts_kts', 'wave_height_m', 'wave_period_s', 'wave_direction', 'swell_height_m', 'swell_period_s', 'swell_direction', 'air_temp_c', 'pressure_hpa', 'cloud_cover_pct', 'visibility_m'];
+  weatherColumns.forEach(c => allColumns.add(c));
+
+  // Helper to find closest weather record
+  function findClosestWeather(timestamp) {
+    if (weather.length === 0) return null;
+    const targetTime = new Date(timestamp).getTime();
+    let closest = weather[0];
+    let closestDiff = Math.abs(new Date(closest.recorded_at).getTime() - targetTime);
+
+    for (const w of weather) {
+      const diff = Math.abs(new Date(w.recorded_at).getTime() - targetTime);
+      if (diff < closestDiff) {
+        closest = w;
+        closestDiff = diff;
+      }
+    }
+    // Only use if within 30 minutes
+    return closestDiff <= 30 * 60 * 1000 ? closest : null;
+  }
+
+  for (const point of telemetry) {
+    const pointTime = new Date(point.recorded_at).getTime();
+
+    if (lastSampleTime === null || (pointTime - lastSampleTime) >= intervalMs) {
+      // Extract SignalK values and units
+      const { values: signalkValues, units: signalkUnits } = extractSignalKValues(point.signalk_data || {});
+
+      // Track all columns and units we see
+      for (const key of Object.keys(signalkValues)) {
+        allColumns.add(key);
+      }
+      Object.assign(allUnits, signalkUnits);
+
+      // Find matching weather
+      const closestWeather = findClosestWeather(point.recorded_at);
+
+      samples.push({
+        recorded_at: point.recorded_at,
+        latitude: point.latitude,
+        longitude: point.longitude,
+        sog: point.sog,
+        cog: point.cog,
+        heading: point.heading,
+        // Weather data
+        wind_speed_kts: closestWeather?.wind_speed_kts ?? null,
+        wind_direction: closestWeather?.wind_direction ?? null,
+        wind_gusts_kts: closestWeather?.wind_gusts_kts ?? null,
+        wave_height_m: closestWeather?.wave_height_m ?? null,
+        wave_period_s: closestWeather?.wave_period_s ?? null,
+        wave_direction: closestWeather?.wave_direction ?? null,
+        swell_height_m: closestWeather?.swell_height_m ?? null,
+        swell_period_s: closestWeather?.swell_period_s ?? null,
+        swell_direction: closestWeather?.swell_direction ?? null,
+        air_temp_c: closestWeather?.air_temp_c ?? null,
+        pressure_hpa: closestWeather?.pressure_hpa ?? null,
+        cloud_cover_pct: closestWeather?.cloud_cover_pct ?? null,
+        visibility_m: closestWeather?.visibility_m ?? null,
+        // SignalK data (only primitive values)
+        ...signalkValues,
+        _raw: point.signalk_data
+      });
+
+      lastSampleTime = pointTime;
+    }
+  }
+
+  // Always include last point
+  if (telemetry.length > 0 && samples.length > 0) {
+    const lastPoint = telemetry[telemetry.length - 1];
+    const lastSample = samples[samples.length - 1];
+    if (lastPoint.recorded_at !== lastSample.recorded_at) {
+      const { values: signalkValues, units: signalkUnits } = extractSignalKValues(lastPoint.signalk_data || {});
+      for (const key of Object.keys(signalkValues)) {
+        allColumns.add(key);
+      }
+      Object.assign(allUnits, signalkUnits);
+
+      const closestWeather = findClosestWeather(lastPoint.recorded_at);
+      samples.push({
+        recorded_at: lastPoint.recorded_at,
+        latitude: lastPoint.latitude,
+        longitude: lastPoint.longitude,
+        sog: lastPoint.sog,
+        cog: lastPoint.cog,
+        heading: lastPoint.heading,
+        wind_speed_kts: closestWeather?.wind_speed_kts ?? null,
+        wind_direction: closestWeather?.wind_direction ?? null,
+        wind_gusts_kts: closestWeather?.wind_gusts_kts ?? null,
+        wave_height_m: closestWeather?.wave_height_m ?? null,
+        wave_period_s: closestWeather?.wave_period_s ?? null,
+        wave_direction: closestWeather?.wave_direction ?? null,
+        swell_height_m: closestWeather?.swell_height_m ?? null,
+        swell_period_s: closestWeather?.swell_period_s ?? null,
+        swell_direction: closestWeather?.swell_direction ?? null,
+        air_temp_c: closestWeather?.air_temp_c ?? null,
+        pressure_hpa: closestWeather?.pressure_hpa ?? null,
+        cloud_cover_pct: closestWeather?.cloud_cover_pct ?? null,
+        visibility_m: closestWeather?.visibility_m ?? null,
+        ...signalkValues,
+        _raw: lastPoint.signalk_data
+      });
+    }
+  }
+
+  // Filter out low-variance columns
+  const allColumnsArray = Array.from(allColumns);
+  const filteredColumns = filterLowVarianceColumns(samples, allColumnsArray);
+
+  // Sort columns sensibly: core nav first, then weather, then signalk
+  const sortedColumns = filteredColumns.sort((a, b) => {
+    const order = ['recorded_at', 'latitude', 'longitude', 'sog', 'cog', 'heading'];
+    const aIdx = order.indexOf(a);
+    const bIdx = order.indexOf(b);
+    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+    if (aIdx !== -1) return -1;
+    if (bIdx !== -1) return 1;
+    // Weather columns next
+    if (a.includes('wind') || a.includes('wave') || a.includes('swell') || a.includes('temp') || a.includes('pressure')) {
+      if (!(b.includes('wind') || b.includes('wave') || b.includes('swell') || b.includes('temp') || b.includes('pressure'))) {
+        return -1;
+      }
+    }
+    if (b.includes('wind') || b.includes('wave') || b.includes('swell') || b.includes('temp') || b.includes('pressure')) {
+      if (!(a.includes('wind') || a.includes('wave') || a.includes('swell') || a.includes('temp') || a.includes('pressure'))) {
+        return 1;
+      }
+    }
+    return a.localeCompare(b);
+  });
+
+  return {
+    samples,
+    columns: sortedColumns,
+    units: allUnits
+  };
+}
+
+/**
+ * Reverse geocode a lat/lon to get a place name
+ */
+async function reverseGeocode(lat, lon) {
+  try {
+    // Use zoom 14 for more local detail
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14`;
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'BoatOS/1.0' }
+    });
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const address = data.address || {};
+
+    // Try various fields in order of preference
+    return address.village || address.town || address.city || address.island ||
+           address.municipality || address.county || address.state_district ||
+           address.state || address.country || null;
+  } catch (error) {
+    requestLogger.warn('Reverse geocode failed', { lat, lon, error: error.message });
+    return null;
+  }
+}
+
+/**
+ * Generate trip title from start/end GPS locations
+ */
+export async function generateTripTitle(tripId) {
+  const supabase = await getSupabaseClient();
+
+  const { data: firstPoint } = await supabase
+    .from('trip_telemetry')
+    .select('latitude, longitude')
+    .eq('trip_id', tripId)
+    .order('recorded_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  const { data: lastPoint } = await supabase
+    .from('trip_telemetry')
+    .select('latitude, longitude')
+    .eq('trip_id', tripId)
+    .order('recorded_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!firstPoint || !lastPoint) return null;
+
+  const [startName, endName] = await Promise.all([
+    reverseGeocode(firstPoint.latitude, firstPoint.longitude),
+    reverseGeocode(lastPoint.latitude, lastPoint.longitude)
+  ]);
+
+  if (!startName && !endName) return null;
+  if (startName === endName || !endName) return startName;
+  if (!startName) return `To ${endName}`;
+
+  return `${startName} to ${endName}`;
+}
+
 export default {
   listTrips,
   getTrip,
@@ -657,5 +1022,7 @@ export default {
   getCurrentSailConfig,
   addComment,
   getComments,
-  deleteComment
+  deleteComment,
+  getTelemetrySamples,
+  generateTripTitle
 };
