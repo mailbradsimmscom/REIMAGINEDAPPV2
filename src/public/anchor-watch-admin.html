@@ -533,6 +533,7 @@
             radius_meters: null
         };
         let refreshTimer = null;
+        let isPreviewMode = false; // True when user has inferred position but not activated yet
 
         // Helper function for API calls
         async function apiCall(endpoint, options = {}) {
@@ -661,9 +662,11 @@
                     markers.zone.setStyle({ color: zoneColor, fillColor: zoneColor });
                 }
 
-                // Center map on anchor with good zoom level
-                const currentZoom = map.getZoom();
-                map.setView(anchorPos, Math.max(currentZoom, 16));
+                // Only center map on initial load, not during auto-refresh in preview mode
+                if (!isPreviewMode) {
+                    const currentZoom = map.getZoom();
+                    map.setView(anchorPos, Math.max(currentZoom, 16));
+                }
             } else {
                 // Remove ACTIVE anchor and zone if inactive
                 // But preserve preview elements (previewZone and radiusHandle) if they exist
@@ -1051,6 +1054,9 @@
 
                 map.setView(anchorPos, 17);
 
+                // Enter preview mode - prevents auto-refresh from messing with user's setup
+                isPreviewMode = true;
+
                 // Re-render controls to show lat/lon input fields
                 renderControls({ active: false });
 
@@ -1082,6 +1088,9 @@
                         radius_meters: radius
                     })
                 });
+
+                // Exit preview mode on successful activation
+                isPreviewMode = false;
 
                 // Refresh display
                 await loadData();
@@ -1121,13 +1130,14 @@
             try {
                 await apiCall('/deactivate', { method: 'POST' });
 
-                // Clear stored state
+                // Clear stored state and exit preview mode
                 anchorWatchState = {
                     active: false,
                     anchor_lat: null,
                     anchor_lon: null,
                     radius_meters: null
                 };
+                isPreviewMode = false;
 
                 // Clean up preview elements if they exist
                 if (markers.previewZone) {
@@ -1159,13 +1169,22 @@
                 const status = statusResult.data;
                 const positions = positionsResult.data.positions;
 
-                // Update state
-                anchorWatchState = {
-                    active: status.active,
-                    anchor_lat: status.anchor_lat,
-                    anchor_lon: status.anchor_lon,
-                    radius_meters: status.radius_meters
-                };
+                // Update state - but preserve local values during preview mode
+                if (isPreviewMode && !status.active) {
+                    // In preview mode, only update active status, keep local anchor position
+                    anchorWatchState.active = status.active;
+                } else {
+                    anchorWatchState = {
+                        active: status.active,
+                        anchor_lat: status.anchor_lat,
+                        anchor_lon: status.anchor_lon,
+                        radius_meters: status.radius_meters
+                    };
+                    // Exit preview mode if anchor watch becomes active
+                    if (status.active) {
+                        isPreviewMode = false;
+                    }
+                }
 
                 // Update display
                 renderStatus(status);
