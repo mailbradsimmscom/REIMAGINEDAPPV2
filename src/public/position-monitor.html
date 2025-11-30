@@ -256,6 +256,40 @@
         .comparison-value.match { color: var(--success-color); }
         .comparison-value.mismatch { color: var(--error-color); }
 
+        .limit-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .limit-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 90px;
+        }
+
+        .expectation-toggle.small {
+            flex: 0 0 auto;
+            padding: 2px;
+        }
+
+        .expectation-toggle.small .expectation-btn {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .limit-status {
+            font-size: 16px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .limit-status.match { color: var(--success-color); }
+        .limit-status.mismatch { color: var(--error-color); }
+
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -326,20 +360,22 @@
     </div>
 
     <div class="card">
-        <div class="card-title">Expectation</div>
-        <div class="expectation-toggle">
-            <button type="button" class="expectation-btn active" id="expectLess" data-expect="less">Less</button>
-            <button type="button" class="expectation-btn" id="expectMore" data-expect="more">More</button>
+        <div class="card-title">Boundary Limits</div>
+        <div class="limit-row">
+            <span class="limit-label">Lat must be</span>
+            <div class="expectation-toggle small">
+                <button type="button" class="expectation-btn active" id="latExpectLess" data-coord="lat" data-expect="less">Less</button>
+                <button type="button" class="expectation-btn" id="latExpectMore" data-coord="lat" data-expect="more">More</button>
+            </div>
+            <span class="limit-status" id="latStatus">--</span>
         </div>
-        <div class="comparison" id="comparisonSection" style="display: none;">
-            <div class="comparison-item">
-                <div class="comparison-label">Lat vs Ref</div>
-                <div class="comparison-value" id="latComparison">--</div>
+        <div class="limit-row">
+            <span class="limit-label">Lon must be</span>
+            <div class="expectation-toggle small">
+                <button type="button" class="expectation-btn active" id="lonExpectLess" data-coord="lon" data-expect="less">Less</button>
+                <button type="button" class="expectation-btn" id="lonExpectMore" data-coord="lon" data-expect="more">More</button>
             </div>
-            <div class="comparison-item">
-                <div class="comparison-label">Lon vs Ref</div>
-                <div class="comparison-value" id="lonComparison">--</div>
-            </div>
+            <span class="limit-status" id="lonStatus">--</span>
         </div>
     </div>
 
@@ -347,7 +383,8 @@
         // State
         let currentPosition = { lat: null, lon: null, timestamp: null };
         let referencePosition = { lat: null, lon: null };
-        let expectation = 'less';
+        let latExpectation = 'less';
+        let lonExpectation = 'less';
         let pollInterval = null;
 
         // DOM elements
@@ -362,13 +399,14 @@
         const refLonMin = document.getElementById('refLonMin');
         const fillCurrentBtn = document.getElementById('fillCurrentBtn');
         const saveBtn = document.getElementById('saveBtn');
-        const expectLessBtn = document.getElementById('expectLess');
-        const expectMoreBtn = document.getElementById('expectMore');
+        const latExpectLessBtn = document.getElementById('latExpectLess');
+        const latExpectMoreBtn = document.getElementById('latExpectMore');
+        const lonExpectLessBtn = document.getElementById('lonExpectLess');
+        const lonExpectMoreBtn = document.getElementById('lonExpectMore');
         const statusIndicator = document.getElementById('statusIndicator');
         const statusText = document.getElementById('statusText');
-        const comparisonSection = document.getElementById('comparisonSection');
-        const latComparison = document.getElementById('latComparison');
-        const lonComparison = document.getElementById('lonComparison');
+        const latStatus = document.getElementById('latStatus');
+        const lonStatus = document.getElementById('lonStatus');
 
         /**
          * Convert decimal degrees to DDM components
@@ -414,7 +452,8 @@
             if (saved) {
                 const state = JSON.parse(saved);
                 referencePosition = state.reference || { lat: null, lon: null };
-                expectation = state.expectation || 'less';
+                latExpectation = state.latExpectation || 'less';
+                lonExpectation = state.lonExpectation || 'less';
 
                 if (referencePosition.lat !== null) {
                     const latDDM = decimalToDDM(referencePosition.lat, true);
@@ -436,7 +475,8 @@
         function saveState() {
             localStorage.setItem('positionMonitor', JSON.stringify({
                 reference: referencePosition,
-                expectation: expectation
+                latExpectation: latExpectation,
+                lonExpectation: lonExpectation
             }));
         }
 
@@ -480,8 +520,10 @@
 
         // Update expectation UI
         function updateExpectationUI() {
-            expectLessBtn.classList.toggle('active', expectation === 'less');
-            expectMoreBtn.classList.toggle('active', expectation === 'more');
+            latExpectLessBtn.classList.toggle('active', latExpectation === 'less');
+            latExpectMoreBtn.classList.toggle('active', latExpectation === 'more');
+            lonExpectLessBtn.classList.toggle('active', lonExpectation === 'less');
+            lonExpectMoreBtn.classList.toggle('active', lonExpectation === 'more');
         }
 
         // Update status indicator and comparison
@@ -490,13 +532,14 @@
             if (referencePosition.lat === null || currentPosition.lat === null) {
                 statusIndicator.className = 'status-indicator neutral';
                 statusText.textContent = 'No Reference Set';
-                comparisonSection.style.display = 'none';
+                latStatus.textContent = '--';
+                lonStatus.textContent = '--';
+                latStatus.className = 'limit-status';
+                lonStatus.className = 'limit-status';
                 currentLatEl.className = 'position-line';
                 currentLonEl.className = 'position-line';
                 return;
             }
-
-            comparisonSection.style.display = 'grid';
 
             // Compare absolute values (displayed numbers, not signed decimals)
             const latDiff = Math.abs(currentPosition.lat) - Math.abs(referencePosition.lat);
@@ -505,34 +548,27 @@
             const latIsLess = latDiff < 0;
             const lonIsLess = lonDiff < 0;
 
-            // Update comparison display
-            latComparison.textContent = latIsLess ? 'Less' : 'More';
-            lonComparison.textContent = lonIsLess ? 'Less' : 'More';
+            // Check if each matches its own expectation
+            const latMatches = (latExpectation === 'less') ? latIsLess : !latIsLess;
+            const lonMatches = (lonExpectation === 'less') ? lonIsLess : !lonIsLess;
 
-            // Check if both match expectation
-            let latMatches, lonMatches;
-            if (expectation === 'less') {
-                latMatches = latIsLess;
-                lonMatches = lonIsLess;
-            } else {
-                latMatches = !latIsLess;
-                lonMatches = !lonIsLess;
-            }
-
-            latComparison.className = 'comparison-value ' + (latMatches ? 'match' : 'mismatch');
-            lonComparison.className = 'comparison-value ' + (lonMatches ? 'match' : 'mismatch');
+            // Update status displays
+            latStatus.textContent = latMatches ? '✓' : '✗';
+            latStatus.className = 'limit-status ' + (latMatches ? 'match' : 'mismatch');
+            lonStatus.textContent = lonMatches ? '✓' : '✗';
+            lonStatus.className = 'limit-status ' + (lonMatches ? 'match' : 'mismatch');
 
             // Update current position styling
-            currentLatEl.className = 'position-line ' + (latIsLess ? 'less' : 'more');
-            currentLonEl.className = 'position-line ' + (lonIsLess ? 'less' : 'more');
+            currentLatEl.className = 'position-line ' + (latMatches ? 'less' : 'more');
+            currentLonEl.className = 'position-line ' + (lonMatches ? 'less' : 'more');
 
             // Overall status
             if (latMatches && lonMatches) {
                 statusIndicator.className = 'status-indicator green';
-                statusText.textContent = 'Both ' + (expectation === 'less' ? 'Less' : 'More');
+                statusText.textContent = 'Within Limits';
             } else {
                 statusIndicator.className = 'status-indicator red';
-                statusText.textContent = 'Mismatch';
+                statusText.textContent = 'Outside Limits';
             }
         }
 
@@ -571,15 +607,29 @@
             }
         });
 
-        expectLessBtn.addEventListener('click', () => {
-            expectation = 'less';
+        latExpectLessBtn.addEventListener('click', () => {
+            latExpectation = 'less';
             updateExpectationUI();
             saveState();
             updateStatus();
         });
 
-        expectMoreBtn.addEventListener('click', () => {
-            expectation = 'more';
+        latExpectMoreBtn.addEventListener('click', () => {
+            latExpectation = 'more';
+            updateExpectationUI();
+            saveState();
+            updateStatus();
+        });
+
+        lonExpectLessBtn.addEventListener('click', () => {
+            lonExpectation = 'less';
+            updateExpectationUI();
+            saveState();
+            updateStatus();
+        });
+
+        lonExpectMoreBtn.addEventListener('click', () => {
+            lonExpectation = 'more';
             updateExpectationUI();
             saveState();
             updateStatus();

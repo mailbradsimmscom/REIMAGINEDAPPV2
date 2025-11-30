@@ -722,20 +722,16 @@
                 const currentLon = result.data.longitude;
                 const refLat = state.reference.lat;
                 const refLon = state.reference.lon;
-                const expectation = state.expectation || 'less';
+                const latExpectation = state.latExpectation || 'less';
+                const lonExpectation = state.lonExpectation || 'less';
 
                 // Compare absolute values (displayed numbers, not signed decimals)
                 const latIsLess = Math.abs(currentLat) < Math.abs(refLat);
                 const lonIsLess = Math.abs(currentLon) < Math.abs(refLon);
 
-                let latMatches, lonMatches;
-                if (expectation === 'less') {
-                    latMatches = latIsLess;
-                    lonMatches = lonIsLess;
-                } else {
-                    latMatches = !latIsLess;
-                    lonMatches = !lonIsLess;
-                }
+                // Each coordinate has its own expectation
+                const latMatches = (latExpectation === 'less') ? latIsLess : !latIsLess;
+                const lonMatches = (lonExpectation === 'less') ? lonIsLess : !lonIsLess;
 
                 if (latMatches && lonMatches) {
                     icon.textContent = '🟢';
