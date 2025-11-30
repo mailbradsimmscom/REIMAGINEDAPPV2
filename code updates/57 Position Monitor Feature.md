@@ -2,27 +2,29 @@
 
 **Date:** 2025-11-30
 **Status:** Complete
-**Branch:** Agent-Enablement
+**Branch:** Stable-v4-Working
 
 ---
 
 ## Overview
 
-A simple position monitoring page that compares current GPS coordinates against a saved reference point. The user sets an expectation ("less" or "more") and the icon turns green if both lat/long match that expectation, or red if they're mismatched.
+A position monitoring page that compares current GPS coordinates against saved boundary limits. Each coordinate (lat/lon) has its own Less/More setting, allowing you to set independent boundary conditions.
 
-**Use case:** Quick visual check to see if the boat has drifted consistently in one direction from a reference point.
+**Use case:** Monitor if the boat stays within boundary limits. Set a reference position and configure whether each coordinate should stay less than or more than that limit.
 
 ---
 
 ## How It Works
 
-1. **Set Reference:** User can fill in current position or manually enter lat/long, then save
-2. **Set Expectation:** Toggle between "Less" or "More"
-3. **Monitor:** Page continuously compares current position to reference (polls every 5 seconds)
-4. **Status Indicator:**
-   - **Green:** Both lat AND long match expectation (both less, or both more than reference)
-   - **Red:** Mismatch (one less, one more - inconsistent drift)
-   - **Neutral:** No reference set
+1. **Set Reference:** Enter boundary limits in DDM format (N 13°17.775' / W 61°14.149') or click "Fill Current"
+2. **Set Limits:** For each coordinate, choose "Less" or "More":
+   - **Lat must be Less:** Alert if latitude exceeds the limit
+   - **Lat must be More:** Alert if latitude drops below the limit
+   - Same for Longitude
+3. **Monitor:** Page polls GPS every 5 seconds
+4. **Status:**
+   - **Green (Within Limits):** Both coordinates satisfy their conditions
+   - **Red (Outside Limits):** One or both coordinates violate their limits
 
 ---
 
@@ -31,69 +33,63 @@ A simple position monitoring page that compares current GPS coordinates against 
 Position is displayed in **Degrees and Decimal Minutes (DDM)** format, matching B&G MFD displays:
 
 ```
-N 13°17.773'    (Latitude)
+N 13°17.775'    (Latitude)
 W 61°14.135'    (Longitude)
 ```
 
-This is converted from decimal degrees (e.g., `13.2961976, -61.235688`) using:
-- Degrees = floor(abs(value))
-- Minutes = (abs(value) - degrees) * 60
-- Direction: N/S for latitude, E/W for longitude
+Reference input also uses DDM format with:
+- Direction dropdown (N/S for lat, E/W for lon)
+- Degrees field
+- Minutes field (to 3 decimal places)
 
 ---
 
-## Files Created/Modified
+## Example Use Case
+
+Anchored at N 13°17.775' W 61°14.140', you don't want to drift:
+- South of 17.774' latitude
+- West of 14.149' longitude
+
+Configure:
+- **Reference:** N 13° 17.774' / W 61° 14.149'
+- **Lat must be: More** (stay above 17.774')
+- **Lon must be: Less** (stay below 14.149')
+
+If you drift south of 17.774' OR west of 14.149', the status turns red.
+
+---
+
+## Files
 
 ### New Files
 
 **`src/routes/gps.route.js`**
-
-Simple public API endpoint for GPS position:
-- `GET /api/gps/current` - Returns latest GPS position from Supabase `gps_position` table
-- No authentication required
-- Returns: latitude, longitude, timestamp, speed_over_ground, course_over_ground
+- `GET /api/gps/current` - Returns latest GPS position from Supabase
+- Public endpoint (no auth required)
 
 **`src/public/position-monitor.html`**
-
-Features:
-- Current position display in DDM format (matching B&G MFD style)
-- Reference position input fields (decimal degrees, editable)
-- "Fill Current" button to populate fields with current GPS
-- "Save" button to store reference to localStorage
-- "Less/More" toggle to set drift expectation
-- Status indicator showing green/red/neutral based on comparison
-- Comparison details showing each coordinate's status
-- Polls GPS API every 5 seconds for updates
+- DDM format display and input (matches B&G MFD)
+- Separate Less/More toggle for each coordinate
+- Polls GPS API every 5 seconds
 - Mobile navigation footer included
-- State persisted in localStorage (`positionMonitor` key)
 
 ### Modified Files
 
 **`src/app.js`**
-
-Changes:
-- Added import for `gpsRouter` from `./routes/gps.route.js`
-- Added route registration: `app.use('/api/gps', gpsRouter);`
+- Added GPS route: `app.use('/api/gps', gpsRouter);`
 
 **`src/public/unified-mobile.html`**
-
-Changes:
-- Replaced "Coming Soon" placeholder with Position Monitor link
-- Updated `updatePositionMonitorStatus()` function to use GPS API instead of browser geolocation
-- Icon states:
-  - `📍` - No reference set or GPS unavailable
-  - `🟢` - Both coordinates match expectation
-  - `🔴` - Coordinates mismatch
-- Status updates every 30 seconds automatically
+- Position Monitor card with dynamic status icon
+- Uses GPS API with separate lat/lon expectations
 
 ---
 
 ## Data Source
 
-GPS data comes from the boat's actual GPS hardware via the Supabase `gps_position` table:
+GPS data from boat's hardware via Supabase `gps_position` table:
 
 ```javascript
-// API Response
+// GET /api/gps/current
 {
   "success": true,
   "data": {
@@ -106,8 +102,6 @@ GPS data comes from the boat's actual GPS hardware via the Supabase `gps_positio
 }
 ```
 
-This is the same GPS data used by the anchor watch feature, populated by the RPi GPS collector.
-
 ---
 
 ## localStorage Schema
@@ -115,84 +109,69 @@ This is the same GPS data used by the anchor watch feature, populated by the RPi
 ```javascript
 localStorage.setItem('positionMonitor', JSON.stringify({
   reference: {
-    lat: 13.296198,    // Reference latitude (decimal degrees)
-    lon: -61.235688    // Reference longitude (decimal degrees)
+    lat: 13.296198,    // Decimal degrees (stored internally)
+    lon: -61.235688
   },
-  expectation: 'less'  // 'less' or 'more'
+  latExpectation: 'more',   // 'less' or 'more'
+  lonExpectation: 'less'    // 'less' or 'more'
 }));
 ```
 
 ---
 
-## Status Logic
+## Comparison Logic
+
+Compares **absolute values** (displayed numbers), not signed decimals:
 
 ```
-If expectation = "less":
-  - Green if: current_lat < ref_lat AND current_lon < ref_lon
-  - Red if: one is less, one is more
+latIsLess = |current_lat| < |reference_lat|
+lonIsLess = |current_lon| < |reference_lon|
 
-If expectation = "more":
-  - Green if: current_lat > ref_lat AND current_lon > ref_lon
-  - Red if: one is more, one is less
+If latExpectation = 'less': latMatches = latIsLess
+If latExpectation = 'more': latMatches = !latIsLess
+
+Same for longitude.
+
+Overall: Green if latMatches AND lonMatches, else Red.
+```
+
+---
+
+## UI Layout
+
+```
+┌─────────────────────────────────┐
+│     Position Monitor            │
+│     ● Within Limits (green)     │
+├─────────────────────────────────┤
+│ CURRENT POSITION                │
+│ N 13°17.774'                    │
+│ W 61°14.137'                    │
+│ Last update: 4:34 PM            │
+├─────────────────────────────────┤
+│ REFERENCE POSITION              │
+│ Lat: [N ▼] [13] ° [17.774] '    │
+│ Lon: [W ▼] [61] ° [14.149] '    │
+│ [Fill Current]  [Save]          │
+├─────────────────────────────────┤
+│ BOUNDARY LIMITS                 │
+│ Lat must be [Less][More]  ✓     │
+│ Lon must be [Less][More]  ✓     │
+└─────────────────────────────────┘
 ```
 
 ---
 
 ## Testing
 
-1. Go to http://localhost:3000/public/unified-mobile.html
-2. Tap the "Position" quick action card
-3. GPS data loads automatically from boat's GPS
-4. Tap "Fill Current" to populate reference fields
-5. Tap "Save" to store reference
-6. Select "Less" or "More" expectation
-7. Status indicator shows green/red based on drift direction
-8. Return to home page - icon should reflect current status
+1. Go to http://localhost:3000/public/position-monitor.html
+2. Click "Fill Current" to populate reference
+3. Click "Save" to store reference
+4. Set Lat to "More" and Lon to "Less" (or as needed)
+5. Status shows green if within limits
+6. If boat drifts past either limit, status turns red
 
-Test the API directly:
+Test API:
 ```bash
 curl http://localhost:3000/api/gps/current | jq .
-```
-
----
-
-## UI/UX Notes
-
-- Uses same iOS-style design language as other mobile pages
-- Coordinates displayed in B&G MFD style (DDM format)
-- Monospace font for coordinate display
-- Cards with rounded corners and subtle shadows
-- Color coding: Blue for "less", Orange for "more"
-- Status indicator uses colored dots and background tints
-- Mobile navigation footer included for consistent navigation
-- Back link to return to home page
-
----
-
-## Architecture
-
-```
-┌─────────────────────────┐
-│  position-monitor.html  │
-│  (Frontend)             │
-└───────────┬─────────────┘
-            │ fetch every 5s
-            ↓
-┌─────────────────────────┐
-│  /api/gps/current       │
-│  (gps.route.js)         │
-└───────────┬─────────────┘
-            │
-            ↓
-┌─────────────────────────┐
-│  gps.repository.js      │
-│  getCurrentPosition()   │
-└───────────┬─────────────┘
-            │
-            ↓
-┌─────────────────────────┐
-│  Supabase               │
-│  gps_position table     │
-│  (populated by RPi)     │
-└─────────────────────────┘
 ```
