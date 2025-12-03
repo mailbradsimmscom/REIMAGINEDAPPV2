@@ -47,10 +47,14 @@ router.post('/categories', async (req, res) => {
       return res.status(400).json({ success: false, error: 'category_name is required' });
     }
 
+    // Calculate level from path (count "/" separators)
+    const finalPath = category_path || category_name;
+    const level = (finalPath.match(/\//g) || []).length;
+
     const supabase = await getSupabaseClient();
     const { data, error } = await supabase
       .from('supply_categories')
-      .insert({ category_name, category_path: category_path || category_name })
+      .insert({ category_name, category_path: finalPath, level })
       .select()
       .single();
 
