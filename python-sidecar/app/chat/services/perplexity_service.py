@@ -76,8 +76,8 @@ class PerplexityService:
         # Extract primary equipment (highest rank)
         primary = equipment[0] if equipment else {}
         manufacturer = primary.get("manufacturer", "")
-        model_name = primary.get("model_name", "")
-        pump_type = primary.get("description", "")
+        model_name = primary.get("model", primary.get("model_name", ""))
+        equipment_description = primary.get("description", "")
 
         # Extract key features from top Pinecone chunk
         features = []
@@ -116,10 +116,15 @@ class PerplexityService:
 
         # Build query components
         intent_line = f"{intent_phrase}."
-        base = f"{manufacturer} {model_name} {pump_type} on a {vessel_type} is {symptom}."
+
+        # Build equipment identifier (handle missing fields gracefully)
+        equipment_parts = [p for p in [manufacturer, model_name, equipment_description] if p]
+        equipment_identifier = " ".join(equipment_parts) if equipment_parts else "marine equipment"
+
+        base = f"{equipment_identifier} on a {vessel_type}: {symptom}"
 
         if features_text:
-            feature_line = f"\n\nThe pump has {features_text}."
+            feature_line = f"\n\nThe equipment has {features_text}."
         else:
             feature_line = ""
 

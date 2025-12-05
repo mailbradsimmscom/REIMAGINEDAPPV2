@@ -42,23 +42,7 @@ export async function processChatMessage({ query, threadId }) {
 
     try {
       threadData = await getChatThread(threadId);
-
-      // 🔍 DIAGNOSTIC LOGGING - Remove after debugging
-      console.log('\n=== EQUIPMENT CONTEXT DEBUG START ===');
-      console.log('Thread ID:', threadId);
-      console.log('threadData exists:', !!threadData);
-      console.log('threadData keys:', threadData ? Object.keys(threadData) : 'null');
-      console.log('threadData.equipment_context:', threadData?.equipment_context);
-      console.log('Type of equipment_context:', typeof threadData?.equipment_context);
-      console.log('Is Array:', Array.isArray(threadData?.equipment_context));
-      console.log('String value:', JSON.stringify(threadData?.equipment_context));
-
       existingEquipmentContext = threadData?.equipment_context || [];
-
-      console.log('After assignment:');
-      console.log('existingEquipmentContext:', existingEquipmentContext);
-      console.log('existingEquipmentContext.length:', existingEquipmentContext.length);
-      console.log('=== EQUIPMENT CONTEXT DEBUG END ===\n');
 
       requestLogger.info('📦 Retrieved thread equipment context', {
         threadId,
@@ -91,18 +75,7 @@ export async function processChatMessage({ query, threadId }) {
       ? existingEquipmentContext
       : conversationContext.accumulated_equipment;
 
-    // 🔍 DIAGNOSTIC LOGGING - Remove after debugging
-    console.log('\n=== REFERENCE CHECK DEBUG START ===');
-    console.log('Query:', query);
-    console.log('existingEquipmentContext.length:', existingEquipmentContext.length);
-    console.log('conversationContext.accumulated_equipment.length:', conversationContext.accumulated_equipment.length);
-    console.log('previousEquipment:', previousEquipment);
-    console.log('previousEquipment.length:', previousEquipment.length);
-
     const referenceCheck = quickReferenceCheck(query, previousEquipment);
-
-    console.log('referenceCheck result:', referenceCheck);
-    console.log('=== REFERENCE CHECK DEBUG END ===\n');
 
     requestLogger.info('🔍 Analyzing query for equipment references', {
       query: query.substring(0, 100),
@@ -123,12 +96,23 @@ export async function processChatMessage({ query, threadId }) {
       has_previous_context: referenceCheck.has_previous_context
     });
 
+    // ALWAYS search current query for new equipment (fast database lookup)
+    // This catches specific model numbers like "4JH57", "SD60" that user adds in follow-ups
+    const searchQuery = extractKeywords(query) || query;
+    const queryKeywordResults = await searchSystems(searchQuery, { limit: 10 });
+
+    requestLogger.info('🔍 Query keyword search completed', {
+      query: searchQuery.substring(0, 50),
+      resultsFound: queryKeywordResults.length,
+      equipment: queryKeywordResults.slice(0, 3).map(eq => `${eq.manufacturer} ${eq.model}`)
+    });
+
     if (referenceCheck.should_infer) {
-      // Use LLM to infer equipment relationships, passing existing equipment context
+      // Use LLM to infer equipment relationships, passing BOTH keyword results AND existing context
       const inferenceResult = await inferEquipmentRelationships(
         threadId,
         query,
-        [], // Start with empty current search for inference
+        queryKeywordResults, // Pass keyword search results (was empty before!)
         existingEquipmentContext // Pass equipment_context blob instead of fetching messages
       );
 
@@ -191,78 +175,76 @@ export async function processChatMessage({ query, threadId }) {
           });
         }
       } else if (currentEquipmentSearch.length === 0 && existingEquipmentContext.length > 0) {
-        // ✅ FIX #2A: Inference returned empty but context exists - use existing context
-        requestLogger.warn('⚠️ Inference returned empty but context exists - using existing context', {
-          threadId,
-          existingEquipmentCount: existingEquipmentContext.length,
-          existingEquipment: existingEquipmentContext.map(eq => ({
-            manufacturer: eq.manufacturer,
-            model: eq.model
-          }))
-        });
-
-        // Use existing context instead of fallback
-        currentEquipmentSearch = [...existingEquipmentContext];
+        // Inference returned empty but context exists
+        // First check if keyword search found new equipment we should add
+        if (queryKeywordResults.length > 0) {
+          requestLogger.info('🔄 Inference empty but keyword search found equipment - merging with context', {
+            keywordResultsCount: queryKeywordResults.length,
+            existingContextCount: existingEquipmentContext.length
+          });
+          // Merge keyword results with existing context
+          const seenAssetUids = new Set(existingEquipmentContext.map(eq => eq.asset_uid));
+          currentEquipmentSearch = [...existingEquipmentContext];
+          for (const eq of queryKeywordResults) {
+            if (!seenAssetUids.has(eq.asset_uid)) {
+              currentEquipmentSearch.push(eq);
+              seenAssetUids.add(eq.asset_uid);
+            }
+          }
+        } else {
+          // ✅ FIX #2A: Inference returned empty but context exists - use existing context
+          requestLogger.warn('⚠️ Inference returned empty but context exists - using existing context', {
+            threadId,
+            existingEquipmentCount: existingEquipmentContext.length,
+            existingEquipment: existingEquipmentContext.map(eq => ({
+              manufacturer: eq.manufacturer,
+              model: eq.model
+            }))
+          });
+          // Use existing context instead of fallback
+          currentEquipmentSearch = [...existingEquipmentContext];
+        }
       }
 
     } else {
-      // ===== PARALLEL EQUIPMENT SEARCH =====
-      // Run BOTH keyword search AND LLM extraction simultaneously
-      // Merge results to never miss multi-equipment or implicit systems
+      // ===== LLM EXTRACTION (keyword search already done above) =====
+      // Use queryKeywordResults from earlier + add LLM extraction for semantic understanding
 
-      requestLogger.info('🔀 Starting PARALLEL equipment search', {
+      requestLogger.info('🔀 Starting LLM extraction (keyword search already done)', {
         query: query.substring(0, 100),
-        paths: ['keyword_search', 'llm_extraction']
+        keywordResultsFromEarlier: queryKeywordResults.length
       });
 
-      chatDebug.step('PARALLEL_SEARCH_START', {
+      chatDebug.step('LLM_EXTRACTION_START', {
         query: query.substring(0, 100),
-        paths: 2
+        keywordResultsAlreadyHave: queryKeywordResults.length
       });
 
-      const parallelStart = Date.now();
+      const extractionStart = Date.now();
 
-      // Extract keywords for search
-      const searchQuery = extractKeywords(query) || query;
-
-      // Launch both searches in parallel with error handling
-      let keywordResults = [];
+      // Use keyword results from earlier search
+      let keywordResults = queryKeywordResults;
       let llmExtraction = { equipment: [] };
 
       try {
-        const results = await Promise.all([
-          // Path 1: Keyword search (fast, exact matches)
-          searchSystems(searchQuery, { limit: 10 }).catch(err => {
-            requestLogger.error('❌ Keyword search FAILED', {
-              error: err.message,
-              query: searchQuery
-            });
-            return []; // Graceful degradation
-          }),
-
-          // Path 2: LLM extraction (semantic understanding)
-          extractEquipmentName(query).catch(err => {
-            requestLogger.error('❌ LLM extraction FAILED', {
-              error: err.message,
-              query: query.substring(0, 100)
-            });
-            return { equipment: [] }; // Graceful degradation
-          })
-        ]);
-
-        keywordResults = results[0];
-        llmExtraction = results[1];
-
-        const parallelDuration = Date.now() - parallelStart;
-
-        requestLogger.info('✅ Parallel execution COMPLETE', {
-          duration_ms: parallelDuration,
-          keywordResultsCount: keywordResults.length,
-          llmExtractedCount: llmExtraction.equipment?.length || 0,
-          bothSucceeded: true
+        // Only need LLM extraction now (keyword search already done)
+        llmExtraction = await extractEquipmentName(query).catch(err => {
+          requestLogger.error('❌ LLM extraction FAILED', {
+            error: err.message,
+            query: query.substring(0, 100)
+          });
+          return { equipment: [] }; // Graceful degradation
         });
 
-        chatDebug.timing('PARALLEL_SEARCH_COMPLETE', parallelDuration, {
+        const extractionDuration = Date.now() - extractionStart;
+
+        requestLogger.info('✅ LLM extraction COMPLETE', {
+          duration_ms: extractionDuration,
+          keywordResultsCount: keywordResults.length,
+          llmExtractedCount: llmExtraction.equipment?.length || 0
+        });
+
+        chatDebug.timing('LLM_EXTRACTION_COMPLETE', extractionDuration, {
           keyword_count: keywordResults.length,
           llm_count: llmExtraction.equipment?.length || 0
         });
