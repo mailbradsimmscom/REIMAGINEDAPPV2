@@ -143,25 +143,13 @@ export class SuppliesList {
     const select = document.getElementById('categoryFilter');
     if (!select) return;
 
-    // Group by root category
-    const grouped = {};
-    this.categories.forEach(cat => {
-      const parts = cat.path.split('/');
-      const root = parts[0];
-      if (!grouped[root]) grouped[root] = [];
-      grouped[root].push(cat);
-    });
-
-    // Build options
+    // Simple flat list of categories
     let html = '<option value="">All Categories</option>';
-    Object.keys(grouped).sort().forEach(root => {
-      html += `<optgroup label="${root}">`;
-      grouped[root].forEach(cat => {
-        const indent = '  '.repeat((cat.path.split('/').length - 1));
-        html += `<option value="${cat.id}">${indent}${cat.name}</option>`;
+    this.categories
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(cat => {
+        html += `<option value="${cat.id}">${this.escapeHtml(cat.name)}</option>`;
       });
-      html += '</optgroup>';
-    });
 
     select.innerHTML = html;
   }
@@ -330,7 +318,7 @@ export class SuppliesList {
           </div>
         </td>
         <td class="category">
-          <span class="category-badge" title="${this.escapeHtml(supply.supply_categories?.category_path || '')}">
+          <span class="category-badge">
             ${this.escapeHtml(supply.supply_categories?.category_name || '-')}
           </span>
         </td>

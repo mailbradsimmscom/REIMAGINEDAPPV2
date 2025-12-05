@@ -47,7 +47,7 @@ export async function listSupplies({
   try {
     let query = supabase
       .from(TABLE)
-      .select('*, supply_categories(category_name, category_path), supply_units(unit_name, abbreviation)', { count: 'exact' })
+      .select('*, supply_categories(category_name), supply_units(unit_name, abbreviation)', { count: 'exact' })
       .range(offset, offset + limit - 1)
       .order(orderBy, { ascending });
 
@@ -57,7 +57,7 @@ export async function listSupplies({
     }
 
     if (location) {
-      query = query.ilike('location', `%${location}%`);
+      query = query.eq('location', location);
     }
 
     if (systemAssetUid) {
@@ -104,7 +104,7 @@ export async function getSupplyById(id) {
       .from(TABLE)
       .select(`
         *,
-        supply_categories(id, category_name, category_path),
+        supply_categories(id, category_name),
         supply_units(id, unit_name, abbreviation)
       `)
       .eq('id', id)
@@ -145,7 +145,7 @@ export async function createSupply(supply) {
       .insert(supply)
       .select(`
         *,
-        supply_categories(id, category_name, category_path),
+        supply_categories(id, category_name),
         supply_units(id, unit_name, abbreviation)
       `)
       .single();
@@ -183,7 +183,7 @@ export async function updateSupply(id, updates) {
       .eq('id', id)
       .select(`
         *,
-        supply_categories(id, category_name, category_path),
+        supply_categories(id, category_name),
         supply_units(id, unit_name, abbreviation)
       `)
       .single();
@@ -253,7 +253,7 @@ export async function searchSupplies(query, { limit = 20, offset = 0 } = {}) {
       .from(TABLE)
       .select(`
         *,
-        supply_categories(category_name, category_path),
+        supply_categories(category_name),
         supply_units(unit_name, abbreviation)
       `, { count: 'exact' })
       .textSearch('search_vector', query, {
@@ -295,7 +295,7 @@ export async function getLowStockSupplies(autoReorderOnly = false) {
       .from(TABLE)
       .select(`
         *,
-        supply_categories(category_name, category_path),
+        supply_categories(category_name),
         supply_units(unit_name, abbreviation)
       `)
       .not('reorder_threshold', 'is', null)
@@ -338,7 +338,7 @@ export async function getSuppliesByCategory(categoryId) {
       .from(TABLE)
       .select(`
         *,
-        supply_categories(id, category_name, category_path),
+        supply_categories(id, category_name),
         supply_units(unit_name, abbreviation)
       `)
       .eq('category_id', categoryId)
@@ -370,7 +370,7 @@ export async function getSuppliesBySystem(assetUid) {
       .from(TABLE)
       .select(`
         *,
-        supply_categories(category_name, category_path),
+        supply_categories(category_name),
         supply_units(unit_name, abbreviation)
       `)
       .eq('system_asset_uid', assetUid)

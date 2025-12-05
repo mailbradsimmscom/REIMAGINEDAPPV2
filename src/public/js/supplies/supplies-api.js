@@ -121,75 +121,94 @@ export const SuppliesAPI = {
   },
 
   /**
-   * Get all categories
+   * Get all categories (flat list)
+   * @param {boolean} withCounts - include item counts (for admin)
    */
-  async getCategories() {
-    // Use helper endpoint if available, otherwise build from supplies
-    try {
-      const response = await fetch('/api/supplies-categories');
-      if (response.ok) {
-        return response.json();
-      }
-    } catch (e) {
-      // Fallback: no dedicated endpoint yet
+  async getCategories(withCounts = false) {
+    const url = withCounts
+      ? '/api/supplies/config/categories?withCounts=true'
+      : '/api/supplies/config/categories';
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch categories');
     }
 
-    // Fallback: extract from supplies (less efficient but works)
-    const { data } = await this.list({ limit: 1000 });
-    const categories = new Map();
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to fetch categories');
+    }
 
-    data.forEach(supply => {
-      if (supply.supply_categories) {
-        const cat = supply.supply_categories;
-        if (!categories.has(supply.category_id)) {
-          categories.set(supply.category_id, {
-            id: supply.category_id,
-            name: cat.category_name,
-            path: cat.category_path,
-          });
-        }
-      }
+    // Map to consistent frontend format
+    return (result.data || []).map(cat => ({
+      id: cat.id,
+      name: cat.category_name,
+      displayOrder: cat.display_order,
+      icon: cat.icon,
+      itemCount: cat.item_count // only present if withCounts=true
+    }));
+  },
+
+  /**
+   * Create a new category
+   * @param {string} name - category name
+   */
+  async createCategory(name) {
+    const response = await fetch('/api/supplies/config/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category_name: name })
     });
 
-    return Array.from(categories.values()).sort((a, b) =>
-      a.path.localeCompare(b.path)
-    );
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to create category');
+    }
+
+    return {
+      id: result.data.id,
+      name: result.data.category_name,
+      displayOrder: result.data.display_order
+    };
+  },
+
+  /**
+   * Delete a category (only if no items use it)
+   * @param {string} id - category UUID
+   */
+  async deleteCategory(id) {
+    const response = await fetch(`/api/supplies/config/categories/${id}`, {
+      method: 'DELETE'
+    });
+
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to delete category');
+    }
+
+    return true;
   },
 
   /**
    * Get all units
    */
   async getUnits() {
-    // Use helper endpoint if available
-    try {
-      const response = await fetch('/api/supplies-units');
-      if (response.ok) {
-        return response.json();
-      }
-    } catch (e) {
-      // Fallback
+    const response = await fetch('/api/supplies/config/units');
+    if (!response.ok) {
+      throw new Error('Failed to fetch units');
     }
 
-    // Fallback: extract from supplies
-    const { data } = await this.list({ limit: 1000 });
-    const units = new Map();
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to fetch units');
+    }
 
-    data.forEach(supply => {
-      if (supply.supply_units) {
-        const unit = supply.supply_units;
-        if (!units.has(supply.unit_id)) {
-          units.set(supply.unit_id, {
-            id: supply.unit_id,
-            name: unit.unit_name,
-            abbreviation: unit.abbreviation,
-          });
-        }
-      }
-    });
-
-    return Array.from(units.values()).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+    // Map to consistent frontend format
+    return (result.data || []).map(unit => ({
+      id: unit.id,
+      name: unit.unit_name,
+      abbreviation: unit.abbreviation
+    }));
   },
 
   /**

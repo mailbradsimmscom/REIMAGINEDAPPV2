@@ -86,12 +86,13 @@ function setupTabs() {
 }
 
 // ============================================
-// Categories
+// Categories (Flat List)
 // ============================================
 
 async function loadCategories() {
   try {
-    const result = await apiRequest(`${API_BASE}/categories`);
+    // Load with item counts for admin view
+    const result = await apiRequest(`${API_BASE}/categories?withCounts=true`);
     categories = result.data || [];
     renderCategories();
   } catch (error) {
@@ -112,43 +113,50 @@ function renderCategories() {
     return;
   }
 
-  container.innerHTML = categories.map(cat => `
-    <div class="item-row" data-id="${cat.id}">
-      ${editingId === cat.id ? `
-        <div class="edit-inputs">
-          <input type="text" value="${escapeHtml(cat.category_name)}" data-field="category_name" placeholder="Name">
-          <input type="text" value="${escapeHtml(cat.category_path || '')}" data-field="category_path" placeholder="Path">
-        </div>
-        <div class="item-actions">
-          <button class="btn-save" onclick="saveCategory('${cat.id}')">Save</button>
-          <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
-        </div>
-      ` : `
-        <div class="item-info">
-          <div class="item-name">${escapeHtml(cat.category_name)}</div>
-          <div class="item-meta">${escapeHtml(cat.category_path || '')}</div>
-        </div>
-        <div class="item-actions">
-          <button class="btn-edit" onclick="editCategory('${cat.id}')">Edit</button>
-          <button class="btn-delete" onclick="deleteCategory('${cat.id}')">Delete</button>
-        </div>
-      `}
-    </div>
-  `).join('');
+  container.innerHTML = categories.map(cat => {
+    const itemCount = cat.item_count || 0;
+    const canDelete = itemCount === 0;
+
+    return `
+      <div class="item-row" data-id="${cat.id}">
+        ${editingId === cat.id ? `
+          <div class="edit-inputs">
+            <input type="text" value="${escapeHtml(cat.category_name)}" data-field="category_name" placeholder="Category name">
+          </div>
+          <div class="item-actions">
+            <button class="btn-save" onclick="saveCategory('${cat.id}')">Save</button>
+            <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+          </div>
+        ` : `
+          <div class="item-info">
+            <div class="item-name">${escapeHtml(cat.category_name)}</div>
+            <div class="item-meta">${itemCount} item${itemCount !== 1 ? 's' : ''}</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-edit" onclick="editCategory('${cat.id}')">Edit</button>
+            <button class="btn-delete" onclick="deleteCategory('${cat.id}')" ${canDelete ? '' : 'disabled title="Has items"'}>${canDelete ? 'Delete' : 'In Use'}</button>
+          </div>
+        `}
+      </div>
+    `;
+  }).join('');
 }
 
 async function addCategory(e) {
   e.preventDefault();
   const form = e.target;
   const formData = new FormData(form);
+  const name = formData.get('category_name')?.trim();
+
+  if (!name) {
+    showToast('Please enter a category name', 'error');
+    return;
+  }
 
   try {
     await apiRequest(`${API_BASE}/categories`, {
       method: 'POST',
-      body: JSON.stringify({
-        category_name: formData.get('category_name'),
-        category_path: formData.get('category_path') || formData.get('category_name')
-      })
+      body: JSON.stringify({ category_name: name })
     });
 
     form.reset();
@@ -167,15 +175,17 @@ window.editCategory = function(id) {
 window.saveCategory = async function(id) {
   const row = document.querySelector(`[data-id="${id}"]`);
   const nameInput = row.querySelector('[data-field="category_name"]');
-  const pathInput = row.querySelector('[data-field="category_path"]');
+  const name = nameInput?.value?.trim();
+
+  if (!name) {
+    showToast('Category name is required', 'error');
+    return;
+  }
 
   try {
     await apiRequest(`${API_BASE}/categories/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({
-        category_name: nameInput.value,
-        category_path: pathInput.value || nameInput.value
-      })
+      body: JSON.stringify({ category_name: name })
     });
 
     editingId = null;
@@ -187,6 +197,12 @@ window.saveCategory = async function(id) {
 };
 
 window.deleteCategory = async function(id) {
+  const cat = categories.find(c => c.id === id);
+  if (cat && cat.item_count > 0) {
+    showToast('Cannot delete category with items', 'error');
+    return;
+  }
+
   if (!confirm('Delete this category?')) return;
 
   try {

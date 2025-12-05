@@ -13,21 +13,45 @@ const router = express.Router();
 
 /**
  * GET /api/supplies/config/categories
- * List all categories
+ * List all categories (flat list)
+ * Query params:
+ *   - withCounts=true: include item_count for each category
  */
 router.get('/categories', async (req, res) => {
   try {
+    const { withCounts } = req.query;
     const supabase = await getSupabaseClient();
+
     const { data, error } = await supabase
       .from('supply_categories')
-      .select('*')
-      .order('category_path');
+      .select('id, category_name, display_order, is_active, icon')
+      .eq('is_active', true)
+      .order('display_order');
 
     if (error) throw error;
 
+    let categories = data || [];
+
+    // Add item counts if requested (for admin page)
+    if (withCounts === 'true') {
+      const { data: counts } = await supabase
+        .from('supplies')
+        .select('category_id');
+
+      const countMap = {};
+      (counts || []).forEach(s => {
+        countMap[s.category_id] = (countMap[s.category_id] || 0) + 1;
+      });
+
+      categories = categories.map(cat => ({
+        ...cat,
+        item_count: countMap[cat.id] || 0
+      }));
+    }
+
     return res.json({
       success: true,
-      data: data || []
+      data: categories
     });
   } catch (error) {
     logger.error('Error listing categories', { error: error.message });
@@ -37,29 +61,46 @@ router.get('/categories', async (req, res) => {
 
 /**
  * POST /api/supplies/config/categories
- * Create new category
+ * Create new category (flat list - just name)
  */
 router.post('/categories', async (req, res) => {
   try {
-    const { category_name, category_path } = req.body;
+    const { category_name } = req.body;
 
-    if (!category_name) {
+    if (!category_name || !category_name.trim()) {
       return res.status(400).json({ success: false, error: 'category_name is required' });
     }
 
-    // Calculate level from path (count "/" separators)
-    const finalPath = category_path || category_name;
-    const level = (finalPath.match(/\//g) || []).length;
-
     const supabase = await getSupabaseClient();
+
+    // Get max display_order to append at end
+    const { data: maxOrder } = await supabase
+      .from('supply_categories')
+      .select('display_order')
+      .order('display_order', { ascending: false })
+      .limit(1)
+      .single();
+
+    const nextOrder = (maxOrder?.display_order || 0) + 1;
+
     const { data, error } = await supabase
       .from('supply_categories')
-      .insert({ category_name, category_path: finalPath, level })
+      .insert({
+        category_name: category_name.trim(),
+        display_order: nextOrder,
+        is_active: true
+      })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      if (error.code === '23505') {
+        return res.status(400).json({ success: false, error: 'Category already exists' });
+      }
+      throw error;
+    }
 
+    logger.info('Category created', { categoryId: data.id, name: data.category_name });
     return res.status(201).json({ success: true, data });
   } catch (error) {
     logger.error('Error creating category', { error: error.message });
@@ -69,22 +110,31 @@ router.post('/categories', async (req, res) => {
 
 /**
  * PUT /api/supplies/config/categories/:id
- * Update category
+ * Update category (name only for flat list)
  */
 router.put('/categories/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { category_name, category_path } = req.body;
+    const { category_name } = req.body;
+
+    if (!category_name || !category_name.trim()) {
+      return res.status(400).json({ success: false, error: 'category_name is required' });
+    }
 
     const supabase = await getSupabaseClient();
     const { data, error } = await supabase
       .from('supply_categories')
-      .update({ category_name, category_path })
+      .update({ category_name: category_name.trim() })
       .eq('id', id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      if (error.code === '23505') {
+        return res.status(400).json({ success: false, error: 'Category already exists' });
+      }
+      throw error;
+    }
 
     return res.json({ success: true, data });
   } catch (error) {

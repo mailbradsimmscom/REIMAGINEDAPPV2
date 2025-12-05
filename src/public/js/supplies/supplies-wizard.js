@@ -578,13 +578,98 @@ export class SuppliesWizard {
     try {
       const categories = await SuppliesAPI.getCategories();
       const select = document.getElementById('wizardCategory');
-      if (select && categories.length > 0) {
+      if (select) {
         select.innerHTML = '<option value="">Select...</option>' +
-          categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+          categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('') +
+          '<option value="__new__">+ Add New Category...</option>';
       }
+
+      // Setup change handler for "new category" option
+      select?.removeEventListener('change', this._handleCategoryChange);
+      this._handleCategoryChange = (e) => this.handleCategoryChange(e);
+      select?.addEventListener('change', this._handleCategoryChange);
     } catch (error) {
       console.error('Error loading categories:', error);
     }
+  }
+
+  handleCategoryChange(e) {
+    const select = e.target;
+    if (select.value === '__new__') {
+      this.showNewCategoryInput();
+    } else {
+      this.hideNewCategoryInput();
+    }
+  }
+
+  showNewCategoryInput() {
+    let container = document.getElementById('newCategoryContainer');
+    if (!container) {
+      // Create the input container
+      const select = document.getElementById('wizardCategory');
+      container = document.createElement('div');
+      container.id = 'newCategoryContainer';
+      container.className = 'new-category-input';
+      container.innerHTML = `
+        <input type="text" id="newCategoryName" placeholder="Enter category name..." class="wizard-input">
+        <button type="button" id="saveNewCategory" class="wizard-btn wizard-btn-small">Add</button>
+        <button type="button" id="cancelNewCategory" class="wizard-btn wizard-btn-small wizard-btn-secondary">Cancel</button>
+      `;
+      select.parentNode.insertBefore(container, select.nextSibling);
+
+      // Add event listeners
+      document.getElementById('saveNewCategory')?.addEventListener('click', () => this.saveNewCategory());
+      document.getElementById('cancelNewCategory')?.addEventListener('click', () => this.cancelNewCategory());
+      document.getElementById('newCategoryName')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.saveNewCategory();
+        }
+      });
+    }
+    container.style.display = 'flex';
+    document.getElementById('newCategoryName')?.focus();
+  }
+
+  hideNewCategoryInput() {
+    const container = document.getElementById('newCategoryContainer');
+    if (container) {
+      container.style.display = 'none';
+      document.getElementById('newCategoryName').value = '';
+    }
+  }
+
+  async saveNewCategory() {
+    const input = document.getElementById('newCategoryName');
+    const name = input?.value?.trim();
+
+    if (!name) {
+      this.showToast('Please enter a category name', 'error');
+      return;
+    }
+
+    try {
+      const newCategory = await SuppliesAPI.createCategory(name);
+      this.showToast(`Category "${name}" created!`, 'success');
+
+      // Reload categories and select the new one
+      await this.loadCategories();
+      const select = document.getElementById('wizardCategory');
+      if (select) {
+        select.value = newCategory.id;
+      }
+      this.hideNewCategoryInput();
+    } catch (error) {
+      this.showToast(error.message || 'Failed to create category', 'error');
+    }
+  }
+
+  cancelNewCategory() {
+    const select = document.getElementById('wizardCategory');
+    if (select) {
+      select.value = ''; // Reset to "Select..."
+    }
+    this.hideNewCategoryInput();
   }
 
   async loadUnits() {

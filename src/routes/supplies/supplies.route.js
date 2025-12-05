@@ -369,7 +369,7 @@ router.post('/analyze-photo', async (req, res) => {
     // Fetch real categories and units from database for AI prompt
     const supabase = await getSupabaseClient();
     const [categoriesResult, unitsResult] = await Promise.all([
-      supabase.from('supply_categories').select('category_name, category_path').order('category_path'),
+      supabase.from('supply_categories').select('category_name').order('category_name'),
       supabase.from('supply_units').select('unit_name, abbreviation').order('unit_name')
     ]);
 
