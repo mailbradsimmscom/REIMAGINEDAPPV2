@@ -196,7 +196,9 @@ class AnchorWatchService {
             longitude: pos.longitude,
             timestamp: pos.timestamp,
             distance_from_anchor: null,
-            status: 'inactive'
+            status: 'inactive',
+            true_wind_speed: pos.true_wind_speed,
+            true_wind_direction: pos.true_wind_direction
           }))
         };
       }
@@ -221,7 +223,9 @@ class AnchorWatchService {
             longitude: pos.longitude,
             timestamp: pos.timestamp,
             distance_from_anchor: Math.round(distance * 100) / 100,
-            status: status
+            status: status,
+            true_wind_speed: pos.true_wind_speed,
+            true_wind_direction: pos.true_wind_direction
           };
         })
       };

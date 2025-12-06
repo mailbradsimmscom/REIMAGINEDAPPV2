@@ -491,9 +491,9 @@
         </div>
     </div>
 
-    <!-- Recent Positions -->
+    <!-- Recent Data -->
     <div class="card">
-        <h2 class="card-title">Recent Positions</h2>
+        <h2 class="card-title">Recent Data</h2>
         <div id="positionsContent">
             <div class="loading">Loading...</div>
         </div>
@@ -834,6 +834,8 @@
                                 <th>Time</th>
                                 <th>Position</th>
                                 <th>Distance</th>
+                                <th>Wind</th>
+                                <th>Dir</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -843,6 +845,8 @@
                 const time = new Date(pos.timestamp).toLocaleTimeString();
                 const latLon = `${pos.latitude.toFixed(4)}, ${pos.longitude.toFixed(4)}`;
                 const distance = pos.distance_from_anchor ? pos.distance_from_anchor + ' m' : '-';
+                const windSpeed = pos.true_wind_speed != null ? pos.true_wind_speed.toFixed(1) + ' kt' : '-';
+                const windDir = pos.true_wind_direction != null ? pos.true_wind_direction.toFixed(0) + '°' : '-';
                 const rowClass = pos.status || '';
 
                 tableHtml += `
@@ -850,6 +854,8 @@
                         <td>${time}</td>
                         <td>${latLon}</td>
                         <td>${distance}</td>
+                        <td>${windSpeed}</td>
+                        <td>${windDir}</td>
                     </tr>
                 `;
             });
