@@ -1,0 +1,3 @@
+[submodule "maintenance-agent"]
+	path = maintenance-agent
+	url = https://github.com/mailbradsimmscom/maintenance-agent.git
