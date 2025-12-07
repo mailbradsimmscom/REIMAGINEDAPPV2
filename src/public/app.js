@@ -845,12 +845,14 @@ function handleSend() {
   input.value = '';
 }
 
-// Event listeners
-send.addEventListener('click', handleSend);
-newChatBtn.addEventListener('click', createNewChat);
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') handleSend();
-});
+// Event listeners (with null checks for pages that don't have all elements)
+if (send) send.addEventListener('click', handleSend);
+if (newChatBtn) newChatBtn.addEventListener('click', createNewChat);
+if (input) {
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSend();
+  });
+}
 
 // Helper function to get source icons for DIP tables
 function getSourceIcon(sourceType) {

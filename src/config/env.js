@@ -91,3 +91,31 @@ export function getEnv({ loose = null } = {}) {
 
 // Export environment variables directly for easy access
 export const ENV = getEnv();
+
+// ============================================
+// TEST HELPERS - Used only in test environment
+// ============================================
+
+/**
+ * Reset the memoized environment.
+ * Call this in test teardown to ensure clean state between tests.
+ */
+export function resetEnvMemo() {
+  MEMO = null;
+}
+
+/**
+ * Set test environment overrides.
+ * Merges overrides with current env and memoizes the result.
+ *
+ * @param {Object} overrides - Key-value pairs to override
+ * @returns {Object} The merged environment
+ *
+ * @example
+ * setTestEnv({ PYTHON_SIDECAR_URL: 'http://localhost:8001' });
+ */
+export function setTestEnv(overrides) {
+  const current = getEnv();
+  MEMO = { ...current, ...overrides };
+  return MEMO;
+}

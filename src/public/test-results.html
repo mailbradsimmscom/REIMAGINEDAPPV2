@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results Dashboard</title>
+    <script>
+        // Auto-set admin token from environment (for development)
+        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
+        if (ADMIN_TOKEN && !localStorage.getItem('x-admin-token')) {
+            localStorage.setItem('x-admin-token', ADMIN_TOKEN);
+        }
+    </script>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .refresh-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .refresh-btn:hover {
+            opacity: 0.9;
+        }
+
+        .summary-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .summary-card {
+            flex: 1;
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            text-align: center;
+        }
+
+        .summary-card.success { border-top: 4px solid var(--success-color); }
+        .summary-card.error { border-top: 4px solid var(--error-color); }
+        .summary-card.warning { border-top: 4px solid var(--warning-color); }
+        .summary-card.info { border-top: 4px solid var(--primary-color); }
+
+        .summary-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .failure-item {
+            padding: var(--spacing-md);
+            background: #FFF5F5;
+            border-left: 4px solid var(--error-color);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .failure-title {
+            font-weight: 600;
+            color: var(--error-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .failure-error {
+            font-family: 'SF Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .failure-hint {
+            font-size: 13px;
+            color: var(--primary-color);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.success { background: #E8F5E9; color: #2E7D32; }
+        .badge.error { background: #FFEBEE; color: #C62828; }
+        .badge.nightly { background: #E3F2FD; color: #1565C0; }
+        .badge.push { background: #F3E5F5; color: #7B1FA2; }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .category-card {
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            text-align: center;
+        }
+
+        .category-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .category-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: var(--spacing-lg);
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+
+        /* Timing Visualization */
+        .timing-summary {
+            display: flex;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .timing-stat {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .timing-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .timing-stat-value.warning {
+            color: var(--warning-color);
+        }
+
+        .timing-stat-value.error {
+            color: var(--error-color);
+        }
+
+        .timing-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .timing-chart {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .timing-bar-container {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .timing-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .timing-bar-name {
+            font-weight: 500;
+        }
+
+        .timing-bar-value {
+            color: var(--text-secondary);
+        }
+
+        .timing-bar {
+            height: 24px;
+            background: var(--background-color);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timing-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .timing-bar-fill.fast {
+            background: linear-gradient(90deg, var(--success-color), #4ADE80);
+        }
+
+        .timing-bar-fill.medium {
+            background: linear-gradient(90deg, var(--warning-color), #FBBF24);
+        }
+
+        .timing-bar-fill.slow {
+            background: linear-gradient(90deg, var(--error-color), #F87171);
+        }
+
+        .timing-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .timing-breakdown-item {
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .timing-breakdown-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .timing-breakdown-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .summary-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Test Results Dashboard</h1>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span id="live-indicator" style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary);">
+                    <span id="live-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--success-color); animation: pulse 2s infinite;"></span>
+                    <span id="live-text">Auto-refresh: 30m 0s</span>
+                </span>
+                <button class="refresh-btn" onclick="loadData()">Refresh Now</button>
+            </div>
+        </header>
+        <style>
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.4; }
+            }
+        </style>
+
+        <div id="loading" class="loading">Loading test results...</div>
+
+        <div id="content" style="display: none;">
+            <!-- Summary Cards -->
+            <div class="summary-row">
+                <div class="summary-card success">
+                    <div class="summary-value" id="passed-count">-</div>
+                    <div class="summary-label">Passed</div>
+                </div>
+                <div class="summary-card error">
+                    <div class="summary-value" id="failed-count">-</div>
+                    <div class="summary-label">Failed</div>
+                </div>
+                <div class="summary-card warning">
+                    <div class="summary-value" id="skipped-count">-</div>
+                    <div class="summary-label">Skipped</div>
+                </div>
+                <div class="summary-card info">
+                    <div class="summary-value" id="total-count">-</div>
+                    <div class="summary-label">Total</div>
+                </div>
+            </div>
+
+            <!-- Latest Run Meta -->
+            <div class="meta-info" id="meta-info"></div>
+
+            <!-- Category Breakdown -->
+            <div class="card">
+                <h2>Results by Category</h2>
+                <div class="category-grid" id="category-grid"></div>
+            </div>
+
+            <!-- Chat Timing -->
+            <div class="card" id="timing-card" style="display: none;">
+                <h2>Chat Response Timing</h2>
+                <div class="timing-summary" id="timing-summary"></div>
+                <div class="timing-chart" id="timing-chart"></div>
+                <div class="timing-breakdown" id="timing-breakdown"></div>
+            </div>
+
+            <!-- Failures -->
+            <div class="card" id="failures-card" style="display: none;">
+                <h2>Failures Requiring Action</h2>
+                <div id="failures-list"></div>
+            </div>
+
+            <!-- History -->
+            <div class="card">
+                <h2>Recent Runs (Last 7 Days)</h2>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Branch</th>
+                            <th>Passed</th>
+                            <th>Failed</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="no-data" class="no-data" style="display: none;">
+            <p>No test results found.</p>
+            <p style="margin-top: 8px;">Run tests locally or wait for the nightly sweep.</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/admin/api/test-results';
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('x-admin-token');
+            return {
+                'Content-Type': 'application/json',
+                'x-admin-token': token || ''
+            };
+        }
+
+        async function fetchWithAuth(url) {
+            const response = await fetch(url, {
+                headers: getAuthHeaders()
+            });
+            return response.json();
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString();
+        }
+
+        function formatRelativeTime(isoString) {
+            const date = new Date(isoString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 60) return `${diffMins} min ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            return `${diffDays}d ago`;
+        }
+
+        function getTimingClass(ms) {
+            if (ms < 5000) return 'fast';
+            if (ms < 15000) return 'medium';
+            return 'slow';
+        }
+
+        function getTimingValueClass(ms) {
+            if (ms < 5000) return '';
+            if (ms < 15000) return 'warning';
+            return 'error';
+        }
+
+        function formatMs(ms) {
+            if (ms < 1000) return `${ms}ms`;
+            return `${(ms / 1000).toFixed(1)}s`;
+        }
+
+        function renderTimingData(timing) {
+            const summary = timing.summary;
+            const tests = timing.tests || [];
+            const breakdown = summary.breakdown || {};
+
+            // Summary stats with TOTAL TIME prominently displayed
+            const summaryEl = document.getElementById('timing-summary');
+            summaryEl.innerHTML = `
+                <div class="timing-stat" style="flex: 2; background: linear-gradient(135deg, #007AFF22, #5856D622);">
+                    <div class="timing-stat-value ${getTimingValueClass(summary.avgFullStackMs)}" style="font-size: 42px;">${formatMs(summary.avgFullStackMs)}</div>
+                    <div class="timing-stat-label" style="font-size: 14px; font-weight: 600;">TOTAL AVG RESPONSE</div>
+                </div>
+                <div class="timing-stat">
+                    <div class="timing-stat-value">${formatMs(summary.avgNodeOverheadMs)}</div>
+                    <div class="timing-stat-label">Node.js Routing</div>
+                </div>
+                <div class="timing-stat">
+                    <div class="timing-stat-value ${getTimingValueClass(summary.avgPythonDirectMs)}">${formatMs(summary.avgPythonDirectMs)}</div>
+                    <div class="timing-stat-label">Python Sidecar</div>
+                </div>
+            `;
+
+            // Add breakdown visualization if available
+            if (breakdown.total_internal_ms > 0) {
+                const breakdownEl = document.getElementById('timing-breakdown');
+                const total = breakdown.total_internal_ms;
+                const classifyPct = Math.round((breakdown.classification_ms / total) * 100);
+                const pineconePct = Math.round((breakdown.pinecone_ms / total) * 100);
+                const synthesisPct = Math.round((breakdown.synthesis_ms / total) * 100);
+
+                breakdownEl.innerHTML = `
+                    <div style="grid-column: 1 / -1; margin-bottom: 16px;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">Python Sidecar Breakdown</div>
+                        <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color);">
+                            <div style="width: ${classifyPct}%; background: #5856D6; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${classifyPct > 10 ? 'Classify' : ''}</div>
+                            <div style="width: ${pineconePct}%; background: #007AFF; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${pineconePct > 10 ? 'Pinecone' : ''}</div>
+                            <div style="width: ${synthesisPct}%; background: #34C759; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${synthesisPct > 10 ? 'LLM' : ''}</div>
+                        </div>
+                    </div>
+                    <div class="timing-breakdown-item">
+                        <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
+                            <span style="width: 12px; height: 12px; background: #5856D6; border-radius: 3px;"></span>
+                            Classification
+                        </div>
+                        <div class="timing-breakdown-value">${formatMs(breakdown.classification_ms)}</div>
+                    </div>
+                    <div class="timing-breakdown-item">
+                        <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
+                            <span style="width: 12px; height: 12px; background: #007AFF; border-radius: 3px;"></span>
+                            Pinecone Search
+                        </div>
+                        <div class="timing-breakdown-value">${formatMs(breakdown.pinecone_ms)}</div>
+                    </div>
+                    <div class="timing-breakdown-item">
+                        <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
+                            <span style="width: 12px; height: 12px; background: #34C759; border-radius: 3px;"></span>
+                            LLM Synthesis
+                        </div>
+                        <div class="timing-breakdown-value">${formatMs(breakdown.synthesis_ms)}</div>
+                    </div>
+                    <div class="timing-breakdown-item">
+                        <div class="timing-breakdown-label">Tests Passed</div>
+                        <div class="timing-breakdown-value">${summary.passed}/${summary.totalTests}</div>
+                    </div>
+                `;
+            }
+
+            // Bar chart for each test
+            const chartEl = document.getElementById('timing-chart');
+            const chatTests = tests.filter(t => t.type !== 'health');
+            const maxDuration = Math.max(...chatTests.map(t => t.duration), 1);
+
+            chartEl.innerHTML = chatTests.map(test => {
+                const pct = (test.duration / maxDuration) * 100;
+                const speedClass = getTimingClass(test.duration);
+                return `
+                    <div class="timing-bar-container">
+                        <div class="timing-bar-label">
+                            <span class="timing-bar-name">${test.name}</span>
+                            <span class="timing-bar-value">${formatMs(test.duration)}</span>
+                        </div>
+                        <div class="timing-bar">
+                            <div class="timing-bar-fill ${speedClass}" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+        }
+
+        async function loadData() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('no-data').style.display = 'none';
+
+            try {
+                const [latestRes, historyRes] = await Promise.all([
+                    fetchWithAuth(API_BASE),
+                    fetchWithAuth(`${API_BASE}/history`)
+                ]);
+
+                const latest = latestRes.data;
+                const history = historyRes.data || [];
+
+                document.getElementById('loading').style.display = 'none';
+
+                if (!latest) {
+                    document.getElementById('no-data').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('content').style.display = 'block';
+
+                // Update summary cards
+                document.getElementById('passed-count').textContent = latest.passed || 0;
+                document.getElementById('failed-count').textContent = latest.failed || 0;
+                document.getElementById('skipped-count').textContent = latest.skipped || 0;
+                document.getElementById('total-count').textContent = latest.total_tests || 0;
+
+                // Update meta info
+                const metaInfo = document.getElementById('meta-info');
+                metaInfo.innerHTML = `
+                    <span>Last Run: ${formatRelativeTime(latest.created_at)}</span>
+                    <span>Type: ${latest.run_type}</span>
+                    <span>Branch: ${latest.git_branch || 'unknown'}</span>
+                    <span>Environment: ${latest.environment || 'unknown'}</span>
+                `;
+
+                // Update category grid
+                const categoryGrid = document.getElementById('category-grid');
+                const results = latest.results || {};
+                categoryGrid.innerHTML = Object.entries(results).map(([category, data]) => `
+                    <div class="category-card">
+                        <div class="category-name">${category}</div>
+                        <div class="category-value" style="color: ${data.failed > 0 ? 'var(--error-color)' : 'var(--success-color)'}">
+                            ${data.passed}/${data.passed + data.failed}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Update chat timing
+                const chatTiming = latest.chat_timing;
+                const timingCard = document.getElementById('timing-card');
+
+                if (chatTiming && chatTiming.summary) {
+                    timingCard.style.display = 'block';
+                    renderTimingData(chatTiming);
+                } else {
+                    timingCard.style.display = 'none';
+                }
+
+                // Update failures
+                const failures = latest.failures || [];
+                const failuresCard = document.getElementById('failures-card');
+                const failuresList = document.getElementById('failures-list');
+
+                if (failures.length > 0) {
+                    failuresCard.style.display = 'block';
+                    failuresList.innerHTML = failures.map(f => `
+                        <div class="failure-item">
+                            <div class="failure-title">${f.category}: ${f.name}</div>
+                            <div class="failure-error">${f.error || 'No error message'}</div>
+                            <div class="failure-hint">${f.fix_hint || ''}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    failuresCard.style.display = 'none';
+                }
+
+                // Update history table
+                const historyTable = document.getElementById('history-table');
+                historyTable.innerHTML = history.map(run => {
+                    const total = run.passed + run.failed;
+                    const status = run.failed === 0 ? 'success' : 'error';
+                    return `
+                        <tr>
+                            <td>${formatDate(run.created_at)}</td>
+                            <td><span class="badge ${run.run_type}">${run.run_type}</span></td>
+                            <td>${run.git_branch || '-'}</td>
+                            <td>${run.passed}</td>
+                            <td>${run.failed}</td>
+                            <td><span class="badge ${status}">${status === 'success' ? 'Pass' : 'Fail'}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('no-data').style.display = 'block';
+                document.getElementById('no-data').innerHTML = `
+                    <p>Error loading test results.</p>
+                    <p style="margin-top: 8px; color: var(--error-color);">${error.message}</p>
+                `;
+            }
+        }
+
+        // Track last known run_id to detect new runs
+        let lastRunId = null;
+        let refreshInterval = null;
+        let countdown = 1800; // 30 minutes in seconds
+
+        // Update countdown display
+        function updateCountdown() {
+            countdown--;
+            if (countdown <= 0) {
+                countdown = 1800;
+                loadData();
+            }
+            const mins = Math.floor(countdown / 60);
+            const secs = countdown % 60;
+            document.getElementById('live-text').textContent = `Auto-refresh: ${mins}m ${secs}s`;
+        }
+
+        // Show "new data" flash when results change
+        function flashNewData() {
+            const dot = document.getElementById('live-dot');
+            dot.style.background = 'var(--primary-color)';
+            setTimeout(() => {
+                dot.style.background = 'var(--success-color)';
+            }, 1000);
+        }
+
+        // Modified loadData to detect changes
+        const originalLoadData = loadData;
+        loadData = async function() {
+            await originalLoadData();
+            // Check if run_id changed
+            try {
+                const res = await fetchWithAuth(API_BASE);
+                if (res.data && res.data.run_id !== lastRunId) {
+                    if (lastRunId !== null) {
+                        flashNewData();
+                    }
+                    lastRunId = res.data.run_id;
+                }
+            } catch (e) {}
+            countdown = 1800; // Reset countdown after refresh
+        };
+
+        // Load data on page load
+        loadData();
+
+        // Auto-refresh every 30 minutes
+        setInterval(updateCountdown, 1000);
+
+        // Also try to set up Supabase real-time subscription
+        (async function setupRealtime() {
+            try {
+                // Check if Supabase client is available
+                if (typeof window.supabase !== 'undefined') {
+                    const channel = window.supabase
+                        .channel('test_results_changes')
+                        .on('postgres_changes', {
+                            event: 'INSERT',
+                            schema: 'public',
+                            table: 'test_results'
+                        }, () => {
+                            console.log('New test results detected via realtime');
+                            loadData();
+                            flashNewData();
+                        })
+                        .subscribe();
+                    console.log('Supabase realtime subscription active');
+                }
+            } catch (e) {
+                console.log('Realtime subscription not available, using polling');
+            }
+        })();
+    </script>
+</body>
+</html>

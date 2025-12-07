@@ -14,6 +14,9 @@ class TripDetail {
   }
 
   init() {
+    // Bind elements first so showError works
+    this.bindElements();
+
     // Get trip ID from URL
     const params = new URLSearchParams(window.location.search);
     this.tripId = params.get('id');
@@ -23,7 +26,6 @@ class TripDetail {
       return;
     }
 
-    this.bindElements();
     this.bindEvents();
     this.loadTripData();
   }

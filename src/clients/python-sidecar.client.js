@@ -1,29 +1,51 @@
 // Python Sidecar Client for chat workflow
 // Handles HTTP calls to Python sequential workflow endpoint
 
-import { logger } from '../utils/logger.js';
-import { getEnv } from '../config/env.js';
+import { logger as defaultLogger } from '../utils/logger.js';
+import * as envConfig from '../config/env.js';
 
-const requestLogger = logger.createRequestLogger();
+// ============================================
+// FACTORY PATTERN - For Dependency Injection
+// ============================================
 
 /**
- * Calls Python sidecar chat workflow endpoint
- * @param {Object} params - Configuration object
- * @param {string} params.query - User query
- * @param {Array<Object>} params.systemsContext - Equipment context from memory/search
- * @param {string} params.threadId - Conversation thread ID
- * @param {string} params.conversationSummary - Summary of conversation history
- * @param {Object} params.memoryContext - Memory context (weighted equipment tracking)
- * @returns {Promise<Object>} - Chat response with classification, sources, and metadata
+ * Create a Python sidecar client with injected dependencies.
+ * Use this in tests to inject mocks.
+ *
+ * @param {Object} deps - Dependencies (all optional, defaults to real implementations)
+ * @returns {Object} Client object with processChatWorkflow and checkChatHealth functions
+ *
+ * @example
+ * // In tests:
+ * const mockFetch = async () => new Response(JSON.stringify({ response: 'test' }));
+ * const client = createPythonSidecarClient({ fetchFn: mockFetch });
  */
-export async function processChatWorkflow({
-  query,
-  systemsContext = [],
-  threadId = null,
-  conversationSummary = null,
-  memoryContext = null
-}) {
-  const env = getEnv();
+export function createPythonSidecarClient({
+  envConfigDep = envConfig,
+  logger = defaultLogger,
+  fetchFn = fetch  // Allow injecting fetch for testing
+} = {}) {
+
+  const requestLogger = logger.createRequestLogger();
+
+  /**
+   * Calls Python sidecar chat workflow endpoint
+   * @param {Object} params - Configuration object
+   * @param {string} params.query - User query
+   * @param {Array<Object>} params.systemsContext - Equipment context from memory/search
+   * @param {string} params.threadId - Conversation thread ID
+   * @param {string} params.conversationSummary - Summary of conversation history
+   * @param {Object} params.memoryContext - Memory context (weighted equipment tracking)
+   * @returns {Promise<Object>} - Chat response with classification, sources, and metadata
+   */
+  async function processChatWorkflow({
+    query,
+    systemsContext = [],
+    threadId = null,
+    conversationSummary = null,
+    memoryContext = null
+  }) {
+    const env = envConfigDep.getEnv();
 
   const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
   const endpoint = `${sidecarUrl}/v1/chat/process`;
@@ -38,18 +60,18 @@ export async function processChatWorkflow({
     memory_context: memoryContext
   };
 
-  return await makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAttempts);
-}
+    return await makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAttempts);
+  }
 
-/**
- * Makes the actual Python sidecar API call with retry logic
- * @param {string} endpoint - Full endpoint URL
- * @param {Object} requestBody - Request body
- * @param {number} timeoutMs - Timeout in milliseconds
- * @param {number} retryAttempts - Number of retry attempts
- * @returns {Promise<Object>} - Python sidecar API response
- */
-async function makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAttempts) {
+  /**
+   * Makes the actual Python sidecar API call with retry logic
+   * @param {string} endpoint - Full endpoint URL
+   * @param {Object} requestBody - Request body
+   * @param {number} timeoutMs - Timeout in milliseconds
+   * @param {number} retryAttempts - Number of retry attempts
+   * @returns {Promise<Object>} - Python sidecar API response
+   */
+  async function makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAttempts) {
   let lastError;
 
   for (let attempt = 1; attempt <= retryAttempts; attempt++) {
@@ -57,7 +79,7 @@ async function makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAtte
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-      const response = await fetch(endpoint, {
+      const response = await fetchFn(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -119,36 +141,51 @@ async function makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAtte
     error: lastError?.message
   });
 
-  throw new Error(`Python sidecar call failed after ${retryAttempts} attempts: ${lastError?.message}`);
-}
-
-/**
- * Health check for Python sidecar chat endpoint
- * @returns {Promise<Object>} - Health status
- */
-export async function checkChatHealth() {
-  const env = getEnv();
-  const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
-  const endpoint = `${sidecarUrl}/v1/chat/health`;
-
-  try {
-    const response = await fetch(endpoint, {
-      method: 'GET',
-      signal: AbortSignal.timeout(5000) // 5s timeout
-    });
-
-    if (!response.ok) {
-      return { status: 'unhealthy', error: `${response.status} ${response.statusText}` };
-    }
-
-    const data = await response.json();
-    return { status: 'healthy', ...data };
-  } catch (error) {
-    return { status: 'unhealthy', error: error.message };
+    throw new Error(`Python sidecar call failed after ${retryAttempts} attempts: ${lastError?.message}`);
   }
+
+  /**
+   * Health check for Python sidecar chat endpoint
+   * @returns {Promise<Object>} - Health status
+   */
+  async function checkChatHealth() {
+    const env = envConfigDep.getEnv();
+    const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+    const endpoint = `${sidecarUrl}/v1/chat/health`;
+
+    try {
+      const response = await fetchFn(endpoint, {
+        method: 'GET',
+        signal: AbortSignal.timeout(5000) // 5s timeout
+      });
+
+      if (!response.ok) {
+        return { status: 'unhealthy', error: `${response.status} ${response.statusText}` };
+      }
+
+      const data = await response.json();
+      return { status: 'healthy', ...data };
+    } catch (error) {
+      return { status: 'unhealthy', error: error.message };
+    }
+  }
+
+  // Return the client object
+  return { processChatWorkflow, checkChatHealth };
 }
+
+// ============================================
+// DEFAULT INSTANCE - For Backward Compatibility
+// ============================================
+
+// Create default instance with real dependencies
+const defaultClient = createPythonSidecarClient();
+
+// Export functions directly for backward compatibility
+export const { processChatWorkflow, checkChatHealth } = defaultClient;
 
 export default {
   processChatWorkflow,
-  checkChatHealth
+  checkChatHealth,
+  createPythonSidecarClient  // Also export factory for tests
 };

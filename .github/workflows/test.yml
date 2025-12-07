@@ -1,93 +1,211 @@
-name: Tests
+# .github/workflows/test.yml
+#
+# Test Suite for REIMAGINEDAPPV2
+# Runs on PR and push to main branches
+#
+# Jobs:
+#   - unit-tests: Fast Node.js unit tests (~1 min)
+#   - python-tests: Python sidecar tests (~2 min)
+#   - e2e-tests: Playwright browser tests (only on push to main, ~5 min)
+
+name: Test Suite
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, Stable-v4-Working]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, Stable-v4-Working]
+
+env:
+  NODE_ENV: test
+  # Mock values for tests - real services not called
+  SUPABASE_URL: https://test.supabase.co
+  SUPABASE_SERVICE_KEY: test-service-key
+  SUPABASE_ANON_KEY: test-anon-key
+  PINECONE_API_KEY: test-pinecone-key
+  PINECONE_INDEX: test-index
+  OPENAI_API_KEY: sk-test-not-real
+  ADMIN_TOKEN: test-admin-token
 
 jobs:
-  test:
+  # ============================================
+  # Unit Tests - Fast, no external dependencies
+  # ============================================
+  unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [20.x]
-    
+    timeout-minutes: 5
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run linting
-      run: npx eslint src/ --ext .js
-      
-    - name: Run tests
-      run: npm run test:ci
-      env:
-        # Test environment configuration
-        NODE_ENV: test
-        APP_VERSION: 1.0.0
-        PORT: 3000
-        
-        # Database configuration (mock values for testing)
-        SUPABASE_URL: https://test.supabase.co
-        SUPABASE_SERVICE_KEY: test-service-key
-        SUPABASE_ANON_KEY: test-anon-key
-        
-        # Pinecone configuration (mock values for testing)
-        PINECONE_API_KEY: test-pinecone-key
-        PINECONE_INDEX: test-index
-        PINECONE_REGION: us-east-1
-        PINECONE_CLOUD: aws
-        
-        # OpenAI configuration (mock values for testing)
-        OPENAI_API_KEY: test-openai-key
-        
-        # Admin configuration
-        ADMIN_TOKEN: admin-secret-key
-        
-    - name: Performance monitoring
-      run: |
-        echo "📊 Performance Metrics:"
-        echo "========================="
-        echo "Test execution time: $(date)"
-        echo "Total tests: 74"
-        echo "Test categories:"
-        echo "  - Health: 8 tests"
-        echo "  - Chat: 10 tests"
-        echo "  - Systems: 10 tests"
-        echo "  - Admin: 10 tests"
-        echo "  - Document: 18 tests"
-        echo "  - Pinecone: 18 tests"
-        echo ""
-        echo "Performance thresholds:"
-        echo "  - Individual test: < 10s"
-        echo "  - Total suite: < 30s"
-        echo "  - Memory usage: < 512MB"
-        
-    - name: Test summary
-      run: |
-        echo "✅ All tests completed successfully!"
-        echo "📊 Test coverage: 74 tests across all endpoints"
-        echo "🔒 Security tests: Headers, CORS, Rate limiting, Auth"
-        echo "✅ Express migration: Fully validated"
-        echo "🚀 Performance: All tests within acceptable thresholds"
-        echo ""
-        echo "Test Categories:"
-        echo "  ✅ Health endpoints (8/8)"
-        echo "  ✅ Chat endpoints (10/10)"
-        echo "  ✅ Systems endpoints (10/10)"
-        echo "  ✅ Admin endpoints (10/10)"
-        echo "  ✅ Document endpoints (18/18)"
-        echo "  ✅ Pinecone endpoints (18/18)"
-        echo ""
-        echo "🎯 Phase 4 Complete: Full Test Coverage Achieved!"
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: test-results/
+          retention-days: 7
+
+  # ============================================
+  # Python Tests - Sidecar unit/integration tests
+  # ============================================
+  python-tests:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: python-sidecar
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: python-sidecar/requirements*.txt
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Run pytest
+        run: pytest tests/ -v --tb=short
+        env:
+          OPENAI_API_KEY: sk-test-not-real
+          SUPABASE_URL: https://test.supabase.co
+          SUPABASE_SERVICE_KEY: test-service-key
+          PINECONE_API_KEY: test-pinecone-key
+
+  # ============================================
+  # E2E Tests - Browser tests with Playwright
+  # Only runs on push to main (not PRs - too slow)
+  # ============================================
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Only run on push to main branches, not on PRs
+    if: github.event_name == 'push'
+    needs: [unit-tests, python-tests]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Setup Python for sidecar
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: |
+          cd python-sidecar
+          pip install -r requirements.txt
+
+      - name: Start services
+        run: |
+          # Start Python sidecar in background
+          cd python-sidecar && python -m uvicorn app.main:app --port 8000 &
+
+          # Start Node.js server in background
+          npm run dev &
+
+          # Wait for services to be ready
+          sleep 15
+
+          # Verify services are up
+          curl -f http://localhost:3000/health || exit 1
+          curl -f http://localhost:8000/health || exit 1
+        env:
+          PYTHON_SIDECAR_URL: http://localhost:8000
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: Run Playwright tests
+        run: npx playwright test --reporter=html
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: test-results/
+          retention-days: 7
+
+  # ============================================
+  # Summary job - reports overall status
+  # ============================================
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, python-tests]
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+            echo "- :white_check_mark: Unit Tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- :x: Unit Tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.python-tests.result }}" == "success" ]; then
+            echo "- :white_check_mark: Python Tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- :x: Python Tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See individual job logs for details." >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any test failed
+        if: needs.unit-tests.result == 'failure' || needs.python-tests.result == 'failure'
+        run: exit 1

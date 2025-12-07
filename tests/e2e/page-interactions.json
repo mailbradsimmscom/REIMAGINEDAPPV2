@@ -1,0 +1,617 @@
+{
+  "_meta": {
+    "description": "Page interactions for comprehensive E2E testing",
+    "generatedAt": "2025-12-07",
+    "totalPages": 53
+  },
+  "pages": {
+    "/": {
+      "name": "Chat Interface",
+      "type": "route",
+      "elements": ["#chatSection", "#messageInput", "#sendBtn", "#messages", "#newChatBtn"],
+      "dropdowns": [],
+      "buttons": ["#sendBtn", "#newChatBtn"],
+      "inputs": ["#messageInput"],
+      "interactions": [
+        { "action": "visible", "selector": "#chatSection" },
+        { "action": "visible", "selector": "#messageInput" },
+        { "action": "fill", "selector": "#messageInput", "value": "test" },
+        { "action": "enabled", "selector": "#sendBtn" }
+      ]
+    },
+    "/admin": {
+      "name": "Admin Dashboard",
+      "type": "route",
+      "elements": ["#admin-root"],
+      "dropdowns": [],
+      "buttons": ["#tab-dashboard", "#tab-doc-upload", "#tab-dip", "#tab-jobs", "#tab-chunks", "#tab-metrics", "#tab-health", "#tab-systems"],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "#admin-root" },
+        { "action": "click", "selector": "#tab-dashboard" },
+        { "action": "visible", "selector": "#section-dashboard" }
+      ]
+    },
+    "/landing": {
+      "name": "Landing Page",
+      "type": "route",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/anchor-watch-admin.html": {
+      "name": "Anchor Watch Admin",
+      "type": "static",
+      "elements": ["#loginOverlay", "#statusBadge", "#map"],
+      "dropdowns": [],
+      "buttons": ["#loginBtn"],
+      "inputs": ["#pinInput"],
+      "interactions": [
+        { "action": "visible", "selector": "#loginOverlay" },
+        { "action": "visible", "selector": "#pinInput" }
+      ],
+      "requiresAuth": true
+    },
+    "/public/chat-mobile.html": {
+      "name": "Chat Mobile",
+      "type": "static",
+      "elements": ["#messageInput", "#sendBtn"],
+      "dropdowns": [],
+      "buttons": ["#sendBtn"],
+      "inputs": ["#messageInput"],
+      "interactions": [
+        { "action": "visible", "selector": "#messageInput" }
+      ]
+    },
+    "/public/dashboard.html": {
+      "name": "Dashboard",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/documents.html": {
+      "name": "Documents",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/index-mobile.html": {
+      "name": "Chat Mobile Index",
+      "type": "static",
+      "elements": ["#messageInput", "#sendBtn"],
+      "dropdowns": [],
+      "buttons": ["#sendBtn"],
+      "inputs": ["#messageInput"],
+      "interactions": [
+        { "action": "visible", "selector": "#messageInput" }
+      ]
+    },
+    "/public/index.html": {
+      "name": "Chat Index",
+      "type": "static",
+      "elements": ["#chatSection", "#messageInput", "#sendBtn"],
+      "dropdowns": [],
+      "buttons": ["#sendBtn", "#newChatBtn"],
+      "inputs": ["#messageInput"],
+      "interactions": [
+        { "action": "visible", "selector": "#chatSection" },
+        { "action": "visible", "selector": "#messageInput" }
+      ]
+    },
+    "/public/landing.html": {
+      "name": "Landing Static",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/logs-viewer.html": {
+      "name": "Logs Viewer",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/maintenance-review.html": {
+      "name": "Maintenance Review",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/maintenance-tasks-list.html": {
+      "name": "Maintenance Tasks List",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/pinecone-admin.html": {
+      "name": "Pinecone Admin",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/position-monitor.html": {
+      "name": "Position Monitor",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/supplies-admin.html": {
+      "name": "Supplies Admin",
+      "type": "static",
+      "elements": [".admin-tabs", "#tab-categories", "#tab-units", "#tab-locations", "#categoriesList"],
+      "dropdowns": [],
+      "buttons": [".admin-tab"],
+      "inputs": ["[name='category_name']"],
+      "interactions": [
+        { "action": "visible", "selector": ".admin-tabs" },
+        { "action": "click", "selector": "[data-tab='categories']" },
+        { "action": "visible", "selector": "#tab-categories" }
+      ]
+    },
+    "/public/supplies.html": {
+      "name": "Supplies Management",
+      "type": "static",
+      "elements": ["#searchInput", "#suppliesTable", "#addBtn", ".type-tabs"],
+      "dropdowns": ["#categoryFilter", "#locationFilter"],
+      "buttons": ["#addBtn", ".type-tab", "#clearFilters"],
+      "inputs": ["#searchInput"],
+      "interactions": [
+        { "action": "visible", "selector": "#searchInput" },
+        { "action": "visible", "selector": ".type-tabs" },
+        { "action": "fill", "selector": "#searchInput", "value": "test" }
+      ]
+    },
+    "/public/systems.html": {
+      "name": "Systems",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/test-results.html": {
+      "name": "Test Results Dashboard",
+      "type": "static",
+      "elements": [".container", "#content", "#loading"],
+      "dropdowns": [],
+      "buttons": [".refresh-btn"],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": ".container" }
+      ]
+    },
+    "/public/testing-golden-tests.html": {
+      "name": "Testing Golden Tests",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/testing-intent-router.html": {
+      "name": "Testing Intent Router",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/testing-playbook.html": {
+      "name": "Testing Playbook",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/testing-specifications.html": {
+      "name": "Testing Specifications",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/testing.html": {
+      "name": "DIP Testing Dashboard",
+      "type": "static",
+      "elements": [".container", ".header", ".cards-grid", ".card"],
+      "dropdowns": [],
+      "buttons": [".card"],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": ".container" },
+        { "action": "visible", "selector": ".cards-grid" }
+      ]
+    },
+    "/public/trip-detail.html": {
+      "name": "Trip Detail",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/trips.html": {
+      "name": "Trip Tracking",
+      "type": "static",
+      "elements": [".header", "#startTripCard", "#historyCard", "#statusBadge"],
+      "dropdowns": [],
+      "buttons": ["#startTripBtn"],
+      "inputs": ["#tripTitle"],
+      "interactions": [
+        { "action": "visible", "selector": ".header" },
+        { "action": "visible", "selector": "#startTripCard" }
+      ]
+    },
+    "/public/unified-dashboard.html": {
+      "name": "Unified Dashboard",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/unified-mobile.html": {
+      "name": "BoatOS Mobile Dashboard",
+      "type": "static",
+      "elements": [".header", ".actions-grid", ".action-card", "#anchorAlarmBtn", "#userTodoList"],
+      "dropdowns": [],
+      "buttons": [".action-card", "#anchorAlarmBtn"],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": ".header" },
+        { "action": "visible", "selector": ".actions-grid" }
+      ]
+    },
+    "/public/upload.html": {
+      "name": "Upload",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/victron-mobile.html": {
+      "name": "Victron Mobile",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/weather-area-add.html": {
+      "name": "Add Weather Area",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/weather-area-view.html": {
+      "name": "View Weather Area",
+      "type": "static",
+      "elements": ["body"],
+      "dropdowns": [],
+      "buttons": [],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": "body" }
+      ]
+    },
+    "/public/weather-areas.html": {
+      "name": "Weather Areas",
+      "type": "static",
+      "elements": [".container", ".header", "#areas-container", "#loading"],
+      "dropdowns": [],
+      "buttons": [".btn-primary"],
+      "inputs": [],
+      "interactions": [
+        { "action": "visible", "selector": ".container" },
+        { "action": "visible", "selector": ".header" }
+      ]
+    }
+  },
+  "maintenanceAgent": {
+    "_note": "Maintenance Agent pages run on port 3001",
+    "baseUrl": "http://localhost:3001",
+    "pages": {
+      "/index.html": {
+        "name": "Maintenance Agent Dashboard",
+        "type": "static",
+        "elements": [".container", ".header", ".modules", ".module-card", "#apiDot", "#apiStatus"],
+        "dropdowns": [],
+        "buttons": [".module-card"],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".header" },
+          { "action": "visible", "selector": ".modules" }
+        ]
+      },
+      "/index-mobile.html": {
+        "name": "Maintenance Agent Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/agent-status.html": {
+        "name": "Agent Status",
+        "type": "static",
+        "elements": [".main-container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".main-container" }
+        ]
+      },
+      "/agent-status-mobile.html": {
+        "name": "Agent Status Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/app-mobile.html": {
+        "name": "App Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/dedup-review.html": {
+        "name": "Duplicate Review",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/edit-user-task.html": {
+        "name": "Edit User Task",
+        "type": "static",
+        "elements": [".container", ".card"],
+        "dropdowns": ["#system", "#frequencyType"],
+        "buttons": [".btn-primary", ".btn-secondary"],
+        "inputs": ["#description", "#dueDate", "#notes"],
+        "interactions": [
+          { "action": "visible", "selector": ".container" },
+          { "action": "visible", "selector": ".card" }
+        ]
+      },
+      "/edit-user-task-mobile.html": {
+        "name": "Edit User Task Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/hours-update.html": {
+        "name": "Hours Update",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/hours-update-mobile.html": {
+        "name": "Hours Update Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/maintenance-tasks-list.html": {
+        "name": "Maintenance Tasks List",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/task-completion.html": {
+        "name": "Task Completion",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/todos.html": {
+        "name": "To-Do List",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/todos-mobile.html": {
+        "name": "To-Do List Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/user-tasks.html": {
+        "name": "Create User Task",
+        "type": "static",
+        "elements": [".container", ".card", "#userTaskForm"],
+        "dropdowns": ["#system", "#frequencyType"],
+        "buttons": [".btn-primary", ".btn-secondary"],
+        "inputs": ["#description", "#dueDate", "#notes"],
+        "interactions": [
+          { "action": "visible", "selector": ".container" },
+          { "action": "visible", "selector": "#userTaskForm" }
+        ]
+      },
+      "/user-tasks-mobile.html": {
+        "name": "User Tasks Mobile",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      },
+      "/weather-area-add.html": {
+        "name": "Add Weather Area",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/weather-area-view.html": {
+        "name": "View Weather Area",
+        "type": "static",
+        "elements": [".container"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/weather-areas.html": {
+        "name": "Weather Areas",
+        "type": "static",
+        "elements": [".container", ".header"],
+        "dropdowns": [],
+        "buttons": [".btn-primary"],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": ".container" }
+        ]
+      },
+      "/ws-test.html": {
+        "name": "WebSocket Test",
+        "type": "static",
+        "elements": ["body"],
+        "dropdowns": [],
+        "buttons": [],
+        "inputs": [],
+        "interactions": [
+          { "action": "visible", "selector": "body" }
+        ]
+      }
+    }
+  }
+}

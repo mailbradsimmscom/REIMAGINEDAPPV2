@@ -572,19 +572,25 @@
           el.addEventListener('click', hapticFeedback);
         });
 
-        // Back button
-        backBtn.addEventListener('click', () => {
-          window.history.back();
-        });
+        // Back button (with null check)
+        if (backBtn) {
+          backBtn.addEventListener('click', () => {
+            window.history.back();
+          });
+        }
 
-        // Menu button (placeholder)
-        menuBtn.addEventListener('click', () => {
-          alert('Menu coming soon!');
-        });
+        // Menu button (placeholder, with null check)
+        if (menuBtn) {
+          menuBtn.addEventListener('click', () => {
+            alert('Menu coming soon!');
+          });
+        }
 
-        // Pull to Refresh
+        // Pull to Refresh (with null check)
         let startY = 0;
         let pulling = false;
+
+        if (!messagesContainer) return; // Exit if no messages container
 
         messagesContainer.addEventListener('touchstart', (e) => {
           if (messagesContainer.scrollTop === 0) {

@@ -1,0 +1,313 @@
+{
+  "generatedAt": "2025-12-07T17:40:39.429Z",
+  "totalPages": 53,
+  "mainApp": 33,
+  "maintenanceAgent": 20,
+  "pages": [
+    {
+      "url": "/",
+      "name": "Chat Interface (Root)",
+      "type": "route"
+    },
+    {
+      "url": "/admin",
+      "name": "Admin Dashboard",
+      "type": "route"
+    },
+    {
+      "url": "/landing",
+      "name": "Landing Page",
+      "type": "route"
+    },
+    {
+      "file": "maintenance-agent/public/agent-status-mobile.html",
+      "url": "/maintenance-agent/agent-status-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/agent-status.html",
+      "url": "/maintenance-agent/agent-status.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/app-mobile.html",
+      "url": "/maintenance-agent/app-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/dedup-review.html",
+      "url": "/maintenance-agent/dedup-review.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/edit-user-task-mobile.html",
+      "url": "/maintenance-agent/edit-user-task-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/edit-user-task.html",
+      "url": "/maintenance-agent/edit-user-task.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/hours-update-mobile.html",
+      "url": "/maintenance-agent/hours-update-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/hours-update.html",
+      "url": "/maintenance-agent/hours-update.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/index-mobile.html",
+      "url": "/maintenance-agent/index-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/index.html",
+      "url": "/maintenance-agent/index.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/maintenance-tasks-list.html",
+      "url": "/maintenance-agent/maintenance-tasks-list.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/task-completion.html",
+      "url": "/maintenance-agent/task-completion.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/todos-mobile.html",
+      "url": "/maintenance-agent/todos-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/todos.html",
+      "url": "/maintenance-agent/todos.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/user-tasks-mobile.html",
+      "url": "/maintenance-agent/user-tasks-mobile.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/user-tasks.html",
+      "url": "/maintenance-agent/user-tasks.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/weather-area-add.html",
+      "url": "/maintenance-agent/weather-area-add.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/weather-area-view.html",
+      "url": "/maintenance-agent/weather-area-view.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/weather-areas.html",
+      "url": "/maintenance-agent/weather-areas.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "maintenance-agent/public/ws-test.html",
+      "url": "/maintenance-agent/ws-test.html",
+      "type": "static",
+      "service": "maintenance-agent",
+      "port": 3001
+    },
+    {
+      "file": "src/public/anchor-watch-admin.html",
+      "url": "/public/anchor-watch-admin.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/chat-mobile.html",
+      "url": "/public/chat-mobile.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/dashboard.html",
+      "url": "/public/dashboard.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/documents.html",
+      "url": "/public/documents.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/index-mobile.html",
+      "url": "/public/index-mobile.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/index.html",
+      "url": "/public/index.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/landing.html",
+      "url": "/public/landing.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/logs-viewer.html",
+      "url": "/public/logs-viewer.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/maintenance-review.html",
+      "url": "/public/maintenance-review.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/maintenance-tasks-list.html",
+      "url": "/public/maintenance-tasks-list.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/pinecone-admin.html",
+      "url": "/public/pinecone-admin.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/position-monitor.html",
+      "url": "/public/position-monitor.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/supplies-admin.html",
+      "url": "/public/supplies-admin.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/supplies.html",
+      "url": "/public/supplies.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/systems.html",
+      "url": "/public/systems.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/test-results.html",
+      "url": "/public/test-results.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/testing-golden-tests.html",
+      "url": "/public/testing-golden-tests.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/testing-intent-router.html",
+      "url": "/public/testing-intent-router.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/testing-playbook.html",
+      "url": "/public/testing-playbook.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/testing-specifications.html",
+      "url": "/public/testing-specifications.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/testing.html",
+      "url": "/public/testing.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/trip-detail.html",
+      "url": "/public/trip-detail.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/trips.html",
+      "url": "/public/trips.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/unified-dashboard.html",
+      "url": "/public/unified-dashboard.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/unified-mobile.html",
+      "url": "/public/unified-mobile.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/upload.html",
+      "url": "/public/upload.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/victron-mobile.html",
+      "url": "/public/victron-mobile.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/weather-area-add.html",
+      "url": "/public/weather-area-add.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/weather-area-view.html",
+      "url": "/public/weather-area-view.html",
+      "type": "static"
+    },
+    {
+      "file": "src/public/weather-areas.html",
+      "url": "/public/weather-areas.html",
+      "type": "static"
+    }
+  ]
+}

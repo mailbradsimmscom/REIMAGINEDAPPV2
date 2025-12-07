@@ -1,47 +1,73 @@
-import { searchSystems } from '../repositories/systems.repository.js';
-import { getSystemSvc } from './systems.service.js';
-import { getWeightedConversationContext, getEquipmentRelationshipContext } from './conversation-context.service.js';
-import { inferEquipmentRelationships, quickReferenceCheck } from './equipment-relationship-inference.service.js';
-import { updateChatThread } from '../repositories/chat.repository.js';
-import { getEnv } from '../config/env.js';
-import { logger } from '../utils/logger.js';
-import { processChatWorkflow } from '../clients/python-sidecar.client.js';
-import { chatDebug } from '../utils/chat-debug-logger.js';
-import { extractEquipmentName } from './equipment-extraction.service.js';
+// ============================================
+// DEFAULT IMPORTS - Used as defaults in factory
+// ============================================
+import * as systemsRepo from '../repositories/systems.repository.js';
+import * as systemsService from './systems.service.js';
+import * as conversationContextService from './conversation-context.service.js';
+import * as equipmentRelationshipService from './equipment-relationship-inference.service.js';
+import * as chatRepo from '../repositories/chat.repository.js';
+import * as envConfig from '../config/env.js';
+import { logger as defaultLogger } from '../utils/logger.js';
+import * as pythonSidecar from '../clients/python-sidecar.client.js';
+import { chatDebug as defaultChatDebug } from '../utils/chat-debug-logger.js';
+import * as equipmentExtraction from './equipment-extraction.service.js';
 
-function extractKeywords(query) {
-  if (!query || typeof query !== 'string') {
-    return '';
-  }
+// Pure helper functions - extracted for testability
+import { extractKeywords } from './chat-proxy/helpers.js';
 
-  const stopWords = new Set(['tell', 'me', 'about', 'my', 'the', 'a', 'an', 'is', 'are', 'what', 'how', 'when', 'where', 'why', 'which', 'who', 'can', 'could', 'would', 'should', 'will', 'do', 'does', 'did', 'has', 'have', 'had', 'be', 'been', 'being', 'to', 'of', 'in', 'for', 'on', 'with', 'at', 'from', 'by', 'it', 'its', 'this', 'that', 'these', 'those']);
+// Re-export for backward compatibility and direct testing
+export { extractKeywords };
 
-  const words = query.toLowerCase()
-    .replace(/[^\w\s-]/g, ' ')
-    .split(/\s+/)
-    .filter(word => word.length > 2 && !stopWords.has(word));
+// ============================================
+// FACTORY PATTERN - For Dependency Injection
+// ============================================
 
-  return words.join(' ');
-}
+/**
+ * Create a chat proxy service with injected dependencies.
+ * Use this in tests to inject mocks.
+ *
+ * @param {Object} deps - Dependencies (all optional, defaults to real implementations)
+ * @returns {Object} Service object with processChatMessage function
+ *
+ * @example
+ * // In tests:
+ * const mockSystemsRepo = { searchSystems: async () => [] };
+ * const service = createChatProxyService({ systemsRepository: mockSystemsRepo });
+ * const result = await service.processChatMessage({ query: 'test', threadId: '123' });
+ */
+export function createChatProxyService({
+  // Repositories
+  systemsRepository = systemsRepo,
+  chatRepository = chatRepo,
+  // Services
+  systemsServiceDep = systemsService,
+  conversationContextServiceDep = conversationContextService,
+  equipmentRelationshipServiceDep = equipmentRelationshipService,
+  equipmentExtractionServiceDep = equipmentExtraction,
+  // Clients
+  pythonSidecarClient = pythonSidecar,
+  // Config & Utils
+  envConfigDep = envConfig,
+  logger = defaultLogger,
+  chatDebug = defaultChatDebug
+} = {}) {
 
-
-export async function processChatMessage({ query, threadId }) {
-  const requestLogger = logger.createRequestLogger();
-  const env = getEnv();
-  let systemsContext = [];
-  let conversationContext = null;
+  async function processChatMessage({ query, threadId }) {
+    const requestLogger = logger.createRequestLogger();
+    const env = envConfigDep.getEnv();
+    let systemsContext = [];
+    let conversationContext = null;
 
   try {
     // STEP 1: Get conversation context (always, for memory) and thread equipment blob
-    conversationContext = await getWeightedConversationContext(threadId, query);
+    conversationContext = await conversationContextServiceDep.getWeightedConversationContext(threadId, query);
 
     // Get thread with equipment_context blob
-    const { getChatThread } = await import('../repositories/chat.repository.js');
     let threadData = null;
     let existingEquipmentContext = [];
 
     try {
-      threadData = await getChatThread(threadId);
+      threadData = await chatRepository.getChatThread(threadId);
       existingEquipmentContext = threadData?.equipment_context || [];
 
       requestLogger.info('📦 Retrieved thread equipment context', {
@@ -75,7 +101,7 @@ export async function processChatMessage({ query, threadId }) {
       ? existingEquipmentContext
       : conversationContext.accumulated_equipment;
 
-    const referenceCheck = quickReferenceCheck(query, previousEquipment);
+    const referenceCheck = equipmentRelationshipServiceDep.quickReferenceCheck(query, previousEquipment);
 
     requestLogger.info('🔍 Analyzing query for equipment references', {
       query: query.substring(0, 100),
@@ -99,7 +125,7 @@ export async function processChatMessage({ query, threadId }) {
     // ALWAYS search current query for new equipment (fast database lookup)
     // This catches specific model numbers like "4JH57", "SD60" that user adds in follow-ups
     const searchQuery = extractKeywords(query) || query;
-    const queryKeywordResults = await searchSystems(searchQuery, { limit: 10 });
+    const queryKeywordResults = await systemsRepository.searchSystems(searchQuery, { limit: 10 });
 
     requestLogger.info('🔍 Query keyword search completed', {
       query: searchQuery.substring(0, 50),
@@ -109,7 +135,7 @@ export async function processChatMessage({ query, threadId }) {
 
     if (referenceCheck.should_infer) {
       // Use LLM to infer equipment relationships, passing BOTH keyword results AND existing context
-      const inferenceResult = await inferEquipmentRelationships(
+      const inferenceResult = await equipmentRelationshipServiceDep.inferEquipmentRelationships(
         threadId,
         query,
         queryKeywordResults, // Pass keyword search results (was empty before!)
@@ -137,7 +163,7 @@ export async function processChatMessage({ query, threadId }) {
           originalQuery: query.substring(0, 100)
         });
 
-        const extraction = await extractEquipmentName(query);
+        const extraction = await equipmentExtractionServiceDep.extractEquipmentName(query);
 
         if (extraction.equipment && extraction.equipment.length > 0) {
           requestLogger.info('🔬 [INFERENCE_FALLBACK] Extracted multiple equipment', {
@@ -153,7 +179,7 @@ export async function processChatMessage({ query, threadId }) {
               role: eq.role
             });
 
-            const results = await searchSystems(eq.name, { limit: 10 });
+            const results = await systemsRepository.searchSystems(eq.name, { limit: 10 });
 
             requestLogger.info('🔍 [SEARCH_RESULT]', {
               name: eq.name,
@@ -228,7 +254,7 @@ export async function processChatMessage({ query, threadId }) {
 
       try {
         // Only need LLM extraction now (keyword search already done)
-        llmExtraction = await extractEquipmentName(query).catch(err => {
+        llmExtraction = await equipmentExtractionServiceDep.extractEquipmentName(query).catch(err => {
           requestLogger.error('❌ LLM extraction FAILED', {
             error: err.message,
             query: query.substring(0, 100)
@@ -317,7 +343,7 @@ export async function processChatMessage({ query, threadId }) {
             role: eq.role
           });
 
-          const results = await searchSystems(eq.name, { limit: 10 });
+          const results = await systemsRepository.searchSystems(eq.name, { limit: 10 });
           const searchDuration = Date.now() - searchStart;
 
           requestLogger.info('🔍 [LLM_SEARCH_RESULT]', {
@@ -447,7 +473,7 @@ export async function processChatMessage({ query, threadId }) {
     }
 
     // STEP 4: Get enhanced equipment context (current + conversation history)
-    const rawEquipmentContext = await getEquipmentRelationshipContext(threadId, currentEquipmentSearch);
+    const rawEquipmentContext = await conversationContextServiceDep.getEquipmentRelationshipContext(threadId, currentEquipmentSearch);
 
     requestLogger.info('🔗 Built equipment relationship context', {
       currentEquipmentFound: currentEquipmentSearch.length,
@@ -497,7 +523,7 @@ export async function processChatMessage({ query, threadId }) {
           fullSystem = equipment;
         } else {
           // Fetch full details from systems API for NEW equipment
-          fullSystem = await getSystemSvc(equipment.asset_uid);
+          fullSystem = await systemsServiceDep.getSystemSvc(equipment.asset_uid);
           newEquipmentFound.push(fullSystem);
 
           requestLogger.info('🆕 Fetched NEW equipment details', {
@@ -544,7 +570,7 @@ export async function processChatMessage({ query, threadId }) {
     // STEP 6: Update equipment context blob (always update to persist confidence scores)
     if (systemsContext.length > 0) {
       try {
-        await updateChatThread(threadId, {
+        await chatRepository.updateChatThread(threadId, {
           equipment_context: systemsContext
         });
 
@@ -588,7 +614,7 @@ export async function processChatMessage({ query, threadId }) {
     });
 
     const workflowStart = Date.now();
-    const pythonResult = await processChatWorkflow({
+    const pythonResult = await pythonSidecarClient.processChatWorkflow({
       query,
       systemsContext,
       threadId,
@@ -668,8 +694,24 @@ export async function processChatMessage({ query, threadId }) {
     });
     throw error;
   }
+  }
+
+  // Return the service object
+  return { processChatMessage };
 }
 
+// ============================================
+// DEFAULT INSTANCE - For Backward Compatibility
+// ============================================
+
+// Create default instance with real dependencies
+const defaultService = createChatProxyService();
+
+// Export the function directly for backward compatibility
+// Existing code can still do: import { processChatMessage } from './chat-proxy.service.js'
+export const { processChatMessage } = defaultService;
+
 export default {
-  processChatMessage
+  processChatMessage,
+  createChatProxyService  // Also export factory for tests
 };
