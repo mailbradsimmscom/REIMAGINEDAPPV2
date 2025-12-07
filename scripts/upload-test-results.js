@@ -144,11 +144,11 @@ async function uploadResults() {
     console.log('No results directory found. Creating empty result.');
     // Still upload so dashboard shows a run happened
   } else {
-    // Read all result files
-    const files = readdirSync(resultsDir).filter(f => f.endsWith('.json'));
+    // Read all result files (.json and .txt)
+    const files = readdirSync(resultsDir).filter(f => f.endsWith('.json') || f.endsWith('.txt'));
 
     for (const file of files) {
-      const category = file.replace('.json', '');
+      const category = file.replace('.json', '').replace('.txt', '');
       const content = readFileSync(join(resultsDir, file), 'utf-8');
 
       let data;
