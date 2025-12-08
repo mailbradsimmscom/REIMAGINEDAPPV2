@@ -132,11 +132,17 @@ jobs:
       - name: Run Unit Tests
         run: |
           node --test --test-force-exit \
-            tests/unit/middleware/serviceGuards.test.js \
-            tests/unit/middleware/admin.test.js \
-            tests/unit/services/guards.test.js \
-            tests/unit/fixture-validation.test.js \
             tests/unit/config/env.test.js \
+            tests/unit/fixture-validation.test.js \
+            tests/unit/middleware/admin.test.js \
+            tests/unit/middleware/serviceGuards.test.js \
+            tests/unit/repositories/guards.test.js \
+            tests/unit/services/chat-proxy.service.test.js \
+            tests/unit/services/guards.test.js \
+            tests/unit/services/query-normalizer.test.js \
+            tests/unit/services/service-guards.test.js \
+            tests/unit/validation/debug.test.js \
+            tests/unit/validation/method-guards.test.js \
             2>&1 | tee results/unit.txt || true
         timeout-minutes: 2
         env:
