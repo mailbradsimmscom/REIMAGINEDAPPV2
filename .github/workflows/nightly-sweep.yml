@@ -157,8 +157,18 @@ jobs:
           CI=true BASE_URL=${{ env.PRODUCTION_URL }} \
             npx playwright test tests/e2e/admin-dashboard.spec.js \
             --reporter=json \
-            2>&1 | tee results/playwright.json || true
+            2>&1 | tee results/playwright-e2e.json || true
         timeout-minutes: 5
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: Run Nightly UI Sweep (Playwright)
+        run: |
+          CI=true BASE_URL=${{ env.PRODUCTION_URL }} \
+            npx playwright test tests/nightly/ui-all.spec.js \
+            --reporter=json \
+            2>&1 | tee results/playwright-nightly.json || true
+        timeout-minutes: 10
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
