@@ -106,12 +106,26 @@ jobs:
       - name: Record start time
         run: echo "RUN_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python test dependencies
+        run: |
+          cd python-sidecar
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
       - name: Discover UI pages
         run: node scripts/discover-ui-pages.js
 
       # Run tests in parallel where possible
       - name: Run Unit Tests
         run: npm run test:unit 2>&1 | tee results/unit.txt || true
+
+      - name: Run Python Tests
+        run: cd python-sidecar && pytest tests -v --tb=short 2>&1 | tee ../results/python.txt || true
 
       - name: Run Integration Tests (against production)
         run: npm run test:integration 2>&1 | tee results/integration.txt || true

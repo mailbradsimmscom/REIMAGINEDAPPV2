@@ -87,6 +87,34 @@ function parseNodeTestOutput(content) {
 }
 
 /**
+ * Parse pytest verbose output
+ */
+function parsePytestOutput(content) {
+  const lines = content.split('\n');
+  const tests = [];
+  let passed = 0;
+  let failed = 0;
+  let skipped = 0;
+
+  for (const line of lines) {
+    // Match pytest verbose output: test_file.py::test_name PASSED/FAILED/SKIPPED
+    const match = line.match(/^([\w\/\.\-]+::\S+)\s+(PASSED|FAILED|SKIPPED|ERROR)/);
+    if (match) {
+      const name = match[1];
+      const status = match[2].toLowerCase();
+
+      if (status === 'passed') passed++;
+      else if (status === 'failed' || status === 'error') failed++;
+      else if (status === 'skipped') skipped++;
+
+      tests.push({ name, status: status === 'error' ? 'failed' : status });
+    }
+  }
+
+  return { passed, failed, skipped, tests };
+}
+
+/**
  * Parse Playwright JSON report
  */
 function parsePlaywrightReport(content) {
@@ -155,6 +183,9 @@ async function uploadResults() {
       try {
         if (file.includes('playwright')) {
           data = parsePlaywrightReport(content);
+        } else if (file.includes('python')) {
+          // Pytest verbose output
+          data = parsePytestOutput(content);
         } else {
           data = JSON.parse(content);
           // If it's raw JSON, try to extract stats
@@ -168,7 +199,7 @@ async function uploadResults() {
           }
         }
       } catch (e) {
-        // Might be TAP format
+        // Might be TAP format (Node.js tests)
         data = parseNodeTestOutput(content);
       }
 
