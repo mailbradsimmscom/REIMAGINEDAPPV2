@@ -172,6 +172,17 @@ jobs:
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
+      - name: Run Integration Tests
+        run: |
+          node --test --test-force-exit \
+            tests/integration/health.test.js \
+            2>&1 | tee results/integration.txt || true
+        timeout-minutes: 2
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       - name: Debug results directory
         if: always()
         run: |
