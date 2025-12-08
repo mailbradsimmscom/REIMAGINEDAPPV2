@@ -1,7 +1,7 @@
 import { test, assertSuccess, assertError, adminRequest, postRequest, assert } from '../test-config.js';
 
 // Set admin token for tests
-process.env.ADMIN_TOKEN = 'admin-secret-key';
+process.env.ADMIN_TOKEN = 'admin_secret_key';
 
 // Document route tests
 test('Document Routes - Happy Path', async (t) => {
