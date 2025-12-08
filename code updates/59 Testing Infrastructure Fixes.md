@@ -34,27 +34,39 @@ cp /tmp/test-backup-20251208_101556/nightly-sweep.yml .github/workflows/
 
 ---
 
-## Current State (as of Run #15)
+## Current State (as of Run #16)
 
 ### What's Working
 - Nightly sweep workflow runs without hanging
-- Python test step added back with proper env vars
+- Python tests: 68 tests (64 passed, 4 failed) - proper env vars working
+- Unit tests being added back incrementally with `--test-force-exit`
 - Test file backups saved
-
-### What Was Removed (Temporarily)
-The following test steps were removed due to hanging issues:
-- **Unit Tests** - Hung after ~19 tests due to open DB connections
-- **Integration Tests** - Dependent on unit tests completing
-- **E2E/Playwright Tests** - Never got to run due to earlier failures
 
 ### Test Steps Status
 
-| Test Type | Status | Notes |
-|-----------|--------|-------|
-| Python Tests | Active | Added back with proper env vars (Run #15) |
-| Unit Tests | Removed | Hanging issue - needs `--test-force-exit` |
-| Integration Tests | Removed | Will add back after unit tests fixed |
-| E2E/Playwright Tests | Removed | Will add back after others working |
+| Test Type | Status | Tests | Notes |
+|-----------|--------|-------|-------|
+| Python Tests | Active | 68 (64 pass, 4 fail) | All run, no skips |
+| Unit: serviceGuards.test.js | Active (Run #16) | 12 | Testing with --test-force-exit |
+| Unit: Other files | Removed | ~60 | Will add incrementally |
+| Integration Tests | Removed | ? | Will add after unit tests |
+| E2E/Playwright Tests | Removed | ? | Will add last |
+
+### Incremental Unit Test Strategy
+
+Adding unit tests one file at a time to isolate hanging issues:
+
+1. **serviceGuards.test.js** (12 tests) - Run #16 - TESTING NOW
+2. guards.test.js (services) - 13 tests - Next
+3. service-guards.test.js - 10 tests
+4. chat-proxy.service.test.js - 9 tests
+5. guards.test.js (repositories) - 8 tests
+6. method-guards.test.js - 5 tests
+7. query-normalizer.test.js - 5 tests
+8. admin.test.js - 4 tests
+9. fixture-validation.test.js - 3 tests
+10. env.test.js - 1 test
+11. debug.test.js - 1 test
 
 ---
 
@@ -69,7 +81,8 @@ The following test steps were removed due to hanging issues:
 | #12 | 20m 17s | npm ci --include=dev | **Hung on unit tests** |
 | #13 | 6m 48s | 5min timeout on tests | Unit tests timed out, others skipped |
 | #14 | **2m** | All test steps removed | Success - workflow works |
-| #15 | Pending | Python tests added back with env vars | Awaiting results |
+| #15 | ~3m | Python tests with env vars | 68 tests: 64 pass, 4 fail, 0 skip |
+| #16 | Pending | + serviceGuards.test.js (12 tests) | Testing --test-force-exit |
 
 ---
 
