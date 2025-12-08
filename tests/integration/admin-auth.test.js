@@ -11,7 +11,7 @@ test('Admin Authentication - Happy Path', async (t) => {
     const response = await adminRequest('get', '/admin/api/health');
     
     assertSuccess(response, 200);
-    assert.strictEqual(response.body.data.status, 'ok');
+    assert.strictEqual(response.body.data.status, 'healthy');
   });
 
   await t.test('GET /admin/systems with valid token returns 200', async () => {
