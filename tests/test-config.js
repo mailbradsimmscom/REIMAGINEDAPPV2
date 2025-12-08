@@ -4,7 +4,7 @@ import request from 'supertest';
 
 // Test configuration
 export const TEST_CONFIG = {
-  ADMIN_TOKEN: 'admin-secret-key',
+  ADMIN_TOKEN: 'admin_secret_key',
   BASE_URL: 'http://localhost:3000',
   TIMEOUT: 5000
 };
