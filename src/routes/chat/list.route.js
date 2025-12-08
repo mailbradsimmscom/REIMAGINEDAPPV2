@@ -2,6 +2,7 @@ import express from 'express';
 import { listThreadsWithSummaries } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireSupabase } from '../../middleware/serviceGuards.js';
 import {
   ChatListEnvelope,
   chatListQuerySchema,
@@ -10,12 +11,12 @@ import {
 
 const router = express.Router();
 
-// Apply response validation to all routes in this file
-router.use(validateResponse(ChatListEnvelope));
-
 // GET /chat/list - List chat threads with summaries
+// Validation runs first, then service guard checks Supabase availability
 router.get('/',
   validate(chatListQuerySchema, 'query'),
+  requireSupabase(),
+  validateResponse(ChatListEnvelope),
   async (req, res, next) => {
     try {
       const { limit, cursor } = req.query;

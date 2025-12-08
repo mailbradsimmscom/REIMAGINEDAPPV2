@@ -3,9 +3,10 @@ import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
-import { 
-  documentDocumentsQuerySchema, 
-  documentDocumentsResponseSchema 
+import { requireSupabase } from '../../middleware/serviceGuards.js';
+import {
+  documentDocumentsQuerySchema,
+  documentDocumentsResponseSchema
 } from '../../schemas/document.schema.js';
 
 const router = express.Router();
@@ -13,12 +14,12 @@ const router = express.Router();
 // Apply admin gate middleware
 router.use(adminGate);
 
-// Apply response validation
-router.use(validateResponse(documentDocumentsResponseSchema));
-
 // GET /admin/docs/documents - List documents
-router.get('/', 
+// Validation runs first, then service guard checks Supabase availability
+router.get('/',
   validate(documentDocumentsQuerySchema, 'query'),
+  requireSupabase(),
+  validateResponse(documentDocumentsResponseSchema),
   async (req, res, next) => {
     try {
       const { limit, offset, status } = req.query;

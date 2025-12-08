@@ -18,12 +18,11 @@ import {
 
 const router = express.Router();
 
-// Apply service guards - systems routes require Supabase
-router.use(requireSupabase());
-
 // GET /systems/search - Search systems (MUST come before /:assetUid)
-router.get('/search', 
+// Validation runs first, then service guard checks Supabase availability
+router.get('/search',
   validate(systemsSearchQuerySchema, 'query'),
+  requireSupabase(),
   validateResponse(SystemsSearchEnvelope),
   async (req, res, next) => {
     try {
@@ -43,8 +42,9 @@ router.get('/search',
 );
 
 // GET /systems - List systems
-router.get('/', 
+router.get('/',
   validate(systemsListQuerySchema, 'query'),
+  requireSupabase(),
   validateResponse(SystemsListEnvelope),
   async (req, res, next) => {
     try {
@@ -66,6 +66,7 @@ router.get('/',
 // GET /systems/:assetUid - Get specific system
 router.get('/:assetUid',
   validate(UUIDParam, 'params'),
+  requireSupabase(),
   validateResponse(SystemsGetEnvelope),
   async (req, res, next) => {
     try {

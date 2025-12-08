@@ -1,8 +1,9 @@
 import express from 'express';
 import { validate } from '../middleware/validate.js';
 import { validateResponse } from '../middleware/validateResponse.js';
+import { requirePinecone } from '../middleware/serviceGuards.js';
 import { ERR } from '../constants/errorCodes.js';
-import { 
+import {
   pineconeSearchRequestSchema,
   pineconeStatsQuerySchema,
   pineconeDocumentChunksPathSchema,
@@ -20,9 +21,6 @@ async function getPineService() {
   return import('../services/pinecone.service.js');
 }
 
-// Helper function to check if Pinecone is configured
-import { isPineconeConfigured } from '../services/pinecone.guard.js';
-
 // Method not allowed handler
 function methodNotAllowed(req, res) {
   return res.status(405).json({
@@ -35,29 +33,19 @@ function methodNotAllowed(req, res) {
 }
 
 // POST /pinecone/search - Search Pinecone
-router.post('/search', 
+// Validation runs first, then service guard checks Pinecone availability
+router.post('/search',
   validate(pineconeSearchRequestSchema, 'body'),
+  requirePinecone(),
   validateResponse(pineconeSearchResponseSchema),
   async (req, res, next) => {
     try {
-      if (!isPineconeConfigured()) {
-        const envelope = {
-          success: false,
-          error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
-        };
-        // Optional: Validate response schema if RESPONSE_VALIDATE=1
-        // pineconeSearchResponseSchema.parse(envelope);
-        return res.status(400).json(envelope);
-      }
-
       const pineconeService = await getPineService();
       const result = await pineconeService.default.searchDocuments(req.body.query, req.body.context);
       const envelope = {
         success: true,
         data: result
       };
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // pineconeSearchResponseSchema.parse(envelope);
       return res.json(envelope);
     } catch (error) {
       next(error);
@@ -69,29 +57,19 @@ router.post('/search',
 router.all('/search', methodNotAllowed);
 
 // GET /pinecone/stats - Get Pinecone stats
-router.get('/stats', 
+// Validation runs first, then service guard checks Pinecone availability
+router.get('/stats',
   validate(pineconeStatsQuerySchema, 'query'),
+  requirePinecone(),
   validateResponse(pineconeStatsResponseSchema),
   async (req, res, next) => {
     try {
-      if (!isPineconeConfigured()) {
-        const envelope = {
-          success: false,
-          error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
-        };
-        // Optional: Validate response schema if RESPONSE_VALIDATE=1
-        // pineconeStatsResponseSchema.parse(envelope);
-        return res.status(400).json(envelope);
-      }
-
       const pineconeService = await getPineService();
       const result = await pineconeService.default.getIndexStatistics();
       const envelope = {
         success: true,
         data: result
       };
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // pineconeStatsResponseSchema.parse(envelope);
       return res.json(envelope);
     } catch (error) {
       next(error);
@@ -100,21 +78,13 @@ router.get('/stats',
 );
 
 // GET /pinecone/documents/:docId/chunks - Get document chunks
-router.get('/documents/:docId/chunks', 
+// Validation runs first, then service guard checks Pinecone availability
+router.get('/documents/:docId/chunks',
   validate(pineconeDocumentChunksPathSchema, 'params'),
+  requirePinecone(),
   validateResponse(pineconeDocumentChunksResponseSchema),
   async (req, res, next) => {
     try {
-      if (!isPineconeConfigured()) {
-        const envelope = {
-          success: false,
-          error: { code: ERR.PINECONE_DISABLED, message: 'Pinecone not configured' }
-        };
-        // Optional: Validate response schema if RESPONSE_VALIDATE=1
-        // pineconeDocumentChunksResponseSchema.parse(envelope);
-        return res.status(400).json(envelope);
-      }
-
       const { docId } = req.params;
       const pineconeService = await getPineService();
       const result = await pineconeService.default.getDocumentChunks(docId);
@@ -122,8 +92,6 @@ router.get('/documents/:docId/chunks',
         success: true,
         data: result
       };
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // pineconeDocumentChunksResponseSchema.parse(envelope);
       return res.json(envelope);
     } catch (error) {
       next(error);
@@ -132,29 +100,19 @@ router.get('/documents/:docId/chunks',
 );
 
 // POST /pinecone/query - Query Pinecone
-router.post('/query', 
+// Validation runs first, then service guard checks Pinecone availability
+router.post('/query',
   validate(pineconeQueryRequestSchema, 'body'),
+  requirePinecone(),
   validateResponse(pineconeQueryResponseSchema),
   async (req, res, next) => {
     try {
-      if (!isPineconeConfigured()) {
-        const envelope = {
-          success: false,
-          error: { code: 'PINECONE_DISABLED', message: 'Pinecone not configured' }
-        };
-        // Optional: Validate response schema if RESPONSE_VALIDATE=1
-        // pineconeQueryResponseSchema.parse(envelope);
-        return res.status(400).json(envelope);
-      }
-
       const pineconeService = await getPineService();
       const result = await pineconeService.default.searchDocuments(req.body.query, req.body.context);
       const envelope = {
         success: true,
         data: result
       };
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // pineconeQueryResponseSchema.parse(envelope);
       return res.json(envelope);
     } catch (error) {
       next(error);

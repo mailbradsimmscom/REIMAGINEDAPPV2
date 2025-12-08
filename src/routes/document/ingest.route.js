@@ -18,20 +18,17 @@ const router = express.Router();
 // Apply admin gate middleware
 router.use(adminGate);
 
-// Apply service guards - document ingest requires Supabase and Sidecar
-router.use(requireServices(['supabase', 'sidecar']));
-
-// Apply response validation to all routes in this file
-router.use(validateResponse(DocumentIngestEnvelope));
-
 // Document ingest body schema (for multipart form data)
 const documentIngestBodySchema = z.object({
   // This will be validated after busboy processes the multipart data
 }).passthrough();
 
 // POST /admin/docs/ingest - Create document ingest job
-router.post('/', 
+// Validation runs first, then service guards check availability
+router.post('/',
   validate(documentIngestBodySchema, 'body'),
+  requireServices(['supabase', 'sidecar']),
+  validateResponse(DocumentIngestEnvelope),
   async (req, res, next) => {
     try {
       // Parse multipart form data using busboy

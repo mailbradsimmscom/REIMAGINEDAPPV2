@@ -14,13 +14,13 @@ import {
 
 const router = express.Router();
 
-router.use(requireServices(['supabase','openai','pinecone']));
-router.use(validateResponse(ChatProcessEnvelope));
-
 // Chat processing endpoint - delegates to chat-proxy service
+// Validation runs first, then service guards check availability
 router.post(
   '/',
   validate(chatProcessRequestSchema, 'body'),
+  requireServices(['supabase', 'openai', 'pinecone']),
+  validateResponse(ChatProcessEnvelope),
   async (req, res, next) => {
     const startTime = Date.now();
     const requestLogger = logger.createRequestLogger();
