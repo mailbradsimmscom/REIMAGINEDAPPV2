@@ -1,7 +1,7 @@
 # 59 Testing Infrastructure Fixes
 
 **Date:** 2025-12-08
-**Status:** In Progress - Run #18 pending (25 unit tests + Python)
+**Status:** COMPLETE - Full test suite running in CI
 **Goal:** Fix nightly sweep workflow to properly run and capture all tests
 
 ---
@@ -9,83 +9,111 @@
 ## Quick Recovery After Compact
 
 **To continue after `/compact`, say:**
-> "Continue fixing the testing infrastructure. Read `code updates/59 Testing Infrastructure Fixes.md` for context. We're on Run #18 with 25 unit tests + 68 Python tests."
+> "Continue with testing infrastructure. Read `code updates/59 Testing Infrastructure Fixes.md` for context. Full test suite is running (555 tests). See `code updates/98 Test Failure Analysis.md` for failure details."
 
 ---
 
-## Current State (as of Run #18)
+## Final State (Run #25)
 
-### What's Working
-- Nightly sweep workflow runs without hanging
-- Python tests: 68 tests (64 pass, 4 fail)
-- Unit tests: 25 tests (25 pass) - serviceGuards (12) + guards (13)
-- TAP parser fixed to correctly count nested subtests
+### Test Suite Summary
+
+| Category | Files | Passed | Failed | Skipped | Total |
+|----------|-------|--------|--------|---------|-------|
+| Python | pytest | 64 | 4 | 0 | 68 |
+| Unit | 11 files | 52 | 19 | 7 | 78 |
+| E2E | 3 files | ~30 | ~5 | 0 | ~35 |
+| Nightly UI | 1 file | ~200 | ~150 | 83 | ~433 |
+| Integration | 21 files | many | many | - | varies |
+| Smoke | 2 files | 7 | 2 | 0 | 9 |
+| **TOTAL** | **39 files** | **374** | **181** | **90** | **555** |
+
+**Pass Rate: 67%**
+
+---
+
+## What Was Accomplished
+
+### 1. Workflow Infrastructure
+- Nightly sweep runs without hanging (`--test-force-exit`)
+- All test results uploaded to Supabase with granular detail
+- TAP parser correctly counts nested subtests
+- Timeouts prevent stuck tests
+
+### 2. Test Categories Added
+- **Python tests** (pytest) - 68 tests
+- **Unit tests** (node --test) - 11 files, 78 tests
+- **E2E tests** (Playwright) - 3 files
+- **Nightly UI sweep** (Playwright) - 33 pages x multiple tests
+- **Integration tests** (node --test) - 21 files
+- **Smoke tests** (node --test) - 2 files
+
+### 3. Key Fixes Applied
 - Guards use `getEnv()` for testable env control
-
-### Test Counts Expected
-
-| Test Type | Tests | Status |
-|-----------|-------|--------|
-| Python | 68 | 64 pass, 4 fail |
-| Unit (serviceGuards) | 12 | 12 pass |
-| Unit (guards) | 13 | 13 pass |
-| **Total** | **93** | 89 pass, 4 fail |
-
-### Key Fix: ENV Caching Problem
-
-**Problem:** Tests couldn't control env vars because guards used cached `ENV` constant.
-
-**Solution:**
-1. Guards now use `getEnv()` (dynamic) instead of `ENV` (cached at import)
-2. Tests use `resetEnvMemo()` + `setTestEnv()` to control env state
-3. Works in CI even with real env vars set
-
-**Files changed:**
-- `src/services/guards/*.js` - Use `getEnv()` instead of `ENV`
-- `src/config/env.js` - Already had `resetEnvMemo()` and `setTestEnv()`
-- `tests/unit/*/guards*.test.js` - Use env helpers instead of `process.env`
+- Tests use `setTestEnv()` + `resetEnvMemo()`
+- All env vars passed to test steps (PINECONE_API_KEY, etc.)
+- JSON reporter for Playwright results
 
 ---
 
-## Unit Tests Status
+## Files in Nightly Sweep Workflow
 
-| File | Tests | Status | Notes |
-|------|-------|--------|-------|
-| `middleware/serviceGuards.test.js` | 12 | ✅ In CI | Uses setTestEnv |
-| `services/guards.test.js` | 13 | ✅ In CI | Uses setTestEnv |
-| `services/service-guards.test.js` | 10 | ❌ Needs refactor | Services use cached ENV |
-| `services/chat-proxy.service.test.js` | 9 | Pending | |
-| `repositories/guards.test.js` | 8 | Pending | |
-| `validation/method-guards.test.js` | 5 | Pending | |
-| `services/query-normalizer.test.js` | 5 | Pending | |
-| `middleware/admin.test.js` | 4 | Pending | |
-| `fixture-validation.test.js` | 3 | Pending | |
-| `config/env.test.js` | 1 | Pending | |
-| `validation/debug.test.js` | 1 | Pending | |
+```yaml
+# Python
+cd python-sidecar && pytest tests -v
 
-### service-guards.test.js Blocker
+# Unit Tests (11 files)
+tests/unit/config/env.test.js
+tests/unit/fixture-validation.test.js
+tests/unit/middleware/admin.test.js
+tests/unit/middleware/serviceGuards.test.js
+tests/unit/repositories/guards.test.js
+tests/unit/services/chat-proxy.service.test.js
+tests/unit/services/guards.test.js
+tests/unit/services/query-normalizer.test.js
+tests/unit/services/service-guards.test.js
+tests/unit/validation/debug.test.js
+tests/unit/validation/method-guards.test.js
 
-This test file tests actual services (documentService, enhancedChatService, systemsService).
-These services import `ENV` at module load time, so `setTestEnv()` doesn't affect them.
+# E2E Tests (3 files)
+tests/e2e/admin-dashboard.spec.js
+tests/e2e/chat-flow.spec.js
+tests/e2e/error-handling.spec.js
 
-**To fix:** Refactor those services to use `getEnv()` instead of `ENV`.
+# Nightly UI Sweep (1 file)
+tests/nightly/ui-all.spec.js
 
----
+# Integration Tests (21 files)
+tests/integration/admin-auth.test.js
+tests/integration/admin.test.js
+tests/integration/bad-input-matrix.test.js
+tests/integration/bad-input.test.js
+tests/integration/chat.process.normalization.test.js
+tests/integration/chat.test.js
+tests/integration/comprehensive-validation.test.js
+tests/integration/contract-fit.test.js
+tests/integration/document.test.js
+tests/integration/golden-rules-validation.test.js
+tests/integration/health.test.js
+tests/integration/monitoring.test.js
+tests/integration/openai-client.test.js
+tests/integration/phase-d3-core.test.js
+tests/integration/phase2-achievements.test.js
+tests/integration/phase2-demo.test.js
+tests/integration/phase3-achievements.test.js
+tests/integration/pinecone.test.js
+tests/integration/response-validation.test.js
+tests/integration/retrieval-spec.test.js
+tests/integration/schema-validation.test.js
+tests/integration/security.test.js
+tests/integration/spec-bias-telemetry.test.js
+tests/integration/style-detection.test.js
+tests/integration/systems.test.js
+tests/integration/test-infrastructure.test.js
 
-## Python Test Failures (4 tests)
-
-All failures are related to `/v1/chat/process` returning 404:
-
+# Smoke Tests (2 files)
+tests/smoke/route-map.test.js
+tests/smoke/router-imports.test.js
 ```
-tests/contract/test_api_schemas.py::TestChatEndpointContract::test_chat_requires_body
-tests/contract/test_api_schemas.py::TestChatEndpointContract::test_chat_requires_query
-tests/contract/test_api_schemas.py::TestChatEndpointContract::test_chat_accepts_minimal_payload
-tests/contract/test_api_schemas.py::TestErrorResponses::test_405_on_wrong_method
-```
-
-**Cause:** Tests expect `/v1/chat/process` route but it returns 404. Either:
-- Route is at different path
-- Chat routes not mounted in test app fixture
 
 ---
 
@@ -97,62 +125,65 @@ tests/contract/test_api_schemas.py::TestErrorResponses::test_405_on_wrong_method
 | #15 | Python tests with env vars | 68 tests: 64 pass, 4 fail |
 | #16 | + serviceGuards.test.js | 6/12 fail (ENV caching issue) |
 | #17 | Fix guards to use getEnv() | 12/12 pass, TAP parser fix |
-| #18 | + guards.test.js | Expected: 25 pass unit + 64 pass Python |
+| #18 | + guards.test.js | 25 pass unit + 68 Python |
+| #19 | + 3 safe unit tests | 32 unit tests pass |
+| #20 | All unit tests (11 files) | 78 tests (52 pass, 19 fail, 7 skip) |
+| #21 | + Playwright e2e | 7 e2e tests pass |
+| #22 | + Nightly UI sweep | ~100 page tests pass |
+| #23 | + Integration health.test.js | Failed - missing env vars |
+| #24 | Fix env vars | Still failing - need all env vars |
+| #25 | All tests + all env vars | **555 tests (374 pass, 181 fail, 90 skip)** |
 
 ---
 
-## Files Modified This Session
+## Known Issues (See 98 Test Failure Analysis.md)
 
-```
-src/services/guards/index.js         # Use getEnv() instead of ENV
-src/services/guards/supabase.guard.js
-src/services/guards/openai.guard.js
-src/services/guards/pinecone.guard.js
-src/services/guards/sidecar.guard.js
-tests/unit/middleware/serviceGuards.test.js  # Use setTestEnv()
-tests/unit/services/guards.test.js           # Use setTestEnv()
-scripts/upload-test-results.js               # Fix TAP parser for nested subtests
-.github/workflows/nightly-sweep.yml          # Add guards.test.js
-```
+1. **Unit Tests (19 failures)**
+   - ENV caching in repositories/services
+   - Query normalizer stripping too much
+   - Method guard expectations wrong
 
----
+2. **Integration Tests (many failures)**
+   - Admin token mismatch (hardcoded vs secrets)
+   - Route expectations incorrect
+   - Service initialization at module load
 
-## Next Steps
+3. **Playwright Skipped (83)**
+   - Maintenance agent pages (service not deployed in CI)
 
-1. **Verify Run #18** - Should show 25 unit + 68 Python tests
-2. **Fix Python 404 failures** - Check chat route path in test fixture
-3. **Refactor services to use getEnv()** - Unblock service-guards.test.js
-4. **Add more unit test files** - One at a time
-5. **Add integration tests back**
-6. **Add Playwright tests back**
+4. **Python Tests (4 failures)**
+   - `/v1/chat/process` route 404
 
 ---
 
 ## Commands Reference
 
 ```bash
-# Run both guard test files locally
-node --test --test-force-exit \
-  tests/unit/middleware/serviceGuards.test.js \
-  tests/unit/services/guards.test.js
+# Run all unit tests locally
+node --test --test-force-exit tests/unit/
 
-# Check which unit test files exist
-find tests/unit -name "*.test.js"
+# Run specific test file
+node --test --test-force-exit tests/unit/middleware/serviceGuards.test.js
+
+# Run Playwright e2e against production
+CI=true BASE_URL=https://boatos-main.onrender.com npx playwright test tests/e2e/
 
 # Query Supabase for test results
-# (use the check-skipped.mjs pattern from session)
+node -r dotenv/config -e "..."
 
 # Trigger nightly sweep manually
-# GitHub Actions UI → nightly-sweep.yml → Run workflow
+# GitHub Actions UI -> nightly-sweep.yml -> Run workflow
 ```
 
 ---
 
-## Lessons Learned (Updated)
+## Lessons Learned
 
 1. **ENV caching breaks tests** - Use `getEnv()` for code that needs test control
 2. **setTestEnv() only works for dynamic getEnv()** - Static imports cache at load time
 3. **TAP parser must handle nested subtests** - Node test runner indents subtests
-4. **Summary lines are authoritative** - Parse `# pass N` instead of counting `ok` lines
+4. **All env vars needed for app import** - Pinecone, OpenAI init at module load
 5. **Add tests incrementally** - Easier to debug failures
-6. **Services need refactoring** - Can't test "not configured" if service imports cached ENV
+6. **Full visibility first, fix later** - Get all tests running, then fix failures
+7. **Integration tests hit real services** - Need proper mocking or env vars
+8. **Playwright tests need deployed services** - Can't test maintenance agent without deployment
