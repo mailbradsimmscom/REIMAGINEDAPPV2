@@ -100,7 +100,7 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
   
   // Admin health
   await t.test('POST /admin/health with invalid method returns 405', async () => {
-    const response = await adminRequest('post', '/admin/health');
+    const response = await adminRequest('post', '/admin/api/health');
     
     assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
@@ -108,7 +108,7 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
 
   // Admin pinecone
   await t.test('POST /admin/pinecone with invalid method returns 405', async () => {
-    const response = await adminRequest('post', '/admin/pinecone');
+    const response = await adminRequest('post', '/admin/api/pinecone');
     
     assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
@@ -116,7 +116,7 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
 
   // Admin systems
   await t.test('GET /admin/systems with empty query returns 400', async () => {
-    const response = await adminRequest('get', '/admin/systems')
+    const response = await adminRequest('get', '/admin/api/systems')
       .query({ q: '' });
     
     assertError(response, 400);
@@ -124,7 +124,7 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
 
   // Admin manufacturers
   await t.test('GET /admin/manufacturers with empty query returns 400', async () => {
-    const response = await adminRequest('get', '/admin/manufacturers')
+    const response = await adminRequest('get', '/admin/api/manufacturers')
       .query({ q: '' });
     
     assertError(response, 400);
@@ -132,7 +132,7 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
 
   // Admin models
   await t.test('GET /admin/models with empty query returns 400', async () => {
-    const response = await adminRequest('get', '/admin/models')
+    const response = await adminRequest('get', '/admin/api/models')
       .query({ q: '' });
     
     assertError(response, 400);
@@ -140,14 +140,14 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
 
   // Admin logs
   await t.test('GET /admin/logs with invalid level returns 400', async () => {
-    const response = await adminRequest('get', '/admin/logs')
+    const response = await adminRequest('get', '/admin/api/logs')
       .query({ level: 'invalid' });
     
     assertError(response, 400);
   });
 
   await t.test('GET /admin/logs with invalid limit returns 400', async () => {
-    const response = await adminRequest('get', '/admin/logs')
+    const response = await adminRequest('get', '/admin/api/logs')
       .query({ limit: 'invalid' });
     
     assertError(response, 400);
@@ -199,28 +199,28 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
 test('Bad Input Validation - Unauthorized Access', async (t) => {
   
   await t.test('GET /admin/health without admin token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/health');
+    const response = await publicRequest('get', '/admin/api/health');
     
     assert.strictEqual(response.status, 401);
     assert.strictEqual(response.body.success, false);
   });
 
   await t.test('GET /admin/pinecone without admin token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/pinecone');
+    const response = await publicRequest('get', '/admin/api/pinecone');
     
     assert.strictEqual(response.status, 401);
     assert.strictEqual(response.body.success, false);
   });
 
   await t.test('GET /admin/systems without admin token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/systems');
+    const response = await publicRequest('get', '/admin/api/systems');
     
     assert.strictEqual(response.status, 401);
     assert.strictEqual(response.body.success, false);
   });
 
   await t.test('GET /admin/logs without admin token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/logs');
+    const response = await publicRequest('get', '/admin/api/logs');
     
     assert.strictEqual(response.status, 401);
     assert.strictEqual(response.body.success, false);

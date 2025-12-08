@@ -3,14 +3,14 @@ import { test, assertSuccess, assertUnauthorized, adminRequest, publicRequest, a
 // Admin authentication tests
 test('Admin Authentication - Happy Path', async (t) => {
   await t.test('GET /admin/health with valid token returns 200', async () => {
-    const response = await adminRequest('get', '/admin/health');
+    const response = await adminRequest('get', '/admin/api/health');
     
     assertSuccess(response, 200);
     assert.strictEqual(response.body.data.status, 'ok');
   });
 
   await t.test('GET /admin/systems with valid token returns 200', async () => {
-    const response = await adminRequest('get', '/admin/systems');
+    const response = await adminRequest('get', '/admin/api/systems');
     
     assertSuccess(response, 200);
     assert.strictEqual(typeof response.body.data.totalSystems, 'number');
@@ -19,19 +19,19 @@ test('Admin Authentication - Happy Path', async (t) => {
 
 test('Admin Authentication - Failure Path', async (t) => {
   await t.test('GET /admin/health without token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/health');
+    const response = await publicRequest('get', '/admin/api/health');
     
     assertUnauthorized(response);
   });
 
   await t.test('GET /admin/systems without token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/systems');
+    const response = await publicRequest('get', '/admin/api/systems');
     
     assertUnauthorized(response);
   });
 
   await t.test('GET /admin/health with invalid token returns 401', async () => {
-    const response = await publicRequest('get', '/admin/health')
+    const response = await publicRequest('get', '/admin/api/health')
       .set('x-admin-token', 'invalid-token');
     
     assertUnauthorized(response);

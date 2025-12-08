@@ -11,7 +11,7 @@ test('Phase 3: Specific Schema Tightening Achievements', async (t) => {
   await t.test('✅ Admin health endpoint uses AdminHealthEnvelope', async () => {
     const response = await testRequest({
       method: 'GET',
-      url: '/admin/health'
+      url: '/admin/api/health'
     }).expect(401); // Expected due to admin token requirement
 
     // Should get admin auth error, but the important thing is no schema validation errors
