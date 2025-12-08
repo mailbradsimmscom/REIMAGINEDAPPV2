@@ -57,6 +57,7 @@ function generateFixHint(category, test) {
 
 /**
  * Parse Node.js test output (TAP format)
+ * Handles nested subtests (indented with spaces)
  */
 function parseNodeTestOutput(content) {
   const lines = content.split('\n');
@@ -65,22 +66,50 @@ function parseNodeTestOutput(content) {
   let failed = 0;
   let skipped = 0;
 
+  // First, try to parse the summary line (most accurate)
+  // Format: "# pass 12" "# fail 0" "# skipped 0"
+  let foundSummary = false;
   for (const line of lines) {
-    if (line.startsWith('ok ')) {
-      passed++;
-      tests.push({
-        name: line.replace(/^ok \d+ - /, '').trim(),
-        status: 'passed'
-      });
-    } else if (line.startsWith('not ok ')) {
-      failed++;
-      tests.push({
-        name: line.replace(/^not ok \d+ - /, '').trim(),
-        status: 'failed'
-      });
-    } else if (line.includes('# SKIP') || line.includes('# skip')) {
-      skipped++;
+    const passMatch = line.match(/^# pass (\d+)/);
+    const failMatch = line.match(/^# fail (\d+)/);
+    const skipMatch = line.match(/^# skipped (\d+)/);
+
+    if (passMatch) { passed = parseInt(passMatch[1], 10); foundSummary = true; }
+    if (failMatch) { failed = parseInt(failMatch[1], 10); foundSummary = true; }
+    if (skipMatch) { skipped = parseInt(skipMatch[1], 10); foundSummary = true; }
+  }
+
+  // Parse individual test lines (handles both root and indented subtests)
+  for (const line of lines) {
+    // Match "ok N - name" or "    ok N - name" (with optional leading spaces)
+    const okMatch = line.match(/^\s*ok \d+ - (.+)/);
+    const notOkMatch = line.match(/^\s*not ok \d+ - (.+)/);
+
+    if (okMatch) {
+      const name = okMatch[1].trim();
+      // Skip YAML metadata lines that look like test names
+      if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
+        tests.push({ name, status: 'passed' });
+      }
+    } else if (notOkMatch) {
+      const name = notOkMatch[1].trim();
+      if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
+        tests.push({ name, status: 'failed' });
+      }
     }
+
+    // Check for skipped tests in the test line itself (not summary)
+    // Format: "ok 1 - test name # SKIP reason"
+    if ((line.includes('# SKIP') || line.includes('# TODO')) && line.match(/^\s*(ok|not ok)/)) {
+      // This specific test was skipped
+      // Note: skipped count already handled by summary, this is for test details
+    }
+  }
+
+  // If no summary found, count from parsed tests (fallback)
+  if (!foundSummary && tests.length > 0) {
+    passed = tests.filter(t => t.status === 'passed').length;
+    failed = tests.filter(t => t.status === 'failed').length;
   }
 
   return { passed, failed, skipped, tests };
