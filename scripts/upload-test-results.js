@@ -58,6 +58,7 @@ function generateFixHint(category, test) {
 /**
  * Parse Node.js test output (TAP format)
  * Handles nested subtests (indented with spaces)
+ * NOW CAPTURES ERROR MESSAGES from YAML blocks
  */
 function parseNodeTestOutput(content) {
   const lines = content.split('\n');
@@ -79,31 +80,76 @@ function parseNodeTestOutput(content) {
     if (skipMatch) { skipped = parseInt(skipMatch[1], 10); foundSummary = true; }
   }
 
-  // Parse individual test lines (handles both root and indented subtests)
-  for (const line of lines) {
+  // Parse individual test lines with error capture
+  let currentTest = null;
+  let inYamlBlock = false;
+  let errorLines = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
     // Match "ok N - name" or "    ok N - name" (with optional leading spaces)
     const okMatch = line.match(/^\s*ok \d+ - (.+)/);
     const notOkMatch = line.match(/^\s*not ok \d+ - (.+)/);
 
     if (okMatch) {
-      const name = okMatch[1].trim();
-      // Skip YAML metadata lines that look like test names
-      if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
-        tests.push({ name, status: 'passed' });
+      // Save previous failed test with error if any
+      if (currentTest && currentTest.status === 'failed' && errorLines.length > 0) {
+        currentTest.error = errorLines.join('\n').trim();
       }
+
+      const name = okMatch[1].trim();
+      if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
+        currentTest = { name, status: 'passed' };
+        tests.push(currentTest);
+      }
+      inYamlBlock = false;
+      errorLines = [];
     } else if (notOkMatch) {
+      // Save previous failed test with error if any
+      if (currentTest && currentTest.status === 'failed' && errorLines.length > 0) {
+        currentTest.error = errorLines.join('\n').trim();
+      }
+
       const name = notOkMatch[1].trim();
       if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
-        tests.push({ name, status: 'failed' });
+        currentTest = { name, status: 'failed' };
+        tests.push(currentTest);
+      }
+      inYamlBlock = false;
+      errorLines = [];
+    } else if (line.match(/^\s+---\s*$/)) {
+      // Start of YAML block
+      inYamlBlock = true;
+    } else if (line.match(/^\s+\.\.\.\s*$/)) {
+      // End of YAML block
+      inYamlBlock = false;
+    } else if (inYamlBlock && currentTest && currentTest.status === 'failed') {
+      // Capture error-related lines from YAML block
+      const errorMatch = line.match(/^\s+error:\s*['"]?(.+?)['"]?\s*$/);
+      const stackMatch = line.match(/^\s+stack:\s*\|?\-?\s*$/);
+      const actualMatch = line.match(/^\s+actual:\s*(.+)/);
+      const expectedMatch = line.match(/^\s+expected:\s*(.+)/);
+      const codeMatch = line.match(/^\s+code:\s*['"]?(.+?)['"]?\s*$/);
+
+      if (errorMatch) {
+        errorLines.push(`Error: ${errorMatch[1]}`);
+      } else if (actualMatch) {
+        errorLines.push(`Actual: ${actualMatch[1]}`);
+      } else if (expectedMatch) {
+        errorLines.push(`Expected: ${expectedMatch[1]}`);
+      } else if (codeMatch) {
+        errorLines.push(`Code: ${codeMatch[1]}`);
+      } else if (line.match(/^\s{6,}/) && errorLines.length > 0) {
+        // Stack trace lines (deeply indented)
+        errorLines.push(line.trim());
       }
     }
+  }
 
-    // Check for skipped tests in the test line itself (not summary)
-    // Format: "ok 1 - test name # SKIP reason"
-    if ((line.includes('# SKIP') || line.includes('# TODO')) && line.match(/^\s*(ok|not ok)/)) {
-      // This specific test was skipped
-      // Note: skipped count already handled by summary, this is for test details
-    }
+  // Don't forget the last test
+  if (currentTest && currentTest.status === 'failed' && errorLines.length > 0) {
+    currentTest.error = errorLines.join('\n').trim();
   }
 
   // If no summary found, count from parsed tests (fallback)
