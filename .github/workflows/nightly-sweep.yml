@@ -145,6 +145,18 @@ jobs:
         env:
           BASE_URL: ${{ env.PRODUCTION_URL }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          PLAYWRIGHT_JSON_REPORT: '1'
+
+      - name: Debug results directory
+        if: always()
+        run: |
+          echo "Results dir contents:"
+          ls -la results/ || echo "results/ not found"
+          if [ -f results/playwright.json ]; then
+            echo "Found results/playwright.json: $(wc -c < results/playwright.json) bytes"
+          else
+            echo "MISSING: results/playwright.json"
+          fi
 
       - name: Upload test results to Supabase
         run: node scripts/upload-test-results.js
@@ -155,14 +167,6 @@ jobs:
           ENVIRONMENT: production
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_SHA: ${{ github.sha }}
-
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: nightly-playwright-report
-          path: playwright-report/
-          retention-days: 14
 
       - name: Upload test results
         if: always()

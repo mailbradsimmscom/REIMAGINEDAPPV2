@@ -192,6 +192,12 @@ async function uploadResults() {
       const category = file.replace('.json', '').replace('.txt', '');
       const content = readFileSync(join(resultsDir, file), 'utf-8');
 
+      // Skip empty files
+      if (!content || content.trim().length === 0) {
+        console.log(`  ${category}: skipped (empty file)`);
+        continue;
+      }
+
       let data;
       try {
         if (file.includes('playwright')) {
