@@ -16,7 +16,7 @@ on:
 env:
   PRODUCTION_URL: https://boatos-main.onrender.com
   PYTHON_SIDECAR_URL: https://boatos-python.onrender.com
-  NODE_ENV: test
+  NODE_ENV: production
 
 jobs:
   # ============================================
@@ -120,10 +120,12 @@ jobs:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Run E2E Tests (against production)
-        run: npx playwright test --reporter=json > results/playwright.json || true
+        run: npx playwright test --reporter=json
+        continue-on-error: true
         env:
           BASE_URL: ${{ env.PRODUCTION_URL }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          PLAYWRIGHT_JSON_OUTPUT_NAME: results/playwright.json
 
       - name: Upload test results to Supabase
         run: node scripts/upload-test-results.js
