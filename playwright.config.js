@@ -16,7 +16,9 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? 'json' : 'html',
+  reporter: process.env.CI
+    ? [['json', { outputFile: 'results/playwright.json' }]]
+    : [['html']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL - use BASE_URL env var for CI, localhost for local dev */
@@ -30,15 +32,15 @@ export default defineConfig({
   },
 
   /* Configure projects for browsers */
-  /* By default, only run Chromium for speed. Enable all browsers in CI. */
+  /* CI: Chromium only (faster, matches installed browser). Local: all browsers. */
   projects: process.env.CI
     ? [
         { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-        { name: 'webkit', use: { ...devices['Desktop Safari'] } },
       ]
     : [
         { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+        { name: 'webkit', use: { ...devices['Desktop Safari'] } },
       ],
 
   /* Run your local dev server before starting the tests (skip in CI - testing against production) */

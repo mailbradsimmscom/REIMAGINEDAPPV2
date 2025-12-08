@@ -63,6 +63,9 @@ coverage/
 .mypy_cache/
 .pytype/
 .hypothesis/
+playwright-report/
+test-results/
+results/
 
 # -----------------------------------------------------------------------------
 # IDE / OS cruft
