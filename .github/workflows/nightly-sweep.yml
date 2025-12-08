@@ -120,6 +120,15 @@ jobs:
       - name: Discover UI pages
         run: node scripts/discover-ui-pages.js
 
+      - name: Run Python Tests
+        run: cd python-sidecar && pytest tests -v --tb=short 2>&1 | tee ../results/python.txt || true
+        timeout-minutes: 3
+        env:
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       - name: Debug results directory
         if: always()
         run: |
