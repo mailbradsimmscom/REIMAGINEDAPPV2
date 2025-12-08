@@ -141,7 +141,7 @@ jobs:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Run E2E Tests (against production)
-        run: npx playwright test || true
+        run: npm run playwright:ci || true
         env:
           BASE_URL: ${{ env.PRODUCTION_URL }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
