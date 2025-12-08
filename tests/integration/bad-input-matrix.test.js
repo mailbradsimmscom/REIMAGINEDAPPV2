@@ -10,19 +10,19 @@ test.before(async () => {
 
 test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
   
-  // Test 1: Public GET → 400 on bad query (search endpoint requires q with min 2 chars)
-  await t.test('GET /systems/search with empty query returns 400', async () => {
-    const response = await get('/systems/search', { query: { q: '' } });
+  // Test 1: Public GET → 400 on bad query
+  await t.test('GET /systems with empty query returns 400', async () => {
+    const response = await get('/systems', { query: { q: '' } });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
     assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
   });
 
   // Test 2: Admin GET → 400 with valid token + bad query
-  await t.test('GET /admin/docs/documents with valid token + bad query returns 400', async () => {
-    const response = await get('/admin/docs/documents', {
-      token: process.env.ADMIN_TOKEN,
-      query: { limit: 'abc' }
+  await t.test('GET /admin/docs with valid token + bad query returns 400', async () => {
+    const response = await get('/admin/docs', { 
+      token: process.env.ADMIN_TOKEN, 
+      query: { limit: 'abc' } 
     });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
@@ -37,23 +37,22 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
   });
 
-  // Test 4: Bad UUID param → 400 (route is /document/documents/:docId)
-  await t.test('GET /document/documents/not-a-uuid returns 400', async () => {
-    const response = await get('/document/documents/not-a-uuid');
+  // Test 4: Bad UUID param → 400
+  await t.test('GET /document/not-a-uuid returns 400', async () => {
+    const response = await get('/document/not-a-uuid');
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
     assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
   });
 
-  // Test 5: Disabled/unavailable external → returns error envelope (200 or 503)
-  await t.test('POST /pinecone/query with disabled service returns error envelope', async () => {
-    const response = await post('/pinecone/query', {
-      body: { query: 'ping' }
+  // Test 5: Disabled external → typed envelope (not 500)
+  await t.test('POST /pinecone/query with disabled service returns typed envelope', async () => {
+    const response = await post('/pinecone/query', { 
+      body: { query: 'ping' } 
     });
-    // Service may return 200 with PINECONE_DISABLED or 503 with service error
-    assert.ok([200, 503].includes(response.status), `Expected 200 or 503, got ${response.status}`);
+    assert.strictEqual(response.status, 200);
     assert.strictEqual(response.body.success, false);
-    assert.ok(response.body.error.code, 'Should have error code');
+    assert.strictEqual(response.body.error.code, 'PINECONE_DISABLED');
   });
 
   // Test 6: Admin route with invalid token → 401/403
