@@ -25,7 +25,7 @@ env:
   PINECONE_API_KEY: test-pinecone-key
   PINECONE_INDEX: test-index
   OPENAI_API_KEY: sk-test-not-real
-  ADMIN_TOKEN: test-admin-token
+  ADMIN_TOKEN: admin_secret_key
 
 jobs:
   # ============================================
