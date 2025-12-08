@@ -1,201 +1,158 @@
 # 59 Testing Infrastructure Fixes
 
 **Date:** 2025-12-08
-**Status:** In Progress - Run #15 pending (Python tests with proper env vars)
+**Status:** In Progress - Run #18 pending (25 unit tests + Python)
 **Goal:** Fix nightly sweep workflow to properly run and capture all tests
-
----
-
-## CRITICAL: Backup Locations
-
-**All test scripts backed up before removal:**
-
-```
-/tmp/test-backup-20251208_101556/
-├── tests/                      # All Node.js tests (unit, integration, e2e, nightly)
-├── python-sidecar-tests/       # Python sidecar tests
-├── nightly-sweep.yml           # Original workflow with all test steps
-├── playwright.config.js        # Playwright configuration
-└── package.json                # Contains test scripts
-```
-
-**To restore tests from backup:**
-```bash
-cp -r /tmp/test-backup-20251208_101556/tests/* tests/
-cp /tmp/test-backup-20251208_101556/nightly-sweep.yml .github/workflows/
-```
 
 ---
 
 ## Quick Recovery After Compact
 
 **To continue after `/compact`, say:**
-> "Continue fixing the testing infrastructure. Read `/code updates/59 Testing Infrastructure Fixes.md` for context. Backup is at `/tmp/test-backup-20251208_101556/`. Currently on Run #15 with Python tests."
+> "Continue fixing the testing infrastructure. Read `code updates/59 Testing Infrastructure Fixes.md` for context. We're on Run #18 with 25 unit tests + 68 Python tests."
 
 ---
 
-## Current State (as of Run #16)
+## Current State (as of Run #18)
 
 ### What's Working
 - Nightly sweep workflow runs without hanging
-- Python tests: 68 tests (64 passed, 4 failed) - proper env vars working
-- Unit tests being added back incrementally with `--test-force-exit`
-- Test file backups saved
+- Python tests: 68 tests (64 pass, 4 fail)
+- Unit tests: 25 tests (25 pass) - serviceGuards (12) + guards (13)
+- TAP parser fixed to correctly count nested subtests
+- Guards use `getEnv()` for testable env control
 
-### Test Steps Status
+### Test Counts Expected
 
-| Test Type | Status | Tests | Notes |
-|-----------|--------|-------|-------|
-| Python Tests | Active | 68 (64 pass, 4 fail) | All run, no skips |
-| Unit: serviceGuards.test.js | Active (Run #16) | 12 | Testing with --test-force-exit |
-| Unit: Other files | Removed | ~60 | Will add incrementally |
-| Integration Tests | Removed | ? | Will add after unit tests |
-| E2E/Playwright Tests | Removed | ? | Will add last |
+| Test Type | Tests | Status |
+|-----------|-------|--------|
+| Python | 68 | 64 pass, 4 fail |
+| Unit (serviceGuards) | 12 | 12 pass |
+| Unit (guards) | 13 | 13 pass |
+| **Total** | **93** | 89 pass, 4 fail |
 
-### Incremental Unit Test Strategy
+### Key Fix: ENV Caching Problem
 
-Adding unit tests one file at a time to isolate hanging issues:
+**Problem:** Tests couldn't control env vars because guards used cached `ENV` constant.
 
-1. **serviceGuards.test.js** (12 tests) - Run #16 - TESTING NOW
-2. guards.test.js (services) - 13 tests - Next
-3. service-guards.test.js - 10 tests
-4. chat-proxy.service.test.js - 9 tests
-5. guards.test.js (repositories) - 8 tests
-6. method-guards.test.js - 5 tests
-7. query-normalizer.test.js - 5 tests
-8. admin.test.js - 4 tests
-9. fixture-validation.test.js - 3 tests
-10. env.test.js - 1 test
-11. debug.test.js - 1 test
+**Solution:**
+1. Guards now use `getEnv()` (dynamic) instead of `ENV` (cached at import)
+2. Tests use `resetEnvMemo()` + `setTestEnv()` to control env state
+3. Works in CI even with real env vars set
+
+**Files changed:**
+- `src/services/guards/*.js` - Use `getEnv()` instead of `ENV`
+- `src/config/env.js` - Already had `resetEnvMemo()` and `setTestEnv()`
+- `tests/unit/*/guards*.test.js` - Use env helpers instead of `process.env`
 
 ---
 
-## Complete Run History
+## Unit Tests Status
 
-| Run | Duration | Changes | Result |
-|-----|----------|---------|--------|
-| #1-#8 | Various | Multiple fixes | Playwright JSON issues |
-| #9 | ? | Debug step added | playwright.json MISSING |
-| #10 | ? | npm run playwright:ci | ERR_MODULE_NOT_FOUND |
-| #11 | ? | node_modules/.bin path | playwright: not found |
-| #12 | 20m 17s | npm ci --include=dev | **Hung on unit tests** |
-| #13 | 6m 48s | 5min timeout on tests | Unit tests timed out, others skipped |
-| #14 | **2m** | All test steps removed | Success - workflow works |
-| #15 | ~3m | Python tests with env vars | 68 tests: 64 pass, 4 fail, 0 skip |
-| #16 | Pending | + serviceGuards.test.js (12 tests) | Testing --test-force-exit |
+| File | Tests | Status | Notes |
+|------|-------|--------|-------|
+| `middleware/serviceGuards.test.js` | 12 | ✅ In CI | Uses setTestEnv |
+| `services/guards.test.js` | 13 | ✅ In CI | Uses setTestEnv |
+| `services/service-guards.test.js` | 10 | ❌ Needs refactor | Services use cached ENV |
+| `services/chat-proxy.service.test.js` | 9 | Pending | |
+| `repositories/guards.test.js` | 8 | Pending | |
+| `validation/method-guards.test.js` | 5 | Pending | |
+| `services/query-normalizer.test.js` | 5 | Pending | |
+| `middleware/admin.test.js` | 4 | Pending | |
+| `fixture-validation.test.js` | 3 | Pending | |
+| `config/env.test.js` | 1 | Pending | |
+| `validation/debug.test.js` | 1 | Pending | |
 
----
+### service-guards.test.js Blocker
 
-## Root Causes Identified
+This test file tests actual services (documentService, enhancedChatService, systemsService).
+These services import `ENV` at module load time, so `setTestEnv()` doesn't affect them.
 
-### 1. Playwright Not Installed in CI
-**Problem:** `npx playwright test` downloaded a temp CLI instead of using node_modules
-**Fix:** Changed to `npm run playwright:ci` which uses local install
-
-### 2. NODE_ENV=production Skipped devDependencies
-**Problem:** `npm ci` skipped @playwright/test because NODE_ENV=production
-**Fix:** Added `npm ci --include=dev`
-
-### 3. Unit Tests Hanging
-**Problem:** After test #19 completed, process never exited
-**Cause:** Open database connections (Supabase) keeping process alive
-**Temporary fix:** Removed test step, added 5min timeout
-**Proper fix needed:** Use `node --test --test-force-exit` or fix connection cleanup
-
-### 4. Python Tests Missing Environment Variables
-**Problem:** 15 tests skipped because Pinecone not configured
-**Cause:** No `env:` block in Python test step
-**Fix:** Added env vars (PINECONE_API_KEY, OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY)
+**To fix:** Refactor those services to use `getEnv()` instead of `ENV`.
 
 ---
 
-## Files Modified
+## Python Test Failures (4 tests)
+
+All failures are related to `/v1/chat/process` returning 404:
 
 ```
-.github/workflows/nightly-sweep.yml   # Test steps removed then Python added back
-.gitignore                             # Added playwright-report/, test-results/, results/
-scripts/upload-test-results.js         # .txt support, pytest parser, skip empty files
-playwright.config.js                   # JSON reporter config, chromium only in CI
-package.json                           # Added playwright:ci script
+tests/contract/test_api_schemas.py::TestChatEndpointContract::test_chat_requires_body
+tests/contract/test_api_schemas.py::TestChatEndpointContract::test_chat_requires_query
+tests/contract/test_api_schemas.py::TestChatEndpointContract::test_chat_accepts_minimal_payload
+tests/contract/test_api_schemas.py::TestErrorResponses::test_405_on_wrong_method
 ```
+
+**Cause:** Tests expect `/v1/chat/process` route but it returns 404. Either:
+- Route is at different path
+- Chat routes not mounted in test app fixture
 
 ---
 
-## How to Add Tests Back
+## Run History
 
-### 1. Unit Tests (When Fixed)
-```yaml
-- name: Run Unit Tests
-  run: node --test --test-force-exit tests/unit/ 2>&1 | tee results/unit.txt || true
-  timeout-minutes: 5
-  env:
-    ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-    SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-    SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-    PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-    PYTHON_SIDECAR_URL: ${{ env.PYTHON_SIDECAR_URL }}
+| Run | Changes | Result |
+|-----|---------|--------|
+| #14 | All test steps removed | Success - workflow works |
+| #15 | Python tests with env vars | 68 tests: 64 pass, 4 fail |
+| #16 | + serviceGuards.test.js | 6/12 fail (ENV caching issue) |
+| #17 | Fix guards to use getEnv() | 12/12 pass, TAP parser fix |
+| #18 | + guards.test.js | Expected: 25 pass unit + 64 pass Python |
+
+---
+
+## Files Modified This Session
+
 ```
-
-### 2. Integration Tests
-```yaml
-- name: Run Integration Tests (against production)
-  run: npm run test:integration 2>&1 | tee results/integration.txt || true
-  timeout-minutes: 5
-  env:
-    BASE_URL: ${{ env.PRODUCTION_URL }}
-    ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-```
-
-### 3. E2E/Playwright Tests
-```yaml
-- name: Run E2E Tests (against production)
-  run: npm run playwright:ci || true
-  timeout-minutes: 10
-  env:
-    BASE_URL: ${{ env.PRODUCTION_URL }}
-    ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-    PLAYWRIGHT_JSON_REPORT: '1'
+src/services/guards/index.js         # Use getEnv() instead of ENV
+src/services/guards/supabase.guard.js
+src/services/guards/openai.guard.js
+src/services/guards/pinecone.guard.js
+src/services/guards/sidecar.guard.js
+tests/unit/middleware/serviceGuards.test.js  # Use setTestEnv()
+tests/unit/services/guards.test.js           # Use setTestEnv()
+scripts/upload-test-results.js               # Fix TAP parser for nested subtests
+.github/workflows/nightly-sweep.yml          # Add guards.test.js
 ```
 
 ---
 
 ## Next Steps
 
-1. **Check Run #15 results** - Verify all 68 Python tests run (no skips)
-2. **Fix unit test hanging** - Try `--test-force-exit` flag
-3. **Add unit tests back** - With proper exit handling
-4. **Add integration tests back**
-5. **Add Playwright tests back**
+1. **Verify Run #18** - Should show 25 unit + 68 Python tests
+2. **Fix Python 404 failures** - Check chat route path in test fixture
+3. **Refactor services to use getEnv()** - Unblock service-guards.test.js
+4. **Add more unit test files** - One at a time
+5. **Add integration tests back**
+6. **Add Playwright tests back**
 
 ---
 
 ## Commands Reference
 
 ```bash
-# Check backup contents
-ls -la /tmp/test-backup-20251208_101556/
+# Run both guard test files locally
+node --test --test-force-exit \
+  tests/unit/middleware/serviceGuards.test.js \
+  tests/unit/services/guards.test.js
 
-# Test Python locally with env vars
-cd python-sidecar
-PINECONE_API_KEY=$PINECONE_API_KEY pytest tests -v
+# Check which unit test files exist
+find tests/unit -name "*.test.js"
 
-# Test unit tests with force exit
-node --test --test-force-exit tests/unit/
+# Query Supabase for test results
+# (use the check-skipped.mjs pattern from session)
 
-# Check workflow runs on GitHub
-# https://github.com/mailbradsimmscom/REIMAGINEDAPPV2/actions/workflows/nightly-sweep.yml
+# Trigger nightly sweep manually
+# GitHub Actions UI → nightly-sweep.yml → Run workflow
 ```
 
 ---
 
-## Lessons Learned
+## Lessons Learned (Updated)
 
-1. **Test in CI early** - Local success doesn't mean CI success
-2. **Check what's in git** - Stale artifacts can mislead debugging
-3. **Use explicit env vars** - Don't rely on implicit CI detection
-4. **Add debug steps** - See what's actually happening in CI
-5. **One test type at a time** - Easier to identify issues
-6. **Always backup before removing** - Can restore if needed
-7. **Pass secrets to all test steps** - Tests need credentials to run properly
-8. **Timeout + continue-on-error** - Prevent hangs from blocking workflow
+1. **ENV caching breaks tests** - Use `getEnv()` for code that needs test control
+2. **setTestEnv() only works for dynamic getEnv()** - Static imports cache at load time
+3. **TAP parser must handle nested subtests** - Node test runner indents subtests
+4. **Summary lines are authoritative** - Parse `# pass N` instead of counting `ok` lines
+5. **Add tests incrementally** - Easier to debug failures
+6. **Services need refactoring** - Can't test "not configured" if service imports cached ENV
