@@ -106,16 +106,32 @@ export function resetEnvMemo() {
 
 /**
  * Set test environment overrides.
- * Merges overrides with current env and memoizes the result.
+ * If MEMO exists, merges overrides with it. If MEMO is null (after resetEnvMemo),
+ * starts with an empty object and applies only the provided overrides.
+ * Keys explicitly set to undefined or null will be deleted.
  *
  * @param {Object} overrides - Key-value pairs to override
  * @returns {Object} The merged environment
  *
  * @example
- * setTestEnv({ PYTHON_SIDECAR_URL: 'http://localhost:8001' });
+ * resetEnvMemo();
+ * setTestEnv({ PYTHON_SIDECAR_URL: 'http://localhost:8001' }); // Only this key is set
+ * setTestEnv({ SUPABASE_URL: undefined }); // Removes SUPABASE_URL if present
  */
 export function setTestEnv(overrides) {
-  const current = getEnv();
-  MEMO = { ...current, ...overrides };
+  // If MEMO is null (after reset), start with empty object - don't re-read process.env
+  // This allows tests to have a truly clean slate
+  const current = MEMO !== null ? MEMO : {};
+  MEMO = { ...current };
+
+  // Apply overrides, deleting keys that are explicitly undefined/null
+  for (const [key, value] of Object.entries(overrides)) {
+    if (value === undefined || value === null) {
+      delete MEMO[key];
+    } else {
+      MEMO[key] = value;
+    }
+  }
+
   return MEMO;
 }

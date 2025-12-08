@@ -201,23 +201,23 @@ router.get('/fuzzy', async (req, res, next) => {
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return res.json({
+  return res.status(405).json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
       message: `${req.method} not allowed`
     }
-  }, 405);
+  });
 });
 
 router.all('/fuzzy', (req, res) => {
-  return res.json({
+  return res.status(405).json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
       message: `${req.method} not allowed`
     }
-  }, 405);
+  });
 });
 
 export default router;

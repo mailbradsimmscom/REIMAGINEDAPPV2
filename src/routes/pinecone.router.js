@@ -25,13 +25,13 @@ import { isPineconeConfigured } from '../services/pinecone.guard.js';
 
 // Method not allowed handler
 function methodNotAllowed(req, res) {
-  return res.json({
+  return res.status(405).json({
     success: false,
     error: {
       code: ERR.METHOD_NOT_ALLOWED,
       message: `${req.method} not allowed for ${req.path}`
     }
-  }, 405);
+  });
 }
 
 // POST /pinecone/search - Search Pinecone

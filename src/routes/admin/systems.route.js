@@ -117,15 +117,15 @@ router.get('/lookup',
       
     } catch (error) {
       if (error.code === 'SYSTEM_NOT_FOUND') {
-        return res.json({
+        return res.status(404).json({
           success: false,
           error: {
             code: 'SYSTEM_NOT_FOUND',
             message: error.message
           }
-        }, 404);
+        });
       }
-      
+
       next(error);
     }
   }
@@ -133,13 +133,13 @@ router.get('/lookup',
 
 // Method not allowed for all other methods
 router.all('/', (req, res) => {
-  return res.json({
+  return res.status(405).json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
       message: `${req.method} not allowed`
     }
-  }, 405);
+  });
 });
 
 export default router;

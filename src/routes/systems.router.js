@@ -84,24 +84,24 @@ router.get('/:assetUid',
 
 // Method not allowed for all other methods on /systems/search
 router.all('/search', (req, res) => {
-  return res.json({
+  return res.status(405).json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
       message: `${req.method} not allowed`
     }
-  }, 405);
+  });
 });
 
 // Method not allowed for all other methods on /systems
 router.all('/', (req, res) => {
-  return res.json({
+  return res.status(405).json({
     success: false,
     error: {
       code: 'METHOD_NOT_ALLOWED',
       message: `${req.method} not allowed`
     }
-  }, 405);
+  });
 });
 
 export default router;
