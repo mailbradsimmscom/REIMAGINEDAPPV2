@@ -155,10 +155,13 @@ jobs:
       - name: Run E2E Tests (Playwright)
         run: |
           CI=true BASE_URL=${{ env.PRODUCTION_URL }} \
-            npx playwright test tests/e2e/admin-dashboard.spec.js \
+            npx playwright test \
+            tests/e2e/admin-dashboard.spec.js \
+            tests/e2e/chat-flow.spec.js \
+            tests/e2e/error-handling.spec.js \
             --reporter=json \
             2>&1 | tee results/playwright-e2e.json || true
-        timeout-minutes: 5
+        timeout-minutes: 10
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
@@ -175,8 +178,47 @@ jobs:
       - name: Run Integration Tests
         run: |
           node --test --test-force-exit \
+            tests/integration/admin-auth.test.js \
+            tests/integration/admin.test.js \
+            tests/integration/bad-input-matrix.test.js \
+            tests/integration/bad-input.test.js \
+            tests/integration/chat.process.normalization.test.js \
+            tests/integration/chat.test.js \
+            tests/integration/comprehensive-validation.test.js \
+            tests/integration/contract-fit.test.js \
+            tests/integration/document.test.js \
+            tests/integration/golden-rules-validation.test.js \
             tests/integration/health.test.js \
+            tests/integration/monitoring.test.js \
+            tests/integration/openai-client.test.js \
+            tests/integration/phase-d3-core.test.js \
+            tests/integration/phase2-achievements.test.js \
+            tests/integration/phase2-demo.test.js \
+            tests/integration/phase3-achievements.test.js \
+            tests/integration/pinecone.test.js \
+            tests/integration/response-validation.test.js \
+            tests/integration/retrieval-spec.test.js \
+            tests/integration/schema-validation.test.js \
+            tests/integration/security.test.js \
+            tests/integration/spec-bias-telemetry.test.js \
+            tests/integration/style-detection.test.js \
+            tests/integration/systems.test.js \
+            tests/integration/test-infrastructure.test.js \
             2>&1 | tee results/integration.txt || true
+        timeout-minutes: 5
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+
+      - name: Run Smoke Tests
+        run: |
+          node --test --test-force-exit \
+            tests/smoke/route-map.test.js \
+            tests/smoke/router-imports.test.js \
+            2>&1 | tee results/smoke.txt || true
         timeout-minutes: 2
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
