@@ -1,4 +1,9 @@
-import { test, assertError, publicRequest, adminRequest, assert } from '../test-config.js';
+import { test, assertError, publicRequest, adminRequest, assert, initTestApp } from '../test-config.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 // Bad-input tests for all endpoints
 test('Bad Input Validation - Public Endpoints', async (t) => {

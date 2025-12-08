@@ -1,4 +1,9 @@
-import { test, assertSuccess, assertError, publicRequest, postRequest, assert } from '../test-config.js';
+import { test, assertSuccess, assertError, publicRequest, postRequest, assert, initTestApp } from '../test-config.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 // Chat route tests
 test('Chat Routes - Happy Path', async (t) => {

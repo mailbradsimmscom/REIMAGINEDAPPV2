@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { get, post } from '../helpers/http.js';
+import { initTestApp } from '../setupApp.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 test('Comprehensive Bad-Input Test Matrix', async (t) => {
   

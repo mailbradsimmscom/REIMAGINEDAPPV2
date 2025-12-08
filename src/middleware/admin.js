@@ -40,10 +40,10 @@ export function adminGate(req, res, next) {
   }
   if (!supplied) {
     logger.info('Admin auth: missing token');
-    return res.status(401).json({ 
-      success: false, 
-      data: null, 
-      error: { code: ERR.UNAUTHORIZED, message: 'Admin token required' },
+    return res.status(401).json({
+      success: false,
+      data: null,
+      error: { code: ERR.UNAUTHORIZED, message: 'Admin access required' },
       requestId: res.locals?.requestId ?? null,
     });
   }

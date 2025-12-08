@@ -1,4 +1,9 @@
-import { test, assertSuccess, assertError, publicRequest, assert } from '../test-config.js';
+import { test, assertSuccess, assertError, publicRequest, assert, initTestApp } from '../test-config.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 // Health route tests
 test('Health Route - Happy Path', async (t) => {

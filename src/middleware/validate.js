@@ -11,7 +11,13 @@ export function validate(schema, source = 'body') {
     if (!result.success) {
       return res.status(400).json({
         success: false,
-        error: result.error.errors
+        data: null,
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Validation failed',
+          details: result.error.errors
+        },
+        requestId: res.locals?.requestId ?? null
       });
     }
 

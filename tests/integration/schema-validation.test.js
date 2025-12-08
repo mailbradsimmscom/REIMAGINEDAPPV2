@@ -1,4 +1,9 @@
-import { test, assertSuccess, assertError, publicRequest, adminRequest, assert } from '../test-config.js';
+import { test, assertSuccess, assertError, publicRequest, adminRequest, assert, initTestApp } from '../test-config.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 // Test tightened schema validation with RESPONSE_VALIDATE=1
 test('Health Routes - Tightened Schema Validation', async (t) => {

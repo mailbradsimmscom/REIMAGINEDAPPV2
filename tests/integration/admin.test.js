@@ -1,7 +1,9 @@
-import { test, assertSuccess, assertError, adminRequest, assert } from '../test-config.js';
+import { test, assertSuccess, assertError, adminRequest, assert, initTestApp } from '../test-config.js';
 
-// Set admin token for tests
-process.env.ADMIN_TOKEN = 'admin_secret_key';
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 // Admin route tests
 test('Admin Routes - Happy Path', async (t) => {

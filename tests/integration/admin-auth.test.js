@@ -1,4 +1,9 @@
-import { test, assertSuccess, assertUnauthorized, adminRequest, publicRequest, assert } from '../test-config.js';
+import { test, assertSuccess, assertUnauthorized, adminRequest, publicRequest, assert, initTestApp } from '../test-config.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 // Admin authentication tests
 test('Admin Authentication - Happy Path', async (t) => {
@@ -30,11 +35,14 @@ test('Admin Authentication - Failure Path', async (t) => {
     assertUnauthorized(response);
   });
 
-  await t.test('GET /admin/health with invalid token returns 401', async () => {
+  await t.test('GET /admin/health with invalid token returns 403', async () => {
     const response = await publicRequest('get', '/admin/api/health')
       .set('x-admin-token', 'invalid-token');
-    
-    assertUnauthorized(response);
+
+    // Invalid token returns 403 Forbidden, not 401 Unauthorized
+    assert.strictEqual(response.status, 403);
+    assert.strictEqual(response.body.success, false);
+    assert.strictEqual(response.body.error?.code, 'FORBIDDEN');
   });
 
   await t.test('GET /admin/docs/jobs without token returns 401', async () => {
