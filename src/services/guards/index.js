@@ -1,6 +1,6 @@
 // src/services/guards/index.js
 // Centralized external service guards
-import { ENV } from '../../config/env.js';
+import { getEnv } from '../../config/env.js';
 
 export { isPineconeConfigured } from './pinecone.guard.js';
 export { isSupabaseConfigured } from './supabase.guard.js';
@@ -9,20 +9,11 @@ export { isSidecarConfigured } from './sidecar.guard.js';
 
 // Convenience function to check all external services
 export async function getExternalServiceStatus() {
-  // For testing, check process.env directly if getEnv is memoized
-  if (ENV.NODE_ENV === 'test') {
-    return {
-      supabase: !!(ENV.SUPABASE_URL && (ENV.SUPABASE_SERVICE_KEY || ENV.SUPABASE_SERVICE_ROLE_KEY || ENV.SUPABASE_SERVICE_ROLE || ENV.SERVICE_ROLE_KEY)),
-      pinecone: !!ENV.PYTHON_SIDECAR_URL,
-      openai: !!ENV.OPENAI_API_KEY,
-      sidecar: !!ENV.PYTHON_SIDECAR_URL
-    };
-  }
-  
+  const env = getEnv();
   return {
-    supabase: !!(ENV.SUPABASE_URL && (ENV.SUPABASE_SERVICE_KEY || ENV.SUPABASE_SERVICE_ROLE_KEY || ENV.SUPABASE_SERVICE_ROLE || ENV.SERVICE_ROLE_KEY)),
-    pinecone: !!ENV.PYTHON_SIDECAR_URL,
-    openai: !!ENV.OPENAI_API_KEY,
-    sidecar: !!ENV.PYTHON_SIDECAR_URL
+    supabase: !!(env.SUPABASE_URL && (env.SUPABASE_SERVICE_KEY || env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE || env.SERVICE_ROLE_KEY)),
+    pinecone: !!env.PYTHON_SIDECAR_URL,
+    openai: !!env.OPENAI_API_KEY,
+    sidecar: !!env.PYTHON_SIDECAR_URL
   };
 }

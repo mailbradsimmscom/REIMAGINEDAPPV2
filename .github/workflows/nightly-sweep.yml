@@ -129,8 +129,12 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      - name: Run Unit Tests (serviceGuards only)
-        run: node --test --test-force-exit tests/unit/middleware/serviceGuards.test.js 2>&1 | tee results/unit.txt || true
+      - name: Run Unit Tests (guard tests)
+        run: |
+          node --test --test-force-exit \
+            tests/unit/middleware/serviceGuards.test.js \
+            tests/unit/services/guards.test.js \
+            2>&1 | tee results/unit.txt || true
         timeout-minutes: 2
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
