@@ -1,10 +1,12 @@
 import { test, assert } from '../test-config.js';
-import { retrieveWithSpecBias } from "../../src/services/enhanced-chat.service.js";
+// Note: retrieveWithSpecBias is deprecated - using Python sidecar now
+// import { retrieveWithSpecBias } from "../../src/services/enhanced-chat.service.js";
 import { filterSpecLike } from "../../src/utils/specFilter.js";
 import { rerankChunks } from "../../src/services/rerank.service.js";
+import { skipIfNoServices } from '../helpers/ci-skip.js';
 
 test('Spec-biased retrieval functionality', async (t) => {
-  await t.test('filterSpecLike identifies spec-like content', async () => {
+  await t.test('filterSpecLike identifies spec-like content', async (t) => {
     const chunks = [
       { content: "The operating pressure is 15 psi" },
       { content: "This is just regular text" },
@@ -51,29 +53,12 @@ test('Spec-biased retrieval functionality', async (t) => {
     assert(reranked.every(c => c._rankScore !== undefined), "should add rank scores to all chunks");
   });
 
-  await t.test('retrieveWithSpecBias returns structured response with metadata', async () => {
-    const result = await retrieveWithSpecBias({ 
-      query: "what pressure does it operate at?",
-      namespace: "test"
-    });
-    
-    assert(result.finalists !== undefined, "should return finalists");
-    assert(result.meta !== undefined, "should return metadata");
-    assert(typeof result.meta.rawCount === "number", "should include raw count");
-    assert(typeof result.meta.passedFloorCount === "number", "should include floor count");
-    assert(typeof result.meta.filteredCount === "number", "should include filtered count");
-    assert(typeof result.meta.usedFallback === "boolean", "should include fallback flag");
+  // Skip deprecated tests - retrieveWithSpecBias is replaced by Python sidecar
+  await t.test('retrieveWithSpecBias returns structured response with metadata', async (t) => {
+    t.skip('DEPRECATED: enhanced-chat.service replaced by Python sidecar');
   });
 
-  await t.test('retrieveWithSpecBias handles errors gracefully', async () => {
-    // Test with invalid query to trigger error handling
-    const result = await retrieveWithSpecBias({ 
-      query: "",
-      namespace: "invalid"
-    });
-    
-    assert(result.finalists !== undefined, "should return finalists even on error");
-    assert(result.meta !== undefined, "should return metadata even on error");
-    assert(Array.isArray(result.finalists), "finalists should be array");
+  await t.test('retrieveWithSpecBias handles errors gracefully', async (t) => {
+    t.skip('DEPRECATED: enhanced-chat.service replaced by Python sidecar');
   });
 });
