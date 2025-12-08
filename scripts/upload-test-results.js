@@ -115,7 +115,7 @@ function parsePytestOutput(content) {
 }
 
 /**
- * Parse Playwright JSON report
+ * Parse Playwright JSON report (handles nested suites)
  */
 function parsePlaywrightReport(content) {
   const report = JSON.parse(content);
@@ -124,7 +124,10 @@ function parsePlaywrightReport(content) {
   let failed = 0;
   let skipped = 0;
 
-  for (const suite of report.suites || []) {
+  function processSuite(suite, parentTitle = '') {
+    const suiteTitle = parentTitle ? `${parentTitle} > ${suite.title}` : suite.title;
+
+    // Process specs in this suite
     for (const spec of suite.specs || []) {
       for (const test of spec.tests || []) {
         const result = test.results?.[0];
@@ -135,12 +138,22 @@ function parsePlaywrightReport(content) {
         else if (status === 'skipped') skipped++;
 
         tests.push({
-          name: `${suite.title} > ${spec.title}`,
+          name: `${suiteTitle} > ${spec.title}`,
           status,
           error: result?.error?.message
         });
       }
     }
+
+    // Recursively process nested suites
+    for (const nestedSuite of suite.suites || []) {
+      processSuite(nestedSuite, suiteTitle);
+    }
+  }
+
+  // Process all top-level suites
+  for (const suite of report.suites || []) {
+    processSuite(suite);
   }
 
   return { passed, failed, skipped, tests };
