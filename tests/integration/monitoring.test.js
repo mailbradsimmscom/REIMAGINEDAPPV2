@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { get } from '../helpers/http.js';
+import { initTestApp } from '../setupApp.js';
+
+// Initialize app before tests
+test.before(async () => {
+  await initTestApp();
+});
 
 test('Runtime Monitoring Endpoint', async (t) => {
   

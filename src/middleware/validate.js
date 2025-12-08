@@ -13,7 +13,7 @@ export function validate(schema, source = 'body') {
         success: false,
         data: null,
         error: {
-          code: 'BAD_REQUEST',
+          code: 'VALIDATION_ERROR',
           message: 'Validation failed',
           details: result.error.errors
         },
