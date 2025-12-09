@@ -5,7 +5,7 @@ import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
 import { getEnv } from './config/env.js';
-import { errorHandler, notFoundHandler } from './middleware/error.js';
+// Note: errorHandler and notFoundHandler are wired in src/index.js after routes are mounted
 import adminRouter from './routes/admin/index.js';
 import suppliesRouter from './routes/supplies/index.js';
 import tripsRouter from './routes/trips/index.js';
@@ -326,10 +326,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 404 handler - must be AFTER all routes
-app.use(notFoundHandler);
-
-// Global error handler - must be LAST middleware
-app.use(errorHandler);
+// NOTE: 404 and error handlers are wired in src/index.js AFTER routes are mounted
+// Do NOT add them here - app.js is imported by index.js which adds routes after this
 
 export default app;
