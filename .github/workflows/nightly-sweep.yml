@@ -73,6 +73,22 @@ jobs:
           curl -sf ${{ env.PRODUCTION_URL }}/health
           curl -sf ${{ env.PYTHON_SIDECAR_URL }}/health
 
+          echo ""
+          echo "=== Sidecar Connectivity Check ==="
+          echo "PYTHON_SIDECAR_URL (from env): ${{ env.PYTHON_SIDECAR_URL }}"
+          echo "PYTHON_SIDECAR_URL (from secret): ${{ secrets.PYTHON_SIDECAR_URL }}"
+          echo ""
+          echo "Testing sidecar health endpoint..."
+          HEALTH_RESPONSE=$(curl -sS -m 10 "${{ secrets.PYTHON_SIDECAR_URL }}/health" 2>&1) || {
+            echo "FAILED: Sidecar unreachable from CI"
+            echo "Response: $HEALTH_RESPONSE"
+            echo ""
+            echo "This is an INFRASTRUCTURE issue, not app code."
+            exit 1
+          }
+          echo "SUCCESS: Sidecar is reachable from CI"
+          echo "Response: $HEALTH_RESPONSE"
+
   # ============================================
   # Main nightly sweep
   # ============================================
@@ -174,25 +190,6 @@ jobs:
         timeout-minutes: 10
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-
-      - name: Pre-flight Sidecar Health Check
-        run: |
-          echo "=== Sidecar Health Check ==="
-          echo "PYTHON_SIDECAR_URL from secret: $PYTHON_SIDECAR_URL"
-          echo ""
-          echo "Attempting health check..."
-          HEALTH_RESPONSE=$(curl -sS -m 10 "$PYTHON_SIDECAR_URL/health" 2>&1) || {
-            echo "FAILED: Sidecar unreachable from CI"
-            echo "Response: $HEALTH_RESPONSE"
-            echo ""
-            echo "This is an INFRASTRUCTURE issue, not app code."
-            echo "Check: Render service status, IP allowlists, DNS"
-            exit 1
-          }
-          echo "SUCCESS: Sidecar is reachable"
-          echo "Response: $HEALTH_RESPONSE"
-        env:
-          PYTHON_SIDECAR_URL: ${{ secrets.PYTHON_SIDECAR_URL }}
 
       - name: Run Integration Tests
         run: |
