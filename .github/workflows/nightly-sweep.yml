@@ -208,6 +208,11 @@ jobs:
 
       - name: Run Integration Tests
         run: |
+          echo "=== Integration Tests: Env Check ==="
+          echo "PYTHON_SIDECAR_URL=$PYTHON_SIDECAR_URL"
+          curl -sS -m 5 "$PYTHON_SIDECAR_URL/health" && echo " - curl OK" || echo " - curl FAILED"
+          node -e "console.log('Node sees:', process.env.PYTHON_SIDECAR_URL); fetch(process.env.PYTHON_SIDECAR_URL + '/health').then(r => r.json()).then(d => console.log('fetch OK:', JSON.stringify(d))).catch(e => console.log('fetch FAILED:', e.message))"
+          echo "=== Starting Tests ==="
           node --test --test-force-exit \
             tests/integration/admin-auth.test.js \
             tests/integration/admin.test.js \
