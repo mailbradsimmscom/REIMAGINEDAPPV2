@@ -21,25 +21,28 @@ test('Health Route - Happy Path', async (t) => {
 });
 
 test('Health Route - Method Not Allowed', async (t) => {
-  await t.test('POST /health returns 404 (method not allowed)', async () => {
+  await t.test('POST /health returns 405 (method not allowed)', async () => {
     const response = await publicRequest('post', '/health');
-    
-    assert.strictEqual(response.status, 404);
+
+    assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
+    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
   });
 
-  await t.test('PUT /health returns 404 (method not allowed)', async () => {
+  await t.test('PUT /health returns 405 (method not allowed)', async () => {
     const response = await publicRequest('put', '/health');
-    
-    assert.strictEqual(response.status, 404);
+
+    assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
+    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
   });
 
-  await t.test('DELETE /health returns 404 (method not allowed)', async () => {
+  await t.test('DELETE /health returns 405 (method not allowed)', async () => {
     const response = await publicRequest('delete', '/health');
-    
-    assert.strictEqual(response.status, 404);
+
+    assert.strictEqual(response.status, 405);
     assert.strictEqual(response.body.success, false);
+    assert.strictEqual(response.body.error.code, 'METHOD_NOT_ALLOWED');
   });
 });
 

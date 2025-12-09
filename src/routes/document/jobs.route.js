@@ -20,14 +20,18 @@ router.use(adminGate);
 router.use(validateResponse(DocumentJobsEnvelope));
 
 // GET /admin/docs/jobs - List jobs
-router.get('/', 
+router.get('/',
   validate(documentJobsQuerySchema, 'query'),
   async (req, res, next) => {
     try {
-      const { limit, offset, status } = req.query;
-      
+      // Use validated query with defaults from schema
+      const validated = req.validated?.query ?? req.query;
+      const limit = Number(validated.limit) || 50;
+      const offset = Number(validated.offset) || 0;
+      const status = validated.status;
+
       const jobs = await documentService.listJobs(limit, offset, status);
-      
+
       const envelope = {
         success: true,
         data: {

@@ -57,7 +57,12 @@ const EnvSchema = z.object({
   TWILIO_ACCOUNT_SID: z.string().optional(),
   TWILIO_AUTH_TOKEN: z.string().optional(),
   TWILIO_PHONE_NUMBER: z.string().optional(),
-  TWILIO_SMS_TO: z.string().optional()
+  TWILIO_SMS_TO: z.string().optional(),
+  // Service disable flags for testing/CI
+  PINECONE_DISABLED: z.string().optional(),
+  SIDECAR_DISABLED: z.string().optional(),
+  SUPABASE_DISABLED: z.string().optional(),
+  OPENAI_DISABLED: z.string().optional()
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

@@ -22,23 +22,23 @@ router.get('/',
   validateResponse(documentDocumentsResponseSchema),
   async (req, res, next) => {
     try {
-      const { limit, offset, status } = req.query;
-      
-      const documents = await documentService.listDocuments(Number(limit), Number(offset), status);
-      
+      // Use validated query with defaults from schema
+      const validated = req.validated?.query ?? req.query;
+      const limit = Number(validated.limit) || 50;
+      const offset = Number(validated.offset) || 0;
+      const status = validated.status;
+
+      const documents = await documentService.listDocuments(limit, offset, status);
+
       const envelope = {
         success: true,
         data: {
           documents,
           count: documents.length,
-          limit: Number(limit),
-          offset: Number(offset)
-        },
-        error: null,
+          limit,
+          offset
+        }
       };
-
-      // Optional: Validate response schema if RESPONSE_VALIDATE=1
-      // documentDocumentsResponseSchema.parse(envelope);
 
       return res.json(envelope);
     } catch (error) {
