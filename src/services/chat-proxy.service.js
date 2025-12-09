@@ -663,6 +663,7 @@ export function createChatProxyService({
     // Build result object matching previous format
     const result = {
       response: pythonResult.response,
+      thread_id: pythonResult.thread_id || threadId,  // Include thread_id from Python or use normalized one
       systems_context: systemsContext,
       sources: pythonResult.sources || [],
       classification: pythonResult.classification,

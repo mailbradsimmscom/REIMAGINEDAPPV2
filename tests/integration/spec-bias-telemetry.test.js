@@ -19,9 +19,9 @@ test('Spec-biased retrieval integration test', async (t) => {
     .expect(200);
   
   const data = response.body.data;
-  
+
   // Verify response structure
-  assert.ok(data.sessionId, 'Should have sessionId');
+  // Note: Enhanced route uses threadId, not sessionId
   assert.ok(data.threadId, 'Should have threadId');
   assert.ok(data.assistantMessage, 'Should have assistantMessage');
   assert.ok(data.userMessage, 'Should have userMessage');

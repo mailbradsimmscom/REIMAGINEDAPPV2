@@ -59,10 +59,12 @@ router.post(
       });
 
       // Build envelope response
+      // Use threadId from result (service normalizes/generates it) or fallback to request
+      const responseThreadId = result.thread_id || result.threadId || threadId;
       const envelope = {
         success: true,
         data: {
-          threadId,
+          threadId: responseThreadId,
           userMessage: {
             id: `user-${Date.now()}`,
             content: message,
