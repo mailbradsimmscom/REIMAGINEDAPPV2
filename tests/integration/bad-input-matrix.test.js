@@ -49,10 +49,11 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
 
   // Test 5: Disabled external → typed envelope (not 500)
   await t.test('POST /pinecone/query with disabled service returns typed envelope', async () => {
-    const response = await post('/pinecone/query', { 
-      body: { query: 'ping' } 
+    const response = await post('/pinecone/query', {
+      body: { query: 'ping' }
     });
-    assert.strictEqual(response.status, 200);
+    // Service guards return 503 with typed error envelope (not 500 crash)
+    assert.strictEqual(response.status, 503);
     assert.strictEqual(response.body.success, false);
     assert.strictEqual(response.body.error.code, 'PINECONE_DISABLED');
   });

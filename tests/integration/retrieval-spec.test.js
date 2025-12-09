@@ -13,8 +13,8 @@ test('Spec-biased retrieval functionality', async (t) => {
       { content: "Voltage: 24V, Current: 2.5A" },
       { content: "Temperature range: 0°C to 50°C" }
     ];
-    
-    const filtered = filterSpecLike(chunks);
+
+    const filtered = await filterSpecLike(chunks);
     assert.strictEqual(filtered.length, 3, "should filter 3 spec-like chunks");
     assert(filtered.some(c => c.content.includes("15 psi")), "should include pressure spec");
     assert(filtered.some(c => c.content.includes("24V")), "should include voltage spec");
@@ -27,8 +27,8 @@ test('Spec-biased retrieval functionality', async (t) => {
       { metadata: { content: "Current: 5A" } },
       { content: "Regular text without specs" }
     ];
-    
-    const filtered = filterSpecLike(chunks);
+
+    const filtered = await filterSpecLike(chunks);
     assert.strictEqual(filtered.length, 2, "should handle different chunk structures");
   });
 

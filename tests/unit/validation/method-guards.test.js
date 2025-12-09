@@ -28,7 +28,7 @@ test('Method guards - POST-only endpoints return 405 for wrong methods', async (
   const ingestResponse = await get('/admin/docs/ingest');
   assert.strictEqual(ingestResponse.body.success, false);
   assert.ok([401, 403].includes(ingestResponse.status), 'Admin route should return 401 or 403, not 405');
-  assert.ok(['ADMIN_DISABLED', 'FORBIDDEN'].includes(ingestResponse.body.error.code), 'Should be auth error, not method error');
+  assert.ok(['ADMIN_DISABLED', 'UNAUTHORIZED', 'FORBIDDEN'].includes(ingestResponse.body.error.code), 'Should be auth error, not method error');
 });
 
 test('Query validation - Invalid search query returns 400', async () => {

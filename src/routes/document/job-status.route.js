@@ -16,7 +16,7 @@ router.use(adminGate);
 router.use(validateResponse(JobStatusEnvelope));
 
 // GET /admin/docs/jobs/:jobId - Get job status
-router.get('/jobs/:jobId', 
+router.get('/:jobId',
   validate(documentJobStatusPathSchema, 'params'),
   async (req, res, next) => {
   try {

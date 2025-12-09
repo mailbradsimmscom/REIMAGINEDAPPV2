@@ -2,11 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert';
 import { initTestApp, getAppSync } from '../setupApp.js';
 import request from 'supertest';
+import { skipIfNoServices } from '../helpers/ci-skip.js';
 
 await initTestApp();
 const app = getAppSync();
 
 test('Spec-biased retrieval integration test', async (t) => {
+  if (skipIfNoServices(t)) return;
   // Test pressure question that should trigger spec-biased retrieval
   const response = await request(app)
     .post('/chat/process')
@@ -52,6 +54,7 @@ test('Spec-biased retrieval integration test', async (t) => {
 });
 
 test('Style detection integration test', async (t) => {
+  if (skipIfNoServices(t)) return;
   // Test different question types to verify style detection
   const testCases = [
     {
@@ -95,6 +98,7 @@ test('Style detection integration test', async (t) => {
 });
 
 test('Request ID uniqueness test', async (t) => {
+  if (skipIfNoServices(t)) return;
   // Make multiple requests to verify request IDs are unique
   const results = await Promise.all([
     request(app).post('/chat/process').send({ message: 'test 1' }).expect(200),
@@ -118,6 +122,7 @@ test('Request ID uniqueness test', async (t) => {
 });
 
 test('Spec-bias metadata validation test', async (t) => {
+  if (skipIfNoServices(t)) return;
   const response = await request(app)
     .post('/chat/process')
     .send({
@@ -141,6 +146,7 @@ test('Spec-bias metadata validation test', async (t) => {
 });
 
 test('Environment configuration test', async (t) => {
+  if (skipIfNoServices(t)) return;
   const response = await request(app)
     .post('/chat/process')
     .send({
@@ -163,6 +169,7 @@ test('Environment configuration test', async (t) => {
 });
 
 test('Schema validation test', async (t) => {
+  if (skipIfNoServices(t)) return;
   const response = await request(app)
     .post('/chat/process')
     .send({

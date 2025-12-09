@@ -16,7 +16,7 @@ router.use(adminGate);
 router.use(validateResponse(DocumentGetOneEnvelope));
 
 // GET /admin/docs/documents/:docId - Get document details
-router.get('/documents/:docId', 
+router.get('/:docId',
   validate(documentGetQuerySchema, 'params'),
   async (req, res, next) => {
   try {

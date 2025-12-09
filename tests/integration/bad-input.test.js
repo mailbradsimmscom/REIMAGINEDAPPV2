@@ -119,27 +119,27 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
     assert.strictEqual(response.body.success, false);
   });
 
-  // Admin systems
-  await t.test('GET /admin/systems with empty query returns 400', async () => {
+  // Admin systems - test invalid pagination (these are list endpoints, not search)
+  await t.test('GET /admin/systems with invalid limit returns 400', async () => {
     const response = await adminRequest('get', '/admin/api/systems')
-      .query({ q: '' });
-    
+      .query({ limit: 'invalid' });
+
     assertError(response, 400);
   });
 
-  // Admin manufacturers
-  await t.test('GET /admin/manufacturers with empty query returns 400', async () => {
+  // Admin manufacturers - test invalid pagination
+  await t.test('GET /admin/manufacturers with invalid limit returns 400', async () => {
     const response = await adminRequest('get', '/admin/api/manufacturers')
-      .query({ q: '' });
-    
+      .query({ limit: 'invalid' });
+
     assertError(response, 400);
   });
 
-  // Admin models
-  await t.test('GET /admin/models with empty query returns 400', async () => {
+  // Admin models - test invalid pagination
+  await t.test('GET /admin/models with invalid limit returns 400', async () => {
     const response = await adminRequest('get', '/admin/api/models')
-      .query({ q: '' });
-    
+      .query({ limit: 'invalid' });
+
     assertError(response, 400);
   });
 
@@ -173,10 +173,9 @@ test('Bad Input Validation - Admin Endpoints', async (t) => {
     assertError(response, 400);
   });
 
-  await t.test('GET /admin/docs/job-status with invalid jobId returns 400', async () => {
-    const response = await adminRequest('get', '/admin/docs/job-status')
-      .query({ jobId: 'invalid' });
-    
+  await t.test('GET /admin/docs/jobs/:jobId with invalid jobId returns 400', async () => {
+    const response = await adminRequest('get', '/admin/docs/jobs/not-a-valid-uuid');
+
     assertError(response, 400);
   });
 

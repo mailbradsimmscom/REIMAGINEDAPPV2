@@ -25,7 +25,8 @@ export const documentIngestMetadataSchema = z.object({
 // Document jobs query parameters
 export const documentJobsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
-  offset: z.coerce.number().int().min(0).default(0)
+  offset: z.coerce.number().int().min(0).default(0),
+  status: z.enum(['queued', 'running', 'done', 'error']).optional()
 });
 
 // Document jobs success response schema
@@ -124,7 +125,7 @@ export const documentGetResponseSchema = z.union([DocumentGetOkSchema, ErrorEnve
 
 // Document job status path parameters
 export const documentJobStatusPathSchema = z.object({
-  jobId: z.string().min(1, 'Job ID is required')
+  jobId: z.string().uuid('Job ID must be a valid UUID')
 });
 
 // Document job status success response schema

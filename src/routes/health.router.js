@@ -15,7 +15,7 @@ import { logger } from '../utils/logger.js';
 const router = express.Router();
 
 // GET /health - Basic health check
-router.get('/', 
+router.get('/',
   validate(EmptyQuery, 'query'),
   validateResponse(BasicHealthEnvelope),
   (req, res) => {
@@ -29,6 +29,19 @@ router.get('/',
   };
 
   return res.json(envelope);
+});
+
+// 405 for non-GET methods on /health
+router.all('/', (req, res) => {
+  return res.status(405).json({
+    success: false,
+    data: null,
+    error: {
+      code: 'METHOD_NOT_ALLOWED',
+      message: `${req.method} not allowed on /health`
+    },
+    requestId: res.locals?.requestId ?? null
+  });
 });
 
 // GET /health/services - Check external service status
@@ -230,10 +243,12 @@ async function runRuntimeMonitoringChecks() {
     // Check 6: Error rate analysis
     const errorRate = await analyzeErrorRate();
     results.checks.errorRate = {
+      count: errorRate.totalErrors,
       rate: errorRate.rate,
       totalErrors: errorRate.totalErrors,
       totalRequests: errorRate.totalRequests,
-      status: errorRate.rate > 10 ? 'critical' : errorRate.rate > 5 ? 'warning' : 'healthy'
+      status: errorRate.rate > 10 ? 'critical' : errorRate.rate > 5 ? 'warning' : 'healthy',
+      recent: []
     };
     if (errorRate.rate > 10) results.criticalErrors++;
     else if (errorRate.rate > 5) results.warnings++;

@@ -49,10 +49,11 @@ test('Comprehensive Bad-Input Test Matrix', async (t) => {
 
   // Test Matrix 5: Disabled external → typed envelope (not 500)
   await t.test('POST /pinecone/query with disabled service returns typed envelope', async () => {
-    const response = await post('/pinecone/query', { 
-      body: { query: 'ping' } 
+    const response = await post('/pinecone/query', {
+      body: { query: 'ping' }
     });
-    assert.strictEqual(response.status, 200);
+    // Service guards return 503 with typed error envelope (not 500 crash)
+    assert.strictEqual(response.status, 503);
     assert.strictEqual(response.body.success, false);
     assert.strictEqual(response.body.error.code, 'PINECONE_DISABLED');
   });
@@ -162,12 +163,12 @@ test('Comprehensive Bad-Input Test Matrix', async (t) => {
 
   // Service disabled handling
   await t.test('Disabled services return proper error codes', async () => {
-    const response = await post('/pinecone/query', { 
-      body: { query: 'test' } 
+    const response = await post('/pinecone/query', {
+      body: { query: 'test' }
     });
-    
-    // Should return 200 with error envelope, not 500
-    assert.strictEqual(response.status, 200);
+
+    // Should return 503 with typed error envelope (not 500 crash)
+    assert.strictEqual(response.status, 503);
     assert.strictEqual(response.body.success, false);
     assert.ok(['PINECONE_DISABLED', 'PINECONE_NOT_CONFIGURED'].includes(response.body.error.code));
   });

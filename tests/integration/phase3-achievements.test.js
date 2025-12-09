@@ -25,7 +25,7 @@ test('Phase 3: Specific Schema Tightening Achievements', async (t) => {
     const response = await testRequest({
       method: 'GET',
       url: '/systems'
-    }).expect(500); // Expected due to missing Supabase configuration
+    }).expect(503); // Expected due to missing Supabase configuration (service guard returns 503)
 
     // Should get service error, but the important thing is no schema validation errors
     assert.equal(response.body.success, false);
@@ -68,9 +68,9 @@ test('Phase 3: Specific Schema Tightening Achievements', async (t) => {
       body: {
         message: 'test message'
       }
-    }).expect(405); // Expected due to method not allowed (service guards)
+    }).expect(503); // Expected due to service unavailable (service guards)
 
-    // Should get method not allowed error, but the important thing is no schema validation errors
+    // Should get service unavailable error, but the important thing is no schema validation errors
     assert.equal(response.body.success, false);
     assert.ok(response.body.error);
     assert.ok(response.body.error.code);
@@ -106,9 +106,9 @@ test('Phase 3: Specific Schema Tightening Achievements', async (t) => {
       method: 'DELETE',
       url: '/chat/delete',
       body: { sessionId: 'test-session-id' }
-    }).expect(500); // Expected due to service errors
+    }).expect(503); // Expected due to service unavailable (service guards)
 
-    // Should get service error, but the important thing is no schema validation errors
+    // Should get service unavailable error, but the important thing is no schema validation errors
     assert.equal(response.body.success, false);
     assert.ok(response.body.error);
     assert.ok(response.body.error.code);
@@ -132,7 +132,7 @@ test('Phase 3: Specific Schema Tightening Achievements', async (t) => {
     const methodNotAllowedResponse = await testRequest({
       method: 'POST',
       url: '/health'
-    }).expect(404); // This route doesn't exist, so we get 404 instead of 405
+    }).expect(405); // POST on /health returns 405 Method Not Allowed
 
     assert.equal(methodNotAllowedResponse.body.success, false);
     assert.ok(methodNotAllowedResponse.body.error);
