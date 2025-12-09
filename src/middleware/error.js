@@ -58,10 +58,23 @@ export function errorHandler(err, req, res, next) {
     });
   }
   
+  // Handle NOT_FOUND errors (return 404)
+  if (err.code === ERR.NOT_FOUND || err.code === 'NOT_FOUND' || err.status === 404) {
+    return res.status(404).json({
+      success: false,
+      data: null,
+      error: {
+        code: ERR.NOT_FOUND,
+        message: err.message || 'Resource not found'
+      },
+      requestId: res.locals?.requestId ?? null,
+    });
+  }
+  
   // Handle other errors
   const status = Number(err.status) || 500;
-  const code = err.code || (status === 400 ? ERR.BAD_REQUEST : ERR.INTERNAL);
-  const message = err.message || (status === 400 ? 'Validation failed' : 'Unexpected error');
+  const code = err.code || (status === 400 ? ERR.BAD_REQUEST : (status === 404 ? ERR.NOT_FOUND : ERR.INTERNAL));
+  const message = err.message || (status === 400 ? 'Validation failed' : (status === 404 ? 'Resource not found' : 'Unexpected error'));
 
   if (status >= 500) {
     // Enhanced error context logging

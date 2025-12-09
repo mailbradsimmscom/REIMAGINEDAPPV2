@@ -713,6 +713,15 @@ export async function deleteChatSession(sessionId) {
       throw err;
     }
 
+    // Check if anything was actually deleted
+    if (!data || data.length === 0) {
+      const err = new Error(`No chat thread found with id: ${sessionId}`);
+      err.status = 404;
+      err.code = 'NOT_FOUND';
+      err.context = { operation: 'delete_thread', sessionId, table: THREADS_TABLE };
+      throw err;
+    }
+
     moduleLogger.debug('Successfully deleted thread', { sessionId });
     return { success: true };
   } catch (error) {
