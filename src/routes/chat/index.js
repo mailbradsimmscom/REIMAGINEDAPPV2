@@ -1,7 +1,8 @@
 import express from 'express';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
-import processRouter from './process.route.js';
+import processSimpleRouter from './process-simple.route.js';  // Simple contract (string assistantMessage)
+import processEnhancedRouter from './process.route.js';       // Rich contract (object assistantMessage)
 import historyRouter from './history.route.js';
 import listRouter from './list.route.js';
 import contextRouter from './context.route.js';
@@ -20,15 +21,18 @@ router.use(messagesRouter);
 
 router.use(validateResponse(EnvelopeSchema));
 
-router.use('/process', processRouter);
+// /chat/process - Simple contract: data.assistantMessage is a STRING
+// Used by tests and external callers
+router.use('/process', processSimpleRouter);
 router.use('/history', historyRouter);
 router.use('/list', listRouter);
 router.use('/context', contextRouter);
 router.use('/delete', deleteRouter);
 router.use('/thread', threadBySessionRouter);
 
-// NEW: compatibility alias for the UI's /chat/enhanced/* paths
-router.use('/enhanced/process', processRouter);
+// /chat/enhanced/* - Rich contract: data.assistantMessage is an OBJECT with content, role, etc.
+// Used by the UI for full message display
+router.use('/enhanced/process', processEnhancedRouter);
 router.use('/enhanced/history', historyRouter);
 router.use('/enhanced/list', listRouter);
 router.use('/enhanced/context', contextRouter);
