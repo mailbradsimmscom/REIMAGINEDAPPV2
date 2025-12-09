@@ -1,6 +1,7 @@
 // ============================================
 // DEFAULT IMPORTS - Used as defaults in factory
 // ============================================
+import { randomUUID } from 'crypto';
 import * as systemsRepo from '../repositories/systems.repository.js';
 import * as systemsService from './systems.service.js';
 import * as conversationContextService from './conversation-context.service.js';
@@ -53,9 +54,14 @@ export function createChatProxyService({
   chatDebug = defaultChatDebug
 } = {}) {
 
-  async function processChatMessage({ query, threadId }) {
+  async function processChatMessage({ query, threadId: rawThreadId }) {
     const requestLogger = logger.createRequestLogger();
     const env = envConfigDep.getEnv();
+
+    // Normalize threadId: guarantee a string for Python sidecar
+    // API contract allows optional threadId, but sidecar requires it
+    const threadId = rawThreadId?.trim() || randomUUID();
+
     let systemsContext = [];
     let conversationContext = null;
 

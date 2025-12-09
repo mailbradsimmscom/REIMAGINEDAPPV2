@@ -11,10 +11,8 @@ test('Chat Routes - Happy Path', async (t) => {
   if (skipIfNoServices(t)) return;
 
   await t.test('POST /chat/enhanced/process with valid message returns 200', async () => {
-    const response = await postRequest('/chat/enhanced/process', {
-      message: 'test message',
-      threadId: `test-${Date.now()}`
-    });
+    // threadId is optional - Node layer generates one if not provided
+    const response = await postRequest('/chat/enhanced/process', { message: 'test message' });
 
     assertSuccess(response, 200);
     assert.strictEqual(typeof response.body.data.assistantMessage.content, 'string');
