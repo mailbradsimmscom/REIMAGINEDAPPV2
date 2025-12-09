@@ -20,7 +20,7 @@ router.get('/',
     const envelope = { 
       success: true, 
       data: { 
-        status: 'ok', 
+        status: 'healthy', 
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         memory: process.memoryUsage(),
