@@ -94,7 +94,7 @@ export const documentDocumentsResponseSchema = z.union([DocumentDocumentsOkSchem
 
 // Document get by ID query parameters (from URL path)
 export const documentGetQuerySchema = z.object({
-  docId: z.string().min(1, 'Document ID is required')
+  docId: z.string().uuid('Document ID must be a valid UUID')
 });
 
 // Document get by ID success response schema

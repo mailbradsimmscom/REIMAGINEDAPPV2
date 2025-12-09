@@ -14,7 +14,7 @@ const ErrorEnvelopeSchema = z.object({
 
 // Chat history query parameters
 export const chatHistoryQuerySchema = z.object({
-  threadId: z.string().min(1, 'threadId is required'),
+  threadId: z.string().uuid('threadId must be a valid UUID'),
   limit: z.coerce.number().int().min(1).max(100).default(50)
 });
 
@@ -140,7 +140,7 @@ export const chatListResponseSchema = z.union([ChatListOkSchema, ErrorEnvelopeSc
 
 // Chat context query parameters
 export const chatContextQuerySchema = z.object({
-  threadId: z.string().min(1, 'threadId is required')
+  threadId: z.string().uuid('threadId must be a valid UUID')
 });
 
 // Chat context success response schema

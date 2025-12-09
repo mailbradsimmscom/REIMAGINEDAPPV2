@@ -11,18 +11,18 @@ test.before(async () => {
 test('Comprehensive Bad-Input Test Matrix', async (t) => {
   
   // Test Matrix 1: Public GET → 400 on bad query
-  await t.test('GET /systems with empty query returns 400', async () => {
-    const response = await get('/systems', { query: { q: '' } });
+  await t.test('GET /systems/search with empty query returns 400', async () => {
+    const response = await get('/systems/search', { query: { q: '' } });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
     assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   // Test Matrix 2: Admin GET → 400 with valid token + bad query
-  await t.test('GET /admin/docs with valid token + bad query returns 400', async () => {
-    const response = await get('/admin/docs', { 
-      token: process.env.ADMIN_TOKEN, 
-      query: { limit: 'abc' } 
+  await t.test('GET /admin/docs/documents with valid token + bad query returns 400', async () => {
+    const response = await get('/admin/docs/documents', {
+      token: process.env.ADMIN_TOKEN,
+      query: { limit: 'abc' }
     });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
@@ -38,8 +38,10 @@ test('Comprehensive Bad-Input Test Matrix', async (t) => {
   });
 
   // Test Matrix 4: Bad UUID param → 400
-  await t.test('GET /document/not-a-uuid returns 400', async () => {
-    const response = await get('/document/not-a-uuid');
+  await t.test('GET /admin/docs/documents/not-a-uuid returns 400', async () => {
+    const response = await get('/admin/docs/documents/not-a-uuid', {
+      token: process.env.ADMIN_TOKEN
+    });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
     assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
@@ -56,8 +58,8 @@ test('Comprehensive Bad-Input Test Matrix', async (t) => {
   });
 
   // Test Matrix 6: Admin route with invalid token → 401/403
-  await t.test('GET /admin/docs with invalid token returns 401/403', async () => {
-    const response = await get('/admin/docs', { token: 'invalid-token' });
+  await t.test('GET /admin/docs/documents with invalid token returns 401/403', async () => {
+    const response = await get('/admin/docs/documents', { token: 'invalid-token' });
     assert.ok([401, 403].includes(response.status), 'Should return 401 or 403');
     assert.strictEqual(response.body.success, false);
   });
