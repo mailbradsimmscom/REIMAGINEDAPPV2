@@ -105,6 +105,69 @@ const threadId = rawThreadId?.trim() || randomUUID();
 
 ---
 
+## Ninth Pass - Route Contract Split (commit `4311f4b`)
+
+### Issue: Tests expect `assistantMessage` to be a string, but route returns object
+
+**Error from CI logs:**
+```
+assistantMessage.toLowerCase is not a function
+Should have sessionId
+```
+
+**Root Cause:**
+1. Tests hit `/chat/process` expecting simple contract: `{ data: { assistantMessage: "string" } }`
+2. Route returns rich contract: `{ data: { assistantMessage: { content, role, ... } } }`
+3. Tests call `.toLowerCase()` on the object → crash
+
+**Analysis:**
+- `/chat/process` should be a simple API for tests and external callers
+- `/chat/enhanced/process` should be the rich API for the UI
+- They were aliased to the same handler
+
+**Fix (commit `4311f4b`):**
+Split the routes into two different handlers:
+
+1. Created `src/routes/chat/process-simple.route.js`:
+   - Returns `data.assistantMessage` as a **string**
+   - Returns `data.sessionId` as a string
+   - Simple telemetry
+
+2. Updated `src/routes/chat/index.js`:
+   - `/chat/process` → `process-simple.route.js` (simple contract)
+   - `/chat/enhanced/process` → `process.route.js` (rich contract)
+
+**Contract Separation:**
+```
+/chat/process (simple):
+{
+  success: true,
+  data: {
+    sessionId: "uuid",
+    assistantMessage: "string response",
+    threadId: "uuid",
+    telemetry: { processing_time_ms: 1234 }
+  }
+}
+
+/chat/enhanced/process (rich):
+{
+  success: true,
+  data: {
+    threadId: "uuid",
+    userMessage: { id, content, role, createdAt },
+    assistantMessage: { id, content, role, createdAt, sources },
+    systemsContext: [...],
+    telemetry: { workflow, classification, ... },
+    detailed_metrics: { ... }
+  }
+}
+```
+
+**Expected Impact:** 11-17 fewer failures (Golden Rules, Ground Truth, Error Handling, Spec-bias tests).
+
+---
+
 ## Progress Log
 
 | Run | Commit | Integration | Total | Notes |
@@ -112,7 +175,8 @@ const threadId = rawThreadId?.trim() || randomUUID();
 | Start | `7d8ea48` | 25 | 33 | Initial state |
 | Run 6 | `1fc9344` | 29 | 37 | Added PYTHON_SIDECAR_URL to CI |
 | Run 7 | `0cb7e98` | 27 | 35 | Added threadId to test |
-| Run 8 | `c857aa6` | ? | ? | Node generates threadId (pending) |
+| Run 8 | `c857aa6` | 27 | 35 | Node generates threadId - chat tests pass |
+| Run 9 | `4311f4b` | ? | ? | Route split (pending) |
 
 ---
 
