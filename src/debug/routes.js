@@ -7,6 +7,6 @@ export function attachRouteDebugger(app) {
   
   app.get('/__routes', (_req, res) => {
     const routes = listEndpoints(app);
-    res.json(routes);
+    res.json({ success: true, data: { routes } });
   });
 }

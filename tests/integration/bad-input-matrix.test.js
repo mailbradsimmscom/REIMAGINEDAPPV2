@@ -15,7 +15,7 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     const response = await get('/systems', { query: { q: '' } });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   // Test 2: Admin GET → 400 with valid token + bad query
@@ -26,7 +26,7 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   // Test 3: Wrong method on public POST-only → 405
@@ -42,7 +42,7 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     const response = await get('/document/not-a-uuid');
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   // Test 5: Disabled external → typed envelope (not 500)
@@ -67,7 +67,7 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     const response = await post('/chat/enhanced/process', { body: {} });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   // Test 8: Invalid JSON body → 400
@@ -86,7 +86,7 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     const response = await get('/systems', { query: { limit: -1 } });
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
   // Test 10: Path parameter validation → 400
@@ -94,7 +94,7 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
     const response = await get('/systems/invalid-uuid');
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'VALIDATION_ERROR');
+    assert.strictEqual(response.body.error.code, 'BAD_REQUEST');
   });
 
 });

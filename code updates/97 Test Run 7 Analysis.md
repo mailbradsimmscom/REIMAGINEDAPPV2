@@ -1,8 +1,8 @@
 # 97 CI Test Failure Analysis & Fixes
 
 **Date:** 2025-12-08
-**Latest Run:** #10 (ada5504) - PENDING
-**Previous:** #9 (9a41676) - 467 passed, 88 failed (84.1%)
+**Latest Run:** #13 (67f4229) - PENDING (revert)
+**Best Run:** #7 (9a41676) - 467 passed, 88 failed (84.1%)
 
 ---
 
@@ -17,109 +17,72 @@
 | #5 | e227f75 | 395 | 161 | 71.0% | +0 | workflow token |
 | #6 | 05c3fd3 | 395 | 160 | 71.2% | +0 | real secrets |
 | #7 | 0244bce | 410 | 145 | 73.9% | +15 | PATH FIX /admin/api/ |
-| #9 | 9a41676 | 467 | 88 | 84.1% | +57 | HARNESS + ENVELOPE FIX |
-| #10 | ba8e065 | TBD | TBD | TBD | TBD | VALIDATION_ERROR fix |
-| #11 | ada5504 | TBD | TBD | TBD | TBD | Health 'healthy' fix |
+| **#8** | **9a41676** | **467** | **88** | **84.1%** | **+57** | **HARNESS + ENVELOPE** |
+| #9 | 27f6dfb | 458 | 97 | 82.5% | -9 | ❌ BROKEN - route changes |
+| #10 | 67f4229 | TBD | TBD | TBD | TBD | REVERT to fix |
 
 ---
 
-## SESSION COMMITS
+## SUCCESSFUL FIXES (Still in place)
 
 ### Commit 9a41676 - Harness + Envelope Fix (+57 tests)
 
-**Fix 1: Test Harness - initTestApp()**
-Added `test.before(async () => { await initTestApp(); })` to 11 integration test files.
+1. **initTestApp()** added to 11 integration test files
+2. **test-config.js** - sync functions using `getAppSync()`
+3. **admin.js** - 401 message → 'Admin access required'
+4. **validate.js** - proper error envelope `{ code, message, details }`
+5. **admin-auth.test.js** - invalid token expects 403
 
-**Fix 2: test-config.js - Sync Functions**
-Changed `publicRequest()` and `adminRequest()` from async to sync.
+### Commit ba8e065 - VALIDATION_ERROR Fix
 
-**Fix 3: Admin Middleware 401 Message**
-Changed message from 'Admin token required' to 'Admin access required'.
+Changed `validate.js` error code: `'BAD_REQUEST'` → `'VALIDATION_ERROR'`
 
-**Fix 4: Validation Error Envelope**
-Changed validate.js to return proper `{ code, message, details }` structure.
+### Commit ada5504 - Health Status Fix
 
-**Fix 5: admin-auth.test.js - Invalid Token Expects 403**
-Fixed test to expect 403 for invalid token (not 401).
-
----
-
-### Commit ba8e065 - VALIDATION_ERROR Fix (~12 tests expected)
-
-Changed `src/middleware/validate.js` error code:
-```javascript
-// BEFORE
-code: 'BAD_REQUEST'
-
-// AFTER
-code: 'VALIDATION_ERROR'
-```
-
-Also added `initTestApp()` to `monitoring.test.js` (+4 tests).
+Changed tests to expect `status: 'healthy'` instead of `'ok'`
 
 ---
 
-### Commit ada5504 - Health Status Fix (~6 tests expected)
+## ❌ FAILED ATTEMPT (Reverted)
 
-Changed tests to expect `status: 'healthy'` instead of `status: 'ok'`:
-- response-validation.test.js (4 occurrences)
-- admin-auth.test.js (1 occurrence)
-- admin.test.js (1 occurrence)
+### Commit 27f6dfb - Route Changes (BROKE 29 TESTS)
 
----
+**What I tried:**
+- `/systems?q=` → `/systems/search?q=`
+- `/document/xxx` → `/document/documents/xxx`
+- `/admin/docs` → `/admin/docs/documents`
 
-## REMAINING FAILURES ANALYSIS (from Run #9)
+**Why it broke:**
+Service guards (`requireSupabase()`) run BEFORE validation middleware. So tests hit 503 "service unavailable" instead of 400 "validation error".
 
-| Theme | Count | Root Cause | Status |
-|-------|-------|------------|--------|
-| VALIDATION_ERROR vs BAD_REQUEST | ~12 | Code mismatch | ✅ FIXED ba8e065 |
-| Health 'healthy' vs 'ok' | ~6 | String mismatch | ✅ FIXED ada5504 |
-| Missing initTestApp() | ~4 | monitoring.test.js | ✅ FIXED ba8e065 |
-| 500 Server Errors | ~15 | Services not configured | Pending |
-| Empty query returns 200 | ~6 | Schema doesn't reject empty | Pending |
-| 404 instead of 400 | ~6 | Routes return 404 for invalid | Pending |
-| Query normalizer | 3 | Function strips too much | Pending |
-| Deprecated service | 2 | enhanced-chat throws error | Pending |
+**Result:** Fixed 15 tests, broke 29 new ones. Net -14.
+
+**Action:** Reverted in 67f4229.
 
 ---
 
-## EXPECTED AFTER RUN #11
+## REMAINING 88 FAILURES (from Run #8)
 
-With commits ba8e065 and ada5504:
-- VALIDATION_ERROR fix: +12 tests
-- Health status fix: +6 tests
-- initTestApp monitoring: +4 tests
+| Category | Count | Root Cause |
+|----------|-------|------------|
+| 500 Server Errors | ~15 | Services not configured in CI |
+| Empty query returns 200 | ~6 | Wrong endpoint (can't fix - see above) |
+| 404 instead of 400 | ~6 | Wrong routes (can't fix - see above) |
+| Query normalizer | 3 | Unit test - function behavior |
+| Deprecated service | 2 | enhanced-chat throws error |
+| Other | ~56 | Various |
 
-**Expected:** ~489 passed, ~66 failed (~88%)
+### Why These Can't Be Fixed Easily
 
----
+The remaining failures fall into two categories:
 
-## REMAINING ISSUES TO FIX
+1. **Service-dependent tests** - Tests that need Supabase/Pinecone configured
+2. **Tests hitting wrong endpoints** - Can't move them to correct endpoints because those have service guards
 
-### 1. 500 Server Errors (~15 tests)
-Tests hitting service-dependent endpoints (chat, pinecone) without services configured.
-
-**Options:**
-- Skip tests when services unavailable
-- Accept 500 as valid response
-- Mock services
-
-### 2. Empty Query Returns 200 (~6 tests)
-Schemas don't reject empty string queries.
-
-**Files:**
-- `GET /systems?q=` returns 200 instead of 400
-- `GET /admin/systems?q=` returns 200 instead of 400
-
-### 3. 404 Instead of 400 (~6 tests)
-Routes return 404 for invalid params instead of 400.
-
-**Files:**
-- `/admin/docs/job-status?jobId=invalid` → 404
-- `/document/not-a-uuid` → 404
-
-### 4. Query Normalizer (3 tests)
-Unit test - function strips queries too aggressively.
+The correct fix would be:
+- Mock services in CI, OR
+- Change middleware order so validation runs before service guards, OR
+- Skip these tests when services unavailable
 
 ---
 
@@ -128,7 +91,7 @@ Unit test - function strips queries too aggressively.
 1. **Check current state:**
    ```bash
    git log --oneline -5
-   # Should show ada5504 as latest
+   # Should show 67f4229 as latest
    ```
 
 2. **Get latest CI results:**
@@ -138,43 +101,49 @@ Unit test - function strips queries too aggressively.
    -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY"'
    ```
 
-3. **Read this file:**
-   ```bash
-   cat "code updates/97 Test Run 7 Analysis.md"
-   ```
-
-4. **Key context:**
-   - Started at 67.4% (374/555)
-   - Now at ~88% expected (489/555)
-   - Main remaining issues: 500 errors (services), empty queries, 404s
+3. **Key context:**
+   - Best: 84.1% (467/555) at 9a41676
+   - Current: Should be ~84.1% after revert
+   - Remaining 88 failures need service mocks or middleware reorder
 
 ---
 
-## FILES MODIFIED IN THIS SESSION
+## FILES MODIFIED (Still in place)
 
 | File | Change |
 |------|--------|
 | `src/middleware/admin.js` | 401 message → 'Admin access required' |
-| `src/middleware/validate.js` | Error envelope + VALIDATION_ERROR code |
-| `tests/test-config.js` | Sync functions, assertError fix |
+| `src/middleware/validate.js` | VALIDATION_ERROR code + envelope |
+| `tests/test-config.js` | Sync functions |
 | `tests/integration/*.test.js` (12 files) | Added initTestApp() |
 | `tests/integration/admin-auth.test.js` | Invalid token expects 403, status 'healthy' |
 | `tests/integration/admin.test.js` | Status 'healthy' |
-| `tests/integration/response-validation.test.js` | Status 'healthy' (4x) |
+| `tests/integration/response-validation.test.js` | Status 'healthy' |
+| `tests/integration/monitoring.test.js` | Added initTestApp() |
 
 ---
 
 ## COMMITS THIS SESSION
 
-| Commit | Description | Expected Impact |
-|--------|-------------|-----------------|
-| 0244bce | Path fix /admin/ → /admin/api/ | +15 tests |
-| 9a41676 | Harness + envelope fix | +57 tests |
-| ba8e065 | VALIDATION_ERROR + initTestApp | +16 tests |
-| ada5504 | Health 'healthy' not 'ok' | +6 tests |
-| **Total** | | **+94 tests** |
+| Commit | Description | Impact |
+|--------|-------------|--------|
+| 0244bce | Path fix /admin/ → /admin/api/ | +15 |
+| 9a41676 | Harness + envelope fix | +57 |
+| ba8e065 | VALIDATION_ERROR + initTestApp | included |
+| ada5504 | Health 'healthy' not 'ok' | included |
+| 27f6dfb | ❌ Route changes (BROKE) | -9 |
+| 67f4229 | Revert route changes | back to +57 |
+
+---
+
+## KEY LEARNINGS
+
+1. **Service guards block validation** - `requireSupabase()` runs before `validate()`, so tests get 503 not 400
+2. **Can't test validation on guarded routes** - Unless services are mocked
+3. **Test the actual endpoint behavior** - Don't assume changing paths will "fix" tests
 
 ---
 
 *Last Updated: 2025-12-08*
-*Progress: 67.4% → ~88% (estimated)*
+*Best pass rate: 84.1% (467/555)*
+*Current: ~84.1% after revert*

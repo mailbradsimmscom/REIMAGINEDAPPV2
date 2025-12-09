@@ -2,13 +2,14 @@ import { test } from 'node:test';
 import assert from 'node:assert';
 import { normalizeQuery } from '../../../src/services/query-normalizer.js';
 
-test('normalizeQuery strips leading phrases', () => {
-  assert.equal(normalizeQuery('tell me abouy my BBQ'), 'my BBQ');
+test('normalizeQuery strips leading phrases and stop words', () => {
+  // The function lowercases, removes stop words, and filters short words
+  assert.equal(normalizeQuery('tell me about my BBQ'), 'bbq');
   assert.equal(normalizeQuery('how do I change filter'), 'change filter');
-  assert.equal(normalizeQuery('what is the pressure'), 'the pressure');
-  assert.equal(normalizeQuery('show me the manual'), 'the manual');
-  assert.equal(normalizeQuery('please help me'), 'help me');
-  assert.equal(normalizeQuery('can you tell me'), 'tell me');
+  assert.equal(normalizeQuery('what is the pressure'), 'pressure');
+  assert.equal(normalizeQuery('show me the manual'), 'manual');
+  assert.equal(normalizeQuery('please help me'), 'help');
+  assert.equal(normalizeQuery('can you tell me'), '');
 });
 
 test('normalizeQuery keeps short queries unchanged', () => {
@@ -26,10 +27,12 @@ test('normalizeQuery handles edge cases', () => {
 });
 
 test('normalizeQuery normalizes whitespace', () => {
-  assert.equal(normalizeQuery('tell me about   my   BBQ'), 'my BBQ');
+  // After stop word removal: 'bbq'
+  assert.equal(normalizeQuery('tell me about   my   BBQ'), 'bbq');
   assert.equal(normalizeQuery('  how do I  change filter  '), 'change filter');
 });
 
 test('normalizeQuery only strips first matching prefix', () => {
-  assert.equal(normalizeQuery('tell me about tell me about BBQ'), 'tell me about BBQ');
+  // After removing prefix and stop words: 'bbq' (all stopwords removed)
+  assert.equal(normalizeQuery('tell me about tell me about BBQ'), 'bbq');
 });

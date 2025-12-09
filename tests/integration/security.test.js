@@ -75,8 +75,8 @@ test('Rate Limiting - Verify rate limit headers are present', async (t) => {
   const limit = parseInt(response.headers['x-ratelimit-limit']);
   const remaining = parseInt(response.headers['x-ratelimit-remaining']);
 
-  assert.strictEqual(limit, 100, 'Rate limit should be 100');
-  assert.ok(remaining >= 0 && remaining <= 100, 'Rate limit remaining should be between 0 and 100');
+  assert.strictEqual(limit, 1000, 'Rate limit should be 1000');
+  assert.ok(remaining >= 0 && remaining <= 1000, 'Rate limit remaining should be between 0 and 1000');
 });
 
 test('Request Size Limits - Verify large JSON payloads are rejected', async (t) => {

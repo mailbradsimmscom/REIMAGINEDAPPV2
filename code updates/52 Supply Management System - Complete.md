@@ -1,7 +1,7 @@
 # 52 Supply Management System - Complete Documentation
 
 **Project:** REIMAGINEDAPPV2 / BoatOS
-**Last Updated:** 2025-11-25
+**Last Updated:** 2025-12-05
 **Status:** Production Ready
 
 ---
@@ -9,12 +9,14 @@
 ## Overview
 
 A comprehensive **supplies inventory management system** for a marine catamaran featuring:
-- 244 items tracked (supplies, tools, items)
+- 317 items tracked (237 supplies, 39 tools, 41 items)
+- 18 flat categories (simplified from 3-level hierarchy)
 - AI-powered photo recognition (GPT-4o)
 - AI system recommendations (Pinecone vector search)
-- Mobile-first wizard for adding items
+- Mobile-first wizard for adding items with "+ New Category" option
 - Desktop modal for editing
 - iOS camera integration
+- Admin page for category/unit/location management
 
 ---
 
@@ -23,7 +25,9 @@ A comprehensive **supplies inventory management system** for a marine catamaran 
 | Resource | URL |
 |----------|-----|
 | Live App | http://localhost:3000/supplies.html |
+| Admin Page | http://localhost:3000/supplies-admin.html |
 | API Base | http://localhost:3000/api/supplies |
+| Config API | http://localhost:3000/api/supplies/config |
 
 ---
 
@@ -32,8 +36,8 @@ A comprehensive **supplies inventory management system** for a marine catamaran 
 | Component | Status |
 |-----------|--------|
 | Database | Done |
-| Backend API (11 endpoints) | Done |
-| Data Import (244 items) | Done |
+| Backend API (17 endpoints) | Done |
+| Data Import (317 items) | Done |
 | Desktop UI | Done |
 | Mobile UI | Done |
 | Photo Upload | Done |
@@ -41,6 +45,8 @@ A comprehensive **supplies inventory management system** for a marine catamaran 
 | AI System Recommendations (Pinecone) | Done |
 | Mobile Wizard (3-screen) | Done |
 | Item Types (Supply/Tool/Item) | Done |
+| Admin Page (Categories/Units/Locations) | Done |
+| Flat Categories (simplified) | Done |
 
 ---
 
@@ -52,20 +58,23 @@ A comprehensive **supplies inventory management system** for a marine catamaran 
 Frontend:
 /src/public/
   supplies.html                    Main page + wizard HTML
+  supplies-admin.html              Admin: manage categories/units/locations
   css/supplies.css                 Core styles
   css/supplies-wizard.css          Wizard styles
   js/supplies/
-    supplies-api.js                API client
+    supplies-api.js                API client (getCategories, createCategory, deleteCategory)
     supplies-list.js               List/search/filter
     supplies-form.js               Modal form (edit)
     supplies-photos.js             Photo upload/gallery
     supplies-ai.js                 AI features
-    supplies-wizard.js             Mobile wizard (add)
+    supplies-wizard.js             Mobile wizard (add) with "+ New Category"
+    supplies-admin.js              Admin page controller
 
 Backend:
 /src/
   routes/supplies/
     supplies.route.js              API endpoints + photo upload
+    config.route.js                Categories/units/locations CRUD
   services/supplies/
     supplies.service.js            Business logic
     ai-analysis.service.js         GPT-4o + Pinecone AI
@@ -75,7 +84,8 @@ Backend:
 Database:
 /scripts/migrations/
   020_create_supplies_tables.sql   Schema
-  020_seed_supply_config.sql       Categories/units
+  020_seed_supply_config.sql       Categories/units (original hierarchy)
+  021_simplify_supply_categories.sql  Flatten categories (2025-12-05)
 
 Storage:
 /uploads/supplies/                 Photo storage
@@ -105,6 +115,16 @@ POST   /api/supplies/upload-photo    Upload (multipart/form-data)
 ```
 POST   /api/supplies/analyze-photo     Analyze with GPT-4o (base64)
 POST   /api/supplies/suggest-systems   Pinecone system recommendations
+```
+
+### Config (Categories/Units/Locations)
+```
+GET    /api/supplies/config/categories              List categories (?withCounts=true)
+POST   /api/supplies/config/categories              Create category
+PUT    /api/supplies/config/categories/:id          Update category
+DELETE /api/supplies/config/categories/:id          Delete (only if no items)
+GET    /api/supplies/config/units                   List units
+GET    /api/supplies/config/locations               List locations
 ```
 
 ---
@@ -155,9 +175,11 @@ The mobile "Add Supply" uses a 3-screen wizard:
 
 ### Tables
 
-**supply_categories**
-- Hierarchical (3 levels max)
-- DELETE RESTRICT (prevents orphans)
+**supply_categories** (simplified 2025-12-05)
+- Flat list (no hierarchy) - 18 categories
+- Fields: `id`, `category_name`, `display_order`, `is_active`, `icon`
+- Unique constraint on `category_name`
+- Can only delete if no supplies reference it
 
 **supply_units**
 - Countable, volume, weight, length, container types
@@ -210,6 +232,16 @@ The mobile "Add Supply" uses a 3-screen wizard:
 2. **Localhost URL issue**: Changed from URL to base64 image encoding
 3. **Pinecone field name**: Changed `asset_uid` to `linked_asset_uid`
 4. **Category dilution**: Removed category from Pinecone search query
+
+### Category Simplification (2025-12-05)
+1. **Flattened hierarchy**: Removed `parent_id`, `category_path`, `level` columns
+2. **Migration**: `021_simplify_supply_categories.sql`
+3. **Kept 18 categories** that had items, deleted unused hierarchy levels
+4. **Frontend fixes**: Updated supplies-list.js, supplies-form.js, supplies-wizard.js
+5. **Backend fixes**: Removed `category_path` from all Supabase select queries
+6. **New feature**: "+ Add New Category" in wizard dropdown
+7. **Admin page**: Shows item counts, disables delete for categories in use
+8. **Location filter fix**: Changed from partial match (`ilike`) to exact match (`eq`)
 
 ---
 
@@ -273,11 +305,11 @@ tail -f logs/api/node-api.log
 
 ## Data Statistics
 
-- **244 items** imported from CSV
-- **164 supplies**, 39 tools, 41 items
-- **24 categories** active
+- **317 items** total
+- **237 supplies**, 39 tools, 41 items
+- **18 categories** (flat list)
 - **24 units** available
-- **~15 locations** tracked
+- **~40 locations** tracked
 
 ---
 
@@ -299,9 +331,10 @@ tail -f logs/api/node-api.log
 - Dashboard charts
 - Recent items & favorites
 
-### Layer 6: Admin Config
-- Manage categories UI
-- Manage units UI
+### Layer 6: Admin Config (Partially Done)
+- ✅ Manage categories UI (`/supplies-admin.html`)
+- ✅ Manage units UI
+- ✅ Manage locations UI
 - Bulk edit thresholds
 - Export/import
 

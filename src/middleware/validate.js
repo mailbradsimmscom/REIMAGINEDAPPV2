@@ -1,4 +1,6 @@
 // src/middleware/validate.js
+import { ERR } from '../constants/errorCodes.js';
+
 export function validate(schema, source = 'body') {
   return (req, res, next) => {
     if (!schema) {
@@ -13,7 +15,7 @@ export function validate(schema, source = 'body') {
         success: false,
         data: null,
         error: {
-          code: 'VALIDATION_ERROR',
+          code: ERR.BAD_REQUEST,
           message: 'Validation failed',
           details: result.error.errors
         },
