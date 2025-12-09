@@ -42,5 +42,7 @@ router.use('/enhanced/thread', threadBySessionRouter);
 // Keep this last so it doesn't swallow unknown subpaths
 // param-scoped delete, LAST (so it can't see 'enhanced')
 router.use('/:sessionId', sessionDeleteRouter);
+// Also support /chat/enhanced/:sessionId for consistency
+router.use('/enhanced/:sessionId', sessionDeleteRouter);
 
 export default router;

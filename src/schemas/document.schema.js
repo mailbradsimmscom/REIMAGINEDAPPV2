@@ -23,11 +23,12 @@ export const documentIngestMetadataSchema = z.object({
 }).passthrough();
 
 // Document jobs query parameters
+// Note: 'pending' is accepted as alias for 'queued' for API flexibility
 export const documentJobsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
-  status: z.enum(['queued', 'running', 'done', 'error']).optional()
-});
+  status: z.enum(['queued', 'running', 'done', 'error', 'pending', 'completed']).optional()
+}).passthrough();
 
 // Document jobs success response schema
 const DocumentJobsOkSchema = z.object({
@@ -58,10 +59,12 @@ const DocumentJobsOkSchema = z.object({
 export const documentJobsResponseSchema = z.union([DocumentJobsOkSchema, ErrorEnvelopeSchema]);
 
 // Document documents query parameters
+// Accepts optional status filter and passes through unknown params
 export const documentDocumentsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
-  offset: z.coerce.number().int().min(0).default(0)
-});
+  offset: z.coerce.number().int().min(0).default(0),
+  status: z.string().optional()
+}).passthrough();
 
 // Document documents success response schema
 const DocumentDocumentsOkSchema = z.object({

@@ -24,7 +24,9 @@ app.use(helmet({
 const env = getEnv();
 app.use(cors({
   origin: function(origin, callback) {
-    const allowedOrigins = env.NODE_ENV === 'development'
+    // Development and test environments allow localhost
+    const isDevOrTest = env.NODE_ENV === 'development' || env.NODE_ENV === 'test' || process.env.CI;
+    const allowedOrigins = isDevOrTest
       ? [
           'http://localhost:3000',
           'http://localhost:3001',

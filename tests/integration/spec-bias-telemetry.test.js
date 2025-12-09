@@ -10,8 +10,9 @@ const app = getAppSync();
 test('Spec-biased retrieval integration test', async (t) => {
   if (skipIfNoServices(t)) return;
   // Test pressure question that should trigger spec-biased retrieval
+  // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
-    .post('/chat/process')
+    .post('/chat/enhanced/process')
     .send({
       message: 'what pressure does my watermaker operate at?'
     })
@@ -56,6 +57,7 @@ test('Spec-biased retrieval integration test', async (t) => {
 test('Style detection integration test', async (t) => {
   if (skipIfNoServices(t)) return;
   // Test different question types to verify style detection
+  // Use /chat/enhanced/process for rich response with telemetry
   const testCases = [
     {
       message: 'what pressure does my watermaker operate at?',
@@ -74,10 +76,10 @@ test('Style detection integration test', async (t) => {
       expectedStyle: 'brief'
     }
   ];
-  
+
   for (const testCase of testCases) {
     const response = await request(app)
-      .post('/chat/process')
+      .post('/chat/enhanced/process')
       .send({
         message: testCase.message
       })
@@ -100,10 +102,11 @@ test('Style detection integration test', async (t) => {
 test('Request ID uniqueness test', async (t) => {
   if (skipIfNoServices(t)) return;
   // Make multiple requests to verify request IDs are unique
+  // Use /chat/enhanced/process for rich response with telemetry
   const results = await Promise.all([
-    request(app).post('/chat/process').send({ message: 'test 1' }).expect(200),
-    request(app).post('/chat/process').send({ message: 'test 2' }).expect(200),
-    request(app).post('/chat/process').send({ message: 'test 3' }).expect(200)
+    request(app).post('/chat/enhanced/process').send({ message: 'test 1' }).expect(200),
+    request(app).post('/chat/enhanced/process').send({ message: 'test 2' }).expect(200),
+    request(app).post('/chat/enhanced/process').send({ message: 'test 3' }).expect(200)
   ]);
   const requestIds = results.map(res => res.body.data.telemetry.requestId);
   
@@ -123,8 +126,9 @@ test('Request ID uniqueness test', async (t) => {
 
 test('Spec-bias metadata validation test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
-    .post('/chat/process')
+    .post('/chat/enhanced/process')
     .send({
       message: 'what are the technical specifications of my watermaker?'
     })
@@ -147,8 +151,9 @@ test('Spec-bias metadata validation test', async (t) => {
 
 test('Environment configuration test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
-    .post('/chat/process')
+    .post('/chat/enhanced/process')
     .send({
       message: 'test environment config'
     })
@@ -170,8 +175,9 @@ test('Environment configuration test', async (t) => {
 
 test('Schema validation test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
-    .post('/chat/process')
+    .post('/chat/enhanced/process')
     .send({
       message: 'test schema validation'
     })

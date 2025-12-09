@@ -78,23 +78,25 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
   for (const testCase of testCases) {
     await t.test(`RAG Validation: "${testCase.query}"`, async () => {
       console.log(`\n🔍 Testing: "${testCase.query}"`);
-      
+
+      // Use /chat/enhanced/process for rich response with telemetry
       const response = await request(app)
-        .post('/chat/process')
+        .post('/chat/enhanced/process')
         .send({
           message: testCase.query
         })
         .expect(200);
       
       const data = response.body.data;
-      
+
       // Validate response structure
       assert.ok(data.assistantMessage, 'Should have assistant message');
       assert.ok(data.telemetry, 'Should have telemetry data');
       assert.ok(data.telemetry.retrievalMeta, 'Should have retrieval metadata');
-      
+
       // Extract retrieved content for validation
-      const assistantMessage = data.assistantMessage;
+      // Enhanced route returns assistantMessage as object with .content
+      const assistantMessage = data.assistantMessage.content || data.assistantMessage;
       const retrievalMeta = data.telemetry.retrievalMeta;
       
       console.log(`📊 Retrieval Stats:`, {
@@ -142,16 +144,19 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
   for (const testCase of technicalTestCases) {
     await t.test(`Technical Accuracy: ${testCase.validationType}`, async () => {
       console.log(`\n🔧 Testing ${testCase.validationType}: "${testCase.query}"`);
-      
+
+      // Use /chat/enhanced/process for rich response with telemetry
       const response = await request(app)
-        .post('/chat/process')
+        .post('/chat/enhanced/process')
         .send({
           message: testCase.query
         })
         .expect(200);
-      
-      const assistantMessage = response.body.data.assistantMessage;
-      
+
+      // Enhanced route returns assistantMessage as object with .content
+      const rawMessage = response.body.data.assistantMessage;
+      const assistantMessage = rawMessage.content || rawMessage;
+
       // Validate technical accuracy based on type
       switch (testCase.validationType) {
         case 'preconditions':
@@ -205,16 +210,19 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
   for (const testCase of groundTruthTests) {
     await t.test(`Ground Truth: ${testCase.procedure}`, async () => {
       console.log(`\n🎯 Testing ground truth for: ${testCase.procedure}`);
-      
+
+      // Use /chat/enhanced/process for rich response with telemetry
       const response = await request(app)
-        .post('/chat/process')
+        .post('/chat/enhanced/process')
         .send({
           message: testCase.query
         })
         .expect(200);
-      
-      const assistantMessage = response.body.data.assistantMessage;
-      
+
+      // Enhanced route returns assistantMessage as object with .content
+      const rawMessage = response.body.data.assistantMessage;
+      const assistantMessage = rawMessage.content || rawMessage;
+
       // Validate against ground truth
       await validateGroundTruth(assistantMessage, testCase.groundTruth);
       
@@ -245,16 +253,19 @@ test('Golden Rules Validation - Error Handling', async (t) => {
   for (const testCase of errorTestCases) {
     await t.test(`Error Handling: "${testCase.query}"`, async () => {
       console.log(`\n⚠️ Testing error handling: "${testCase.query}"`);
-      
+
+      // Use /chat/enhanced/process for rich response with telemetry
       const response = await request(app)
-        .post('/chat/process')
+        .post('/chat/enhanced/process')
         .send({
           message: testCase.query
         })
         .expect(200);
-      
-      const assistantMessage = response.body.data.assistantMessage;
-      
+
+      // Enhanced route returns assistantMessage as object with .content
+      const rawMessage = response.body.data.assistantMessage;
+      const assistantMessage = rawMessage.content || rawMessage;
+
       // Validate error handling
       assert.ok(assistantMessage.length > 0, 'Should provide some response');
       assert.ok(typeof assistantMessage === 'string', 'Should return string response');
