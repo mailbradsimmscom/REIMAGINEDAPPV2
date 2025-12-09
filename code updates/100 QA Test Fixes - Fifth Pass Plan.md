@@ -30,7 +30,7 @@ This pass focuses on **real code fixes** and **proper test refactoring** (not lo
 
 ---
 
-## Sixth Pass - Critical Fix
+## Sixth Pass - Error Code Fix
 
 ### Issue: Chat routes returning 500 instead of 503
 
@@ -47,6 +47,72 @@ In `chat-proxy.service.js` catch block, detect sidecar connectivity errors and a
 
 **Files Changed:**
 - `src/services/chat-proxy.service.js` - Import ERR, add error code before rethrowing
+
+**Result:** Tests now get proper 503 instead of 500, but still failing because sidecar was unreachable.
+
+---
+
+## Seventh Pass - CI Infrastructure
+
+### Issue: Tests failing in CI despite services being available
+
+**Investigation:**
+1. Added pre-flight health checks to wake-services step
+2. Added debug logging to verify env vars in test process
+3. Confirmed: `PYTHON_SIDECAR_URL` is set, `getEnv()` sees it, curl/fetch work
+
+**Finding:** Sidecar IS reachable from CI. The 503s were caused by Python sidecar returning 500 due to validation error.
+
+---
+
+## Eighth Pass - Root Cause Found (thread_id)
+
+### Issue: Python sidecar returns 500 when thread_id is None
+
+**Error from CI logs:**
+```
+Chat processing failed: 1 validation error for ChatResponse
+thread_id
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+```
+
+**Root Cause:**
+1. Test sends `{ message: 'test message' }` without threadId
+2. Node forwards to sidecar with `thread_id: null`
+3. Python Pydantic model requires `thread_id: str`
+4. Validation fails → 500
+5. Node catches and converts to 503
+
+**Analysis:**
+- UI always generates threadId (required at UI level)
+- API contract should allow optional threadId (cleaner public API)
+- Node layer should be the adapter that guarantees sidecar gets what it needs
+
+**Fix (commit `c857aa6`):**
+Node layer generates a UUID if threadId is missing or empty:
+```javascript
+import { randomUUID } from 'crypto';
+
+// In processChatMessage:
+const threadId = rawThreadId?.trim() || randomUUID();
+```
+
+**Files Changed:**
+- `src/services/chat-proxy.service.js` - Import randomUUID, normalize threadId
+- `tests/integration/chat.test.js` - Reverted to send just `{ message }` (tests the API contract)
+
+**Expected Impact:** Large drop in chat-related 503 failures.
+
+---
+
+## Progress Log
+
+| Run | Commit | Integration | Total | Notes |
+|-----|--------|-------------|-------|-------|
+| Start | `7d8ea48` | 25 | 33 | Initial state |
+| Run 6 | `1fc9344` | 29 | 37 | Added PYTHON_SIDECAR_URL to CI |
+| Run 7 | `0cb7e98` | 27 | 35 | Added threadId to test |
+| Run 8 | `c857aa6` | ? | ? | Node generates threadId (pending) |
 
 ---
 
