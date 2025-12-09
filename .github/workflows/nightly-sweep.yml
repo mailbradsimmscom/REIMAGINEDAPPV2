@@ -191,28 +191,8 @@ jobs:
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
-      - name: Verify Node.js can reach sidecar
-        run: |
-          echo "PYTHON_SIDECAR_URL=$PYTHON_SIDECAR_URL"
-          node -e "
-            const url = process.env.PYTHON_SIDECAR_URL;
-            console.log('Node sees PYTHON_SIDECAR_URL:', url);
-            if (!url) { console.log('ERROR: PYTHON_SIDECAR_URL not set'); process.exit(1); }
-            fetch(url + '/health')
-              .then(r => r.json())
-              .then(d => { console.log('SUCCESS:', JSON.stringify(d)); process.exit(0); })
-              .catch(e => { console.log('FAILED:', e.message); process.exit(1); });
-          "
-        env:
-          PYTHON_SIDECAR_URL: ${{ secrets.PYTHON_SIDECAR_URL }}
-
       - name: Run Integration Tests
         run: |
-          echo "=== Integration Tests: Env Check ==="
-          echo "PYTHON_SIDECAR_URL=$PYTHON_SIDECAR_URL"
-          curl -sS -m 5 "$PYTHON_SIDECAR_URL/health" && echo " - curl OK" || echo " - curl FAILED"
-          node -e "console.log('Node sees:', process.env.PYTHON_SIDECAR_URL); fetch(process.env.PYTHON_SIDECAR_URL + '/health').then(r => r.json()).then(d => console.log('fetch OK:', JSON.stringify(d))).catch(e => console.log('fetch FAILED:', e.message))"
-          echo "=== Starting Tests ==="
           node --test --test-force-exit \
             tests/integration/admin-auth.test.js \
             tests/integration/admin.test.js \

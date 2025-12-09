@@ -1,24 +1,5 @@
 import { test, assertSuccess, assertError, publicRequest, postRequest, assert, initTestApp } from '../test-config.js';
 import { skipIfNoServices } from '../helpers/ci-skip.js';
-import { getEnv } from '../../src/config/env.js';
-
-// DEBUG: Check sidecar connectivity at test start
-console.log('=== CHAT.TEST.JS DEBUG ===');
-console.log('process.env.PYTHON_SIDECAR_URL:', process.env.PYTHON_SIDECAR_URL);
-const env = getEnv();
-console.log('getEnv().PYTHON_SIDECAR_URL:', env.PYTHON_SIDECAR_URL);
-const sidecarUrl = env.PYTHON_SIDECAR_URL || 'NOT SET';
-console.log('Testing connectivity to:', sidecarUrl);
-if (sidecarUrl !== 'NOT SET') {
-  try {
-    const resp = await fetch(sidecarUrl + '/health');
-    const data = await resp.json();
-    console.log('Sidecar health check:', resp.status, JSON.stringify(data));
-  } catch (e) {
-    console.log('Sidecar health check FAILED:', e.message);
-  }
-}
-console.log('=== END DEBUG ===');
 
 // Initialize app before tests
 test.before(async () => {
@@ -30,7 +11,10 @@ test('Chat Routes - Happy Path', async (t) => {
   if (skipIfNoServices(t)) return;
 
   await t.test('POST /chat/enhanced/process with valid message returns 200', async () => {
-    const response = await postRequest('/chat/enhanced/process', { message: 'test message' });
+    const response = await postRequest('/chat/enhanced/process', {
+      message: 'test message',
+      threadId: `test-${Date.now()}`
+    });
 
     assertSuccess(response, 200);
     assert.strictEqual(typeof response.body.data.assistantMessage.content, 'string');
