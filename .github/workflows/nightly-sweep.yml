@@ -191,6 +191,21 @@ jobs:
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
+      - name: Verify Node.js can reach sidecar
+        run: |
+          echo "PYTHON_SIDECAR_URL=$PYTHON_SIDECAR_URL"
+          node -e "
+            const url = process.env.PYTHON_SIDECAR_URL;
+            console.log('Node sees PYTHON_SIDECAR_URL:', url);
+            if (!url) { console.log('ERROR: PYTHON_SIDECAR_URL not set'); process.exit(1); }
+            fetch(url + '/health')
+              .then(r => r.json())
+              .then(d => { console.log('SUCCESS:', JSON.stringify(d)); process.exit(0); })
+              .catch(e => { console.log('FAILED:', e.message); process.exit(1); });
+          "
+        env:
+          PYTHON_SIDECAR_URL: ${{ secrets.PYTHON_SIDECAR_URL }}
+
       - name: Run Integration Tests
         run: |
           node --test --test-force-exit \
