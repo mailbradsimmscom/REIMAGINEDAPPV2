@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { initTestApp, getAppSync } from '../setupApp.js';
+import { skipIfNoServices } from '../helpers/ci-skip.js';
 import request from 'supertest';
 import fs from 'fs/promises';
 import path from 'path';
@@ -9,14 +10,22 @@ await initTestApp();
 const app = getAppSync();
 
 // Load golden test data
-const goldenTestData = JSON.parse(
-  await fs.readFile(
-    path.join(process.cwd(), 'anthropic_parallel_extraction_315e3f0f.json'),
-    'utf8'
-  )
-);
+let goldenTestData = null;
+try {
+  goldenTestData = JSON.parse(
+    await fs.readFile(
+      path.join(process.cwd(), 'anthropic_parallel_extraction_315e3f0f.json'),
+      'utf8'
+    )
+  );
+} catch (e) {
+  console.log('Golden test data file not found - tests will skip');
+}
 
 test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
+  // Skip if services aren't available - these tests require live chat service
+  if (skipIfNoServices(t)) return;
+  if (!goldenTestData) { t.skip('Golden test data not available'); return; }
   console.log('🧪 Testing Golden Rules Validation Logic...\n');
   
   // Test cases derived from golden procedures
@@ -105,6 +114,7 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
 });
 
 test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
+  if (skipIfNoServices(t)) return;
   console.log('\n🔬 Testing Technical Accuracy Assertions...\n');
   
   const technicalTestCases = [
@@ -161,6 +171,7 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
 });
 
 test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
+  if (skipIfNoServices(t)) return;
   console.log('\n🎯 Testing Ground Truth Assertions...\n');
   
   // Test ground truth assertions against known procedures
@@ -213,6 +224,7 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
 });
 
 test('Golden Rules Validation - Error Handling', async (t) => {
+  if (skipIfNoServices(t)) return;
   console.log('\n⚠️ Testing Error Handling in Golden Rules...\n');
   
   const errorTestCases = [

@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert';
 import { get, post } from '../helpers/http.js';
 import { initTestApp } from '../setupApp.js';
+import { setTestEnv, resetEnvMemo } from '../helpers/env.js';
 
 // Initialize app before tests
 test.before(async () => {
@@ -49,13 +50,20 @@ test('Bad-input test matrix - Comprehensive validation testing', async (t) => {
 
   // Test 5: Disabled external → typed envelope (not 500)
   await t.test('POST /pinecone/query with disabled service returns typed envelope', async () => {
-    const response = await post('/pinecone/query', {
-      body: { query: 'ping' }
-    });
-    // Service guards return 503 with typed error envelope (not 500 crash)
-    assert.strictEqual(response.status, 503);
-    assert.strictEqual(response.body.success, false);
-    assert.strictEqual(response.body.error.code, 'PINECONE_DISABLED');
+    // Explicitly disable Pinecone for this test
+    setTestEnv({ PINECONE_DISABLED: '1' });
+    try {
+      const response = await post('/pinecone/query', {
+        body: { query: 'ping' }
+      });
+      // Service guards return 503 with typed error envelope (not 500 crash)
+      assert.strictEqual(response.status, 503);
+      assert.strictEqual(response.body.success, false);
+      assert.strictEqual(response.body.error.code, 'PINECONE_DISABLED');
+    } finally {
+      // Reset env after test
+      resetEnvMemo();
+    }
   });
 
   // Test 6: Admin route with invalid token → 401/403

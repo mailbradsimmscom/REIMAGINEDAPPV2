@@ -2,10 +2,10 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
+import { requireSupabase } from '../../middleware/serviceGuards.js';
 import { documentJobStatusPathSchema } from '../../schemas/document.schema.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { JobStatusEnvelope } from '../../schemas/document.schema.js';
-import { z } from 'zod';
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ router.use(validateResponse(JobStatusEnvelope));
 // GET /admin/docs/jobs/:jobId - Get job status
 router.get('/:jobId',
   validate(documentJobStatusPathSchema, 'params'),
+  requireSupabase(),
   async (req, res, next) => {
   try {
     const { jobId } = req.params;

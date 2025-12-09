@@ -2,10 +2,10 @@ import express from 'express';
 import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
+import { requireSupabase } from '../../middleware/serviceGuards.js';
 import { documentGetQuerySchema } from '../../schemas/document.schema.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { DocumentGetOneEnvelope } from '../../schemas/document.schema.js';
-import { z } from 'zod';
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ router.use(validateResponse(DocumentGetOneEnvelope));
 // GET /admin/docs/documents/:docId - Get document details
 router.get('/:docId',
   validate(documentGetQuerySchema, 'params'),
+  requireSupabase(),
   async (req, res, next) => {
   try {
     const { docId } = req.params;

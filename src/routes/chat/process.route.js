@@ -19,7 +19,7 @@ const router = express.Router();
 router.post(
   '/',
   validate(chatProcessRequestSchema, 'body'),
-  requireServices(['supabase', 'openai', 'pinecone']),
+  requireServices(['supabase', 'openai', 'pinecone', 'sidecar']),
   validateResponse(ChatProcessEnvelope),
   async (req, res, next) => {
     const startTime = Date.now();

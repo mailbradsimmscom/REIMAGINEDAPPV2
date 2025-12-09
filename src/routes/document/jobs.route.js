@@ -3,9 +3,10 @@ import documentService from '../../services/document.service.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireSupabase } from '../../middleware/serviceGuards.js';
 import { DocumentJobsEnvelope } from '../../schemas/document.schema.js';
-import { 
-  documentJobsQuerySchema, 
+import {
+  documentJobsQuerySchema,
   documentJobsResponseSchema,
   documentGetQuerySchema,
   documentGetResponseSchema
@@ -22,6 +23,7 @@ router.use(validateResponse(DocumentJobsEnvelope));
 // GET /admin/docs/jobs - List jobs
 router.get('/',
   validate(documentJobsQuerySchema, 'query'),
+  requireSupabase(),
   async (req, res, next) => {
     try {
       // Use validated query with defaults from schema

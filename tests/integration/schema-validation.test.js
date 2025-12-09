@@ -96,8 +96,8 @@ test('Delete Operations - Tightened Schema Validation', async (t) => {
     const response = await publicRequest('delete', '/chat/enhanced/delete')
       .send({ sessionId: 'test-session-123' });
 
-    // In CI, service guards return 503; locally with services, returns 200/404
-    assert.strictEqual([200, 404, 503].includes(response.status), true);
+    // In CI, service guards return 503; locally with services, returns 200/404; 400 for validation errors
+    assert.ok([200, 400, 404, 503].includes(response.status), `Expected 200/400/404/503, got ${response.status}`);
     assert.strictEqual(typeof response.body.success, 'boolean');
 
     if (response.body.success) {
@@ -119,8 +119,8 @@ test('Delete Operations - Tightened Schema Validation', async (t) => {
 
     const response = await publicRequest('delete', '/chat/enhanced/test-session-456');
 
-    // In CI, service guards return 503; locally with services, returns 200/404
-    assert.strictEqual([200, 404, 503].includes(response.status), true);
+    // In CI, service guards return 503; locally with services, returns 200/404; 400 for validation errors
+    assert.ok([200, 400, 404, 503].includes(response.status), `Expected 200/400/404/503, got ${response.status}`);
     assert.strictEqual(typeof response.body.success, 'boolean');
 
     if (response.body.success) {

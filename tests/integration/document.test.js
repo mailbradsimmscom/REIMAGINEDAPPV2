@@ -7,11 +7,11 @@ test.before(async () => {
 
 // Document route tests
 test('Document Routes - Happy Path', async (t) => {
-  await t.test('GET /admin/docs/documents returns 200 or 500 (depends on DB)', async () => {
+  await t.test('GET /admin/docs/documents returns 200 or 503 (depends on DB)', async () => {
     const response = await adminRequest('get', '/admin/docs/documents');
-    
-    // Accept either 200 (success) or 500 (service unavailable)
-    assert.strictEqual(response.status === 200 || response.status === 500, true);
+
+    // Accept 200 (success) or 503 (service unavailable)
+    assert.ok([200, 503].includes(response.status), `Expected 200 or 503, got ${response.status}`);
     if (response.status === 200) {
       assert.strictEqual(response.body.success, true);
       assert.strictEqual(Array.isArray(response.body.data.documents), true);
@@ -23,20 +23,20 @@ test('Document Routes - Happy Path', async (t) => {
 
   await t.test('GET /admin/docs/documents with query parameters works', async () => {
     const response = await adminRequest('get', '/admin/docs/documents?limit=10&offset=0&status=completed');
-    
-    // Accept either 200 (success) or 500 (service unavailable)
-    assert.strictEqual(response.status === 200 || response.status === 500, true);
+
+    // Accept 200 (success) or 503 (service unavailable)
+    assert.ok([200, 503].includes(response.status), `Expected 200 or 503, got ${response.status}`);
     if (response.status === 200) {
       assert.strictEqual(response.body.success, true);
       assert.strictEqual(Array.isArray(response.body.data.documents), true);
     }
   });
 
-  await t.test('GET /admin/docs/jobs returns 200 or 500 (depends on DB)', async () => {
+  await t.test('GET /admin/docs/jobs returns 200 or 503 (depends on DB)', async () => {
     const response = await adminRequest('get', '/admin/docs/jobs');
-    
-    // Accept either 200 (success) or 500 (service unavailable)
-    assert.strictEqual(response.status === 200 || response.status === 500, true);
+
+    // Accept 200 (success) or 503 (service unavailable)
+    assert.ok([200, 503].includes(response.status), `Expected 200 or 503, got ${response.status}`);
     if (response.status === 200) {
       assert.strictEqual(response.body.success, true);
       assert.strictEqual(Array.isArray(response.body.data.jobs), true);
@@ -48,9 +48,9 @@ test('Document Routes - Happy Path', async (t) => {
 
   await t.test('GET /admin/docs/jobs with query parameters works', async () => {
     const response = await adminRequest('get', '/admin/docs/jobs?limit=5&offset=0&status=pending');
-    
-    // Accept either 200 (success) or 500 (service unavailable)
-    assert.strictEqual(response.status === 200 || response.status === 500, true);
+
+    // Accept 200 (success) or 503 (service unavailable)
+    assert.ok([200, 503].includes(response.status), `Expected 200 or 503, got ${response.status}`);
     if (response.status === 200) {
       assert.strictEqual(response.body.success, true);
       assert.strictEqual(Array.isArray(response.body.data.jobs), true);
