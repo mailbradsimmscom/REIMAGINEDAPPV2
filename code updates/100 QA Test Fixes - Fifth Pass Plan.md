@@ -30,6 +30,26 @@ This pass focuses on **real code fixes** and **proper test refactoring** (not lo
 
 ---
 
+## Sixth Pass - Critical Fix
+
+### Issue: Chat routes returning 500 instead of 503
+
+**Root Cause:**
+1. Guard passes (PYTHON_SIDECAR_URL env var exists)
+2. Code calls sidecar
+3. Sidecar isn't running → client throws generic Error
+4. Chat proxy catches, logs, re-throws WITHOUT error code
+5. Error middleware receives error without `code` property
+6. Falls through to generic 500 handler
+
+**Fix:**
+In `chat-proxy.service.js` catch block, detect sidecar connectivity errors and add `error.code = ERR.SIDECAR_DISABLED`. Error middleware already handles this code and returns 503.
+
+**Files Changed:**
+- `src/services/chat-proxy.service.js` - Import ERR, add error code before rethrowing
+
+---
+
 ## Detailed Plan
 
 ### Cluster A: Pinecone "Disabled" Tests (3 failures)

@@ -11,6 +11,7 @@ import { logger as defaultLogger } from '../utils/logger.js';
 import * as pythonSidecar from '../clients/python-sidecar.client.js';
 import { chatDebug as defaultChatDebug } from '../utils/chat-debug-logger.js';
 import * as equipmentExtraction from './equipment-extraction.service.js';
+import { ERR } from '../constants/errorCodes.js';
 
 // Pure helper functions - extracted for testability
 import { extractKeywords } from './chat-proxy/helpers.js';
@@ -692,6 +693,16 @@ export function createChatProxyService({
       hadConversationContext: !!conversationContext?.conversation_summary,
       conversationExchanges: conversationContext?.total_exchanges
     });
+
+    // Convert sidecar connectivity errors to service unavailable (503)
+    // so error middleware returns proper status instead of generic 500
+    const msg = error.message || '';
+    if (msg.includes('Python sidecar') ||
+        msg.includes('ECONNREFUSED') ||
+        msg.includes('fetch failed')) {
+      error.code = ERR.SIDECAR_DISABLED;
+    }
+
     throw error;
   }
   }
