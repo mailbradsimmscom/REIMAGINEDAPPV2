@@ -2,6 +2,7 @@ import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
 
@@ -9,6 +10,9 @@ const router = express.Router();
 
 // Apply admin gate middleware
 router.use(adminGate);
+
+// Require Supabase for all upload routes
+router.use(requireServices(['supabase']));
 
 // GET /admin/upload/documents - List documents for upload page
 router.get('/documents', 

@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { adminOnly } from '../../middleware/admin.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { logger } from '../../utils/logger.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 
 const router = Router();
 
 // Get dashboard overview data for all staging tables
-router.get('/dashboard', adminOnly, async (req, res) => {
+router.get('/dashboard', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const supabaseClient = await getSupabaseClient();
     
@@ -107,7 +108,7 @@ router.get('/dashboard', adminOnly, async (req, res) => {
 });
 
 // Get detailed data for a specific staging table
-router.get('/:table', adminOnly, async (req, res) => {
+router.get('/:table', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const { table } = req.params;
     const { docId, page = 1, limit = 1000 } = req.query;
@@ -194,7 +195,7 @@ router.get('/:table', adminOnly, async (req, res) => {
 });
 
 // Approve selected items from staging to production
-router.post('/:table/approve', adminOnly, async (req, res) => {
+router.post('/:table/approve', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const { table } = req.params;
     const { itemIds } = req.body;
@@ -351,7 +352,7 @@ router.post('/:table/approve', adminOnly, async (req, res) => {
 });
 
 // Decline items endpoint
-router.post('/:table/decline', adminOnly, async (req, res) => {
+router.post('/:table/decline', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const { table } = req.params;
     const { itemIds } = req.body;

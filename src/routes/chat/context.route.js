@@ -3,6 +3,7 @@ import { getChatThread, getChatSession, getChatMessages } from '../../repositori
 import { getWeightedConversationContext } from '../../services/conversation-context.service.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { ChatContextEnvelope } from '../../schemas/chat.schema.js';
 import {
   chatContextQuerySchema
@@ -16,16 +17,19 @@ router.use(validateResponse(ChatContextEnvelope));
 // GET /chat/context - Get chat context with conversation memory
 router.get('/',
   validate(chatContextQuerySchema, 'query'),
+  requireServices(['supabase']),
   async (req, res, next) => {
     try {
       const { threadId } = req.query;
 
-      // Get thread, messages, and weighted context
+      // Get thread, session, messages, and weighted context
       const thread = await getChatThread(threadId);
+      const session = await getChatSession(thread.session_id);
       const messages = await getChatMessages(threadId, { limit: 50 });
       const conversationContext = await getWeightedConversationContext(threadId);
 
       const context = {
+        session,
         thread,
         messages,
         context: conversationContext

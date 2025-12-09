@@ -2,6 +2,7 @@ import express from 'express';
 import { deleteChatSession } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { ChatDeleteEnvelope } from '../../schemas/chat.schema.js';
 import {
   chatDeleteRequestSchema
@@ -15,6 +16,7 @@ router.use(validateResponse(ChatDeleteEnvelope));
 // DELETE /chat/delete - Delete chat session (body)
 router.delete('/',
   validate(chatDeleteRequestSchema, 'body'),
+  requireServices(['supabase']),
   async (req, res, next) => {
     try {
       const { sessionId } = req.body;

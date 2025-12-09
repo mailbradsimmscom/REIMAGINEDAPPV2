@@ -2,6 +2,7 @@ import express from 'express';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { AdminSystemsEnvelope } from '../../schemas/admin.schema.js';
 import { adminService } from '../../services/admin.service.js';
 import { lookupSystemByManufacturerAndModel } from '../../repositories/systems.repository.js';
@@ -14,6 +15,9 @@ router.use(adminGate);
 
 // Apply response validation to all routes in this file
 router.use(validateResponse(AdminSystemsEnvelope));
+
+// Apply service guard to all routes - requires Supabase
+router.use(requireServices(['supabase']));
 
 // Admin systems query schema
 const adminSystemsQuerySchema = z.object({

@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { createChatThreadWithId, getChatThread } from '../../repositories/chat.repository.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { logger } from '../../utils/logger.js';
 
 const router = Router();
 
-router.post('/threads', async (req, res) => {
+router.post('/threads', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
@@ -50,7 +51,7 @@ router.post('/threads', async (req, res) => {
   }
 });
 
-router.get('/threads/:threadId', async (req, res) => {
+router.get('/threads/:threadId', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {

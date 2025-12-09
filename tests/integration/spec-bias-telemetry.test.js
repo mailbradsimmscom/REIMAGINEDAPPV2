@@ -96,13 +96,11 @@ test('Style detection integration test', async (t) => {
 
 test('Request ID uniqueness test', async (t) => {
   // Make multiple requests to verify request IDs are unique
-  const responses = await Promise.all([
-    request(app).post('/chat/process').send({ message: 'test 1' }),
-    request(app).post('/chat/process').send({ message: 'test 2' }),
-    request(app).post('/chat/process').send({ message: 'test 3' })
+  const results = await Promise.all([
+    request(app).post('/chat/process').send({ message: 'test 1' }).expect(200),
+    request(app).post('/chat/process').send({ message: 'test 2' }).expect(200),
+    request(app).post('/chat/process').send({ message: 'test 3' }).expect(200)
   ]);
-  
-  const results = await Promise.all(responses.map(r => r.expect(200)));
   const requestIds = results.map(res => res.body.data.telemetry.requestId);
   
   // Verify all request IDs are unique

@@ -1,5 +1,6 @@
 import express from 'express';
 import { adminOnly } from '../../middleware/admin.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
 
@@ -9,7 +10,7 @@ const requestLogger = logger.createRequestLogger();
 // Validation schemas removed - only used in commented-out routes
 
 // GET /admin/api/playbooks - Get all playbook hints (staging data)
-router.get('/', adminOnly, async (req, res) => {
+router.get('/', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const filters = {
       system_norm: req.query.system_norm,
@@ -54,7 +55,7 @@ router.get('/', adminOnly, async (req, res) => {
 });
 
 // GET /admin/api/playbooks/stats - Get playbook hints statistics
-router.get('/stats', adminOnly, async (req, res) => {
+router.get('/stats', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const supabase = await getSupabaseClient();
     if (!supabase) {
@@ -87,7 +88,7 @@ router.get('/stats', adminOnly, async (req, res) => {
 });
 
 // GET /admin/api/playbooks/:playbookId - Get specific playbook hint
-router.get('/:playbookId', adminOnly, async (req, res) => {
+router.get('/:playbookId', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const { playbookId } = req.params;
 

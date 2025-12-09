@@ -3,6 +3,7 @@ import { logger } from '../../utils/logger.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { AdminPineconeEnvelope } from '../../schemas/admin.schema.js';
 import { z } from 'zod';
 
@@ -13,6 +14,9 @@ router.use(adminGate);
 
 // Apply response validation to all routes in this file
 router.use(validateResponse(AdminPineconeEnvelope));
+
+// Require Python sidecar for pinecone routes
+router.use(requireServices(['sidecar']));
 
 // Admin pinecone query schema
 const adminPineconeQuerySchema = z.object({}).passthrough();

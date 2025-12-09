@@ -12,7 +12,7 @@ test('Response Validation - Flag Functionality', async (t) => {
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.body.success, true);
     assert.strictEqual(response.body.data.status, 'healthy');
-    assert.strictEqual(typeof response.body.data.ts, 'string');
+    assert.strictEqual(typeof response.body.data.timestamp, 'string');
   });
 
   await t.test('Response validation can be enabled via environment', async () => {

@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { createChatSessionWithId, getChatSession } from '../../repositories/chat.repository.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { logger } from '../../utils/logger.js';
 
 const router = Router();
 
-router.post('/sessions', async (req, res) => {
+router.post('/sessions', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
@@ -51,7 +52,7 @@ router.post('/sessions', async (req, res) => {
   }
 });
 
-router.get('/sessions/:sessionId', async (req, res) => {
+router.get('/sessions/:sessionId', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {

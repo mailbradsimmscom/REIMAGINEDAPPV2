@@ -2,6 +2,7 @@ import express from 'express';
 import { getChatMessages } from '../../repositories/chat.repository.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { ChatHistoryEnvelope } from '../../schemas/chat.schema.js';
 import {
   chatHistoryQuerySchema
@@ -15,6 +16,7 @@ router.use(validateResponse(ChatHistoryEnvelope));
 // GET /chat/history - Get chat history
 router.get('/',
   validate(chatHistoryQuerySchema, 'query'),
+  requireServices(['supabase']),
   async (req, res, next) => {
     try {
       const { threadId, limit } = req.query;

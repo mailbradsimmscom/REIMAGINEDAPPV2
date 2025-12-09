@@ -5,6 +5,7 @@ import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
 import { getEnv } from './config/env.js';
+import { errorHandler, notFoundHandler } from './middleware/error.js';
 import adminRouter from './routes/admin/index.js';
 import suppliesRouter from './routes/supplies/index.js';
 import tripsRouter from './routes/trips/index.js';
@@ -315,8 +316,8 @@ app.use((req, res, next) => {
   const originalEnd = res.end;
   res.end = function(chunk, encoding) {
     const duration = Date.now() - req.startTime;
-    req.requestLogger.performance('http_request', duration, { 
-      method: req.method, 
+    req.requestLogger.performance('http_request', duration, {
+      method: req.method,
       url: req.url,
       statusCode: res.statusCode
     });
@@ -324,5 +325,11 @@ app.use((req, res, next) => {
   };
   next();
 });
+
+// 404 handler - must be AFTER all routes
+app.use(notFoundHandler);
+
+// Global error handler - must be LAST middleware
+app.use(errorHandler);
 
 export default app;

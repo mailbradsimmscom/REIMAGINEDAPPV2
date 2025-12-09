@@ -1,6 +1,7 @@
 import express from 'express';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { methodNotAllowed } from '../../utils/methodNotAllowed.js';
 import { z } from 'zod';
 import chatRepository from '../../repositories/chat.repository.js';
@@ -46,6 +47,7 @@ router.use(validateResponse(ThreadResponseSchema));
 router.get(
   '/:sessionId',
   validate(threadBySessionSchema, 'params'),
+  requireServices(['supabase']),
   async (req, res, next) => {
     try {
       const { sessionId } = req.params;

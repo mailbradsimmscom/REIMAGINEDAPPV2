@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { listMinimal } from '../../repositories/systems.repository.js';
 import { adminOnly } from '../../middleware/admin.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 
 const router = Router();
 
@@ -8,7 +9,7 @@ const router = Router();
  * GET /admin/api/systems/minimal
  * Get minimal system data for admin dropdowns
  */
-router.get('/minimal', adminOnly, async (_req, res, next) => {
+router.get('/minimal', adminOnly, requireServices(['supabase']), async (_req, res, next) => {
   try {
     const rows = await listMinimal();
     res.json({

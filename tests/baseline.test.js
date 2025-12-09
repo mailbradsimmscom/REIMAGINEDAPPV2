@@ -73,8 +73,8 @@ test('GET /health - Basic health check', async () => {
   
   assert.strictEqual(response.status, 200, 'Health endpoint should return 200');
   assert.ok(response.data, 'Health response should exist');
-  assert.ok(response.data.status === 'ok', 'Health status should be ok');
-  assert.ok(typeof response.data.uptimeSeconds === 'number', 'Uptime should be a number');
+  assert.ok(response.data.data.status === 'healthy', 'Health status should be healthy');
+  assert.ok(typeof response.data.data.uptime === 'number', 'Uptime should be a number');
 });
 
 test('GET /admin/health - Admin health check', async () => {

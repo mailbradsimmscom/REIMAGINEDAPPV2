@@ -7,12 +7,13 @@ import {
   deleteChatMessageBySequence
 } from '../../repositories/chat.repository.js';
 import { checkAndGenerateSummary, checkAndGenerateQASummary } from '../../services/thread-summary.service.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { logger } from '../../utils/logger.js';
 import { getEnv } from '../../config/env.js';
 
 const router = Router();
 
-router.post('/messages', async (req, res) => {
+router.post('/messages', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
@@ -91,7 +92,7 @@ router.post('/messages', async (req, res) => {
   }
 });
 
-router.get('/messages/:threadId', async (req, res) => {
+router.get('/messages/:threadId', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
@@ -128,7 +129,7 @@ router.get('/messages/:threadId', async (req, res) => {
   }
 });
 
-router.delete('/messages/:threadId/:sequenceNumber', async (req, res) => {
+router.delete('/messages/:threadId/:sequenceNumber', requireServices(['supabase']), async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {

@@ -8,6 +8,7 @@ import { logger } from '../../utils/logger.js';
 import documentService from '../../services/document.service.js';
 import documentRepository from '../../repositories/document.repository.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
 
 const router = Router();
@@ -15,6 +16,9 @@ const log = logger.createRequestLogger();
 
 // Add validateResponse middleware
 router.use(validateResponse(EnvelopeSchema));
+
+// Require Supabase for all job routes
+router.use(requireServices(['supabase']));
 
 /**
  * GET /admin/jobs

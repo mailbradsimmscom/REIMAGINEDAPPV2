@@ -2,22 +2,24 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { initTestApp } from '../setupApp.js';
 import { testRequest } from '../helpers/http.js';
-import { mockRepositories } from '../mocks/repositories.js';
+import { mockServices } from '../mocks/repositories.js';
 
 test('Phase 2: Complete test infrastructure demonstration', async (t) => {
   await t.test('setup with mocks', async () => {
     await initTestApp();
-    
-    // Mock external dependencies
-    await mockRepositories(t, {
-      'pinecone.repository.js': {
-        searchDocuments: async () => ({ 
+
+    // Mock external dependencies (pinecone.service.js, not repository)
+    await mockServices(t, {
+      'pinecone.service.js': {
+        searchDocuments: async () => ({
+          success: true,
           results: [
-            { id: 'test1', score: 0.95, metadata: { text: 'test content' } }
-          ] 
+            { id: 'test1', score: 0.95, content: 'test content' }
+          ],
+          metadata: { totalResults: 1 }
         }),
-        getIndexStatistics: async () => ({ 
-          totalVectorCount: 1000,
+        getIndexStatistics: async () => ({
+          totalVectors: 1000,
           dimension: 1536,
           indexFullness: 0.75
         })

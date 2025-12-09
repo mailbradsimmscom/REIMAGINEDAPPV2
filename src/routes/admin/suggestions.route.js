@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { adminOnly } from '../../middleware/admin.js';
+import { requireServices } from '../../middleware/serviceGuards.js';
 import { logger } from '../../utils/logger.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 
 const router = Router();
 
 // Get all pending suggestions from all four tables
-router.get('/pending', adminOnly, async (req, res) => {
+router.get('/pending', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const { docId } = req.query;
     
@@ -174,7 +175,7 @@ router.get('/pending', adminOnly, async (req, res) => {
 });
 
 // Approve selected suggestions
-router.post('/approve', adminOnly, async (req, res) => {
+router.post('/approve', adminOnly, requireServices(['supabase']), async (req, res) => {
   try {
     const { docId, approved } = req.body;
     
