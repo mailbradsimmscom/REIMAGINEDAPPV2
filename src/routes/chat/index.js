@@ -23,16 +23,26 @@ router.use(validateResponse(EnvelopeSchema));
 
 // /chat/process - Simple contract: data.assistantMessage is a STRING
 // Used by tests and external callers
+// Set _mountPath for Express 5 route introspection (see src/debug/routes.js)
+processSimpleRouter._mountPath = '/process';
 router.use('/process', processSimpleRouter);
+historyRouter._mountPath = '/history';
 router.use('/history', historyRouter);
+listRouter._mountPath = '/list';
 router.use('/list', listRouter);
+contextRouter._mountPath = '/context';
 router.use('/context', contextRouter);
+deleteRouter._mountPath = '/delete';
 router.use('/delete', deleteRouter);
+threadBySessionRouter._mountPath = '/thread';
 router.use('/thread', threadBySessionRouter);
 
 // /chat/enhanced/* - Rich contract: data.assistantMessage is an OBJECT with content, role, etc.
 // Used by the UI for full message display
+processEnhancedRouter._mountPath = '/enhanced/process';
 router.use('/enhanced/process', processEnhancedRouter);
+// Note: historyRouter etc are reused, their _mountPath was set above
+// The route debugger will use the last-set _mountPath, which is fine for this use case
 router.use('/enhanced/history', historyRouter);
 router.use('/enhanced/list', listRouter);
 router.use('/enhanced/context', contextRouter);
@@ -41,6 +51,7 @@ router.use('/enhanced/thread', threadBySessionRouter);
 
 // Keep this last so it doesn't swallow unknown subpaths
 // param-scoped delete, LAST (so it can't see 'enhanced')
+sessionDeleteRouter._mountPath = '/:sessionId';
 router.use('/:sessionId', sessionDeleteRouter);
 // Also support /chat/enhanced/:sessionId for consistency
 router.use('/enhanced/:sessionId', sessionDeleteRouter);

@@ -80,10 +80,12 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
       console.log(`\n🔍 Testing: "${testCase.query}"`);
 
       // Use /chat/enhanced/process for rich response with telemetry
+      // Send equipment context so the AI knows what device we're asking about
       const response = await request(app)
         .post('/chat/enhanced/process')
         .send({
-          message: testCase.query
+          message: testCase.query,
+          systems_context: [{ manufacturer: testCase.model, model: testCase.model }]
         })
         .expect(200);
       
@@ -146,10 +148,12 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
       console.log(`\n🔧 Testing ${testCase.validationType}: "${testCase.query}"`);
 
       // Use /chat/enhanced/process for rich response with telemetry
+      // Send equipment context so the AI knows what device we're asking about
       const response = await request(app)
         .post('/chat/enhanced/process')
         .send({
-          message: testCase.query
+          message: testCase.query,
+          systems_context: [{ manufacturer: 'NEMESIS', model: 'NEMESIS' }]
         })
         .expect(200);
 
@@ -212,10 +216,12 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
       console.log(`\n🎯 Testing ground truth for: ${testCase.procedure}`);
 
       // Use /chat/enhanced/process for rich response with telemetry
+      // Send equipment context so the AI knows what device we're asking about
       const response = await request(app)
         .post('/chat/enhanced/process')
         .send({
-          message: testCase.query
+          message: testCase.query,
+          systems_context: [{ manufacturer: 'NEMESIS', model: 'NEMESIS' }]
         })
         .expect(200);
 
@@ -255,10 +261,12 @@ test('Golden Rules Validation - Error Handling', async (t) => {
       console.log(`\n⚠️ Testing error handling: "${testCase.query}"`);
 
       // Use /chat/enhanced/process for rich response with telemetry
+      // Send equipment context so the AI knows what device we're asking about
       const response = await request(app)
         .post('/chat/enhanced/process')
         .send({
-          message: testCase.query
+          message: testCase.query,
+          systems_context: [{ manufacturer: 'NEMESIS', model: 'NEMESIS' }]
         })
         .expect(200);
 

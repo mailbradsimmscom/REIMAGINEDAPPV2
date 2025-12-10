@@ -141,15 +141,20 @@ app.post('/api/auth/pin', (req, res) => {
 });
 
 // Admin API routes
+// Set _mountPath for Express 5 route introspection (see src/debug/routes.js)
+adminRouter._mountPath = '/admin/api';
 app.use('/admin/api', adminRouter);
 
 // Supplies API routes
+suppliesRouter._mountPath = '/api/supplies';
 app.use('/api/supplies', suppliesRouter);
 
 // Trips API routes
+tripsRouter._mountPath = '/api/trips';
 app.use('/api/trips', tripsRouter);
 
 // GPS API routes (public, for position monitor)
+gpsRouter._mountPath = '/api/gps';
 app.use('/api/gps', gpsRouter);
 
 // Admin dashboard route (no auth required for HTML page)

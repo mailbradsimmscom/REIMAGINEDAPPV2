@@ -9,13 +9,17 @@ function collectRoutes(stack, base = '') {
         .filter(Boolean)
         .map(m => m.toUpperCase())
         .sort();
+      // Handle root path specially: /base + / should be /base, not /base/
+      const routePath = layer.route.path === '/' ? '' : layer.route.path;
       out.push({
-        path: path.posix.join(base || '/', layer.route.path),
+        path: path.posix.join(base || '/', routePath) || '/',
         methods,
       });
     } else if (layer?.name === 'router' && layer?.handle?.stack) {
-      // Express 5 stores the prefix in layer.regexp; easiest is to rely on layer.path if present
-      const prefix = layer.path ?? '';
+      // Express 5 doesn't expose mount path on layer
+      // Use our custom _mountPath property set by safeMount() in index.js
+      // Fall back to layer.path for Express 4 compatibility
+      const prefix = layer.handle._mountPath ?? layer.path ?? '';
       out.push(...collectRoutes(layer.handle.stack, path.posix.join(base || '/', prefix || '')));
     }
   }
@@ -24,7 +28,8 @@ function collectRoutes(stack, base = '') {
 
 export function printRoutes(appOrRouter, logger = console) {
   try {
-    const stack = appOrRouter?._router?.stack ?? appOrRouter?.stack ?? [];
+    // Express 5 uses app.router.stack, Express 4 uses app._router.stack
+    const stack = appOrRouter?.router?.stack ?? appOrRouter?._router?.stack ?? appOrRouter?.stack ?? [];
     const routes = collectRoutes(stack);
     logger.info?.('--- ROUTE SNAPSHOT START ---');
     for (const r of routes) {

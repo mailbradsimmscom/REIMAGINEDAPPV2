@@ -749,7 +749,7 @@ async function processMessage(message) {
 
     addLoadingAnimation();
 
-    const response = await fetch('/chat/process', {
+    const response = await fetch('/chat/enhanced/process', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

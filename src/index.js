@@ -34,14 +34,17 @@ ensureLexicons().catch(err => {
 });
 
 // Safe mount function to identify failing routers
+// Also stores mount path on router for Express 5 route introspection
 function safeMount(base, router) {
   try {
+    // Store mount path on router for route debugging (Express 5 doesn't expose this)
+    router._mountPath = base;
     app.use(base, router);
-    logger.debug('mounted', { base }); 
+    logger.debug('mounted', { base });
   }
-  catch (e) { 
-    logger.error('MOUNT_FAILED', { base, error: e.message }); 
-    throw e; 
+  catch (e) {
+    logger.error('MOUNT_FAILED', { base, error: e.message });
+    throw e;
   }
 }
 

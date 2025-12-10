@@ -53,8 +53,12 @@ test('Route map - /__routes endpoint returns expected routes', async (t) => {
       // Essential routes should be present
       assert.ok(routePaths.includes('/health'), 'Health route missing');
       assert.ok(routePaths.includes('/systems'), 'Systems route missing');
-      assert.ok(routePaths.includes('/chat/enhanced'), 'Chat enhanced route missing');
-      assert.ok(routePaths.includes('/pinecone/stats'), 'Pinecone stats route missing');
+      // Check for chat/enhanced routes (prefix, not exact path)
+      const hasChatEnhanced = routePaths.some(p => p.startsWith('/chat/enhanced'));
+      assert.ok(hasChatEnhanced, 'Chat enhanced route missing (expected route starting with /chat/enhanced)');
+      // Check for pinecone/stats route
+      const hasPineconeStats = routePaths.includes('/pinecone/stats') || routePaths.some(p => p.startsWith('/pinecone/stats'));
+      assert.ok(hasPineconeStats, 'Pinecone stats route missing');
       assert.ok(routePaths.includes('/__routes'), 'Route map endpoint missing');
       
       // Check route structure

@@ -57,7 +57,7 @@ test('Admin validation with valid token - Bad query returns 400, not 403', async
   // If token is configured but wrong, we'll get FORBIDDEN (403)
   // If token is valid, we should get 400 for bad validation
   
-  const response = await get('/admin/health', { 
+  const response = await get('/admin/api/health', {  // Changed from /admin/health to /admin/api/health
     token: 'test-token',
     query: { invalid: 'param' } 
   });
