@@ -224,6 +224,7 @@ jobs:
             2>&1 | tee results/integration.txt || true
         timeout-minutes: 5
         env:
+          ENABLE_ROUTE_DEBUG: '1'
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -239,6 +240,7 @@ jobs:
             2>&1 | tee results/smoke.txt || true
         timeout-minutes: 2
         env:
+          ENABLE_ROUTE_DEBUG: '1'  # Required for route-map.test.js
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

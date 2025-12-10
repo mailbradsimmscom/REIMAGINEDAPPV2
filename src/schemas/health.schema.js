@@ -55,7 +55,7 @@ export const healthQuerySchema = z.object({
 }).optional();
 
 // Empty query schema for simple GET routes - rejects unknown parameters
-export const EmptyQuery = z.object({}); // Removed .passthrough()
+export const EmptyQuery = z.object({}).strict(); // Reject unknown params
 
 // Admin health schemas (separate from main health domain)
 export const adminHealthResponseSchema = z.object({

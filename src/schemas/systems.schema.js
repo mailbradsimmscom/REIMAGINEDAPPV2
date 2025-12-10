@@ -22,7 +22,7 @@ export const systemsListQuerySchema = z.object({
     .optional()
     .default(25),
   cursor: z.string().optional()
-}); // Removed .passthrough() - reject unknown params
+}).strict(); // Reject unknown params (like 'offset')
 
 // Systems get path parameters
 export const systemsGetPathSchema = z.object({
