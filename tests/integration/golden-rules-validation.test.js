@@ -153,7 +153,7 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
         .post('/chat/enhanced/process')
         .send({
           message: testCase.query,
-          systems_context: [{ manufacturer: 'NEMESIS', model: 'NEMESIS' }]
+          systems_context: [{ manufacturer: 'B&G', model: 'NEMESIS' }]
         })
         .expect(200);
 
@@ -221,7 +221,7 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
         .post('/chat/enhanced/process')
         .send({
           message: testCase.query,
-          systems_context: [{ manufacturer: 'NEMESIS', model: 'NEMESIS' }]
+          systems_context: [{ manufacturer: 'B&G', model: 'NEMESIS' }]
         })
         .expect(200);
 
@@ -266,7 +266,7 @@ test('Golden Rules Validation - Error Handling', async (t) => {
         .post('/chat/enhanced/process')
         .send({
           message: testCase.query,
-          systems_context: [{ manufacturer: 'NEMESIS', model: 'NEMESIS' }]
+          systems_context: [{ manufacturer: 'B&G', model: 'NEMESIS' }]
         })
         .expect(200);
 

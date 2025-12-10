@@ -73,7 +73,13 @@ export const chatProcessRequestSchema = z.object({
   query: z.string().min(1, 'Query cannot be empty').max(5000, 'Query too long (max 5000 characters)').optional(),
   sessionId: z.string().optional(),
   threadId: z.string().optional(),
-  thread_id: z.string().optional()
+  thread_id: z.string().optional(),
+  // systems_context: optional array of equipment objects for context
+  systems_context: z.array(z.object({
+    manufacturer: z.string().optional(),
+    model: z.string().optional(),
+    asset_uid: z.string().optional()
+  }).passthrough()).optional()
 }).strict() // Reject unknown keys
 .refine(
   (val) => !!(val.message || val.query),
