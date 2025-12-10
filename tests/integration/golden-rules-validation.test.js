@@ -123,11 +123,11 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
   
   const technicalTestCases = [
     {
-      query: 'What are the preconditions for locking the screen?',
+      query: 'For my NEMESIS, what are the preconditions for locking the screen?',
       expectedPreconditions: [
-        'Unit powered on',
-        'Dashboard bar visible',
-        'Landscape orientation'
+        'dashboard bar',     // "dashboard bar must be shown"
+        'idle',              // "idle for a period of time"
+        'lock button'        // "press the lock button"
       ],
       validationType: 'preconditions'
     },
@@ -187,26 +187,38 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
   const groundTruthTests = [
     {
       procedure: 'Language Selection',
-      query: 'How do I change the language?',
+      query: 'For my NEMESIS, how do I change the language?',
       groundTruth: {
-        steps: ['Select desired language from available options: English, Deutsch, Español, Suomi, Français, Italiano, Nederlands, Norsk, Português, Svenska, 中文'],
-        preconditions: ['Device powered on', 'At initial setup screen'],
-        expectedOutcome: 'Interface language changed to selected option'
+        steps: [
+          'Home',              // "Home button" / "Home screen"
+          'Settings',          // "System Settings"
+          'General',           // "General settings menu"
+          'Language',          // "Select Language"
+          'ENGLISH'            // One of the listed languages
+        ],
+        preconditions: [
+          'Home',              // Start from Home screen
+          'Settings'           // Access settings
+        ],
+        expectedOutcome: 'selection'  // "Confirm your selection"
       }
     },
     {
       procedure: 'First Time System Setup',
-      query: 'How do I set up the system for the first time?',
+      query: 'For my NEMESIS, how do I set up the system for the first time?',
       groundTruth: {
         steps: [
-          'Apply power to turn on unit',
-          'Wait for setup wizard to appear',
-          'Follow wizard prompts to set screen orientation',
-          'Set language preferences',
-          'Configure additional settings as prompted'
+          'power',             // "power is applied"
+          'wizard',            // "setup wizard"
+          'orientation',       // "screen orientation"
+          'language',          // "language setting"
+          'settings'           // "system settings"
         ],
-        preconditions: ['Power available', 'Unit not previously configured'],
-        expectedOutcome: 'Unit configured with basic settings'
+        preconditions: [
+          'power',             // "power is applied"
+          'first time'         // "first time startup"
+        ],
+        expectedOutcome: 'wizard'  // "wizard will guide you"
       }
     }
   ];

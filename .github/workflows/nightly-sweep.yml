@@ -16,6 +16,7 @@ on:
 env:
   PRODUCTION_URL: https://boatos-main.onrender.com
   PYTHON_SIDECAR_URL: https://boatos-python.onrender.com
+  MAINTENANCE_URL: https://boatos-maintenance.onrender.com
   NODE_ENV: production
 
 jobs:
@@ -66,12 +67,16 @@ jobs:
           echo "Waking up Python sidecar..."
           curl -sf ${{ env.PYTHON_SIDECAR_URL }}/health || echo "Python sidecar warming up..."
 
+          echo "Waking up maintenance agent..."
+          curl -sf ${{ env.MAINTENANCE_URL }}/health || echo "Maintenance agent warming up..."
+
           echo "Waiting 45 seconds for cold start..."
           sleep 45
 
           echo "Verifying services are up..."
           curl -sf ${{ env.PRODUCTION_URL }}/health
           curl -sf ${{ env.PYTHON_SIDECAR_URL }}/health
+          curl -sf ${{ env.MAINTENANCE_URL }}/health || echo "Maintenance agent not available (optional)"
 
           echo ""
           echo "=== Sidecar Connectivity Check ==="
@@ -184,7 +189,7 @@ jobs:
 
       - name: Run Nightly UI Sweep (Playwright)
         run: |
-          CI=true BASE_URL=${{ env.PRODUCTION_URL }} \
+          CI=true BASE_URL=${{ env.PRODUCTION_URL }} MAINTENANCE_URL=${{ env.MAINTENANCE_URL }} \
             npx playwright test tests/nightly/ui-all.spec.js \
             --reporter=json \
             2>&1 | tee results/playwright-nightly.json || true

@@ -53,12 +53,4 @@ test('Spec-biased retrieval functionality', async (t) => {
     assert(reranked.every(c => c._rankScore !== undefined), "should add rank scores to all chunks");
   });
 
-  // Skip deprecated tests - retrieveWithSpecBias is replaced by Python sidecar
-  await t.test('retrieveWithSpecBias returns structured response with metadata', async (t) => {
-    t.skip('DEPRECATED: enhanced-chat.service replaced by Python sidecar');
-  });
-
-  await t.test('retrieveWithSpecBias handles errors gracefully', async (t) => {
-    t.skip('DEPRECATED: enhanced-chat.service replaced by Python sidecar');
-  });
 });
