@@ -802,6 +802,7 @@ if chat_enabled:
         from .chat.chat_models import ChatRequest, ChatResponse, HealthResponse as ChatHealthResponse
         from .chat.services.dip_retriever import DIPRetriever
         from .chat.services.production_dip_retriever import ProductionDIPRetriever
+        from .chat.workflows.chat_workflow_sequential import ChatWorkflowSequential  # Moved to module level for easier mocking
         from datetime import datetime
 
         # Environment-based DIP connector selection
@@ -828,7 +829,7 @@ if chat_enabled:
             try:
                 # Initialize sequential workflow (LangGraph removed)
                 from .chat.services.llm_service import LLMService
-                from .chat.workflows.chat_workflow_sequential import ChatWorkflowSequential
+                # ChatWorkflowSequential imported at module level (line 806) for easier mocking
                 from .chat.debug_logger import chat_debug
 
                 # Structured chat logging

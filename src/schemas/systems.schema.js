@@ -12,9 +12,17 @@ const ErrorEnvelopeSchema = z.object({
 
 // Systems list query parameters
 export const systemsListQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(100).optional().default(25),
+  limit: z.coerce.number()
+    .refine((val) => !isNaN(val), { 
+      message: 'Limit must be a valid number' 
+    })
+    .int()
+    .min(1, 'Limit must be at least 1')
+    .max(100, 'Limit cannot exceed 100')
+    .optional()
+    .default(25),
   cursor: z.string().optional()
-}).passthrough();
+}); // Removed .passthrough() - reject unknown params
 
 // Systems get path parameters
 export const systemsGetPathSchema = z.object({
