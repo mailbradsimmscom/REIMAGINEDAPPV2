@@ -23,7 +23,9 @@ router.post(
   validateResponse(ChatProcessEnvelope),
   async (req, res, next) => {
     const startTime = Date.now();
-    const requestLogger = logger.createRequestLogger();
+    // Use requestId from middleware (req_ format) instead of creating new UUID
+    const requestId = req.requestId || res.locals?.requestId;
+    const requestLogger = logger.createRequestLogger(requestId);
 
     try {
       // Accept both message/threadId (UI) and query/thread_id (Python format)
@@ -69,6 +71,7 @@ router.post(
       const envelope = {
         success: true,
         data: {
+          requestId, // Add requestId to data (tests expect it here)
           sessionId,
           threadId: responseThreadId,
           userMessage: {
@@ -93,7 +96,7 @@ router.post(
           enhancedQuery: message,
           sources: result.sources || [],
           telemetry: {
-            requestId: requestLogger.requestId,
+            requestId, // Also keep in telemetry for backward compatibility
             workflow: 'python-sequential',
             processing_time_ms: result.processing_time_ms || (Date.now() - startTime),
             classification: result.classification,

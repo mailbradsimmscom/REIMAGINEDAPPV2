@@ -48,8 +48,12 @@ const SystemsListOkSchema = z.object({
 export const systemsListResponseSchema = z.union([SystemsListOkSchema, ErrorEnvelopeSchema]);
 
 // Systems search query parameters
+// Match service's validateQuery regex: alphanumeric, spaces, hyphens, underscores, ampersands
 export const systemsSearchQuerySchema = z.object({
-  q: z.string().min(2, 'Query must be at least 2 characters').max(100, 'Query too long'),
+  q: z.string()
+    .min(2, 'Query must be at least 2 characters')
+    .max(100, 'Query too long')
+    .regex(/^[a-zA-Z0-9\s\-_&]+$/, 'Query contains invalid characters (only letters, numbers, spaces, hyphens, underscores, and ampersands allowed)'),
   limit: z.coerce.number().int().min(1).max(100).optional()
 }).passthrough();
 

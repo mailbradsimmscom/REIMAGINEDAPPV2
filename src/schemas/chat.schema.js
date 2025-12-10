@@ -65,11 +65,12 @@ export const chatListQuerySchema = z.object({
 // Chat process request schema
 // Strict validation: message/query must be non-empty strings when present
 // Reject null, invalid types (numbers, objects, arrays), and empty strings
+// Max length: 5000 characters (reasonable limit for chat messages)
 export const chatProcessRequestSchema = z.object({
-  // message is OPTIONAL, but when present must be a non-empty string
-  message: z.string().min(1, 'Message cannot be empty').optional(),
-  // query is OPTIONAL, but when present must be a non-empty string
-  query: z.string().min(1, 'Query cannot be empty').optional(),
+  // message is OPTIONAL, but when present must be a non-empty string (max 5000 chars)
+  message: z.string().min(1, 'Message cannot be empty').max(5000, 'Message too long (max 5000 characters)').optional(),
+  // query is OPTIONAL, but when present must be a non-empty string (max 5000 chars)
+  query: z.string().min(1, 'Query cannot be empty').max(5000, 'Query too long (max 5000 characters)').optional(),
   sessionId: z.string().optional(),
   threadId: z.string().optional(),
   thread_id: z.string().optional()

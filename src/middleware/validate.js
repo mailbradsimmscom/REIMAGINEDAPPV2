@@ -15,6 +15,8 @@ export function validate(schema, source = 'body') {
 
     if (!result.success) {
       // Validation failed - return 400 with error details
+      const errorDetails = result.error?.errors || result.error?.issues || [];
+      
       // This should never throw, but wrap in try-catch as safety net
       try {
         return res.status(400).json({
@@ -23,7 +25,7 @@ export function validate(schema, source = 'body') {
           error: {
             code: ERR.BAD_REQUEST,
             message: 'Validation failed',
-            details: result.error.errors
+            details: errorDetails
           },
           requestId: res.locals?.requestId ?? null
         });
@@ -32,7 +34,7 @@ export function validate(schema, source = 'body') {
         return next(err);
       }
     }
-
+    
     // Validation passed - assign parsed data back to request
     // Only assign back to body (writable), for query/params just validate
     if (source === 'body') {

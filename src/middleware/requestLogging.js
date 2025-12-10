@@ -1,7 +1,17 @@
 import { logger } from '../utils/logger.js';
-import { v4 as uuidv4 } from 'uuid';
+import { randomBytes } from 'node:crypto';
 
 const requestLogger = logger.createRequestLogger();
+
+// Generate requestId in format: req_<yyyyMMddHHmmss>_<8-char-random>
+function generateRequestId() {
+  const now = new Date();
+  // Format: 20251210T120314 (15 chars: yyyyMMddTHHmmss)
+  const timestamp = now.toISOString().replace(/[-:.]/g, '').slice(0, 15);
+  // 8-char random hex
+  const random = randomBytes(4).toString('hex');
+  return `req_${timestamp}_${random}`;
+}
 
 // In-memory store for request metrics (in production, this would be Redis or a database)
 const requestMetrics = {
@@ -41,10 +51,13 @@ function cleanupOldData() {
 // Request logging middleware
 export function requestLoggingMiddleware(req, res, next) {
   const startTime = Date.now();
-  const requestId = req.headers['x-request-id'] || uuidv4();
+  // Use provided request ID from header, or generate new one in req_ format
+  const requestId = req.headers['x-request-id'] || generateRequestId();
   
   // Add requestId to request object for use in other middleware
   req.requestId = requestId;
+  // Also set in res.locals for easy access in routes and error handlers
+  res.locals.requestId = requestId;
   req.startTime = startTime;
   req.requestLogger = requestLogger;
   

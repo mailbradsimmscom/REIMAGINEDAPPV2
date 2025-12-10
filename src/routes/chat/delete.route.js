@@ -37,6 +37,19 @@ router.delete('/',
 
       return res.status(200).json(envelope);
     } catch (error) {
+      // Handle UUID validation errors (invalid UUID format)
+      if (error.message && error.message.includes('invalid input syntax for type uuid')) {
+        return res.status(400).json({
+          success: false,
+          data: null,
+          error: {
+            code: ERR.BAD_REQUEST,
+            message: 'Invalid session ID format (must be a valid UUID)'
+          },
+          requestId: res.locals?.requestId ?? null
+        });
+      }
+      
       // Handle NOT_FOUND errors explicitly
       // Check both string code and numeric status
       if (error.code === 'NOT_FOUND' || error.code === ERR.NOT_FOUND || error.status === 404 || (error.message && error.message.includes('not found'))) {

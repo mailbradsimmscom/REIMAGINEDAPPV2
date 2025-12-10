@@ -17,7 +17,9 @@ router.post(
   requireServices(['supabase', 'openai', 'pinecone', 'sidecar']),
   async (req, res, next) => {
     const startTime = Date.now();
-    const requestLogger = logger.createRequestLogger();
+    // Use requestId from middleware (req_ format) instead of creating new UUID
+    const requestId = req.requestId || res.locals?.requestId;
+    const requestLogger = logger.createRequestLogger(requestId);
 
     try {
       const message = req.body.message || req.body.query;
@@ -63,10 +65,12 @@ router.post(
       return res.json({
         success: true,
         data: {
+          requestId, // Add requestId for traceability
           sessionId,
           assistantMessage,
           threadId: threadId || sessionId,
           telemetry: {
+            requestId, // Also in telemetry for consistency
             processing_time_ms: result.processing_time_ms || totalDuration
           }
         }
