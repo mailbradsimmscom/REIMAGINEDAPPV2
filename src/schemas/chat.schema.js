@@ -63,15 +63,21 @@ export const chatListQuerySchema = z.object({
 });
 
 // Chat process request schema
+// Strict validation: message/query must be non-empty strings when present
+// Reject null, invalid types (numbers, objects, arrays), and empty strings
 export const chatProcessRequestSchema = z.object({
+  // message is OPTIONAL, but when present must be a non-empty string
   message: z.string().min(1, 'Message cannot be empty').optional(),
+  // query is OPTIONAL, but when present must be a non-empty string
   query: z.string().min(1, 'Query cannot be empty').optional(),
   sessionId: z.string().optional(),
   threadId: z.string().optional(),
   thread_id: z.string().optional()
-}).refine(data => data.message || data.query, {
-  message: 'Either message or query is required'
-});
+}).strict() // Reject unknown keys
+.refine(
+  (val) => !!(val.message || val.query),
+  'Either message or query is required'
+);
 
 // Chat process success response schema
 const ChatProcessOkSchema = z.object({

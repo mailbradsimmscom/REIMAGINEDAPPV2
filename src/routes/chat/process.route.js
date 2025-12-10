@@ -61,9 +61,15 @@ router.post(
       // Build envelope response
       // Use threadId from result (service normalizes/generates it) or fallback to request
       const responseThreadId = result.thread_id || result.threadId || threadId;
+      
+      // sessionId for schema compliance (tests expect it)
+      // Use sessionId from result if available, otherwise use threadId as fallback
+      const sessionId = result.sessionId || result.session_id || responseThreadId || req.body.sessionId;
+      
       const envelope = {
         success: true,
         data: {
+          sessionId,
           threadId: responseThreadId,
           userMessage: {
             id: `user-${Date.now()}`,
@@ -87,6 +93,7 @@ router.post(
           enhancedQuery: message,
           sources: result.sources || [],
           telemetry: {
+            requestId: requestLogger.requestId,
             workflow: 'python-sequential',
             processing_time_ms: result.processing_time_ms || (Date.now() - startTime),
             classification: result.classification,
