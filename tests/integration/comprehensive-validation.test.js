@@ -200,32 +200,54 @@ test('Comprehensive Bad-Input Test Matrix', async (t) => {
 
     for (const edgeCase of edgeCases) {
       const response = await get('/systems/search', edgeCase);
-      // Should either return 400 (validation error) or 200 (handled properly)
-      assert.ok([200, 400].includes(response.status));
-      assert.strictEqual(response.body.success, response.status === 200);
+      // Should return:
+      // - 400 (validation error) for invalid params
+      // - 200 (handled properly) if validation passes and services work
+      // - 503 (service unavailable) if validation passes but Supabase unavailable
+      assert.ok([200, 400, 503].includes(response.status), 
+        `Expected 200, 400, or 503, got ${response.status}`);
+      if (response.status === 200) {
+        assert.strictEqual(response.body.success, true);
+      } else {
+        assert.strictEqual(response.body.success, false);
+      }
     }
   });
 
   // Body validation edge cases
-  // Note: This test validates that invalid bodies return 400.
-  // When services are unavailable (503), we can't test the full validation path,
-  // so we accept 400 (validation error) or 503 (service unavailable).
+  // Note: This test validates that invalid bodies are handled gracefully.
+  // Expected outcomes:
+  // - 400: Validation correctly rejects invalid input
+  // - 503: Services unavailable (validation may have passed)
+  // Should NOT return 200 (indicates validation bypass) or 500 (unhandled error)
   await t.test('Body validation edge cases are handled', async () => {
     const edgeCases = [
-      { body: { message: '' } }, // Empty string
-      { body: { message: 'a'.repeat(10000) } }, // Very long message
-      { body: { message: null } }, // Null value
-      { body: { message: undefined } }, // Undefined value
-      { body: { message: 123 } }, // Wrong type
-      { body: { message: {} } }, // Object instead of string
-      { body: { message: [] } } // Array instead of string
+      { body: { message: '' } }, // Empty string - should fail .min(1)
+      { body: { message: 'a'.repeat(10000) } }, // Very long message - should fail .max(5000)
+      { body: { message: null } }, // Null value - should fail type check
+      { body: { message: undefined } }, // Undefined value - should fail refine (no message or query)
+      { body: { message: 123 } }, // Wrong type - should fail type check
+      { body: { message: {} } }, // Object instead of string - should fail type check
+      { body: { message: [] } } // Array instead of string - should fail type check
     ];
 
     for (const edgeCase of edgeCases) {
       const response = await post('/chat/enhanced/process', edgeCase);
-      // Should return 400 (validation) or 503 (services unavailable)
-      // Should NOT return 500 (unhandled error)
-      assert.ok([400, 503].includes(response.status), `Expected 400 or 503, got ${response.status}`);
+      
+      // If we get 200, log the actual request body that reached the handler
+      // This indicates validation is being bypassed - a code bug, not a test issue
+      if (response.status === 200) {
+        console.error('[VALIDATION BYPASSED]', {
+          sent: edgeCase.body,
+          received: response.body,
+          status: response.status
+        });
+      }
+      
+      // Only accept 400 (validation error) or 503 (service unavailable)
+      // Should NOT return 200 (validation bypass) or 500 (unhandled error)
+      assert.ok([400, 503].includes(response.status), 
+        `Expected 400 or 503, got ${response.status}. This indicates validation is being bypassed. Sent: ${JSON.stringify(edgeCase.body)}`);
       assert.strictEqual(response.body.success, false);
       if (response.status === 400) {
         assert.strictEqual(response.body.error.code, 'BAD_REQUEST');

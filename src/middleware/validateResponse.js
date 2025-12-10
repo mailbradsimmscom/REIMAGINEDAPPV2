@@ -8,6 +8,13 @@ export const validateResponse = (schema) => (req, res, next) => {
   const origJson = res.json.bind(res);
 
   res.json = (payload) => {
+    // Skip validation for error responses - let error handler work without interference
+    // This prevents throwing during error handling which would turn 400/404/503 into 500
+    if (payload?.success === false) {
+      return origJson(payload);
+    }
+
+    // For success responses, validate strictly - this catches real schema bugs
     const parsed = schema.safeParse(payload);
     if (!parsed.success) {
       const err = new Error('Response schema validation failed');
