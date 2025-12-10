@@ -21,7 +21,11 @@ test('Route map - /__routes endpoint returns expected routes', async (t) => {
     // Start server in background
     const { spawn } = await import('node:child_process');
     const server = spawn('node', ['src/start.js'], {
-      env: { ...process.env, NODE_ENV: 'development' },
+      env: { 
+        ...process.env, 
+        NODE_ENV: 'development',
+        ENABLE_ROUTE_DEBUG: '1'  // Explicitly set for route introspection
+      },
       stdio: 'pipe'
     });
 

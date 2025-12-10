@@ -60,15 +60,20 @@ test('Admin validation with valid token - Bad query returns 400, not 403', async
   const response = await get('/admin/health', { 
     token: 'test-token',
     query: { invalid: 'param' } 
-  }); // Will be 401 (ADMIN_DISABLED) or 403 (FORBIDDEN) depending on config
+  });
   
   assert.strictEqual(response.body.success, false);
-  assert.ok(['ADMIN_DISABLED', 'FORBIDDEN'].includes(response.body.error.code));
+  // Accept auth errors (token not configured) OR validation errors (token valid, bad query rejected by .strict())
+  assert.ok(
+    ['ADMIN_DISABLED', 'FORBIDDEN', 'BAD_REQUEST'].includes(response.body.error.code),
+    `Expected ADMIN_DISABLED, FORBIDDEN, or BAD_REQUEST, got ${response.body.error.code}`
+  );
 });
 
 test('Test helpers work correctly with chaining', async () => {
   // Test that our helpers return request objects that can be chained
-  const request = get('/health', { query: { test: 'value' } });
+  // Note: Don't send query params since /health uses EmptyQuery.strict()
+  const request = get('/health');
   assert.ok(typeof request.expect === 'function', 'Should return a Supertest request object');
   
   const response = await request.expect(200);
