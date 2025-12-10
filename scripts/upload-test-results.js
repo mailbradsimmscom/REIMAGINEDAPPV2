@@ -190,6 +190,32 @@ function parsePytestOutput(content) {
 }
 
 /**
+ * Parse chat timing results
+ */
+function parseChatTiming(jsonPath) {
+  if (!existsSync(jsonPath)) {
+    return null;
+  }
+
+  try {
+    const data = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+    return {
+      timestamp: data.timestamp,
+      summary: data.summary,
+      tests: (data.tests || []).map(t => ({
+        name: t.name,
+        duration: t.duration,
+        success: t.success,
+        type: t.type || t.category
+      }))
+    };
+  } catch (e) {
+    console.error('Error parsing chat timing:', e.message);
+    return null;
+  }
+}
+
+/**
  * Parse Playwright JSON report (handles nested suites)
  */
 function parsePlaywrightReport(content) {
@@ -254,6 +280,13 @@ async function uploadResults() {
   let failed = 0;
   let skipped = 0;
 
+  // Parse chat timing separately (special structure)
+  const chatTimingPath = join(projectRoot, 'results', 'chat-timing.json');
+  const chatTiming = parseChatTiming(chatTimingPath);
+  if (chatTiming) {
+    console.log('  chat-timing: parsed successfully');
+  }
+
   // Check for results directory
   const resultsDir = join(projectRoot, 'results');
   if (!existsSync(resultsDir)) {
@@ -261,7 +294,10 @@ async function uploadResults() {
     // Still upload so dashboard shows a run happened
   } else {
     // Read all result files (.json and .txt)
-    const files = readdirSync(resultsDir).filter(f => f.endsWith('.json') || f.endsWith('.txt'));
+    // Skip chat-timing.json as it's handled separately
+    const files = readdirSync(resultsDir).filter(f => 
+      (f.endsWith('.json') || f.endsWith('.txt')) && f !== 'chat-timing.json'
+    );
 
     for (const file of files) {
       const category = file.replace('.json', '').replace('.txt', '');
@@ -339,6 +375,7 @@ async function uploadResults() {
     git_commit: process.env.GITHUB_SHA || 'unknown',
     environment: process.env.ENVIRONMENT || 'ci',
     results,
+    chat_timing: chatTiming,
     failures
   });
 

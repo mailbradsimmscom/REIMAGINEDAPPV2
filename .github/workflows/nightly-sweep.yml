@@ -253,6 +253,14 @@ jobs:
           PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
           PYTHON_SIDECAR_URL: ${{ secrets.PYTHON_SIDECAR_URL }}
 
+      - name: Run Chat Timing Tests
+        run: |
+          node tests/nightly/chat-timing.test.js 2>&1 | tee results/chat-timing-output.txt || true
+        timeout-minutes: 10
+        env:
+          BASE_URL: ${{ env.PRODUCTION_URL }}
+          PYTHON_SIDECAR_URL: ${{ secrets.PYTHON_SIDECAR_URL }}
+
       - name: Debug results directory
         if: always()
         run: |
