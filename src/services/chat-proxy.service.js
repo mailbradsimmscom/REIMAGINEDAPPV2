@@ -65,9 +65,24 @@ export function createChatProxyService({
     let systemsContext = [];
     let conversationContext = null;
 
+    // Initialize timing breakdown for Node.js steps
+    const nodeTiming = {
+      conversation_context_ms: 0,
+      equipment_search_ms: 0,
+      equipment_extraction_ms: 0,
+      equipment_inference_ms: 0,
+      equipment_context_build_ms: 0,
+      system_details_fetch_ms: 0,
+      equipment_context_update_ms: 0,
+      python_call_ms: 0,
+      response_format_ms: 0
+    };
+
   try {
     // STEP 1: Get conversation context (always, for memory) and thread equipment blob
+    const step1Start = Date.now();
     conversationContext = await conversationContextServiceDep.getWeightedConversationContext(threadId, query);
+    nodeTiming.conversation_context_ms = Date.now() - step1Start;
 
     // Get thread with equipment_context blob
     let threadData = null;
@@ -104,6 +119,7 @@ export function createChatProxyService({
 
     // STEP 2: Quick reference check and equipment relationship inference
     // ✅ FIX #3: Use existingEquipmentContext from thread blob, not accumulated_equipment
+    const step2Start = Date.now();
     const previousEquipment = existingEquipmentContext.length > 0
       ? existingEquipmentContext
       : conversationContext.accumulated_equipment;
@@ -131,8 +147,10 @@ export function createChatProxyService({
 
     // ALWAYS search current query for new equipment (fast database lookup)
     // This catches specific model numbers like "4JH57", "SD60" that user adds in follow-ups
+    const step3Start = Date.now();
     const searchQuery = extractKeywords(query) || query;
     const queryKeywordResults = await systemsRepository.searchSystems(searchQuery, { limit: 10 });
+    const keywordSearchDuration = Date.now() - step3Start;
 
     requestLogger.info('🔍 Query keyword search completed', {
       query: searchQuery.substring(0, 50),
@@ -142,12 +160,14 @@ export function createChatProxyService({
 
     if (referenceCheck.should_infer) {
       // Use LLM to infer equipment relationships, passing BOTH keyword results AND existing context
+      const inferenceStart = Date.now();
       const inferenceResult = await equipmentRelationshipServiceDep.inferEquipmentRelationships(
         threadId,
         query,
         queryKeywordResults, // Pass keyword search results (was empty before!)
         existingEquipmentContext // Pass equipment_context blob instead of fetching messages
       );
+      nodeTiming.equipment_inference_ms = Date.now() - inferenceStart;
 
       equipmentInference = inferenceResult.inference;
       currentEquipmentSearch = inferenceResult.expanded_equipment;
@@ -170,7 +190,9 @@ export function createChatProxyService({
           originalQuery: query.substring(0, 100)
         });
 
+        const extractionStart = Date.now();
         const extraction = await equipmentExtractionServiceDep.extractEquipmentName(query);
+        nodeTiming.equipment_extraction_ms += Date.now() - extractionStart;
 
         if (extraction.equipment && extraction.equipment.length > 0) {
           requestLogger.info('🔬 [INFERENCE_FALLBACK] Extracted multiple equipment', {
@@ -270,6 +292,7 @@ export function createChatProxyService({
         });
 
         const extractionDuration = Date.now() - extractionStart;
+        nodeTiming.equipment_extraction_ms = extractionDuration;
 
         requestLogger.info('✅ LLM extraction COMPLETE', {
           duration_ms: extractionDuration,
@@ -435,6 +458,7 @@ export function createChatProxyService({
       });
 
       currentEquipmentSearch = allEquipment;
+      nodeTiming.equipment_search_ms = Date.now() - step3Start + keywordSearchDuration;
 
       // ===== CLARIFICATION IF NOTHING FOUND =====
       if (currentEquipmentSearch.length === 0) {
@@ -480,7 +504,9 @@ export function createChatProxyService({
     }
 
     // STEP 4: Get enhanced equipment context (current + conversation history)
+    const step4Start = Date.now();
     const rawEquipmentContext = await conversationContextServiceDep.getEquipmentRelationshipContext(threadId, currentEquipmentSearch);
+    nodeTiming.equipment_context_build_ms = Date.now() - step4Start;
 
     requestLogger.info('🔗 Built equipment relationship context', {
       currentEquipmentFound: currentEquipmentSearch.length,
@@ -508,6 +534,7 @@ export function createChatProxyService({
     systemsContext = [];
     const newEquipmentFound = [];
 
+    const step5Start = Date.now();
     for (let i = 0; i < Math.min(rawEquipmentContext.length, 20); i++) {
       const equipment = rawEquipmentContext[i];
       try {
@@ -573,8 +600,10 @@ export function createChatProxyService({
         });
       }
     }
+    nodeTiming.system_details_fetch_ms = Date.now() - step5Start;
 
     // STEP 6: Update equipment context blob (always update to persist confidence scores)
+    const step6Start = Date.now();
     if (systemsContext.length > 0) {
       try {
         await chatRepository.updateChatThread(threadId, {
@@ -612,6 +641,7 @@ export function createChatProxyService({
         equipmentCount: systemsContext.length
       });
     }
+    nodeTiming.equipment_context_update_ms = Date.now() - step6Start;
 
     // STEP 7: Call Python sequential workflow (replaces DIP, Pinecone, OpenAI completion)
     chatDebug.step('PYTHON_WORKFLOW_CALL', {
@@ -633,6 +663,7 @@ export function createChatProxyService({
       }
     });
     const workflowDuration = Date.now() - workflowStart;
+    nodeTiming.python_call_ms = workflowDuration;
 
     chatDebug.timing('PYTHON_WORKFLOW_COMPLETE', workflowDuration, {
       hasResponse: !!pythonResult.response,
@@ -661,6 +692,7 @@ export function createChatProxyService({
     }
 
     // Build result object matching previous format
+    const step7Start = Date.now();
     const result = {
       response: pythonResult.response,
       thread_id: pythonResult.thread_id || threadId,  // Include thread_id from Python or use normalized one
@@ -670,11 +702,14 @@ export function createChatProxyService({
       score: pythonResult.score,
       metadata: pythonResult.metadata || {},
       processing_time_ms: pythonResult.processing_time_ms || 0,
-      detailed_metrics: pythonResult.detailed_metrics || null  // Pass through detailed metrics
+      detailed_metrics: pythonResult.detailed_metrics || null,  // Pass through detailed metrics
+      node_timing: nodeTiming  // Include Node.js step-by-step timing breakdown
     };
+    nodeTiming.response_format_ms = Date.now() - step7Start;
 
     // Debug: Log what we're returning
     requestLogger.info('🎯 Returning result with detailed_metrics:', !!result.detailed_metrics);
+    requestLogger.info('📊 Node.js timing breakdown:', nodeTiming);
 
     return result;
 

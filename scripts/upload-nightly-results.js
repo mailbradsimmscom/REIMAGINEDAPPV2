@@ -164,12 +164,13 @@ function parseChatTiming(jsonPath) {
     const data = JSON.parse(readFileSync(jsonPath, 'utf-8'));
     return {
       timestamp: data.timestamp,
-      summary: data.summary,
+      summary: data.summary,  // This includes breakdown and node_timing
       tests: data.tests.map(t => ({
         name: t.name,
         duration: t.duration,
         success: t.success,
-        type: t.type || t.category
+        type: t.type || t.category,
+        nodeTiming: t.nodeTiming || null  // Preserve Node.js timing for individual tests
       }))
     };
   } catch (e) {

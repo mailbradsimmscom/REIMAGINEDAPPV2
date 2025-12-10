@@ -498,6 +498,18 @@
             const summary = timing.summary;
             const tests = timing.tests || [];
             const breakdown = summary.breakdown || {};
+            const nodeTiming = summary.node_timing || {};
+
+            // Calculate total Node.js time (sum of all steps)
+            const totalNodeTime = (nodeTiming.conversation_context_ms || 0) +
+                                  (nodeTiming.equipment_search_ms || 0) +
+                                  (nodeTiming.equipment_extraction_ms || 0) +
+                                  (nodeTiming.equipment_inference_ms || 0) +
+                                  (nodeTiming.equipment_context_build_ms || 0) +
+                                  (nodeTiming.system_details_fetch_ms || 0) +
+                                  (nodeTiming.equipment_context_update_ms || 0) +
+                                  (nodeTiming.python_call_ms || 0) +
+                                  (nodeTiming.response_format_ms || 0);
 
             // Summary stats with TOTAL TIME prominently displayed
             const summaryEl = document.getElementById('timing-summary');
@@ -507,8 +519,8 @@
                     <div class="timing-stat-label" style="font-size: 14px; font-weight: 600;">TOTAL AVG RESPONSE</div>
                 </div>
                 <div class="timing-stat">
-                    <div class="timing-stat-value">${formatMs(summary.avgNodeOverheadMs)}</div>
-                    <div class="timing-stat-label">Node.js Routing</div>
+                    <div class="timing-stat-value">${formatMs(totalNodeTime || summary.avgNodeOverheadMs)}</div>
+                    <div class="timing-stat-label">Node.js Total</div>
                 </div>
                 <div class="timing-stat">
                     <div class="timing-stat-value ${getTimingValueClass(summary.avgPythonDirectMs)}">${formatMs(summary.avgPythonDirectMs)}</div>
@@ -517,16 +529,66 @@
             `;
 
             // Add breakdown visualization if available
+            const breakdownEl = document.getElementById('timing-breakdown');
+            let breakdownHTML = '';
+
+            // Node.js breakdown
+            if (totalNodeTime > 0) {
+                const nodeSteps = [
+                    { key: 'conversation_context_ms', label: 'Conversation Context', color: '#FF6B6B' },
+                    { key: 'equipment_search_ms', label: 'Equipment Search', color: '#4ECDC4' },
+                    { key: 'equipment_extraction_ms', label: 'Equipment Extraction', color: '#45B7D1' },
+                    { key: 'equipment_inference_ms', label: 'Equipment Inference', color: '#FFA07A' },
+                    { key: 'equipment_context_build_ms', label: 'Context Build', color: '#98D8C8' },
+                    { key: 'system_details_fetch_ms', label: 'System Details', color: '#F7DC6F' },
+                    { key: 'equipment_context_update_ms', label: 'Context Update', color: '#BB8FCE' },
+                    { key: 'python_call_ms', label: 'Python Call', color: '#85C1E2' },
+                    { key: 'response_format_ms', label: 'Response Format', color: '#F8C471' }
+                ];
+
+                breakdownHTML += `
+                    <div style="grid-column: 1 / -1; margin-bottom: 24px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">Node.js Step-by-Step Breakdown</div>
+                        <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color); margin-bottom: 8px;">
+                `;
+
+                nodeSteps.forEach(step => {
+                    const value = nodeTiming[step.key] || 0;
+                    const pct = totalNodeTime > 0 ? Math.round((value / totalNodeTime) * 100) : 0;
+                    if (value > 0) {
+                        breakdownHTML += `<div style="width: ${pct}%; background: ${step.color}; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 500;" title="${step.label}: ${formatMs(value)}">${pct > 8 ? step.label.split(' ')[0] : ''}</div>`;
+                    }
+                });
+
+                breakdownHTML += `</div></div>`;
+
+                // Node.js breakdown items
+                nodeSteps.forEach(step => {
+                    const value = nodeTiming[step.key] || 0;
+                    if (value > 0) {
+                        breakdownHTML += `
+                            <div class="timing-breakdown-item">
+                                <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="width: 12px; height: 12px; background: ${step.color}; border-radius: 3px;"></span>
+                                    ${step.label}
+                                </div>
+                                <div class="timing-breakdown-value">${formatMs(value)}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Python breakdown
             if (breakdown.total_internal_ms > 0) {
-                const breakdownEl = document.getElementById('timing-breakdown');
                 const total = breakdown.total_internal_ms;
                 const classifyPct = Math.round((breakdown.classification_ms / total) * 100);
                 const pineconePct = Math.round((breakdown.pinecone_ms / total) * 100);
                 const synthesisPct = Math.round((breakdown.synthesis_ms / total) * 100);
 
-                breakdownEl.innerHTML = `
-                    <div style="grid-column: 1 / -1; margin-bottom: 16px;">
-                        <div style="font-weight: 600; margin-bottom: 8px;">Python Sidecar Breakdown</div>
+                breakdownHTML += `
+                    <div style="grid-column: 1 / -1; margin-bottom: 16px; margin-top: ${totalNodeTime > 0 ? '24px' : '0'};">
+                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">Python Sidecar Breakdown</div>
                         <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color);">
                             <div style="width: ${classifyPct}%; background: #5856D6; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${classifyPct > 10 ? 'Classify' : ''}</div>
                             <div style="width: ${pineconePct}%; background: #007AFF; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${pineconePct > 10 ? 'Pinecone' : ''}</div>
@@ -554,11 +616,19 @@
                         </div>
                         <div class="timing-breakdown-value">${formatMs(breakdown.synthesis_ms)}</div>
                     </div>
-                    <div class="timing-breakdown-item">
-                        <div class="timing-breakdown-label">Tests Passed</div>
-                        <div class="timing-breakdown-value">${summary.passed}/${summary.totalTests}</div>
-                    </div>
                 `;
+            }
+
+            // Add summary item
+            breakdownHTML += `
+                <div class="timing-breakdown-item">
+                    <div class="timing-breakdown-label">Tests Passed</div>
+                    <div class="timing-breakdown-value">${summary.passed}/${summary.totalTests}</div>
+                </div>
+            `;
+
+            if (breakdownHTML) {
+                breakdownEl.innerHTML = breakdownHTML;
             }
 
             // Bar chart for each test

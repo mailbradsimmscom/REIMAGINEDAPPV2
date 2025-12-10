@@ -109,6 +109,7 @@ async function testChatEndpoint(query, context = {}) {
 
   // Extract internal timing from detailed_metrics (Python sidecar returns this)
   const detailedMetrics = result.data?.data?.detailed_metrics || result.data?.detailed_metrics || {};
+  const nodeTiming = result.data?.data?.telemetry?.node_timing || result.data?.telemetry?.node_timing || {};
   const internalTiming = {
     classification_ms: detailedMetrics?.classification?.duration_ms || 0,
     pinecone_ms: detailedMetrics?.pinecone?.duration_ms || 0,
@@ -119,7 +120,8 @@ async function testChatEndpoint(query, context = {}) {
   return {
     ...result,
     internalTiming,
-    detailedMetrics
+    detailedMetrics,
+    nodeTiming
   };
 }
 
@@ -219,7 +221,8 @@ async function runTimingTests() {
       duration: fullStack.duration,
       success: fullStack.success,
       error: fullStack.error,
-      internalTiming: fullStack.internalTiming
+      internalTiming: fullStack.internalTiming,
+      nodeTiming: fullStack.nodeTiming
     });
     console.log(`     Full stack: ${fullStack.duration}ms ${fullStack.success ? '✓' : '✗'}`);
 
@@ -259,7 +262,7 @@ async function runTimingTests() {
   const avgFullStack = fullStackTests.reduce((sum, t) => sum + t.duration, 0) / fullStackTests.length || 0;
   const avgPythonDirect = pythonDirectTests.reduce((sum, t) => sum + t.duration, 0) / pythonDirectTests.length || 0;
 
-  // Calculate average internal timing breakdown
+  // Calculate average internal timing breakdown (Python)
   const avgBreakdown = {
     classification_ms: 0,
     pinecone_ms: 0,
@@ -282,6 +285,45 @@ async function runTimingTests() {
     avgBreakdown.total_internal_ms = Math.round(avgBreakdown.total_internal_ms / pythonDirectTests.length);
   }
 
+  // Calculate average Node.js step-by-step timing breakdown
+  const avgNodeTiming = {
+    conversation_context_ms: 0,
+    equipment_search_ms: 0,
+    equipment_extraction_ms: 0,
+    equipment_inference_ms: 0,
+    equipment_context_build_ms: 0,
+    system_details_fetch_ms: 0,
+    equipment_context_update_ms: 0,
+    python_call_ms: 0,
+    response_format_ms: 0
+  };
+
+  const fullStackTestsWithTiming = fullStackTests.filter(t => t.nodeTiming);
+  for (const test of fullStackTestsWithTiming) {
+    const timing = test.nodeTiming || {};
+    avgNodeTiming.conversation_context_ms += timing.conversation_context_ms || 0;
+    avgNodeTiming.equipment_search_ms += timing.equipment_search_ms || 0;
+    avgNodeTiming.equipment_extraction_ms += timing.equipment_extraction_ms || 0;
+    avgNodeTiming.equipment_inference_ms += timing.equipment_inference_ms || 0;
+    avgNodeTiming.equipment_context_build_ms += timing.equipment_context_build_ms || 0;
+    avgNodeTiming.system_details_fetch_ms += timing.system_details_fetch_ms || 0;
+    avgNodeTiming.equipment_context_update_ms += timing.equipment_context_update_ms || 0;
+    avgNodeTiming.python_call_ms += timing.python_call_ms || 0;
+    avgNodeTiming.response_format_ms += timing.response_format_ms || 0;
+  }
+
+  if (fullStackTestsWithTiming.length > 0) {
+    avgNodeTiming.conversation_context_ms = Math.round(avgNodeTiming.conversation_context_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.equipment_search_ms = Math.round(avgNodeTiming.equipment_search_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.equipment_extraction_ms = Math.round(avgNodeTiming.equipment_extraction_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.equipment_inference_ms = Math.round(avgNodeTiming.equipment_inference_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.equipment_context_build_ms = Math.round(avgNodeTiming.equipment_context_build_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.system_details_fetch_ms = Math.round(avgNodeTiming.system_details_fetch_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.equipment_context_update_ms = Math.round(avgNodeTiming.equipment_context_update_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.python_call_ms = Math.round(avgNodeTiming.python_call_ms / fullStackTestsWithTiming.length);
+    avgNodeTiming.response_format_ms = Math.round(avgNodeTiming.response_format_ms / fullStackTestsWithTiming.length);
+  }
+
   results.summary = {
     servicesAvailable: true,
     totalTests: results.tests.length,
@@ -290,7 +332,8 @@ async function runTimingTests() {
     avgFullStackMs: Math.round(avgFullStack),
     avgPythonDirectMs: Math.round(avgPythonDirect),
     avgNodeOverheadMs: Math.round(avgFullStack - avgPythonDirect),
-    breakdown: avgBreakdown,
+    breakdown: avgBreakdown,  // Python breakdown
+    node_timing: avgNodeTiming,  // Node.js step-by-step breakdown
     healthCheck: {
       nodeMs: nodeHealth.duration,
       pythonMs: pythonHealth.duration

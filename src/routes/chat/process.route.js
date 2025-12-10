@@ -101,7 +101,8 @@ router.post(
             processing_time_ms: result.processing_time_ms || (Date.now() - startTime),
             classification: result.classification,
             score: result.score,
-            metadata: result.metadata
+            metadata: result.metadata,
+            node_timing: result.node_timing || null  // Include Node.js timing breakdown
           },
           detailed_metrics: result.detailed_metrics || null  // Pass through detailed metrics from Python
         }
