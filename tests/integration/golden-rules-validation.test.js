@@ -31,7 +31,7 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
   // Test cases derived from golden procedures
   const testCases = [
     {
-      query: 'How do I lock the screen?',
+      query: 'How do I lock the screen on my Nemesis 9?',
       expectedProcedure: 'Locking Screen',
       expectedSteps: ['Locate lock button on dashboard bar', 'Press lock button'],
       expectedOutcome: 'Screen locked',
