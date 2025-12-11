@@ -501,7 +501,8 @@ export function createChatProxyService({
               extracted_equipment: extractedNames,
               needs_user_input: true
             },
-            processing_time_ms: 0
+            processing_time_ms: 0,
+            node_timing: nodeTiming  // Include timing even in early return
           };
         }
 

@@ -188,6 +188,10 @@
         .badge.error { background: #FFEBEE; color: #C62828; }
         .badge.nightly { background: #E3F2FD; color: #1565C0; }
         .badge.push { background: #F3E5F5; color: #7B1FA2; }
+        .badge.flaky { background: #FFF3E0; color: #E65100; }
+        .badge.regression { background: #FCE4EC; color: #C2185B; }
+        .badge.resolved { background: #E8F5E9; color: #2E7D32; }
+        .badge.review { background: #FFF8E1; color: #F57F17; }
 
         .category-grid {
             display: grid;
@@ -344,6 +348,120 @@
             font-weight: 600;
         }
 
+        /* AI Analysis Styles */
+        .analysis-item {
+            padding: var(--spacing-md);
+            background: #F8F9FF;
+            border-left: 4px solid var(--secondary-color);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .analysis-item.resolved {
+            border-left-color: var(--success-color);
+            background: #F0FFF4;
+        }
+
+        .analysis-item.review-needed {
+            border-left-color: var(--warning-color);
+            background: #FFFBEB;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .analysis-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .analysis-badges {
+            display: flex;
+            gap: var(--spacing-xs);
+            flex-wrap: wrap;
+        }
+
+        .analysis-recommendation {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .analysis-accordion {
+            margin-top: var(--spacing-sm);
+        }
+
+        .analysis-accordion-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--primary-color);
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        .analysis-accordion-header:hover {
+            text-decoration: underline;
+        }
+
+        .analysis-accordion-content {
+            display: none;
+            margin-top: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: white;
+            border-radius: var(--border-radius-small);
+            font-size: 13px;
+        }
+
+        .analysis-accordion-content.open {
+            display: block;
+        }
+
+        .hypothesis-item {
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hypothesis-item:last-child {
+            border-bottom: none;
+        }
+
+        .hypothesis-result {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .hypothesis-result.PASSED { background: #E8F5E9; color: #2E7D32; }
+        .hypothesis-result.FAILED_ASSERTION { background: #FFEBEE; color: #C62828; }
+        .hypothesis-result.TIMED_OUT { background: #FFF3E0; color: #E65100; }
+        .hypothesis-result.NOT_RUN { background: #F5F5F5; color: #757575; }
+
+        .analysis-summary-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .analysis-summary-stat {
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+            padding: var(--spacing-sm);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
         @media (max-width: 768px) {
             .summary-row {
                 flex-direction: column;
@@ -414,6 +532,13 @@
             <div class="card" id="failures-card" style="display: none;">
                 <h2>Failures Requiring Action</h2>
                 <div id="failures-list"></div>
+            </div>
+
+            <!-- AI Analysis -->
+            <div class="card" id="analysis-card" style="display: none;">
+                <h2>AI Failure Analysis</h2>
+                <div class="analysis-summary-row" id="analysis-summary"></div>
+                <div id="analysis-list"></div>
             </div>
 
             <!-- History -->
@@ -494,20 +619,123 @@
             return `${(ms / 1000).toFixed(1)}s`;
         }
 
+        // Load and render AI analysis for a run
+        async function loadAnalysis(runId) {
+            const analysisCard = document.getElementById('analysis-card');
+            const analysisSummary = document.getElementById('analysis-summary');
+            const analysisList = document.getElementById('analysis-list');
+
+            if (!runId) {
+                analysisCard.style.display = 'none';
+                return;
+            }
+
+            try {
+                const res = await fetchWithAuth(`/admin/api/test-analysis/${runId}`);
+                if (!res.success || !res.data || res.data.summary.total === 0) {
+                    analysisCard.style.display = 'none';
+                    return;
+                }
+
+                analysisCard.style.display = 'block';
+                const { byFailureKey, summary } = res.data;
+
+                // Render summary
+                analysisSummary.innerHTML = `
+                    <div class="analysis-summary-stat">
+                        <div style="font-size: 24px; font-weight: 600;">${summary.total}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Analyzed</div>
+                    </div>
+                    <div class="analysis-summary-stat">
+                        <div style="font-size: 24px; font-weight: 600; color: var(--success-color);">${summary.resolved}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Resolved</div>
+                    </div>
+                    <div class="analysis-summary-stat">
+                        <div style="font-size: 24px; font-weight: 600; color: var(--warning-color);">${summary.human_review_needed}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Need Review</div>
+                    </div>
+                `;
+
+                // Render individual analyses
+                const analyses = Object.values(byFailureKey);
+                analysisList.innerHTML = analyses.map((a, idx) => {
+                    const itemClass = a.resolved ? 'resolved' : (a.human_review_needed ? 'review-needed' : '');
+                    const statusBadge = a.resolved
+                        ? '<span class="badge resolved">Resolved</span>'
+                        : (a.human_review_needed ? '<span class="badge review">Needs Review</span>' : '');
+
+                    const classificationBadge = a.classification
+                        ? `<span class="badge ${a.classification === 'flaky' ? 'flaky' : (a.classification.includes('regression') ? 'regression' : 'nightly')}">${a.classification.replace('_', ' ')}</span>`
+                        : '';
+
+                    const rootCauseBadge = a.root_cause_type
+                        ? `<span class="badge push">${a.root_cause_type.replace('_', ' ')}</span>`
+                        : '';
+
+                    const hypothesesHtml = (a.hypotheses_tested || []).map(h => `
+                        <div class="hypothesis-item">
+                            <div><strong>${h.hypothesis}</strong></div>
+                            <div style="margin-top: 4px;">
+                                <span class="hypothesis-result ${h.test_result}">${h.test_result}</span>
+                                ${h.target_files.length ? `<span style="margin-left: 8px; color: var(--text-secondary);">Files: ${h.target_files.join(', ')}</span>` : ''}
+                            </div>
+                            ${h.rejected_reason ? `<div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">Rejected: ${h.rejected_reason}</div>` : ''}
+                        </div>
+                    `).join('') || '<div style="color: var(--text-secondary);">No hypotheses tested</div>';
+
+                    return `
+                        <div class="analysis-item ${itemClass}">
+                            <div class="analysis-header">
+                                <div class="analysis-title">${a.failure_key}</div>
+                                <div class="analysis-badges">
+                                    ${statusBadge}
+                                    ${classificationBadge}
+                                    ${rootCauseBadge}
+                                </div>
+                            </div>
+                            ${a.recommendation ? `<div class="analysis-recommendation">${a.recommendation.description}</div>` : ''}
+                            <div class="analysis-accordion">
+                                <button class="analysis-accordion-header" onclick="toggleAccordion('accordion-${idx}')">
+                                    <span>&#9654;</span> What the agent tried
+                                </button>
+                                <div id="accordion-${idx}" class="analysis-accordion-content">
+                                    ${hypothesesHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (e) {
+                // 404 is expected if no analysis exists yet - silently hide
+                if (e.message && e.message.includes('404')) {
+                    analysisCard.style.display = 'none';
+                } else {
+                    console.error('Failed to load analysis:', e);
+                    analysisCard.style.display = 'none';
+                }
+            }
+        }
+
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('open');
+        }
+
         function renderTimingData(timing) {
             const summary = timing.summary;
             const tests = timing.tests || [];
             const breakdown = summary.breakdown || {};
             const nodeTiming = summary.node_timing || {};
 
-            // Debug: Log what we received
-            console.log('📊 Timing data:', {
+            // Debug: Log what we received (stringified for visibility)
+            console.log('📊 Timing data:', JSON.stringify({
                 hasSummary: !!summary,
                 hasNodeTiming: !!summary.node_timing,
                 nodeTiming: summary.node_timing,
                 avgFullStackMs: summary.avgFullStackMs,
                 avgNodeOverheadMs: summary.avgNodeOverheadMs
-            });
+            }, null, 2));
 
             // Calculate total Node.js time (sum of all steps)
             const totalNodeTime = (nodeTiming.conversation_context_ms || 0) +
@@ -520,11 +748,18 @@
                                   (nodeTiming.python_call_ms || 0) +
                                   (nodeTiming.response_format_ms || 0);
 
-            console.log('📊 Node.js timing calculation:', {
+            console.log('📊 Node.js timing calculation:', JSON.stringify({
                 totalNodeTime,
                 nodeTimingKeys: Object.keys(nodeTiming),
-                nodeTimingValues: nodeTiming
-            });
+                nodeTimingValues: nodeTiming,
+                willShowBreakdown: totalNodeTime > 0
+            }, null, 2));
+            
+            if (!summary.node_timing) {
+                console.warn('⚠️ node_timing is missing from summary. Summary keys:', Object.keys(summary));
+            } else if (totalNodeTime === 0) {
+                console.warn('⚠️ node_timing exists but all values are 0 or undefined');
+            }
 
             // Summary stats with TOTAL TIME prominently displayed
             const summaryEl = document.getElementById('timing-summary');
@@ -747,6 +982,9 @@
                 } else {
                     failuresCard.style.display = 'none';
                 }
+
+                // Load AI Analysis for this run
+                await loadAnalysis(latest.run_id);
 
                 // Update history table
                 const historyTable = document.getElementById('history-table');

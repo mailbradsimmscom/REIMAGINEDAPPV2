@@ -387,6 +387,14 @@ async function uploadResults() {
 
   console.log(`\nUploaded results: ${passed}/${total} passed, ${failed} failed`);
   console.log(`Run ID: ${runId}`);
+
+  // Output run_id for downstream GitHub Actions steps
+  const githubOutput = process.env.GITHUB_OUTPUT;
+  if (githubOutput) {
+    const { appendFileSync } = await import('fs');
+    appendFileSync(githubOutput, `run_id=${runId}\n`);
+    console.log('Exported run_id to GITHUB_OUTPUT');
+  }
 }
 
 // Run if called directly

@@ -1,0 +1,68 @@
+# .github/workflows/analyze-failures.yml
+#
+# On-Demand Defect Fix Analysis
+# Fetches latest test failures from Supabase and runs AI analysis
+# Does NOT run tests - just analyzes existing failures
+#
+# Use this when you want to re-analyze failures without re-running tests
+
+name: Analyze Failures
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Specific run_id to analyze (leave empty for latest)'
+        required: false
+        default: ''
+      max_failures:
+        description: 'Max failures to analyze'
+        required: false
+        default: '10'
+
+jobs:
+  analyze:
+    name: Analyze Test Failures
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          cd python-sidecar
+          pip install -r requirements.txt
+          pip install anthropic
+
+      - name: Run AI analysis
+        run: |
+          if [ -n "${{ github.event.inputs.run_id }}" ]; then
+            python scripts/analyze-failures.py \
+              --run-id "${{ github.event.inputs.run_id }}" \
+              --max-failures ${{ github.event.inputs.max_failures }}
+          else
+            python scripts/analyze-failures.py \
+              --latest \
+              --max-failures ${{ github.event.inputs.max_failures }}
+          fi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Generate summary
+        run: |
+          echo "## Failure Analysis Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Run time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View results on the [Test Dashboard](/public/test-results.html)" >> $GITHUB_STEP_SUMMARY

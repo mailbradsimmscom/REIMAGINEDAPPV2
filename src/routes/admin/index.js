@@ -28,6 +28,7 @@ import maintenanceTasksRouter from './maintenance-tasks.route.js';
 import anchorWatchRouter from './anchor-watch.route.js';
 import telemetryRouter from './telemetry.route.js';
 import testResultsRouter from './test-results.route.js';
+import testAnalysisRouter from './test-analysis.route.js';
 
 const router = express.Router();
 
@@ -69,6 +70,7 @@ router.use('/maintenance-tasks', maintenanceTasksRouter);
 router.use('/anchor-watch', anchorWatchRouter);
 router.use('/telemetry', telemetryRouter);
 router.use('/test-results', testResultsRouter);
+router.use('/test-analysis', testAnalysisRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin

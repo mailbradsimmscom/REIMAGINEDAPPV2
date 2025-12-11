@@ -1,7 +1,7 @@
 # Test Failure Analysis Agent - Implementation Plan
 
 **Last Updated:** 2025-12-11
-**Status:** Planning complete, ready to implement
+**Status:** Implementation complete, deployed
 
 ## Current State
 
@@ -11,12 +11,48 @@
    - `tests/integration/spec-bias-telemetry.test.js`
    - This fixes the intermittent 503 errors from rate limiting
 2. **Plan documented** - This file saved to `code updates/101 Test Failure Analysis Agent Plan.md`
+3. **Implementation complete** - All files created:
+   - Database schema: `sql/test_analysis_table.sql` - **DEPLOYED TO SUPABASE**
+   - Python module: `python-sidecar/app/analysis/` (7 files)
+   - CLI entry point: `scripts/analyze-failures.py` (supports `--latest` flag)
+   - API layer: service + route + Zod schema
+   - Frontend: AI Analysis card in test-results.html
+   - CI workflows: 3 separate workflows (see below)
+4. **Infrastructure ready**:
+   - SQL migration run in Supabase
+   - `ANTHROPIC_API_KEY` added to GitHub secrets
+
+### Three CI Workflows
+
+| Workflow | File | Trigger | Duration | Purpose |
+|----------|------|---------|----------|---------|
+| **Nightly Sweep** | `nightly-sweep.yml` | Scheduled 3am EST + manual | ~30 min | Quick QA, no AI |
+| **Nightly Sweep + AI Fix** | `nightly-sweep-full.yml` | Manual only | ~45 min | Full QA + AI analysis |
+| **Analyze Failures** | `analyze-failures.yml` | Manual only | ~15 min | AI analysis only (no tests) |
+
+### Usage
+
+```bash
+# Quick QA (runs automatically at 3am EST, or trigger manually)
+# No AI analysis - just tests with fix_hint explanations
+
+# Full QA + AI Fix (trigger from GitHub Actions UI)
+# Runs all tests, then AI analyzes failures and proposes fixes
+
+# Just re-analyze latest failures (no new test run)
+python scripts/analyze-failures.py --latest
+
+# Analyze specific run
+python scripts/analyze-failures.py --run-id <uuid>
+
+# Dry run (test plumbing without LLM calls)
+python scripts/analyze-failures.py --latest --dry-run
+```
 
 ### Next Steps
-1. Create database schema (`sql/test_analysis_table.sql`)
-2. Create Python analysis module foundation (`__init__.py`, `models.py`, `worktree.py`)
-3. Build "hello world" stub to prove plumbing (no LLM yet)
-4. Then add Claude integration
+1. **Commit and push** to deploy
+2. **Test locally** with `--dry-run` flag
+3. **Trigger manual run** of `Nightly Sweep + AI Fix` workflow
 
 ### Key Context/Decisions Made
 - **Why git worktree?** Hard isolation - main checkout never touched, no risk of dirty state
@@ -226,8 +262,98 @@ class TestRunResult(BaseModel):
 4. Write `test_analysis` rows back to Supabase
 5. Print concise summary to stdout
 
-### 4. API Route
-**`src/routes/admin/test-analysis.route.js`**
+### 4. API Route (Following routes → services → repositories pattern)
+
+**Files to create:**
+- `src/services/test-analysis.service.js` - Business logic + Supabase queries
+- `src/routes/admin/test-analysis.route.js` - Thin route, delegates to service
+- `src/schemas/test-analysis.schema.js` - Zod validation for response
+
+**`src/schemas/test-analysis.schema.js`** (Zod response validation per .cursorrules):
+```javascript
+import { z } from 'zod';
+
+export const TestAnalysisRecordSchema = z.object({
+  id: z.string().uuid(),
+  run_id: z.string().uuid(),
+  failure_key: z.string(),
+  classification: z.enum(['always_passes', 'always_fails', 'flaky', 'recent_regression', 'new_failure']).nullable(),
+  root_cause_type: z.enum(['code_logic', 'test_bug', 'env_config', 'external_service']).nullable(),
+  investigation: z.record(z.unknown()).nullable(),
+  hypotheses_tested: z.array(z.record(z.unknown())).nullable(),
+  recommendation: z.record(z.unknown()).nullable(),
+  analysis_duration_ms: z.number().nullable(),
+  resolved: z.boolean(),
+  human_review_needed: z.boolean(),
+  model_used: z.string().nullable(),
+  created_at: z.string()
+});
+
+export const TestAnalysisSummarySchema = z.object({
+  total: z.number(),
+  resolved: z.number(),
+  human_review_needed: z.number(),
+  by_classification: z.record(z.number()),
+  by_root_cause: z.record(z.number())
+});
+
+export const TestAnalysisResponseSchema = z.object({
+  byFailureKey: z.record(TestAnalysisRecordSchema),
+  summary: TestAnalysisSummarySchema
+});
+```
+
+**`src/services/test-analysis.service.js`** (all DB I/O here):
+```javascript
+import { supabase } from '../repositories/supabaseClient.js';
+
+export async function getAnalysisForRun(runId) {
+  const { data, error } = await supabase
+    .from('test_analysis')
+    .select('*')
+    .eq('run_id', runId);
+
+  if (error) throw error;
+
+  // Transform to byFailureKey map + compute summary
+  const byFailureKey = {};
+  const summary = { total: 0, resolved: 0, human_review_needed: 0, by_classification: {}, by_root_cause: {} };
+
+  for (const record of data || []) {
+    byFailureKey[record.failure_key] = record;
+    summary.total++;
+    if (record.resolved) summary.resolved++;
+    if (record.human_review_needed) summary.human_review_needed++;
+    if (record.classification) {
+      summary.by_classification[record.classification] = (summary.by_classification[record.classification] || 0) + 1;
+    }
+    if (record.root_cause_type) {
+      summary.by_root_cause[record.root_cause_type] = (summary.by_root_cause[record.root_cause_type] || 0) + 1;
+    }
+  }
+
+  return { byFailureKey, summary };
+}
+```
+
+**`src/routes/admin/test-analysis.route.js`** (thin, delegates to service):
+```javascript
+import { Router } from 'express';
+import { getAnalysisForRun } from '../../services/test-analysis.service.js';
+
+const router = Router();
+
+router.get('/:runId', async (req, res, next) => {
+  try {
+    const data = await getAnalysisForRun(req.params.runId);
+    res.json({ success: true, data, requestId: res.locals.requestId });
+  } catch (err) {
+    next(err);
+  }
+});
+
+export default router;
+```
 
 `GET /admin/api/test-analysis/:runId`
 
@@ -366,13 +492,16 @@ Phase 5: Report (1 min)
 12. Modify `.github/workflows/nightly-sweep.yml` - add analysis step
 
 ### Phase 4: API & Frontend (2-3 hrs)
-13. Create `src/routes/admin/test-analysis.route.js`
-14. Mount in `src/routes/admin/index.js`
-15. Update `src/public/test-results.html` to display analysis
+13. Create `src/schemas/test-analysis.schema.js` - Zod validation
+14. Create `src/services/test-analysis.service.js` - Business logic + DB queries
+15. Create `src/routes/admin/test-analysis.route.js` - Thin route
+16. Mount in `src/routes/admin/index.js`
+17. Update `src/public/test-results.html` to display analysis
 
 ### Phase 5: Testing (1-2 hrs)
-16. Test locally with `--dry-run`
-17. Test in CI with manual workflow trigger
+18. Test locally with `--dry-run`
+19. Test in CI with manual workflow trigger
+20. Verify frontend display
 18. Verify frontend display
 
 ## Output Structure
