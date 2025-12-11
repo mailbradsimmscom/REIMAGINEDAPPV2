@@ -4,6 +4,10 @@ import { initTestApp, getAppSync } from '../setupApp.js';
 import request from 'supertest';
 import { skipIfNoServices } from '../helpers/ci-skip.js';
 
+// Pacing helper to avoid overwhelming external services
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const PACING_DELAY_MS = 2000;
+
 await initTestApp();
 const app = getAppSync();
 
@@ -61,6 +65,9 @@ test('Spec-biased retrieval integration test', async (t) => {
   
   console.log('✅ Spec-biased retrieval test passed');
   console.log('📊 Telemetry data:', JSON.stringify(data.telemetry, null, 2));
+
+  // Pace requests to avoid overwhelming external services
+  await sleep(PACING_DELAY_MS);
 });
 
 test('Style detection integration test', async (t) => {
@@ -102,11 +109,14 @@ test('Style detection integration test', async (t) => {
     
     // Note: Style detection is optional - only validate if present
     if (detectedStyle) {
-      assert.ok(['specBrief', 'steps', 'bullets3', 'brief', 'technical'].includes(detectedStyle), 
+      assert.ok(['specBrief', 'steps', 'bullets3', 'brief', 'technical'].includes(detectedStyle),
         `Should detect valid style for: ${testCase.message}`);
     }
+
+    // Pace requests to avoid overwhelming external services
+    await sleep(PACING_DELAY_MS);
   }
-  
+
   console.log('✅ Style detection test passed');
 });
 
@@ -114,25 +124,27 @@ test('Request ID uniqueness test', async (t) => {
   if (skipIfNoServices(t)) return;
   // Make multiple requests to verify request IDs are unique
   // Use /chat/enhanced/process for rich response with telemetry
-  const results = await Promise.all([
-    request(app).post('/chat/enhanced/process').send({ message: 'test 1' }).expect(200),
-    request(app).post('/chat/enhanced/process').send({ message: 'test 2' }).expect(200),
-    request(app).post('/chat/enhanced/process').send({ message: 'test 3' }).expect(200)
-  ]);
+  // Run sequentially with pacing to avoid overwhelming external services
+  const results = [];
+  for (const msg of ['test 1', 'test 2', 'test 3']) {
+    const res = await request(app).post('/chat/enhanced/process').send({ message: msg }).expect(200);
+    results.push(res);
+    await sleep(PACING_DELAY_MS);
+  }
   const requestIds = results.map(res => res.body.data.telemetry?.requestId).filter(Boolean);
-  
+
   // Only test uniqueness if requestIds are present (optional field)
   if (requestIds.length > 0) {
     // Verify all request IDs are unique
     const uniqueIds = new Set(requestIds);
     assert.strictEqual(uniqueIds.size, requestIds.length, 'All request IDs should be unique');
-    
+
     // Verify request ID format
     for (const id of requestIds) {
       assert.ok(id.startsWith('req_'), 'Request ID should start with "req_"');
       assert.ok(id.includes('_'), 'Request ID should contain underscore separator');
     }
-    
+
     console.log('✅ Request ID uniqueness test passed');
     console.log('🆔 Request IDs:', requestIds);
   } else {
@@ -168,6 +180,9 @@ test('Spec-bias metadata validation test', async (t) => {
   } else {
     console.log('ℹ️ Spec-bias metadata not present (optional field)');
   }
+
+  // Pace requests to avoid overwhelming external services
+  await sleep(PACING_DELAY_MS);
 });
 
 test('Environment configuration test', async (t) => {
@@ -193,13 +208,16 @@ test('Environment configuration test', async (t) => {
     }
     
     console.log('✅ Environment configuration test passed');
-    console.log('⚙️ Config:', { 
-      temperature: retrievalMeta.temperature, 
-      model: retrievalMeta.model 
+    console.log('⚙️ Config:', {
+      temperature: retrievalMeta.temperature,
+      model: retrievalMeta.model
     });
   } else {
     console.log('ℹ️ Environment config not present in retrievalMeta (optional field)');
   }
+
+  // Pace requests to avoid overwhelming external services
+  await sleep(PACING_DELAY_MS);
 });
 
 test('Schema validation test', async (t) => {

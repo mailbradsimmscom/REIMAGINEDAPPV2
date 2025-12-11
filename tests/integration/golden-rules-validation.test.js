@@ -6,6 +6,10 @@ import request from 'supertest';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Pacing helper to avoid overwhelming external services
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const PACING_DELAY_MS = 2000;
+
 await initTestApp();
 const app = getAppSync();
 
@@ -113,6 +117,9 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
       await validateProceduralCorrectness(assistantMessage, testCase);
       
       console.log(`✅ Validation passed for: "${testCase.query}"`);
+
+      // Pace requests to avoid overwhelming external services
+      await sleep(PACING_DELAY_MS);
     });
   }
 });
@@ -175,6 +182,9 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
       }
       
       console.log(`✅ Technical accuracy validation passed`);
+
+      // Pace requests to avoid overwhelming external services
+      await sleep(PACING_DELAY_MS);
     });
   }
 });
@@ -245,6 +255,9 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
       await validateGroundTruth(assistantMessage, testCase.groundTruth);
       
       console.log(`✅ Ground truth validation passed`);
+
+      // Pace requests to avoid overwhelming external services
+      await sleep(PACING_DELAY_MS);
     });
   }
 });
@@ -291,6 +304,9 @@ test('Golden Rules Validation - Error Handling', async (t) => {
       assert.ok(typeof assistantMessage === 'string', 'Should return string response');
       
       console.log(`✅ Error handling validation passed`);
+
+      // Pace requests to avoid overwhelming external services
+      await sleep(PACING_DELAY_MS);
     });
   }
 });
