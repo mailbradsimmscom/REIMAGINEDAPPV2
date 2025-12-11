@@ -72,7 +72,8 @@ router.post(
           telemetry: {
             requestId, // Also in telemetry for consistency
             processing_time_ms: result.processing_time_ms || totalDuration,
-            node_timing: result.node_timing || null
+            node_timing: result.node_timing || null,
+            detailed_metrics: result.detailed_metrics || null
           }
         }
       });
