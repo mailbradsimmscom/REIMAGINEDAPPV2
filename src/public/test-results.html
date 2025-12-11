@@ -500,6 +500,15 @@
             const breakdown = summary.breakdown || {};
             const nodeTiming = summary.node_timing || {};
 
+            // Debug: Log what we received
+            console.log('📊 Timing data:', {
+                hasSummary: !!summary,
+                hasNodeTiming: !!summary.node_timing,
+                nodeTiming: summary.node_timing,
+                avgFullStackMs: summary.avgFullStackMs,
+                avgNodeOverheadMs: summary.avgNodeOverheadMs
+            });
+
             // Calculate total Node.js time (sum of all steps)
             const totalNodeTime = (nodeTiming.conversation_context_ms || 0) +
                                   (nodeTiming.equipment_search_ms || 0) +
@@ -510,6 +519,12 @@
                                   (nodeTiming.equipment_context_update_ms || 0) +
                                   (nodeTiming.python_call_ms || 0) +
                                   (nodeTiming.response_format_ms || 0);
+
+            console.log('📊 Node.js timing calculation:', {
+                totalNodeTime,
+                nodeTimingKeys: Object.keys(nodeTiming),
+                nodeTimingValues: nodeTiming
+            });
 
             // Summary stats with TOTAL TIME prominently displayed
             const summaryEl = document.getElementById('timing-summary');

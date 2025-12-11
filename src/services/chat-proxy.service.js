@@ -147,9 +147,29 @@ export function createChatProxyService({
 
     // ALWAYS search current query for new equipment (fast database lookup)
     // This catches specific model numbers like "4JH57", "SD60" that user adds in follow-ups
+    // Search each keyword separately to avoid multi-word queries returning 0 results
     const step3Start = Date.now();
     const searchQuery = extractKeywords(query) || query;
-    const queryKeywordResults = await systemsRepository.searchSystems(searchQuery, { limit: 10 });
+    const keywords = searchQuery.split(/\s+/).filter(w => w.length > 2);
+
+    // Search each keyword and combine results, deduplicating by asset_uid
+    const seenAssetUids = new Set();
+    let queryKeywordResults = [];
+
+    for (const keyword of keywords.slice(0, 5)) { // Limit to first 5 keywords
+      const results = await systemsRepository.searchSystems(keyword, { limit: 5 });
+      for (const result of results) {
+        if (!seenAssetUids.has(result.asset_uid)) {
+          seenAssetUids.add(result.asset_uid);
+          queryKeywordResults.push(result);
+        }
+      }
+    }
+
+    // Sort by rank (highest first) and limit to top 10
+    queryKeywordResults = queryKeywordResults
+      .sort((a, b) => (b.rank || 0) - (a.rank || 0))
+      .slice(0, 10);
     const keywordSearchDuration = Date.now() - step3Start;
 
     requestLogger.info('🔍 Query keyword search completed', {

@@ -110,6 +110,13 @@ async function testChatEndpoint(query, context = {}) {
   // Extract internal timing from detailed_metrics (Python sidecar returns this)
   const detailedMetrics = result.data?.data?.detailed_metrics || result.data?.detailed_metrics || {};
   const nodeTiming = result.data?.data?.telemetry?.node_timing || result.data?.telemetry?.node_timing || {};
+  
+  // Debug: Log what we received
+  if (!nodeTiming || Object.keys(nodeTiming).length === 0) {
+    console.log('   ⚠️  No node_timing found in response. Response keys:', Object.keys(result.data?.data || {}));
+    console.log('   Telemetry keys:', Object.keys(result.data?.data?.telemetry || {}));
+  }
+
   const internalTiming = {
     classification_ms: detailedMetrics?.classification?.duration_ms || 0,
     pinecone_ms: detailedMetrics?.pinecone?.duration_ms || 0,
@@ -298,9 +305,14 @@ async function runTimingTests() {
     response_format_ms: 0
   };
 
-  const fullStackTestsWithTiming = fullStackTests.filter(t => t.nodeTiming);
+  const fullStackTestsWithTiming = fullStackTests.filter(t => t.nodeTiming && Object.keys(t.nodeTiming || {}).length > 0);
+  console.log(`\n📊 Node.js Timing Analysis:`);
+  console.log(`   Full Stack tests: ${fullStackTests.length}`);
+  console.log(`   Tests with nodeTiming: ${fullStackTestsWithTiming.length}`);
+  
   for (const test of fullStackTestsWithTiming) {
     const timing = test.nodeTiming || {};
+    console.log(`   Test "${test.name}":`, timing);
     avgNodeTiming.conversation_context_ms += timing.conversation_context_ms || 0;
     avgNodeTiming.equipment_search_ms += timing.equipment_search_ms || 0;
     avgNodeTiming.equipment_extraction_ms += timing.equipment_extraction_ms || 0;
@@ -322,6 +334,9 @@ async function runTimingTests() {
     avgNodeTiming.equipment_context_update_ms = Math.round(avgNodeTiming.equipment_context_update_ms / fullStackTestsWithTiming.length);
     avgNodeTiming.python_call_ms = Math.round(avgNodeTiming.python_call_ms / fullStackTestsWithTiming.length);
     avgNodeTiming.response_format_ms = Math.round(avgNodeTiming.response_format_ms / fullStackTestsWithTiming.length);
+    console.log(`   ✅ Calculated average Node.js timing:`, avgNodeTiming);
+  } else {
+    console.log(`   ⚠️  No Node.js timing data found in test results`);
   }
 
   results.summary = {
