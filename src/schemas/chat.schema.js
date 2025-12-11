@@ -110,6 +110,22 @@ const ChatProcessOkSchema = z.object({
     sources: z.array(z.any()).optional(),
     telemetry: z.object({
       requestId: z.string().optional(),
+      workflow: z.string().optional(),
+      processing_time_ms: z.number().optional(),
+      classification: z.any().optional(),
+      score: z.number().optional(),
+      metadata: z.any().optional(),
+      node_timing: z.object({
+        conversation_context_ms: z.number().optional(),
+        equipment_search_ms: z.number().optional(),
+        equipment_extraction_ms: z.number().optional(),
+        equipment_inference_ms: z.number().optional(),
+        equipment_context_build_ms: z.number().optional(),
+        system_details_fetch_ms: z.number().optional(),
+        equipment_context_update_ms: z.number().optional(),
+        python_call_ms: z.number().optional(),
+        response_format_ms: z.number().optional()
+      }).optional(),
       retrievalMeta: z.object({
         specBiasMeta: z.any().optional(),
         styleDetected: z.string().optional(),
