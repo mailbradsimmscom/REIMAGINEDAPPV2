@@ -5,7 +5,7 @@
  * Follows routes → services → repositories pattern per .cursorrules.
  */
 
-import { supabase } from '../repositories/supabaseClient.js';
+import { getSupabaseClient } from '../repositories/supabaseClient.js';
 
 /**
  * Get analysis results for a specific test run.
@@ -14,6 +14,7 @@ import { supabase } from '../repositories/supabaseClient.js';
  * @returns {Promise<{byFailureKey: Object, summary: Object}>}
  */
 export async function getAnalysisForRun(runId) {
+  const supabase = await getSupabaseClient();
   const { data, error } = await supabase
     .from('test_analysis')
     .select('*')
@@ -63,6 +64,7 @@ export async function getAnalysisForRun(runId) {
  * @returns {Promise<boolean>}
  */
 export async function hasAnalysisForRun(runId) {
+  const supabase = await getSupabaseClient();
   const { count, error } = await supabase
     .from('test_analysis')
     .select('*', { count: 'exact', head: true })
@@ -82,6 +84,7 @@ export async function hasAnalysisForRun(runId) {
  * @returns {Promise<Array>}
  */
 export async function getRecentAnalysisRuns(limit = 10) {
+  const supabase = await getSupabaseClient();
   const { data, error } = await supabase
     .from('test_analysis')
     .select('run_id, classification, resolved, human_review_needed, created_at')
