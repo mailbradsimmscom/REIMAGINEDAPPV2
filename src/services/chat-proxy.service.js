@@ -730,7 +730,17 @@ export function createChatProxyService({
 
     // Debug: Log what we're returning
     requestLogger.info('🎯 Returning result with detailed_metrics:', !!result.detailed_metrics);
-    requestLogger.info('📊 Node.js timing breakdown:', nodeTiming);
+    
+    // Diagnostic: Check if timing assignments executed
+    const timingSum = Object.values(nodeTiming).reduce((sum, val) => sum + (val || 0), 0);
+    if (timingSum === 0) {
+      requestLogger.warn('⚠️ WARNING: All node_timing values are 0. Timing assignments may not be executing.', {
+        nodeTiming,
+        timingSum
+      });
+    } else {
+      requestLogger.info('📊 Node.js timing breakdown (sum:', timingSum, 'ms):', nodeTiming);
+    }
 
     return result;
 
