@@ -133,7 +133,7 @@ class ChatWorkflowSequential:
             step_start = datetime.now()
             state = await self._retrieve_data(state)
             step_duration = (datetime.now() - step_start).total_seconds() * 1000
-            state["pinecone_duration_ms"] = step_duration  # Store for metrics
+            state["data_retrieval_duration_ms"] = step_duration  # Total retrieval time
             logger.info(f"✅ STEP 2 Complete: Data retrieval took {step_duration:.2f}ms")
             chat_debug.timing('retrieve_data', step_duration, {
                 'dip_results_count': len(state.get('dip_results', [])),
@@ -161,11 +161,14 @@ class ChatWorkflowSequential:
             )
 
             parallel_duration = (datetime.now() - parallel_start).total_seconds() * 1000
+            state["parallel_duration_ms"] = int(parallel_duration)
             logger.info(f"✅ STEP 3 Complete: Parallel execution took {parallel_duration:.2f}ms")
 
             # ===== STEP 4: Assemble Response =====
             logger.info("📌 STEP 4: Assembling Response")
+            assembly_start = datetime.now()
             state = await self._assemble_response(openai_result, perplexity_result, state)
+            state["assembly_duration_ms"] = int((datetime.now() - assembly_start).total_seconds() * 1000)
 
             if not state.get("final_response"):
                 chat_debug.error('ASSEMBLY_FAILED', Exception('No response generated'), {
@@ -198,9 +201,35 @@ class ChatWorkflowSequential:
                 logger.info(f"  - classification content: {state['classification']}")
 
             # Collect detailed metrics for stats panel
+            # Get all timing values
+            classification_ms = state.get("classification_duration_ms", 0)
+            dip_ms = state.get("dip_duration_ms", 0)
+            pinecone_ms = state.get("pinecone_duration_ms", 0)
+            ranking_ms = state.get("pinecone_complexity_filtering", {}).get("ranking_duration_ms", 0)
+            synthesis_ms = state.get("synthesis_duration_ms", 0)
+            perplexity_ms = state.get("perplexity_duration_ms", 0)
+            assembly_ms = state.get("assembly_duration_ms", 0)
+
+            # Calculate totals
+            total_measured = classification_ms + dip_ms + pinecone_ms + ranking_ms + synthesis_ms + perplexity_ms + assembly_ms
+
             detailed_metrics = {
+                "timing_summary": {
+                    "total_processing_ms": processing_time,
+                    "total_measured_ms": total_measured,
+                    "unmeasured_ms": processing_time - total_measured,
+                    "breakdown": {
+                        "classification_ms": classification_ms,
+                        "dip_retrieval_ms": dip_ms,
+                        "pinecone_search_ms": pinecone_ms,
+                        "chunk_ranking_ms": ranking_ms,
+                        "synthesis_ms": synthesis_ms,
+                        "perplexity_ms": perplexity_ms,
+                        "assembly_ms": assembly_ms
+                    }
+                },
                 "classification": {
-                    "duration_ms": state.get("classification_duration_ms", 0),
+                    "duration_ms": classification_ms,
                     "intent": state["classification"].get("intent", "unknown"),
                     "confidence": state["classification"].get("confidence", 0),
                     "complexity_score": state["classification"].get("complexity_score", 0),
@@ -208,16 +237,26 @@ class ChatWorkflowSequential:
                     "table_types_needed": state["classification"].get("table_types_needed", []),
                     "primary_equipment_index": state["classification"].get("primary_equipment_index")
                 },
+                "dip_retrieval": {
+                    "duration_ms": dip_ms,
+                    "tables_queried": len(state["dip_results"]),
+                    "total_entries": sum(r.get('count', 0) for r in state["dip_results"])
+                },
                 "pinecone": {
-                    "duration_ms": state.get("pinecone_duration_ms", 0),
+                    "duration_ms": pinecone_ms,
                     "total_matches": (state.get("pinecone_results") or {}).get("total_matches", 0),
                     "filtered_matches": (state.get("pinecone_results") or {}).get("filtered_matches", 0),
                     "chunks": [],  # Will be populated below
                     "metadata_filter_used": (state.get("pinecone_results") or {}).get("metadata_filter_used", False),
                     "complexity_based_filtering": state.get("pinecone_complexity_filtering", {})
                 },
+                "chunk_ranking": {
+                    "duration_ms": ranking_ms,
+                    "original_count": state.get("pinecone_complexity_filtering", {}).get("original_count", 0),
+                    "filtered_count": state.get("pinecone_complexity_filtering", {}).get("filtered_count", 0)
+                },
                 "synthesis": {
-                    "duration_ms": state.get("synthesis_duration_ms", 0),
+                    "duration_ms": synthesis_ms,
                     "reasoning_effort": state.get("reasoning_effort", "medium"),
                     "dip_tables_sent": len(state["dip_results"]),
                     "dip_entries_sent": sum(r.get('count', 0) for r in state["dip_results"]),
@@ -232,6 +271,14 @@ class ChatWorkflowSequential:
                     ],
                     "token_usage": state.get("synthesis_token_usage", {}),
                     "model_used": state.get("synthesis_model_used", "unknown")
+                },
+                "perplexity": {
+                    "duration_ms": perplexity_ms,
+                    "enabled": os.getenv("PERPLEXITY_ENABLED", "false").lower() == "true",
+                    "citations_count": len(state.get("perplexity_citations", []))
+                },
+                "assembly": {
+                    "duration_ms": assembly_ms
                 }
             }
 
@@ -248,15 +295,19 @@ class ChatWorkflowSequential:
                         "doc_type": match.get("metadata", {}).get("doc_type", "unknown")
                     })
 
-            # Debug: Log the detailed metrics
-            logger.info(f"📊 DETAILED METRICS BEING SENT: {detailed_metrics}")
-
-            # Additional debug - confirm metrics structure
-            logger.info("📊 METRICS STRUCTURE CHECK:")
-            logger.info(f"  - Classification duration: {detailed_metrics['classification']['duration_ms']}ms")
-            logger.info(f"  - Pinecone duration: {detailed_metrics['pinecone']['duration_ms']}ms")
-            logger.info(f"  - Synthesis duration: {detailed_metrics['synthesis']['duration_ms']}ms")
-            logger.info(f"  - Total chunks: {len(detailed_metrics['pinecone']['chunks'])}")
+            # Debug: Log timing summary
+            logger.info("📊 TIMING SUMMARY:")
+            logger.info(f"  - Total processing: {processing_time}ms")
+            logger.info(f"  - Total measured: {total_measured}ms")
+            logger.info(f"  - Unmeasured gap: {processing_time - total_measured}ms")
+            logger.info("📊 BREAKDOWN:")
+            logger.info(f"  - Classification: {classification_ms}ms")
+            logger.info(f"  - DIP retrieval: {dip_ms}ms")
+            logger.info(f"  - Pinecone search: {pinecone_ms}ms")
+            logger.info(f"  - Chunk ranking: {ranking_ms}ms")
+            logger.info(f"  - Synthesis: {synthesis_ms}ms")
+            logger.info(f"  - Perplexity: {perplexity_ms}ms")
+            logger.info(f"  - Assembly: {assembly_ms}ms")
 
             result = {
                 "response": state["final_response"],
@@ -394,6 +445,7 @@ class ChatWorkflowSequential:
             equipment_to_query.extend(state["secondary_equipment"])
 
             all_dip_results = []
+            dip_start = datetime.now()
 
             for equipment in equipment_to_query:
                 asset_uid = equipment.get("asset_uid")
@@ -452,6 +504,7 @@ class ChatWorkflowSequential:
                 })
 
             state["dip_results"] = all_dip_results
+            state["dip_duration_ms"] = int((datetime.now() - dip_start).total_seconds() * 1000)
 
             # INTELLIGENCE: Enhanced Pinecone semantic search
             pinecone_query = state["user_query"]
@@ -699,14 +752,15 @@ class ChatWorkflowSequential:
 
             if result:
                 logger.info(f"✅ Perplexity success: {len(result['citations'])} citations in {duration:.0f}ms")
+                result["duration_ms"] = int(duration)
                 return result
             else:
                 logger.warning("⚠️  Perplexity returned no results")
-                return None
+                return {"duration_ms": int(duration), "skipped": True, "reason": "no_results"}
 
         except Exception as e:
             logger.error(f"❌ Perplexity error: {str(e)}")
-            return None
+            return {"duration_ms": 0, "skipped": True, "reason": str(e)}
 
     async def _assemble_response(
         self,
@@ -741,7 +795,12 @@ class ChatWorkflowSequential:
 
         if isinstance(perplexity_result, Exception):
             logger.error(f"Perplexity failed: {perplexity_result}")
+            state["perplexity_duration_ms"] = 0
             perplexity_result = None
+        elif perplexity_result:
+            state["perplexity_duration_ms"] = perplexity_result.get("duration_ms", 0)
+        else:
+            state["perplexity_duration_ms"] = 0
 
         # CASE 1: Both succeeded (ideal case)
         if openai_response and perplexity_result:
