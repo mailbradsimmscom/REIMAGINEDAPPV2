@@ -11,7 +11,7 @@ Maintains all intelligence:
 TEMPORARY DEBUG LOGGING - Remove after migration complete
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, AsyncGenerator
 from datetime import datetime
 import logging
 import os
@@ -345,6 +345,134 @@ class ChatWorkflowSequential:
             })
             logger.error(f"Sequential workflow failed: {e}", exc_info=True)
             return await self._fallback_processing(user_query, systems_context, thread_id)
+
+    async def process_chat_streaming(
+        self,
+        user_query: str,
+        systems_context: List[Dict[str, Any]],
+        thread_id: Optional[str] = None,
+        conversation_summary: Optional[str] = None,
+        memory_context: Optional[Dict[str, Any]] = None,
+        synthesis_model: Optional[str] = None
+    ) -> AsyncGenerator[Dict[str, Any], None]:
+        """
+        Streaming version of process_chat - yields events as they complete.
+
+        Events:
+        - synthesis: When OpenAI response is ready (~5s)
+        - perplexity: When Perplexity response is ready (~10s)
+        - done: Final metrics
+        """
+        start_time = datetime.now()
+
+        logger.info("🚀 STREAMING WORKFLOW - process_chat_streaming() called")
+        logger.info(f"  - Query: {user_query[:100]}")
+
+        try:
+            # Initialize state (same as process_chat)
+            state = {
+                "user_query": user_query,
+                "thread_id": thread_id,
+                "systems_context": systems_context,
+                "conversation_summary": conversation_summary,
+                "memory_context": memory_context,
+                "synthesis_model": synthesis_model,
+                "classification": None,
+                "primary_equipment": None,
+                "secondary_equipment": [],
+                "dip_results": [],
+                "pinecone_results": None,
+                "final_response": None,
+                "response_score": None,
+                "processing_steps": [],
+                "start_time": start_time,
+                "error": None
+            }
+
+            # STEP 1: Classification (same as process_chat)
+            step_start = datetime.now()
+            state = await self._classify_query(state)
+            state["classification_duration_ms"] = int((datetime.now() - step_start).total_seconds() * 1000)
+
+            if state.get("error"):
+                yield {"event": "error", "error": state["error"]}
+                return
+
+            # STEP 2: Data Retrieval (same as process_chat)
+            step_start = datetime.now()
+            state = await self._retrieve_data(state)
+            state["data_retrieval_duration_ms"] = int((datetime.now() - step_start).total_seconds() * 1000)
+
+            # STEP 3: STREAMING - Start both tasks but yield synthesis first
+            logger.info("📌 STREAMING STEP 3: Starting parallel tasks (will yield synthesis first)")
+
+            openai_task = asyncio.create_task(self._synthesize_response(state))
+            perplexity_task = asyncio.create_task(self._query_perplexity(state))
+
+            # Wait for synthesis first, yield immediately when ready
+            openai_result = await openai_task
+            synthesis_time = int((datetime.now() - start_time).total_seconds() * 1000)
+
+            if isinstance(openai_result, dict) and openai_result.get("final_response"):
+                logger.info(f"✅ STREAMING: Synthesis ready at {synthesis_time}ms - yielding immediately")
+
+                # Format sources from state
+                sources = self._format_sources(openai_result)
+
+                yield {
+                    "event": "synthesis",
+                    "response": openai_result["final_response"],
+                    "sources": sources,
+                    "classification": state["classification"],
+                    "thread_id": thread_id,
+                    "synthesis_time_ms": synthesis_time
+                }
+            else:
+                logger.warning("⚠️  STREAMING: Synthesis failed or empty")
+                yield {
+                    "event": "synthesis",
+                    "response": "I encountered an issue processing your request.",
+                    "sources": [],
+                    "classification": state.get("classification"),
+                    "thread_id": thread_id,
+                    "synthesis_time_ms": synthesis_time
+                }
+
+            # Now wait for Perplexity (user already has synthesis displayed)
+            perplexity_result = await perplexity_task
+            perplexity_time = int((datetime.now() - start_time).total_seconds() * 1000)
+
+            if perplexity_result and not isinstance(perplexity_result, Exception):
+                if not perplexity_result.get("skipped"):
+                    logger.info(f"✅ STREAMING: Perplexity ready at {perplexity_time}ms - yielding")
+                    yield {
+                        "event": "perplexity",
+                        "answer": perplexity_result.get("answer", ""),
+                        "citations": perplexity_result.get("citations", []),
+                        "perplexity_time_ms": perplexity_time
+                    }
+                else:
+                    logger.info(f"⏭️  STREAMING: Perplexity skipped - {perplexity_result.get('reason', 'unknown')}")
+
+            # Final done event with metrics
+            processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
+
+            yield {
+                "event": "done",
+                "processing_time_ms": processing_time,
+                "detailed_metrics": {
+                    "classification_ms": state.get("classification_duration_ms", 0),
+                    "data_retrieval_ms": state.get("data_retrieval_duration_ms", 0),
+                    "synthesis_ms": openai_result.get("synthesis_duration_ms", 0) if isinstance(openai_result, dict) else 0,
+                    "perplexity_ms": perplexity_result.get("duration_ms", 0) if perplexity_result else 0
+                }
+            }
+
+            logger.info(f"🎯 STREAMING COMPLETE - Total time: {processing_time}ms")
+
+        except Exception as e:
+            logger.error(f"Streaming workflow failed: {e}", exc_info=True)
+            yield {"event": "error", "error": str(e)}
 
     # ========== STEP 1: QUERY CLASSIFICATION ==========
     async def _classify_query(self, state: Dict[str, Any]) -> Dict[str, Any]:

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import json
 import logging
 from typing import Optional, Dict, Any
@@ -820,13 +820,58 @@ if chat_enabled:
         logger.info("✅ Chat module enabled and initialized - endpoints registered")
 
         @app.post("/v1/chat/process", response_model=ChatResponse)
-        async def process_chat(request: ChatRequest):
+        async def process_chat(request: ChatRequest, stream: bool = False):
             """
-            Process chat query using LangGraph workflow with DIP integration
+            Process chat query using LangGraph workflow with DIP integration.
+
+            Args:
+                request: ChatRequest with query, systems_context, etc.
+                stream: If True, return SSE stream instead of JSON response
+
+            Returns:
+                ChatResponse (JSON) or StreamingResponse (SSE if stream=True)
             """
             start_time = datetime.now()
 
             try:
+                # === STREAMING BRANCH ===
+                if stream:
+                    logger.info("🌊 STREAMING MODE: Returning SSE response")
+
+                    async def stream_events():
+                        """Generator that yields SSE events"""
+                        try:
+                            from .chat.services.llm_service import LLMService
+
+                            llm_service = LLMService()
+                            workflow = ChatWorkflowSequential(llm_service, chat_dip_retriever, pinecone_client)
+
+                            async for event in workflow.process_chat_streaming(
+                                user_query=request.query,
+                                systems_context=request.systems_context or [],
+                                thread_id=request.thread_id,
+                                conversation_summary=request.conversation_summary,
+                                memory_context=request.memory_context,
+                                synthesis_model=request.synthesis_model
+                            ):
+                                event_type = event.pop("event")
+                                yield f"event: {event_type}\ndata: {json.dumps(event)}\n\n"
+                        except Exception as e:
+                            logger.error(f"Stream error: {e}", exc_info=True)
+                            yield f"event: error\ndata: {json.dumps({'error': str(e)})}\n\n"
+
+                    return StreamingResponse(
+                        stream_events(),
+                        media_type="text/event-stream",
+                        headers={
+                            "Cache-Control": "no-cache",
+                            "X-Accel-Buffering": "no",
+                            "Connection": "keep-alive"
+                        }
+                    )
+
+                # === NORMAL JSON RESPONSE (unchanged below) ===
+
                 # === TIMING INSTRUMENTATION: Measure endpoint overhead ===
                 import_start = datetime.now()
 

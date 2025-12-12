@@ -64,6 +64,81 @@ export function createPythonSidecarClient({
   }
 
   /**
+   * Streaming version - calls Python sidecar with SSE streaming
+   * Yields events as they arrive (synthesis first, then perplexity)
+   *
+   * @param {Object} params - Same params as processChatWorkflow
+   * @yields {Object} Event objects with { event: string, data: Object }
+   */
+  async function* processChatWorkflowStreaming({
+    query,
+    systemsContext = [],
+    threadId = null,
+    conversationSummary = null,
+    memoryContext = null
+  }) {
+    const env = envConfigDep.getEnv();
+    const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
+    const endpoint = `${sidecarUrl}/v1/chat/process?stream=true`;
+
+    requestLogger.info('Starting streaming chat workflow', {
+      endpoint,
+      queryLength: query?.length || 0,
+      systemsCount: systemsContext?.length || 0
+    });
+
+    const response = await fetchFn(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        systems_context: systemsContext,
+        thread_id: threadId,
+        conversation_summary: conversationSummary,
+        memory_context: memoryContext
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Streaming error: ${response.status} - ${errorText}`);
+    }
+
+    // Parse SSE stream
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // Keep incomplete line in buffer
+
+        let currentEvent = null;
+        for (const line of lines) {
+          if (line.startsWith('event: ')) {
+            currentEvent = line.slice(7);
+          } else if (line.startsWith('data: ') && currentEvent) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              yield { event: currentEvent, data };
+            } catch (parseError) {
+              requestLogger.warn('Failed to parse SSE data', { line, error: parseError.message });
+            }
+            currentEvent = null;
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  /**
    * Makes the actual Python sidecar API call with retry logic
    * @param {string} endpoint - Full endpoint URL
    * @param {Object} requestBody - Request body
@@ -171,7 +246,7 @@ export function createPythonSidecarClient({
   }
 
   // Return the client object
-  return { processChatWorkflow, checkChatHealth };
+  return { processChatWorkflow, processChatWorkflowStreaming, checkChatHealth };
 }
 
 // ============================================
@@ -182,10 +257,11 @@ export function createPythonSidecarClient({
 const defaultClient = createPythonSidecarClient();
 
 // Export functions directly for backward compatibility
-export const { processChatWorkflow, checkChatHealth } = defaultClient;
+export const { processChatWorkflow, processChatWorkflowStreaming, checkChatHealth } = defaultClient;
 
 export default {
   processChatWorkflow,
+  processChatWorkflowStreaming,
   checkChatHealth,
   createPythonSidecarClient  // Also export factory for tests
 };

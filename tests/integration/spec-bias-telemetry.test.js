@@ -13,6 +13,8 @@ const app = getAppSync();
 
 test('Spec-biased retrieval integration test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   // Test pressure question that should trigger spec-biased retrieval
   // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
@@ -72,6 +74,8 @@ test('Spec-biased retrieval integration test', async (t) => {
 
 test('Style detection integration test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   // Test different question types to verify style detection
   // Use /chat/enhanced/process for rich response with telemetry
   const testCases = [
@@ -122,6 +126,8 @@ test('Style detection integration test', async (t) => {
 
 test('Request ID uniqueness test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   // Make multiple requests to verify request IDs are unique
   // Use /chat/enhanced/process for rich response with telemetry
   // Run sequentially with pacing to avoid overwhelming external services
@@ -154,6 +160,8 @@ test('Request ID uniqueness test', async (t) => {
 
 test('Spec-bias metadata validation test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
     .post('/chat/enhanced/process')
@@ -187,6 +195,8 @@ test('Spec-bias metadata validation test', async (t) => {
 
 test('Environment configuration test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
     .post('/chat/enhanced/process')
@@ -222,6 +232,8 @@ test('Environment configuration test', async (t) => {
 
 test('Schema validation test', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   // Use /chat/enhanced/process for rich response with telemetry
   const response = await request(app)
     .post('/chat/enhanced/process')

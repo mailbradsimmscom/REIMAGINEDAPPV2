@@ -749,7 +749,8 @@ async function processMessage(message) {
 
     addLoadingAnimation();
 
-    const response = await fetch('/chat/enhanced/process', {
+    // === STREAMING FETCH ===
+    const response = await fetch('/chat/enhanced/process?stream=true', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -763,64 +764,114 @@ async function processMessage(message) {
       throw new Error(`Chat request failed: ${response.status} ${errorText}`);
     }
 
-    removeLoadingAnimation();
-    const data = await response.json();
+    // Parse SSE stream
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullResponse = '';
+    let allSources = [];
 
-    if (data.success && data.data) {
-      const responseData = data.data;
-      const assistantMessage = responseData.assistantMessage.content || 'No response generated';
-      const sources = responseData.sources || [];
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-      assistantSequence = ++currentMessageSequence;
-      await saveAssistantMessage(currentThreadId, assistantMessage, assistantSequence, {
-        sources: sources,
-        processing_time_ms: responseData.telemetry?.processing_time_ms
-      });
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // Keep incomplete line in buffer
 
-      const formattedSources = sources.map(source => ({
-        type: source.type,
-        content: source.data,
-        data: source.data,  // Keep original data field for modal
-        count: source.count,
-        equipment: source.equipment,  // Keep equipment field for modal
-        icon: getSourceIcon(source.type)
-      }));
+      let currentEvent = null;
+      for (const line of lines) {
+        if (line.startsWith('event: ')) {
+          currentEvent = line.slice(7);
+        } else if (line.startsWith('data: ') && currentEvent) {
+          try {
+            const data = JSON.parse(line.slice(6));
 
-      addEnhancedMessage(assistantMessage, formattedSources);
+            // === SYNTHESIS EVENT: Display immediately ===
+            if (currentEvent === 'synthesis') {
+              removeLoadingAnimation();
+              fullResponse = data.response || 'No response generated';
+              allSources = data.sources || [];
 
-      // Update stats panel with detailed metrics
-      if (responseData.detailed_metrics) {
-        window.lastMetrics = responseData.detailed_metrics;
-        updateStatsPanel(responseData.detailed_metrics);
+              // Format sources for display
+              const formattedSources = allSources.map(source => ({
+                type: source.type,
+                content: source.data,
+                data: source.data,
+                count: source.count,
+                equipment: source.equipment,
+                icon: getSourceIcon(source.type)
+              }));
 
-        // Auto-show stats panel if not visible
-        const chatSection = document.getElementById('chatSection');
-        const appContainer = document.querySelector('.app');
-        if (chatSection && !chatSection.classList.contains('show-stats')) {
-          setTimeout(() => {
-            chatSection.classList.add('show-stats');
-            if (appContainer) appContainer.classList.add('show-stats');
-          }, 500); // Small delay to let message render first
+              addEnhancedMessage(fullResponse, formattedSources);
+
+              // Save to DB
+              assistantSequence = ++currentMessageSequence;
+              await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
+                sources: allSources
+              });
+            }
+
+            // === PERPLEXITY EVENT: Append to existing message ===
+            if (currentEvent === 'perplexity' && data.answer) {
+              const perplexitySection = (
+                '\n\n───────────────────────────────\n\n' +
+                '💡 **Real-World Resources from Boat Owners**\n\n' +
+                data.answer +
+                '\n\n───────────────────────────────\n\n' +
+                '*(View citations in sources below)*'
+              );
+              fullResponse += perplexitySection;
+
+              // Add Perplexity citations to sources
+              if (data.citations && data.citations.length > 0) {
+                allSources.push({
+                  type: 'PERPLEXITY',
+                  data: data.citations.map(url => ({ url })),
+                  count: data.citations.length
+                });
+              }
+
+              // Update displayed message
+              updateLastAssistantMessage(fullResponse, allSources);
+
+              // Update DB
+              await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
+                sources: allSources
+              });
+            }
+
+            // === DONE EVENT: Update metrics ===
+            if (currentEvent === 'done' && data.detailed_metrics) {
+              window.lastMetrics = data.detailed_metrics;
+              updateStatsPanel(data.detailed_metrics);
+
+              // Auto-show stats panel if not visible
+              const chatSection = document.getElementById('chatSection');
+              const appContainer = document.querySelector('.app');
+              if (chatSection && !chatSection.classList.contains('show-stats')) {
+                setTimeout(() => {
+                  chatSection.classList.add('show-stats');
+                  if (appContainer) appContainer.classList.add('show-stats');
+                }, 500);
+              }
+            }
+
+            // === ERROR EVENT ===
+            if (currentEvent === 'error') {
+              throw new Error(data.error || 'Stream error');
+            }
+
+          } catch (parseError) {
+            console.warn('Failed to parse SSE data:', parseError);
+          }
+          currentEvent = null;
         }
       }
-
-      if (responseData.telemetry && responseData.telemetry.score) {
-        const score = responseData.telemetry.score;
-        const scoreIndicator = document.createElement('div');
-        scoreIndicator.className = 'python-service-indicator';
-        scoreIndicator.innerHTML = `
-          <div style="font-size: 12px; color: #666; margin-top: 8px;">
-            🐍 Python Service ${score.confidence_emoji} Score: ${score.total_score}/100
-            (${responseData.telemetry.processing_time_ms}ms)
-          </div>
-        `;
-        document.querySelector('.messages').appendChild(scoreIndicator);
-      }
-
-      await loadChatSessions();
-    } else {
-      addMessage(`Error: ${data.error || 'Unknown error'}`, 'inbound');
     }
+
+    await loadChatSessions();
+
   } catch (error) {
     removeLoadingAnimation();
     addMessage(`Error: ${error.message}`, 'inbound');
@@ -834,6 +885,55 @@ async function processMessage(message) {
       currentMessageSequence--;
     }
   }
+}
+
+// Helper to update the last assistant message (for streaming Perplexity append)
+function updateLastAssistantMessage(text, sources) {
+  const messagesContainer = document.getElementById('messages');
+  if (!messagesContainer) return;
+
+  const lastMessage = messagesContainer.querySelector('.message.inbound:last-child');
+  if (!lastMessage) return;
+
+  const bubble = lastMessage.querySelector('.bubble');
+  if (!bubble) return;
+
+  const contentDiv = bubble.querySelector('.content');
+  if (contentDiv) {
+    const mainContent = parseMainContent(text);
+    contentDiv.innerHTML = parseMarkdown(mainContent);
+  }
+
+  // Update source bubbles if they've changed
+  let sourceBubblesDiv = bubble.querySelector('.source-bubbles');
+  if (sources.length > 0) {
+    if (!sourceBubblesDiv) {
+      sourceBubblesDiv = document.createElement('div');
+      sourceBubblesDiv.className = 'source-bubbles';
+      const timestamp = bubble.querySelector('.timestamp');
+      if (timestamp) {
+        bubble.insertBefore(sourceBubblesDiv, timestamp);
+      } else {
+        bubble.appendChild(sourceBubblesDiv);
+      }
+    }
+
+    sourceBubblesDiv.innerHTML = '';
+    sources.forEach((source, index) => {
+      const sourceType = detectSourceType(source);
+      const bubbleClass = getSourceBubbleClass(sourceType);
+      const sourceLabel = getSourceLabel(source);
+      const bubbleEl = document.createElement('span');
+      bubbleEl.className = `source-bubble ${bubbleClass}`;
+      bubbleEl.dataset.sourceIndex = index;
+      bubbleEl.title = sourceLabel;
+      bubbleEl.textContent = index + 1;
+      bubbleEl.addEventListener('click', () => showSourceDetails(source, index + 1));
+      sourceBubblesDiv.appendChild(bubbleEl);
+    });
+  }
+
+  scrollToBottom();
 }
 
 // Handle send button click

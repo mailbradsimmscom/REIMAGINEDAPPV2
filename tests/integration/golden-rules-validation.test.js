@@ -30,6 +30,8 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
   // Skip if services aren't available - these tests require live chat service
   if (skipIfNoServices(t)) return;
   if (!goldenTestData) { t.skip('Golden test data not available'); return; }
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   console.log('🧪 Testing Golden Rules Validation Logic...\n');
   
   // Test cases derived from golden procedures
@@ -126,6 +128,8 @@ test('Golden Rules Validation - RAG Retrieval Accuracy', async (t) => {
 
 test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   console.log('\n🔬 Testing Technical Accuracy Assertions...\n');
   
   const technicalTestCases = [
@@ -191,6 +195,8 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
 
 test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   console.log('\n🎯 Testing Ground Truth Assertions...\n');
   
   // Test ground truth assertions against known procedures
@@ -264,6 +270,8 @@ test('Golden Rules Validation - Ground Truth Assertions', async (t) => {
 
 test('Golden Rules Validation - Error Handling', async (t) => {
   if (skipIfNoServices(t)) return;
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
   console.log('\n⚠️ Testing Error Handling in Golden Rules...\n');
   
   const errorTestCases = [

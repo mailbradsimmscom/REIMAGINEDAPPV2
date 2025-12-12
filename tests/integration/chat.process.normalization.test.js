@@ -4,9 +4,13 @@ import { post } from '../helpers/http.js';
 import { initTestApp } from '../setupApp.js';
 import { skipIfNoServices } from '../helpers/ci-skip.js';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Initialize app before tests
 test.before(async () => {
   await initTestApp();
+  // Cool-down before test suite to avoid overwhelming external services
+  await sleep(3000);
 });
 
 test('Chat process uses normalized input', async (t) => {
