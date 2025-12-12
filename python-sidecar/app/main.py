@@ -827,10 +827,15 @@ if chat_enabled:
             start_time = datetime.now()
 
             try:
+                # === TIMING INSTRUMENTATION: Measure endpoint overhead ===
+                import_start = datetime.now()
+
                 # Initialize sequential workflow (LangGraph removed)
                 from .chat.services.llm_service import LLMService
                 # ChatWorkflowSequential imported at module level (line 806) for easier mocking
                 from .chat.debug_logger import chat_debug
+
+                import_duration = (datetime.now() - import_start).total_seconds() * 1000
 
                 # Structured chat logging
                 logger.info("Chat request received", extra={
@@ -848,8 +853,17 @@ if chat_enabled:
                     'query': request.query[:100]
                 })
 
+                # === TIMING: LLMService initialization ===
+                llm_init_start = datetime.now()
                 llm_service = LLMService()
+                llm_init_duration = (datetime.now() - llm_init_start).total_seconds() * 1000
+
+                # === TIMING: Workflow initialization ===
+                workflow_init_start = datetime.now()
                 workflow = ChatWorkflowSequential(llm_service, chat_dip_retriever, pinecone_client)
+                workflow_init_duration = (datetime.now() - workflow_init_start).total_seconds() * 1000
+
+                logger.info(f"⏱️ ENDPOINT OVERHEAD: imports={import_duration:.0f}ms, LLMService_init={llm_init_duration:.0f}ms, workflow_init={workflow_init_duration:.0f}ms, total_overhead={(import_duration + llm_init_duration + workflow_init_duration):.0f}ms")
 
                 # Process through sequential workflow with conversation memory
                 chat_debug.step('WORKFLOW_START', {
@@ -888,6 +902,9 @@ if chat_enabled:
 
                 thread_id = request.thread_id
 
+                # === TIMING: Response building ===
+                response_build_start = datetime.now()
+
                 # Normalize classification to match schema
                 classification = workflow_result.get("classification", {})
                 if classification and "intent" in classification:
@@ -901,8 +918,12 @@ if chat_enabled:
                 else:
                     normalized_classification = classification
 
-                # Log success
+                # Calculate all timing
+                response_build_duration = (datetime.now() - response_build_start).total_seconds() * 1000
                 total_duration = (datetime.now() - start_time).total_seconds() * 1000
+                total_overhead = import_duration + llm_init_duration + workflow_init_duration + response_build_duration
+
+                # Log success with overhead breakdown
                 logger.info("Chat request successful", extra={
                     'log_type': 'SUCCESS',
                     'details': {
@@ -912,6 +933,21 @@ if chat_enabled:
                     }
                 })
 
+                # === TIMING: Final overhead summary ===
+                logger.info(f"⏱️ ENDPOINT TIMING SUMMARY: total={total_duration:.0f}ms, workflow={workflow_duration:.0f}ms, overhead={total_overhead:.0f}ms (imports={import_duration:.0f}ms, llm_init={llm_init_duration:.0f}ms, workflow_init={workflow_init_duration:.0f}ms, response_build={response_build_duration:.0f}ms)")
+
+                # Inject overhead timing into detailed_metrics for dashboard visibility
+                detailed_metrics = workflow_result.get("detailed_metrics") or {}
+                if "timing_summary" not in detailed_metrics:
+                    detailed_metrics["timing_summary"] = {}
+                detailed_metrics["timing_summary"]["endpoint_overhead_ms"] = int(total_overhead)
+                detailed_metrics["timing_summary"]["endpoint_breakdown"] = {
+                    "imports_ms": int(import_duration),
+                    "llm_init_ms": int(llm_init_duration),
+                    "workflow_init_ms": int(workflow_init_duration),
+                    "response_build_ms": int(response_build_duration)
+                }
+
                 return ChatResponse(
                     response=workflow_result["response"],
                     thread_id=thread_id,
@@ -920,7 +956,7 @@ if chat_enabled:
                     classification=normalized_classification,
                     processing_time_ms=workflow_result.get("processing_time_ms", 0),
                     metadata=workflow_result.get("metadata", {}),
-                    detailed_metrics=workflow_result.get("detailed_metrics")  # Pass through metrics
+                    detailed_metrics=detailed_metrics  # Now includes overhead timing
                 )
 
             except Exception as e:
