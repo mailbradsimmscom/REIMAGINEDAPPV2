@@ -43,16 +43,6 @@ jobs:
           pip install -r requirements.txt
           pip install anthropic
 
-      - name: Debug secrets
-        run: |
-          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
-          echo "SUPABASE_SERVICE_KEY length: ${#SUPABASE_SERVICE_KEY}"
-          echo "SUPABASE_URL first 20 chars: ${SUPABASE_URL:0:20}"
-          echo "SUPABASE_SERVICE_KEY first 10 chars: ${SUPABASE_SERVICE_KEY:0:10}"
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-
       - name: Run AI analysis
         run: |
           if [ -n "${{ github.event.inputs.run_id }}" ]; then
@@ -67,7 +57,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.PY_SUPABASE_SERVICE_KEY }}
 
       - name: Generate summary
         run: |
