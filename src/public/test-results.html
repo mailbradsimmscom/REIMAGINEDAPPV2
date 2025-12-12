@@ -829,44 +829,69 @@
                 });
             }
 
-            // Python breakdown
-            if (breakdown.total_internal_ms > 0) {
-                const total = breakdown.total_internal_ms;
-                const classifyPct = Math.round((breakdown.classification_ms / total) * 100);
-                const pineconePct = Math.round((breakdown.pinecone_ms / total) * 100);
-                const synthesisPct = Math.round((breakdown.synthesis_ms / total) * 100);
+            // Python breakdown - now with all timing fields
+            if (breakdown.total_internal_ms > 0 || breakdown.total_measured_ms > 0) {
+                const total = breakdown.total_measured_ms || breakdown.total_internal_ms || 1;
 
+                // Define all Python timing steps with colors
+                const pythonSteps = [
+                    { key: 'classification_ms', label: 'Classification', color: '#5856D6' },
+                    { key: 'dip_retrieval_ms', label: 'DIP Retrieval', color: '#FF9500' },
+                    { key: 'pinecone_ms', label: 'Pinecone', color: '#007AFF' },
+                    { key: 'chunk_ranking_ms', label: 'Chunk Ranking', color: '#AF52DE' },
+                    { key: 'synthesis_ms', label: 'LLM Synthesis', color: '#34C759' },
+                    { key: 'perplexity_ms', label: 'Perplexity', color: '#FF2D55' },
+                    { key: 'assembly_ms', label: 'Assembly', color: '#5AC8FA' }
+                ];
+
+                // Build stacked bar
                 breakdownHTML += `
                     <div style="grid-column: 1 / -1; margin-bottom: 16px; margin-top: ${totalNodeTime > 0 ? '24px' : '0'};">
                         <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">Python Sidecar Breakdown</div>
                         <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color);">
-                            <div style="width: ${classifyPct}%; background: #5856D6; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${classifyPct > 10 ? 'Classify' : ''}</div>
-                            <div style="width: ${pineconePct}%; background: #007AFF; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${pineconePct > 10 ? 'Pinecone' : ''}</div>
-                            <div style="width: ${synthesisPct}%; background: #34C759; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 500;">${synthesisPct > 10 ? 'LLM' : ''}</div>
-                        </div>
-                    </div>
-                    <div class="timing-breakdown-item">
-                        <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
-                            <span style="width: 12px; height: 12px; background: #5856D6; border-radius: 3px;"></span>
-                            Classification
-                        </div>
-                        <div class="timing-breakdown-value">${formatMs(breakdown.classification_ms)}</div>
-                    </div>
-                    <div class="timing-breakdown-item">
-                        <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
-                            <span style="width: 12px; height: 12px; background: #007AFF; border-radius: 3px;"></span>
-                            Pinecone Search
-                        </div>
-                        <div class="timing-breakdown-value">${formatMs(breakdown.pinecone_ms)}</div>
-                    </div>
-                    <div class="timing-breakdown-item">
-                        <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
-                            <span style="width: 12px; height: 12px; background: #34C759; border-radius: 3px;"></span>
-                            LLM Synthesis
-                        </div>
-                        <div class="timing-breakdown-value">${formatMs(breakdown.synthesis_ms)}</div>
-                    </div>
                 `;
+
+                pythonSteps.forEach(step => {
+                    const value = breakdown[step.key] || 0;
+                    const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+                    if (value > 0 && pct > 0) {
+                        breakdownHTML += `<div style="width: ${pct}%; background: ${step.color}; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 500;" title="${step.label}: ${formatMs(value)}">${pct > 8 ? step.label.split(' ')[0] : ''}</div>`;
+                    }
+                });
+
+                breakdownHTML += `</div></div>`;
+
+                // Add breakdown items for each step with non-zero values
+                pythonSteps.forEach(step => {
+                    const value = breakdown[step.key] || 0;
+                    if (value > 0) {
+                        breakdownHTML += `
+                            <div class="timing-breakdown-item">
+                                <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="width: 12px; height: 12px; background: ${step.color}; border-radius: 3px;"></span>
+                                    ${step.label}
+                                </div>
+                                <div class="timing-breakdown-value">${formatMs(value)}</div>
+                            </div>
+                        `;
+                    }
+                });
+
+                // Show measured vs unmeasured gap if available
+                if (breakdown.total_measured_ms > 0) {
+                    const gapColor = breakdown.unmeasured_ms > 500 ? 'var(--warning-color)' : 'var(--success-color)';
+                    const gapLabel = breakdown.unmeasured_ms < 0 ? 'Parallel Overlap' : 'Unmeasured Gap';
+                    breakdownHTML += `
+                        <div class="timing-breakdown-item" style="border-left: 3px solid ${gapColor};">
+                            <div class="timing-breakdown-label">Total Measured</div>
+                            <div class="timing-breakdown-value">${formatMs(breakdown.total_measured_ms)}</div>
+                        </div>
+                        <div class="timing-breakdown-item" style="border-left: 3px solid ${gapColor};">
+                            <div class="timing-breakdown-label">${gapLabel}</div>
+                            <div class="timing-breakdown-value" style="color: ${gapColor};">${formatMs(Math.abs(breakdown.unmeasured_ms || 0))}</div>
+                        </div>
+                    `;
+                }
             }
 
             // Add summary item
