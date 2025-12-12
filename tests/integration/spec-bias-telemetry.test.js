@@ -94,6 +94,9 @@ test('Style detection integration test', async (t) => {
   ];
 
   for (const testCase of testCases) {
+    // Pace requests BEFORE each test to avoid overwhelming external services
+    await sleep(PACING_DELAY_MS);
+
     const response = await request(app)
       .post('/chat/enhanced/process')
       .send({
@@ -112,9 +115,6 @@ test('Style detection integration test', async (t) => {
       assert.ok(['specBrief', 'steps', 'bullets3', 'brief', 'technical'].includes(detectedStyle),
         `Should detect valid style for: ${testCase.message}`);
     }
-
-    // Pace requests to avoid overwhelming external services
-    await sleep(PACING_DELAY_MS);
   }
 
   console.log('✅ Style detection test passed');
@@ -127,9 +127,9 @@ test('Request ID uniqueness test', async (t) => {
   // Run sequentially with pacing to avoid overwhelming external services
   const results = [];
   for (const msg of ['test 1', 'test 2', 'test 3']) {
+    await sleep(PACING_DELAY_MS);
     const res = await request(app).post('/chat/enhanced/process').send({ message: msg }).expect(200);
     results.push(res);
-    await sleep(PACING_DELAY_MS);
   }
   const requestIds = results.map(res => res.body.data.telemetry?.requestId).filter(Boolean);
 
