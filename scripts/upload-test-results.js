@@ -28,31 +28,107 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');
 
 /**
- * Generate a fix hint based on error message
+ * Generate an intelligent fix hint based on error message, test name, and category.
+ * Provides actionable guidance rather than generic messages.
  */
 function generateFixHint(category, test) {
-  const error = test.error || test.message || '';
+  const error = (test.error || test.message || '').toLowerCase();
+  const name = (test.name || '').toLowerCase();
 
-  if (error.includes('Timeout')) {
-    return 'Service may be slow or down. Check Render logs.';
+  // HTTP status codes - most specific first
+  if (error.includes('503') || error.includes('service unavailable')) {
+    return 'Rate limiting or service overload. Add delays between requests (2s recommended) or check if Python sidecar is overwhelmed.';
   }
-  if (error.includes('401') || error.includes('403')) {
-    return 'Authentication issue. Check ADMIN_TOKEN env var.';
+  if (error.includes('502') || error.includes('bad gateway')) {
+    return 'Service crashed or restarted mid-request. Check Render logs for OOM or restart events.';
   }
-  if (error.includes('404')) {
-    return 'Route not found. Check if endpoint exists or was renamed.';
+  if (error.includes('504') || error.includes('gateway timeout')) {
+    return 'Request took too long. Check for slow DB queries or LLM calls. Consider increasing timeout or optimizing query.';
   }
-  if (error.includes('500')) {
-    return 'Server error. Check application logs for stack trace.';
+  if (error.includes('429') || error.includes('too many requests')) {
+    return 'API rate limit hit. Add request pacing or implement backoff. Check OpenAI/Pinecone rate limits.';
   }
-  if (error.includes('ECONNREFUSED')) {
-    return 'Service not reachable. Check if Render service is running.';
+  if (error.includes('401') || error.includes('unauthorized')) {
+    return 'Authentication failed. Verify ADMIN_TOKEN matches in .env and CI secrets. Check if token expired.';
   }
-  if (error.includes('EPIPE') || error.includes('socket')) {
-    return 'Connection reset. Service may have restarted.';
+  if (error.includes('403') || error.includes('forbidden')) {
+    return 'Permission denied. Check if admin middleware is applied correctly. Verify x-admin-token header is being sent.';
+  }
+  if (error.includes('404') || error.includes('not found')) {
+    if (error.includes('route') || error.includes('endpoint')) {
+      return 'Route not found. Check if endpoint was renamed or removed. Verify route is mounted in admin/index.js.';
+    }
+    return 'Resource not found. Check if the expected data exists in database or if ID is correct.';
+  }
+  if (error.includes('500') || error.includes('internal server error')) {
+    return 'Server crashed. Check Node.js logs for stack trace. Common causes: null reference, missing env var, DB connection.';
   }
 
-  return 'Review test file and error message for details.';
+  // Connection errors
+  if (error.includes('econnrefused')) {
+    return 'Connection refused. Service not running. Check Render dashboard for service status and cold start.';
+  }
+  if (error.includes('econnreset') || error.includes('epipe') || error.includes('socket hang up')) {
+    return 'Connection dropped. Service restarted or crashed mid-request. Check for memory issues or unhandled exceptions.';
+  }
+  if (error.includes('etimedout') || error.includes('timeout')) {
+    if (name.includes('chat') || error.includes('chat')) {
+      return 'Chat request timed out. LLM or vector search took too long. Check Pinecone latency and OpenAI response times.';
+    }
+    return 'Request timed out. Service may be cold starting (wait 45s) or overwhelmed. Check Render logs.';
+  }
+
+  // Assertion errors
+  if (error.includes('expected') && error.includes('actual')) {
+    if (error.includes('status') || error.includes('200') || error.includes('201')) {
+      return 'HTTP status mismatch. API returned unexpected status. Check if endpoint behavior changed or request format is wrong.';
+    }
+    if (error.includes('length') || error.includes('array')) {
+      return 'Array/collection size mismatch. Data returned different number of items than expected. Check DB state or filtering logic.';
+    }
+    return 'Assertion failed. Expected value differs from actual. Check if API response format changed or test expectation is outdated.';
+  }
+
+  // Specific error types
+  if (error.includes('json') && (error.includes('parse') || error.includes('syntax'))) {
+    return 'Invalid JSON response. Server returned non-JSON (possibly HTML error page). Check for unhandled errors.';
+  }
+  if (error.includes('undefined') || error.includes('null') || error.includes('cannot read prop')) {
+    return 'Null/undefined reference. Code accessing property on missing object. Check data flow and add null guards.';
+  }
+  if (error.includes('validation') || error.includes('schema') || error.includes('zod')) {
+    return 'Validation failed. Request or response doesnt match expected schema. Check Zod schemas and request payload.';
+  }
+
+  // Category-specific hints
+  if (category === 'playwright-e2e' || category === 'playwright-nightly') {
+    if (error.includes('locator') || error.includes('selector') || error.includes('element')) {
+      return 'UI element not found. Page structure may have changed. Update selector or add wait for element.';
+    }
+    if (error.includes('navigation') || error.includes('page')) {
+      return 'Page navigation failed. Check if URL is correct and page loads within timeout.';
+    }
+  }
+
+  if (category === 'python') {
+    if (error.includes('import') || error.includes('module')) {
+      return 'Python import failed. Check requirements.txt and virtual environment. Run pip install -r requirements.txt.';
+    }
+  }
+
+  // Test name based hints
+  if (name.includes('golden') || name.includes('ground truth')) {
+    return 'Golden rule test failed. Core functionality may be broken. This is high priority - check recent changes to chat processing.';
+  }
+  if (name.includes('timing') || name.includes('performance')) {
+    return 'Performance test failed. Response time exceeded threshold. Check for slow queries, cold starts, or service degradation.';
+  }
+  if (name.includes('auth') || name.includes('admin')) {
+    return 'Auth test failed. Check ADMIN_TOKEN configuration and middleware. Verify headers are passed correctly.';
+  }
+
+  // Default - still more helpful than before
+  return `Test failed in ${category}. Review error message above. Check recent commits that touched this area.`;
 }
 
 /**
