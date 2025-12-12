@@ -782,7 +782,7 @@
             const breakdownEl = document.getElementById('timing-breakdown');
             let breakdownHTML = '';
 
-            // Node.js breakdown
+            // Node.js breakdown (exclude python_call_ms since it's shown in Python section)
             if (totalNodeTime > 0) {
                 const nodeSteps = [
                     { key: 'conversation_context_ms', label: 'Conversation Context', color: '#FF6B6B' },
@@ -792,13 +792,19 @@
                     { key: 'equipment_context_build_ms', label: 'Context Build', color: '#98D8C8' },
                     { key: 'system_details_fetch_ms', label: 'System Details', color: '#F7DC6F' },
                     { key: 'equipment_context_update_ms', label: 'Context Update', color: '#BB8FCE' },
-                    { key: 'python_call_ms', label: 'Python Call', color: '#85C1E2' },
+                    { key: 'python_call_ms', label: 'Python', color: '#85C1E2' },
                     { key: 'response_format_ms', label: 'Response Format', color: '#F8C471' }
                 ];
 
+                // Calculate Node.js only time (exclude Python call)
+                const nodeOnlyTime = totalNodeTime - (nodeTiming.python_call_ms || 0);
+
                 breakdownHTML += `
                     <div style="grid-column: 1 / -1; margin-bottom: 24px;">
-                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">Node.js Step-by-Step Breakdown</div>
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-weight: 600; font-size: 14px;">Node.js Step-by-Step Breakdown</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">${formatMs(totalNodeTime)}</div>
+                        </div>
                         <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color); margin-bottom: 8px;">
                 `;
 
@@ -812,10 +818,11 @@
 
                 breakdownHTML += `</div></div>`;
 
-                // Node.js breakdown items
+                // Node.js breakdown items (exclude Python Call - it's shown in Python section)
                 nodeSteps.forEach(step => {
                     const value = nodeTiming[step.key] || 0;
-                    if (value > 0) {
+                    // Skip Python Call card - it's redundant with Python section
+                    if (value > 0 && step.key !== 'python_call_ms') {
                         breakdownHTML += `
                             <div class="timing-breakdown-item">
                                 <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
