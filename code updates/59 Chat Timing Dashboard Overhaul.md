@@ -50,11 +50,18 @@ Updated to capture all new timing fields from `detailed_metrics.timing_summary`:
 
 ### 4. Dashboard (`src/public/test-results.html`)
 
-Complete redesign of timing visualization:
+Complete redesign of timing visualization - simplified to show only what matters:
+
+**Removed (redundant/confusing):**
+- Old summary cards (Total Avg Response, Node.js Total, Python Sidecar) - metrics didn't align
+- Individual test timing bars (Simple/Equipment/Complex Full Stack vs Python Direct)
+
+**New clean visualization:**
 
 **Total Response Time Bar**
 - Shows total time split between Node.js and Python
 - Single bar with gradient colors
+- Clear visual of where time is spent
 
 **Node.js Step-by-Step Breakdown**
 - Header shows Node.js-only time (excludes Python call)
@@ -85,6 +92,8 @@ Fixed import error that was blocking Render deployment:
 8. `d5d5e05` - Add total time to Node.js header, remove redundant Python Call card
 9. `9c87b72` - Add total time bar split by Node/Python, remove Tests Passed card
 10. `e02ae88` - Fix Node.js breakdown to show only Node tasks
+11. `ca1cb0a` - Remove redundant timing summary cards (Total Avg Response, Node.js Total, Python Sidecar)
+12. `20b9a28` - Hide individual test timing bars (Simple/Equipment/Complex Full Stack vs Python Direct)
 
 ## Key Insights
 
