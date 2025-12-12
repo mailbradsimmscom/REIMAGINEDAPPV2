@@ -671,6 +671,49 @@
             return `${(ms / 1000).toFixed(1)}s`;
         }
 
+        // Format error message for display
+        // Handles both old-style concatenated errors and new structured errorData
+        function formatError(errorStr, errorData) {
+            // If we have structured error data, use it
+            if (errorData && (errorData.expected !== undefined || errorData.actual !== undefined)) {
+                const parts = [];
+
+                if (errorData.expected !== undefined && errorData.actual !== undefined) {
+                    parts.push(`<div><strong>Expected:</strong> ${escapeHtml(String(errorData.expected))}</div>`);
+                    parts.push(`<div><strong>Actual:</strong> ${escapeHtml(String(errorData.actual))}</div>`);
+                }
+
+                if (errorData.message) {
+                    parts.push(`<div style="margin-top: 8px;"><strong>Message:</strong> ${escapeHtml(errorData.message)}</div>`);
+                }
+
+                if (errorData.code) {
+                    parts.push(`<div><strong>Code:</strong> ${escapeHtml(errorData.code)}</div>`);
+                }
+
+                if (errorData.file) {
+                    const location = errorData.line ? `${errorData.file}:${errorData.line}` : errorData.file;
+                    parts.push(`<div style="margin-top: 8px; color: var(--text-secondary);"><strong>File:</strong> ${escapeHtml(location)}</div>`);
+                }
+
+                return parts.join('');
+            }
+
+            // Fall back to string parsing for old-style errors
+            if (!errorStr) return 'No error message';
+
+            // Convert newlines to <br> and preserve formatting
+            let formatted = escapeHtml(errorStr);
+
+            // Convert newlines to breaks
+            formatted = formatted.replace(/\n/g, '<br>');
+
+            // Bold the labels
+            formatted = formatted.replace(/(Expected:|Actual:|Message:|Code:|Stack:)/g, '<strong>$1</strong>');
+
+            return formatted;
+        }
+
         // Load and render AI analysis for a run
         async function loadAnalysis(runId) {
             const analysisCard = document.getElementById('analysis-card');
@@ -1065,7 +1108,7 @@
                     failuresList.innerHTML = failures.map(f => `
                         <div class="failure-item">
                             <div class="failure-title">${f.category}: ${f.name}</div>
-                            <div class="failure-error">${f.error || 'No error message'}</div>
+                            <div class="failure-error">${formatError(f.error, f.errorData)}</div>
                             <div class="failure-hint">${f.fix_hint || ''}</div>
                         </div>
                     `).join('');
@@ -1191,7 +1234,7 @@
                         <div class="modal-failure-item">
                             <div class="modal-failure-category">${f.category}</div>
                             <div class="modal-failure-name">${f.name}</div>
-                            ${f.error ? `<div class="modal-failure-error">${escapeHtml(f.error)}</div>` : ''}
+                            ${f.error || f.errorData ? `<div class="modal-failure-error">${formatError(f.error, f.errorData)}</div>` : ''}
                             ${f.fix_hint ? `<div class="modal-failure-hint">${f.fix_hint}</div>` : ''}
                         </div>
                     `).join('')}

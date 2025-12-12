@@ -159,7 +159,54 @@ function parseNodeTestOutput(content) {
   // Parse individual test lines with error capture
   let currentTest = null;
   let inYamlBlock = false;
-  let errorLines = [];
+  let errorData = {};  // Structured error data
+  let stackLines = [];
+  let inStackBlock = false;
+
+  // Helper to finalize error for current test
+  function finalizeTestError() {
+    if (currentTest && currentTest.status === 'failed' && Object.keys(errorData).length > 0) {
+      // Build clean, human-readable error message
+      const parts = [];
+
+      if (errorData.expected !== undefined && errorData.actual !== undefined) {
+        parts.push(`Expected: ${errorData.expected}`);
+        parts.push(`Actual: ${errorData.actual}`);
+      }
+
+      if (errorData.message) {
+        parts.push(`Message: ${errorData.message}`);
+      }
+
+      if (errorData.code) {
+        parts.push(`Code: ${errorData.code}`);
+      }
+
+      if (stackLines.length > 0) {
+        // Only include first 3 relevant stack lines (skip node internals)
+        const relevantStack = stackLines
+          .filter(l => !l.includes('node:internal') && !l.includes('node_modules'))
+          .slice(0, 3);
+        if (relevantStack.length > 0) {
+          parts.push('');  // blank line before stack
+          parts.push('Stack:');
+          relevantStack.forEach(l => parts.push(`  ${l}`));
+        }
+      }
+
+      currentTest.error = parts.join('\n');
+
+      // Also store structured data for dashboard to use
+      currentTest.errorData = {
+        expected: errorData.expected,
+        actual: errorData.actual,
+        message: errorData.message,
+        code: errorData.code,
+        file: errorData.file,
+        line: errorData.line
+      };
+    }
+  }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -169,64 +216,85 @@ function parseNodeTestOutput(content) {
     const notOkMatch = line.match(/^\s*not ok \d+ - (.+)/);
 
     if (okMatch) {
-      // Save previous failed test with error if any
-      if (currentTest && currentTest.status === 'failed' && errorLines.length > 0) {
-        currentTest.error = errorLines.join('\n').trim();
-      }
-
+      finalizeTestError();
       const name = okMatch[1].trim();
       if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
         currentTest = { name, status: 'passed' };
         tests.push(currentTest);
       }
       inYamlBlock = false;
-      errorLines = [];
+      inStackBlock = false;
+      errorData = {};
+      stackLines = [];
     } else if (notOkMatch) {
-      // Save previous failed test with error if any
-      if (currentTest && currentTest.status === 'failed' && errorLines.length > 0) {
-        currentTest.error = errorLines.join('\n').trim();
-      }
-
+      finalizeTestError();
       const name = notOkMatch[1].trim();
       if (!name.startsWith('duration_ms') && !name.startsWith('location')) {
         currentTest = { name, status: 'failed' };
         tests.push(currentTest);
       }
       inYamlBlock = false;
-      errorLines = [];
+      inStackBlock = false;
+      errorData = {};
+      stackLines = [];
     } else if (line.match(/^\s+---\s*$/)) {
       // Start of YAML block
       inYamlBlock = true;
+      inStackBlock = false;
     } else if (line.match(/^\s+\.\.\.\s*$/)) {
       // End of YAML block
       inYamlBlock = false;
+      inStackBlock = false;
     } else if (inYamlBlock && currentTest && currentTest.status === 'failed') {
-      // Capture error-related lines from YAML block
+      // Parse YAML fields into structured data
+
+      // Check for stack block start
+      if (line.match(/^\s+stack:\s*\|?\-?\s*$/)) {
+        inStackBlock = true;
+        continue;
+      }
+
+      // If in stack block, collect stack lines
+      if (inStackBlock) {
+        const stackLine = line.trim();
+        if (stackLine && !stackLine.startsWith('stack:')) {
+          stackLines.push(stackLine);
+        }
+        continue;
+      }
+
+      // Parse individual YAML fields
       const errorMatch = line.match(/^\s+error:\s*['"]?(.+?)['"]?\s*$/);
-      const stackMatch = line.match(/^\s+stack:\s*\|?\-?\s*$/);
       const actualMatch = line.match(/^\s+actual:\s*(.+)/);
       const expectedMatch = line.match(/^\s+expected:\s*(.+)/);
       const codeMatch = line.match(/^\s+code:\s*['"]?(.+?)['"]?\s*$/);
+      const nameMatch = line.match(/^\s+name:\s*['"]?(.+?)['"]?\s*$/);
+
+      // Also try to extract file location from error message
+      const fileMatch = line.match(/\(file:\/\/\/[^)]+\/([^/]+):(\d+):\d+\)/);
 
       if (errorMatch) {
-        errorLines.push(`Error: ${errorMatch[1]}`);
+        // Clean up the error message - remove YAML artifacts
+        let msg = errorMatch[1];
+        msg = msg.replace(/^\|-?\s*/, '').replace(/['"]$/, '');
+        errorData.message = msg;
       } else if (actualMatch) {
-        errorLines.push(`Actual: ${actualMatch[1]}`);
+        errorData.actual = actualMatch[1].trim().replace(/^['"]|['"]$/g, '');
       } else if (expectedMatch) {
-        errorLines.push(`Expected: ${expectedMatch[1]}`);
+        errorData.expected = expectedMatch[1].trim().replace(/^['"]|['"]$/g, '');
       } else if (codeMatch) {
-        errorLines.push(`Code: ${codeMatch[1]}`);
-      } else if (line.match(/^\s{6,}/) && errorLines.length > 0) {
-        // Stack trace lines (deeply indented)
-        errorLines.push(line.trim());
+        errorData.code = codeMatch[1];
+      } else if (nameMatch) {
+        errorData.name = nameMatch[1];
+      } else if (fileMatch) {
+        errorData.file = fileMatch[1];
+        errorData.line = fileMatch[2];
       }
     }
   }
 
   // Don't forget the last test
-  if (currentTest && currentTest.status === 'failed' && errorLines.length > 0) {
-    currentTest.error = errorLines.join('\n').trim();
-  }
+  finalizeTestError();
 
   // If no summary found, count from parsed tests (fallback)
   if (!foundSummary && tests.length > 0) {
@@ -429,6 +497,7 @@ async function uploadResults() {
           category,
           name: test.name,
           error: test.error || test.message,
+          errorData: test.errorData || null,  // Structured error data for dashboard
           file: test.file,
           fix_hint: generateFixHint(category, test)
         });
