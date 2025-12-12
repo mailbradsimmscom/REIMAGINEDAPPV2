@@ -934,26 +934,9 @@
                 breakdownEl.innerHTML = breakdownHTML;
             }
 
-            // Bar chart for each test
+            // Hide individual test bars - the breakdown visualization is clearer
             const chartEl = document.getElementById('timing-chart');
-            const chatTests = tests.filter(t => t.type !== 'health');
-            const maxDuration = Math.max(...chatTests.map(t => t.duration), 1);
-
-            chartEl.innerHTML = chatTests.map(test => {
-                const pct = (test.duration / maxDuration) * 100;
-                const speedClass = getTimingClass(test.duration);
-                return `
-                    <div class="timing-bar-container">
-                        <div class="timing-bar-label">
-                            <span class="timing-bar-name">${test.name}</span>
-                            <span class="timing-bar-value">${formatMs(test.duration)}</span>
-                        </div>
-                        <div class="timing-bar">
-                            <div class="timing-bar-fill ${speedClass}" style="width: ${pct}%"></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            chartEl.style.display = 'none';
 
         }
 
