@@ -467,26 +467,62 @@
                 flex-direction: column;
             }
         }
+
+        .clickable-row:hover {
+            background: var(--background-color);
+        }
+
+        .modal-failure-item {
+            padding: var(--spacing-md);
+            background: #FFF5F5;
+            border-left: 4px solid var(--error-color);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .modal-failure-category {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .modal-failure-name {
+            font-weight: 600;
+            color: var(--error-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .modal-failure-error {
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: #FEE;
+            padding: var(--spacing-sm);
+            border-radius: 4px;
+            margin-bottom: var(--spacing-sm);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .modal-failure-hint {
+            font-size: 13px;
+            color: var(--primary-color);
+            background: #F0F7FF;
+            padding: var(--spacing-sm);
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-color);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Test Results Dashboard</h1>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span id="live-indicator" style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary);">
-                    <span id="live-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--success-color); animation: pulse 2s infinite;"></span>
-                    <span id="live-text">Auto-refresh: 30m 0s</span>
-                </span>
-                <button class="refresh-btn" onclick="loadData()">Refresh Now</button>
-            </div>
+            <button class="refresh-btn" onclick="loadData()">Refresh</button>
         </header>
-        <style>
-            @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.4; }
-            }
-        </style>
 
         <div id="loading" class="loading">Loading test results...</div>
 
@@ -557,12 +593,28 @@
                     </thead>
                     <tbody id="history-table"></tbody>
                 </table>
+                <div id="pagination-controls" style="display: none; margin-top: 16px; text-align: center;">
+                    <button id="prev-page" class="refresh-btn" style="margin-right: 8px;" onclick="changePage(-1)">Previous</button>
+                    <span id="page-info" style="color: var(--text-secondary); font-size: 14px;"></span>
+                    <button id="next-page" class="refresh-btn" style="margin-left: 8px;" onclick="changePage(1)">Next</button>
+                </div>
             </div>
         </div>
 
         <div id="no-data" class="no-data" style="display: none;">
             <p>No test results found.</p>
             <p style="margin-top: 8px;">Run tests locally or wait for the nightly sweep.</p>
+        </div>
+
+        <!-- Failures Modal -->
+        <div id="failures-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;">
+            <div style="background: var(--surface-color); margin: 40px auto; max-width: 800px; border-radius: var(--border-radius); box-shadow: var(--shadow-medium); max-height: calc(100vh - 80px); overflow-y: auto;">
+                <div style="padding: var(--spacing-lg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--surface-color); z-index: 1;">
+                    <h2 id="modal-title" style="margin: 0;">Run Details</h2>
+                    <button onclick="closeModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary);">&times;</button>
+                </div>
+                <div id="modal-content" style="padding: var(--spacing-lg);"></div>
+            </div>
         </div>
     </div>
 
@@ -978,10 +1030,12 @@
                     <span>Environment: ${latest.environment || 'unknown'}</span>
                 `;
 
-                // Update category grid
+                // Update category grid (filter out empty categories)
                 const categoryGrid = document.getElementById('category-grid');
                 const results = latest.results || {};
-                categoryGrid.innerHTML = Object.entries(results).map(([category, data]) => `
+                categoryGrid.innerHTML = Object.entries(results)
+                    .filter(([category, data]) => (data.passed + data.failed) > 0)
+                    .map(([category, data]) => `
                     <div class="category-card">
                         <div class="category-name">${category}</div>
                         <div class="category-value" style="color: ${data.failed > 0 ? 'var(--error-color)' : 'var(--success-color)'}">
@@ -1022,22 +1076,10 @@
                 // Load AI Analysis for this run
                 await loadAnalysis(latest.run_id);
 
-                // Update history table
-                const historyTable = document.getElementById('history-table');
-                historyTable.innerHTML = history.map(run => {
-                    const total = run.passed + run.failed;
-                    const status = run.failed === 0 ? 'success' : 'error';
-                    return `
-                        <tr>
-                            <td>${formatDate(run.created_at)}</td>
-                            <td><span class="badge ${run.run_type}">${run.run_type}</span></td>
-                            <td>${run.git_branch || '-'}</td>
-                            <td>${run.passed}</td>
-                            <td>${run.failed}</td>
-                            <td><span class="badge ${status}">${status === 'success' ? 'Pass' : 'Fail'}</span></td>
-                        </tr>
-                    `;
-                }).join('');
+                // Store history data for pagination
+                allHistoryData = history;
+                currentPage = 0;
+                renderHistoryPage();
 
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -1050,78 +1092,131 @@
             }
         }
 
-        // Track last known run_id to detect new runs
-        let lastRunId = null;
-        let refreshInterval = null;
-        let countdown = 1800; // 30 minutes in seconds
+        // Pagination state
+        let allHistoryData = [];
+        let currentPage = 0;
+        const PAGE_SIZE = 10;
 
-        // Update countdown display
-        function updateCountdown() {
-            countdown--;
-            if (countdown <= 0) {
-                countdown = 1800;
-                loadData();
+        // Render current page of history
+        function renderHistoryPage() {
+            const historyTable = document.getElementById('history-table');
+            const paginationControls = document.getElementById('pagination-controls');
+            const pageInfo = document.getElementById('page-info');
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+
+            const totalPages = Math.ceil(allHistoryData.length / PAGE_SIZE);
+            const start = currentPage * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            const pageData = allHistoryData.slice(start, end);
+
+            historyTable.innerHTML = pageData.map(run => {
+                const status = run.failed === 0 ? 'success' : 'error';
+                const clickable = run.failed > 0 ? `onclick="showRunDetails('${run.run_id}')" style="cursor: pointer;"` : '';
+                const hoverClass = run.failed > 0 ? 'class="clickable-row"' : '';
+                return `
+                    <tr ${hoverClass} ${clickable} title="${run.failed > 0 ? 'Click to view failures' : ''}">
+                        <td>${formatDate(run.created_at)}</td>
+                        <td><span class="badge ${run.run_type}">${run.run_type}</span></td>
+                        <td>${run.git_branch || '-'}</td>
+                        <td>${run.passed}</td>
+                        <td>${run.failed}</td>
+                        <td><span class="badge ${status}">${status === 'success' ? 'Pass' : 'Fail'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Show/hide pagination controls
+            if (totalPages > 1) {
+                paginationControls.style.display = 'block';
+                pageInfo.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+                prevBtn.disabled = currentPage === 0;
+                nextBtn.disabled = currentPage >= totalPages - 1;
+                prevBtn.style.opacity = currentPage === 0 ? '0.5' : '1';
+                nextBtn.style.opacity = currentPage >= totalPages - 1 ? '0.5' : '1';
+            } else {
+                paginationControls.style.display = 'none';
             }
-            const mins = Math.floor(countdown / 60);
-            const secs = countdown % 60;
-            document.getElementById('live-text').textContent = `Auto-refresh: ${mins}m ${secs}s`;
         }
 
-        // Show "new data" flash when results change
-        function flashNewData() {
-            const dot = document.getElementById('live-dot');
-            dot.style.background = 'var(--primary-color)';
-            setTimeout(() => {
-                dot.style.background = 'var(--success-color)';
-            }, 1000);
+        // Change page
+        function changePage(delta) {
+            const totalPages = Math.ceil(allHistoryData.length / PAGE_SIZE);
+            const newPage = currentPage + delta;
+            if (newPage >= 0 && newPage < totalPages) {
+                currentPage = newPage;
+                renderHistoryPage();
+            }
         }
 
-        // Modified loadData to detect changes
-        const originalLoadData = loadData;
-        loadData = async function() {
-            await originalLoadData();
-            // Check if run_id changed
+        // Modal functions
+        function closeModal() {
+            document.getElementById('failures-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        async function showRunDetails(runId) {
+            const modal = document.getElementById('failures-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            modalContent.innerHTML = '<div class="loading">Loading failures...</div>';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
             try {
-                const res = await fetchWithAuth(API_BASE);
-                if (res.data && res.data.run_id !== lastRunId) {
-                    if (lastRunId !== null) {
-                        flashNewData();
-                    }
-                    lastRunId = res.data.run_id;
+                const res = await fetchWithAuth(`${API_BASE}/${runId}`);
+                if (!res.success || !res.data) {
+                    modalContent.innerHTML = '<p>Failed to load run details.</p>';
+                    return;
                 }
-            } catch (e) {}
-            countdown = 1800; // Reset countdown after refresh
-        };
+
+                const run = res.data;
+                const failures = run.failures || [];
+
+                modalTitle.textContent = `Failures - ${formatDate(run.created_at)}`;
+
+                if (failures.length === 0) {
+                    modalContent.innerHTML = '<p>No failures in this run.</p>';
+                    return;
+                }
+
+                modalContent.innerHTML = `
+                    <div style="margin-bottom: var(--spacing-md); color: var(--text-secondary);">
+                        <strong>${failures.length}</strong> failure${failures.length !== 1 ? 's' : ''} in this run
+                        &bull; Branch: <strong>${run.git_branch || 'unknown'}</strong>
+                        &bull; Type: <strong>${run.run_type}</strong>
+                    </div>
+                    ${failures.map(f => `
+                        <div class="modal-failure-item">
+                            <div class="modal-failure-category">${f.category}</div>
+                            <div class="modal-failure-name">${f.name}</div>
+                            ${f.error ? `<div class="modal-failure-error">${escapeHtml(f.error)}</div>` : ''}
+                            ${f.fix_hint ? `<div class="modal-failure-hint">${f.fix_hint}</div>` : ''}
+                        </div>
+                    `).join('')}
+                `;
+            } catch (e) {
+                modalContent.innerHTML = `<p style="color: var(--error-color);">Error: ${e.message}</p>`;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close modal on escape key or clicking outside
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+        document.getElementById('failures-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'failures-modal') closeModal();
+        });
 
         // Load data on page load
         loadData();
-
-        // Auto-refresh every 30 minutes
-        setInterval(updateCountdown, 1000);
-
-        // Also try to set up Supabase real-time subscription
-        (async function setupRealtime() {
-            try {
-                // Check if Supabase client is available
-                if (typeof window.supabase !== 'undefined') {
-                    const channel = window.supabase
-                        .channel('test_results_changes')
-                        .on('postgres_changes', {
-                            event: 'INSERT',
-                            schema: 'public',
-                            table: 'test_results'
-                        }, () => {
-                            console.log('New test results detected via realtime');
-                            loadData();
-                            flashNewData();
-                        })
-                        .subscribe();
-                    console.log('Supabase realtime subscription active');
-                }
-            } catch (e) {
-                console.log('Realtime subscription not available, using polling');
-            }
-        })();
     </script>
 </body>
 </html>
