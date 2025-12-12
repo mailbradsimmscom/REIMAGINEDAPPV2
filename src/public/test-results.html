@@ -782,6 +782,27 @@
             const breakdownEl = document.getElementById('timing-breakdown');
             let breakdownHTML = '';
 
+            // Top-level bar showing Node.js vs Python split
+            const pythonCallTime = nodeTiming.python_call_ms || 0;
+            const nodeOnlyTime = totalNodeTime - pythonCallTime;
+            if (totalNodeTime > 0 && pythonCallTime > 0) {
+                const nodePct = Math.round((nodeOnlyTime / totalNodeTime) * 100);
+                const pythonPct = 100 - nodePct;
+
+                breakdownHTML += `
+                    <div style="grid-column: 1 / -1; margin-bottom: 32px;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-weight: 600; font-size: 16px;">Total Response Time</div>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--text-primary);">${formatMs(totalNodeTime)}</div>
+                        </div>
+                        <div style="display: flex; height: 40px; border-radius: 8px; overflow: hidden; background: var(--background-color);">
+                            <div style="width: ${nodePct}%; background: linear-gradient(135deg, #FF6B6B, #4ECDC4); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600;" title="Node.js: ${formatMs(nodeOnlyTime)}">Node.js ${formatMs(nodeOnlyTime)}</div>
+                            <div style="width: ${pythonPct}%; background: linear-gradient(135deg, #5856D6, #34C759); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600;" title="Python: ${formatMs(pythonCallTime)}">Python ${formatMs(pythonCallTime)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
             // Node.js breakdown (exclude python_call_ms since it's shown in Python section)
             if (totalNodeTime > 0) {
                 const nodeSteps = [
@@ -925,13 +946,7 @@
                 }
             }
 
-            // Add summary item
-            breakdownHTML += `
-                <div class="timing-breakdown-item">
-                    <div class="timing-breakdown-label">Tests Passed</div>
-                    <div class="timing-breakdown-value">${summary.passed}/${summary.totalTests}</div>
-                </div>
-            `;
+            // Tests Passed is shown in summary cards at top, no need to repeat here
 
             if (breakdownHTML) {
                 breakdownEl.innerHTML = breakdownHTML;
