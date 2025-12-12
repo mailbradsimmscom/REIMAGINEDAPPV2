@@ -240,6 +240,53 @@ To test the agent:
 
 Note: Latest run has 0 failures (pacing fix worked), so agent will report "No failures analyzed" until a real failure occurs.
 
+## Updates (2025-12-12)
+
+### Dashboard Improvements
+
+1. **Removed auto-update timing** - No more countdown timer, just manual "Refresh" button
+
+2. **Paginated history table** - Shows 10 runs per page with Previous/Next buttons
+
+3. **Clickable history rows** - Rows with failures show a modal when clicked displaying:
+   - Category and test name
+   - Full error message (scrollable)
+   - Fix hint
+
+4. **Smarter fix hints** - Improved `generateFixHint()` in `scripts/upload-test-results.js`:
+   - 25+ patterns instead of 6
+   - Context-aware based on error text, test name, and category
+   - Examples:
+     - 503 → "Rate limiting or service overload. Add delays between requests (2s recommended)..."
+     - Golden rules test → "Golden rule test failed. Core functionality may be broken..."
+     - Chat timeout → "Chat request timed out. LLM or vector search took too long..."
+
+### CI Secrets Configuration
+
+**Important:** Python workflows require a separate Supabase key:
+
+| Secret | Used By | Purpose |
+|--------|---------|---------|
+| `SUPABASE_SERVICE_KEY` | Node.js (nightly-sweep.yml) | Upload test results |
+| `PY_SUPABASE_SERVICE_KEY` | Python (analyze-failures.yml, nightly-sweep-full.yml) | Fetch failures for AI analysis |
+
+The Python `supabase-py` client has stricter key validation than the Node.js client.
+
+### Anthropic API Key Issue
+
+**Problem:** "Connection error" when calling Claude from CI.
+
+**Root cause:** `ANTHROPIC_API_KEY` had a trailing newline character causing:
+```
+httpcore.LocalProtocolError: Illegal header value b'***'
+```
+
+**Fix:** Delete and recreate the secret in GitHub, ensuring no trailing whitespace when pasting.
+
+### Scheduled Workflow Note
+
+The `nightly-sweep.yml` schedule (`cron: '0 8 * * *'` = 3am EST) only runs from the **default branch** (`main`). While working on `Stable-v4-Working`, use manual workflow triggers. Schedule will activate after merging to `main`.
+
 ## Related Files
 
 - Plan document: `code updates/101 Test Failure Analysis Agent Plan.md`
