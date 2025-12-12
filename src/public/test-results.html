@@ -761,22 +761,9 @@
                 console.warn('⚠️ node_timing exists but all values are 0 or undefined');
             }
 
-            // Summary stats with TOTAL TIME prominently displayed
+            // Hide the old summary stats - the new breakdown visualization is clearer
             const summaryEl = document.getElementById('timing-summary');
-            summaryEl.innerHTML = `
-                <div class="timing-stat" style="flex: 2; background: linear-gradient(135deg, #007AFF22, #5856D622);">
-                    <div class="timing-stat-value ${getTimingValueClass(summary.avgFullStackMs)}" style="font-size: 42px;">${formatMs(summary.avgFullStackMs)}</div>
-                    <div class="timing-stat-label" style="font-size: 14px; font-weight: 600;">TOTAL AVG RESPONSE</div>
-                </div>
-                <div class="timing-stat">
-                    <div class="timing-stat-value">${formatMs(totalNodeTime || summary.avgNodeOverheadMs)}</div>
-                    <div class="timing-stat-label">Node.js Total</div>
-                </div>
-                <div class="timing-stat">
-                    <div class="timing-stat-value ${getTimingValueClass(summary.avgPythonDirectMs)}">${formatMs(summary.avgPythonDirectMs)}</div>
-                    <div class="timing-stat-label">Python Sidecar</div>
-                </div>
-            `;
+            summaryEl.style.display = 'none';
 
             // Add breakdown visualization if available
             const breakdownEl = document.getElementById('timing-breakdown');
