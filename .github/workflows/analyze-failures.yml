@@ -43,17 +43,6 @@ jobs:
           pip install -r requirements.txt
           pip install anthropic
 
-      - name: Debug API keys
-        run: |
-          echo "ANTHROPIC_API_KEY length: ${#ANTHROPIC_API_KEY}"
-          echo "ANTHROPIC_API_KEY first 10 chars: ${ANTHROPIC_API_KEY:0:10}"
-          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
-          echo "SUPABASE_SERVICE_KEY length: ${#SUPABASE_SERVICE_KEY}"
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.PY_SUPABASE_SERVICE_KEY }}
-
       - name: Run AI analysis
         run: |
           if [ -n "${{ github.event.inputs.run_id }}" ]; then

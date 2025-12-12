@@ -118,12 +118,12 @@ describe('Python Sidecar - Chat Process Contract', () => {
     const response = await sidecarRequest('/v1/chat/process', {
       method: 'POST',
       body: JSON.stringify({
-        query: 'Tell me about engine maintenance',
+        query: 'How do I clean my grill?',
         systems_context: [{
-          asset_uid: 'test-asset',
-          manufacturer: 'Yanmar',
-          model: '4JH57',
-          description: 'Marine diesel engine'
+          asset_uid: '949d1562-68ae-2382-98cd-8647ff498aa7',
+          manufacturer: 'Kenyon',
+          model: 'silken_grill',
+          description: 'Kenyon Silken electric grill'
         }],
         thread_id: `test-metrics-${Date.now()}`,
         conversation_summary: null,
@@ -175,23 +175,23 @@ describe('Python Sidecar - Chat Process Contract', () => {
 
     const systemsContext = [
       {
-        asset_uid: 'test-engine-001',
-        manufacturer: 'Yanmar',
-        model: '4JH57',
-        description: 'Marine diesel engine 57HP'
+        asset_uid: '949d1562-68ae-2382-98cd-8647ff498aa7',
+        manufacturer: 'Kenyon',
+        model: 'silken_grill',
+        description: 'Kenyon Silken electric grill'
       },
       {
-        asset_uid: 'test-genset-001',
-        manufacturer: 'Fischer Panda',
-        model: 'AGT-DC 8000',
-        description: 'DC generator'
+        asset_uid: 'd0cbc03e-ad33-47c8-84b7-92b41d319727',
+        manufacturer: 'Schenker',
+        model: 'zen_150_watermaker_48v',
+        description: 'Schenker Zen 150 watermaker 48V'
       }
     ];
 
     const response = await sidecarRequest('/v1/chat/process', {
       method: 'POST',
       body: JSON.stringify({
-        query: 'What is the oil capacity for my engine?',
+        query: 'What is the maximum temperature for my grill?',
         systems_context: systemsContext,
         thread_id: `test-systems-${Date.now()}`,
         conversation_summary: null,
@@ -333,12 +333,12 @@ describe('Python Sidecar - Performance', () => {
     const response = await sidecarRequest('/v1/chat/process', {
       method: 'POST',
       body: JSON.stringify({
-        query: 'How do I change the oil filter on my engine?',
+        query: 'What maintenance does my watermaker need?',
         systems_context: [{
-          asset_uid: 'perf-test-engine',
-          manufacturer: 'Yanmar',
-          model: '4JH57',
-          description: 'Marine diesel engine'
+          asset_uid: 'd0cbc03e-ad33-47c8-84b7-92b41d319727',
+          manufacturer: 'Schenker',
+          model: 'zen_150_watermaker_48v',
+          description: 'Schenker Zen 150 watermaker 48V'
         }],
         thread_id: `test-perf-equip-${Date.now()}`
       })

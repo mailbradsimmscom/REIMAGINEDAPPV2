@@ -151,6 +151,9 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
   ];
   
   for (const testCase of technicalTestCases) {
+    // Pace requests BEFORE each test to avoid overwhelming external services
+    await sleep(PACING_DELAY_MS);
+
     await t.test(`Technical Accuracy: ${testCase.validationType}`, async () => {
       console.log(`\n🔧 Testing ${testCase.validationType}: "${testCase.query}"`);
 
@@ -182,9 +185,6 @@ test('Golden Rules Validation - Technical Accuracy Assertions', async (t) => {
       }
       
       console.log(`✅ Technical accuracy validation passed`);
-
-      // Pace requests to avoid overwhelming external services
-      await sleep(PACING_DELAY_MS);
     });
   }
 });
