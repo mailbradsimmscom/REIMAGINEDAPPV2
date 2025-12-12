@@ -803,8 +803,8 @@
                 `;
             }
 
-            // Node.js breakdown (exclude python_call_ms since it's shown in Python section)
-            if (totalNodeTime > 0) {
+            // Node.js breakdown (only Node.js tasks, exclude Python call)
+            if (nodeOnlyTime > 0) {
                 const nodeSteps = [
                     { key: 'conversation_context_ms', label: 'Conversation Context', color: '#FF6B6B' },
                     { key: 'equipment_search_ms', label: 'Equipment Search', color: '#4ECDC4' },
@@ -813,25 +813,21 @@
                     { key: 'equipment_context_build_ms', label: 'Context Build', color: '#98D8C8' },
                     { key: 'system_details_fetch_ms', label: 'System Details', color: '#F7DC6F' },
                     { key: 'equipment_context_update_ms', label: 'Context Update', color: '#BB8FCE' },
-                    { key: 'python_call_ms', label: 'Python', color: '#85C1E2' },
                     { key: 'response_format_ms', label: 'Response Format', color: '#F8C471' }
                 ];
-
-                // Calculate Node.js only time (exclude Python call)
-                const nodeOnlyTime = totalNodeTime - (nodeTiming.python_call_ms || 0);
 
                 breakdownHTML += `
                     <div style="grid-column: 1 / -1; margin-bottom: 24px;">
                         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
                             <div style="font-weight: 600; font-size: 14px;">Node.js Step-by-Step Breakdown</div>
-                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">${formatMs(totalNodeTime)}</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">${formatMs(nodeOnlyTime)}</div>
                         </div>
                         <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color); margin-bottom: 8px;">
                 `;
 
                 nodeSteps.forEach(step => {
                     const value = nodeTiming[step.key] || 0;
-                    const pct = totalNodeTime > 0 ? Math.round((value / totalNodeTime) * 100) : 0;
+                    const pct = nodeOnlyTime > 0 ? Math.round((value / nodeOnlyTime) * 100) : 0;
                     if (value > 0) {
                         breakdownHTML += `<div style="width: ${pct}%; background: ${step.color}; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 500;" title="${step.label}: ${formatMs(value)}">${pct > 8 ? step.label.split(' ')[0] : ''}</div>`;
                     }
@@ -839,11 +835,10 @@
 
                 breakdownHTML += `</div></div>`;
 
-                // Node.js breakdown items (exclude Python Call - it's shown in Python section)
+                // Node.js breakdown items
                 nodeSteps.forEach(step => {
                     const value = nodeTiming[step.key] || 0;
-                    // Skip Python Call card - it's redundant with Python section
-                    if (value > 0 && step.key !== 'python_call_ms') {
+                    if (value > 0) {
                         breakdownHTML += `
                             <div class="timing-breakdown-item">
                                 <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
