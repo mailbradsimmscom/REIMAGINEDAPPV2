@@ -829,31 +829,44 @@
                 });
             }
 
-            // Python breakdown - now with all timing fields
+            // Python breakdown - layered view showing sequential vs parallel operations
             if (breakdown.total_internal_ms > 0 || breakdown.total_measured_ms > 0) {
-                const total = breakdown.total_measured_ms || breakdown.total_internal_ms || 1;
+                // Get Python call time from Node.js perspective (actual wall clock time)
+                const pythonCallTime = nodeTiming.python_call_ms || breakdown.total_internal_ms || 0;
 
-                // Define all Python timing steps with colors
-                const pythonSteps = [
+                // Sequential steps (these add up to the total time)
+                const sequentialSteps = [
                     { key: 'classification_ms', label: 'Classification', color: '#5856D6' },
                     { key: 'dip_retrieval_ms', label: 'DIP Retrieval', color: '#FF9500' },
                     { key: 'pinecone_ms', label: 'Pinecone', color: '#007AFF' },
                     { key: 'chunk_ranking_ms', label: 'Chunk Ranking', color: '#AF52DE' },
                     { key: 'synthesis_ms', label: 'LLM Synthesis', color: '#34C759' },
-                    { key: 'perplexity_ms', label: 'Perplexity', color: '#FF2D55' },
                     { key: 'assembly_ms', label: 'Assembly', color: '#5AC8FA' }
                 ];
 
-                // Build stacked bar
+                // Parallel steps (run alongside synthesis, don't add to total)
+                const parallelSteps = [
+                    { key: 'perplexity_ms', label: 'Perplexity (parallel)', color: '#FF2D55' }
+                ];
+
+                // Calculate sequential total
+                const sequentialTotal = sequentialSteps.reduce((sum, step) => sum + (breakdown[step.key] || 0), 0);
+
+                // Build section header with total time
                 breakdownHTML += `
-                    <div style="grid-column: 1 / -1; margin-bottom: 16px; margin-top: ${totalNodeTime > 0 ? '24px' : '0'};">
-                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">Python Sidecar Breakdown</div>
-                        <div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color);">
+                    <div style="grid-column: 1 / -1; margin-top: ${totalNodeTime > 0 ? '24px' : '0'};">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+                            <div style="font-weight: 600; font-size: 14px;">Python Sidecar Breakdown</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">${formatMs(pythonCallTime)}</div>
+                        </div>
                 `;
 
-                pythonSteps.forEach(step => {
+                // Stacked bar for sequential steps only
+                breakdownHTML += `<div style="display: flex; height: 32px; border-radius: 8px; overflow: hidden; background: var(--background-color); margin-bottom: 16px;">`;
+
+                sequentialSteps.forEach(step => {
                     const value = breakdown[step.key] || 0;
-                    const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+                    const pct = sequentialTotal > 0 ? Math.round((value / sequentialTotal) * 100) : 0;
                     if (value > 0 && pct > 0) {
                         breakdownHTML += `<div style="width: ${pct}%; background: ${step.color}; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 500;" title="${step.label}: ${formatMs(value)}">${pct > 8 ? step.label.split(' ')[0] : ''}</div>`;
                     }
@@ -861,8 +874,9 @@
 
                 breakdownHTML += `</div></div>`;
 
-                // Add breakdown items for each step with non-zero values
-                pythonSteps.forEach(step => {
+                // Sequential step cards (first row)
+                breakdownHTML += `<div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 12px;">`;
+                sequentialSteps.forEach(step => {
                     const value = breakdown[step.key] || 0;
                     if (value > 0) {
                         breakdownHTML += `
@@ -876,21 +890,31 @@
                         `;
                     }
                 });
+                breakdownHTML += `</div>`;
 
-                // Show measured vs unmeasured gap if available
-                if (breakdown.total_measured_ms > 0) {
-                    const gapColor = breakdown.unmeasured_ms > 500 ? 'var(--warning-color)' : 'var(--success-color)';
-                    const gapLabel = breakdown.unmeasured_ms < 0 ? 'Parallel Overlap' : 'Unmeasured Gap';
+                // Parallel step cards (second row with visual distinction)
+                const hasParallelSteps = parallelSteps.some(step => (breakdown[step.key] || 0) > 0);
+                if (hasParallelSteps) {
                     breakdownHTML += `
-                        <div class="timing-breakdown-item" style="border-left: 3px solid ${gapColor};">
-                            <div class="timing-breakdown-label">Total Measured</div>
-                            <div class="timing-breakdown-value">${formatMs(breakdown.total_measured_ms)}</div>
-                        </div>
-                        <div class="timing-breakdown-item" style="border-left: 3px solid ${gapColor};">
-                            <div class="timing-breakdown-label">${gapLabel}</div>
-                            <div class="timing-breakdown-value" style="color: ${gapColor};">${formatMs(Math.abs(breakdown.unmeasured_ms || 0))}</div>
-                        </div>
+                        <div style="grid-column: 1 / -1; margin-top: 8px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">⚡ Runs in parallel (not added to total)</div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; opacity: 0.85;">
                     `;
+                    parallelSteps.forEach(step => {
+                        const value = breakdown[step.key] || 0;
+                        if (value > 0) {
+                            breakdownHTML += `
+                                <div class="timing-breakdown-item" style="border: 2px dashed ${step.color}40; background: ${step.color}10;">
+                                    <div class="timing-breakdown-label" style="display: flex; align-items: center; gap: 6px;">
+                                        <span style="width: 12px; height: 12px; background: ${step.color}; border-radius: 3px;"></span>
+                                        ${step.label}
+                                    </div>
+                                    <div class="timing-breakdown-value">${formatMs(value)}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                    breakdownHTML += `</div></div>`;
                 }
             }
 
