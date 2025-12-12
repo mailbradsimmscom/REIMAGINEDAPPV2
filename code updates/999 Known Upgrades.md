@@ -180,3 +180,72 @@ Background jobs:
 - All critical paths have happy-path + error tests
 - Live integration tests between Node↔Python pass
 - CI runs all tests on every PR
+
+### Progress (2025-12-12)
+
+**Tests Added:**
+- `tests/unit/middleware/error.test.js` - 21 tests for error handler middleware
+- `tests/integration/sidecar-live.test.js` - 14 tests for Node↔Python integration
+- `tests/unit/services/chat-proxy.service.test.js` - Expanded with 12 new tests (21 total)
+
+**Total: 56 new tests added**
+
+---
+
+## 3. Test Data Cleanup Fix
+
+**Status:** Completed
+**Priority:** High
+**Date Completed:** 2025-12-12
+
+### Problem
+
+CI/QA tests were creating threads in production database but cleanup wasn't working. The `scripts/cleanup-test-data.js` script was looking for `test_%` pattern on UUID columns using LIKE operator, which fails because:
+
+1. Thread `id` column is UUID type, not text
+2. Can't use LIKE pattern matching on UUIDs
+3. Test threads use `test-` (hyphen) not `test_` (underscore) anyway
+
+Result: 351 orphan "New Thread" entries polluting production data.
+
+### Solution
+
+Rewrote cleanup script with smarter approach:
+
+1. **Find test threads by characteristics** - `name='New Thread'` with `message_count <= 5`
+2. **Delete messages first** - Respect foreign key constraint
+3. **Delete threads** - Clean removal
+4. **Use project's supabaseClient** - Instead of creating new client
+
+### Changes Made
+
+**File:** `scripts/cleanup-test-data.js`
+
+```javascript
+// OLD (broken)
+.like(column, 'test_%')  // Fails on UUID columns
+
+// NEW (working)
+const { data: testThreads } = await supabase
+  .from('chat_threads')
+  .select('id')
+  .eq('name', 'New Thread')
+  .lte('message_count', 5);
+
+// Delete messages first (FK constraint)
+await supabase.from('chat_messages').delete().in('thread_id', threadIds);
+
+// Then delete threads
+await supabase.from('chat_threads').delete().in('id', threadIds);
+```
+
+### Results
+
+Initial cleanup removed:
+- 339 test threads
+- 461 test messages
+- **800 total rows cleaned**
+
+### Commit
+
+`8313988` - Fix test data cleanup to handle UUID thread IDs
