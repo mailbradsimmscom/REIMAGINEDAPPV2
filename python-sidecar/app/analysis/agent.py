@@ -234,7 +234,10 @@ class AnalysisAgent:
                     recent_commits=commits
                 )
             except Exception as e:
+                import traceback
                 print(f"      LLM error: {e}")
+                print(f"      Error type: {type(e).__name__}")
+                print(f"      Traceback: {traceback.format_exc()}")
                 hypotheses_tested.append(HypothesisAttempt(
                     hypothesis=f"LLM call failed: {str(e)}",
                     change_type="no_change",
