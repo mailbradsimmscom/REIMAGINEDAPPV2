@@ -117,11 +117,22 @@ async function testChatEndpoint(query, context = {}) {
     console.log('   Telemetry keys:', Object.keys(result.data?.data?.telemetry || {}));
   }
 
+  // Extract timing_summary if available (new comprehensive breakdown)
+  const timingSummary = detailedMetrics?.timing_summary || {};
+  const breakdown = timingSummary?.breakdown || {};
+
   const internalTiming = {
-    classification_ms: detailedMetrics?.classification?.duration_ms || 0,
-    pinecone_ms: detailedMetrics?.pinecone?.duration_ms || 0,
-    synthesis_ms: detailedMetrics?.synthesis?.duration_ms || 0,
-    total_processing_ms: result.data?.data?.processing_time_ms || result.data?.processing_time_ms || 0
+    // New comprehensive timing from timing_summary
+    classification_ms: breakdown.classification_ms || detailedMetrics?.classification?.duration_ms || 0,
+    dip_retrieval_ms: breakdown.dip_retrieval_ms || detailedMetrics?.dip_retrieval?.duration_ms || 0,
+    pinecone_ms: breakdown.pinecone_search_ms || detailedMetrics?.pinecone?.duration_ms || 0,
+    chunk_ranking_ms: breakdown.chunk_ranking_ms || detailedMetrics?.chunk_ranking?.duration_ms || 0,
+    synthesis_ms: breakdown.synthesis_ms || detailedMetrics?.synthesis?.duration_ms || 0,
+    perplexity_ms: breakdown.perplexity_ms || detailedMetrics?.perplexity?.duration_ms || 0,
+    assembly_ms: breakdown.assembly_ms || detailedMetrics?.assembly?.duration_ms || 0,
+    total_processing_ms: timingSummary.total_processing_ms || result.data?.data?.processing_time_ms || result.data?.processing_time_ms || 0,
+    total_measured_ms: timingSummary.total_measured_ms || 0,
+    unmeasured_ms: timingSummary.unmeasured_ms || 0
   };
 
   return {
@@ -149,11 +160,20 @@ async function testPythonDirect(query, context = {}) {
 
   // Extract internal timing from detailed_metrics
   const detailedMetrics = result.data?.detailed_metrics || {};
+  const timingSummary = detailedMetrics?.timing_summary || {};
+  const breakdown = timingSummary?.breakdown || {};
+
   const internalTiming = {
-    classification_ms: detailedMetrics?.classification?.duration_ms || 0,
-    pinecone_ms: detailedMetrics?.pinecone?.duration_ms || 0,
-    synthesis_ms: detailedMetrics?.synthesis?.duration_ms || 0,
-    total_processing_ms: result.data?.processing_time_ms || 0
+    classification_ms: breakdown.classification_ms || detailedMetrics?.classification?.duration_ms || 0,
+    dip_retrieval_ms: breakdown.dip_retrieval_ms || detailedMetrics?.dip_retrieval?.duration_ms || 0,
+    pinecone_ms: breakdown.pinecone_search_ms || detailedMetrics?.pinecone?.duration_ms || 0,
+    chunk_ranking_ms: breakdown.chunk_ranking_ms || detailedMetrics?.chunk_ranking?.duration_ms || 0,
+    synthesis_ms: breakdown.synthesis_ms || detailedMetrics?.synthesis?.duration_ms || 0,
+    perplexity_ms: breakdown.perplexity_ms || detailedMetrics?.perplexity?.duration_ms || 0,
+    assembly_ms: breakdown.assembly_ms || detailedMetrics?.assembly?.duration_ms || 0,
+    total_processing_ms: timingSummary.total_processing_ms || result.data?.processing_time_ms || 0,
+    total_measured_ms: timingSummary.total_measured_ms || 0,
+    unmeasured_ms: timingSummary.unmeasured_ms || 0
   };
 
   return {
@@ -254,10 +274,16 @@ async function runTimingTests() {
     const timing = pythonDirect.internalTiming;
     if (timing.total_processing_ms > 0) {
       console.log('     Breakdown (Python sidecar):');
-      console.log(`       Classification: ${timing.classification_ms}ms`);
-      console.log(`       Pinecone:       ${timing.pinecone_ms}ms`);
-      console.log(`       LLM Synthesis:  ${timing.synthesis_ms}ms`);
-      console.log(`       Total Internal: ${timing.total_processing_ms}ms`);
+      console.log(`       Classification:  ${timing.classification_ms}ms`);
+      console.log(`       DIP Retrieval:   ${timing.dip_retrieval_ms}ms`);
+      console.log(`       Pinecone:        ${timing.pinecone_ms}ms`);
+      console.log(`       Chunk Ranking:   ${timing.chunk_ranking_ms}ms`);
+      console.log(`       LLM Synthesis:   ${timing.synthesis_ms}ms`);
+      console.log(`       Perplexity:      ${timing.perplexity_ms}ms`);
+      console.log(`       Assembly:        ${timing.assembly_ms}ms`);
+      console.log(`       Total Measured:  ${timing.total_measured_ms}ms`);
+      console.log(`       Total Processing:${timing.total_processing_ms}ms`);
+      console.log(`       Unmeasured Gap:  ${timing.unmeasured_ms}ms`);
     }
   }
 
@@ -272,24 +298,42 @@ async function runTimingTests() {
   // Calculate average internal timing breakdown (Python)
   const avgBreakdown = {
     classification_ms: 0,
+    dip_retrieval_ms: 0,
     pinecone_ms: 0,
+    chunk_ranking_ms: 0,
     synthesis_ms: 0,
-    total_internal_ms: 0
+    perplexity_ms: 0,
+    assembly_ms: 0,
+    total_internal_ms: 0,
+    total_measured_ms: 0,
+    unmeasured_ms: 0
   };
 
   for (const test of pythonDirectTests) {
     const timing = test.internalTiming || {};
     avgBreakdown.classification_ms += timing.classification_ms || 0;
+    avgBreakdown.dip_retrieval_ms += timing.dip_retrieval_ms || 0;
     avgBreakdown.pinecone_ms += timing.pinecone_ms || 0;
+    avgBreakdown.chunk_ranking_ms += timing.chunk_ranking_ms || 0;
     avgBreakdown.synthesis_ms += timing.synthesis_ms || 0;
+    avgBreakdown.perplexity_ms += timing.perplexity_ms || 0;
+    avgBreakdown.assembly_ms += timing.assembly_ms || 0;
     avgBreakdown.total_internal_ms += timing.total_processing_ms || 0;
+    avgBreakdown.total_measured_ms += timing.total_measured_ms || 0;
+    avgBreakdown.unmeasured_ms += timing.unmeasured_ms || 0;
   }
 
   if (pythonDirectTests.length > 0) {
     avgBreakdown.classification_ms = Math.round(avgBreakdown.classification_ms / pythonDirectTests.length);
+    avgBreakdown.dip_retrieval_ms = Math.round(avgBreakdown.dip_retrieval_ms / pythonDirectTests.length);
     avgBreakdown.pinecone_ms = Math.round(avgBreakdown.pinecone_ms / pythonDirectTests.length);
+    avgBreakdown.chunk_ranking_ms = Math.round(avgBreakdown.chunk_ranking_ms / pythonDirectTests.length);
     avgBreakdown.synthesis_ms = Math.round(avgBreakdown.synthesis_ms / pythonDirectTests.length);
+    avgBreakdown.perplexity_ms = Math.round(avgBreakdown.perplexity_ms / pythonDirectTests.length);
+    avgBreakdown.assembly_ms = Math.round(avgBreakdown.assembly_ms / pythonDirectTests.length);
     avgBreakdown.total_internal_ms = Math.round(avgBreakdown.total_internal_ms / pythonDirectTests.length);
+    avgBreakdown.total_measured_ms = Math.round(avgBreakdown.total_measured_ms / pythonDirectTests.length);
+    avgBreakdown.unmeasured_ms = Math.round(avgBreakdown.unmeasured_ms / pythonDirectTests.length);
   }
 
   // Calculate average Node.js step-by-step timing breakdown
@@ -355,21 +399,30 @@ async function runTimingTests() {
     }
   };
 
-  console.log('\n╔════════════════════════════════════════╗');
-  console.log('║       CHAT TIMING SUMMARY              ║');
-  console.log('╠════════════════════════════════════════╣');
-  console.log(`║ TOTAL AVG RESPONSE: ${String(results.summary.avgFullStackMs).padStart(6)}ms          ║`);
-  console.log('╠════════════════════════════════════════╣');
-  console.log('║ Breakdown:                             ║');
-  console.log(`║   Node.js Routing:    ${String(results.summary.avgNodeOverheadMs).padStart(6)}ms          ║`);
-  console.log(`║   Python Sidecar:     ${String(results.summary.avgPythonDirectMs).padStart(6)}ms          ║`);
-  console.log(`║     ├─ Classification: ${String(avgBreakdown.classification_ms).padStart(5)}ms          ║`);
-  console.log(`║     ├─ Pinecone:       ${String(avgBreakdown.pinecone_ms).padStart(5)}ms          ║`);
-  console.log(`║     └─ LLM Synthesis:  ${String(avgBreakdown.synthesis_ms).padStart(5)}ms          ║`);
-  console.log('╠════════════════════════════════════════╣');
-  console.log(`║ Health: Node ${nodeHealth.duration}ms, Python ${pythonHealth.duration}ms          ║`);
-  console.log(`║ Tests: ${results.summary.passed}/${results.summary.totalTests} passed                         ║`);
-  console.log('╚════════════════════════════════════════╝');
+  console.log('\n╔════════════════════════════════════════════╗');
+  console.log('║         CHAT TIMING SUMMARY                ║');
+  console.log('╠════════════════════════════════════════════╣');
+  console.log(`║ TOTAL AVG RESPONSE: ${String(results.summary.avgFullStackMs).padStart(6)}ms              ║`);
+  console.log('╠════════════════════════════════════════════╣');
+  console.log('║ Node.js Overhead:                          ║');
+  console.log(`║   Total:              ${String(results.summary.avgNodeOverheadMs).padStart(6)}ms              ║`);
+  console.log('╠════════════════════════════════════════════╣');
+  console.log('║ Python Sidecar:                            ║');
+  console.log(`║   Total:              ${String(results.summary.avgPythonDirectMs).padStart(6)}ms              ║`);
+  console.log(`║   ├─ Classification:  ${String(avgBreakdown.classification_ms).padStart(6)}ms              ║`);
+  console.log(`║   ├─ DIP Retrieval:   ${String(avgBreakdown.dip_retrieval_ms).padStart(6)}ms              ║`);
+  console.log(`║   ├─ Pinecone:        ${String(avgBreakdown.pinecone_ms).padStart(6)}ms              ║`);
+  console.log(`║   ├─ Chunk Ranking:   ${String(avgBreakdown.chunk_ranking_ms).padStart(6)}ms              ║`);
+  console.log(`║   ├─ LLM Synthesis:   ${String(avgBreakdown.synthesis_ms).padStart(6)}ms              ║`);
+  console.log(`║   ├─ Perplexity:      ${String(avgBreakdown.perplexity_ms).padStart(6)}ms              ║`);
+  console.log(`║   └─ Assembly:        ${String(avgBreakdown.assembly_ms).padStart(6)}ms              ║`);
+  console.log('╠════════════════════════════════════════════╣');
+  console.log(`║ Measured Total:       ${String(avgBreakdown.total_measured_ms).padStart(6)}ms              ║`);
+  console.log(`║ Unmeasured Gap:       ${String(avgBreakdown.unmeasured_ms).padStart(6)}ms              ║`);
+  console.log('╠════════════════════════════════════════════╣');
+  console.log(`║ Health: Node ${nodeHealth.duration}ms, Python ${pythonHealth.duration}ms              ║`);
+  console.log(`║ Tests: ${results.summary.passed}/${results.summary.totalTests} passed                             ║`);
+  console.log('╚════════════════════════════════════════════╝');
 
   saveResults(results);
   return results;
