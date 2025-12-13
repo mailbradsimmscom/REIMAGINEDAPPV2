@@ -170,7 +170,8 @@ function parseChatTiming(jsonPath) {
         duration: t.duration,
         success: t.success,
         type: t.type || t.category,
-        nodeTiming: t.nodeTiming || null  // Preserve Node.js timing for individual tests
+        nodeTiming: t.nodeTiming || null,
+        internalTiming: t.internalTiming || null  // Python breakdown per test
       }))
     };
   } catch (e) {
