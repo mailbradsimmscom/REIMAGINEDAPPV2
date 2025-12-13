@@ -481,3 +481,207 @@ ln -s python3.13 python
 - All streaming code changes: **ROLLED BACK** via `git checkout -- .`
 - Committed changes from earlier (timing instrumentation): Still in place
 - Implementation: **NOT COMPLETE** - needs to be redone correctly
+
+---
+
+## SESSION 2: Route Consolidation & Pinecone Fix (2025-12-12 Evening)
+
+### What Was Accomplished
+
+#### 1. Consolidated Chat Routes (Commit `7c86e62`)
+
+**Problem:** Two separate chat routes existed with different response formats:
+- `/chat/process` (simple) - returned `assistantMessage` as string
+- `/chat/enhanced/process` (enhanced) - returned `assistantMessage` as object
+
+**Solution:** Unified to single route, both paths now alias to same handler.
+
+**Files Changed:**
+- Deleted `src/routes/chat/process-simple.route.js`
+- Modified `src/routes/chat/index.js` - both routes now use same `processRouter`
+- Removed broken `processChatMessageStreaming()` from `chat-proxy.service.js`
+- Removed broken `processChatWorkflowStreaming()` from `python-sidecar.client.js`
+- Reverted frontend to JSON fetch (removed SSE handling)
+
+**Net result:** -305 lines of code
+
+#### 2. Fixed Pinecone Parallelization
+
+**Problem:** Despite using `asyncio.gather()`, Pinecone searches ran sequentially because the underlying `search_vectors()` function was synchronous (blocking the event loop).
+
+**Evidence from logs:**
+```
+BEFORE:
+00:26:32 - SEARCH_1 START
+00:26:53 - SEARCH_2 START  ← 21 seconds later!
+00:26:54 - SEARCH_3 START
+...
+Pinecone total: 25,921ms
+
+AFTER:
+00:38:03 - SEARCH_1 START
+00:38:03 - SEARCH_2 START  ← Same second
+00:38:03 - SEARCH_3 START
+...
+Pinecone total: 1,563ms
+```
+
+**Fix:** One line change in `chat_workflow_sequential.py`:
+```python
+# Before (blocking):
+search_result = self.pinecone_client.search_vectors(...)
+
+# After (non-blocking):
+search_result = await asyncio.to_thread(
+    self.pinecone_client.search_vectors,
+    ...
+)
+```
+
+**Result:** Pinecone search 26s → 1.5s (94% faster), Total chat 40s → 19s (53% faster)
+
+---
+
+### Outstanding Issue: 8-Second Timing Gap
+
+**The Problem:** Python's internal timing doesn't match what Node.js measures.
+
+From CI QA run (post-fix, 2025-12-13T01:00:25 UTC):
+
+```
+=== Python Internal Breakdown ===
+Classification:    781ms
+DIP Retrieval:       0ms
+Pinecone:          118ms
+Chunk Ranking:   1,201ms
+Synthesis:       6,293ms  ┐ Run in parallel
+Perplexity:      5,764ms  ┘
+Assembly:            0ms
+─────────────────────────
+Total Internal:  9,496ms
+
+=== Node.js Measured ===
+Python Call:    17,776ms
+
+GAP: 8,280ms UNACCOUNTED (47% of total time!)
+```
+
+**Math Check:**
+- Sequential steps: 781 + 0 + 118 + 1201 = 2,100ms
+- Parallel step: max(6293, 5764) = 6,293ms
+- Expected total: 2,100 + 6,293 = 8,393ms
+- Actual measured: 17,776ms
+- **Gap: ~8,300ms**
+
+**Possible Causes (Need Investigation):**
+1. A step in Python not being timed/logged
+2. Network/serialization overhead between Node.js and Python
+3. Parallel execution not working correctly in CI environment
+4. Hidden step running between workflow completion and response return
+
+---
+
+### Streaming Implementation Status
+
+**Python side:** Already implemented and working
+- `process_chat_streaming()` exists in `chat_workflow_sequential.py`
+- `?stream=true` branch exists in `main.py`
+
+**Node.js side:** Needs to be re-implemented correctly
+- `processChatWorkflowStreaming()` - needs to be added to `python-sidecar.client.js`
+- `processChatMessageStreaming()` - needs to be added to `chat-proxy.service.js`
+  - **CRITICAL:** Must duplicate steps 1-6 EXACTLY from `processChatMessage()`
+  - Only step 7 changes (streaming vs JSON call to Python)
+- Streaming branch in `process.route.js`
+
+**Frontend:** Needs SSE handling in `app.js`
+
+---
+
+## POST-COMPACT INSTRUCTIONS
+
+### Priority 1: Find the 8-Second Gap
+
+1. **Check Python workflow for untimed steps:**
+   ```bash
+   grep -n "await" python-sidecar/app/chat/workflows/chat_workflow_sequential.py | head -50
+   ```
+   Look for async calls that aren't wrapped in timing logic.
+
+2. **Add timing to Python endpoint overhead:**
+   In `main.py` around line 822, add timing around:
+   - Request parsing
+   - Workflow initialization
+   - Response serialization
+   - Any middleware
+
+3. **Check for duplicate processing:**
+   The CI shows `total_internal_ms: 9,496ms` which is close to `seq + max(synth, perp)`.
+   But if perplexity isn't actually running in parallel, that would explain some gap.
+
+4. **Verify parallel execution in CI:**
+   Add logging to confirm synthesis and perplexity start at same timestamp.
+
+### Priority 2: Implement Streaming Correctly
+
+**Step-by-step implementation order:**
+
+1. **`python-sidecar.client.js`** (~60 lines)
+   - Add `processChatWorkflowStreaming()` async generator
+   - Parse SSE stream from Python
+
+2. **`chat-proxy.service.js`** (~650 lines)
+   - Add `processChatMessageStreaming()` async generator
+   - **COPY steps 1-6 exactly from `processChatMessage()`**
+   - Only change step 7 to use streaming client
+
+3. **`process.route.js`** (~20 lines)
+   - Add `if (req.query.stream === 'true')` branch
+   - Set SSE headers, stream events
+
+4. **`app.js`** (~80 lines)
+   - Handle SSE instead of JSON
+   - Display synthesis immediately
+   - Append perplexity when ready
+
+### Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `python-sidecar/app/chat/workflows/chat_workflow_sequential.py` | Python workflow with streaming |
+| `python-sidecar/app/main.py:822` | Python endpoint with streaming branch |
+| `src/clients/python-sidecar.client.js` | Node.js client to Python |
+| `src/services/chat-proxy.service.js` | Main chat orchestrator (steps 1-7) |
+| `src/routes/chat/process.route.js` | HTTP route handler |
+| `src/public/app.js` | Frontend chat UI |
+| `src/public/test-results.html` | Dashboard showing timing data |
+
+### Test Commands
+
+```bash
+# Test Python streaming directly
+curl -X POST "http://localhost:8000/v1/chat/process?stream=true" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "test watermaker filters", "systems_context": []}'
+
+# Check timing in logs
+tail -100 logs/python.log | grep -E "Classification:|Pinecone|Synthesis:|Perplexity:|Total"
+
+# Check CI timing data
+curl -s "http://localhost:3000/admin/api/test-results" \
+  -H "x-admin-token: $ADMIN_TOKEN" | python3 -m json.tool | grep -A20 "chat_timing"
+```
+
+### Current Commit
+
+```
+7c86e62 Consolidate chat routes and fix Pinecone parallelization
+```
+
+### Timing Improvement Summary
+
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| Pinecone Search | 26,000ms | 1,500ms | 94% faster |
+| Total Chat Time | 40,000ms | 19,000ms | 53% faster |
+| Code Lines | +425 | -305 | Simpler |
