@@ -780,65 +780,8 @@ export function createChatProxyService({
   }
   }
 
-  /**
-   * Streaming version of processChatMessage - yields events as they arrive.
-   * Uses simplified context building (existing thread equipment only)
-   * for faster time-to-first-byte.
-   *
-   * @param {Object} params
-   * @param {string} params.query - User query
-   * @param {string} params.threadId - Thread ID
-   * @yields {Object} SSE events { event: string, data: Object }
-   */
-  async function* processChatMessageStreaming({ query, threadId: rawThreadId }) {
-    const requestLogger = logger.createRequestLogger();
-    const threadId = rawThreadId?.trim() || randomUUID();
-
-    requestLogger.info('🌊 Starting streaming chat', { threadId, queryLength: query?.length });
-
-    try {
-      // Get conversation context (fast ~100ms)
-      const conversationContext = await conversationContextServiceDep.getWeightedConversationContext(threadId, query);
-
-      // Get existing equipment from thread (fast ~10ms)
-      // For streaming, we skip complex equipment discovery to reduce latency
-      // Equipment discovered in previous (non-streaming) requests is reused
-      let systemsContext = [];
-      try {
-        const threadData = await chatRepository.getChatThread(threadId);
-        systemsContext = threadData?.equipment_context || [];
-        requestLogger.info('📦 Using existing equipment context for streaming', {
-          threadId,
-          equipmentCount: systemsContext.length
-        });
-      } catch (error) {
-        requestLogger.warn('Failed to get thread equipment context', { error: error.message });
-      }
-
-      // Stream from Python sidecar
-      const pythonStream = pythonSidecarClient.processChatWorkflowStreaming({
-        query,
-        systemsContext,
-        threadId,
-        conversationSummary: conversationContext.conversation_summary,
-        memoryContext: {
-          accumulated_equipment: conversationContext.accumulated_equipment,
-          total_exchanges: conversationContext.total_exchanges
-        }
-      });
-
-      for await (const event of pythonStream) {
-        yield event;
-      }
-
-    } catch (error) {
-      requestLogger.error('❌ Streaming chat error', { error: error.message, threadId });
-      yield { event: 'error', data: { error: error.message } };
-    }
-  }
-
   // Return the service object
-  return { processChatMessage, processChatMessageStreaming };
+  return { processChatMessage };
 }
 
 // ============================================
@@ -850,10 +793,9 @@ const defaultService = createChatProxyService();
 
 // Export the function directly for backward compatibility
 // Existing code can still do: import { processChatMessage } from './chat-proxy.service.js'
-export const { processChatMessage, processChatMessageStreaming } = defaultService;
+export const { processChatMessage } = defaultService;
 
 export default {
   processChatMessage,
-  processChatMessageStreaming,
   createChatProxyService  // Also export factory for tests
 };

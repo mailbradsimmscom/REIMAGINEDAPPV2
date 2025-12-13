@@ -420,3 +420,64 @@ Remove `?stream=true` from frontend fetch call. Everything else can stay.
 - LLMService init: 50ms (not the bottleneck)
 - Network overhead: ~76ms (not 4.5s as suspected)
 - Perplexity: 10.8s IS the bottleneck
+
+---
+
+## APPENDIX: Failed Implementation Attempt (2025-12-12)
+
+### What Happened
+
+Implementation was attempted and then rolled back due to a critical design error.
+
+### The Mistake
+
+In `chat-proxy.service.js`, instead of reusing the EXACT same equipment context building logic (steps 1-6), a **simplified version** was written that only fetched existing equipment from the thread:
+
+```javascript
+// WRONG - What was implemented:
+async function* processChatMessageStreaming({ query, threadId }) {
+  // Only got existing equipment from thread - SKIPPED steps 1-6
+  const threadData = await chatRepository.getChatThread(threadId);
+  systemsContext = threadData?.equipment_context || [];
+  // ...
+}
+```
+
+This meant:
+- New threads had **empty equipment context**
+- No keyword search
+- No LLM extraction
+- No equipment inference
+- Pinecone searches returned 0 results
+
+### The Correct Approach
+
+The streaming function MUST do the **exact same steps 1-6** as `processChatMessage`. The ONLY difference should be step 7:
+- Non-streaming: `pythonSidecarClient.processChatWorkflow()` returns JSON
+- Streaming: `pythonSidecarClient.processChatWorkflowStreaming()` yields SSE events
+
+**Nothing else in the chat processing logic should change.**
+
+### Additional Issue: venv Corruption
+
+During the session, the Python venv was found to be missing symlinks (`python3`, `python`, `activate`). This was traced to a `git checkout` branch switch at 09:19:01 that somehow corrupted the venv (which is gitignored and shouldn't have been affected).
+
+Fix applied:
+```bash
+cd python-sidecar/venv/bin
+ln -s python3.13 python3
+ln -s python3.13 python
+```
+
+### Lessons Learned
+
+1. **DO NOT simplify or "optimize" the chat processing path** - the equipment context building is complex and intentional
+2. **The streaming change should ONLY affect how the response is returned**, not how it's processed
+3. **Test with a fresh thread** to catch missing equipment context issues
+4. **Code duplication is acceptable** if it ensures the logic is identical
+
+### Status
+
+- All streaming code changes: **ROLLED BACK** via `git checkout -- .`
+- Committed changes from earlier (timing instrumentation): Still in place
+- Implementation: **NOT COMPLETE** - needs to be redone correctly

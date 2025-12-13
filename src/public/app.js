@@ -749,13 +749,13 @@ async function processMessage(message) {
 
     addLoadingAnimation();
 
-    // === STREAMING FETCH ===
-    const response = await fetch('/chat/enhanced/process?stream=true', {
+    // JSON fetch to chat endpoint
+    const response = await fetch('/chat/enhanced/process', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        query: message,
-        thread_id: currentThreadId
+        message: message,
+        threadId: currentThreadId
       })
     });
 
@@ -764,109 +764,48 @@ async function processMessage(message) {
       throw new Error(`Chat request failed: ${response.status} ${errorText}`);
     }
 
-    // Parse SSE stream
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    let fullResponse = '';
-    let allSources = [];
+    const result = await response.json();
+    removeLoadingAnimation();
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    if (!result.success) {
+      throw new Error(result.error || 'Chat request failed');
+    }
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop(); // Keep incomplete line in buffer
+    const data = result.data;
+    const fullResponse = data.assistantMessage?.content || 'No response generated';
+    const allSources = data.sources || [];
 
-      let currentEvent = null;
-      for (const line of lines) {
-        if (line.startsWith('event: ')) {
-          currentEvent = line.slice(7);
-        } else if (line.startsWith('data: ') && currentEvent) {
-          try {
-            const data = JSON.parse(line.slice(6));
+    // Format sources for display
+    const formattedSources = allSources.map(source => ({
+      type: source.type,
+      content: source.data,
+      data: source.data,
+      count: source.count,
+      equipment: source.equipment,
+      icon: getSourceIcon(source.type)
+    }));
 
-            // === SYNTHESIS EVENT: Display immediately ===
-            if (currentEvent === 'synthesis') {
-              removeLoadingAnimation();
-              fullResponse = data.response || 'No response generated';
-              allSources = data.sources || [];
+    addEnhancedMessage(fullResponse, formattedSources);
 
-              // Format sources for display
-              const formattedSources = allSources.map(source => ({
-                type: source.type,
-                content: source.data,
-                data: source.data,
-                count: source.count,
-                equipment: source.equipment,
-                icon: getSourceIcon(source.type)
-              }));
+    // Save to DB
+    assistantSequence = ++currentMessageSequence;
+    await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
+      sources: allSources
+    });
 
-              addEnhancedMessage(fullResponse, formattedSources);
+    // Update metrics panel if available
+    if (data.detailed_metrics) {
+      window.lastMetrics = data.detailed_metrics;
+      updateStatsPanel(data.detailed_metrics);
 
-              // Save to DB
-              assistantSequence = ++currentMessageSequence;
-              await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
-                sources: allSources
-              });
-            }
-
-            // === PERPLEXITY EVENT: Append to existing message ===
-            if (currentEvent === 'perplexity' && data.answer) {
-              const perplexitySection = (
-                '\n\n───────────────────────────────\n\n' +
-                '💡 **Real-World Resources from Boat Owners**\n\n' +
-                data.answer +
-                '\n\n───────────────────────────────\n\n' +
-                '*(View citations in sources below)*'
-              );
-              fullResponse += perplexitySection;
-
-              // Add Perplexity citations to sources
-              if (data.citations && data.citations.length > 0) {
-                allSources.push({
-                  type: 'PERPLEXITY',
-                  data: data.citations.map(url => ({ url })),
-                  count: data.citations.length
-                });
-              }
-
-              // Update displayed message
-              updateLastAssistantMessage(fullResponse, allSources);
-
-              // Update DB
-              await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
-                sources: allSources
-              });
-            }
-
-            // === DONE EVENT: Update metrics ===
-            if (currentEvent === 'done' && data.detailed_metrics) {
-              window.lastMetrics = data.detailed_metrics;
-              updateStatsPanel(data.detailed_metrics);
-
-              // Auto-show stats panel if not visible
-              const chatSection = document.getElementById('chatSection');
-              const appContainer = document.querySelector('.app');
-              if (chatSection && !chatSection.classList.contains('show-stats')) {
-                setTimeout(() => {
-                  chatSection.classList.add('show-stats');
-                  if (appContainer) appContainer.classList.add('show-stats');
-                }, 500);
-              }
-            }
-
-            // === ERROR EVENT ===
-            if (currentEvent === 'error') {
-              throw new Error(data.error || 'Stream error');
-            }
-
-          } catch (parseError) {
-            console.warn('Failed to parse SSE data:', parseError);
-          }
-          currentEvent = null;
-        }
+      // Auto-show stats panel if not visible
+      const chatSection = document.getElementById('chatSection');
+      const appContainer = document.querySelector('.app');
+      if (chatSection && !chatSection.classList.contains('show-stats')) {
+        setTimeout(() => {
+          chatSection.classList.add('show-stats');
+          if (appContainer) appContainer.classList.add('show-stats');
+        }, 500);
       }
     }
 
@@ -885,55 +824,6 @@ async function processMessage(message) {
       currentMessageSequence--;
     }
   }
-}
-
-// Helper to update the last assistant message (for streaming Perplexity append)
-function updateLastAssistantMessage(text, sources) {
-  const messagesContainer = document.getElementById('messages');
-  if (!messagesContainer) return;
-
-  const lastMessage = messagesContainer.querySelector('.message.inbound:last-child');
-  if (!lastMessage) return;
-
-  const bubble = lastMessage.querySelector('.bubble');
-  if (!bubble) return;
-
-  const contentDiv = bubble.querySelector('.content');
-  if (contentDiv) {
-    const mainContent = parseMainContent(text);
-    contentDiv.innerHTML = parseMarkdown(mainContent);
-  }
-
-  // Update source bubbles if they've changed
-  let sourceBubblesDiv = bubble.querySelector('.source-bubbles');
-  if (sources.length > 0) {
-    if (!sourceBubblesDiv) {
-      sourceBubblesDiv = document.createElement('div');
-      sourceBubblesDiv.className = 'source-bubbles';
-      const timestamp = bubble.querySelector('.timestamp');
-      if (timestamp) {
-        bubble.insertBefore(sourceBubblesDiv, timestamp);
-      } else {
-        bubble.appendChild(sourceBubblesDiv);
-      }
-    }
-
-    sourceBubblesDiv.innerHTML = '';
-    sources.forEach((source, index) => {
-      const sourceType = detectSourceType(source);
-      const bubbleClass = getSourceBubbleClass(sourceType);
-      const sourceLabel = getSourceLabel(source);
-      const bubbleEl = document.createElement('span');
-      bubbleEl.className = `source-bubble ${bubbleClass}`;
-      bubbleEl.dataset.sourceIndex = index;
-      bubbleEl.title = sourceLabel;
-      bubbleEl.textContent = index + 1;
-      bubbleEl.addEventListener('click', () => showSourceDetails(source, index + 1));
-      sourceBubblesDiv.appendChild(bubbleEl);
-    });
-  }
-
-  scrollToBottom();
 }
 
 // Handle send button click

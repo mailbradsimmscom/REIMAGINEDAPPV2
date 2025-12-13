@@ -1,8 +1,7 @@
 import express from 'express';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { EnvelopeSchema } from '../../schemas/envelope.schema.js';
-import processSimpleRouter from './process-simple.route.js';  // Simple contract (string assistantMessage)
-import processEnhancedRouter from './process.route.js';       // Rich contract (object assistantMessage)
+import processRouter from './process.route.js';
 import historyRouter from './history.route.js';
 import listRouter from './list.route.js';
 import contextRouter from './context.route.js';
@@ -21,11 +20,10 @@ router.use(messagesRouter);
 
 router.use(validateResponse(EnvelopeSchema));
 
-// /chat/process - Simple contract: data.assistantMessage is a STRING
-// Used by tests and external callers
-// Set _mountPath for Express 5 route introspection (see src/debug/routes.js)
-processSimpleRouter._mountPath = '/process';
-router.use('/process', processSimpleRouter);
+// Both /chat/process and /chat/enhanced/process use the same router
+// Response format: data.assistantMessage is an OBJECT with content, role, sources
+processRouter._mountPath = '/process';
+router.use('/process', processRouter);
 historyRouter._mountPath = '/history';
 router.use('/history', historyRouter);
 listRouter._mountPath = '/list';
@@ -37,12 +35,8 @@ router.use('/delete', deleteRouter);
 threadBySessionRouter._mountPath = '/thread';
 router.use('/thread', threadBySessionRouter);
 
-// /chat/enhanced/* - Rich contract: data.assistantMessage is an OBJECT with content, role, etc.
-// Used by the UI for full message display
-processEnhancedRouter._mountPath = '/enhanced/process';
-router.use('/enhanced/process', processEnhancedRouter);
-// Note: historyRouter etc are reused, their _mountPath was set above
-// The route debugger will use the last-set _mountPath, which is fine for this use case
+// /chat/enhanced/* - aliases to the same routes for backward compatibility
+router.use('/enhanced/process', processRouter);
 router.use('/enhanced/history', historyRouter);
 router.use('/enhanced/list', listRouter);
 router.use('/enhanced/context', contextRouter);

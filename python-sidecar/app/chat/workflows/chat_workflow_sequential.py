@@ -1195,7 +1195,9 @@ class ChatWorkflowSequential:
 
                 try:
                     # Search Pinecone with THIS equipment's filter
-                    search_result = self.pinecone_client.search_vectors(
+                    # Use asyncio.to_thread() to run sync call in thread pool for true parallelism
+                    search_result = await asyncio.to_thread(
+                        self.pinecone_client.search_vectors,
                         query=enhanced_query,
                         top_k=top_k_per_system,
                         include_metadata=True,

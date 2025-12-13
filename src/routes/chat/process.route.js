@@ -1,5 +1,5 @@
 import express from 'express';
-import { processChatMessage, processChatMessageStreaming } from '../../services/chat-proxy.service.js';
+import { processChatMessage } from '../../services/chat-proxy.service.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
 import { requireServices } from '../../middleware/serviceGuards.js';
@@ -36,29 +36,6 @@ router.post(
         throw new Error('Message or query is required');
       }
 
-      // === STREAMING BRANCH ===
-      if (req.query.stream === 'true') {
-        requestLogger.info('🌊 Streaming mode requested');
-
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-        res.setHeader('X-Accel-Buffering', 'no');
-
-        try {
-          for await (const event of processChatMessageStreaming({ query: message, threadId })) {
-            res.write(`event: ${event.event}\ndata: ${JSON.stringify(event.data)}\n\n`);
-          }
-          res.end();
-        } catch (streamError) {
-          requestLogger.error('❌ Stream error', { error: streamError.message });
-          res.write(`event: error\ndata: ${JSON.stringify({ error: streamError.message })}\n\n`);
-          res.end();
-        }
-        return;
-      }
-
-      // === NORMAL JSON RESPONSE ===
       chatDebug.step('ROUTE_RECEIVED', {
         threadId,
         messageLength: message.length,
