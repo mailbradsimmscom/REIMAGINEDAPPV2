@@ -355,10 +355,13 @@
           <div class="wizard-photo-area" id="wizardPhotoArea">
             <div class="wizard-photo-placeholder" id="wizardPhotoPlaceholder">
               <span class="wizard-photo-icon">📷</span>
-              <span>Tap to take photo</span>
+              <span>Tap to add photos (up to 5)</span>
             </div>
             <img class="wizard-photo-preview" id="wizardPhotoPreview" style="display: none;">
-            <input type="file" id="wizardPhotoInput" accept="image/*" capture="environment" class="photo-input">
+            <div class="wizard-photo-thumbnails" id="wizardPhotoThumbnails" style="display: none;">
+              <!-- Thumbnail strip for multiple photos -->
+            </div>
+            <input type="file" id="wizardPhotoInput" accept="image/*" capture="environment" multiple class="photo-input">
           </div>
 
           <div class="wizard-ai-status" id="wizardAiStatus" style="display: none;">
@@ -498,6 +501,17 @@
 
           <div class="wizard-systems-list" id="wizardSystemsList" style="display: none;">
             <!-- System cards will be populated here -->
+          </div>
+
+          <!-- Browse All Systems Section -->
+          <div class="wizard-systems-browse" id="wizardSystemsBrowse">
+            <h4>Browse All Systems</h4>
+            <div class="wizard-systems-search">
+              <input type="text" id="wizardSystemSearch" placeholder="Search systems..." autocomplete="off">
+            </div>
+            <div class="wizard-all-systems-list" id="wizardAllSystemsList">
+              <!-- All systems will be loaded here -->
+            </div>
           </div>
         </div>
 

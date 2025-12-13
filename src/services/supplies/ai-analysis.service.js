@@ -5,7 +5,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { oaiVision } from '../../clients/openai.client.js';
+import { oaiVision, oaiVisionMulti } from '../../clients/openai.client.js';
 import pineconeRepository from '../../repositories/pinecone.repository.js';
 import { getSystemByAssetUid } from '../../repositories/systems.repository.js';
 import { logger } from '../../utils/logger.js';
@@ -260,6 +260,144 @@ Return your analysis in this exact JSON format:
 }
 
 /**
+ * Analyze MULTIPLE photos of the same supply item using GPT Vision
+ * All photos are sent in a single API call for cross-referencing
+ * @param {string[]} imageBase64Array - Array of base64 data URLs
+ * @param {Object} options - Optional categories and units from database
+ * @param {string[]} options.categories - List of category names
+ * @param {string[]} options.units - List of unit names with abbreviations
+ * @returns {Promise<Object>} Merged extracted item details
+ */
+export async function analyzeMultipleSupplyPhotos(imageBase64Array, options = {}) {
+  try {
+    // Validate input
+    if (!imageBase64Array || !Array.isArray(imageBase64Array) || imageBase64Array.length === 0) {
+      throw new Error('imageBase64Array must be a non-empty array');
+    }
+
+    // Validate each image
+    for (let i = 0; i < imageBase64Array.length; i++) {
+      if (!imageBase64Array[i] || typeof imageBase64Array[i] !== 'string') {
+        throw new Error(`Invalid image data at index ${i}`);
+      }
+      if (!imageBase64Array[i].startsWith('data:image/')) {
+        throw new Error(`Invalid image format at index ${i} - expected data URL`);
+      }
+    }
+
+    requestLogger.info('Analyzing multiple supply photos', {
+      photoCount: imageBase64Array.length
+    });
+
+    // Use provided categories/units or defaults
+    const categories = options.categories?.length > 0
+      ? options.categories.join(', ')
+      : 'Engine Parts & Service, Electrical, Plumbing & Water Systems, Rigging & Deck Hardware, Safety Equipment, General Supplies, Tools, Consumables, Other';
+
+    const units = options.units?.length > 0
+      ? options.units.join(', ')
+      : 'Each (ea), Box (box), Gallon (gal), Quart (qt), Liter (L), Feet (ft), Meter (m), Set (set), Pair (pr), Pack (pk)';
+
+    const systemPrompt = `You are an expert at analyzing marine equipment and supply items from photos.
+You are receiving MULTIPLE photos of the SAME supply item from different angles.
+
+Your task is to:
+1. Cross-reference information between all photos
+2. One photo might show a label with part number, another the full item, another the packaging
+3. Combine all visible information into ONE accurate result
+4. If photos appear to show DIFFERENT items, set confidence to 0 and note the discrepancy
+
+Be specific and accurate. If you cannot determine something with confidence, use null.`;
+
+    const userPrompt = `Analyze these ${imageBase64Array.length} photos of the SAME supply item and extract:
+
+1. Item name (e.g., "Oil Filter", "Bilge Pump", "Shackle")
+2. Brand (e.g., "Racor", "Rule", "Harken")
+3. Part number (e.g., "2010PM", "500GPH", "H2161")
+4. Suggested category - choose the BEST match from: ${categories}
+5. Suggested unit - choose the BEST match from: ${units}
+6. Quantity visible - count items in photos, or read "Pack of X" from packaging (null if unclear)
+7. Additional insights - any other useful info visible (material, size, specs, thread type, voltage, condition, expiration date)
+
+Cross-reference ALL photos to get the most accurate information.
+
+Return your analysis in this exact JSON format:
+{
+  "item_name": "extracted name or null",
+  "brand": "extracted brand or null",
+  "part_number": "extracted part number or null",
+  "suggested_category": "best matching category from the list",
+  "suggested_unit": "best matching unit from the list (just the name, not abbreviation)",
+  "quantity_visible": number or null,
+  "additional_insights": "material, specs, condition, etc. or null",
+  "confidence": 0.0-1.0,
+  "notes": "which photo(s) each piece of info came from",
+  "photos_analyzed": ${imageBase64Array.length}
+}`;
+
+    const response = await oaiVisionMulti({
+      system: systemPrompt,
+      user: userPrompt,
+      imageUrls: imageBase64Array,
+      maxOutputTokens: 800
+    });
+
+    requestLogger.info('Multi-photo GPT response', { response: response.substring(0, 200) });
+
+    // Parse JSON response
+    let analysisResult;
+    try {
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        analysisResult = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('No JSON found in response');
+      }
+    } catch (parseError) {
+      requestLogger.error('Failed to parse multi-photo GPT response', { error: parseError.message, response });
+      throw new Error('Failed to parse AI response. Please try again.');
+    }
+
+    // Validate and set defaults
+    if (!analysisResult.suggested_category) {
+      analysisResult.suggested_category = 'Other';
+    }
+
+    requestLogger.info('Multi-photo analysis completed', {
+      item_name: analysisResult.item_name,
+      brand: analysisResult.brand,
+      part_number: analysisResult.part_number,
+      quantity_visible: analysisResult.quantity_visible,
+      confidence: analysisResult.confidence,
+      photos_analyzed: analysisResult.photos_analyzed
+    });
+
+    return {
+      success: true,
+      data: {
+        item_name: analysisResult.item_name,
+        brand: analysisResult.brand,
+        part_number: analysisResult.part_number,
+        suggested_category: analysisResult.suggested_category,
+        suggested_unit: analysisResult.suggested_unit || null,
+        quantity_visible: analysisResult.quantity_visible || null,
+        additional_insights: analysisResult.additional_insights || null,
+        confidence: analysisResult.confidence || 0,
+        notes: analysisResult.notes || '',
+        photos_analyzed: imageBase64Array.length
+      }
+    };
+
+  } catch (error) {
+    requestLogger.error('Multi-photo analysis failed', {
+      error: error.message,
+      photoCount: imageBase64Array?.length
+    });
+    throw new Error(`Multi-photo analysis failed: ${error.message}`);
+  }
+}
+
+/**
  * Suggest boat systems relevant to a supply item
  * Uses Pinecone semantic search + systems table lookup
  * @param {Object} itemData - Supply item details
@@ -414,5 +552,6 @@ export async function suggestSystemsForSupply(itemData) {
 export default {
   analyzeSupplyPhoto,
   analyzeSupplyPhotoBase64,
+  analyzeMultipleSupplyPhotos,
   suggestSystemsForSupply
 };

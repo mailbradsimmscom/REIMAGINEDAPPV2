@@ -194,6 +194,60 @@
   object-fit: cover;
 }
 
+/* Multi-photo thumbnail strip */
+.wizard-photo-thumbnails {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.wizard-photo-thumb {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.wizard-photo-thumb.active {
+  border-color: var(--primary-color, #007bff);
+}
+
+.wizard-photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wizard-photo-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wizard-photo-remove:hover {
+  background: rgba(220, 53, 69, 0.9);
+}
+
 .wizard-ai-status {
   margin-top: 16px;
   padding: 12px 16px;
@@ -288,6 +342,18 @@
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
+  /* Fix truncation issue */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure option text displays fully in dropdown */
+.wizard-form .form-group select option {
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .wizard-form .form-row {
@@ -386,6 +452,63 @@
   font-size: 12px;
   color: var(--success-color, #28a745);
   font-weight: 500;
+}
+
+/* ===== Browse All Systems ===== */
+
+.wizard-systems-browse {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+}
+
+.wizard-systems-browse h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--text-primary, #333);
+}
+
+.wizard-systems-search {
+  margin-bottom: 12px;
+}
+
+.wizard-systems-search input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--bg-primary, #ffffff);
+}
+
+.wizard-systems-search input:focus {
+  outline: none;
+  border-color: var(--primary-color, #007bff);
+}
+
+.wizard-all-systems-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wizard-all-systems-list .wizard-system-card {
+  background: var(--bg-secondary, #f5f5f5);
+}
+
+.wizard-all-systems-list .wizard-system-checkbox {
+  padding: 12px;
+}
+
+.wizard-all-systems-list .wizard-system-name {
+  font-size: 14px;
+}
+
+.wizard-all-systems-list .wizard-system-path {
+  font-size: 12px;
 }
 
 /* ===== Spinner ===== */

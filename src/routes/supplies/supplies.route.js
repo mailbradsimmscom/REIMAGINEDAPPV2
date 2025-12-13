@@ -397,6 +397,67 @@ router.post('/analyze-photo', async (req, res) => {
 });
 
 /**
+ * POST /api/supplies/analyze-photos
+ * Analyze MULTIPLE supply photos using GPT Vision (multi-image call)
+ * All photos are analyzed together for cross-referencing
+ */
+router.post('/analyze-photos', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { imageBase64Array } = req.body;
+
+    // Validate input
+    if (!imageBase64Array || !Array.isArray(imageBase64Array) || imageBase64Array.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'imageBase64Array must be a non-empty array of base64 image data URLs',
+        requestId: res.locals.requestId
+      });
+    }
+
+    // Limit to 5 photos max to avoid token limits
+    if (imageBase64Array.length > 5) {
+      return res.status(400).json({
+        success: false,
+        error: 'Maximum 5 photos allowed per analysis',
+        requestId: res.locals.requestId
+      });
+    }
+
+    requestLogger.info('Analyzing multiple photos', {
+      photoCount: imageBase64Array.length
+    });
+
+    // Fetch real categories and units from database for AI prompt
+    const supabase = await getSupabaseClient();
+    const [categoriesResult, unitsResult] = await Promise.all([
+      supabase.from('supply_categories').select('category_name').order('category_name'),
+      supabase.from('supply_units').select('unit_name, abbreviation').order('unit_name')
+    ]);
+
+    const categories = (categoriesResult.data || []).map(c => c.category_name);
+    const units = (unitsResult.data || []).map(u => `${u.unit_name} (${u.abbreviation})`);
+
+    // Analyze all photos together
+    const result = await aiAnalysisService.analyzeMultipleSupplyPhotos(imageBase64Array, { categories, units });
+
+    return res.json({
+      success: result.success,
+      data: result.data,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error analyzing multiple photos', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
  * POST /api/supplies/suggest-systems
  * Suggest boat systems relevant to a supply item
  */

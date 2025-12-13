@@ -10,18 +10,20 @@ export class SuppliesWizard {
     this.currentStep = 1;
     this.totalSteps = 3;
     this.state = {
-      photo: {
-        url: null,
-        file: null
-      },
+      photos: [],  // Array of { file, base64, preview }
       aiAnalysis: {
         item_name: null,
         brand: null,
         part_number: null,
         suggested_category: null,
+        suggested_unit: null,
+        quantity_visible: null,
+        additional_insights: null,
         confidence: null,
-        notes: null
+        notes: null,
+        photos_analyzed: 0
       },
+      analysisStatus: 'idle',  // 'idle' | 'analyzing' | 'complete' | 'error'
       formData: {},
       selectedSystems: []
     };
@@ -106,6 +108,10 @@ export class SuppliesWizard {
     this.back3Btn?.addEventListener('click', () => this.goToStep(2));
     this.saveBtn?.addEventListener('click', () => this.saveSupply());
 
+    // System search filter
+    const systemSearchInput = document.getElementById('wizardSystemSearch');
+    systemSearchInput?.addEventListener('input', (e) => this.filterSystems(e.target.value));
+
     // Keyboard
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isOpen()) {
@@ -164,6 +170,7 @@ export class SuppliesWizard {
         this.prefillFormFromAI();
       } else if (step === 3) {
         this.loadSystemRecommendations();
+        this.loadAllSystems();  // Load browse all systems
       }
     }, 150);
   }
@@ -191,15 +198,20 @@ export class SuppliesWizard {
   reset() {
     this.currentStep = 1;
     this.state = {
-      photo: { url: null, file: null },
+      photos: [],
       aiAnalysis: {
         item_name: null,
         brand: null,
         part_number: null,
         suggested_category: null,
+        suggested_unit: null,
+        quantity_visible: null,
+        additional_insights: null,
         confidence: null,
-        notes: null
+        notes: null,
+        photos_analyzed: 0
       },
+      analysisStatus: 'idle',
       formData: {},
       selectedSystems: []
     };
@@ -237,80 +249,203 @@ export class SuppliesWizard {
   }
 
   async handlePhotoSelected(event) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
 
-    // Validate file
-    if (!file.type.startsWith('image/')) {
-      this.showToast('Please select an image file', 'error');
+    // Validate and process each file
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        this.showToast(`Skipped ${file.name} - not an image`, 'error');
+        continue;
+      }
+
+      // Check limit (max 5 photos)
+      if (this.state.photos.length >= 5) {
+        this.showToast('Maximum 5 photos allowed', 'warning');
+        break;
+      }
+
+      // Read file as base64
+      const base64Data = await this.readFileAsBase64(file);
+
+      // Add to photos array
+      this.state.photos.push({
+        file,
+        base64: base64Data,
+        preview: base64Data
+      });
+    }
+
+    // Update UI to show thumbnails
+    this.renderPhotoThumbnails();
+
+    // Reset analysis status since photos changed
+    this.state.analysisStatus = 'idle';
+    this.state.aiAnalysis = {
+      item_name: null, brand: null, part_number: null,
+      suggested_category: null, suggested_unit: null,
+      quantity_visible: null, additional_insights: null,
+      confidence: null, notes: null, photos_analyzed: 0
+    };
+
+    // Auto-analyze if we have photos
+    if (this.state.photos.length > 0) {
+      await this.analyzeAllPhotos();
+    }
+
+    // Clear file input for next selection
+    if (this.photoInput) this.photoInput.value = '';
+  }
+
+  // Helper to read file as base64
+  readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(e);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Render photo thumbnails
+  renderPhotoThumbnails() {
+    const container = document.getElementById('wizardPhotoThumbnails');
+
+    if (this.state.photos.length === 0) {
+      // Show placeholder
+      if (this.photoPlaceholder) this.photoPlaceholder.style.display = 'flex';
+      if (this.photoPreview) this.photoPreview.style.display = 'none';
+      if (container) container.innerHTML = '';
+      if (this.next1Btn) this.next1Btn.disabled = true;
       return;
     }
 
-    // Show preview and get base64 for AI analysis
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64Data = e.target.result;
+    // Hide placeholder, show thumbnails
+    if (this.photoPlaceholder) this.photoPlaceholder.style.display = 'none';
 
-      if (this.photoPreview) {
-        this.photoPreview.src = base64Data;
-        this.photoPreview.style.display = 'block';
-      }
-      if (this.photoPlaceholder) {
-        this.photoPlaceholder.style.display = 'none';
-      }
+    // Show first photo as main preview
+    if (this.photoPreview && this.state.photos[0]) {
+      this.photoPreview.src = this.state.photos[0].preview;
+      this.photoPreview.style.display = 'block';
+    }
 
-      // Store file for later upload when saving
-      this.state.photo.file = file;
-      this.state.photo.base64 = base64Data;
+    // Render thumbnail strip if multiple photos
+    if (container && this.state.photos.length > 1) {
+      container.innerHTML = this.state.photos.map((photo, index) => `
+        <div class="wizard-photo-thumb ${index === 0 ? 'active' : ''}" data-index="${index}">
+          <img src="${photo.preview}" alt="Photo ${index + 1}">
+          <button class="wizard-photo-remove" onclick="window.suppliesWizard.removePhoto(${index})">&times;</button>
+        </div>
+      `).join('');
+      container.style.display = 'flex';
+    } else if (container) {
+      container.innerHTML = '';
+      container.style.display = 'none';
+    }
 
-      // Analyze with AI using base64 directly (no disk storage needed)
-      await this.analyzePhotoWithAI(base64Data);
-    };
-    reader.readAsDataURL(file);
+    // Enable next button
+    if (this.next1Btn) this.next1Btn.disabled = false;
   }
 
-  async analyzePhotoWithAI(base64Data) {
+  // Remove a photo by index
+  removePhoto(index) {
+    if (index >= 0 && index < this.state.photos.length) {
+      this.state.photos.splice(index, 1);
+      this.renderPhotoThumbnails();
+
+      // Reset analysis since photos changed
+      this.state.analysisStatus = 'idle';
+
+      // Re-analyze if still have photos
+      if (this.state.photos.length > 0) {
+        this.analyzeAllPhotos();
+      } else {
+        // Clear AI analysis
+        this.state.aiAnalysis = {
+          item_name: null, brand: null, part_number: null,
+          suggested_category: null, suggested_unit: null,
+          quantity_visible: null, additional_insights: null,
+          confidence: null, notes: null, photos_analyzed: 0
+        };
+        if (this.aiStatus) this.aiStatus.style.display = 'none';
+      }
+    }
+  }
+
+  // Analyze all photos together using multi-photo endpoint
+  async analyzeAllPhotos() {
+    if (this.state.photos.length === 0) return;
+
     try {
+      this.state.analysisStatus = 'analyzing';
+
       // Show analyzing state
       if (this.aiStatus) {
         this.aiStatus.style.display = 'block';
-        this.aiStatus.querySelector('.wizard-ai-analyzing').style.display = 'flex';
-        this.aiStatus.querySelector('.wizard-ai-result').style.display = 'none';
+        const analyzingEl = this.aiStatus.querySelector('.wizard-ai-analyzing');
+        const resultEl = this.aiStatus.querySelector('.wizard-ai-result');
+        if (analyzingEl) {
+          analyzingEl.style.display = 'flex';
+          const countText = this.state.photos.length > 1
+            ? `Analyzing ${this.state.photos.length} photos...`
+            : 'Analyzing photo...';
+          // Update text if there's a span inside
+          const textEl = analyzingEl.querySelector('span') || analyzingEl;
+          if (textEl.tagName === 'SPAN') textEl.textContent = countText;
+        }
+        if (resultEl) resultEl.style.display = 'none';
       }
 
-      // Send base64 directly to analyze endpoint
-      const analyzeResponse = await fetch('/api/supplies/analyze-photo', {
+      // Collect all base64 images
+      const imageBase64Array = this.state.photos.map(p => p.base64);
+
+      // Use multi-photo endpoint if multiple photos, single endpoint for one
+      const endpoint = imageBase64Array.length > 1
+        ? '/api/supplies/analyze-photos'
+        : '/api/supplies/analyze-photo';
+
+      const body = imageBase64Array.length > 1
+        ? { imageBase64Array }
+        : { imageBase64: imageBase64Array[0] };
+
+      const analyzeResponse = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageBase64: base64Data })
+        body: JSON.stringify(body)
       });
 
       const analyzeResult = await analyzeResponse.json();
 
       if (analyzeResult.success && analyzeResult.data) {
         this.state.aiAnalysis = analyzeResult.data;
+        this.state.analysisStatus = 'complete';
 
         // Show result
         if (this.aiStatus) {
-          this.aiStatus.querySelector('.wizard-ai-analyzing').style.display = 'none';
-          this.aiStatus.querySelector('.wizard-ai-result').style.display = 'block';
+          const analyzingEl = this.aiStatus.querySelector('.wizard-ai-analyzing');
+          const resultEl = this.aiStatus.querySelector('.wizard-ai-result');
+          if (analyzingEl) analyzingEl.style.display = 'none';
+          if (resultEl) resultEl.style.display = 'block';
         }
 
         const detectedText = analyzeResult.data.item_name || 'Item detected';
         const confidence = analyzeResult.data.confidence
           ? ` (${Math.round(analyzeResult.data.confidence * 100)}%)`
           : '';
+        const photoCount = analyzeResult.data.photos_analyzed || this.state.photos.length;
+        const photoLabel = photoCount > 1 ? ` from ${photoCount} photos` : '';
 
         if (this.aiDetected) {
-          this.aiDetected.textContent = `✓ ${detectedText}${confidence}`;
+          this.aiDetected.textContent = `✓ ${detectedText}${confidence}${photoLabel}`;
         }
       } else {
         // AI analysis failed
+        this.state.analysisStatus = 'error';
         if (this.aiStatus) {
           this.aiStatus.style.display = 'none';
         }
         const errorMsg = analyzeResult.error || 'AI analysis unavailable';
-        this.showToast('Photo ready - ' + errorMsg, 'info');
+        this.showToast('Photos ready - ' + errorMsg, 'info');
       }
 
       // Enable next button
@@ -318,21 +453,21 @@ export class SuppliesWizard {
 
     } catch (error) {
       console.error('Photo analysis error:', error);
+      this.state.analysisStatus = 'error';
       if (this.aiStatus) this.aiStatus.style.display = 'none';
 
-      // Extract error message properly
       const errorMsg = typeof error === 'string'
         ? error
         : (error?.message || JSON.stringify(error) || 'Unknown error');
-      this.showToast('Photo ready - AI analysis failed: ' + errorMsg, 'info');
+      this.showToast('Photos ready - AI analysis failed: ' + errorMsg, 'info');
 
-      // Still enable next - photo is ready even if AI failed
+      // Still enable next - photos are ready even if AI failed
       if (this.next1Btn) this.next1Btn.disabled = false;
     }
   }
 
   skipPhoto() {
-    this.state.photo = { url: null, file: null };
+    this.state.photos = [];
     if (this.next1Btn) this.next1Btn.disabled = false;
     this.goToStep(2);
   }
@@ -386,7 +521,7 @@ export class SuppliesWizard {
       part_number: document.getElementById('wizardPartNumber')?.value?.trim() || null,
       supplier: document.getElementById('wizardSupplier')?.value?.trim() || null,
       notes: document.getElementById('wizardNotes')?.value?.trim() || null,
-      photos: this.state.photo.url ? [this.state.photo.url] : []
+      photos: []  // Will be uploaded separately after save
     };
   }
 
@@ -394,6 +529,7 @@ export class SuppliesWizard {
     const ai = this.state.aiAnalysis;
     if (!ai) return;
 
+    // Item name
     if (ai.item_name) {
       const itemNameInput = document.getElementById('wizardItemName');
       if (itemNameInput && !itemNameInput.value) {
@@ -401,6 +537,7 @@ export class SuppliesWizard {
       }
     }
 
+    // Brand
     if (ai.brand) {
       const brandInput = document.getElementById('wizardBrand');
       if (brandInput && !brandInput.value) {
@@ -408,6 +545,7 @@ export class SuppliesWizard {
       }
     }
 
+    // Part number
     if (ai.part_number) {
       const partNumInput = document.getElementById('wizardPartNumber');
       if (partNumInput && !partNumInput.value) {
@@ -415,8 +553,49 @@ export class SuppliesWizard {
       }
     }
 
+    // Category
     if (ai.suggested_category) {
       this.selectCategoryByName(ai.suggested_category);
+    }
+
+    // Unit (NEW)
+    if (ai.suggested_unit) {
+      this.selectUnitByName(ai.suggested_unit);
+    }
+
+    // Quantity visible → Current Stock (NEW)
+    if (ai.quantity_visible && ai.quantity_visible > 0) {
+      const stockInput = document.getElementById('wizardCurrentStock');
+      if (stockInput && !stockInput.value) {
+        stockInput.value = ai.quantity_visible;
+      }
+    }
+
+    // Additional insights → Notes (NEW)
+    if (ai.additional_insights) {
+      const notesInput = document.getElementById('wizardNotes');
+      if (notesInput) {
+        const existing = notesInput.value ? notesInput.value + '\n\n' : '';
+        notesInput.value = existing + 'AI detected: ' + ai.additional_insights;
+      }
+    }
+  }
+
+  // Select unit dropdown by name (fuzzy match)
+  selectUnitByName(unitName) {
+    const unitSelect = document.getElementById('wizardUnit');
+    if (!unitSelect) return;
+
+    const options = unitSelect.querySelectorAll('option');
+    const searchName = unitName.toLowerCase();
+
+    for (const option of options) {
+      const optionText = option.textContent.trim().toLowerCase();
+      // Match on name or abbreviation
+      if (optionText.includes(searchName) || searchName.includes(optionText.split('(')[0].trim())) {
+        unitSelect.value = option.value;
+        break;
+      }
     }
   }
 
@@ -494,6 +673,97 @@ export class SuppliesWizard {
     } else {
       this.state.selectedSystems.push(assetUid);
     }
+    // Update checkbox state in UI
+    this.updateSystemCheckboxes();
+  }
+
+  updateSystemCheckboxes() {
+    // Update AI suggestions list
+    const aiCards = document.querySelectorAll('#wizardSystemsList .wizard-system-card');
+    aiCards.forEach(card => {
+      const uid = card.dataset.assetUid;
+      const checkbox = card.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = this.state.selectedSystems.includes(uid);
+      }
+    });
+
+    // Update browse all list
+    const browseCards = document.querySelectorAll('#wizardAllSystemsList .wizard-system-card');
+    browseCards.forEach(card => {
+      const uid = card.dataset.assetUid;
+      const checkbox = card.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = this.state.selectedSystems.includes(uid);
+      }
+    });
+  }
+
+  // ===== Browse All Systems =====
+
+  async loadAllSystems() {
+    const container = document.getElementById('wizardAllSystemsList');
+    if (!container) return;
+
+    try {
+      container.innerHTML = '<div class="wizard-systems-loading"><div class="spinner"></div><span>Loading systems...</span></div>';
+
+      const response = await fetch('/api/supplies/systems');
+      const result = await response.json();
+
+      if (result.success && result.data && result.data.length > 0) {
+        this.allSystems = result.data;
+        this.renderAllSystemsList(result.data);
+      } else {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No systems available</p>';
+      }
+    } catch (error) {
+      console.error('Error loading all systems:', error);
+      container.innerHTML = '<p style="text-align: center; color: var(--error-color);">Failed to load systems</p>';
+    }
+  }
+
+  renderAllSystemsList(systems) {
+    const container = document.getElementById('wizardAllSystemsList');
+    if (!container) return;
+
+    container.innerHTML = systems.map(s => {
+      const isSelected = this.state.selectedSystems.includes(s.asset_uid);
+      return `
+        <div class="wizard-system-card" data-asset-uid="${s.asset_uid}">
+          <label class="wizard-system-checkbox">
+            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="window.suppliesWizard.toggleSystem('${s.asset_uid}')">
+            <div class="wizard-system-info">
+              <div class="wizard-system-name">${this.escapeHtml(s.manufacturer || '')} ${this.escapeHtml(s.model || '')}</div>
+              <div class="wizard-system-path">${this.escapeHtml(s.system || '')} › ${this.escapeHtml(s.subsystem || '')}</div>
+            </div>
+          </label>
+        </div>
+      `;
+    }).join('');
+  }
+
+  filterSystems(query) {
+    if (!this.allSystems) return;
+
+    const searchTerm = query.toLowerCase().trim();
+
+    if (!searchTerm) {
+      this.renderAllSystemsList(this.allSystems);
+      return;
+    }
+
+    const filtered = this.allSystems.filter(s => {
+      const searchable = [
+        s.manufacturer || '',
+        s.model || '',
+        s.system || '',
+        s.subsystem || ''
+      ].join(' ').toLowerCase();
+      return searchable.includes(searchTerm);
+    });
+
+    this.renderAllSystemsList(filtered);
   }
 
   // ===== Save Supply =====
@@ -524,32 +794,42 @@ export class SuppliesWizard {
 
       const supplyId = result.data.id;
 
-      // Step 2: Upload photo if present
-      if (this.state.photo.base64) {
-        this.saveBtn.textContent = 'Uploading photo...';
+      // Step 2: Upload all photos
+      if (this.state.photos.length > 0) {
+        const photoCount = this.state.photos.length;
+        let uploadedCount = 0;
+        let failedCount = 0;
 
-        try {
-          const photoResponse = await fetch(`/api/supplies/${supplyId}/photo`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageBase64: this.state.photo.base64,
-              photoIndex: 1
-            })
-          });
+        for (let i = 0; i < this.state.photos.length; i++) {
+          this.saveBtn.textContent = `Uploading photo ${i + 1}/${photoCount}...`;
 
-          const photoResult = await photoResponse.json();
+          try {
+            const photoResponse = await fetch(`/api/supplies/${supplyId}/photo`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                imageBase64: this.state.photos[i].base64,
+                photoIndex: i + 1
+              })
+            });
 
-          if (photoResult.success) {
-            console.log('Photo uploaded:', photoResult.data.url);
-          } else {
-            // Photo upload failed but supply was created
-            console.error('Photo upload failed:', photoResult.error);
-            this.showToast('Supply saved, but photo upload failed', 'warning');
+            const photoResult = await photoResponse.json();
+
+            if (photoResult.success) {
+              uploadedCount++;
+              console.log(`Photo ${i + 1} uploaded:`, photoResult.data.url);
+            } else {
+              failedCount++;
+              console.error(`Photo ${i + 1} upload failed:`, photoResult.error);
+            }
+          } catch (photoError) {
+            failedCount++;
+            console.error(`Photo ${i + 1} upload error:`, photoError);
           }
-        } catch (photoError) {
-          console.error('Photo upload error:', photoError);
-          this.showToast('Supply saved, but photo upload failed', 'warning');
+        }
+
+        if (failedCount > 0) {
+          this.showToast(`Supply saved, but ${failedCount} photo(s) failed to upload`, 'warning');
         }
       }
 

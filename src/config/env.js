@@ -17,6 +17,7 @@ const EnvSchema = z.object({
   DEFAULT_NAMESPACE: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().optional(),
+  VISION_MODEL: z.string().optional().default('gpt-4o'),  // Vision model for photo analysis
   SEARCH_RANK_FLOOR: z.string().optional(),
   SUPABASE_URL: z.string().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),

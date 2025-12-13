@@ -301,8 +301,8 @@ export class SuppliesList {
                 src="${supply.photos[0]}"
                 alt="${this.escapeHtml(supply.item_name)}"
                 class="photo-thumbnail"
-                onclick="window.suppliesPhotos?.viewPhoto('${supply.photos[0]}')"
-              >
+                onclick="window.suppliesPhotos?.viewPhoto('${supply.photos[0]}', ${this.escapeAttr(JSON.stringify(supply.photos))})"
+              >${supply.photos.length > 1 ? `<span class="photo-count">${supply.photos.length}</span>` : ''}
             ` : `
               <div
                 class="photo-placeholder"
@@ -350,13 +350,15 @@ export class SuppliesList {
     grid.innerHTML = this.supplies.map(supply => `
       <div class="supply-card" data-id="${supply.id}">
         ${supply.photos && supply.photos.length > 0 ? `
-          <img
-            src="${supply.photos[0]}"
-            alt="${this.escapeHtml(supply.item_name)}"
-            class="photo-thumbnail"
-            onclick="window.suppliesPhotos?.viewPhoto('${supply.photos[0]}')"
-            style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--border-radius); margin-bottom: var(--spacing-md); cursor: pointer;"
-          >
+          <div class="card-photo-container" style="position: relative;">
+            <img
+              src="${supply.photos[0]}"
+              alt="${this.escapeHtml(supply.item_name)}"
+              class="photo-thumbnail"
+              onclick="window.suppliesPhotos?.viewPhoto('${supply.photos[0]}', ${this.escapeAttr(JSON.stringify(supply.photos))})"
+              style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--border-radius); cursor: pointer;"
+            >${supply.photos.length > 1 ? `<span class="photo-count">${supply.photos.length}</span>` : ''}
+          </div>
         ` : `
           <div
             onclick="window.suppliesForm.openModal('${supply.id}')"
@@ -576,6 +578,11 @@ export class SuppliesList {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  escapeAttr(text) {
+    if (!text) return '';
+    return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
 }
 

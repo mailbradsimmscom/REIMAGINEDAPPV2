@@ -186,7 +186,7 @@ export async function oaiVision({ system, user, imageUrl, model, maxOutputTokens
   const env = getEnv();
 
   const openaiApiKey = env.OPENAI_API_KEY;
-  const openaiModel = model || 'gpt-4o';
+  const openaiModel = model || env.VISION_MODEL || 'gpt-4o';
   const maxTokens = maxOutputTokens || 500;
   const temperature = 0; // Deterministic for vision analysis
   const timeoutMs = parseInt(env.OPENAI_TIMEOUT_SECONDS || '30') * 1000; // Longer timeout for vision
@@ -219,6 +219,67 @@ export async function oaiVision({ system, user, imageUrl, model, maxOutputTokens
 }
 
 /**
+ * Makes a vision API call to OpenAI with MULTIPLE images
+ * @param {Object} params - Configuration object
+ * @param {string} params.system - System prompt
+ * @param {string} params.user - User prompt
+ * @param {string[]} params.imageUrls - Array of image URLs (base64 data URLs or http URLs)
+ * @param {string} params.model - OpenAI model to use (default: from VISION_MODEL env var)
+ * @param {number} params.maxOutputTokens - Maximum tokens to generate
+ * @returns {Promise<string>} - Generated text response
+ */
+export async function oaiVisionMulti({ system, user, imageUrls, model, maxOutputTokens }) {
+  const { getEnv } = await import('../config/env.js');
+  const env = getEnv();
+
+  const openaiApiKey = env.OPENAI_API_KEY;
+  const openaiModel = model || env.VISION_MODEL || 'gpt-4o';
+  const maxTokens = maxOutputTokens || 800; // Higher default for multi-image
+  const temperature = 0; // Deterministic for vision analysis
+  const timeoutMs = parseInt(env.OPENAI_TIMEOUT_SECONDS || '45') * 1000; // Longer timeout for multi-image
+  const retryAttempts = parseInt(env.OPENAI_RETRY_ATTEMPTS || '3');
+
+  // Validate imageUrls
+  if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
+    throw new Error('imageUrls must be a non-empty array');
+  }
+
+  // Build image content array
+  const imageContent = imageUrls.map((url, index) => ({
+    type: 'image_url',
+    image_url: {
+      url,
+      detail: 'high'
+    }
+  }));
+
+  const requestBody = {
+    model: openaiModel,
+    messages: [
+      { role: 'system', content: system },
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: user },
+          ...imageContent
+        ]
+      }
+    ],
+    max_tokens: maxTokens,
+    temperature
+  };
+
+  requestLogger.info('Multi-image vision API call', {
+    model: openaiModel,
+    imageCount: imageUrls.length,
+    maxTokens
+  });
+
+  const response = await makeOpenAICall(requestBody, openaiApiKey, timeoutMs, retryAttempts);
+  return response.choices[0].message.content.trim();
+}
+
+/**
  * Truncates text content to specified length
  * @param {string} text - Text to truncate
  * @param {number} maxLength - Maximum length
@@ -235,5 +296,6 @@ export default {
   oaiJson,
   oaiText,
   oaiVision,
+  oaiVisionMulti,
   truncateContent
 };

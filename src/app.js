@@ -111,7 +111,14 @@ app.use('/public', express.static(join(process.cwd(), 'src/public')));
 
 // Root-level static file serving for CSS, JS, and other assets
 app.use('/css', express.static(join(process.cwd(), 'src/public/css')));
-app.use('/js', express.static(join(process.cwd(), 'src/public/js')));
+app.use('/js', express.static(join(process.cwd(), 'src/public/js'), {
+  setHeaders: (res, path) => {
+    // Ensure JavaScript files have correct MIME type for ES6 modules (Safari requirement)
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+    }
+  }
+}));
 app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
 // PIN authentication endpoint (public - no auth required)
