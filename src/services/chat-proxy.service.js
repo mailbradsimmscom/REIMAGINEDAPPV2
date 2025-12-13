@@ -54,7 +54,7 @@ export function createChatProxyService({
   chatDebug = defaultChatDebug
 } = {}) {
 
-  async function processChatMessage({ query, threadId: rawThreadId }) {
+  async function processChatMessage({ query, threadId: rawThreadId, stream = false }) {
     const requestLogger = logger.createRequestLogger();
     const env = envConfigDep.getEnv();
 
@@ -668,10 +668,46 @@ export function createChatProxyService({
     chatDebug.step('PYTHON_WORKFLOW_CALL', {
       systemsContextCount: systemsContext.length,
       hasConversationSummary: !!conversationContext.conversation_summary,
-      hasEquipmentInference: !!equipmentInference
+      hasEquipmentInference: !!equipmentInference,
+      streaming: stream
     });
 
     const workflowStart = Date.now();
+
+    // STREAMING MODE: Return async generator that yields SSE events
+    if (stream) {
+      const pythonStream = await pythonSidecarClient.processChatWorkflow({
+        query,
+        systemsContext,
+        threadId,
+        conversationSummary: conversationContext.conversation_summary,
+        memoryContext: {
+          accumulated_equipment: conversationContext.accumulated_equipment,
+          total_exchanges: conversationContext.total_exchanges,
+          equipment_inference: equipmentInference
+        },
+        stream: true
+      });
+
+      // Return generator that wraps Python events with Node.js context
+      return (async function* () {
+        for await (const { event, data } of pythonStream) {
+          // Add Node.js context to each event
+          yield {
+            event,
+            data: {
+              ...data,
+              thread_id: threadId,
+              systems_context: systemsContext,
+              node_timing: nodeTiming
+            }
+          };
+        }
+        nodeTiming.python_call_ms = Date.now() - workflowStart;
+      })();
+    }
+
+    // NON-STREAMING MODE: Original behavior
     const pythonResult = await pythonSidecarClient.processChatWorkflow({
       query,
       systemsContext,
@@ -730,7 +766,7 @@ export function createChatProxyService({
 
     // Debug: Log what we're returning
     requestLogger.info('🎯 Returning result with detailed_metrics:', !!result.detailed_metrics);
-    
+
     // Diagnostic: Check if timing assignments executed
     const timingSum = Object.values(nodeTiming).reduce((sum, val) => sum + (val || 0), 0);
     if (timingSum === 0) {

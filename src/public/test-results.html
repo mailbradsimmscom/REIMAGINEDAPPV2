@@ -936,8 +936,10 @@
 
             // Python breakdown - layered view showing sequential vs parallel operations
             if (breakdown.total_internal_ms > 0 || breakdown.total_measured_ms > 0) {
-                // Get Python call time from Node.js perspective (actual wall clock time)
-                const pythonCallTime = nodeTiming.python_call_ms || breakdown.total_internal_ms || 0;
+                // Use Python's internal timing for consistency with breakdown items
+                const pythonInternalTime = breakdown.total_internal_ms || 0;
+                const pythonCallTime = nodeTiming.python_call_ms || pythonInternalTime;
+                const httpOverhead = pythonCallTime - pythonInternalTime;
 
                 // Sequential steps (these add up to the total time)
                 const sequentialSteps = [
@@ -957,12 +959,12 @@
                 // Calculate sequential total
                 const sequentialTotal = sequentialSteps.reduce((sum, step) => sum + (breakdown[step.key] || 0), 0);
 
-                // Build section header with total time
+                // Build section header with total time (use internal time to match breakdown items)
                 breakdownHTML += `
                     <div style="grid-column: 1 / -1; margin-top: ${totalNodeTime > 0 ? '24px' : '0'};">
                         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
                             <div style="font-weight: 600; font-size: 14px;">Python Sidecar Breakdown</div>
-                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">${formatMs(pythonCallTime)}</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">${formatMs(pythonInternalTime)}${httpOverhead > 500 ? ` <span style="font-size: 12px; color: var(--text-secondary); font-weight: 400;">(+${formatMs(httpOverhead)} HTTP)</span>` : ''}</div>
                         </div>
                 `;
 

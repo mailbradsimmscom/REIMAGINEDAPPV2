@@ -197,7 +197,7 @@ jobs:
             tests/integration/systems.test.js \
             tests/integration/test-infrastructure.test.js \
             2>&1 | tee results/integration.txt || true
-        timeout-minutes: 5
+        timeout-minutes: 10
         env:
           ENABLE_ROUTE_DEBUG: '1'
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}

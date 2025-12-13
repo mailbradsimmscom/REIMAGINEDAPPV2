@@ -36,19 +36,22 @@ export function createPythonSidecarClient({
    * @param {string} params.threadId - Conversation thread ID
    * @param {string} params.conversationSummary - Summary of conversation history
    * @param {Object} params.memoryContext - Memory context (weighted equipment tracking)
-   * @returns {Promise<Object>} - Chat response with classification, sources, and metadata
+   * @param {boolean} params.stream - If true, returns async generator of SSE events
+   * @returns {Promise<Object>|AsyncGenerator} - Chat response or SSE event generator
    */
   async function processChatWorkflow({
     query,
     systemsContext = [],
     threadId = null,
     conversationSummary = null,
-    memoryContext = null
+    memoryContext = null,
+    stream = false
   }) {
     const env = envConfigDep.getEnv();
 
   const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
-  const endpoint = `${sidecarUrl}/v1/chat/process`;
+  const baseEndpoint = `${sidecarUrl}/v1/chat/process`;
+  const endpoint = stream ? `${baseEndpoint}?stream=true` : baseEndpoint;
   const timeoutMs = parseInt(env.PYTHON_CHAT_TIMEOUT_MS || '30000'); // 30s default
   const retryAttempts = parseInt(env.PYTHON_CHAT_RETRY_ATTEMPTS || '2');
 
@@ -60,7 +63,71 @@ export function createPythonSidecarClient({
     memory_context: memoryContext
   };
 
+    if (stream) {
+      return streamPythonSidecarCall(endpoint, requestBody, timeoutMs);
+    }
     return await makePythonSidecarCall(endpoint, requestBody, timeoutMs, retryAttempts);
+  }
+
+  /**
+   * Makes streaming Python sidecar API call, yields SSE events
+   * @param {string} endpoint - Full endpoint URL with ?stream=true
+   * @param {Object} requestBody - Request body
+   * @param {number} timeoutMs - Timeout in milliseconds
+   * @yields {Object} - Parsed SSE events {event, data}
+   */
+  async function* streamPythonSidecarCall(endpoint, requestBody, timeoutMs) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetchFn(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Python sidecar API error: ${response.status} - ${errorText}`);
+      }
+
+      // Parse SSE stream
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // Keep incomplete line in buffer
+
+        let currentEvent = null;
+        for (const line of lines) {
+          if (line.startsWith('event: ')) {
+            currentEvent = line.slice(7).trim();
+          } else if (line.startsWith('data: ') && currentEvent) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              yield { event: currentEvent, data };
+            } catch (e) {
+              requestLogger.warn('Failed to parse SSE data', { line, error: e.message });
+            }
+            currentEvent = null;
+          }
+        }
+      }
+    } catch (error) {
+      clearTimeout(timeoutId);
+      requestLogger.error('Python sidecar stream failed', { endpoint, error: error.message });
+      throw error;
+    }
   }
 
   /**

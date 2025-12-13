@@ -749,8 +749,8 @@ async function processMessage(message) {
 
     addLoadingAnimation();
 
-    // JSON fetch to chat endpoint
-    const response = await fetch('/chat/enhanced/process', {
+    // Streaming SSE fetch to chat endpoint
+    const response = await fetch('/chat/enhanced/process?stream=true', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -764,28 +764,77 @@ async function processMessage(message) {
       throw new Error(`Chat request failed: ${response.status} ${errorText}`);
     }
 
-    const result = await response.json();
-    removeLoadingAnimation();
+    // Parse SSE stream
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullResponse = '';
+    let allSources = [];
+    let detailedMetrics = null;
+    let messageAdded = false;
 
-    if (!result.success) {
-      throw new Error(result.error || 'Chat request failed');
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      let currentEvent = null;
+      for (const line of lines) {
+        if (line.startsWith('event: ')) {
+          currentEvent = line.slice(7).trim();
+        } else if (line.startsWith('data: ') && currentEvent) {
+          try {
+            const data = JSON.parse(line.slice(6));
+
+            if (currentEvent === 'synthesis') {
+              // Show synthesis response immediately
+              removeLoadingAnimation();
+              fullResponse = data.response || '';
+              allSources = data.sources || [];
+
+              const formattedSources = allSources.map(source => ({
+                type: source.type,
+                content: source.data,
+                data: source.data,
+                count: source.count,
+                equipment: source.equipment,
+                icon: getSourceIcon(source.type)
+              }));
+
+              addEnhancedMessage(fullResponse, formattedSources);
+              messageAdded = true;
+
+            } else if (currentEvent === 'perplexity' && data.answer) {
+              // Append Perplexity content to existing message
+              const perplexitySection = `\n\n---\n\n**Real-World Resources from Boat Owners**\n\n${data.answer}`;
+              fullResponse += perplexitySection;
+
+              // Update the last message in DOM (class is .content, not .message-content)
+              const messagesContainer = document.getElementById('messages');
+              const lastMessage = messagesContainer?.querySelector('.message.inbound:last-child .content');
+              if (lastMessage) {
+                lastMessage.innerHTML = parseMarkdown(parseMainContent(fullResponse));
+              }
+
+            } else if (currentEvent === 'done') {
+              detailedMetrics = data.detailed_metrics;
+            }
+          } catch (e) {
+            console.warn('Failed to parse SSE data:', e);
+          }
+          currentEvent = null;
+        }
+      }
     }
 
-    const data = result.data;
-    const fullResponse = data.assistantMessage?.content || 'No response generated';
-    const allSources = data.sources || [];
-
-    // Format sources for display
-    const formattedSources = allSources.map(source => ({
-      type: source.type,
-      content: source.data,
-      data: source.data,
-      count: source.count,
-      equipment: source.equipment,
-      icon: getSourceIcon(source.type)
-    }));
-
-    addEnhancedMessage(fullResponse, formattedSources);
+    // Fallback if no message was added (shouldn't happen)
+    if (!messageAdded) {
+      removeLoadingAnimation();
+      addMessage('No response received', 'inbound');
+    }
 
     // Save to DB
     assistantSequence = ++currentMessageSequence;
@@ -794,11 +843,10 @@ async function processMessage(message) {
     });
 
     // Update metrics panel if available
-    if (data.detailed_metrics) {
-      window.lastMetrics = data.detailed_metrics;
-      updateStatsPanel(data.detailed_metrics);
+    if (detailedMetrics) {
+      window.lastMetrics = detailedMetrics;
+      updateStatsPanel(detailedMetrics);
 
-      // Auto-show stats panel if not visible
       const chatSection = document.getElementById('chatSection');
       const appContainer = document.querySelector('.app');
       if (chatSection && !chatSection.classList.contains('show-stats')) {

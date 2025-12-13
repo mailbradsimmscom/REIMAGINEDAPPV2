@@ -454,18 +454,99 @@ class ChatWorkflowSequential:
                 else:
                     logger.info(f"⏭️  STREAMING: Perplexity skipped - {perplexity_result.get('reason', 'unknown')}")
 
-            # Final done event with metrics
+            # Final done event with FULL metrics (same structure as non-streaming)
             processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
+
+            # Collect timing values
+            classification_ms = state.get("classification_duration_ms", 0)
+            dip_ms = state.get("dip_duration_ms", 0)
+            pinecone_ms = state.get("pinecone_duration_ms", 0)
+            ranking_ms = state.get("pinecone_complexity_filtering", {}).get("ranking_duration_ms", 0)
+            synthesis_ms = openai_result.get("synthesis_duration_ms", 0) if isinstance(openai_result, dict) else 0
+            perplexity_ms = perplexity_result.get("duration_ms", 0) if perplexity_result and not isinstance(perplexity_result, Exception) else 0
+
+            total_measured = classification_ms + dip_ms + pinecone_ms + ranking_ms + synthesis_ms + perplexity_ms
+
+            # Build full detailed_metrics structure
+            detailed_metrics = {
+                "timing_summary": {
+                    "total_processing_ms": processing_time,
+                    "total_measured_ms": total_measured,
+                    "unmeasured_ms": processing_time - total_measured,
+                    "breakdown": {
+                        "classification_ms": classification_ms,
+                        "dip_retrieval_ms": dip_ms,
+                        "pinecone_search_ms": pinecone_ms,
+                        "chunk_ranking_ms": ranking_ms,
+                        "synthesis_ms": synthesis_ms,
+                        "perplexity_ms": perplexity_ms,
+                        "assembly_ms": 0
+                    }
+                },
+                "classification": {
+                    "duration_ms": classification_ms,
+                    "intent": state.get("classification", {}).get("intent", "unknown"),
+                    "confidence": state.get("classification", {}).get("confidence", 0),
+                    "complexity_score": state.get("classification", {}).get("complexity_score", 0),
+                    "complexity": state.get("classification", {}).get("complexity", "unknown"),
+                    "table_types_needed": state.get("classification", {}).get("table_types_needed", []),
+                    "primary_equipment_index": state.get("classification", {}).get("primary_equipment_index")
+                },
+                "dip_retrieval": {
+                    "duration_ms": dip_ms,
+                    "tables_queried": len(state.get("dip_results", [])),
+                    "total_entries": sum(r.get('count', 0) for r in state.get("dip_results", []))
+                },
+                "pinecone": {
+                    "duration_ms": pinecone_ms,
+                    "total_matches": (state.get("pinecone_results") or {}).get("total_matches", 0),
+                    "filtered_matches": (state.get("pinecone_results") or {}).get("filtered_matches", 0),
+                    "chunks": [],
+                    "metadata_filter_used": (state.get("pinecone_results") or {}).get("metadata_filter_used", False),
+                    "complexity_based_filtering": state.get("pinecone_complexity_filtering", {})
+                },
+                "chunk_ranking": {
+                    "duration_ms": ranking_ms,
+                    "original_count": state.get("pinecone_complexity_filtering", {}).get("original_count", 0),
+                    "filtered_count": state.get("pinecone_complexity_filtering", {}).get("filtered_count", 0)
+                },
+                "synthesis": {
+                    "duration_ms": synthesis_ms,
+                    "reasoning_effort": state.get("reasoning_effort", "medium"),
+                    "dip_tables_sent": len(state.get("dip_results", [])),
+                    "dip_entries_sent": sum(r.get('count', 0) for r in state.get("dip_results", [])),
+                    "pinecone_chunks_sent": len((state.get("pinecone_results") or {}).get("matches", [])),
+                    "equipment_context": [
+                        {"manufacturer": eq.get("manufacturer", ""), "model": eq.get("model", ""), "rank": eq.get("rank", 0)}
+                        for eq in state.get("systems_context", [])[:7]
+                    ],
+                    "token_usage": state.get("synthesis_token_usage", {}),
+                    "model_used": state.get("synthesis_model_used", state.get("synthesis_model", "unknown"))
+                },
+                "perplexity": {
+                    "duration_ms": perplexity_ms,
+                    "enabled": os.getenv("PERPLEXITY_ENABLED", "false").lower() == "true",
+                    "citations_count": len(perplexity_result.get("citations", [])) if perplexity_result and not isinstance(perplexity_result, Exception) else 0
+                },
+                "assembly": {
+                    "duration_ms": 0
+                }
+            }
+
+            # Add Pinecone chunk details
+            if state.get("pinecone_results"):
+                all_chunks = state["pinecone_results"].get("all_matches", state["pinecone_results"].get("matches", []))
+                for match in all_chunks[:10]:
+                    detailed_metrics["pinecone"]["chunks"].append({
+                        "score": match.get("score", 0),
+                        "content_preview": str(match.get("metadata", {}).get("text", ""))[:100],
+                        "doc_type": match.get("metadata", {}).get("doc_type", "unknown")
+                    })
 
             yield {
                 "event": "done",
                 "processing_time_ms": processing_time,
-                "detailed_metrics": {
-                    "classification_ms": state.get("classification_duration_ms", 0),
-                    "data_retrieval_ms": state.get("data_retrieval_duration_ms", 0),
-                    "synthesis_ms": openai_result.get("synthesis_duration_ms", 0) if isinstance(openai_result, dict) else 0,
-                    "perplexity_ms": perplexity_result.get("duration_ms", 0) if perplexity_result else 0
-                }
+                "detailed_metrics": detailed_metrics
             }
 
             logger.info(f"🎯 STREAMING COMPLETE - Total time: {processing_time}ms")

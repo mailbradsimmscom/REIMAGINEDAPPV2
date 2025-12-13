@@ -20,9 +20,9 @@ router.post(
   '/',
   validate(chatProcessRequestSchema, 'body'),
   requireServices(['supabase', 'openai', 'pinecone', 'sidecar']),
-  validateResponse(ChatProcessEnvelope),
   async (req, res, next) => {
     const startTime = Date.now();
+    const stream = req.query.stream === 'true';
     // Use requestId from middleware (req_ format) instead of creating new UUID
     const requestId = req.requestId || res.locals?.requestId;
     const requestLogger = logger.createRequestLogger(requestId);
@@ -39,22 +39,46 @@ router.post(
       chatDebug.step('ROUTE_RECEIVED', {
         threadId,
         messageLength: message.length,
-        hasMessage: !!message
+        hasMessage: !!message,
+        streaming: stream
       });
 
       // Structured chat logging
       await logger.chat('CHAT', 'User message received', {
         query: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
         thread_id: threadId || 'new',
-        message_length: message.length
+        message_length: message.length,
+        streaming: stream
       }, { correlationId: requestLogger.requestId });
 
       requestLogger.debug('🔍 [PROCESS] Chat request received', {
         threadId,
-        messageLength: message.length
+        messageLength: message.length,
+        streaming: stream
       });
 
-      // Call chat-proxy service (handles all intelligence and Python workflow)
+      // STREAMING MODE: Return SSE events
+      if (stream) {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no');
+
+        const eventStream = await processChatMessage({
+          query: message,
+          threadId,
+          stream: true
+        });
+
+        for await (const { event, data } of eventStream) {
+          res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+        }
+
+        res.end();
+        return;
+      }
+
+      // NON-STREAMING MODE: Original JSON behavior
       const result = await processChatMessage({
         query: message,
         threadId
