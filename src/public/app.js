@@ -772,16 +772,14 @@ async function processMessage(message) {
     let allSources = [];
     let detailedMetrics = null;
     let messageAdded = false;
+    let sawDoneEvent = false;
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop();
-
+    // Helper to parse SSE frames from buffer
+    const parseSSEBuffer = () => {
       let currentEvent = null;
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // Keep incomplete line in buffer
+
       for (const line of lines) {
         if (line.startsWith('event: ')) {
           currentEvent = line.slice(7).trim();
@@ -812,7 +810,7 @@ async function processMessage(message) {
               const perplexitySection = `\n\n---\n\n**Real-World Resources from Boat Owners**\n\n${data.answer}`;
               fullResponse += perplexitySection;
 
-              // Update the last message in DOM (class is .content, not .message-content)
+              // Update the last message in DOM
               const messagesContainer = document.getElementById('messages');
               const lastMessage = messagesContainer?.querySelector('.message.inbound:last-child .content');
               if (lastMessage) {
@@ -821,6 +819,7 @@ async function processMessage(message) {
 
             } else if (currentEvent === 'done') {
               detailedMetrics = data.detailed_metrics;
+              sawDoneEvent = true;
             }
           } catch (e) {
             console.warn('Failed to parse SSE data:', e);
@@ -828,19 +827,49 @@ async function processMessage(message) {
           currentEvent = null;
         }
       }
+    };
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      // Process value BEFORE checking done (final chunk may have data)
+      if (value) {
+        buffer += decoder.decode(value, { stream: true });
+        parseSSEBuffer();
+      }
+
+      if (done) {
+        // Final parse pass for any remaining buffer content
+        if (buffer.trim()) {
+          buffer += '\n'; // Ensure we can parse the last line
+          parseSSEBuffer();
+        }
+        break;
+      }
     }
 
-    // Fallback if no message was added (shouldn't happen)
+    // Fallback if no message was added
     if (!messageAdded) {
       removeLoadingAnimation();
-      addMessage('No response received', 'inbound');
+      if (fullResponse) {
+        // We have content but didn't add message - add it now
+        addEnhancedMessage(fullResponse, allSources);
+        messageAdded = true;
+      } else {
+        addMessage('No response received', 'inbound');
+        console.warn('SSE stream ended but no synthesis event received');
+      }
     }
 
-    // Save to DB
-    assistantSequence = ++currentMessageSequence;
-    await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
-      sources: allSources
-    });
+    // Only save if we have content (don't save empty messages)
+    if (fullResponse) {
+      assistantSequence = ++currentMessageSequence;
+      await saveAssistantMessage(currentThreadId, fullResponse, assistantSequence, {
+        sources: allSources
+      });
+    } else {
+      console.warn('Not saving empty assistant message');
+    }
 
     // Update metrics panel if available
     if (detailedMetrics) {

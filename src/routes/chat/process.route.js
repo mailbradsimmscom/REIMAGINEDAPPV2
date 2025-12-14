@@ -59,22 +59,36 @@ router.post(
 
       // STREAMING MODE: Return SSE events
       if (stream) {
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
+        res.status(200);
+        res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');
 
-        const eventStream = await processChatMessage({
-          query: message,
-          threadId,
-          stream: true
-        });
+        // Send headers immediately to prevent proxy buffering
+        if (typeof res.flushHeaders === 'function') res.flushHeaders();
 
-        for await (const { event, data } of eventStream) {
-          res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+        // Keep-alive heartbeat every 15s to prevent connection timeout
+        const heartbeat = setInterval(() => {
+          res.write(':\n\n');
+          if (typeof res.flush === 'function') res.flush();
+        }, 15000);
+
+        try {
+          const eventStream = await processChatMessage({
+            query: message,
+            threadId,
+            stream: true
+          });
+
+          for await (const { event, data } of eventStream) {
+            res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+            if (typeof res.flush === 'function') res.flush();
+          }
+        } finally {
+          clearInterval(heartbeat);
+          res.end();
         }
-
-        res.end();
         return;
       }
 
