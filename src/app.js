@@ -10,6 +10,7 @@ import adminRouter from './routes/admin/index.js';
 import suppliesRouter from './routes/supplies/index.js';
 import tripsRouter from './routes/trips/index.js';
 import gpsRouter from './routes/gps.route.js';
+import anchoragesRouter from './routes/anchorages/index.js';
 
 // Create Express app
 const app = express();
@@ -164,6 +165,10 @@ app.use('/api/trips', tripsRouter);
 gpsRouter._mountPath = '/api/gps';
 app.use('/api/gps', gpsRouter);
 
+// Anchorages API routes
+anchoragesRouter._mountPath = '/api/anchorages';
+app.use('/api/anchorages', anchoragesRouter);
+
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {
   try {
@@ -216,6 +221,17 @@ app.get('/trips/detail', async (req, res) => {
     res.end(content);
   } catch (error) {
     res.status(404).json({ error: 'Trip detail page not found' });
+  }
+});
+
+// Anchorages tracking page
+app.get('/anchorages', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/anchorages.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Anchorages page not found' });
   }
 });
 

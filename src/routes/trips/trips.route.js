@@ -285,13 +285,14 @@ router.post('/:id/sail-event', async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { main_sail, jib, code_zero, asym_spinnaker, notes } = req.body;
+    const { main_sail, jib, code_zero, asym_spinnaker, staysail, notes } = req.body;
 
     const sailEvent = await tripsService.recordSailEvent(id, {
       main_sail,
       jib,
       code_zero,
       asym_spinnaker,
+      staysail,
       notes
     });
 

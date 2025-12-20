@@ -15,7 +15,8 @@ class TripsManager {
       main_sail: null,
       jib: false,
       code_zero: false,
-      asym_spinnaker: false
+      asym_spinnaker: false,
+      staysail: false
     };
 
     this.init();
@@ -62,6 +63,7 @@ class TripsManager {
     this.sailJib = document.getElementById('sailJib');
     this.sailCodeZero = document.getElementById('sailCodeZero');
     this.sailAsym = document.getElementById('sailAsym');
+    this.sailStaysail = document.getElementById('sailStaysail');
     this.saveSailConfigBtn = document.getElementById('saveSailConfigBtn');
     this.sailConfigStatus = document.getElementById('sailConfigStatus');
 
@@ -436,7 +438,8 @@ class TripsManager {
       main_sail: this.currentSailConfig.main_sail,
       jib: this.sailJib?.checked || false,
       code_zero: this.sailCodeZero?.checked || false,
-      asym_spinnaker: this.sailAsym?.checked || false
+      asym_spinnaker: this.sailAsym?.checked || false,
+      staysail: this.sailStaysail?.checked || false
     };
   }
 
@@ -453,6 +456,7 @@ class TripsManager {
     if (this.sailJib) this.sailJib.checked = config.jib || false;
     if (this.sailCodeZero) this.sailCodeZero.checked = config.code_zero || false;
     if (this.sailAsym) this.sailAsym.checked = config.asym_spinnaker || false;
+    if (this.sailStaysail) this.sailStaysail.checked = config.staysail || false;
 
     // Update status text
     this.updateSailConfigStatus(config);
@@ -469,6 +473,7 @@ class TripsManager {
     if (config.jib) parts.push('Jib');
     if (config.code_zero) parts.push('Code 0');
     if (config.asym_spinnaker) parts.push('Asym');
+    if (config.staysail) parts.push('Staysail');
 
     this.sailConfigStatus.textContent = parts.length > 0 ? parts.join(' + ') : 'Not set';
   }

@@ -1,0 +1,228 @@
+/**
+ * Anchorages Routes
+ * API endpoints for anchorage and mooring management
+ */
+
+import express from 'express';
+import * as anchoragesService from '../../services/anchorages/anchorages.service.js';
+import { logger } from '../../utils/logger.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/anchorages
+ * List all anchorages with formatted fields
+ */
+router.get('/', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const anchorages = await anchoragesService.listAnchorages();
+
+    return res.json({
+      success: true,
+      data: anchorages,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error listing anchorages', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * GET /api/anchorages/:id
+ * Get single anchorage by ID
+ */
+router.get('/:id', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id } = req.params;
+    const anchorage = await anchoragesService.getAnchorage(id);
+
+    if (!anchorage) {
+      return res.status(404).json({
+        success: false,
+        error: 'Anchorage not found',
+        requestId: res.locals.requestId
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: anchorage,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error getting anchorage', { error: error.message, id: req.params.id });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * POST /api/anchorages/detect
+ * Detect new anchorages from GPS history
+ */
+router.post('/detect', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { minHours } = req.body;
+    const result = await anchoragesService.detectNewAnchorages(minHours || 4);
+
+    requestLogger.info('Anchorage detection complete', {
+      detected: result.detected,
+      inserted: result.inserted
+    });
+
+    return res.json({
+      success: true,
+      data: result,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error detecting anchorages', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * POST /api/anchorages
+ * Create anchorage manually
+ */
+router.post('/', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const {
+      location_name,
+      latitude,
+      longitude,
+      arrived_at,
+      departed_at,
+      anchorage_type,
+      scope_meters,
+      avg_wind_speed,
+      avg_wind_direction,
+      notes
+    } = req.body;
+
+    if (!latitude || !longitude || !arrived_at) {
+      return res.status(400).json({
+        success: false,
+        error: 'latitude, longitude, and arrived_at are required',
+        requestId: res.locals.requestId
+      });
+    }
+
+    const anchorage = await anchoragesService.createAnchorage({
+      location_name,
+      latitude,
+      longitude,
+      arrived_at,
+      departed_at,
+      anchorage_type: anchorage_type || 'anchor',
+      scope_meters,
+      avg_wind_speed,
+      avg_wind_direction,
+      notes
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: anchorage,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error creating anchorage', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * PATCH /api/anchorages/:id
+ * Update anchorage (location_name, type, scope, notes)
+ */
+router.patch('/:id', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id } = req.params;
+    const { location_name, anchorage_type, scope_meters, notes } = req.body;
+
+    const updates = {};
+    if (location_name !== undefined) updates.location_name = location_name;
+    if (anchorage_type !== undefined) updates.anchorage_type = anchorage_type;
+    if (scope_meters !== undefined) updates.scope_meters = scope_meters;
+    if (notes !== undefined) updates.notes = notes;
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No valid fields to update',
+        requestId: res.locals.requestId
+      });
+    }
+
+    const anchorage = await anchoragesService.updateAnchorage(id, updates);
+
+    return res.json({
+      success: true,
+      data: anchorage,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error updating anchorage', { error: error.message, id: req.params.id });
+    const status = error.message.includes('not found') ? 404 : 500;
+    return res.status(status).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * DELETE /api/anchorages/:id
+ * Delete anchorage
+ */
+router.delete('/:id', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id } = req.params;
+    await anchoragesService.deleteAnchorage(id);
+
+    return res.json({
+      success: true,
+      message: 'Anchorage deleted successfully',
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error deleting anchorage', { error: error.message, id: req.params.id });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+export default router;

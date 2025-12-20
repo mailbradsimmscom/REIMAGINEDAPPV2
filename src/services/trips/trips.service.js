@@ -519,6 +519,7 @@ export async function recordSailEvent(tripId, sailConfig) {
       jib: sailConfig.jib || false,
       code_zero: sailConfig.code_zero || false,
       asym_spinnaker: sailConfig.asym_spinnaker || false,
+      staysail: sailConfig.staysail || false,
       notes: sailConfig.notes || null
     })
     .select()
@@ -581,7 +582,8 @@ export async function getCurrentSailConfig(tripId) {
       main_sail: null,
       jib: false,
       code_zero: false,
-      asym_spinnaker: false
+      asym_spinnaker: false,
+      staysail: false
     };
   }
 

@@ -453,6 +453,7 @@ class TripDetail {
     if (event.jib) parts.push('Jib');
     if (event.code_zero) parts.push('Code Zero');
     if (event.asym_spinnaker) parts.push('Asymmetric');
+    if (event.staysail) parts.push('Staysail');
 
     if (parts.length === 1 && parts[0] === 'Main Down') {
       return 'Sails down (motoring)';
