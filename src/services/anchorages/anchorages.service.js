@@ -284,6 +284,68 @@ export async function detectNewAnchorages(minHours = 4) {
 }
 
 /**
+ * Reverse geocode coordinates to get place name
+ * Uses OpenStreetMap Nominatim API (same as trips feature)
+ * @param {number} lat - Latitude
+ * @param {number} lon - Longitude
+ * @returns {Promise<string|null>} Place name or null
+ */
+async function reverseGeocode(lat, lon) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14`;
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'BoatOS/1.0' }
+    });
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const address = data.address || {};
+
+    // Try various fields in order of preference
+    return address.village || address.town || address.city || address.island ||
+           address.municipality || address.county || address.state_district ||
+           address.state || null;
+  } catch (error) {
+    requestLogger.warn('Reverse geocode failed', { lat, lon, error: error.message });
+    return null;
+  }
+}
+
+/**
+ * Populate location names for anchorages that don't have one
+ * Uses reverse geocoding from OpenStreetMap
+ * @returns {Promise<Object>} { updated: number, anchorages: Array }
+ */
+export async function populateLocationNames() {
+  const anchorages = await anchoragesRepository.findAll();
+  const needsName = anchorages.filter(a => !a.location_name);
+
+  requestLogger.info('Populating location names', { total: anchorages.length, needsName: needsName.length });
+
+  let updated = 0;
+  const updatedAnchorages = [];
+
+  for (const anchorage of needsName) {
+    // Rate limit: Nominatim requires max 1 request per second
+    if (updated > 0) {
+      await new Promise(resolve => setTimeout(resolve, 1100));
+    }
+
+    const name = await reverseGeocode(anchorage.latitude, anchorage.longitude);
+
+    if (name) {
+      await anchoragesRepository.update(anchorage.id, { location_name: name });
+      updatedAnchorages.push({ id: anchorage.id, location_name: name });
+      updated++;
+      requestLogger.info('Location name set', { id: anchorage.id, name });
+    }
+  }
+
+  return { updated, anchorages: updatedAnchorages };
+}
+
+/**
  * Create anchorage manually (not from GPS detection)
  * @param {Object} data - Anchorage data
  * @returns {Promise<Object>} Created anchorage

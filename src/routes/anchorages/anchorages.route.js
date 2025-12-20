@@ -69,6 +69,33 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
+ * POST /api/anchorages/populate-names
+ * Populate location names using reverse geocoding
+ */
+router.post('/populate-names', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await anchoragesService.populateLocationNames();
+
+    requestLogger.info('Location names populated', { updated: result.updated });
+
+    return res.json({
+      success: true,
+      data: result,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error populating location names', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
  * POST /api/anchorages/detect
  * Detect new anchorages from GPS history
  */
