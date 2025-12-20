@@ -247,7 +247,7 @@ Response:
 
 ### Populate Names Endpoint
 
-Uses OpenStreetMap Nominatim API (same as trips auto-naming). Rate-limited to 1 request/second per Nominatim policy.
+Uses OpenStreetMap Nominatim API (same as trips auto-naming). Rate-limited to 1 request/second per Nominatim policy. Returns place name with country (e.g., "Rodney Bay, Saint Lucia").
 
 ```javascript
 POST /api/anchorages/populate-names
@@ -258,8 +258,8 @@ Response:
   "data": {
     "updated": 10,
     "anchorages": [
-      { "id": "abc123", "location_name": "Rodney Bay" },
-      { "id": "def456", "location_name": "Soufrière" }
+      { "id": "abc123", "location_name": "Rodney Bay, Saint Lucia" },
+      { "id": "def456", "location_name": "Soufrière, Saint Lucia" }
     ]
   }
 }

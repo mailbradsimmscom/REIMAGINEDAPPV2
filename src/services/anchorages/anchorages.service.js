@@ -302,10 +302,16 @@ async function reverseGeocode(lat, lon) {
     const data = await response.json();
     const address = data.address || {};
 
-    // Try various fields in order of preference
-    return address.village || address.town || address.city || address.island ||
+    // Try various fields in order of preference for place name
+    const placeName = address.village || address.town || address.city || address.island ||
            address.municipality || address.county || address.state_district ||
            address.state || null;
+
+    if (!placeName) return null;
+
+    // Add country if available
+    const country = address.country;
+    return country ? `${placeName}, ${country}` : placeName;
   } catch (error) {
     requestLogger.warn('Reverse geocode failed', { lat, lon, error: error.message });
     return null;
