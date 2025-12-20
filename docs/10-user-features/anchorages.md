@@ -282,7 +282,7 @@ Response:
 | duration_hours | integer | Computed duration |
 | avg_wind_speed | double | Average wind during stay (knots) |
 | avg_wind_direction | double | Average wind direction (degrees) |
-| anchorage_type | text | `anchor` or `mooring` |
+| anchorage_type | text | `anchor`, `mooring`, or `marina` |
 | scope_meters | double | Rode/chain length (meters) |
 | anchor_lat | double | Computed anchor position (upwind) |
 | anchor_lon | double | Computed anchor position (upwind) |
@@ -305,7 +305,7 @@ Response:
 | Departed | display | No | AST timezone, linked trip if available |
 | Duration | display | No | e.g., "1 day 13 hours" |
 | Wind | display | No | e.g., "3.8 kts from ESE (125°)" |
-| Type | dropdown | Yes | Anchor / Mooring |
+| Type | dropdown | Yes | Anchor / Mooring / Marina |
 | Scope | number | Yes | Meters (both anchor and mooring) |
 | Anchor Position | display | No | Computed when scope saved |
 | Notes | textarea | Yes | Optional notes |

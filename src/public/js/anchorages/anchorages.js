@@ -207,8 +207,9 @@ class AnchoragesManager {
   renderCard(a) {
     const arrivedDate = this.formatDate(a.arrived_at);
     const departedDate = a.departed_at ? this.formatDate(a.departed_at) : 'Still here';
-    const typeClass = a.anchorage_type === 'mooring' ? 'mooring' : 'anchor';
-    const typeLabel = a.anchorage_type === 'mooring' ? 'Mooring' : 'Anchor';
+    const typeClass = a.anchorage_type || 'anchor';
+    const typeLabels = { anchor: 'Anchor', mooring: 'Mooring', marina: 'Marina' };
+    const typeLabel = typeLabels[a.anchorage_type] || 'Anchor';
 
     return `
       <div class="anchorage-card" data-anchorage-id="${a.id}">
@@ -259,8 +260,9 @@ class AnchoragesManager {
           <div class="field-group">
             <div class="field-label">Type</div>
             <select class="select-field type-select">
-              <option value="anchor" ${a.anchorage_type !== 'mooring' ? 'selected' : ''}>Anchor</option>
+              <option value="anchor" ${a.anchorage_type === 'anchor' || !a.anchorage_type ? 'selected' : ''}>Anchor</option>
               <option value="mooring" ${a.anchorage_type === 'mooring' ? 'selected' : ''}>Mooring</option>
+              <option value="marina" ${a.anchorage_type === 'marina' ? 'selected' : ''}>Marina</option>
             </select>
           </div>
           <div class="field-group">
