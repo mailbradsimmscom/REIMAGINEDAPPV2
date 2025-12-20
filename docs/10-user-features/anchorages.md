@@ -211,6 +211,7 @@ ORDER BY MIN(hour) DESC
 | GET | `/api/anchorages` | List all anchorages with formatted fields |
 | GET | `/api/anchorages/:id` | Get single anchorage |
 | POST | `/api/anchorages/detect` | Detect new anchorages from GPS history |
+| POST | `/api/anchorages/populate-names` | Populate location names via reverse geocoding |
 | POST | `/api/anchorages` | Create anchorage manually |
 | PATCH | `/api/anchorages/:id` | Update anchorage (name, type, scope, notes) |
 | DELETE | `/api/anchorages/:id` | Delete anchorage |
@@ -240,6 +241,26 @@ Response:
     "detected": 10,
     "inserted": 3,
     "anchorages": [...]
+  }
+}
+```
+
+### Populate Names Endpoint
+
+Uses OpenStreetMap Nominatim API (same as trips auto-naming). Rate-limited to 1 request/second per Nominatim policy.
+
+```javascript
+POST /api/anchorages/populate-names
+
+Response:
+{
+  "success": true,
+  "data": {
+    "updated": 10,
+    "anchorages": [
+      { "id": "abc123", "location_name": "Rodney Bay" },
+      { "id": "def456", "location_name": "Soufrière" }
+    ]
   }
 }
 ```
