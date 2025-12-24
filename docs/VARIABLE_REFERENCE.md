@@ -400,6 +400,7 @@ These are the core identifiers used throughout the system.
 |----------|-------------|
 | `OPENAI_API_KEY` | OpenAI API authentication key |
 | `ANTHROPIC_API_KEY` | Anthropic Claude API key |
+| `COHERE_API_KEY` | Cohere API key for rerank-v3.5 (chunk ranking) |
 | `PINECONE_API_KEY` | Pinecone vector database API key |
 | `SUPABASE_URL` | Supabase PostgreSQL instance URL |
 | `SUPABASE_SERVICE_KEY` | Supabase service role key |
