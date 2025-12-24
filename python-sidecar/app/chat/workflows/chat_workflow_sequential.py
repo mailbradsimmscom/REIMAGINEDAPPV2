@@ -1357,7 +1357,7 @@ class ChatWorkflowSequential:
 
             logger.info(f"✅ Parallel searches COMPLETE")
             logger.info(f"  → Total duration: {parallel_duration:.2f}ms")
-            logger.info(f"  → Avg per search: {parallel_duration / len(search_tasks):.2f}ms")
+            logger.info(f"  → Avg per search: {parallel_duration / len(search_tasks):.2f}ms" if search_tasks else "  → No searches to average")
 
             # ===== COLLECT AND ANALYZE RESULTS =====
             all_matches = []
@@ -1457,11 +1457,11 @@ class ChatWorkflowSequential:
                 logger.info(f"  → Top score: {ranked_matches[0].get('score', 0):.3f}")
                 logger.info(f"  → Bottom score: {ranked_matches[-1].get('score', 0):.3f}")
 
-            # ===== CAP AT 20 CHUNKS =====
-            final_matches = ranked_matches[:20]
+            # ===== CAP AT 10 CHUNKS =====
+            final_matches = ranked_matches[:10]
             capped_count = len(ranked_matches) - len(final_matches)
 
-            logger.info(f"✂️  Final cap (max 20 chunks)")
+            logger.info(f"✂️  Final cap (max 10 chunks)")
             logger.info(f"  → Before cap: {len(ranked_matches)}")
             logger.info(f"  → After cap: {len(final_matches)}")
             logger.info(f"  → Capped: {capped_count}")

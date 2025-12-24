@@ -68,10 +68,16 @@ class Logger {
 
     let formatted = `[${timestamp}] [${level.toUpperCase()}] [${module}] ${message}`;
 
-    if (meta.error) {
-      formatted += `\n  Error: ${meta.error}`;
-      if (meta.stack) {
-        formatted += `\n  Stack: ${meta.stack}`;
+    // Include ALL meta fields (except internal ones)
+    const skipKeys = new Set(['module', 'correlationId', 'requestId']);
+    const metaEntries = Object.entries(meta).filter(([k]) => !skipKeys.has(k));
+
+    if (metaEntries.length > 0) {
+      for (const [key, value] of metaEntries) {
+        if (value !== undefined && value !== null) {
+          const valueStr = typeof value === 'object' ? JSON.stringify(value) : value;
+          formatted += `\n  ${key}: ${valueStr}`;
+        }
       }
     }
 

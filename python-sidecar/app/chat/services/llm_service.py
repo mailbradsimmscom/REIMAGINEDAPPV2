@@ -13,6 +13,8 @@ import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 
+import cohere
+
 from ..config import (
     CLASSIFICATION_PROMPT_TEMPLATE,
     SYNTHESIS_PROMPT_TEMPLATE,
@@ -236,7 +238,7 @@ class LLMService:
                          chunks: List[Dict[str, Any]],
                          complexity_score: float) -> List[Dict[str, Any]]:
         """
-        Rank and filter Pinecone chunks based on relevance and complexity
+        Rank and filter Pinecone chunks using Cohere Rerank API
 
         Args:
             user_query: User's question
@@ -244,71 +246,53 @@ class LLMService:
             complexity_score: Query complexity (0.0-1.0)
 
         Returns:
-            Filtered list of chunks based on complexity
+            Filtered list of chunks based on complexity, with Cohere relevance scores
         """
         if not chunks:
             return []
 
         # Determine chunk limit based on complexity
         if complexity_score <= 0.3:
-            chunk_limit = 2  # Simple (bumped from 1)
-        elif complexity_score <= 0.6:  # Tightened from 0.7
-            chunk_limit = 5  # Moderate (bumped from 3)
+            chunk_limit = 2  # Simple
+        elif complexity_score <= 0.6:
+            chunk_limit = 5  # Moderate
         else:
-            chunk_limit = 10  # Complex (bumped from 8)
+            chunk_limit = 10  # Complex
 
         # If we have fewer chunks than the limit, return all
         if len(chunks) <= chunk_limit:
             logger.info(f"🔍 Chunk filtering: {len(chunks)} chunks <= limit {chunk_limit}, using all")
             return chunks
 
-        # Use LLM to rank chunks by relevance
+        # Use Cohere Rerank for fast, accurate ranking
         try:
-            # Log chunk metadata to debug empty content
-            logger.info(f"🔍 Ranking {len(chunks[:10])} chunks for query: '{user_query}'")
-            for i, chunk in enumerate(chunks[:3]):
-                logger.info(f"  Chunk {i}: score={chunk.get('score', 0):.3f}, metadata_keys={list(chunk.get('metadata', {}).keys())}")
+            logger.info(f"🔍 Cohere reranking {len(chunks[:10])} chunks for query: '{user_query}'")
 
-            chunks_text = ""
-            for i, chunk in enumerate(chunks[:10]):  # Use 0-based indexing
-                content = chunk.get('metadata', {}).get('text', '')
-                chunks_text += f"\n=== CHUNK {i} ===\n{content}\n"
+            # Extract text content from chunks
+            documents = [chunk.get('metadata', {}).get('text', '') for chunk in chunks[:10]]
 
-            prompt = f"""Rank these document chunks by relevance to the query. Return JSON only.
-
-USER QUERY: "{user_query}"
-
-CHUNKS:
-{chunks_text}
-
-Return JSON with chunk rankings (1 is most relevant):
-{{
-    "rankings": [
-        {{"chunk_index": 0, "rank": 1, "relevance_score": 0.9}},
-        {{"chunk_index": 1, "rank": 2, "relevance_score": 0.7}}
-    ]
-}}"""
-
-            response_text = await self._call_llm(
-                prompt,
-                model=self.openai_summary_model,
-                max_tokens=500
+            # Call Cohere Rerank API
+            co = cohere.Client(os.getenv('COHERE_API_KEY'))
+            response = co.rerank(
+                model='rerank-v3.5',
+                query=user_query,
+                documents=documents,
+                top_n=chunk_limit
             )
 
-            result = json.loads(response_text.strip().strip('```json').strip('```'))
+            # Build filtered chunks with Cohere relevance scores
+            filtered_chunks = []
+            for result in response.results:
+                chunk = chunks[result.index].copy()
+                chunk['score'] = result.relevance_score  # Replace Pinecone score with Cohere score
+                filtered_chunks.append(chunk)
 
-            # Sort chunks by rank and take top N
-            sorted_rankings = sorted(result.get('rankings', []), key=lambda x: x['rank'])
-            top_indices = [r['chunk_index'] for r in sorted_rankings[:chunk_limit]]
-
-            filtered_chunks = [chunks[i] for i in top_indices if i < len(chunks)]
-
-            logger.info(f"🔍 Chunk filtering: {len(chunks)} → {len(filtered_chunks)} chunks (complexity: {complexity_score:.2f}, limit: {chunk_limit})")
+            logger.info(f"🔍 Cohere rerank: {len(chunks)} → {len(filtered_chunks)} chunks (complexity: {complexity_score:.2f}, limit: {chunk_limit}, top_score: {filtered_chunks[0]['score']:.3f})")
 
             return filtered_chunks
 
         except Exception as e:
-            logger.warning(f"Chunk ranking failed, using all chunks: {e}")
+            logger.warning(f"Cohere rerank failed, using top chunks: {e}")
             return chunks[:chunk_limit]
 
     # async def score_response(self,

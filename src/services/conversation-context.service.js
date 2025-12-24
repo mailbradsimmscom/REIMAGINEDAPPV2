@@ -291,12 +291,12 @@ export async function getEquipmentRelationshipContext(threadId, currentEquipment
     }
   }
 
-  // Sort by relevance (current query equipment first, then by weight)
+  // Sort by relevance (current query equipment first, then by combinedRank/weight)
   return allEquipment.sort((a, b) => {
     if (a.source !== b.source) {
       return a.source === 'conversation_history' ? 1 : -1;
     }
-    return (b.weight || b.rank || 0) - (a.weight || a.rank || 0);
+    return (b.combinedRank || b.weight || b.rank || 0) - (a.combinedRank || a.weight || a.rank || 0);
   });
 }
 

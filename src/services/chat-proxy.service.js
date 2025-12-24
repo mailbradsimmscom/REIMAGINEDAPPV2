@@ -156,19 +156,39 @@ export function createChatProxyService({
     const seenAssetUids = new Set();
     let queryKeywordResults = [];
 
-    for (const keyword of keywords.slice(0, 5)) { // Limit to first 5 keywords
-      const results = await systemsRepository.searchSystems(keyword, { limit: 5 });
+    // ✅ FIX: Run all keyword searches IN PARALLEL + start LLM extraction at same time
+    const keywordSearchPromises = keywords.slice(0, 5).map(keyword =>
+      systemsRepository.searchSystems(keyword, { limit: 5 })
+    );
+
+    // Start LLM extraction in parallel (will be awaited in else block)
+    const llmExtractionPromise = equipmentExtractionServiceDep.extractEquipmentName(query).catch(err => {
+      requestLogger.error('❌ LLM extraction FAILED (parallel start)', { error: err.message });
+      return { equipment: [] };
+    });
+
+    // Wait for all keyword searches to complete (running in parallel)
+    const keywordSearchResults = await Promise.all(keywordSearchPromises);
+
+    // Process results and deduplicate with score accumulation
+    for (const results of keywordSearchResults) {
       for (const result of results) {
         if (!seenAssetUids.has(result.asset_uid)) {
           seenAssetUids.add(result.asset_uid);
-          queryKeywordResults.push(result);
+          queryKeywordResults.push({...result, combinedRank: result.rank || 0});
+        } else {
+          // ✅ FIX: Add score to existing (same equipment found via different keyword)
+          const existing = queryKeywordResults.find(e => e.asset_uid === result.asset_uid);
+          if (existing) {
+            existing.combinedRank = (existing.combinedRank || 0) + (result.rank || 0);
+          }
         }
       }
     }
 
-    // Sort by rank (highest first) and limit to top 10
+    // Sort by combinedRank (highest first) and limit to top 10
     queryKeywordResults = queryKeywordResults
-      .sort((a, b) => (b.rank || 0) - (a.rank || 0))
+      .sort((a, b) => (b.combinedRank || b.rank || 0) - (a.combinedRank || a.rank || 0))
       .slice(0, 10);
     const keywordSearchDuration = Date.now() - step3Start;
 
@@ -179,6 +199,22 @@ export function createChatProxyService({
     });
 
     if (referenceCheck.should_infer) {
+      // ✅ FIX: Apply anchor boost (+1.0) to top item in existing context
+      // This protects the primary equipment from Q1 during Q2+ queries
+      const ANCHOR_BOOST = 1.0;
+      if (existingEquipmentContext.length > 0) {
+        // existingEquipmentContext is sorted by rank (highest first) from conversation-context.service.js
+        existingEquipmentContext[0].combinedRank =
+          (existingEquipmentContext[0].combinedRank || existingEquipmentContext[0].rank || 0) + ANCHOR_BOOST;
+
+        requestLogger.info('⚓ Applied anchor boost to primary equipment', {
+          manufacturer: existingEquipmentContext[0].manufacturer,
+          model: existingEquipmentContext[0].model,
+          originalRank: existingEquipmentContext[0].rank,
+          boostedRank: existingEquipmentContext[0].combinedRank
+        });
+      }
+
       // Use LLM to infer equipment relationships, passing BOTH keyword results AND existing context
       const inferenceStart = Date.now();
       const inferenceResult = await equipmentRelationshipServiceDep.inferEquipmentRelationships(
@@ -203,6 +239,67 @@ export function createChatProxyService({
         inferenceConfidence: equipmentInference?.confidence || null,
         inferredRelationships: equipmentInference?.relationships?.length || 0
       });
+
+      // ✅ FIX (Change 6): If inference determined this is NEW equipment, run LLM extraction
+      // This ensures phrase-based search runs even in the inference path
+      // Note: Check analysis exists first to avoid null reference errors
+      if (equipmentInference?.analysis?.is_new_equipment === true && currentEquipmentSearch.length > 0) {
+        requestLogger.info('🆕 Inference detected NEW equipment - running LLM extraction for better ranking', {
+          is_new_equipment: equipmentInference.analysis.is_new_equipment,
+          currentKeywordResults: currentEquipmentSearch.length
+        });
+
+        const extractionStart = Date.now();
+        const llmExtraction = await equipmentExtractionServiceDep.extractEquipmentName(query).catch(err => {
+          requestLogger.error('❌ LLM extraction failed in inference path', { error: err.message });
+          return { equipment: [] };
+        });
+        nodeTiming.equipment_extraction_ms += Date.now() - extractionStart;
+
+        if (llmExtraction.equipment && llmExtraction.equipment.length > 0) {
+          const LLM_WEIGHT = 1.5;
+          const seenAssetUids = new Set(currentEquipmentSearch.map(eq => eq.asset_uid));
+
+          for (const eq of llmExtraction.equipment) {
+            const results = await systemsRepository.searchSystems(eq.name, { limit: 10 });
+
+            for (const result of results) {
+              const weightedRank = (result.rank || 0) * LLM_WEIGHT;
+
+              if (!seenAssetUids.has(result.asset_uid)) {
+                seenAssetUids.add(result.asset_uid);
+                currentEquipmentSearch.push({
+                  ...result,
+                  combinedRank: weightedRank,
+                  search_source: 'llm',
+                  llm_confidence: eq.confidence,
+                  llm_role: eq.role
+                });
+              } else {
+                // ✅ Add weighted score to existing (same equipment found by keyword + LLM)
+                const existing = currentEquipmentSearch.find(e => e.asset_uid === result.asset_uid);
+                if (existing) {
+                  existing.combinedRank = (existing.combinedRank || existing.rank || 0) + weightedRank;
+                }
+              }
+            }
+          }
+
+          // Re-sort by combinedRank after LLM merge
+          currentEquipmentSearch.sort((a, b) =>
+            (b.combinedRank || b.rank || 0) - (a.combinedRank || a.rank || 0)
+          );
+
+          requestLogger.info('✅ LLM extraction merged in inference path', {
+            finalEquipmentCount: currentEquipmentSearch.length,
+            topEquipment: currentEquipmentSearch.slice(0, 3).map(eq => ({
+              manufacturer: eq.manufacturer,
+              model: eq.model,
+              combinedRank: eq.combinedRank
+            }))
+          });
+        }
+      }
 
       // NEW: If inference found nothing AND we have no existing context, try LLM extraction as fallback
       if (currentEquipmentSearch.length === 0 && existingEquipmentContext.length === 0) {
@@ -282,15 +379,15 @@ export function createChatProxyService({
       }
 
     } else {
-      // ===== LLM EXTRACTION (keyword search already done above) =====
-      // Use queryKeywordResults from earlier + add LLM extraction for semantic understanding
+      // ===== LLM EXTRACTION (started in parallel with keyword search above) =====
+      // Use queryKeywordResults from earlier + LLM extraction that was started in parallel
 
-      requestLogger.info('🔀 Starting LLM extraction (keyword search already done)', {
+      requestLogger.info('🔀 Awaiting LLM extraction (started in parallel with keywords)', {
         query: query.substring(0, 100),
         keywordResultsFromEarlier: queryKeywordResults.length
       });
 
-      chatDebug.step('LLM_EXTRACTION_START', {
+      chatDebug.step('LLM_EXTRACTION_AWAIT', {
         query: query.substring(0, 100),
         keywordResultsAlreadyHave: queryKeywordResults.length
       });
@@ -302,19 +399,13 @@ export function createChatProxyService({
       let llmExtraction = { equipment: [] };
 
       try {
-        // Only need LLM extraction now (keyword search already done)
-        llmExtraction = await equipmentExtractionServiceDep.extractEquipmentName(query).catch(err => {
-          requestLogger.error('❌ LLM extraction FAILED', {
-            error: err.message,
-            query: query.substring(0, 100)
-          });
-          return { equipment: [] }; // Graceful degradation
-        });
+        // ✅ FIX: Await the promise that was started in parallel with keyword searches
+        llmExtraction = await llmExtractionPromise;
 
         const extractionDuration = Date.now() - extractionStart;
         nodeTiming.equipment_extraction_ms = extractionDuration;
 
-        requestLogger.info('✅ LLM extraction COMPLETE', {
+        requestLogger.info('✅ LLM extraction COMPLETE (was running in parallel)', {
           duration_ms: extractionDuration,
           keywordResultsCount: keywordResults.length,
           llmExtractedCount: llmExtraction.equipment?.length || 0
@@ -357,15 +448,18 @@ export function createChatProxyService({
         llm_not_found: 0
       };
 
-      // Step 1: Add keyword results
+      // Step 1: Add keyword results (preserve combinedRank from score accumulation)
       for (const eq of keywordResults) {
         if (!seenAssetUids.has(eq.asset_uid)) {
           seenAssetUids.add(eq.asset_uid);
           allEquipment.push({
             ...eq,
+            combinedRank: eq.combinedRank || eq.rank || 0,  // ✅ FIX: Preserve accumulated score
             search_source: 'keyword'
           });
           dedupLog.keyword_added++;
+          // DEBUG: Log each keyword result with its combinedRank (inline)
+          requestLogger.debug(`🔑 [KEYWORD_ADD] ${eq.manufacturer} ${eq.model}: rank=${(eq.rank||0).toFixed(3)}, combinedRank=${(eq.combinedRank||0).toFixed(3)}`);
         }
       }
 
@@ -384,27 +478,22 @@ export function createChatProxyService({
           equipment: llmExtraction.equipment.map(e => e.name)
         });
 
-        for (const eq of llmExtraction.equipment) {
-          const searchStart = Date.now();
+        // ✅ FIX: Run all LLM searches in PARALLEL (saves ~800ms)
+        const llmSearchPromises = llmExtraction.equipment.map(eq =>
+          systemsRepository.searchSystems(eq.name, { limit: 10 })
+            .then(results => ({ eq, results }))
+        );
 
-          requestLogger.info('🔍 [LLM_SEARCH_START]', {
-            name: eq.name,
-            confidence: eq.confidence,
-            role: eq.role
-          });
+        const llmSearchResults = await Promise.all(llmSearchPromises);
 
-          const results = await systemsRepository.searchSystems(eq.name, { limit: 10 });
-          const searchDuration = Date.now() - searchStart;
+        // Process results sequentially for score accumulation
+        const LLM_WEIGHT = 1.5;  // LLM phrase-based search is more accurate
 
+        for (const { eq, results } of llmSearchResults) {
           requestLogger.info('🔍 [LLM_SEARCH_RESULT]', {
             name: eq.name,
             found: results.length,
-            duration_ms: searchDuration,
-            asset_uids: results.map(r => r.asset_uid)
-          });
-
-          chatDebug.timing(`SEARCH_${eq.name}`, searchDuration, {
-            found: results.length
+            confidence: eq.confidence
           });
 
           // Track new vs duplicate
@@ -412,10 +501,13 @@ export function createChatProxyService({
           let dupCount = 0;
 
           for (const result of results) {
+            const weightedRank = (result.rank || 0) * LLM_WEIGHT;
+
             if (!seenAssetUids.has(result.asset_uid)) {
               seenAssetUids.add(result.asset_uid);
               allEquipment.push({
                 ...result,
+                combinedRank: weightedRank,
                 search_source: 'llm',
                 llm_confidence: eq.confidence,
                 llm_role: eq.role
@@ -423,6 +515,13 @@ export function createChatProxyService({
               newCount++;
               dedupLog.llm_added++;
             } else {
+              // Add weighted score to existing (same equipment found by keyword + LLM)
+              const existing = allEquipment.find(e => e.asset_uid === result.asset_uid);
+              if (existing) {
+                const oldScore = existing.combinedRank || existing.rank || 0;
+                existing.combinedRank = oldScore + weightedRank;
+                requestLogger.info(`📈 [SCORE_BOOST] ${existing.manufacturer} ${existing.model}: ${oldScore.toFixed(3)} + ${weightedRank.toFixed(3)} = ${existing.combinedRank.toFixed(3)}`);
+              }
               dupCount++;
               dedupLog.llm_duplicates++;
             }
@@ -466,7 +565,9 @@ export function createChatProxyService({
           asset_uid: eq.asset_uid,
           source: eq.search_source,
           manufacturer: eq.manufacturer,
-          model: eq.model
+          model: eq.model,
+          rank: eq.rank,
+          combinedRank: eq.combinedRank  // ← Shows accumulated score
         }))
       });
 
@@ -477,7 +578,9 @@ export function createChatProxyService({
         duplicates: dedupLog.llm_duplicates
       });
 
-      currentEquipmentSearch = allEquipment;
+      // ✅ FIX: Re-sort by combinedRank after merge (ensures correct ranking)
+      currentEquipmentSearch = allEquipment
+        .sort((a, b) => (b.combinedRank || b.rank || 0) - (a.combinedRank || a.rank || 0));
       nodeTiming.equipment_search_ms = Date.now() - step3Start + keywordSearchDuration;
 
       // ===== CLARIFICATION IF NOTHING FOUND =====
@@ -599,7 +702,7 @@ export function createChatProxyService({
           relationship_type: equipment.relationship_type || (i === 0 && equipment.source === 'current' ? 'main' : null),
           llm_confidence: equipment.llm_confidence || null,
           llm_role: equipment.llm_role || null,
-          rank: equipment.rank ?? 0
+          rank: equipment.combinedRank || equipment.rank || 0  // ✅ FIX: Use combinedRank if available
         });
       } catch (error) {
         requestLogger.warn('Failed to fetch full system details', {
@@ -612,7 +715,7 @@ export function createChatProxyService({
           manufacturer: equipment.manufacturer || 'Unknown',
           model: equipment.model || 'Unknown',
           description: equipment.description || 'Equipment details unavailable',
-          rank: equipment.rank ?? equipment.weight ?? 0.5,
+          rank: equipment.combinedRank || equipment.rank || equipment.weight || 0.5,  // ✅ FIX: Use combinedRank
           source: equipment.source || 'current',
           relationship_type: equipment.relationship_type || null,
           inference_confidence: equipment.inference_confidence || null,
