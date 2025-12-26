@@ -3,11 +3,11 @@
 /**
  * Chat Timing Test
  *
- * Measures timing for each hop in the chat flow:
- * 1. Node.js API response time
- * 2. Python sidecar processing
- * 3. Individual components (Pinecone, Perplexity, LLM)
+ * Measures end-to-end timing for chat requests through the full stack:
+ * - Node.js processing (equipment search, extraction, context building)
+ * - Python sidecar processing (classification, retrieval, synthesis)
  *
+ * Makes ONE call per query through Node.js, extracts all timing from response.
  * Results are saved to results/chat-timing.json for dashboard display.
  */
 
@@ -23,11 +23,6 @@ const PYTHON_URL = process.env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
 
 // Test queries with different complexity levels
 const TEST_QUERIES = [
-  {
-    name: 'Simple health check',
-    type: 'health',
-    query: null, // Just health endpoint
-  },
   {
     name: 'Simple question',
     type: 'simple',
@@ -93,7 +88,7 @@ async function testPythonHealth() {
 }
 
 /**
- * Test chat endpoint with timing breakdown
+ * Test chat endpoint - extracts all timing from single full-stack call
  */
 async function testChatEndpoint(query, context = {}) {
   const payload = {
@@ -107,22 +102,14 @@ async function testChatEndpoint(query, context = {}) {
     body: JSON.stringify(payload)
   });
 
-  // Extract internal timing from detailed_metrics (Python sidecar returns this)
+  // Extract timing from response
   const detailedMetrics = result.data?.data?.detailed_metrics || result.data?.detailed_metrics || {};
   const nodeTiming = result.data?.data?.telemetry?.node_timing || result.data?.telemetry?.node_timing || {};
-  
-  // Debug: Log what we received
-  if (!nodeTiming || Object.keys(nodeTiming).length === 0) {
-    console.log('   ⚠️  No node_timing found in response. Response keys:', Object.keys(result.data?.data || {}));
-    console.log('   Telemetry keys:', Object.keys(result.data?.data?.telemetry || {}));
-  }
-
-  // Extract timing_summary if available (new comprehensive breakdown)
   const timingSummary = detailedMetrics?.timing_summary || {};
   const breakdown = timingSummary?.breakdown || {};
 
-  const internalTiming = {
-    // New comprehensive timing from timing_summary
+  // Python sidecar breakdown
+  const pythonBreakdown = {
     classification_ms: breakdown.classification_ms || detailedMetrics?.classification?.duration_ms || 0,
     dip_retrieval_ms: breakdown.dip_retrieval_ms || detailedMetrics?.dip_retrieval?.duration_ms || 0,
     pinecone_ms: breakdown.pinecone_search_ms || detailedMetrics?.pinecone?.duration_ms || 0,
@@ -130,56 +117,15 @@ async function testChatEndpoint(query, context = {}) {
     synthesis_ms: breakdown.synthesis_ms || detailedMetrics?.synthesis?.duration_ms || 0,
     perplexity_ms: breakdown.perplexity_ms || detailedMetrics?.perplexity?.duration_ms || 0,
     assembly_ms: breakdown.assembly_ms || detailedMetrics?.assembly?.duration_ms || 0,
-    total_processing_ms: timingSummary.total_processing_ms || result.data?.data?.processing_time_ms || result.data?.processing_time_ms || 0,
+    total_internal_ms: timingSummary.total_processing_ms || result.data?.data?.processing_time_ms || 0,
     total_measured_ms: timingSummary.total_measured_ms || 0,
     unmeasured_ms: timingSummary.unmeasured_ms || 0
   };
 
   return {
     ...result,
-    internalTiming,
-    detailedMetrics,
-    nodeTiming
-  };
-}
-
-/**
- * Test Python sidecar directly
- */
-async function testPythonDirect(query, context = {}) {
-  const payload = {
-    query,
-    thread_id: `timing-test-direct-${Date.now()}`,
-    systems_context: context.asset_uid ? [{ asset_uid: context.asset_uid }] : []
-  };
-
-  const result = await timedFetch(`${PYTHON_URL}/v1/chat/process`, {
-    method: 'POST',
-    body: JSON.stringify(payload)
-  });
-
-  // Extract internal timing from detailed_metrics
-  const detailedMetrics = result.data?.detailed_metrics || {};
-  const timingSummary = detailedMetrics?.timing_summary || {};
-  const breakdown = timingSummary?.breakdown || {};
-
-  const internalTiming = {
-    classification_ms: breakdown.classification_ms || detailedMetrics?.classification?.duration_ms || 0,
-    dip_retrieval_ms: breakdown.dip_retrieval_ms || detailedMetrics?.dip_retrieval?.duration_ms || 0,
-    pinecone_ms: breakdown.pinecone_search_ms || detailedMetrics?.pinecone?.duration_ms || 0,
-    chunk_ranking_ms: breakdown.chunk_ranking_ms || detailedMetrics?.chunk_ranking?.duration_ms || 0,
-    synthesis_ms: breakdown.synthesis_ms || detailedMetrics?.synthesis?.duration_ms || 0,
-    perplexity_ms: breakdown.perplexity_ms || detailedMetrics?.perplexity?.duration_ms || 0,
-    assembly_ms: breakdown.assembly_ms || detailedMetrics?.assembly?.duration_ms || 0,
-    total_processing_ms: timingSummary.total_processing_ms || result.data?.processing_time_ms || 0,
-    total_measured_ms: timingSummary.total_measured_ms || 0,
-    unmeasured_ms: timingSummary.unmeasured_ms || 0
-  };
-
-  return {
-    ...result,
-    internalTiming,
-    detailedMetrics
+    nodeTiming,
+    pythonBreakdown
   };
 }
 
@@ -197,7 +143,7 @@ async function runTimingTests() {
   };
 
   // Health checks
-  console.log('1. Testing health endpoints...');
+  console.log('1. Health checks...');
 
   const nodeHealth = await testNodeHealth();
   results.tests.push({
@@ -232,70 +178,84 @@ async function runTimingTests() {
   }
 
   // Chat endpoint tests
-  console.log('\n2. Testing chat endpoints...');
+  console.log('\n2. Chat timing tests...');
 
   for (const test of TEST_QUERIES) {
-    if (test.type === 'health') continue;
-
     console.log(`\n   ${test.name}:`);
 
-    // Test via Node.js (full stack)
-    const fullStack = await testChatEndpoint(test.query, test.context || {});
+    const result = await testChatEndpoint(test.query, test.context || {});
+
     results.tests.push({
-      name: `${test.name} (Full Stack)`,
+      name: test.name,
       category: 'chat',
       type: test.type,
-      duration: fullStack.duration,
-      success: fullStack.success,
-      error: fullStack.error,
-      internalTiming: fullStack.internalTiming,
-      nodeTiming: fullStack.nodeTiming
+      duration: result.duration,
+      success: result.success,
+      error: result.error,
+      nodeTiming: result.nodeTiming,
+      pythonBreakdown: result.pythonBreakdown
     });
-    console.log(`     Full stack: ${fullStack.duration}ms ${fullStack.success ? '✓' : '✗'}`);
 
-    // Test Python directly (bypass Node.js)
-    const pythonDirect = await testPythonDirect(test.query, test.context || {});
-    results.tests.push({
-      name: `${test.name} (Python Direct)`,
-      category: 'chat',
-      type: test.type,
-      duration: pythonDirect.duration,
-      success: pythonDirect.success,
-      error: pythonDirect.error,
-      internalTiming: pythonDirect.internalTiming
-    });
-    console.log(`     Python direct: ${pythonDirect.duration}ms ${pythonDirect.success ? '✓' : '✗'}`);
+    console.log(`     Total: ${result.duration}ms ${result.success ? '✓' : '✗'}`);
 
-    // Calculate Node.js overhead
-    const nodeOverhead = fullStack.duration - pythonDirect.duration;
-    console.log(`     Node overhead: ${nodeOverhead}ms`);
+    if (result.success) {
+      // Show Node.js breakdown
+      const node = result.nodeTiming;
+      const nodeTotal = (node.conversation_context_ms || 0) +
+                        (node.equipment_search_ms || 0) +
+                        (node.equipment_extraction_ms || 0) +
+                        (node.equipment_context_build_ms || 0) +
+                        (node.system_details_fetch_ms || 0) +
+                        (node.equipment_context_update_ms || 0);
+      console.log(`     Node.js: ${nodeTotal}ms`);
+      console.log(`       ├─ Conversation Context: ${node.conversation_context_ms || 0}ms`);
+      console.log(`       ├─ Equipment Search:     ${node.equipment_search_ms || 0}ms`);
+      console.log(`       ├─ Equipment Extraction: ${node.equipment_extraction_ms || 0}ms`);
+      console.log(`       ├─ Context Build:        ${node.equipment_context_build_ms || 0}ms`);
+      console.log(`       ├─ System Details:       ${node.system_details_fetch_ms || 0}ms`);
+      console.log(`       └─ Context Update:       ${node.equipment_context_update_ms || 0}ms`);
 
-    // Show internal timing breakdown
-    const timing = pythonDirect.internalTiming;
-    if (timing.total_processing_ms > 0) {
-      console.log('     Breakdown (Python sidecar):');
-      console.log(`       Classification:  ${timing.classification_ms}ms`);
-      console.log(`       DIP Retrieval:   ${timing.dip_retrieval_ms}ms`);
-      console.log(`       Pinecone:        ${timing.pinecone_ms}ms`);
-      console.log(`       Chunk Ranking:   ${timing.chunk_ranking_ms}ms`);
-      console.log(`       LLM Synthesis:   ${timing.synthesis_ms}ms`);
-      console.log(`       Perplexity:      ${timing.perplexity_ms}ms`);
-      console.log(`       Assembly:        ${timing.assembly_ms}ms`);
-      console.log(`       Total Measured:  ${timing.total_measured_ms}ms`);
-      console.log(`       Total Processing:${timing.total_processing_ms}ms`);
-      console.log(`       Unmeasured Gap:  ${timing.unmeasured_ms}ms`);
+      // Show Python breakdown
+      const py = result.pythonBreakdown;
+      console.log(`     Python: ${node.python_call_ms || py.total_internal_ms}ms`);
+      console.log(`       ├─ Classification:       ${py.classification_ms}ms`);
+      console.log(`       ├─ DIP Retrieval:        ${py.dip_retrieval_ms}ms`);
+      console.log(`       ├─ Pinecone:             ${py.pinecone_ms}ms`);
+      console.log(`       ├─ Chunk Ranking:        ${py.chunk_ranking_ms}ms`);
+      console.log(`       ├─ LLM Synthesis:        ${py.synthesis_ms}ms`);
+      console.log(`       └─ Perplexity (parallel):${py.perplexity_ms}ms`);
     }
   }
 
-  // Calculate summary
-  const chatTests = results.tests.filter(t => t.category === 'chat');
-  const fullStackTests = chatTests.filter(t => t.name.includes('Full Stack') && t.success);
-  const pythonDirectTests = chatTests.filter(t => t.name.includes('Python Direct') && t.success);
+  // Calculate averages for summary
+  const chatTests = results.tests.filter(t => t.category === 'chat' && t.success);
 
-  const avgFullStack = fullStackTests.reduce((sum, t) => sum + t.duration, 0) / fullStackTests.length || 0;
-  const avgPythonDirect = pythonDirectTests.reduce((sum, t) => sum + t.duration, 0) / pythonDirectTests.length || 0;
+  if (chatTests.length === 0) {
+    results.summary = {
+      servicesAvailable: true,
+      totalTests: results.tests.length,
+      passed: results.tests.filter(t => t.success).length,
+      failed: results.tests.filter(t => !t.success).length,
+      healthCheck: { nodeMs: nodeHealth.duration, pythonMs: pythonHealth.duration }
+    };
+    saveResults(results);
+    return results;
+  }
 
-  // Calculate average internal timing breakdown (Python)
+  // Average Node.js timing
+  const avgNodeTiming = {
+    conversation_context_ms: 0,
+    equipment_search_ms: 0,
+    equipment_extraction_ms: 0,
+    equipment_inference_ms: 0,
+    equipment_context_build_ms: 0,
+    system_details_fetch_ms: 0,
+    equipment_context_update_ms: 0,
+    python_call_ms: 0,
+    response_format_ms: 0
+  };
+
+  // Average Python breakdown
   const avgBreakdown = {
     classification_ms: 0,
     dip_retrieval_ms: 0,
@@ -309,120 +269,90 @@ async function runTimingTests() {
     unmeasured_ms: 0
   };
 
-  for (const test of pythonDirectTests) {
-    const timing = test.internalTiming || {};
-    avgBreakdown.classification_ms += timing.classification_ms || 0;
-    avgBreakdown.dip_retrieval_ms += timing.dip_retrieval_ms || 0;
-    avgBreakdown.pinecone_ms += timing.pinecone_ms || 0;
-    avgBreakdown.chunk_ranking_ms += timing.chunk_ranking_ms || 0;
-    avgBreakdown.synthesis_ms += timing.synthesis_ms || 0;
-    avgBreakdown.perplexity_ms += timing.perplexity_ms || 0;
-    avgBreakdown.assembly_ms += timing.assembly_ms || 0;
-    avgBreakdown.total_internal_ms += timing.total_processing_ms || 0;
-    avgBreakdown.total_measured_ms += timing.total_measured_ms || 0;
-    avgBreakdown.unmeasured_ms += timing.unmeasured_ms || 0;
+  for (const test of chatTests) {
+    // Sum Node.js timing
+    const node = test.nodeTiming || {};
+    avgNodeTiming.conversation_context_ms += node.conversation_context_ms || 0;
+    avgNodeTiming.equipment_search_ms += node.equipment_search_ms || 0;
+    avgNodeTiming.equipment_extraction_ms += node.equipment_extraction_ms || 0;
+    avgNodeTiming.equipment_inference_ms += node.equipment_inference_ms || 0;
+    avgNodeTiming.equipment_context_build_ms += node.equipment_context_build_ms || 0;
+    avgNodeTiming.system_details_fetch_ms += node.system_details_fetch_ms || 0;
+    avgNodeTiming.equipment_context_update_ms += node.equipment_context_update_ms || 0;
+    avgNodeTiming.python_call_ms += node.python_call_ms || 0;
+    avgNodeTiming.response_format_ms += node.response_format_ms || 0;
+
+    // Sum Python breakdown
+    const py = test.pythonBreakdown || {};
+    avgBreakdown.classification_ms += py.classification_ms || 0;
+    avgBreakdown.dip_retrieval_ms += py.dip_retrieval_ms || 0;
+    avgBreakdown.pinecone_ms += py.pinecone_ms || 0;
+    avgBreakdown.chunk_ranking_ms += py.chunk_ranking_ms || 0;
+    avgBreakdown.synthesis_ms += py.synthesis_ms || 0;
+    avgBreakdown.perplexity_ms += py.perplexity_ms || 0;
+    avgBreakdown.assembly_ms += py.assembly_ms || 0;
+    avgBreakdown.total_internal_ms += py.total_internal_ms || 0;
+    avgBreakdown.total_measured_ms += py.total_measured_ms || 0;
+    avgBreakdown.unmeasured_ms += py.unmeasured_ms || 0;
   }
 
-  if (pythonDirectTests.length > 0) {
-    avgBreakdown.classification_ms = Math.round(avgBreakdown.classification_ms / pythonDirectTests.length);
-    avgBreakdown.dip_retrieval_ms = Math.round(avgBreakdown.dip_retrieval_ms / pythonDirectTests.length);
-    avgBreakdown.pinecone_ms = Math.round(avgBreakdown.pinecone_ms / pythonDirectTests.length);
-    avgBreakdown.chunk_ranking_ms = Math.round(avgBreakdown.chunk_ranking_ms / pythonDirectTests.length);
-    avgBreakdown.synthesis_ms = Math.round(avgBreakdown.synthesis_ms / pythonDirectTests.length);
-    avgBreakdown.perplexity_ms = Math.round(avgBreakdown.perplexity_ms / pythonDirectTests.length);
-    avgBreakdown.assembly_ms = Math.round(avgBreakdown.assembly_ms / pythonDirectTests.length);
-    avgBreakdown.total_internal_ms = Math.round(avgBreakdown.total_internal_ms / pythonDirectTests.length);
-    avgBreakdown.total_measured_ms = Math.round(avgBreakdown.total_measured_ms / pythonDirectTests.length);
-    avgBreakdown.unmeasured_ms = Math.round(avgBreakdown.unmeasured_ms / pythonDirectTests.length);
+  // Calculate averages
+  const count = chatTests.length;
+  for (const key of Object.keys(avgNodeTiming)) {
+    avgNodeTiming[key] = Math.round(avgNodeTiming[key] / count);
+  }
+  for (const key of Object.keys(avgBreakdown)) {
+    avgBreakdown[key] = Math.round(avgBreakdown[key] / count);
   }
 
-  // Calculate average Node.js step-by-step timing breakdown
-  const avgNodeTiming = {
-    conversation_context_ms: 0,
-    equipment_search_ms: 0,
-    equipment_extraction_ms: 0,
-    equipment_inference_ms: 0,
-    equipment_context_build_ms: 0,
-    system_details_fetch_ms: 0,
-    equipment_context_update_ms: 0,
-    python_call_ms: 0,
-    response_format_ms: 0
-  };
-
-  const fullStackTestsWithTiming = fullStackTests.filter(t => t.nodeTiming && Object.keys(t.nodeTiming || {}).length > 0);
-  console.log(`\n📊 Node.js Timing Analysis:`);
-  console.log(`   Full Stack tests: ${fullStackTests.length}`);
-  console.log(`   Tests with nodeTiming: ${fullStackTestsWithTiming.length}`);
-  
-  for (const test of fullStackTestsWithTiming) {
-    const timing = test.nodeTiming || {};
-    console.log(`   Test "${test.name}":`, timing);
-    avgNodeTiming.conversation_context_ms += timing.conversation_context_ms || 0;
-    avgNodeTiming.equipment_search_ms += timing.equipment_search_ms || 0;
-    avgNodeTiming.equipment_extraction_ms += timing.equipment_extraction_ms || 0;
-    avgNodeTiming.equipment_inference_ms += timing.equipment_inference_ms || 0;
-    avgNodeTiming.equipment_context_build_ms += timing.equipment_context_build_ms || 0;
-    avgNodeTiming.system_details_fetch_ms += timing.system_details_fetch_ms || 0;
-    avgNodeTiming.equipment_context_update_ms += timing.equipment_context_update_ms || 0;
-    avgNodeTiming.python_call_ms += timing.python_call_ms || 0;
-    avgNodeTiming.response_format_ms += timing.response_format_ms || 0;
-  }
-
-  if (fullStackTestsWithTiming.length > 0) {
-    avgNodeTiming.conversation_context_ms = Math.round(avgNodeTiming.conversation_context_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.equipment_search_ms = Math.round(avgNodeTiming.equipment_search_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.equipment_extraction_ms = Math.round(avgNodeTiming.equipment_extraction_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.equipment_inference_ms = Math.round(avgNodeTiming.equipment_inference_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.equipment_context_build_ms = Math.round(avgNodeTiming.equipment_context_build_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.system_details_fetch_ms = Math.round(avgNodeTiming.system_details_fetch_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.equipment_context_update_ms = Math.round(avgNodeTiming.equipment_context_update_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.python_call_ms = Math.round(avgNodeTiming.python_call_ms / fullStackTestsWithTiming.length);
-    avgNodeTiming.response_format_ms = Math.round(avgNodeTiming.response_format_ms / fullStackTestsWithTiming.length);
-    console.log(`   ✅ Calculated average Node.js timing:`, avgNodeTiming);
-  } else {
-    console.log(`   ⚠️  No Node.js timing data found in test results`);
-  }
+  const avgTotalMs = Math.round(chatTests.reduce((sum, t) => sum + t.duration, 0) / count);
 
   results.summary = {
     servicesAvailable: true,
     totalTests: results.tests.length,
     passed: results.tests.filter(t => t.success).length,
     failed: results.tests.filter(t => !t.success).length,
-    avgFullStackMs: Math.round(avgFullStack),
-    avgPythonDirectMs: Math.round(avgPythonDirect),
-    avgNodeOverheadMs: Math.round(avgFullStack - avgPythonDirect),
-    breakdown: avgBreakdown,  // Python breakdown
-    node_timing: avgNodeTiming,  // Node.js step-by-step breakdown
+    avgFullStackMs: avgTotalMs,
+    breakdown: avgBreakdown,
+    node_timing: avgNodeTiming,
     healthCheck: {
       nodeMs: nodeHealth.duration,
       pythonMs: pythonHealth.duration
     }
   };
 
-  console.log('\n╔════════════════════════════════════════════╗');
-  console.log('║         CHAT TIMING SUMMARY                ║');
-  console.log('╠════════════════════════════════════════════╣');
-  console.log(`║ TOTAL AVG RESPONSE: ${String(results.summary.avgFullStackMs).padStart(6)}ms              ║`);
-  console.log('╠════════════════════════════════════════════╣');
-  console.log('║ Node.js Overhead:                          ║');
-  console.log(`║   Total:              ${String(results.summary.avgNodeOverheadMs).padStart(6)}ms              ║`);
-  console.log('╠════════════════════════════════════════════╣');
-  console.log('║ Python Sidecar:                            ║');
-  console.log(`║   Total:              ${String(results.summary.avgPythonDirectMs).padStart(6)}ms              ║`);
-  console.log(`║   ├─ Classification:  ${String(avgBreakdown.classification_ms).padStart(6)}ms              ║`);
-  console.log(`║   ├─ DIP Retrieval:   ${String(avgBreakdown.dip_retrieval_ms).padStart(6)}ms              ║`);
-  console.log(`║   ├─ Pinecone:        ${String(avgBreakdown.pinecone_ms).padStart(6)}ms              ║`);
-  console.log(`║   ├─ Chunk Ranking:   ${String(avgBreakdown.chunk_ranking_ms).padStart(6)}ms              ║`);
-  console.log(`║   ├─ LLM Synthesis:   ${String(avgBreakdown.synthesis_ms).padStart(6)}ms              ║`);
-  console.log(`║   ├─ Perplexity:      ${String(avgBreakdown.perplexity_ms).padStart(6)}ms              ║`);
-  console.log(`║   └─ Assembly:        ${String(avgBreakdown.assembly_ms).padStart(6)}ms              ║`);
-  console.log('╠════════════════════════════════════════════╣');
-  console.log(`║ Measured Total:       ${String(avgBreakdown.total_measured_ms).padStart(6)}ms              ║`);
-  console.log(`║ Unmeasured Gap:       ${String(avgBreakdown.unmeasured_ms).padStart(6)}ms              ║`);
-  console.log('╠════════════════════════════════════════════╣');
-  console.log(`║ Health: Node ${nodeHealth.duration}ms, Python ${pythonHealth.duration}ms              ║`);
-  console.log(`║ Tests: ${results.summary.passed}/${results.summary.totalTests} passed                             ║`);
-  console.log('╚════════════════════════════════════════════╝');
+  // Print summary
+  const nodeOnlyMs = avgNodeTiming.conversation_context_ms +
+                     avgNodeTiming.equipment_search_ms +
+                     avgNodeTiming.equipment_extraction_ms +
+                     avgNodeTiming.equipment_context_build_ms +
+                     avgNodeTiming.system_details_fetch_ms +
+                     avgNodeTiming.equipment_context_update_ms;
+
+  console.log('\n╔════════════════════════════════════════════════╗');
+  console.log('║           CHAT TIMING SUMMARY                  ║');
+  console.log('╠════════════════════════════════════════════════╣');
+  console.log(`║ TOTAL AVG RESPONSE:    ${String(avgTotalMs).padStart(6)}ms               ║`);
+  console.log('╠════════════════════════════════════════════════╣');
+  console.log(`║ Node.js:               ${String(nodeOnlyMs).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Conversation:     ${String(avgNodeTiming.conversation_context_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Equipment Search: ${String(avgNodeTiming.equipment_search_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Extraction:       ${String(avgNodeTiming.equipment_extraction_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Context Build:    ${String(avgNodeTiming.equipment_context_build_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ System Details:   ${String(avgNodeTiming.system_details_fetch_ms).padStart(6)}ms               ║`);
+  console.log(`║   └─ Context Update:   ${String(avgNodeTiming.equipment_context_update_ms).padStart(6)}ms               ║`);
+  console.log('╠════════════════════════════════════════════════╣');
+  console.log(`║ Python:                ${String(avgNodeTiming.python_call_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Classification:   ${String(avgBreakdown.classification_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ DIP Retrieval:    ${String(avgBreakdown.dip_retrieval_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Pinecone:         ${String(avgBreakdown.pinecone_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ Chunk Ranking:    ${String(avgBreakdown.chunk_ranking_ms).padStart(6)}ms               ║`);
+  console.log(`║   ├─ LLM Synthesis:    ${String(avgBreakdown.synthesis_ms).padStart(6)}ms               ║`);
+  console.log(`║   └─ Perplexity:       ${String(avgBreakdown.perplexity_ms).padStart(6)}ms (parallel)    ║`);
+  console.log('╠════════════════════════════════════════════════╣');
+  console.log(`║ Health: Node ${nodeHealth.duration}ms, Python ${pythonHealth.duration}ms                 ║`);
+  console.log(`║ Tests: ${results.summary.passed}/${results.summary.totalTests} passed                                ║`);
+  console.log('╚════════════════════════════════════════════════╝');
 
   saveResults(results);
   return results;
