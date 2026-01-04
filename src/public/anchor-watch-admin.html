@@ -85,7 +85,8 @@
 
         .map-container {
             width: 100%;
-            height: 400px;
+            height: 60vh;
+            min-height: 400px;
             background: white;
             position: relative;
         }
@@ -562,10 +563,26 @@
 
         // Initialize map
         async function initMap() {
-            // Updated to actual boat location (Grenada)
-            const defaultCenter = [12.6022, -61.4503];
+            // Fetch current position FIRST before initializing map
+            let initialCenter = [0, 0]; // Will be updated
+            let initialZoom = 2; // World view as fallback
 
-            map = L.map('map').setView(defaultCenter, 15);
+            try {
+                const statusResult = await apiCall('/status');
+                if (statusResult.data.current_lat && statusResult.data.current_lon) {
+                    initialCenter = [statusResult.data.current_lat, statusResult.data.current_lon];
+                    initialZoom = 16;
+                } else if (statusResult.data.anchor_lat && statusResult.data.anchor_lon) {
+                    // If no current position but have anchor, use that
+                    initialCenter = [statusResult.data.anchor_lat, statusResult.data.anchor_lon];
+                    initialZoom = 16;
+                }
+            } catch (e) {
+                console.log('Could not fetch initial position, using world view');
+            }
+
+            // Now initialize map with the fetched position
+            map = L.map('map').setView(initialCenter, initialZoom);
 
             // Add OpenStreetMap tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -573,8 +590,8 @@
                 maxZoom: 19
             }).addTo(map);
 
-            // Initialize boat marker (blue dot)
-            markers.boat = L.circleMarker(defaultCenter, {
+            // Initialize boat marker (blue dot) at current position
+            markers.boat = L.circleMarker(initialCenter, {
                 radius: 8,
                 fillColor: '#007AFF',
                 color: '#fff',
@@ -582,19 +599,6 @@
                 opacity: 1,
                 fillOpacity: 0.8
             }).addTo(map);
-
-            // Immediately fetch current position and update map
-            try {
-                const statusResult = await apiCall('/status');
-                if (statusResult.data.current_lat && statusResult.data.current_lon) {
-                    const currentPos = [statusResult.data.current_lat, statusResult.data.current_lon];
-                    map.setView(currentPos, 16);
-                    markers.boat.setLatLng(currentPos);
-                }
-            } catch (e) {
-                // Keep default if API fails
-                console.log('Could not fetch initial position, using default');
-            }
         }
 
         // Update map with current data
@@ -777,7 +781,7 @@
                                 <span class="slider-value" id="radiusValue">50 m</span>
                             </div>
                             <input type="range" class="slider" id="radiusSlider"
-                                   min="10" max="100" value="50" step="10"
+                                   min="10" max="200" value="50" step="5"
                                    oninput="updateRadiusDisplay(this.value)">
                         </div>
                         <button id="activateBtn" class="button button-primary" ${hasInferredPosition ? '' : 'disabled'} onclick="activateAnchorWatch()">
@@ -803,7 +807,7 @@
                                 <span class="slider-value" id="radiusValue">${status.radius_meters} m</span>
                             </div>
                             <input type="range" class="slider" id="radiusSlider"
-                                   min="10" max="100" value="${status.radius_meters}" step="10"
+                                   min="10" max="200" value="${status.radius_meters}" step="5"
                                    oninput="updateRadiusDisplay(this.value)">
                         </div>
                         <button class="button button-secondary" onclick="updateRadius()">
@@ -1047,8 +1051,8 @@
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                     const distance = R * c;
 
-                    // Clamp to slider limits (10-100m)
-                    const clampedRadius = Math.max(10, Math.min(100, Math.round(distance / 10) * 10));
+                    // Clamp to slider limits (10-200m)
+                    const clampedRadius = Math.max(10, Math.min(200, Math.round(distance / 5) * 5));
 
                     // Update preview circle
                     markers.previewZone.setRadius(clampedRadius);
