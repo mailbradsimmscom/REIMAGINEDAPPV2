@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Other - BoatOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .section {
+            padding: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8E8E93;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+
+        .links-list {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            text-decoration: none;
+            color: #000;
+            border-bottom: 1px solid #F2F2F7;
+            transition: background 0.2s;
+        }
+
+        .link-item:last-child {
+            border-bottom: none;
+        }
+
+        .link-item:active {
+            background: #F2F2F7;
+        }
+
+        .link-icon {
+            font-size: 28px;
+            margin-right: 16px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .link-content {
+            flex: 1;
+        }
+
+        .link-title {
+            font-size: 17px;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .link-description {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-top: 2px;
+        }
+
+        .link-arrow {
+            color: #C7C7CC;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/public/unified-mobile.html" class="back-button">←</a>
+        <h1>Other</h1>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Tools & Utilities</div>
+        <div class="links-list">
+            <a href="/public/position-monitor.html" class="link-item">
+                <div class="link-icon">📍</div>
+                <div class="link-content">
+                    <div class="link-title">Position Monitor</div>
+                    <div class="link-description">Track GPS position changes</div>
+                </div>
+                <div class="link-arrow">›</div>
+            </a>
+            <a href="/anchorages" class="link-item">
+                <div class="link-icon">🗺️</div>
+                <div class="link-content">
+                    <div class="link-title">Anchorages</div>
+                    <div class="link-description">Browse anchorage locations</div>
+                </div>
+                <div class="link-arrow">›</div>
+            </a>
+            <a href="/public/test-results.html" class="link-item">
+                <div class="link-icon">🧪</div>
+                <div class="link-content">
+                    <div class="link-title">Test Results</div>
+                    <div class="link-description">View system test results</div>
+                </div>
+                <div class="link-arrow">›</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Component -->
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

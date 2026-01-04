@@ -367,9 +367,9 @@
                 <div class="action-card-icon">⛵</div>
                 <div class="action-card-title">Trips</div>
             </a>
-            <a href="/public/position-monitor.html" class="action-card" id="positionMonitorCard">
-                <div class="action-card-icon" id="positionMonitorIcon">📍</div>
-                <div class="action-card-title">Position</div>
+            <a href="/public/other-links.html" class="action-card">
+                <div class="action-card-icon">📋</div>
+                <div class="action-card-title">Other</div>
             </a>
         </div>
         <a href="/public/anchor-watch-admin.html" id="anchorAlarmBtn" class="anchor-alarm-button inactive">
@@ -690,70 +690,13 @@
             }
         }
 
-        // Update position monitor icon color based on status
-        async function updatePositionMonitorStatus() {
-            const card = document.getElementById('positionMonitorCard');
-            const icon = document.getElementById('positionMonitorIcon');
-            if (!card || !icon) return;
-
-            const saved = localStorage.getItem('positionMonitor');
-            if (!saved) {
-                icon.textContent = '📍';
-                return;
-            }
-
-            const state = JSON.parse(saved);
-            if (!state.reference || state.reference.lat === null) {
-                icon.textContent = '📍';
-                return;
-            }
-
-            // Get current position from GPS API
-            try {
-                const response = await fetch('/api/gps/current');
-                const result = await response.json();
-
-                if (!result.success || !result.data) {
-                    icon.textContent = '📍';
-                    return;
-                }
-
-                const currentLat = result.data.latitude;
-                const currentLon = result.data.longitude;
-                const refLat = state.reference.lat;
-                const refLon = state.reference.lon;
-                const latExpectation = state.latExpectation || 'less';
-                const lonExpectation = state.lonExpectation || 'less';
-
-                // Compare absolute values (displayed numbers, not signed decimals)
-                const latIsLess = Math.abs(currentLat) < Math.abs(refLat);
-                const lonIsLess = Math.abs(currentLon) < Math.abs(refLon);
-
-                // Each coordinate has its own expectation
-                const latMatches = (latExpectation === 'less') ? latIsLess : !latIsLess;
-                const lonMatches = (lonExpectation === 'less') ? lonIsLess : !lonIsLess;
-
-                if (latMatches && lonMatches) {
-                    icon.textContent = '🟢';
-                } else {
-                    icon.textContent = '🔴';
-                }
-            } catch (error) {
-                console.error('Error fetching GPS position:', error);
-                icon.textContent = '📍';
-            }
-        }
-
         // Load tasks when page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadUserTasks();
             updateAnchorAlarmStatus();
-            updatePositionMonitorStatus();
 
             // Update anchor alarm status every 20 seconds
             setInterval(updateAnchorAlarmStatus, 20000);
-            // Update position monitor status every 30 seconds
-            setInterval(updatePositionMonitorStatus, 30000);
         });
     </script>
 
