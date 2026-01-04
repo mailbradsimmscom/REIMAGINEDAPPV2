@@ -7,6 +7,7 @@ import * as systemsService from './systems.service.js';
 import * as conversationContextService from './conversation-context.service.js';
 import * as equipmentRelationshipService from './equipment-relationship-inference.service.js';
 import * as chatRepo from '../repositories/chat.repository.js';
+import * as userTasksRepo from '../repositories/user-tasks.repository.js';
 import * as envConfig from '../config/env.js';
 import { logger as defaultLogger } from '../utils/logger.js';
 import * as pythonSidecar from '../clients/python-sidecar.client.js';
@@ -41,6 +42,7 @@ export function createChatProxyService({
   // Repositories
   systemsRepository = systemsRepo,
   chatRepository = chatRepo,
+  userTasksRepository = userTasksRepo,
   // Services
   systemsServiceDep = systemsService,
   conversationContextServiceDep = conversationContextService,
@@ -583,7 +585,7 @@ export function createChatProxyService({
         .sort((a, b) => (b.combinedRank || b.rank || 0) - (a.combinedRank || a.rank || 0));
       nodeTiming.equipment_search_ms = Date.now() - step3Start + keywordSearchDuration;
 
-      // ===== CLARIFICATION IF NOTHING FOUND =====
+      // ===== CREATE TODO TASK IF EQUIPMENT NOT FOUND =====
       if (currentEquipmentSearch.length === 0) {
         // Check if LLM extracted anything but didn't find in systems table
         if (llmExtraction.equipment && llmExtraction.equipment.length > 0) {
@@ -594,22 +596,47 @@ export function createChatProxyService({
             count: llmExtraction.equipment.length
           });
 
-          return {
-            response: `I couldn't find "${extractedNames}" in your equipment inventory. Could you provide the manufacturer and model number? Or would you like me to answer generally about ${extractedNames}?`,
-            systems_context: [],
-            sources: [],
-            classification: { primary: 'clarification_needed' },
-            metadata: {
-              extraction_attempted: true,
-              extracted_equipment: extractedNames,
-              needs_user_input: true
-            },
-            processing_time_ms: 0,
-            node_timing: nodeTiming  // Include timing even in early return
-          };
+          // Create SEPARATE user_task for EACH extracted equipment item
+          // Check for existing tasks to prevent duplicates
+          for (const equipment of llmExtraction.equipment) {
+            try {
+              // Check if task already exists for this equipment
+              const exists = await userTasksRepository.hasExistingTask(equipment.name);
+              if (exists) {
+                requestLogger.info('📋 Task already exists for equipment', {
+                  equipment: equipment.name
+                });
+                continue; // Skip this one
+              }
+
+              await userTasksRepository.createUserTask({
+                description: `Add "${equipment.name}" to systems inventory`,
+                asset_uid: null,
+                due_date: new Date().toISOString(),
+                is_recurring: false,
+                notes: `Equipment mentioned in chat: "${query.substring(0, 100)}"`,
+                created_by: 'chat_suggestion',
+                priority: 'normal'
+              });
+
+              requestLogger.info('✅ Created inventory suggestion task', {
+                equipment: equipment.name,
+                threadId
+              });
+            } catch (taskError) {
+              // Non-blocking - log and continue to next equipment
+              requestLogger.warn('⚠️ Failed to create inventory suggestion task', {
+                equipment: equipment.name,
+                error: taskError.message
+              });
+            }
+          }
+
+          // DON'T RETURN EARLY - continue to Python with empty systems_context
+          // Python will use Perplexity for general knowledge
         }
 
-        requestLogger.info('⚠️ No equipment found via keyword or LLM', {
+        requestLogger.info('📤 No equipment found, continuing to Python', {
           query: query.substring(0, 100),
           keywordQuery: searchQuery
         });
