@@ -117,11 +117,16 @@ This is the exact sequence. Each step matters for understanding where bugs can o
     - Deduplicate by `asset_uid`
     - Accumulate scores when same equipment found via multiple keywords
 
-#### Node.js Step 3b: Clarification (if needed)
+#### Node.js Step 3b: Equipment Not in Inventory (Creates User Task)
 14. **If LLM extracted equipment but systems search found nothing**:
-    - Return early with clarification request
-    - "I couldn't find X in your inventory. Can you provide manufacturer/model?"
-    - This is NOT an error - it's a valid response
+    - **Create user_task** for each extracted equipment item (non-blocking)
+      - `description`: "Add [equipment name] to systems inventory"
+      - `due_date`: NOW (immediately due)
+      - `created_by`: 'chat_suggestion'
+    - Check for duplicates first via `hasExistingTask()` - skip if task already exists
+    - **Continue to Python** with empty `systems_context`
+    - Python uses Perplexity for general knowledge about the equipment
+    - This is NOT an error - user gets helpful response + task reminder
 
 #### Node.js Step 4: Build Equipment Context
 15. **Call `getEquipmentRelationshipContext()`**
@@ -307,6 +312,7 @@ systemsContext (full details)
 | Equipment extraction | `src/services/equipment-extraction.service.js` |
 | **Repository** | |
 | Chat data access | `src/repositories/chat.repository.js` |
+| User tasks (inventory suggestions) | `src/repositories/user-tasks.repository.js` |
 | **Python Sidecar** | |
 | Chat workflow | `python-sidecar/app/chat/workflows/chat_workflow_sequential.py` |
 | Chat models | `python-sidecar/app/chat/chat_models.py` |

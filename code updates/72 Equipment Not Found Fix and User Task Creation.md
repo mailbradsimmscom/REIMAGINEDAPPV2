@@ -1,8 +1,9 @@
 # Code Update #72: Equipment Not Found Fix + User Task Creation
 
 **Date:** 2026-01-04
-**Status:** Implementation Complete - Ready for Testing
+**Status:** ✅ Complete - Committed & Documented
 **Branch:** Stable-v4-Working
+**Commit:** `f78bbf1` - Fix streaming bug + create user tasks for equipment not in inventory
 
 ---
 
@@ -170,3 +171,28 @@ User sees response + new tasks appear in maintenance agent todo list
 1. Remove task creation try/catch block
 2. Restore early return at line 597 (if needed)
 3. Repository is isolated - removing import restores original behavior
+
+---
+
+## Documentation Updated
+
+| Document | Changes |
+|----------|---------|
+| `/docs/10-user-features/chat.md` | Updated "Step 3b" section to describe task creation instead of early return; Added `user-tasks.repository.js` to Files & Locations |
+| `/docs/10-user-features/maintenance.md` | Added "Adding a Task (AI-Suggested via Chat)" section explaining the integration |
+
+---
+
+## Session Notes
+
+This fix addresses the production issue where users asking about equipment not in their inventory (e.g., "do you know about spinlock stx") received "No response received" due to:
+
+1. **Root cause**: Early return at line 597 returned a plain object, but streaming mode expected an async generator
+2. **UX issue**: User got no helpful response, even though Perplexity could provide general knowledge
+3. **Missing feature**: No reminder to add the equipment to inventory
+
+The fix ensures:
+- Streaming always works (no more "No response received")
+- Users get helpful Perplexity answers about equipment not in inventory
+- Automatic task creation reminds users to add equipment
+- Duplicate tasks are prevented via `hasExistingTask()` check
