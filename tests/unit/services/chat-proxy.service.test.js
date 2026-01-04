@@ -100,6 +100,10 @@ describe('createChatProxyService', () => {
       getChatThread: async () => null,
       updateChatThread: async () => {}
     },
+    userTasksRepository: {
+      hasExistingTask: async () => false,
+      createUserTask: async (task) => ({ id: 'mock-task-id', ...task })
+    },
     systemsServiceDep: {
       getSystemSvc: async (assetUid) => ({
         asset_uid: assetUid,
@@ -440,10 +444,19 @@ describe('createChatProxyService', () => {
     }
   });
 
-  test('returns clarification response when equipment extracted but not found', async () => {
+  test('creates user task and continues to Python when equipment extracted but not found', async () => {
+    let taskCreated = null;
+
     const deps = createMockDeps({
       systemsRepository: {
         searchSystems: async () => [] // No results
+      },
+      userTasksRepository: {
+        hasExistingTask: async () => false,
+        createUserTask: async (task) => {
+          taskCreated = task;
+          return { id: 'mock-task-id', ...task };
+        }
       },
       equipmentExtractionServiceDep: {
         extractEquipmentName: async () => ({
@@ -464,8 +477,12 @@ describe('createChatProxyService', () => {
       threadId: 'test'
     });
 
-    // Should return clarification response
-    assert.ok(result.response.includes("couldn't find") || result.classification?.primary === 'clarification_needed',
-      'Should return clarification when equipment not found in inventory');
+    // Should create a user task for the equipment not found
+    assert.ok(taskCreated, 'Should create a user task');
+    assert.ok(taskCreated.description.includes('Lewmar windlass'), 'Task should mention the equipment');
+    assert.strictEqual(taskCreated.created_by, 'chat_suggestion', 'Task should be created by chat_suggestion');
+
+    // Should continue to Python (not return early) - result should have response from Python
+    assert.ok(result.response, 'Should have a response from Python sidecar');
   });
 });
