@@ -467,12 +467,28 @@ const config = {
     autoLearning: process.env.FEATURE_AUTO_LEARNING !== 'false',
   },
 
+  // Cross-service URLs (for action links in todo list)
+  chatServiceUrl: process.env.CHAT_SERVICE_URL || 'http://localhost:3000',
+  maintenanceBaseUrl: process.env.MAINTENANCE_BASE_URL || 'http://localhost:3001',
+  mainAppBaseUrl: process.env.MAIN_APP_BASE_URL || 'http://localhost:3000',
+
   meteoblue: {
     enabled: process.env.METEOBLUE_ENABLED === 'true',
     apiKey: process.env.METEOBLUE_API_KEY,
   }
 };
 ```
+
+### URL Configuration for Production
+
+The todo list generates action URLs (e.g., "Details" buttons) that link to maintenance pages. These must be configured correctly for production:
+
+| Variable | Local | Render |
+|----------|-------|--------|
+| `MAINTENANCE_BASE_URL` | `http://localhost:3001` | `https://boatos-maintenance.onrender.com` |
+| `MAIN_APP_BASE_URL` | `http://localhost:3000` | `https://boatos-main.onrender.com` |
+
+Without these, todo "Details" buttons will incorrectly link to localhost in production.
 
 ---
 

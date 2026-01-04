@@ -166,6 +166,8 @@ All in `.env` file at project root. Python sidecar reads from parent directory.
 | `PORT` | `3000` | Node.js port |
 | `PYTHON_SIDECAR_URL` | `http://localhost:8000` | Python sidecar URL |
 | `MAINTENANCE_SERVICE_URL` | `http://localhost:3001` | Maintenance agent URL |
+| `MAINTENANCE_BASE_URL` | `http://localhost:3001` | Maintenance agent page URLs (for action links) |
+| `MAIN_APP_BASE_URL` | `http://localhost:3000` | Main app page URLs (for action links) |
 
 ### External Services
 
@@ -243,6 +245,8 @@ Must match local except for URLs:
 | `PORT` | `$PORT` | Render assigns dynamically |
 | `PYTHON_SIDECAR_URL` | `http://boatos-python:10000` | Internal URL |
 | `MAINTENANCE_SERVICE_URL` | `http://boatos-maintenance:10000` | Internal URL |
+| `MAINTENANCE_BASE_URL` | `https://boatos-maintenance.onrender.com` | Page URLs for action links |
+| `MAIN_APP_BASE_URL` | `https://boatos-main.onrender.com` | Page URLs for action links |
 
 ### Deploy Branch
 

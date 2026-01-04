@@ -432,6 +432,8 @@ These are the core identifiers used throughout the system.
 |----------|---------|-------------|
 | `PYTHON_SIDECAR_URL` | `http://localhost:8000` | Python sidecar URL |
 | `MAINTENANCE_SERVICE_URL` | `http://localhost:3001` | Maintenance agent URL |
+| `MAINTENANCE_BASE_URL` | `http://localhost:3001` | Maintenance agent page URLs (for action links in todo list) |
+| `MAIN_APP_BASE_URL` | `http://localhost:3000` | Main app page URLs (for action links in todo list) |
 
 ### Timeouts & Limits
 
