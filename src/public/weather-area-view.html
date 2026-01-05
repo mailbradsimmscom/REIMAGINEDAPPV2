@@ -604,6 +604,16 @@
             const waveStats = calculateStats(Object.values(waveBySource));
             const periodStats = calculateStats(Object.values(periodBySource));
 
+            // Consensus from first 5 sources only (excluding Meteoblue outlier)
+            const waveExclOutlier = Object.entries(waveBySource)
+                .filter(([k]) => k !== 'meteoblue')
+                .map(([, v]) => v);
+            const periodExclOutlier = Object.entries(periodBySource)
+                .filter(([k]) => k !== 'meteoblue')
+                .map(([, v]) => v);
+            const waveConsensus = calculateStats(waveExclOutlier);
+            const periodConsensus = calculateStats(periodExclOutlier);
+
             // For swell and wind wave, exclude meteoblue
             const swellExclOutlier = Object.entries(swellBySource)
                 .filter(([k]) => k !== 'meteoblue')
@@ -698,6 +708,12 @@
                             <span class="range">(${formatValue(periodStats.min, 0)}-${formatValue(periodStats.max, 0)})</span>
                         </div>
                         ${renderSourceGrid(periodBySource, 0, 's')}
+                    </div>
+
+                    <!-- Consensus (5 sources excl Meteoblue) -->
+                    <div class="simple-metric" style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; margin: 8px 0;">
+                        <span class="metric-icon">📊</span>
+                        <span class="value">Consensus: ${formatValue(waveConsensus.avg, 1)}m @ ${formatValue(periodConsensus.avg, 0)}s</span>
                     </div>
 
                     <!-- Swell -->
