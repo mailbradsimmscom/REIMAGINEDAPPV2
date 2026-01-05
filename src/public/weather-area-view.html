@@ -358,6 +358,9 @@
         let allForecasts = [];
         let selectedDay = null;
         let selectedTime = null;
+        let showAiView = false;
+        let aiSummary = null;
+        let aiLoading = false;
 
         // Time blocks
         const TIME_BLOCKS = [
@@ -457,20 +460,37 @@
                 selectedTime = TIME_BLOCKS[1]; // Morning
             }
 
-            // Day buttons (with date number)
-            dayNav.innerHTML = days.map(day => {
+            // AI button + Day buttons (with date number)
+            const aiButton = `<button class="nav-item ${showAiView ? 'active' : ''}" onclick="selectAiView()" style="background: ${showAiView ? 'var(--primary-color)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}; color: white;">🤖 AI</button>`;
+
+            const dayButtons = days.map(day => {
                 const date = new Date(day + 'T12:00:00Z'); // noon UTC to avoid timezone issues
                 const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                 const dayNum = date.getUTCDate();
-                const isActive = day === selectedDay ? 'active' : '';
+                const isActive = !showAiView && day === selectedDay ? 'active' : '';
                 return `<button class="nav-item ${isActive}" onclick="selectDay('${day}')">${dayName} ${dayNum}</button>`;
             }).join('');
 
-            // Time buttons
-            timeNav.innerHTML = TIME_BLOCKS.map(block => {
-                const isActive = block.name === selectedTime.name ? 'active' : '';
-                return `<button class="nav-item ${isActive}" onclick="selectTime('${block.name}')">${block.label}</button>`;
-            }).join('');
+            dayNav.innerHTML = aiButton + dayButtons;
+
+            // Time buttons (hidden in AI view)
+            const timeNavContainer = document.querySelector('.time-nav-container');
+            if (showAiView) {
+                timeNavContainer.style.display = 'none';
+            } else {
+                timeNavContainer.style.display = 'block';
+                timeNav.innerHTML = TIME_BLOCKS.map(block => {
+                    const isActive = block.name === selectedTime.name ? 'active' : '';
+                    return `<button class="nav-item ${isActive}" onclick="selectTime('${block.name}')">${block.label}</button>`;
+                }).join('');
+            }
+        }
+
+        // Select AI view
+        function selectAiView() {
+            showAiView = true;
+            buildNavigation();
+            renderAiCard();
         }
 
         // Get unique days from forecasts
@@ -491,6 +511,7 @@
 
         // Select day
         function selectDay(day) {
+            showAiView = false;
             selectedDay = day;
             buildNavigation();
             renderCard();
@@ -501,6 +522,411 @@
             selectedTime = TIME_BLOCKS.find(t => t.name === timeName);
             buildNavigation();
             renderCard();
+        }
+
+        // ========== AI SAILING ANALYSIS ==========
+
+        // Score a time block for sailing conditions
+        // Returns 0-100 score (higher = better sailing)
+        function scoreTimeBlock(forecasts) {
+            if (forecasts.length === 0) return null;
+
+            const windBySource = getMetricBySource(forecasts, 'wind_speed_10m', toKnots);
+            const waveBySource = getMetricBySource(forecasts, 'wave_height');
+            const periodBySource = getMetricBySource(forecasts, 'wave_period');
+            const swellBySource = getMetricBySource(forecasts, 'swell_wave_height');
+            const windWaveBySource = getMetricBySource(forecasts, 'wind_wave_height');
+            const currentSpeedBySource = getMetricBySource(forecasts, 'current_speed');
+            const currentDirBySource = getMetricBySource(forecasts, 'current_direction');
+            const swellDirBySource = getMetricBySource(forecasts, 'swell_wave_direction');
+
+            // Get consensus values (excluding meteoblue for waves)
+            const windVals = Object.values(windBySource);
+            const windAvg = windVals.length > 0 ? windVals.reduce((a,b)=>a+b,0)/windVals.length : null;
+
+            const waveExcl = Object.entries(waveBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
+            const waveAvg = waveExcl.length > 0 ? waveExcl.reduce((a,b)=>a+b,0)/waveExcl.length : null;
+
+            const periodExcl = Object.entries(periodBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
+            const periodAvg = periodExcl.length > 0 ? periodExcl.reduce((a,b)=>a+b,0)/periodExcl.length : null;
+
+            const swellExcl = Object.entries(swellBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
+            const swellAvg = swellExcl.length > 0 ? swellExcl.reduce((a,b)=>a+b,0)/swellExcl.length : null;
+
+            const windWaveExcl = Object.entries(windWaveBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
+            const windWaveAvg = windWaveExcl.length > 0 ? windWaveExcl.reduce((a,b)=>a+b,0)/windWaveExcl.length : null;
+
+            // Calculate combined wave height
+            let calcWave = null;
+            if (swellAvg !== null && windWaveAvg !== null) {
+                calcWave = Math.sqrt(swellAvg*swellAvg + windWaveAvg*windWaveAvg);
+            }
+
+            // Current-swell relationship
+            const currentVals = Object.values(currentSpeedBySource);
+            const currentSpeed = currentVals.length > 0 ? currentVals.reduce((a,b)=>a+b,0)/currentVals.length : null;
+            const currentDirVals = Object.values(currentDirBySource);
+            const currentDir = currentDirVals.length > 0 ? currentDirVals.reduce((a,b)=>a+b,0)/currentDirVals.length : null;
+            const swellDirVals = Object.values(swellDirBySource);
+            const swellDir = swellDirVals.length > 0 ? swellDirVals.reduce((a,b)=>a+b,0)/swellDirVals.length : null;
+
+            let currentRelation = 'neutral';
+            if (currentDir !== null && swellDir !== null) {
+                const swellTravelDir = (swellDir + 180) % 360;
+                let angleDiff = Math.abs(currentDir - swellTravelDir);
+                if (angleDiff > 180) angleDiff = 360 - angleDiff;
+                if (angleDiff <= 45) currentRelation = 'opposing';
+                else if (angleDiff >= 135) currentRelation = 'following';
+                else currentRelation = 'crossing';
+            }
+
+            // Score components (0-25 each, total 100)
+            let windScore = 25;
+            if (windAvg !== null) {
+                if (windAvg < 15) windScore = 25;
+                else if (windAvg < 20) windScore = 20;
+                else if (windAvg < 25) windScore = 10;
+                else windScore = 0;
+            }
+
+            let waveScore = 25;
+            const waveToUse = calcWave !== null ? calcWave : waveAvg;
+            if (waveToUse !== null) {
+                if (waveToUse < 1.0) waveScore = 25;
+                else if (waveToUse < 1.3) waveScore = 20;
+                else if (waveToUse < 1.5) waveScore = 10;
+                else waveScore = 0;
+            }
+
+            let periodScore = 25;
+            if (periodAvg !== null) {
+                if (periodAvg > 8) periodScore = 25;
+                else if (periodAvg > 6) periodScore = 20;
+                else if (periodAvg > 4) periodScore = 15;
+                else periodScore = 5;
+            }
+
+            let currentScore = 25;
+            if (currentRelation === 'opposing') currentScore = 5;
+            else if (currentRelation === 'crossing') currentScore = 20;
+            else if (currentRelation === 'following') currentScore = 25;
+
+            return {
+                score: windScore + waveScore + periodScore + currentScore,
+                wind: windAvg,
+                waveConsensus: waveAvg,
+                waveCalc: calcWave,
+                period: periodAvg,
+                currentRelation,
+                currentSpeed: currentSpeed ? currentSpeed * 1.94384 : null // to knots
+            };
+        }
+
+        // Score all time blocks across all days
+        function scoreAllTimeBlocks() {
+            const days = getUniqueDays();
+            const scores = [];
+
+            days.forEach(day => {
+                TIME_BLOCKS.forEach(timeBlock => {
+                    const forecasts = allForecasts.filter(f => {
+                        const date = new Date(f.forecast_time);
+                        const dateStr = date.toISOString().split('T')[0];
+                        const hour = date.getUTCHours();
+
+                        if (dateStr !== day) return false;
+                        if (timeBlock.name === 'Night') {
+                            return hour >= 21 || hour < 5;
+                        }
+                        return hour >= timeBlock.startHour && hour < timeBlock.endHour;
+                    });
+
+                    const result = scoreTimeBlock(forecasts);
+                    if (result) {
+                        const date = new Date(day + 'T12:00:00Z');
+                        scores.push({
+                            day,
+                            dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+                            dayNum: date.getUTCDate(),
+                            timeBlock: timeBlock.name,
+                            timeLabel: timeBlock.label,
+                            ...result
+                        });
+                    }
+                });
+            });
+
+            return scores;
+        }
+
+        // Get area coordinates for AI context
+        async function getAreaCoords() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}`);
+                const result = await response.json();
+                if (result.success) {
+                    return { lat: result.data.latitude, lng: result.data.longitude, name: result.data.name };
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        // Call AI endpoint for sailing summary
+        async function getAiSummary() {
+            aiLoading = true;
+            renderAiCard();
+
+            try {
+                console.log('Getting scores...');
+                const scores = scoreAllTimeBlocks();
+                console.log('Scores:', scores.length, 'time blocks');
+
+                console.log('Getting area info...');
+                const areaInfo = await getAreaCoords();
+                console.log('Area:', areaInfo);
+
+                console.log('Calling AI endpoint...');
+                const response = await fetch(`${API_BASE}/ai-sailing-summary`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        scores,
+                        area: areaInfo,
+                        preferences: {
+                            maxWind: 25,
+                            preferWind: 20,
+                            maxWave: 1.5,
+                            preferWave: 1.3,
+                            minPeriod: 6
+                        }
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Result:', result);
+
+                if (result.success) {
+                    aiSummary = result.data;
+                } else {
+                    aiSummary = { error: result.error || 'Failed to generate summary' };
+                }
+            } catch (error) {
+                console.error('AI Summary error:', error);
+                aiSummary = { error: error.message || error.toString() || 'Unknown error' };
+            }
+
+            aiLoading = false;
+            renderAiCard();
+        }
+
+        // Build SVG line graph
+        function buildLineGraph(data, lines, height = 80, yMax = null, yMin = 0) {
+            const width = 280;
+            const padding = { top: 10, right: 10, bottom: 20, left: 30 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            // Calculate y scale
+            let maxVal = yMax;
+            let minVal = yMin;
+            if (!maxVal) {
+                maxVal = 0;
+                lines.forEach(line => {
+                    data.forEach(d => {
+                        if (d[line.key] !== null && d[line.key] > maxVal) maxVal = d[line.key];
+                    });
+                });
+                maxVal = Math.ceil(maxVal * 1.1); // Add 10% headroom
+            }
+            const range = maxVal - minVal;
+
+            // Build paths
+            const paths = lines.map(line => {
+                const points = data.map((d, i) => {
+                    const x = padding.left + (i / (data.length - 1)) * chartWidth;
+                    const val = d[line.key];
+                    // Skip if null or above max (clip)
+                    if (val === null || val > maxVal) return null;
+                    const y = padding.top + chartHeight - ((val - minVal) / range) * chartHeight;
+                    return `${x},${y}`;
+                }).filter(p => p !== null);
+
+                return `<polyline points="${points.join(' ')}" fill="none" stroke="${line.color}" stroke-width="2" />`;
+            }).join('');
+
+            // X-axis labels (days)
+            const xLabels = data.map((d, i) => {
+                const x = padding.left + (i / (data.length - 1)) * chartWidth;
+                return `<text x="${x}" y="${height - 2}" font-size="8" fill="white" opacity="0.6" text-anchor="middle">${d.label}</text>`;
+            }).join('');
+
+            // Y-axis labels (min, mid, max)
+            const yLabels = [minVal, (minVal + maxVal) / 2, maxVal].map((val, i) => {
+                const y = padding.top + chartHeight - (i / 2) * chartHeight;
+                return `<text x="${padding.left - 4}" y="${y + 3}" font-size="8" fill="white" opacity="0.6" text-anchor="end">${val.toFixed(1)}</text>`;
+            }).join('');
+
+            // Legend
+            const legend = lines.map((line, i) => {
+                return `<text x="${padding.left + i * 60}" y="${padding.top - 2}" font-size="8" fill="${line.color}">${line.label}</text>`;
+            }).join('');
+
+            return `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet">
+                ${legend}
+                ${paths}
+                ${xLabels}
+                ${yLabels}
+                <line x1="${padding.left}" y1="${padding.top + chartHeight}" x2="${width - padding.right}" y2="${padding.top + chartHeight}" stroke="white" opacity="0.2" />
+            </svg>`;
+        }
+
+        // Render AI card
+        function renderAiCard() {
+            const container = document.getElementById('weather-card-container');
+            const scores = scoreAllTimeBlocks();
+
+            // Color for score
+            const scoreColor = (score) => {
+                if (score >= 80) return '#22c55e'; // green
+                if (score >= 60) return '#eab308'; // yellow
+                if (score >= 40) return '#f97316'; // orange
+                return '#ef4444'; // red
+            };
+
+            // Build 10-day score bar
+            const days = getUniqueDays();
+            const dayScoreBars = days.map(day => {
+                const dayScores = scores.filter(s => s.day === day);
+                const avgScore = dayScores.length > 0
+                    ? dayScores.reduce((a,b) => a + b.score, 0) / dayScores.length
+                    : 0;
+                const date = new Date(day + 'T12:00:00Z');
+                const dayLetter = date.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0);
+                const dayNum = date.getUTCDate();
+                return `<div style="flex:1; text-align:center;">
+                    <div style="height:40px; background:${scoreColor(avgScore)}; border-radius:4px; margin:0 1px;"></div>
+                    <div style="font-size:9px; margin-top:2px; line-height:1.1;">${dayLetter}<br><span style="opacity:0.7;">${dayNum}</span></div>
+                </div>`;
+            }).join('');
+
+            // Find best windows
+            const sortedScores = [...scores].sort((a,b) => b.score - a.score);
+            const bestWindows = sortedScores.slice(0, 3);
+            const worstWindows = sortedScores.slice(-3).reverse();
+
+            // Aggregate daily data for graphs
+            const dailyData = days.map(day => {
+                const dayScores = scores.filter(s => s.day === day);
+                const date = new Date(day + 'T12:00:00Z');
+                const winds = dayScores.map(s => s.wind).filter(v => v !== null);
+                const waves = dayScores.map(s => s.waveConsensus).filter(v => v !== null);
+                const calcs = dayScores.map(s => s.waveCalc).filter(v => v !== null);
+
+                return {
+                    label: date.getUTCDate().toString(),
+                    wind: winds.length > 0 ? winds.reduce((a,b) => a+b, 0) / winds.length : null,
+                    gust: winds.length > 0 ? Math.max(...winds) * 1.4 : null, // Estimate gust as 1.4x max wind
+                    wave: waves.length > 0 ? waves.reduce((a,b) => a+b, 0) / waves.length : null,
+                    calc: calcs.length > 0 ? calcs.reduce((a,b) => a+b, 0) / calcs.length : null
+                };
+            });
+
+            // Build graphs
+            const windGraph = buildLineGraph(dailyData, [
+                { key: 'wind', label: 'Avg Wind', color: '#60a5fa' },
+                { key: 'gust', label: 'Gust Est', color: '#f87171' }
+            ], 80, 30, 7);  // yMax=30, yMin=7
+
+            const waveGraph = buildLineGraph(dailyData, [
+                { key: 'wave', label: 'Consensus', color: '#60a5fa' },
+                { key: 'calc', label: 'Calculated', color: '#4ade80' }
+            ], 80, 2.1, 0.7);  // yMax=2.1, yMin=0.7
+
+            container.innerHTML = `
+                <div class="weather-card">
+                    <div class="card-header">
+                        <h2>🤖 AI Sailing Analysis</h2>
+                        <span class="time-range">10-Day Overview</span>
+                    </div>
+
+                    <!-- Score Bar -->
+                    <div style="margin: 16px 0;">
+                        <div style="font-size: 12px; opacity: 0.8; margin-bottom: 4px;">Sailing Conditions by Day</div>
+                        <div style="display: flex; align-items: flex-end; height: 60px;">
+                            ${dayScoreBars}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.6; margin-top: 4px;">
+                            <span>🟢 Great</span>
+                            <span>🟡 Good</span>
+                            <span>🟠 Fair</span>
+                            <span>🔴 Poor</span>
+                        </div>
+                    </div>
+
+                    <!-- Best Windows -->
+                    <div style="margin: 16px 0;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">✅ Best Windows</div>
+                        ${bestWindows.map(w => `
+                            <div style="background: rgba(34,197,94,0.2); padding: 8px; border-radius: 8px; margin-bottom: 4px; font-size: 13px;">
+                                <strong>${w.dayName} ${w.dayNum} ${w.timeLabel}</strong> - Score: ${w.score}/100<br>
+                                <span style="opacity:0.8;">Wind ${w.wind?.toFixed(0) || '--'}kn, Waves ${w.waveCalc?.toFixed(1) || w.waveConsensus?.toFixed(1) || '--'}m @ ${w.period?.toFixed(0) || '--'}s</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Worst Windows -->
+                    <div style="margin: 16px 0;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">⚠️ Avoid</div>
+                        ${worstWindows.map(w => `
+                            <div style="background: rgba(239,68,68,0.2); padding: 8px; border-radius: 8px; margin-bottom: 4px; font-size: 13px;">
+                                <strong>${w.dayName} ${w.dayNum} ${w.timeLabel}</strong> - Score: ${w.score}/100<br>
+                                <span style="opacity:0.8;">Wind ${w.wind?.toFixed(0) || '--'}kn, Waves ${w.waveCalc?.toFixed(1) || w.waveConsensus?.toFixed(1) || '--'}m${w.currentRelation === 'opposing' ? ', opposing current ⚠️' : ''}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- 10-Day Graphs -->
+                    <div style="margin: 16px 0;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">💨 Wind (knots)</div>
+                        <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 8px;">
+                            ${windGraph}
+                        </div>
+                    </div>
+
+                    <div style="margin: 16px 0;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">🌊 Waves (meters)</div>
+                        <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 8px;">
+                            ${waveGraph}
+                        </div>
+                    </div>
+
+                    <!-- AI Summary -->
+                    <div style="margin: 16px 0; padding: 12px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">🧠 AI Summary</div>
+                        ${aiLoading ? `
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 24px;">⏳</div>
+                                <div style="opacity: 0.8;">Analyzing conditions...</div>
+                            </div>
+                        ` : aiSummary ? (aiSummary.error ? `
+                            <div style="color: #f87171;">Error: ${aiSummary.error}</div>
+                        ` : `
+                            <div style="white-space: pre-wrap; line-height: 1.5;">${aiSummary.summary || 'No summary available'}</div>
+                            ${aiSummary.outlook ? `
+                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
+                                    <div style="font-size: 12px; opacity: 0.7; margin-bottom: 4px;">📅 Days 11-17 Outlook (Seasonal Patterns)</div>
+                                    <div style="font-size: 13px; opacity: 0.9;">${aiSummary.outlook}</div>
+                                </div>
+                            ` : ''}
+                        `) : `
+                            <button onclick="getAiSummary()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; color: white; font-size: 14px; cursor: pointer;">
+                                Generate AI Analysis
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
         }
 
         // Get forecasts for selected day/time block
