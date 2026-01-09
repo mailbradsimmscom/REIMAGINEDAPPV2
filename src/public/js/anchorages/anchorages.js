@@ -199,6 +199,20 @@ class AnchoragesManager {
     this.container.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', () => this.deleteAnchorage(btn.dataset.id));
     });
+
+    // Bind type dropdown to update badge
+    this.container.querySelectorAll('.type-select').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const card = e.target.closest('.anchorage-card');
+        const badge = card.querySelector('.anchorage-type-badge');
+        const newType = e.target.value;
+        const typeLabels = { anchor: 'Anchor', mooring: 'Mooring', marina: 'Marina' };
+
+        // Update badge class and text
+        badge.className = `anchorage-type-badge ${newType}`;
+        badge.textContent = typeLabels[newType];
+      });
+    });
   }
 
   /**
