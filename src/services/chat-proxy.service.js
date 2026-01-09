@@ -794,6 +794,31 @@ export function createChatProxyService({
     }
     nodeTiming.equipment_context_update_ms = Date.now() - step6Start;
 
+    // Check for unprocessed manuals - create task if needed (non-blocking)
+    for (const equipment of currentEquipmentSearch) {
+      try {
+        const docStatus = await userTasksRepository.checkDocumentStatus(equipment.asset_uid);
+        if (docStatus.hasDoc && !docStatus.isProcessed) {
+          const exists = await userTasksRepository.hasExistingTask(equipment.model);
+          if (!exists) {
+            await userTasksRepository.createUserTask({
+              description: `Process manual for "${equipment.manufacturer} ${equipment.model}"`,
+              asset_uid: equipment.asset_uid,
+              due_date: new Date().toISOString(),
+              created_by: 'chat_suggestion',
+              priority: 'normal'
+            });
+            requestLogger.info('Created task for unprocessed manual', {
+              equipment: `${equipment.manufacturer} ${equipment.model}`,
+              asset_uid: equipment.asset_uid
+            });
+          }
+        }
+      } catch (err) {
+        requestLogger.warn('Failed to check document status', { error: err.message });
+      }
+    }
+
     // STEP 7: Call Python sequential workflow (replaces DIP, Pinecone, OpenAI completion)
     chatDebug.step('PYTHON_WORKFLOW_CALL', {
       systemsContextCount: systemsContext.length,

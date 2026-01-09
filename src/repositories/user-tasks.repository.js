@@ -111,4 +111,34 @@ export async function createUserTask(task) {
   return data;
 }
 
-export default { createUserTask, hasExistingTask };
+/**
+ * Check if a document exists and is processed for an asset
+ * @param {string} assetUid - Asset UID to check
+ * @returns {Promise<{hasDoc: boolean, isProcessed: boolean}>}
+ */
+export async function checkDocumentStatus(assetUid) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    const { data, error } = await supabase
+      .from('documents')
+      .select('id, chunk_count')
+      .eq('asset_uid', assetUid)
+      .limit(1)
+      .single();
+
+    if (error || !data) {
+      return { hasDoc: false, isProcessed: false };
+    }
+
+    return {
+      hasDoc: true,
+      isProcessed: data.chunk_count > 0
+    };
+  } catch (err) {
+    requestLogger.warn('checkDocumentStatus failed', { error: err.message });
+    return { hasDoc: false, isProcessed: false };
+  }
+}
+
+export default { createUserTask, hasExistingTask, checkDocumentStatus };
