@@ -285,7 +285,8 @@ export async function detectNewAnchorages(minHours = 4) {
 
 /**
  * Reverse geocode coordinates to get place name
- * Uses OpenStreetMap Nominatim API (same as trips feature)
+ * Uses OpenStreetMap Nominatim API
+ * Optimized for Caribbean sailing locations
  * @param {number} lat - Latitude
  * @param {number} lon - Longitude
  * @returns {Promise<string|null>} Place name or null
@@ -302,15 +303,24 @@ async function reverseGeocode(lat, lon) {
     const data = await response.json();
     const address = data.address || {};
 
-    // Try various fields in order of preference for place name
-    const placeName = address.village || address.town || address.city || address.island ||
+    // Prefer town over village (more recognizable names for sailors)
+    // e.g., "Deshaies" instead of "Ferry"
+    const placeName = address.town || address.village || address.city || address.island ||
            address.municipality || address.county || address.state_district ||
            address.state || null;
 
     if (!placeName) return null;
 
-    // Add country if available
+    // For French overseas territories, use state (Guadeloupe, Martinique) instead of France
+    const frenchCaribbean = ['Guadeloupe', 'Martinique', 'Saint Martin', 'Saint Barthélemy'];
+    const state = address.state;
     const country = address.country;
+
+    if (country === 'France' && state && frenchCaribbean.includes(state)) {
+      return `${placeName}, ${state}`;
+    }
+
+    // For other locations, use country
     return country ? `${placeName}, ${country}` : placeName;
   } catch (error) {
     requestLogger.warn('Reverse geocode failed', { lat, lon, error: error.message });
