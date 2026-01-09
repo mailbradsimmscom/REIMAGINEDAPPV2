@@ -131,8 +131,8 @@ class AnchorWatchAlertsService {
       // Always send Telegram alert
       await telegramService.sendAnchorWatchAlert(status, this.lastKnownStatus);
 
-      // Send SMS for CRITICAL statuses only (warning, dragging, gps_lost)
-      const isCritical = ['warning', 'dragging', 'gps_lost'].includes(status.status);
+      // Send SMS only when actually outside area or GPS lost (not for warning)
+      const isCritical = ['dragging', 'gps_lost'].includes(status.status);
 
       if (isCritical && twilioService.isConfigured()) {
         await twilioService.sendCriticalAlert(status);
