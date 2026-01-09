@@ -134,6 +134,7 @@ class AnchoragesRepository {
   /**
    * Detect anchorages from GPS history using stationary period analysis
    * Finds periods where boat stayed in same location for minHours or more
+   * Processes data in JavaScript - no database functions required
    * @param {number} minHours - Minimum hours stationary to count as anchorage (default 4)
    * @returns {Promise<Array>} Detected anchorage candidates
    */
@@ -141,18 +142,50 @@ class AnchoragesRepository {
     try {
       const supabase = await getSupabaseClient();
 
-      // Complex CTE query to find stationary periods in GPS data
-      const { data, error } = await supabase.rpc('detect_anchorages_from_gps', {
-        min_hours: minHours
+      // Fetch GPS data from last 90 days with pagination
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+      requestLogger.info('Fetching GPS data for anchorage detection', {
+        since: ninetyDaysAgo.toISOString()
       });
 
-      if (error) {
-        // Fall back to raw SQL if RPC not available
-        requestLogger.warn('RPC detect_anchorages_from_gps not found, using raw query');
-        return await this.detectFromGpsHistoryRaw(minHours);
+      const allPositions = [];
+      let offset = 0;
+      const batchSize = 10000;
+
+      while (true) {
+        const { data: batch, error } = await supabase
+          .from('gps_position')
+          .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
+          .gte('timestamp', ninetyDaysAgo.toISOString())
+          .order('timestamp', { ascending: true })
+          .range(offset, offset + batchSize - 1);
+
+        if (error) throw error;
+        if (!batch || batch.length === 0) break;
+
+        allPositions.push(...batch);
+
+        if (batch.length < batchSize) break;
+        offset += batchSize;
       }
 
-      return data || [];
+      requestLogger.info('GPS data fetched', { totalPositions: allPositions.length });
+
+      if (allPositions.length === 0) {
+        return [];
+      }
+
+      // Group positions by hour
+      const hourlyPositions = this.groupPositionsByHour(allPositions);
+
+      // Find stationary periods
+      const candidates = this.findStationaryPeriods(hourlyPositions, minHours);
+
+      requestLogger.info('Anchorage candidates found', { count: candidates.length });
+
+      return candidates;
     } catch (error) {
       requestLogger.error('Error detecting anchorages from GPS', { error: error.message });
       throw error;
@@ -160,82 +193,117 @@ class AnchoragesRepository {
   }
 
   /**
-   * Raw SQL fallback for anchorage detection
-   * @param {number} minHours - Minimum hours stationary
-   * @returns {Promise<Array>} Detected anchorage candidates
+   * Group GPS positions by hour and calculate averages
+   * @param {Array} positions - Raw GPS positions
+   * @returns {Array} Hourly averaged positions sorted by time
    */
-  async detectFromGpsHistoryRaw(minHours = 4) {
-    try {
-      const supabase = await getSupabaseClient();
+  groupPositionsByHour(positions) {
+    const hourly = new Map();
 
-      // This query groups GPS positions by hour, identifies stationary periods,
-      // and returns candidates that haven't been recorded yet
-      const query = `
-        WITH hourly_positions AS (
-          SELECT
-            date_trunc('hour', timestamp) as hour,
-            AVG(latitude) as lat,
-            AVG(longitude) as lon,
-            AVG(true_wind_speed) as avg_wind_speed,
-            AVG(true_wind_direction) as avg_wind_dir
-          FROM gps_position
-          GROUP BY 1
-        ),
-        with_movement AS (
-          SELECT
-            hour, lat, lon, avg_wind_speed, avg_wind_dir,
-            SQRT(POWER(lat - LAG(lat) OVER (ORDER BY hour), 2) +
-                 POWER(lon - LAG(lon) OVER (ORDER BY hour), 2)) as movement
-          FROM hourly_positions
-        ),
-        stationary_hours AS (
-          SELECT
-            hour, lat, lon, avg_wind_speed, avg_wind_dir,
-            CASE WHEN movement < 0.0005 THEN 0 ELSE 1 END as moved,
-            SUM(CASE WHEN movement < 0.0005 THEN 0 ELSE 1 END) OVER (ORDER BY hour) as grp
-          FROM with_movement
-        ),
-        anchorage_candidates AS (
-          SELECT
-            MIN(hour) as arrived_at,
-            MAX(hour) + interval '1 hour' as departed_at,
-            ROUND(AVG(lat)::numeric, 5) as latitude,
-            ROUND(AVG(lon)::numeric, 5) as longitude,
-            COUNT(*) as hours_anchored,
-            ROUND(AVG(avg_wind_speed)::numeric, 1) as avg_wind_speed,
-            ROUND(AVG(avg_wind_dir)::numeric, 0) as avg_wind_direction
-          FROM stationary_hours
-          WHERE moved = 0
-          GROUP BY grp
-          HAVING COUNT(*) >= ${minHours}
-        )
-        SELECT
-          ac.*,
-          NOT EXISTS (
-            SELECT 1 FROM anchorages a
-            WHERE ABS(EXTRACT(EPOCH FROM (a.arrived_at - ac.arrived_at))) < 3600
-              AND ABS(a.latitude - ac.latitude) < 0.001
-              AND ABS(a.longitude - ac.longitude) < 0.001
-          ) as is_new
-        FROM anchorage_candidates ac
-        ORDER BY arrived_at DESC
-      `;
+    for (const pos of positions) {
+      const hour = new Date(pos.timestamp);
+      hour.setMinutes(0, 0, 0);
+      const key = hour.toISOString();
 
-      const { data, error } = await supabase.rpc('exec_sql', { query });
-
-      if (error) {
-        // If exec_sql RPC doesn't exist, we need to do this differently
-        // For now, return empty array and log the issue
-        requestLogger.warn('exec_sql RPC not available - anchorage detection requires DB function');
-        return [];
+      if (!hourly.has(key)) {
+        hourly.set(key, { hour, positions: [] });
       }
-
-      // Filter to only new anchorages
-      return (data || []).filter(a => a.is_new);
-    } catch (error) {
-      requestLogger.error('Error in raw GPS detection query', { error: error.message });
-      throw error;
+      hourly.get(key).positions.push(pos);
     }
+
+    // Calculate averages for each hour
+    return Array.from(hourly.values())
+      .map(({ hour, positions }) => ({
+        hour,
+        lat: positions.reduce((sum, p) => sum + p.latitude, 0) / positions.length,
+        lon: positions.reduce((sum, p) => sum + p.longitude, 0) / positions.length,
+        avgWindSpeed: positions.reduce((sum, p) => sum + (p.true_wind_speed || 0), 0) / positions.length,
+        avgWindDir: this.averageAngle(positions.map(p => p.true_wind_direction).filter(d => d != null))
+      }))
+      .sort((a, b) => a.hour - b.hour);
+  }
+
+  /**
+   * Calculate average of angles (handles wraparound at 360°)
+   * @param {Array} angles - Array of angles in degrees
+   * @returns {number} Average angle
+   */
+  averageAngle(angles) {
+    if (angles.length === 0) return 0;
+
+    const sinSum = angles.reduce((sum, a) => sum + Math.sin(a * Math.PI / 180), 0);
+    const cosSum = angles.reduce((sum, a) => sum + Math.cos(a * Math.PI / 180), 0);
+
+    return ((Math.atan2(sinSum, cosSum) * 180 / Math.PI) + 360) % 360;
+  }
+
+  /**
+   * Find stationary periods from hourly positions
+   * @param {Array} hourlyPositions - Hourly averaged positions
+   * @param {number} minHours - Minimum hours to qualify as anchorage
+   * @returns {Array} Anchorage candidates
+   */
+  findStationaryPeriods(hourlyPositions, minHours) {
+    if (hourlyPositions.length < 2) return [];
+
+    const MOVEMENT_THRESHOLD = 0.0005; // ~50 meters in degrees
+    const candidates = [];
+    let currentGroup = [hourlyPositions[0]];
+
+    for (let i = 1; i < hourlyPositions.length; i++) {
+      const prev = hourlyPositions[i - 1];
+      const curr = hourlyPositions[i];
+
+      // Calculate movement (simple Euclidean in degrees)
+      const movement = Math.sqrt(
+        Math.pow(curr.lat - prev.lat, 2) +
+        Math.pow(curr.lon - prev.lon, 2)
+      );
+
+      // Check for time gap (more than 2 hours between readings = break)
+      const timeDiff = (curr.hour - prev.hour) / (1000 * 60 * 60);
+
+      if (movement < MOVEMENT_THRESHOLD && timeDiff <= 2) {
+        // Still stationary, add to current group
+        currentGroup.push(curr);
+      } else {
+        // Moved or time gap - check if current group qualifies
+        if (currentGroup.length >= minHours) {
+          candidates.push(this.groupToCandidate(currentGroup));
+        }
+        // Start new group
+        currentGroup = [curr];
+      }
+    }
+
+    // Don't forget the last group
+    if (currentGroup.length >= minHours) {
+      candidates.push(this.groupToCandidate(currentGroup));
+    }
+
+    return candidates;
+  }
+
+  /**
+   * Convert a group of hourly positions to an anchorage candidate
+   * @param {Array} group - Group of consecutive stationary hours
+   * @returns {Object} Anchorage candidate
+   */
+  groupToCandidate(group) {
+    const avgLat = group.reduce((sum, p) => sum + p.lat, 0) / group.length;
+    const avgLon = group.reduce((sum, p) => sum + p.lon, 0) / group.length;
+    const avgWindSpeed = group.reduce((sum, p) => sum + p.avgWindSpeed, 0) / group.length;
+    const avgWindDir = this.averageAngle(group.map(p => p.avgWindDir));
+
+    return {
+      latitude: Math.round(avgLat * 100000) / 100000,
+      longitude: Math.round(avgLon * 100000) / 100000,
+      arrived_at: group[0].hour.toISOString(),
+      departed_at: new Date(group[group.length - 1].hour.getTime() + 3600000).toISOString(),
+      hours_anchored: group.length,
+      avg_wind_speed: Math.round(avgWindSpeed * 10) / 10,
+      avg_wind_direction: Math.round(avgWindDir)
+    };
   }
 
   /**
