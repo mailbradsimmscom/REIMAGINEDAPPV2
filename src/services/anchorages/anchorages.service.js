@@ -261,6 +261,16 @@ export async function detectNewAnchorages(minHours = 4) {
       auto_detected: true
     });
 
+    // Auto-geocode to get location name (with rate limiting for Nominatim)
+    if (inserted > 0) {
+      await new Promise(resolve => setTimeout(resolve, 1100));
+    }
+    const locationName = await reverseGeocode(anchorage.latitude, anchorage.longitude);
+    if (locationName) {
+      await anchoragesRepository.update(anchorage.id, { location_name: locationName });
+      anchorage.location_name = locationName;
+    }
+
     newAnchorages.push({
       ...anchorage,
       position_formatted: {
