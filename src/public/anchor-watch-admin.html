@@ -576,6 +576,18 @@
                     // If no current position but have anchor, use that
                     initialCenter = [statusResult.data.anchor_lat, statusResult.data.anchor_lon];
                     initialZoom = 16;
+                } else {
+                    // No alarm set - fetch current GPS position directly
+                    try {
+                        const gpsResponse = await fetch('/api/gps/current');
+                        const gpsResult = await gpsResponse.json();
+                        if (gpsResult.success && gpsResult.data && gpsResult.data.latitude && gpsResult.data.longitude) {
+                            initialCenter = [gpsResult.data.latitude, gpsResult.data.longitude];
+                            initialZoom = 16;
+                        }
+                    } catch (gpsError) {
+                        console.log('Could not fetch GPS position');
+                    }
                 }
             } catch (e) {
                 console.log('Could not fetch initial position, using world view');
@@ -901,6 +913,33 @@
             return [lat2 * 180 / Math.PI, lon2 * 180 / Math.PI];
         }
 
+        // Parse coordinate that might be in degrees.minutes.decimal format (e.g., 17.04.446)
+        // or standard decimal format (e.g., 17.0741)
+        function parseCoordinate(input) {
+            const str = input.toString().trim();
+
+            // Check for negative
+            const isNegative = str.startsWith('-');
+            const absStr = isNegative ? str.substring(1) : str;
+
+            // Count dots to detect format
+            const dotCount = (absStr.match(/\./g) || []).length;
+
+            let result;
+            if (dotCount === 2) {
+                // Format: degrees.minutes.decimal (e.g., 17.04.446 = 17° 04.446')
+                const parts = absStr.split('.');
+                const degrees = parseInt(parts[0], 10);
+                const minutes = parseFloat(parts[1] + '.' + parts[2]);
+                result = degrees + (minutes / 60);
+            } else {
+                // Standard decimal format (e.g., 17.0741)
+                result = parseFloat(absStr);
+            }
+
+            return isNegative ? -result : result;
+        }
+
         // Update anchor position from input fields (input → map sync)
         function updateAnchorFromInputs() {
             const latInput = document.getElementById('anchorLatInput');
@@ -908,8 +947,8 @@
 
             if (!latInput || !lonInput) return;
 
-            const lat = parseFloat(latInput.value);
-            const lon = parseFloat(lonInput.value);
+            const lat = parseCoordinate(latInput.value);
+            const lon = parseCoordinate(lonInput.value);
 
             // Validate inputs are valid numbers
             if (isNaN(lat) || isNaN(lon)) return;
