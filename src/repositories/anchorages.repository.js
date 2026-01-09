@@ -142,7 +142,8 @@ class AnchoragesRepository {
     try {
       const supabase = await getSupabaseClient();
 
-      // Fetch GPS data from last 90 days with pagination
+      // Fetch GPS data from last 90 days with timestamp-based pagination
+      // (Supabase enforces 1000 row limit, so we use cursor-based pagination)
       const ninetyDaysAgo = new Date();
       ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
@@ -151,24 +152,24 @@ class AnchoragesRepository {
       });
 
       const allPositions = [];
-      let offset = 0;
-      const batchSize = 10000;
+      let lastTimestamp = ninetyDaysAgo.toISOString();
+      const batchSize = 1000; // Supabase max
 
       while (true) {
         const { data: batch, error } = await supabase
           .from('gps_position')
           .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
-          .gte('timestamp', ninetyDaysAgo.toISOString())
+          .gt('timestamp', lastTimestamp)
           .order('timestamp', { ascending: true })
-          .range(offset, offset + batchSize - 1);
+          .limit(batchSize);
 
         if (error) throw error;
         if (!batch || batch.length === 0) break;
 
         allPositions.push(...batch);
+        lastTimestamp = batch[batch.length - 1].timestamp;
 
         if (batch.length < batchSize) break;
-        offset += batchSize;
       }
 
       requestLogger.info('GPS data fetched', { totalPositions: allPositions.length });
