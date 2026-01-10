@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pipeline Funnel | BoatOS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .header .subtitle {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+    }
+
+    .header .timestamp {
+      color: rgba(255,255,255,0.4);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .funnel-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .funnel-stage {
+      position: relative;
+      margin-bottom: 0;
+    }
+
+    .stage-bar {
+      background: linear-gradient(90deg, #4a90d9 0%, #357abd 100%);
+      border-radius: 8px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .stage-bar:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 20px rgba(74, 144, 217, 0.3);
+    }
+
+    .stage-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stage-icon {
+      font-size: 24px;
+      width: 40px;
+      text-align: center;
+    }
+
+    .stage-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .stage-info .description {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .stage-right {
+      text-align: right;
+    }
+
+    .stage-count {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stage-percentage {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .stage-connector {
+      width: 2px;
+      height: 16px;
+      background: rgba(255,255,255,0.2);
+      margin: 0 auto;
+    }
+
+    .stage-breakdown {
+      background: rgba(0,0,0,0.2);
+      border-radius: 0 0 8px 8px;
+      padding: 12px 24px;
+      margin-top: -8px;
+      padding-top: 20px;
+      display: none;
+    }
+
+    .stage-breakdown.visible {
+      display: block;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .breakdown-key {
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Color coding for different stages */
+    .stage-bar.systems { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
+    .stage-bar.documents { background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%); }
+    .stage-bar.processing { background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%); }
+    .stage-bar.vectors { background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); }
+    .stage-bar.extraction { background: linear-gradient(90deg, #fa709a 0%, #fee140 100%); }
+    .stage-bar.maintenance { background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); }
+    .stage-bar.maintenance .stage-count,
+    .stage-bar.maintenance .stage-info h3 { color: #333; }
+    .stage-bar.maintenance .stage-info .description { color: rgba(0,0,0,0.6); }
+
+    /* Warning states */
+    .stage-bar.warning {
+      border: 2px solid #ffc107;
+    }
+
+    .stage-bar.critical {
+      border: 2px solid #dc3545;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: #4a90d9;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error {
+      text-align: center;
+      padding: 40px;
+      color: #dc3545;
+    }
+
+    .refresh-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4a90d9;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background: #357abd;
+    }
+
+    .back-link {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #fff;
+    }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .summary-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .summary-card .value {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .summary-card .label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+
+    /* Issues section */
+    .issues-section {
+      margin-top: 32px;
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .issues-section h3 {
+      color: #dc3545;
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .issue-item {
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .issue-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .issue-type {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .issue-type.flag_no_doc {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .issue-type.doc_no_flag {
+      background: #17a2b8;
+      color: #fff;
+    }
+
+    .issue-uid {
+      font-family: monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+
+    /* DIP Details Styles */
+    .dip-details {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .dip-section {
+      margin-bottom: 16px;
+    }
+
+    .dip-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .dip-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .dip-stat {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .dip-stat-value {
+      display: block;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .dip-stat-label {
+      display: block;
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+
+    .dip-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .dip-table th,
+    .dip-table td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .dip-table th {
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .dip-table td:first-child {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .dip-table td:not(:first-child) {
+      text-align: right;
+      font-family: monospace;
+    }
+
+    .dip-table th:not(:first-child) {
+      text-align: right;
+    }
+
+    .dip-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Branch visualization */
+    .branch-point {
+      text-align: center;
+      padding: 16px 0;
+      position: relative;
+    }
+
+    .branch-point::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 16px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .branch-point-label {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .branches-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .branch {
+      background: rgba(0,0,0,0.15);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .branch-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .branch-header-icon {
+      font-size: 24px;
+    }
+
+    .branch-header-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .branch-header-info .description {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .branch.dip {
+      border-left: 3px solid #fa709a;
+    }
+
+    .branch.dip .branch-header {
+      color: #fa709a;
+    }
+
+    .branch.maintenance {
+      border-left: 3px solid #38ef7d;
+    }
+
+    .branch.maintenance .branch-header {
+      color: #38ef7d;
+    }
+
+    .branch .funnel-stage {
+      margin-bottom: 0;
+    }
+
+    .branch .stage-bar {
+      padding: 14px 16px;
+    }
+
+    .branch .stage-icon {
+      font-size: 18px;
+      width: 30px;
+    }
+
+    .branch .stage-info h3 {
+      font-size: 14px;
+    }
+
+    .branch .stage-count {
+      font-size: 22px;
+    }
+
+    .branch .stage-connector {
+      height: 12px;
+    }
+
+    /* Branch-specific stage colors */
+    .branch.dip .stage-bar { background: linear-gradient(90deg, #fa709a 0%, #fee140 100%); }
+    .branch.maintenance .stage-bar { background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%); }
+
+    /* Maintenance details */
+    .maint-details {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .maint-section {
+      margin-bottom: 12px;
+    }
+
+    .maint-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .maint-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .maint-list {
+      font-size: 12px;
+    }
+
+    .maint-list-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .maint-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .maint-list-key {
+      color: rgba(255,255,255,0.7);
+      max-width: 70%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .maint-list-value {
+      font-family: monospace;
+      color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .branches-container {
+        grid-template-columns: 1fr;
+      }
+
+      .funnel-container {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back-link">← Back to Home</a>
+
+  <div class="header">
+    <h1>Pipeline Funnel</h1>
+    <div class="subtitle">System → Document → Processing Flow</div>
+    <div class="timestamp" id="timestamp"></div>
+  </div>
+
+  <div class="funnel-container">
+    <div id="summaryCards" class="summary-cards"></div>
+    <div id="funnelContent">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div>Loading pipeline statistics...</div>
+      </div>
+    </div>
+    <div id="issuesContainer"></div>
+  </div>
+
+  <button class="refresh-btn" onclick="loadFunnel()">Refresh</button>
+
+  <script src="/js/funnel/funnel.js?v=3"></script>
+
+  <!-- Mobile Navigation Component -->
+  <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>
