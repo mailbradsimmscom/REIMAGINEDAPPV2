@@ -1,9 +1,13 @@
 # Code Update #75: Manual Not Processed → Task Creation
 
 **Date:** 2026-01-10
-**Status:** ✅ Implemented - Needs Testing
+**Status:** ✅ Implemented & Tested
 **Branch:** Stable-v4-Working
-**Commit:** `eb1d9063` - Add task creation for unprocessed manuals
+**Commits:**
+- `eb1d9063` - Initial implementation
+- `85100ffe` - Add systemDetails lookup for manufacturer/model
+- `1569274e` - Fix checkDocumentStatus query (id → chunk_count)
+- `333593e4` - Run checks in parallel (Promise.all)
 
 ---
 
@@ -20,17 +24,18 @@ The user gets:
 - **No explanation** of why there's no data
 - **No task created** to process the manual
 
-**Example:** User asks "What model of freezer do I have?" - Vitrifrigo IS in systems, but manual was never processed.
+**Example:** User asks "Tell me about my Yanmar sail drive" - Yanmar IS in systems, document IS downloaded, but manual was never chunked into Pinecone.
 
 ---
 
 ## Solution
 
 Replicate the pattern from #72 (equipment not found):
-- Check document status after equipment is found
+- Check document status for ALL equipment in search results
 - Create task if document exists but not processed
 - **Continue to Python** - no early return, no message changes
 - Non-blocking: errors don't break the flow
+- **Parallel execution** to minimize latency impact
 
 ---
 
@@ -39,177 +44,153 @@ Replicate the pattern from #72 (equipment not found):
 | File | Change |
 |------|--------|
 | `src/repositories/user-tasks.repository.js` | Added `checkDocumentStatus(assetUid)` |
-| `src/services/chat-proxy.service.js` | Added check loop at lines 797-820 |
+| `src/services/chat-proxy.service.js` | Added parallel check at lines 797-830 |
 
 ---
 
 ## Implementation Details
 
-### 1. New Function: `checkDocumentStatus(assetUid)`
+### 1. Function: `checkDocumentStatus(assetUid)`
 
 Location: `src/repositories/user-tasks.repository.js`
 
 ```javascript
 export async function checkDocumentStatus(assetUid) {
-  const supabase = await checkSupabaseAvailability();
+  try {
+    const supabase = await checkSupabaseAvailability();
 
-  const { data, error } = await supabase
-    .from('documents')
-    .select('id, chunk_count')
-    .eq('asset_uid', assetUid)
-    .limit(1)
-    .single();
+    const { data, error } = await supabase
+      .from('documents')
+      .select('chunk_count')  // Note: 'id' column doesn't exist, use 'chunk_count' only
+      .eq('asset_uid', assetUid)
+      .limit(1)
+      .single();
 
-  if (error || !data) return { hasDoc: false, isProcessed: false };
+    if (error || !data) return { hasDoc: false, isProcessed: false };
 
-  return {
-    hasDoc: true,
-    isProcessed: data.chunk_count > 0
-  };
+    return {
+      hasDoc: true,
+      isProcessed: data.chunk_count > 0
+    };
+  } catch (err) {
+    requestLogger.warn('checkDocumentStatus failed', { error: err.message });
+    return { hasDoc: false, isProcessed: false };
+  }
 }
 ```
 
-### 2. Check Loop in Chat Flow
+### 2. Parallel Check in Chat Flow
 
-Location: `src/services/chat-proxy.service.js` (lines 797-820)
+Location: `src/services/chat-proxy.service.js` (lines 797-830)
 
 Inserted after `nodeTiming.equipment_context_update_ms` and before STEP 7 (Python call):
 
 ```javascript
-// Check for unprocessed manuals - create task if needed (non-blocking)
-for (const equipment of currentEquipmentSearch) {
+// Check for unprocessed manuals - create task if needed (non-blocking, parallel)
+await Promise.all(currentEquipmentSearch.map(async (equipment) => {
   try {
     const docStatus = await userTasksRepository.checkDocumentStatus(equipment.asset_uid);
     if (docStatus.hasDoc && !docStatus.isProcessed) {
-      const exists = await userTasksRepository.hasExistingTask(equipment.model);
+      // Look up full system details (search_systems RPC only returns asset_uid + rank)
+      const systemDetails = await systemsRepository.getSystemByAssetUid(equipment.asset_uid);
+      if (!systemDetails) {
+        requestLogger.warn('System not found for unprocessed manual check', {
+          asset_uid: equipment.asset_uid
+        });
+        return;
+      }
+
+      const exists = await userTasksRepository.hasExistingTask(systemDetails.model_norm);
       if (!exists) {
         await userTasksRepository.createUserTask({
-          description: `Process manual for "${equipment.manufacturer} ${equipment.model}"`,
+          description: `Process manual for "${systemDetails.manufacturer_norm} ${systemDetails.model_norm}"`,
           asset_uid: equipment.asset_uid,
           due_date: new Date().toISOString(),
           created_by: 'chat_suggestion',
           priority: 'normal'
+        });
+        requestLogger.info('Created task for unprocessed manual', {
+          equipment: `${systemDetails.manufacturer_norm} ${systemDetails.model_norm}`,
+          asset_uid: equipment.asset_uid
         });
       }
     }
   } catch (err) {
     requestLogger.warn('Failed to check document status', { error: err.message });
   }
-}
+}));
 ```
+
+---
+
+## Key Implementation Notes
+
+### Why `systemsRepository.getSystemByAssetUid()`?
+
+The `search_systems` RPC only returns `{ asset_uid, rank }`. It does NOT return `manufacturer` or `model`. We must look up the full system details to get `manufacturer_norm` and `model_norm` for the task description.
+
+### Why `Promise.all` instead of sequential loop?
+
+With 10 equipment items, sequential DB calls would add 500-2000ms latency. Parallel execution reduces this to ~50-200ms (single call latency).
+
+### Why `chunk_count` not `id, chunk_count`?
+
+The `documents` table doesn't have an `id` column - it uses `doc_id`. Querying for `id` caused a silent failure that returned `{ hasDoc: false }` for everything.
 
 ---
 
 ## Data Flow
 
 ```
-User: "What model of freezer do I have?"
+User: "Tell me about my Yanmar sail drive"
   │
   ▼
 chat-proxy.service.js
-  │ LLM extracts: ["freezer", "vitrifrigo"]
-  │ Search inventory → FOUND (Vitrifrigo fridge_freezer)
+  │ Search inventory → FOUND (10 related equipment items)
   │ Build systemsContext
   │
-  ├─► For each equipment in currentEquipmentSearch:
+  ├─► Promise.all: For each equipment (IN PARALLEL):
   │     │
   │     ├─► checkDocumentStatus(asset_uid)
-  │     │     └─► hasDoc: true, isProcessed: false (chunk_count = 0)
+  │     │     └─► hasDoc: true/false, isProcessed: true/false
   │     │
-  │     ├─► hasExistingTask("fridge_freezer") → false
+  │     ├─► If hasDoc && !isProcessed:
+  │     │     ├─► getSystemByAssetUid() → get manufacturer_norm, model_norm
+  │     │     ├─► hasExistingTask(model_norm) → duplicate check
+  │     │     └─► createUserTask() if no duplicate
   │     │
-  │     └─► createUserTask("Process manual for Vitrifrigo fridge_freezer")
+  │     └─► Tasks created for ALL equipment with unprocessed manuals
   │
   ▼ Continue to Python (no early return)
   │
-Python Sidecar
-  │ DIP search → empty (no data)
-  │ Pinecone search → empty (no chunks)
-  │
-  ├─► Synthesis: "I found Vitrifrigo in your inventory but don't have technical data..."
-  ├─► Perplexity: General knowledge about Vitrifrigo freezers
+Python Sidecar → Synthesis + Perplexity
   │
   ▼
-User sees response + new task appears in maintenance todo list
+User sees response + new tasks appear in maintenance todo list
 ```
 
 ---
 
-## Differences from Failed #74
+## Behavior
 
-| #74 (Failed) | #75 (This Implementation) |
-|--------------|---------------------------|
-| Tried to prepend message to response | No message changes |
-| Modified streaming generator | No streaming changes |
-| Used early return | No early return |
-| Broke production | Non-blocking side effect only |
-
-**Key principle:** Just add the task as a side effect, then let everything continue normally.
+- **Creates tasks for ALL related equipment** with unprocessed manuals, not just the one asked about
+- **Silent operation** - no message to user about task creation
+- **Duplicate prevention** - checks `hasExistingTask()` before creating
+- **Non-blocking** - errors caught and logged, don't break chat flow
 
 ---
 
-## Post-Compact Verification Tests
+## Test Cases
 
-Run these tests after `/compact` to verify the feature works:
+### Test Equipment (systems with downloaded but unprocessed manuals)
 
-### Test 1: Verify checkDocumentStatus Function
+| Equipment | asset_uid |
+|-----------|-----------|
+| Yanmar Sail_drive | `4dbf0c41-a3ac-4993-b5d4-b591a6365c72` |
+| B&G zeus_s_16_mfd | `e4739797-4204-fe58-4abf-1867b0fd57ff` |
+| Fortress fx_37 | `603ed86f-0d7a-4ee9-a681-d3a97b600764` |
 
-```bash
-# Find an asset with unprocessed manual (chunk_count = 0)
-node -e "
-const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config();
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
-(async () => {
-  const { data } = await supabase
-    .from('documents')
-    .select('asset_uid, filename, chunk_count')
-    .eq('chunk_count', 0)
-    .limit(5);
-  console.log('Unprocessed documents:', data);
-})();
-"
-```
-
-### Test 2: Verify Task Creation (Direct)
-
-```bash
-# Test the repository function directly
-node -e "
-import('./src/repositories/user-tasks.repository.js').then(async (repo) => {
-  // Replace with actual asset_uid from Test 1
-  const status = await repo.checkDocumentStatus('YOUR_ASSET_UID');
-  console.log('Document status:', status);
-});
-"
-```
-
-### Test 3: End-to-End Chat Test
-
-1. Find equipment with unprocessed manual:
-   ```sql
-   SELECT s.manufacturer, s.model, s.asset_uid, d.chunk_count
-   FROM systems s
-   JOIN documents d ON d.asset_uid = s.asset_uid
-   WHERE d.chunk_count = 0;
-   ```
-
-2. Ask about that equipment in chat:
-   ```
-   "Tell me about my [equipment name]"
-   ```
-
-3. Verify:
-   - [ ] Response arrives (no error)
-   - [ ] Synthesis mentions equipment
-   - [ ] Perplexity provides general info
-   - [ ] Check `user_tasks` table for new task with `created_by='chat_suggestion'`
-
-### Test 4: Duplicate Prevention
-
-1. Ask the same question twice
-2. Verify only ONE task created (not duplicated)
+### Verify Tasks Created
 
 ```sql
 SELECT * FROM user_tasks
@@ -218,56 +199,30 @@ ORDER BY created_at DESC
 LIMIT 10;
 ```
 
-### Test 5: Check Node Logs
+### Expected Log Output
 
-Look for these log messages after a chat request:
-
-**Success case:**
 ```
 Created task for unprocessed manual
-  equipment: "Vitrifrigo fridge_freezer"
-  asset_uid: "xxx"
-```
-
-**Skip case (already exists):**
-No log (silently skipped)
-
-**Error case:**
-```
-Failed to check document status
-  error: "..."
+  equipment: "Yanmar Sail_drive"
+  asset_uid: "4dbf0c41-a3ac-4993-b5d4-b591a6365c72"
 ```
 
 ---
 
-## Troubleshooting
+## Bugs Fixed During Implementation
 
-### Task not created?
-
-1. **Check equipment was found:**
-   - Look for `currentEquipmentSearch` in logs
-   - If empty, equipment extraction failed
-
-2. **Check document exists:**
-   - Query: `SELECT * FROM documents WHERE asset_uid = 'xxx'`
-   - If no row, no document uploaded yet
-
-3. **Check chunk_count:**
-   - If chunk_count > 0, document IS processed (no task needed)
-
-4. **Check for existing task:**
-   - Query: `SELECT * FROM user_tasks WHERE description ILIKE '%equipment_name%'`
-   - If exists, duplicate prevention worked
-
-5. **Check Supabase connection:**
-   - Look for `checkDocumentStatus failed` in logs
+| Bug | Cause | Fix |
+|-----|-------|-----|
+| Tasks not created | Query used non-existent `id` column | Changed to `chunk_count` only |
+| Task description "undefined undefined" | `search_systems` RPC doesn't return manufacturer/model | Added `getSystemByAssetUid()` lookup |
+| Slow chat response | Sequential DB calls for 10 items | Changed to `Promise.all` parallel |
+| Log shows "undefined" for equipment | Logging `manufacturer` instead of `manufacturer_norm` | Fixed log fields |
 
 ---
 
 ## Related Documents
 
 - `/code updates/72 Equipment Not Found Fix and User Task Creation.md` - Original pattern
-- `/code updates/74 Failed Manual Not Processed Feature - REVERTED.md` - What NOT to do
 - `/docs/10-user-features/chat.md` - Chat feature documentation
 - `/docs/10-user-features/maintenance.md` - Task system documentation
 
@@ -278,11 +233,11 @@ Failed to check document status
 To revert this feature:
 
 ```bash
-git revert eb1d9063
+git revert 333593e4 1569274e 85100ffe eb1d9063
 ```
 
 Or manually:
 1. Remove `checkDocumentStatus` from `user-tasks.repository.js`
-2. Remove lines 797-820 from `chat-proxy.service.js`
+2. Remove Promise.all block from `chat-proxy.service.js`
 
 The feature is isolated - removal won't affect other functionality.

@@ -129,17 +129,22 @@ This is the exact sequence. Each step matters for understanding where bugs can o
     - This is NOT an error - user gets helpful response + task reminder
 
 #### Node.js Step 3c: Manual Not Processed (Creates User Task)
-14b. **If equipment found but document has chunk_count = 0**:
-    - Document exists but was never processed (no chunks in Pinecone)
-    - **Create user_task** for each affected equipment item (non-blocking)
-      - `description`: "Process manual for [manufacturer] [model]"
-      - `due_date`: NOW (immediately due)
-      - `created_by`: 'chat_suggestion'
-    - Check for duplicates first via `hasExistingTask()` - skip if task already exists
-    - **Continue to Python** with equipment in `systems_context`
-    - Python synthesis will have no DIP/Pinecone data for this equipment
+14b. **After equipment context is built, check ALL equipment in parallel** for unprocessed manuals:
+    - Uses `Promise.all()` to check all equipment items simultaneously (~50-200ms total)
+    - For each equipment item in `currentEquipmentSearch`:
+      - Call `checkDocumentStatus(asset_uid)` - checks if document exists and chunk_count > 0
+      - If `hasDoc: true` AND `isProcessed: false` (chunk_count = 0):
+        - Look up full system details via `getSystemByAssetUid()` (RPC only returns asset_uid + rank)
+        - Check for duplicates via `hasExistingTask(model_norm)` - skip if task exists
+        - **Create user_task** (non-blocking):
+          - `description`: "Process manual for [manufacturer_norm] [model_norm]"
+          - `due_date`: NOW (immediately due)
+          - `created_by`: 'chat_suggestion'
+    - **Creates tasks for ALL related equipment** with unprocessed manuals, not just the one asked about
+    - **Continue to Python** - no early return, no message changes
+    - Python synthesis will have no DIP/Pinecone data for these equipment items
     - Perplexity provides general knowledge
-    - This is NOT an error - user gets response + task reminder to process the manual
+    - This is NOT an error - user gets response + tasks appear in maintenance UI
 
 #### Node.js Step 4: Build Equipment Context
 15. **Call `getEquipmentRelationshipContext()`**

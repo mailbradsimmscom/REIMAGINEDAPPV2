@@ -336,21 +336,26 @@ This ensures users are reminded to add equipment to their inventory while still 
 
 ### Adding a Task (Manual Not Processed)
 
-When a user asks about equipment that **is in their inventory but has an unprocessed manual** (document exists but chunk_count = 0), the system creates a task:
+When a user asks about equipment that **is in their inventory but has an unprocessed manual** (document exists but chunk_count = 0), the system creates tasks:
 
-1. User asks: "What model of freezer do I have?"
-2. Chat AI extracts "freezer" → finds "Vitrifrigo fridge_freezer" in systems
-3. **Document check:** `documents` table has a row for this asset_uid
-4. **But chunk_count = 0:** Manual was uploaded but never processed
-5. **Automatic task creation:**
-   - `description`: "Process manual for Vitrifrigo fridge_freezer"
+1. User asks: "Tell me about my Yanmar sail drive"
+2. Chat AI finds related equipment (Yanmar sail_drive, vc20, shift_actuator, etc.)
+3. **Parallel document check** for ALL found equipment (via `Promise.all()`):
+   - For each equipment: check `documents` table for `asset_uid`
+   - If document exists AND `chunk_count = 0`: manual needs processing
+4. **Automatic task creation** for each unprocessed manual:
+   - Look up full system details via `getSystemByAssetUid()` (search RPC only returns asset_uid + rank)
+   - `description`: "Process manual for [manufacturer_norm] [model_norm]"
    - `due_date`: NOW (immediately due)
    - `created_by`: 'chat_suggestion'
-6. Duplicate check: Won't create if similar active task exists
-7. Chat continues to Python → no DIP/Pinecone data, but Perplexity provides general knowledge
-8. Task appears in user's maintenance todo list
+5. **Duplicate check:** Won't create if similar active task exists (checks `hasExistingTask(model_norm)`)
+6. **Creates tasks for ALL related equipment** with unprocessed manuals, not just the one asked about
+7. Chat continues to Python → no DIP/Pinecone data for these items, but Perplexity provides general knowledge
+8. Tasks appear in user's maintenance todo list
 
-This ensures users are reminded to process manuals for equipment they're asking about.
+**Performance:** Parallel execution adds only ~50-200ms to chat response time.
+
+This ensures users are reminded to process manuals for all related equipment they interact with.
 
 ### Processing a System (Admin)
 
