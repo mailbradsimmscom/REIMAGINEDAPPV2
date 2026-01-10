@@ -8,6 +8,10 @@
 (function() {
     'use strict';
 
+    // Prevent multiple initializations (can cause vibrating/flickering)
+    if (window.__mobileNavInitialized) return;
+    window.__mobileNavInitialized = true;
+
     // Inject CSS
     function injectStyles() {
         const style = document.createElement('style');
@@ -30,12 +34,14 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: rgba(255, 255, 255, 0.8);
+                background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 border-top: 0.5px solid var(--border-color);
                 padding-bottom: var(--safe-area-bottom);
                 z-index: 100;
+                transform: translateZ(0);
+                will-change: transform;
             }
 
             .mobile-nav-items {
