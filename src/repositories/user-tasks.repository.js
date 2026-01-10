@@ -122,7 +122,7 @@ export async function checkDocumentStatus(assetUid) {
 
     const { data, error } = await supabase
       .from('documents')
-      .select('id, chunk_count')
+      .select('chunk_count')
       .eq('asset_uid', assetUid)
       .limit(1)
       .single();

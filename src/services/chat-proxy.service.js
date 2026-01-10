@@ -713,8 +713,8 @@ export function createChatProxyService({
 
           requestLogger.info('🆕 Fetched NEW equipment details', {
             assetUid: fullSystem.asset_uid,
-            manufacturer: fullSystem.manufacturer,
-            model: fullSystem.model
+            manufacturer: fullSystem.manufacturer_norm,
+            model: fullSystem.model_norm
           });
         }
 
