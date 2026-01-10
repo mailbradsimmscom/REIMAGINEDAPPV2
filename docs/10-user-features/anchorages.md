@@ -6,6 +6,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 **Who uses it:** Boat owners, crew
 **Access:** `/anchorages`
+**Last Updated:** 2026-01-09
 
 ---
 
@@ -17,22 +18,25 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 ┌─────────────────────────────────────────────────────────────────┐
 │  1. Open Anchorages page (/anchorages)                          │
 │     └── Shows list of recorded anchorages                       │
+│     └── Mobile nav footer at bottom                             │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  2. Tap "Refresh New Anchorages"                                │
 │     └── POST /api/anchorages/detect                             │
-│     └── Analyzes GPS history for stationary periods (4+ hours)  │
-│     └── Creates anchorage records with wind data                │
+│     └── Fetches GPS history (last 90 days)                      │
+│     └── Analyzes for stationary periods (4+ hours)              │
+│     └── Auto-geocodes location names                            │
 │     └── Links to arrival/departure trips if found               │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  3. Edit anchorage details                                      │
-│     ├── Set location name (e.g., "Soufrière", "Rodney Bay")     │
-│     ├── Set type: Anchor or Mooring                             │
+│     ├── Set location name (auto-filled, editable)               │
+│     ├── Set type: Anchor / Mooring / Marina                     │
+│     │   └── Badge updates immediately when changed              │
 │     ├── Enter scope in meters                                   │
 │     └── Add notes                                               │
 └─────────────────────────────────────────────────────────────────┘
@@ -59,6 +63,102 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 ---
 
+## Recent Changes (2026-01-09)
+
+### 1. Detection Rewritten in JavaScript (No Database RPC)
+
+Previously required `detect_anchorages_from_gps` PostgreSQL function. Now runs entirely in JavaScript:
+
+```javascript
+// anchorages.repository.js - detectFromGpsHistory()
+
+// 1. Fetch GPS with timestamp-based pagination (Supabase 1000 row limit)
+const allPositions = [];
+let lastTimestamp = ninetyDaysAgo.toISOString();
+
+while (true) {
+  const { data: batch } = await supabase
+    .from('gps_position')
+    .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
+    .gt('timestamp', lastTimestamp)
+    .order('timestamp', { ascending: true })
+    .limit(1000);  // Supabase max
+
+  if (!batch || batch.length === 0) break;
+  allPositions.push(...batch);
+  lastTimestamp = batch[batch.length - 1].timestamp;
+  if (batch.length < 1000) break;
+}
+
+// 2. Group by hour
+const hourlyPositions = this.groupPositionsByHour(allPositions);
+
+// 3. Find stationary periods (movement < 0.0005° between hours)
+const candidates = this.findStationaryPeriods(hourlyPositions, minHours);
+```
+
+**Why timestamp pagination?** Supabase enforces 1000 row limit regardless of `.range()` calls. Using timestamp cursors correctly fetches all 400k+ GPS records.
+
+### 2. Auto-Geocodes New Anchorages
+
+When detecting anchorages, location names are automatically populated via OpenStreetMap Nominatim:
+
+```javascript
+// In detectNewAnchorages() - anchorages.service.js
+const anchorage = await anchoragesRepository.create({ ... });
+
+// Auto-geocode (with rate limiting)
+if (inserted > 0) {
+  await new Promise(resolve => setTimeout(resolve, 1100)); // Nominatim rate limit
+}
+const locationName = await reverseGeocode(anchorage.latitude, anchorage.longitude);
+if (locationName) {
+  await anchoragesRepository.update(anchorage.id, { location_name: locationName });
+}
+```
+
+### 3. Improved French Caribbean Geocoding
+
+French overseas territories now show island name instead of "France":
+
+```javascript
+// reverseGeocode() in anchorages.service.js
+const frenchCaribbean = ['Guadeloupe', 'Martinique', 'Saint Martin', 'Saint Barthélemy'];
+
+if (country === 'France' && state && frenchCaribbean.includes(state)) {
+  return `${placeName}, ${state}`;  // "Deshaies, Guadeloupe"
+}
+// Instead of: "Ferry, France"
+```
+
+Also prefers `town` over `village` for more recognizable names (e.g., "Deshaies" instead of "Ferry").
+
+### 4. Badge Updates Immediately
+
+When changing the type dropdown (Anchor/Mooring/Marina), the badge at the top of the card now updates immediately without saving:
+
+```javascript
+// In renderAnchorages() - anchorages.js
+this.container.querySelectorAll('.type-select').forEach(select => {
+  select.addEventListener('change', (e) => {
+    const card = e.target.closest('.anchorage-card');
+    const badge = card.querySelector('.anchorage-type-badge');
+    badge.className = `anchorage-type-badge ${e.target.value}`;
+    badge.textContent = typeLabels[e.target.value];
+  });
+});
+```
+
+### 5. Mobile Nav Footer Added
+
+Page now includes the common mobile navigation footer:
+
+```html
+<script src="/public/js/mobile-nav.js"></script>
+```
+
+---
+
 ## Architecture
 
 ```
@@ -67,6 +167,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 │  ├── Detect button triggers GPS analysis                        │
 │  ├── Editable fields: name, type, scope, notes                  │
 │  ├── Display: coordinates, duration, wind, trips                │
+│  ├── Badge updates immediately on type change                   │
 │  └── Computed anchor position updates on save                   │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -75,17 +176,22 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 │  /api/anchorages (anchorages.route.js)                          │
 │  └── anchorages.service.js                                      │
 │      ├── listAnchorages() - Get all with formatted fields       │
-│      ├── detectNewAnchorages() - Analyze GPS history            │
+│      ├── detectNewAnchorages() - Analyze GPS + auto-geocode     │
 │      ├── updateAnchorage() - Compute anchor pos on scope change │
 │      ├── formatCoordinate() - Decimal to degrees/minutes        │
-│      └── computeAnchorPosition() - Inverse haversine            │
+│      ├── computeAnchorPosition() - Inverse haversine            │
+│      └── reverseGeocode() - OpenStreetMap Nominatim             │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  anchorages.repository.js                                       │
 │  ├── findAll() - List with trip joins                           │
-│  ├── detectFromGpsHistory() - CTE query for stationary periods  │
+│  ├── detectFromGpsHistory() - JavaScript-based detection        │
+│  │   ├── groupPositionsByHour() - Hourly averages               │
+│  │   ├── findStationaryPeriods() - Movement analysis            │
+│  │   ├── averageAngle() - Circular mean for wind direction      │
+│  │   └── groupToCandidate() - Build anchorage candidate         │
 │  ├── findTripNearTime() - Link to arrival/departure trips       │
 │  └── exists() - Prevent duplicates                              │
 └─────────────────────────────────────────────────────────────────┘
@@ -148,42 +254,76 @@ export function computeAnchorPosition(boatLat, boatLon, scopeMeters, windDir) {
 }
 ```
 
-### GPS Detection Query
+### GPS Detection (JavaScript-based)
 
-Complex CTE query that identifies stationary periods in GPS history:
+Groups GPS positions by hour and identifies stationary periods:
 
-```sql
-WITH hourly_positions AS (
-  SELECT
-    date_trunc('hour', timestamp) as hour,
-    AVG(latitude) as lat, AVG(longitude) as lon,
-    AVG(true_wind_speed) as avg_wind_speed,
-    AVG(true_wind_direction) as avg_wind_dir
-  FROM gps_position GROUP BY 1
-),
-with_movement AS (
-  SELECT hour, lat, lon, avg_wind_speed, avg_wind_dir,
-    SQRT(POWER(lat - LAG(lat) OVER (ORDER BY hour), 2) +
-         POWER(lon - LAG(lon) OVER (ORDER BY hour), 2)) as movement
-  FROM hourly_positions
-),
-stationary_hours AS (
-  SELECT hour, lat, lon, avg_wind_speed, avg_wind_dir,
-    CASE WHEN movement < 0.0005 THEN 0 ELSE 1 END as moved,
-    SUM(CASE WHEN movement < 0.0005 THEN 0 ELSE 1 END) OVER (ORDER BY hour) as grp
-  FROM with_movement
-)
-SELECT
-  MIN(hour) as arrived_at,
-  MAX(hour) as departed_at,
-  AVG(lat) as latitude,
-  AVG(lon) as longitude,
-  COUNT(*) as hours_anchored,
-  AVG(avg_wind_speed) as avg_wind_speed,
-  AVG(avg_wind_dir) as avg_wind_direction
-FROM stationary_hours WHERE moved = 0
-GROUP BY grp HAVING COUNT(*) >= 4
-ORDER BY MIN(hour) DESC
+```javascript
+// Group by hour and calculate averages
+groupPositionsByHour(positions) {
+  const hourly = new Map();
+
+  for (const pos of positions) {
+    const hour = new Date(pos.timestamp);
+    hour.setMinutes(0, 0, 0);
+    const key = hour.toISOString();
+
+    if (!hourly.has(key)) hourly.set(key, { hour, positions: [] });
+    hourly.get(key).positions.push(pos);
+  }
+
+  return Array.from(hourly.values())
+    .map(({ hour, positions }) => ({
+      hour,
+      lat: positions.reduce((sum, p) => sum + p.latitude, 0) / positions.length,
+      lon: positions.reduce((sum, p) => sum + p.longitude, 0) / positions.length,
+      avgWindSpeed: positions.reduce((sum, p) => sum + (p.true_wind_speed || 0), 0) / positions.length,
+      avgWindDir: this.averageAngle(positions.map(p => p.true_wind_direction).filter(d => d != null))
+    }))
+    .sort((a, b) => a.hour - b.hour);
+}
+
+// Find stationary periods
+findStationaryPeriods(hourlyPositions, minHours) {
+  const MOVEMENT_THRESHOLD = 0.0005; // ~50 meters in degrees
+  const candidates = [];
+  let currentGroup = [hourlyPositions[0]];
+
+  for (let i = 1; i < hourlyPositions.length; i++) {
+    const prev = hourlyPositions[i - 1];
+    const curr = hourlyPositions[i];
+
+    const movement = Math.sqrt(
+      Math.pow(curr.lat - prev.lat, 2) +
+      Math.pow(curr.lon - prev.lon, 2)
+    );
+
+    const timeDiff = (curr.hour - prev.hour) / (1000 * 60 * 60);
+
+    if (movement < MOVEMENT_THRESHOLD && timeDiff <= 2) {
+      currentGroup.push(curr);
+    } else {
+      if (currentGroup.length >= minHours) {
+        candidates.push(this.groupToCandidate(currentGroup));
+      }
+      currentGroup = [curr];
+    }
+  }
+
+  if (currentGroup.length >= minHours) {
+    candidates.push(this.groupToCandidate(currentGroup));
+  }
+
+  return candidates;
+}
+
+// Circular mean for wind direction (handles 359° → 1° wraparound)
+averageAngle(angles) {
+  if (angles.length === 0) return 0;
+  const sinSum = angles.reduce((sum, a) => sum + Math.sin(a * Math.PI / 180), 0);
+  const cosSum = angles.reduce((sum, a) => sum + Math.cos(a * Math.PI / 180), 0);
+  return ((Math.atan2(sinSum, cosSum) * 180 / Math.PI) + 360) % 360;
+}
 ```
 
 ---
@@ -210,8 +350,8 @@ ORDER BY MIN(hour) DESC
 |--------|------|-------------|
 | GET | `/api/anchorages` | List all anchorages with formatted fields |
 | GET | `/api/anchorages/:id` | Get single anchorage |
-| POST | `/api/anchorages/detect` | Detect new anchorages from GPS history |
-| POST | `/api/anchorages/populate-names` | Populate location names via reverse geocoding |
+| POST | `/api/anchorages/detect` | Detect and auto-geocode new anchorages |
+| POST | `/api/anchorages/populate-names` | Re-geocode anchorages without names |
 | POST | `/api/anchorages` | Create anchorage manually |
 | PATCH | `/api/anchorages/:id` | Update anchorage (name, type, scope, notes) |
 | DELETE | `/api/anchorages/:id` | Delete anchorage |
@@ -230,6 +370,8 @@ All endpoints return the standard envelope:
 
 ### Detect Endpoint
 
+Now includes auto-geocoded location names:
+
 ```javascript
 POST /api/anchorages/detect
 Body: { "minHours": 4 }
@@ -238,16 +380,25 @@ Response:
 {
   "success": true,
   "data": {
-    "detected": 10,
-    "inserted": 3,
-    "anchorages": [...]
+    "detected": 18,
+    "inserted": 8,
+    "anchorages": [
+      {
+        "id": "...",
+        "location_name": "Jolly Harbour, Antigua and Barbuda",
+        "latitude": 17.07401,
+        "longitude": -61.8967,
+        "arrived_at": "2026-01-09T15:00:00+00:00",
+        ...
+      }
+    ]
   }
 }
 ```
 
 ### Populate Names Endpoint
 
-Uses OpenStreetMap Nominatim API (same as trips auto-naming). Rate-limited to 1 request/second per Nominatim policy. Returns place name with country (e.g., "Rodney Bay, Saint Lucia").
+Uses OpenStreetMap Nominatim API with improved French Caribbean handling. Rate-limited to 1 request/second per Nominatim policy.
 
 ```javascript
 POST /api/anchorages/populate-names
@@ -256,10 +407,11 @@ Response:
 {
   "success": true,
   "data": {
-    "updated": 10,
+    "updated": 4,
     "anchorages": [
-      { "id": "abc123", "location_name": "Rodney Bay, Saint Lucia" },
-      { "id": "def456", "location_name": "Soufrière, Saint Lucia" }
+      { "id": "abc123", "location_name": "Deshaies, Guadeloupe" },
+      { "id": "def456", "location_name": "Terre-de-Haut, Guadeloupe" },
+      { "id": "ghi789", "location_name": "Le Carbet, Martinique" }
     ]
   }
 }
@@ -274,7 +426,7 @@ Response:
 | Column | Type | Description |
 |--------|------|-------------|
 | id | uuid | Primary key |
-| location_name | text | User-editable name (e.g., "Soufrière") |
+| location_name | text | Auto-geocoded or user-editable name |
 | latitude | double | Average boat position (decimal degrees) |
 | longitude | double | Average boat position (decimal degrees) |
 | arrived_at | timestamptz | When anchored |
@@ -299,16 +451,27 @@ Response:
 
 | Field | Type | Editable | Notes |
 |-------|------|----------|-------|
-| Location Name | text | Yes | User can name the anchorage |
+| Location Name | text | Yes | Auto-geocoded, user can override |
 | Boat Position | display | No | Degrees/minutes format (N 14°43.813') |
 | Arrived | display | No | AST timezone, linked trip if available |
 | Departed | display | No | AST timezone, linked trip if available |
 | Duration | display | No | e.g., "1 day 13 hours" |
 | Wind | display | No | e.g., "3.8 kts from ESE (125°)" |
-| Type | dropdown | Yes | Anchor / Mooring / Marina |
+| Type | dropdown | Yes | Anchor / Mooring / Marina (badge updates immediately) |
 | Scope | number | Yes | Meters (both anchor and mooring) |
 | Anchor Position | display | No | Computed when scope saved |
 | Notes | textarea | Yes | Optional notes |
+
+---
+
+## Geocoding Examples
+
+| Location | Old Result | New Result |
+|----------|------------|------------|
+| 16.30546, -61.79796 | Ferry, France | Deshaies, Guadeloupe |
+| 15.87164, -61.58654 | Terre-de-Haut, France | Terre-de-Haut, Guadeloupe |
+| 14.73022, -61.18191 | Le Carbet, France | Le Carbet, Martinique |
+| 17.07401, -61.8967 | Jolly Harbour, Antigua and Barbuda | (unchanged) |
 
 ---
 
@@ -320,6 +483,7 @@ Response:
 | "Real-time anchor tracking" | **No.** See [Anchor Alarm](./anchor-alarm.md) for that |
 | "Edit boat position" | **No.** Positions come from GPS history |
 | "Multiple anchors at once" | **No.** One anchor/mooring per stay |
+| "Requires database functions" | **No.** Detection now runs entirely in JavaScript |
 
 ---
 
