@@ -799,17 +799,26 @@ export function createChatProxyService({
       try {
         const docStatus = await userTasksRepository.checkDocumentStatus(equipment.asset_uid);
         if (docStatus.hasDoc && !docStatus.isProcessed) {
-          const exists = await userTasksRepository.hasExistingTask(equipment.model);
+          // Look up full system details (search_systems RPC only returns asset_uid + rank)
+          const systemDetails = await systemsRepository.getSystemByAssetUid(equipment.asset_uid);
+          if (!systemDetails) {
+            requestLogger.warn('System not found for unprocessed manual check', {
+              asset_uid: equipment.asset_uid
+            });
+            continue;
+          }
+
+          const exists = await userTasksRepository.hasExistingTask(systemDetails.model_norm);
           if (!exists) {
             await userTasksRepository.createUserTask({
-              description: `Process manual for "${equipment.manufacturer} ${equipment.model}"`,
+              description: `Process manual for "${systemDetails.manufacturer_norm} ${systemDetails.model_norm}"`,
               asset_uid: equipment.asset_uid,
               due_date: new Date().toISOString(),
               created_by: 'chat_suggestion',
               priority: 'normal'
             });
             requestLogger.info('Created task for unprocessed manual', {
-              equipment: `${equipment.manufacturer} ${equipment.model}`,
+              equipment: `${systemDetails.manufacturer_norm} ${systemDetails.model_norm}`,
               asset_uid: equipment.asset_uid
             });
           }
