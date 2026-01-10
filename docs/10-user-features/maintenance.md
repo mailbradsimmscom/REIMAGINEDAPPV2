@@ -334,6 +334,24 @@ When a user asks the chat AI about equipment **not in their inventory**, the sys
 
 This ensures users are reminded to add equipment to their inventory while still getting helpful answers about that equipment.
 
+### Adding a Task (Manual Not Processed)
+
+When a user asks about equipment that **is in their inventory but has an unprocessed manual** (document exists but chunk_count = 0), the system creates a task:
+
+1. User asks: "What model of freezer do I have?"
+2. Chat AI extracts "freezer" → finds "Vitrifrigo fridge_freezer" in systems
+3. **Document check:** `documents` table has a row for this asset_uid
+4. **But chunk_count = 0:** Manual was uploaded but never processed
+5. **Automatic task creation:**
+   - `description`: "Process manual for Vitrifrigo fridge_freezer"
+   - `due_date`: NOW (immediately due)
+   - `created_by`: 'chat_suggestion'
+6. Duplicate check: Won't create if similar active task exists
+7. Chat continues to Python → no DIP/Pinecone data, but Perplexity provides general knowledge
+8. Task appears in user's maintenance todo list
+
+This ensures users are reminded to process manuals for equipment they're asking about.
+
 ### Processing a System (Admin)
 
 1. Navigate to admin pipeline UI

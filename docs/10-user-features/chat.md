@@ -128,6 +128,19 @@ This is the exact sequence. Each step matters for understanding where bugs can o
     - Python uses Perplexity for general knowledge about the equipment
     - This is NOT an error - user gets helpful response + task reminder
 
+#### Node.js Step 3c: Manual Not Processed (Creates User Task)
+14b. **If equipment found but document has chunk_count = 0**:
+    - Document exists but was never processed (no chunks in Pinecone)
+    - **Create user_task** for each affected equipment item (non-blocking)
+      - `description`: "Process manual for [manufacturer] [model]"
+      - `due_date`: NOW (immediately due)
+      - `created_by`: 'chat_suggestion'
+    - Check for duplicates first via `hasExistingTask()` - skip if task already exists
+    - **Continue to Python** with equipment in `systems_context`
+    - Python synthesis will have no DIP/Pinecone data for this equipment
+    - Perplexity provides general knowledge
+    - This is NOT an error - user gets response + task reminder to process the manual
+
 #### Node.js Step 4: Build Equipment Context
 15. **Call `getEquipmentRelationshipContext()`**
     - Combines current search results with conversation history
