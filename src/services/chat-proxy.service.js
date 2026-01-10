@@ -794,8 +794,8 @@ export function createChatProxyService({
     }
     nodeTiming.equipment_context_update_ms = Date.now() - step6Start;
 
-    // Check for unprocessed manuals - create task if needed (non-blocking)
-    for (const equipment of currentEquipmentSearch) {
+    // Check for unprocessed manuals - create task if needed (non-blocking, parallel)
+    await Promise.all(currentEquipmentSearch.map(async (equipment) => {
       try {
         const docStatus = await userTasksRepository.checkDocumentStatus(equipment.asset_uid);
         if (docStatus.hasDoc && !docStatus.isProcessed) {
@@ -805,7 +805,7 @@ export function createChatProxyService({
             requestLogger.warn('System not found for unprocessed manual check', {
               asset_uid: equipment.asset_uid
             });
-            continue;
+            return;
           }
 
           const exists = await userTasksRepository.hasExistingTask(systemDetails.model_norm);
@@ -826,7 +826,7 @@ export function createChatProxyService({
       } catch (err) {
         requestLogger.warn('Failed to check document status', { error: err.message });
       }
-    }
+    }));
 
     // STEP 7: Call Python sequential workflow (replaces DIP, Pinecone, OpenAI completion)
     chatDebug.step('PYTHON_WORKFLOW_CALL', {
