@@ -11,6 +11,7 @@ import suppliesRouter from './routes/supplies/index.js';
 import tripsRouter from './routes/trips/index.js';
 import gpsRouter from './routes/gps.route.js';
 import anchoragesRouter from './routes/anchorages/index.js';
+import funnelRouter from './routes/funnel/index.js';
 
 // Create Express app
 const app = express();
@@ -89,21 +90,21 @@ app.get('/app.js', async (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
-    const content = await fs.readFile(join(process.cwd(), 'src/public/index.html'));
+    const content = await fs.readFile(join(process.cwd(), 'src/public/unified-mobile.html'));
     res.setHeader('content-type', 'text/html');
     res.end(content);
   } catch (error) {
-    res.status(404).json({ error: 'index.html not found' });
+    res.status(404).json({ error: 'unified-mobile.html not found' });
   }
 });
 
 app.get('/index.html', async (req, res) => {
   try {
-    const content = await fs.readFile(join(process.cwd(), 'src/public/index.html'));
+    const content = await fs.readFile(join(process.cwd(), 'src/public/unified-mobile.html'));
     res.setHeader('content-type', 'text/html');
     res.end(content);
   } catch (error) {
-    res.status(404).json({ error: 'index.html not found' });
+    res.status(404).json({ error: 'unified-mobile.html not found' });
   }
 });
 
@@ -169,6 +170,10 @@ app.use('/api/gps', gpsRouter);
 anchoragesRouter._mountPath = '/api/anchorages';
 app.use('/api/anchorages', anchoragesRouter);
 
+// Funnel API routes
+funnelRouter._mountPath = '/api/funnel';
+app.use('/api/funnel', funnelRouter);
+
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {
   try {
@@ -232,6 +237,17 @@ app.get('/anchorages', async (req, res) => {
     res.end(content);
   } catch (error) {
     res.status(404).json({ error: 'Anchorages page not found' });
+  }
+});
+
+// Pipeline funnel visualization page
+app.get('/funnel', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/funnel.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Funnel page not found' });
   }
 });
 
