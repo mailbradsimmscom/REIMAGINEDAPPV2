@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Current - BoatOS</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .location-name {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-left: auto;
+        }
+
+        .section {
+            padding: 16px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8E8E93;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+
+        .weather-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .weather-item {
+            text-align: center;
+            padding: 12px;
+            background: #F8F8F8;
+            border-radius: 8px;
+        }
+
+        .weather-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .weather-unit {
+            font-size: 14px;
+            color: #8E8E93;
+        }
+
+        .weather-label {
+            font-size: 12px;
+            color: #8E8E93;
+            margin-top: 4px;
+        }
+
+        .weather-direction {
+            font-size: 14px;
+            color: #007AFF;
+            margin-top: 2px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #FFE5E5;
+            color: #FF3B30;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .position-info {
+            font-size: 12px;
+            color: #8E8E93;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .conditions-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #E5E5EA;
+        }
+
+        .condition-badge {
+            background: #E5F3FF;
+            color: #007AFF;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/public/unified-mobile.html" class="back-button">←</a>
+        <h1>Current</h1>
+        <span class="location-name" id="location-name">Loading...</span>
+    </div>
+
+    <div id="content">
+        <div class="loading">
+            <div class="spinner"></div>
+            <span>Loading boat status...</span>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Component -->
+    <script src="/public/js/mobile-nav.js"></script>
+
+    <script>
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadBoatStatus);
+
+        async function loadBoatStatus() {
+            const contentDiv = document.getElementById('content');
+
+            try {
+                const response = await fetch('/api/boat-now?hours=5');
+                const result = await response.json();
+
+                if (!result.success || !result.data.hasData) {
+                    contentDiv.innerHTML = `<div class="section"><div class="error">No GPS data available</div></div>`;
+                    return;
+                }
+
+                const { current, history } = result.data;
+
+                // Update location name in header
+                document.getElementById('location-name').textContent = current.placeName;
+
+                // Render the page
+                contentDiv.innerHTML = renderContent(current, history);
+
+                // Initialize charts after DOM is ready
+                setTimeout(() => {
+                    initCharts(history.data);
+                }, 100);
+
+            } catch (error) {
+                console.error('Error loading boat status:', error);
+                contentDiv.innerHTML = `<div class="section"><div class="error">Error: ${error.message}</div></div>`;
+            }
+        }
+
+        function renderContent(current, history) {
+            const weather = current.weather || {};
+            const pos = current.position;
+
+            return `
+                <div class="section">
+                    <div class="section-title">Current Conditions</div>
+                    <div class="weather-card">
+                        <div class="weather-grid">
+                            <div class="weather-item">
+                                <div class="weather-value">${weather.temperature_c !== null ? weather.temperature_c.toFixed(1) : '--'}<span class="weather-unit">°C</span></div>
+                                <div class="weather-label">Temperature</div>
+                            </div>
+                            <div class="weather-item">
+                                <div class="weather-value">${weather.wind_speed_kts !== null ? weather.wind_speed_kts.toFixed(1) : '--'}<span class="weather-unit">kts</span></div>
+                                <div class="weather-label">Wind Speed</div>
+                                <div class="weather-direction">${weather.wind_direction_compass || '--'} (${weather.wind_direction !== null ? weather.wind_direction + '°' : '--'})</div>
+                            </div>
+                            <div class="weather-item">
+                                <div class="weather-value">${weather.wave_height_m !== null ? weather.wave_height_m.toFixed(1) : '--'}<span class="weather-unit">m</span></div>
+                                <div class="weather-label">Wave Height</div>
+                                <div class="weather-direction">${weather.wave_direction_compass || '--'} (${weather.wave_direction !== null ? weather.wave_direction + '°' : '--'})</div>
+                            </div>
+                            <div class="weather-item">
+                                <div class="weather-value">${weather.precipitation_mm !== null ? weather.precipitation_mm.toFixed(1) : '--'}<span class="weather-unit">mm</span></div>
+                                <div class="weather-label">Precipitation</div>
+                            </div>
+                        </div>
+                        <div class="conditions-row">
+                            <span class="condition-badge">${weather.weather_description || 'Unknown'}</span>
+                            ${weather.wind_gusts_kts ? `<span class="condition-badge">Gusts ${weather.wind_gusts_kts.toFixed(0)} kts</span>` : ''}
+                        </div>
+                        <div class="position-info">
+                            Position: ${pos.latitude.toFixed(5)}, ${pos.longitude.toFixed(5)} |
+                            Updated: ${new Date(pos.timestamp).toLocaleTimeString()}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Last 5 Hours (${history.pointCount} readings)</div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">Wind Speed (knots)</div>
+                        <div class="chart-container">
+                            <canvas id="windSpeedChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">Wind Direction (degrees)</div>
+                        <div class="chart-container">
+                            <canvas id="windDirectionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">Position Track (5 hours)</div>
+                        <div class="chart-container" id="positionMap" style="z-index: 1;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initCharts(data) {
+            const timestamps = data.timestamps.map(t => new Date(t));
+
+            // Calculate dynamic min/max with padding
+            function getAxisRange(values, padding = 0.1) {
+                const validValues = values.filter(v => v !== null && v !== undefined);
+                if (validValues.length === 0) return { min: 0, max: 100 };
+
+                const min = Math.min(...validValues);
+                const max = Math.max(...validValues);
+                const range = max - min || 1; // Avoid divide by zero
+                const pad = range * padding;
+
+                return {
+                    min: Math.floor(min - pad),
+                    max: Math.ceil(max + pad)
+                };
+            }
+
+            const windSpeedRange = getAxisRange(data.windSpeed);
+            const windDirRange = getAxisRange(data.windDirection);
+
+            // Common chart options
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            displayFormats: {
+                                hour: 'HH:mm'
+                            }
+                        },
+                        grid: { display: false }
+                    },
+                    y: {
+                        grid: { color: '#F0F0F0' }
+                    }
+                }
+            };
+
+            // Wind Speed Chart (dynamic Y-axis)
+            new Chart(document.getElementById('windSpeedChart'), {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        data: data.windSpeed,
+                        borderColor: '#007AFF',
+                        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        ...commonOptions.scales,
+                        y: {
+                            ...commonOptions.scales.y,
+                            title: { display: true, text: 'knots' },
+                            min: Math.max(0, windSpeedRange.min), // Don't go below 0 for speed
+                            max: windSpeedRange.max
+                        }
+                    }
+                }
+            });
+
+            // Wind Direction Chart (dynamic Y-axis)
+            new Chart(document.getElementById('windDirectionChart'), {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        data: data.windDirection,
+                        borderColor: '#34C759',
+                        backgroundColor: 'rgba(52, 199, 89, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        ...commonOptions.scales,
+                        y: {
+                            ...commonOptions.scales.y,
+                            title: { display: true, text: 'degrees' },
+                            min: Math.max(0, windDirRange.min), // Don't go below 0
+                            max: Math.min(360, windDirRange.max) // Don't exceed 360
+                        }
+                    }
+                }
+            });
+
+            // Position Map with Leaflet
+            initPositionMap(data);
+        }
+
+        function initPositionMap(data) {
+            // Build array of valid coordinates
+            const coords = [];
+            for (let i = 0; i < data.latitude.length; i++) {
+                const lat = data.latitude[i];
+                const lon = data.longitude[i];
+                if (lat !== null && lon !== null) {
+                    coords.push([lat, lon]);
+                }
+            }
+
+            if (coords.length === 0) {
+                document.getElementById('positionMap').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8E8E93;">No position data</div>';
+                return;
+            }
+
+            // Calculate centroid
+            const centroid = coords.reduce(
+                (acc, coord) => [acc[0] + coord[0] / coords.length, acc[1] + coord[1] / coords.length],
+                [0, 0]
+            );
+
+            // Calculate bounds for auto-zoom
+            const lats = coords.map(c => c[0]);
+            const lons = coords.map(c => c[1]);
+            const bounds = [
+                [Math.min(...lats), Math.min(...lons)],
+                [Math.max(...lats), Math.max(...lons)]
+            ];
+
+            // Initialize map centered on centroid
+            const map = L.map('positionMap', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView(centroid, 16);
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            // Draw track as polyline (gradient from old to new)
+            const polyline = L.polyline(coords, {
+                color: '#007AFF',
+                weight: 3,
+                opacity: 0.8
+            }).addTo(map);
+
+            // Add marker at current position (last point)
+            const currentPos = coords[coords.length - 1];
+            L.circleMarker(currentPos, {
+                radius: 8,
+                fillColor: '#FF3B30',
+                color: '#fff',
+                weight: 2,
+                fillOpacity: 1
+            }).addTo(map).bindPopup('Current Position');
+
+            // Add marker at centroid
+            L.circleMarker(centroid, {
+                radius: 6,
+                fillColor: '#34C759',
+                color: '#fff',
+                weight: 2,
+                fillOpacity: 0.8
+            }).addTo(map).bindPopup('Centroid (5hr avg)');
+
+            // Fit map to track bounds with padding
+            if (coords.length > 1) {
+                map.fitBounds(bounds, { padding: [20, 20] });
+            }
+        }
+    </script>
+</body>
+</html>
