@@ -594,6 +594,53 @@ Base path: `/api/trips`
 | GET | `/api/trips/:id/comments` | Get comments |
 | DELETE | `/api/trips/:id/comments/:commentId` | Delete comment |
 
+#### Administration
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/trips/regenerate-titles` | Regenerate all trip titles with updated geocoding |
+| POST | `/api/trips/collect-weather` | Manually trigger weather collection |
+
+**POST /api/trips/regenerate-titles**
+
+Regenerates titles for all completed trips using the shared nominatim utility. Returns list of updated trips with old and new titles.
+
+---
+
+### Season Recap Endpoints
+
+Base path: `/api/season-recap`
+
+AI-generated sailing season summaries using OpenAI.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/season-recap` | Get both recaps (boring and exciting) |
+| GET | `/api/season-recap/:style` | Get specific recap (boring or exciting) |
+| POST | `/api/season-recap/:style/generate` | Generate new recap |
+
+**GET /api/season-recap**
+
+Returns both stored recaps:
+```json
+{
+  "success": true,
+  "data": {
+    "boring": { "id": "...", "content": "<h2>...</h2>", "generated_at": "..." },
+    "exciting": { "id": "...", "content": "<h2>...</h2>", "generated_at": "..." }
+  }
+}
+```
+
+**POST /api/season-recap/:style/generate**
+
+Generates a new recap using OpenAI. Style must be `boring` or `exciting`.
+
+- `boring`: Factual, technical, detailed statistics
+- `exciting`: Dramatic, humorous, adventure narrative
+
+Returns generated HTML content with metadata (trips count, anchorages count, model used).
+
 ---
 
 ## Python Sidecar (Port 8000)

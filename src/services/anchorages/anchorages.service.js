@@ -5,6 +5,7 @@
 
 import { anchoragesRepository } from '../../repositories/anchorages.repository.js';
 import { logger } from '../../utils/logger.js';
+import { reverseGeocode, delay } from '../../utils/nominatim.js';
 
 const requestLogger = logger.createRequestLogger();
 
@@ -263,7 +264,7 @@ export async function detectNewAnchorages(minHours = 4) {
 
     // Auto-geocode to get location name (with rate limiting for Nominatim)
     if (inserted > 0) {
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await delay();
     }
     const locationName = await reverseGeocode(anchorage.latitude, anchorage.longitude);
     if (locationName) {
@@ -294,51 +295,6 @@ export async function detectNewAnchorages(minHours = 4) {
 }
 
 /**
- * Reverse geocode coordinates to get place name
- * Uses OpenStreetMap Nominatim API
- * Optimized for Caribbean sailing locations
- * @param {number} lat - Latitude
- * @param {number} lon - Longitude
- * @returns {Promise<string|null>} Place name or null
- */
-async function reverseGeocode(lat, lon) {
-  try {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14`;
-    const response = await fetch(url, {
-      headers: { 'User-Agent': 'BoatOS/1.0' }
-    });
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const address = data.address || {};
-
-    // Prefer town over village (more recognizable names for sailors)
-    // e.g., "Deshaies" instead of "Ferry"
-    const placeName = address.town || address.village || address.city || address.island ||
-           address.municipality || address.county || address.state_district ||
-           address.state || null;
-
-    if (!placeName) return null;
-
-    // For French overseas territories, use state (Guadeloupe, Martinique) instead of France
-    const frenchCaribbean = ['Guadeloupe', 'Martinique', 'Saint Martin', 'Saint Barthélemy'];
-    const state = address.state;
-    const country = address.country;
-
-    if (country === 'France' && state && frenchCaribbean.includes(state)) {
-      return `${placeName}, ${state}`;
-    }
-
-    // For other locations, use country
-    return country ? `${placeName}, ${country}` : placeName;
-  } catch (error) {
-    requestLogger.warn('Reverse geocode failed', { lat, lon, error: error.message });
-    return null;
-  }
-}
-
-/**
  * Populate location names for anchorages that don't have one
  * Uses reverse geocoding from OpenStreetMap
  * @returns {Promise<Object>} { updated: number, anchorages: Array }
@@ -355,7 +311,7 @@ export async function populateLocationNames() {
   for (const anchorage of needsName) {
     // Rate limit: Nominatim requires max 1 request per second
     if (updated > 0) {
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await delay();
     }
 
     const name = await reverseGeocode(anchorage.latitude, anchorage.longitude);

@@ -5,6 +5,7 @@
 
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
+import { reverseGeocode, delay } from '../../utils/nominatim.js';
 
 const requestLogger = logger.createRequestLogger();
 
@@ -948,33 +949,8 @@ export async function getTelemetrySamples(tripId, intervalMinutes = 15) {
 }
 
 /**
- * Reverse geocode a lat/lon to get a place name
- */
-async function reverseGeocode(lat, lon) {
-  try {
-    // Use zoom 14 for more local detail
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14`;
-    const response = await fetch(url, {
-      headers: { 'User-Agent': 'BoatOS/1.0' }
-    });
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const address = data.address || {};
-
-    // Try various fields in order of preference
-    return address.village || address.town || address.city || address.island ||
-           address.municipality || address.county || address.state_district ||
-           address.state || address.country || null;
-  } catch (error) {
-    requestLogger.warn('Reverse geocode failed', { lat, lon, error: error.message });
-    return null;
-  }
-}
-
-/**
  * Generate trip title from start/end GPS locations
+ * Uses shared nominatim utility with town-first preference and country context
  */
 export async function generateTripTitle(tripId) {
   const supabase = await getSupabaseClient();
@@ -1009,6 +985,110 @@ export async function generateTripTitle(tripId) {
   return `${startName} to ${endName}`;
 }
 
+/**
+ * Regenerate titles for all trips with telemetry data
+ * Uses shared nominatim utility with rate limiting
+ * @returns {Promise<Object>} { updated: number, trips: Array<{id, oldTitle, newTitle}> }
+ */
+export async function regenerateTripTitles() {
+  const supabase = await getSupabaseClient();
+
+  // Get all completed trips
+  const { data: trips, error: tripsError } = await supabase
+    .from('trips')
+    .select('id, title')
+    .eq('status', 'completed')
+    .order('started_at', { ascending: false });
+
+  if (tripsError) {
+    throw new Error(`Failed to fetch trips: ${tripsError.message}`);
+  }
+
+  requestLogger.info('Starting trip title regeneration', { totalTrips: trips.length });
+
+  let updated = 0;
+  const results = [];
+
+  for (const trip of trips) {
+    // Rate limit between trips (each trip makes 2 geocode calls)
+    if (updated > 0) {
+      await delay();
+    }
+
+    // Get first and last telemetry points
+    const { data: firstPoint } = await supabase
+      .from('trip_telemetry')
+      .select('latitude, longitude')
+      .eq('trip_id', trip.id)
+      .order('recorded_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    const { data: lastPoint } = await supabase
+      .from('trip_telemetry')
+      .select('latitude, longitude')
+      .eq('trip_id', trip.id)
+      .order('recorded_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!firstPoint || !lastPoint) {
+      requestLogger.debug('Skipping trip without telemetry', { tripId: trip.id });
+      continue;
+    }
+
+    // Geocode both points (with rate limiting between)
+    const startName = await reverseGeocode(firstPoint.latitude, firstPoint.longitude);
+    await delay();
+    const endName = await reverseGeocode(lastPoint.latitude, lastPoint.longitude);
+
+    // Generate new title
+    let newTitle = null;
+    if (!startName && !endName) {
+      continue; // Can't generate title
+    } else if (startName === endName || !endName) {
+      newTitle = startName;
+    } else if (!startName) {
+      newTitle = `To ${endName}`;
+    } else {
+      newTitle = `${startName} to ${endName}`;
+    }
+
+    // Update if different
+    if (newTitle && newTitle !== trip.title) {
+      const { error: updateError } = await supabase
+        .from('trips')
+        .update({
+          title: newTitle,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', trip.id);
+
+      if (updateError) {
+        requestLogger.warn('Failed to update trip title', { tripId: trip.id, error: updateError.message });
+        continue;
+      }
+
+      results.push({
+        id: trip.id,
+        oldTitle: trip.title,
+        newTitle
+      });
+      updated++;
+
+      requestLogger.info('Trip title updated', { tripId: trip.id, oldTitle: trip.title, newTitle });
+    }
+  }
+
+  requestLogger.info('Trip title regeneration complete', { updated, total: trips.length });
+
+  return {
+    updated,
+    total: trips.length,
+    trips: results
+  };
+}
+
 export default {
   listTrips,
   getTrip,
@@ -1026,5 +1106,6 @@ export default {
   getComments,
   deleteComment,
   getTelemetrySamples,
-  generateTripTitle
+  generateTripTitle,
+  regenerateTripTitles
 };

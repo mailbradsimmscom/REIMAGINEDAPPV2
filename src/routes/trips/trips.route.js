@@ -398,6 +398,39 @@ router.get('/:id/telemetry-samples', async (req, res) => {
 });
 
 /**
+ * POST /api/trips/regenerate-titles
+ * Regenerate all trip titles using updated geocoding (with country context)
+ * Rate-limited to respect Nominatim API limits
+ */
+router.post('/regenerate-titles', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    requestLogger.info('Starting trip title regeneration');
+
+    const result = await tripsService.regenerateTripTitles();
+
+    requestLogger.info('Trip title regeneration complete', {
+      updated: result.updated,
+      total: result.total
+    });
+
+    return res.json({
+      success: true,
+      data: result,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error regenerating trip titles', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
  * POST /api/trips/collect-weather
  * Manually trigger weather collection for active trips (admin/testing)
  */

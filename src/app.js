@@ -12,6 +12,7 @@ import tripsRouter from './routes/trips/index.js';
 import gpsRouter from './routes/gps.route.js';
 import anchoragesRouter from './routes/anchorages/index.js';
 import funnelRouter from './routes/funnel/index.js';
+import seasonRecapRouter from './routes/season-recap/index.js';
 
 // Create Express app
 const app = express();
@@ -173,6 +174,10 @@ app.use('/api/anchorages', anchoragesRouter);
 // Funnel API routes
 funnelRouter._mountPath = '/api/funnel';
 app.use('/api/funnel', funnelRouter);
+
+// Season Recap API routes
+seasonRecapRouter._mountPath = '/api/season-recap';
+app.use('/api/season-recap', seasonRecapRouter);
 
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {

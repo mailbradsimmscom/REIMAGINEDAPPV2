@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Season Recap - BoatOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .recap-section {
+            padding: 20px 16px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .generate-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .generate-btn.boring {
+            background: #8E8E93;
+            color: white;
+        }
+
+        .generate-btn.boring:hover {
+            background: #636366;
+        }
+
+        .generate-btn.exciting {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+        }
+
+        .generate-btn.exciting:hover {
+            background: linear-gradient(135deg, #FF5252, #FF7043);
+        }
+
+        .generate-btn.unhinged {
+            background: linear-gradient(135deg, #9B59B6, #E91E63, #FF5722);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .generate-btn.unhinged:hover {
+            background: linear-gradient(135deg, #8E44AD, #C2185B, #E64A19);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .recap-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 200px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .recap-content.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8E8E93;
+            font-style: italic;
+        }
+
+        .recap-content h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+            margin: 24px 0 12px 0;
+        }
+
+        .recap-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .recap-content h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            margin: 20px 0 10px 0;
+        }
+
+        .recap-content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            margin: 12px 0;
+        }
+
+        .recap-content ul {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .recap-content li {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            margin: 8px 0;
+        }
+
+        .recap-content strong {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .recap-content em {
+            font-style: italic;
+        }
+
+        .recap-meta {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #E5E5EA;
+            font-size: 12px;
+            color: #8E8E93;
+        }
+
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 40px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .divider {
+            height: 1px;
+            background: #E5E5EA;
+            margin: 0 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/public/other-links.html" class="back-button">←</a>
+        <h1>Season Recap</h1>
+    </div>
+
+    <!-- Boring Section -->
+    <div class="recap-section">
+        <div class="section-header">
+            <span class="section-title">The Facts</span>
+            <button class="generate-btn boring" id="boring-btn" onclick="generateRecap('boring')">
+                Generate Boring
+            </button>
+        </div>
+        <div class="recap-content" id="boring-content">
+            <div class="empty" id="boring-empty">Click "Generate Boring" to create a factual recap</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Exciting Section -->
+    <div class="recap-section">
+        <div class="section-header">
+            <span class="section-title">The Adventure</span>
+            <button class="generate-btn exciting" id="exciting-btn" onclick="generateRecap('exciting')">
+                Generate Exciting
+            </button>
+        </div>
+        <div class="recap-content" id="exciting-content">
+            <div class="empty" id="exciting-empty">Click "Generate Exciting" to create a dramatic recap</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Unhinged Section -->
+    <div class="recap-section">
+        <div class="section-header">
+            <span class="section-title">The Legend</span>
+            <button class="generate-btn unhinged" id="unhinged-btn" onclick="generateRecap('unhinged')">
+                Generate Unhinged
+            </button>
+        </div>
+        <div class="recap-content" id="unhinged-content">
+            <div class="empty" id="unhinged-empty">Click "Generate Unhinged" to create an over-the-top legendary tale</div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Component -->
+    <script src="/public/js/mobile-nav.js"></script>
+
+    <script>
+        // Load existing recaps on page load
+        document.addEventListener('DOMContentLoaded', loadRecaps);
+
+        async function loadRecaps() {
+            try {
+                const response = await fetch('/api/season-recap');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    if (result.data.boring) {
+                        displayRecap('boring', result.data.boring);
+                    }
+                    if (result.data.exciting) {
+                        displayRecap('exciting', result.data.exciting);
+                    }
+                    if (result.data.unhinged) {
+                        displayRecap('unhinged', result.data.unhinged);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading recaps:', error);
+            }
+        }
+
+        async function generateRecap(style) {
+            const btn = document.getElementById(`${style}-btn`);
+            const contentDiv = document.getElementById(`${style}-content`);
+
+            // Show loading state
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+            contentDiv.innerHTML = `
+                <div class="loading-indicator">
+                    <div class="spinner"></div>
+                    <span>Generating ${style} recap...</span>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/api/season-recap/${style}/generate`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    displayRecap(style, result.data);
+                } else {
+                    contentDiv.innerHTML = `<div class="empty">Error: ${result.error || 'Failed to generate recap'}</div>`;
+                }
+            } catch (error) {
+                console.error('Error generating recap:', error);
+                contentDiv.innerHTML = `<div class="empty">Error: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = `Generate ${style.charAt(0).toUpperCase() + style.slice(1)}`;
+            }
+        }
+
+        function displayRecap(style, recap) {
+            const contentDiv = document.getElementById(`${style}-content`);
+
+            const generatedDate = new Date(recap.generated_at).toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+
+            contentDiv.innerHTML = `
+                ${recap.content}
+                <div class="recap-meta">
+                    Generated: ${generatedDate} |
+                    ${recap.trips_count} trips |
+                    ${recap.anchorages_count} anchorages |
+                    Model: ${recap.model_used}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
