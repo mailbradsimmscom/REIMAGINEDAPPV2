@@ -615,29 +615,33 @@ AI-generated sailing season summaries using OpenAI.
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/season-recap` | Get both recaps (boring and exciting) |
-| GET | `/api/season-recap/:style` | Get specific recap (boring or exciting) |
+| GET | `/api/season-recap` | Get all recaps (boring, exciting, unhinged) |
+| GET | `/api/season-recap/:style` | Get specific recap |
 | POST | `/api/season-recap/:style/generate` | Generate new recap |
 
 **GET /api/season-recap**
 
-Returns both stored recaps:
+Returns all stored recaps:
 ```json
 {
   "success": true,
   "data": {
     "boring": { "id": "...", "content": "<h2>...</h2>", "generated_at": "..." },
-    "exciting": { "id": "...", "content": "<h2>...</h2>", "generated_at": "..." }
+    "exciting": { "id": "...", "content": "<h2>...</h2>", "generated_at": "..." },
+    "unhinged": { "id": "...", "content": "<h2>...</h2>", "generated_at": "..." }
   }
 }
 ```
 
 **POST /api/season-recap/:style/generate**
 
-Generates a new recap using OpenAI. Style must be `boring` or `exciting`.
+Generates a new recap using OpenAI. Style must be `boring`, `exciting`, or `unhinged`.
 
-- `boring`: Factual, technical, detailed statistics
-- `exciting`: Dramatic, humorous, adventure narrative
+| Style | Description |
+|-------|-------------|
+| `boring` | Factual, technical, detailed statistics |
+| `exciting` | Dramatic, adventure narrative |
+| `unhinged` | Over-the-top legendary tale with Caribbean flavor, maximum verbosity |
 
 Returns generated HTML content with metadata (trips count, anchorages count, model used).
 

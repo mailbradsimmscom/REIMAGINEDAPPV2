@@ -101,15 +101,17 @@ const candidates = this.findStationaryPeriods(hourlyPositions, minHours);
 
 ### 2. Auto-Geocodes New Anchorages
 
-When detecting anchorages, location names are automatically populated via OpenStreetMap Nominatim:
+When detecting anchorages, location names are automatically populated via the shared Nominatim utility:
 
 ```javascript
 // In detectNewAnchorages() - anchorages.service.js
+import { reverseGeocode, delay } from '../../utils/nominatim.js';
+
 const anchorage = await anchoragesRepository.create({ ... });
 
 // Auto-geocode (with rate limiting)
 if (inserted > 0) {
-  await new Promise(resolve => setTimeout(resolve, 1100)); // Nominatim rate limit
+  await delay(); // Nominatim rate limit (1.1 seconds)
 }
 const locationName = await reverseGeocode(anchorage.latitude, anchorage.longitude);
 if (locationName) {
@@ -117,21 +119,23 @@ if (locationName) {
 }
 ```
 
-### 3. Improved French Caribbean Geocoding
+### 3. Shared Nominatim Utility
 
-French overseas territories now show island name instead of "France":
+Both anchorages and trips now use a shared reverse geocoding utility (`src/utils/nominatim.js`). This ensures consistent place naming across the app.
+
+**Features:**
+- Town-first preference (more recognizable for sailors)
+- French Caribbean handling (shows "Guadeloupe" not "France")
+- Rate limiting (1.1s between calls)
+- Country context in all place names
 
 ```javascript
-// reverseGeocode() in anchorages.service.js
-const frenchCaribbean = ['Guadeloupe', 'Martinique', 'Saint Martin', 'Saint Barthélemy'];
-
-if (country === 'France' && state && frenchCaribbean.includes(state)) {
-  return `${placeName}, ${state}`;  // "Deshaies, Guadeloupe"
-}
-// Instead of: "Ferry, France"
+// src/utils/nominatim.js
+const placeName = await reverseGeocode(16.3089, -61.7989);
+// Returns: "Deshaies, Guadeloupe"
 ```
 
-Also prefers `town` over `village` for more recognizable names (e.g., "Deshaies" instead of "Ferry").
+See [Utility Scripts](../30-backend/utility-scripts.md#nominatim-reverse-geocoding) for full documentation.
 
 ### 4. Badge Updates Immediately
 
@@ -179,7 +183,8 @@ Page now includes the common mobile navigation footer:
 │      ├── detectNewAnchorages() - Analyze GPS + auto-geocode     │
 │      ├── updateAnchorage() - Compute anchor pos on scope change │
 │      ├── formatCoordinate() - Decimal to degrees/minutes        │
-│      ├── computeAnchorPosition() - Inverse haversine            │
+│      └── computeAnchorPosition() - Inverse haversine            │
+│  └── src/utils/nominatim.js (shared utility)                    │
 │      └── reverseGeocode() - OpenStreetMap Nominatim             │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -491,3 +496,5 @@ Response:
 
 - [Trips](./trips.md) - Linked arrival/departure trips
 - [Anchor Alarm](./anchor-alarm.md) - Real-time anchor monitoring
+- [Season Recap](./season-recap.md) - AI-generated sailing summaries (uses anchorage data)
+- [Utility Scripts](../30-backend/utility-scripts.md) - Shared Nominatim utility
