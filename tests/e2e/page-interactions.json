@@ -6,17 +6,15 @@
   },
   "pages": {
     "/": {
-      "name": "Chat Interface",
+      "name": "BoatOS Mobile Dashboard",
       "type": "route",
-      "elements": ["#chatSection", "#messageInput", "#sendBtn", "#messages", "#newChatBtn"],
+      "elements": [".header", ".actions-grid", ".action-card"],
       "dropdowns": [],
-      "buttons": ["#sendBtn", "#newChatBtn"],
-      "inputs": ["#messageInput"],
+      "buttons": [".action-card"],
+      "inputs": [],
       "interactions": [
-        { "action": "visible", "selector": "#chatSection" },
-        { "action": "visible", "selector": "#messageInput" },
-        { "action": "fill", "selector": "#messageInput", "value": "test" },
-        { "action": "enabled", "selector": "#sendBtn" }
+        { "action": "visible", "selector": ".header" },
+        { "action": "visible", "selector": ".actions-grid" }
       ]
     },
     "/admin": {
