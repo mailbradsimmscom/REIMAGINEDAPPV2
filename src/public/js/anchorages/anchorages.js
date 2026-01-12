@@ -372,7 +372,7 @@ class AnchoragesManager {
             }
             <button class="button button-small button-secondary add-photo-btn" data-id="${a.id}">+ Photo</button>
           </div>
-          <input type="file" accept="image/*" capture="environment" class="photo-input" data-id="${a.id}" style="display:none">
+          <input type="file" accept="image/*" class="photo-input" data-id="${a.id}" style="display:none">
         </div>
 
         <div class="field-group">
