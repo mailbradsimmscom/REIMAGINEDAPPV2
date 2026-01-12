@@ -14,7 +14,7 @@ test.describe('Network Error Handling', () => {
       route.abort('timedout');
     });
 
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
     await page.waitForLoadState('networkidle');
 
     // Page should still be functional
@@ -59,7 +59,7 @@ test.describe('Page Load Errors', () => {
     // Block some static resources
     await page.route('**/*.css', route => route.abort());
 
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
 
     // Page should still function (may look broken, but functional)
     await expect(page.locator('#messageInput')).toBeVisible();
@@ -75,7 +75,7 @@ test.describe('Page Load Errors', () => {
 
 test.describe('Form Validation', () => {
   test('empty message cannot be sent', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
     await page.waitForLoadState('networkidle');
 
     const sendBtn = page.locator('#sendBtn');
@@ -106,7 +106,7 @@ test.describe('Session Handling', () => {
       });
     });
 
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
     await page.waitForLoadState('networkidle');
 
     // Page should still load
@@ -142,7 +142,7 @@ test.describe('JavaScript Errors', () => {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
 
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
     await page.waitForLoadState('networkidle');
 
     // Wait for any async errors
@@ -171,7 +171,7 @@ test.describe('JavaScript Errors', () => {
 
 test.describe('Accessibility', () => {
   test('chat input has proper label', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
     await page.waitForLoadState('networkidle');
 
     const input = page.locator('#messageInput');
@@ -184,7 +184,7 @@ test.describe('Accessibility', () => {
   });
 
   test('send button has aria-label', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/public/index-mobile.html');
     await page.waitForLoadState('networkidle');
 
     const sendBtn = page.locator('#sendBtn');
