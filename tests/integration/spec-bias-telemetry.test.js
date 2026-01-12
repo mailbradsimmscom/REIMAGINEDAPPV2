@@ -6,7 +6,7 @@ import { skipIfNoServices } from '../helpers/ci-skip.js';
 
 // Pacing helper to avoid overwhelming external services
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-const PACING_DELAY_MS = 2000;
+const PACING_DELAY_MS = 3000;
 
 await initTestApp();
 const app = getAppSync();
