@@ -751,7 +751,7 @@
                 </div>
                 <div class="status-row">
                     <span class="status-label">Current Position</span>
-                    <span class="status-value">${status.current_lat ? status.current_lat.toFixed(6) + ', ' + status.current_lon.toFixed(6) : 'N/A'}</span>
+                    <span class="status-value">${status.current_lat ? formatCoordinate(status.current_lat, status.current_lon) : 'N/A'}</span>
                 </div>
                 <div class="status-row">
                     <span class="status-label">Status</span>
@@ -807,7 +807,7 @@
                     <div class="controls-section">
                         <div class="status-row">
                             <span class="status-label">Anchor Position</span>
-                            <span class="status-value">${status.anchor_lat.toFixed(6)}, ${status.anchor_lon.toFixed(6)}</span>
+                            <span class="status-value">${formatCoordinate(status.anchor_lat, status.anchor_lon)}</span>
                         </div>
                         <div class="status-row">
                             <span class="status-label">Watch Radius</span>
@@ -911,6 +911,20 @@
                                            Math.cos(distanceMeters / R) - Math.sin(lat1) * Math.sin(lat2));
 
             return [lat2 * 180 / Math.PI, lon2 * 180 / Math.PI];
+        }
+
+        // Format decimal degrees to degrees-decimal minutes (e.g., N 17°4.441' W 61°53.802')
+        function formatCoordinate(lat, lon) {
+            function toDDM(value, isLat) {
+                const abs = Math.abs(value);
+                const degrees = Math.floor(abs);
+                const minutes = (abs - degrees) * 60;
+                const hemisphere = isLat
+                    ? (value >= 0 ? 'N' : 'S')
+                    : (value >= 0 ? 'E' : 'W');
+                return `${hemisphere} ${degrees}°${minutes.toFixed(3)}'`;
+            }
+            return `${toDDM(lat, true)}  ${toDDM(lon, false)}`;
         }
 
         // Parse coordinate that might be in degrees.minutes.decimal format (e.g., 17.04.446)
