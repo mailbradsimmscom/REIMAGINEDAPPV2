@@ -132,6 +132,30 @@ class AnchoragesRepository {
   }
 
   /**
+   * Get the N most recent anchorages by arrived_at
+   * Used for dynamic lookback calculation
+   * @param {number} limit - Number of anchorages to retrieve
+   * @returns {Promise<Array>} Recent anchorages
+   */
+  async getRecentAnchorages(limit = 2) {
+    try {
+      const supabase = await getSupabaseClient();
+
+      const { data, error } = await supabase
+        .from('anchorages')
+        .select('id, arrived_at, departed_at')
+        .order('arrived_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      requestLogger.error('Error fetching recent anchorages', { error: error.message });
+      throw error;
+    }
+  }
+
+  /**
    * Detect anchorages from GPS history using stationary period analysis
    * Finds periods where boat stayed in same location for minHours or more
    * Processes data in JavaScript - no database functions required
@@ -142,17 +166,34 @@ class AnchoragesRepository {
     try {
       const supabase = await getSupabaseClient();
 
-      // Fetch GPS data from last 90 days with timestamp-based pagination
-      // (Supabase enforces 1000 row limit, so we use cursor-based pagination)
-      const ninetyDaysAgo = new Date();
-      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      // Dynamic lookback: start from 2nd most recent anchorage's departed_at
+      // This ensures we re-scan recent activity without processing old data
+      const recentAnchorages = await this.getRecentAnchorages(2);
+      let startTime;
+
+      if (recentAnchorages.length >= 2 && recentAnchorages[1].departed_at) {
+        // Start from when we left the 2nd most recent anchorage
+        startTime = new Date(recentAnchorages[1].departed_at);
+        requestLogger.info('Using dynamic lookback from 2nd recent anchorage', {
+          anchorageId: recentAnchorages[1].id,
+          since: startTime.toISOString()
+        });
+      } else {
+        // Fallback to 90 days if we don't have enough history
+        startTime = new Date();
+        startTime.setDate(startTime.getDate() - 90);
+        requestLogger.info('Using 90-day fallback lookback', {
+          since: startTime.toISOString(),
+          reason: recentAnchorages.length < 2 ? 'not enough anchorages' : 'no departed_at'
+        });
+      }
 
       requestLogger.info('Fetching GPS data for anchorage detection', {
-        since: ninetyDaysAgo.toISOString()
+        since: startTime.toISOString()
       });
 
       const allPositions = [];
-      let lastTimestamp = ninetyDaysAgo.toISOString();
+      let lastTimestamp = startTime.toISOString();
       const batchSize = 1000; // Supabase max
 
       while (true) {
@@ -247,7 +288,7 @@ class AnchoragesRepository {
   findStationaryPeriods(hourlyPositions, minHours) {
     if (hourlyPositions.length < 2) return [];
 
-    const MOVEMENT_THRESHOLD = 0.0005; // ~50 meters in degrees
+    const MOVEMENT_THRESHOLD = 0.0027; // ~300 meters in degrees (allows for anchor swing)
     const candidates = [];
     let currentGroup = [hourlyPositions[0]];
 
@@ -280,6 +321,25 @@ class AnchoragesRepository {
     // Don't forget the last group
     if (currentGroup.length >= minHours) {
       candidates.push(this.groupToCandidate(currentGroup));
+    }
+
+    // Check if the last candidate is "still here" (within 2 hours of now)
+    if (candidates.length > 0) {
+      const lastCandidate = candidates[candidates.length - 1];
+      const lastDepartedAt = new Date(lastCandidate.departed_at);
+      const now = new Date();
+      const hoursAgo = (now - lastDepartedAt) / (1000 * 60 * 60);
+
+      if (hoursAgo <= 2) {
+        // Boat is still anchored - set departed_at to null
+        lastCandidate.departed_at = null;
+        lastCandidate.hours_anchored = null; // Will be calculated as "in progress"
+        requestLogger.info('Current anchorage detected (still here)', {
+          arrived_at: lastCandidate.arrived_at,
+          latitude: lastCandidate.latitude,
+          longitude: lastCandidate.longitude
+        });
+      }
     }
 
     return candidates;
@@ -344,6 +404,37 @@ class AnchoragesRepository {
         timestamp,
         type
       });
+      throw error;
+    }
+  }
+
+  /**
+   * Find an existing anchorage at this location (within 300m) regardless of time
+   * Used for extending duration of existing anchorages
+   * @param {number} latitude - Latitude
+   * @param {number} longitude - Longitude
+   * @returns {Promise<Object|null>} Existing anchorage or null
+   */
+  async findAtLocation(latitude, longitude) {
+    try {
+      const supabase = await getSupabaseClient();
+      const tolerance = 0.0027; // ~300m - same as movement threshold
+
+      const { data, error } = await supabase
+        .from('anchorages')
+        .select('*')
+        .gte('latitude', latitude - tolerance)
+        .lte('latitude', latitude + tolerance)
+        .gte('longitude', longitude - tolerance)
+        .lte('longitude', longitude + tolerance)
+        .order('arrived_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      requestLogger.error('Error finding anchorage at location', { error: error.message });
       throw error;
     }
   }

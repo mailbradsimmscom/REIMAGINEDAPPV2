@@ -202,38 +202,176 @@ export async function deleteAnchorage(id) {
 }
 
 /**
+ * Calculate distance between two points in degrees (Euclidean)
+ * @param {number} lat1 - Latitude 1
+ * @param {number} lon1 - Longitude 1
+ * @param {number} lat2 - Latitude 2
+ * @param {number} lon2 - Longitude 2
+ * @returns {number} Distance in degrees
+ */
+function distanceDegrees(lat1, lon1, lat2, lon2) {
+  return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2));
+}
+
+/**
+ * Merge overlapping candidates at the same location
+ * Groups candidates within 300m of each other, merges with earliest arrival and latest departure
+ * @param {Array} candidates - Raw candidates from detection
+ * @returns {Array} Merged candidates
+ */
+function mergeCandidates(candidates) {
+  if (candidates.length <= 1) return candidates;
+
+  const MERGE_THRESHOLD = 0.0027; // ~300m
+  const merged = [];
+  const used = new Set();
+
+  for (let i = 0; i < candidates.length; i++) {
+    if (used.has(i)) continue;
+
+    const group = [candidates[i]];
+    used.add(i);
+
+    // Find all candidates within threshold of this one
+    for (let j = i + 1; j < candidates.length; j++) {
+      if (used.has(j)) continue;
+
+      const dist = distanceDegrees(
+        candidates[i].latitude, candidates[i].longitude,
+        candidates[j].latitude, candidates[j].longitude
+      );
+
+      if (dist <= MERGE_THRESHOLD) {
+        group.push(candidates[j]);
+        used.add(j);
+      }
+    }
+
+    if (group.length === 1) {
+      merged.push(group[0]);
+    } else {
+      // Merge group: earliest arrival, latest departure, average position/wind
+      const arrivals = group.map(c => new Date(c.arrived_at)).sort((a, b) => a - b);
+      const departures = group
+        .filter(c => c.departed_at)
+        .map(c => new Date(c.departed_at))
+        .sort((a, b) => b - a);
+
+      const mergedCandidate = {
+        latitude: group.reduce((sum, c) => sum + c.latitude, 0) / group.length,
+        longitude: group.reduce((sum, c) => sum + c.longitude, 0) / group.length,
+        arrived_at: arrivals[0].toISOString(),
+        departed_at: departures.length > 0 ? departures[0].toISOString() : null,
+        avg_wind_speed: group.reduce((sum, c) => sum + (c.avg_wind_speed || 0), 0) / group.length,
+        avg_wind_direction: group[0].avg_wind_direction // Use first one's direction
+      };
+
+      // Round coordinates
+      mergedCandidate.latitude = Math.round(mergedCandidate.latitude * 100000) / 100000;
+      mergedCandidate.longitude = Math.round(mergedCandidate.longitude * 100000) / 100000;
+      mergedCandidate.avg_wind_speed = Math.round(mergedCandidate.avg_wind_speed * 10) / 10;
+
+      requestLogger.info('Merged candidates at same location', {
+        count: group.length,
+        arrived_at: mergedCandidate.arrived_at,
+        departed_at: mergedCandidate.departed_at
+      });
+
+      merged.push(mergedCandidate);
+    }
+  }
+
+  return merged;
+}
+
+/**
  * Detect new anchorages from GPS history and insert them
  * Also attempts to link to arrival/departure trips
+ * Features:
+ * - Merges overlapping candidates at same location
+ * - Updates existing anchorages if new candidate extends duration
+ * - Auto-merges existing duplicate records
  * @param {number} minHours - Minimum stationary hours (default 4)
- * @returns {Promise<Object>} { detected: number, inserted: number, anchorages: Array }
+ * @returns {Promise<Object>} { detected: number, inserted: number, updated: number, merged: number, anchorages: Array }
  */
 export async function detectNewAnchorages(minHours = 4) {
   requestLogger.info('Starting anchorage detection', { minHours });
 
   // Get candidates from GPS history
-  const candidates = await anchoragesRepository.detectFromGpsHistory(minHours);
+  const rawCandidates = await anchoragesRepository.detectFromGpsHistory(minHours);
+
+  // Merge overlapping candidates at same location (Change 3)
+  const candidates = mergeCandidates(rawCandidates);
+
+  requestLogger.info('Candidates after merging', {
+    raw: rawCandidates.length,
+    merged: candidates.length
+  });
 
   let inserted = 0;
+  let updated = 0;
   const newAnchorages = [];
 
   for (const candidate of candidates) {
-    // Check if already exists
-    const exists = await anchoragesRepository.exists(
+    // Check if an anchorage exists at this location (Change 4)
+    const existing = await anchoragesRepository.findAtLocation(
       candidate.latitude,
-      candidate.longitude,
-      candidate.arrived_at
+      candidate.longitude
     );
 
-    if (exists) {
-      requestLogger.debug('Anchorage already exists, skipping', {
+    if (existing) {
+      // Check if we should extend the duration
+      const existingDeparted = existing.departed_at ? new Date(existing.departed_at) : null;
+      const candidateDeparted = candidate.departed_at ? new Date(candidate.departed_at) : null;
+      const candidateArrived = new Date(candidate.arrived_at);
+      const existingArrived = new Date(existing.arrived_at);
+
+      // Extend if: candidate has later departure, OR candidate has earlier arrival
+      const shouldExtendDeparture = candidateDeparted && (!existingDeparted || candidateDeparted > existingDeparted);
+      const shouldExtendArrival = candidateArrived < existingArrived;
+      // Also update if existing has departed_at but candidate is "still here" (null)
+      const isNowStillHere = candidate.departed_at === null && existing.departed_at !== null;
+
+      if (shouldExtendDeparture || shouldExtendArrival || isNowStillHere) {
+        const updates = {};
+
+        if (shouldExtendArrival) {
+          updates.arrived_at = candidate.arrived_at;
+        }
+        if (shouldExtendDeparture || isNowStillHere) {
+          updates.departed_at = candidate.departed_at;
+        }
+
+        // Recalculate duration
+        const finalArrived = new Date(updates.arrived_at || existing.arrived_at);
+        const finalDeparted = updates.departed_at ? new Date(updates.departed_at) : null;
+        updates.duration_hours = finalDeparted
+          ? Math.round((finalDeparted - finalArrived) / (1000 * 60 * 60))
+          : null;
+
+        await anchoragesRepository.update(existing.id, updates);
+        updated++;
+
+        requestLogger.info('Extended existing anchorage', {
+          id: existing.id,
+          location: existing.location_name,
+          extendedArrival: shouldExtendArrival,
+          extendedDeparture: shouldExtendDeparture || isNowStillHere,
+          newDuration: updates.duration_hours
+        });
+
+        continue;
+      }
+
+      // Exists but no extension needed
+      requestLogger.debug('Anchorage already exists, no update needed', {
         lat: candidate.latitude,
-        lon: candidate.longitude,
-        arrived: candidate.arrived_at
+        lon: candidate.longitude
       });
       continue;
     }
 
-    // Try to link to trips
+    // New anchorage - try to link to trips
     const [arrivalTrip, departureTrip] = await Promise.all([
       anchoragesRepository.findTripNearTime(candidate.arrived_at, 60, 'arrival'),
       candidate.departed_at
@@ -282,16 +420,150 @@ export async function detectNewAnchorages(minHours = 4) {
     inserted++;
   }
 
+  // Auto-merge existing duplicate records at same location (Change 6)
+  const mergeResult = await mergeExistingDuplicates();
+
   requestLogger.info('Anchorage detection complete', {
-    detected: candidates.length,
-    inserted
+    detected: rawCandidates.length,
+    afterMerge: candidates.length,
+    inserted,
+    updated,
+    duplicatesMerged: mergeResult.merged
   });
 
   return {
-    detected: candidates.length,
+    detected: rawCandidates.length,
     inserted,
+    updated,
+    merged: mergeResult.merged,
     anchorages: newAnchorages
   };
+}
+
+/**
+ * Merge existing duplicate anchorage records at the same location
+ * Groups anchorages within 300m of each other, keeps earliest arrival with latest departure
+ * @returns {Promise<Object>} { merged: number, groups: Array }
+ */
+export async function mergeExistingDuplicates() {
+  const allAnchorages = await anchoragesRepository.findAll();
+
+  if (allAnchorages.length <= 1) {
+    return { merged: 0, groups: [] };
+  }
+
+  const MERGE_THRESHOLD = 0.0027; // ~300m
+  const groups = [];
+  const used = new Set();
+
+  // Group anchorages by location
+  for (let i = 0; i < allAnchorages.length; i++) {
+    if (used.has(allAnchorages[i].id)) continue;
+
+    const group = [allAnchorages[i]];
+    used.add(allAnchorages[i].id);
+
+    for (let j = i + 1; j < allAnchorages.length; j++) {
+      if (used.has(allAnchorages[j].id)) continue;
+
+      const dist = distanceDegrees(
+        allAnchorages[i].latitude, allAnchorages[i].longitude,
+        allAnchorages[j].latitude, allAnchorages[j].longitude
+      );
+
+      if (dist <= MERGE_THRESHOLD) {
+        group.push(allAnchorages[j]);
+        used.add(allAnchorages[j].id);
+      }
+    }
+
+    if (group.length > 1) {
+      groups.push(group);
+    }
+  }
+
+  let merged = 0;
+
+  // Process each group with duplicates
+  for (const group of groups) {
+    // Sort by arrived_at to find the earliest
+    group.sort((a, b) => new Date(a.arrived_at) - new Date(b.arrived_at));
+
+    const keeper = group[0]; // Keep the one with earliest arrival
+    const toDelete = group.slice(1);
+
+    // Find latest departure from the group
+    const departures = group
+      .filter(a => a.departed_at)
+      .map(a => new Date(a.departed_at))
+      .sort((a, b) => b - a);
+
+    // Find the best location name (prefer non-null, longest)
+    const locationNames = group
+      .filter(a => a.location_name)
+      .map(a => a.location_name)
+      .sort((a, b) => b.length - a.length);
+
+    // Build updates for keeper
+    const updates = {};
+
+    // Use latest departure
+    if (departures.length > 0) {
+      const latestDeparted = departures[0];
+      const existingDeparted = keeper.departed_at ? new Date(keeper.departed_at) : null;
+
+      if (!existingDeparted || latestDeparted > existingDeparted) {
+        updates.departed_at = latestDeparted.toISOString();
+      }
+    }
+
+    // Preserve the null departed_at if any record in group has it (still here)
+    const hasStillHere = group.some(a => a.departed_at === null);
+    if (hasStillHere) {
+      updates.departed_at = null;
+    }
+
+    // Use best location name
+    if (locationNames.length > 0 && (!keeper.location_name || locationNames[0].length > keeper.location_name.length)) {
+      updates.location_name = locationNames[0];
+    }
+
+    // Recalculate duration
+    const finalArrived = new Date(keeper.arrived_at);
+    const finalDeparted = updates.departed_at !== undefined
+      ? (updates.departed_at ? new Date(updates.departed_at) : null)
+      : (keeper.departed_at ? new Date(keeper.departed_at) : null);
+
+    updates.duration_hours = finalDeparted
+      ? Math.round((finalDeparted - finalArrived) / (1000 * 60 * 60))
+      : null;
+
+    // Update the keeper
+    if (Object.keys(updates).length > 0) {
+      await anchoragesRepository.update(keeper.id, updates);
+    }
+
+    // Delete the duplicates
+    for (const dup of toDelete) {
+      await anchoragesRepository.remove(dup.id);
+      merged++;
+
+      requestLogger.info('Deleted duplicate anchorage', {
+        deletedId: dup.id,
+        keptId: keeper.id,
+        location: keeper.location_name || dup.location_name
+      });
+    }
+
+    requestLogger.info('Merged anchorage group', {
+      keptId: keeper.id,
+      deletedCount: toDelete.length,
+      location: updates.location_name || keeper.location_name,
+      newDuration: updates.duration_hours
+    });
+  }
+
+  return { merged, groups: groups.length };
 }
 
 /**

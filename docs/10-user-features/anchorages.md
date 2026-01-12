@@ -6,7 +6,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 **Who uses it:** Boat owners, crew
 **Access:** `/anchorages`
-**Last Updated:** 2026-01-09
+**Last Updated:** 2026-01-12
 
 ---
 
@@ -25,8 +25,13 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 ┌─────────────────────────────────────────────────────────────────┐
 │  2. Tap "Refresh New Anchorages"                                │
 │     └── POST /api/anchorages/detect                             │
-│     └── Fetches GPS history (last 90 days)                      │
+│     └── Dynamic lookback (starts from 2nd most recent anchorage)│
 │     └── Analyzes for stationary periods (4+ hours)              │
+│     └── 300m movement threshold (handles anchor swing)          │
+│     └── Merges overlapping candidates at same location          │
+│     └── Updates existing anchorages if duration extends         │
+│     └── Auto-merges existing duplicate records                  │
+│     └── Detects "still here" (current anchorage)                │
 │     └── Auto-geocodes location names                            │
 │     └── Links to arrival/departure trips if found               │
 └─────────────────────────────────────────────────────────────────┘
@@ -63,9 +68,29 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 ---
 
-## Recent Changes (2026-01-09)
+## Recent Changes (2026-01-12)
 
-### 1. Detection Rewritten in JavaScript (No Database RPC)
+### Improved Detection Algorithm
+
+Major improvements to anchorage detection:
+
+| Feature | Before | After |
+|---------|--------|-------|
+| Movement threshold | 55m (~0.0005°) | 300m (~0.0027°) - handles anchor swing |
+| Lookback period | Fixed 90 days | Dynamic - starts from 2nd most recent anchorage |
+| Duplicate handling | Skip if exists | Update if duration extends, auto-merge duplicates |
+| Current anchorage | Always shows "departed" | Shows "Still here" if within 2 hours |
+| Candidate merging | None | Merges overlapping candidates at same location |
+
+**Why 300m threshold?** Boats at anchor swing with wind/tide changes. A 7:1 scope in deep water can result in 200m+ swing radius. The previous 55m threshold caused false "movement" detection.
+
+**Why dynamic lookback?** If your last anchorage was 9 days ago, we only need to scan 9 days of GPS data - not 90 days. Much faster.
+
+---
+
+## Earlier Changes (2026-01-09)
+
+### Detection Rewritten in JavaScript (No Database RPC)
 
 Previously required `detect_anchorages_from_gps` PostgreSQL function. Now runs entirely in JavaScript:
 
@@ -290,7 +315,7 @@ groupPositionsByHour(positions) {
 
 // Find stationary periods
 findStationaryPeriods(hourlyPositions, minHours) {
-  const MOVEMENT_THRESHOLD = 0.0005; // ~50 meters in degrees
+  const MOVEMENT_THRESHOLD = 0.0027; // ~300 meters in degrees (anchor swing tolerance)
   const candidates = [];
   let currentGroup = [hourlyPositions[0]];
 
@@ -385,8 +410,10 @@ Response:
 {
   "success": true,
   "data": {
-    "detected": 18,
-    "inserted": 8,
+    "detected": 18,        // Raw candidates found in GPS history
+    "inserted": 2,         // New anchorages created
+    "updated": 3,          // Existing anchorages with extended duration
+    "merged": 4,           // Duplicate records merged/deleted
     "anchorages": [
       {
         "id": "...",
@@ -394,6 +421,7 @@ Response:
         "latitude": 17.07401,
         "longitude": -61.8967,
         "arrived_at": "2026-01-09T15:00:00+00:00",
+        "departed_at": null,  // null means "still here"
         ...
       }
     ]
