@@ -173,6 +173,57 @@ class AnchoragesManager {
   }
 
   /**
+   * Upload photo for anchorage
+   */
+  async uploadPhoto(anchorageId, file) {
+    if (!file || !file.type.startsWith('image/')) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.showToast('Image must be under 5MB', 'error');
+      return;
+    }
+
+    this.showToast('Uploading...', '');
+
+    try {
+      const base64 = await this.fileToBase64(file);
+
+      // Determine next photo index
+      const card = this.container.querySelector(`[data-anchorage-id="${anchorageId}"]`);
+      const existingPhotos = card?.querySelectorAll('.photo-thumb').length || 0;
+      const photoIndex = existingPhotos + 1;
+
+      const response = await fetch(`/api/anchorages/${anchorageId}/photo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: base64, photoIndex })
+      });
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      this.showToast('Photo added', 'success');
+      await this.loadAnchorages();
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      this.showToast(error.message, 'error');
+    }
+  }
+
+  /**
+   * Convert file to base64 data URL
+   */
+  fileToBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
    * Render all anchorage cards
    */
   renderAnchorages() {
@@ -212,6 +263,19 @@ class AnchoragesManager {
         badge.className = `anchorage-type-badge ${newType}`;
         badge.textContent = typeLabels[newType];
       });
+    });
+
+    // Photo button triggers file input
+    this.container.querySelectorAll('.add-photo-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = this.container.querySelector(`.photo-input[data-id="${btn.dataset.id}"]`);
+        input?.click();
+      });
+    });
+
+    // File input uploads photo
+    this.container.querySelectorAll('.photo-input').forEach(input => {
+      input.addEventListener('change', (e) => this.uploadPhoto(e.target.dataset.id, e.target.files[0]));
     });
   }
 
@@ -295,6 +359,20 @@ class AnchoragesManager {
               ? `${a.anchor_position_formatted.lat}  ${a.anchor_position_formatted.lon}`
               : 'Set scope to compute'}
           </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Photos</div>
+          <div class="photo-section">
+            ${a.photos && a.photos.length > 0 ?
+              a.photos.map((url, i) => `
+                <img src="${url}" class="photo-thumb" onclick="window.open('${url}')" alt="Anchorage photo ${i + 1}" />
+              `).join('') :
+              '<span class="field-value muted">No photos</span>'
+            }
+            <button class="button button-small button-secondary add-photo-btn" data-id="${a.id}">+ Photo</button>
+          </div>
+          <input type="file" accept="image/*" capture="environment" class="photo-input" data-id="${a.id}" style="display:none">
         </div>
 
         <div class="field-group">

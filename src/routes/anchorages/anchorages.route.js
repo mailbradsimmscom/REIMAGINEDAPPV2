@@ -5,6 +5,8 @@
 
 import express from 'express';
 import * as anchoragesService from '../../services/anchorages/anchorages.service.js';
+import { uploadAnchoragePhoto } from '../../services/supplies/photo-storage.service.js';
+import { anchoragesRepository } from '../../repositories/anchorages.repository.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
@@ -219,6 +221,62 @@ router.patch('/:id', async (req, res) => {
     requestLogger.error('Error updating anchorage', { error: error.message, id: req.params.id });
     const status = error.message.includes('not found') ? 404 : 500;
     return res.status(status).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * POST /api/anchorages/:id/photo
+ * Upload a photo for an anchorage
+ */
+router.post('/:id/photo', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id } = req.params;
+    const { imageBase64, photoIndex = 1 } = req.body;
+
+    if (!imageBase64) {
+      return res.status(400).json({
+        success: false,
+        error: 'imageBase64 is required',
+        requestId: res.locals.requestId
+      });
+    }
+
+    // Get current anchorage to check it exists and get existing photos
+    const anchorage = await anchoragesRepository.findById(id);
+    if (!anchorage) {
+      return res.status(404).json({
+        success: false,
+        error: 'Anchorage not found',
+        requestId: res.locals.requestId
+      });
+    }
+
+    // Upload photo to Supabase Storage
+    const photoUrl = await uploadAnchoragePhoto(id, imageBase64, photoIndex);
+
+    // Update photos array in database
+    const existingPhotos = anchorage.photos || [];
+    const updatedPhotos = [...existingPhotos];
+    updatedPhotos[photoIndex - 1] = photoUrl;
+
+    await anchoragesRepository.update(id, { photos: updatedPhotos });
+
+    requestLogger.info('Anchorage photo uploaded', { id, photoIndex, photoUrl });
+
+    return res.json({
+      success: true,
+      data: { url: photoUrl, photos: updatedPhotos },
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error uploading anchorage photo', { error: error.message, id: req.params.id });
+    return res.status(500).json({
       success: false,
       error: error.message,
       requestId: res.locals.requestId

@@ -382,6 +382,31 @@
             outline: none;
             border-color: #007AFF;
         }
+
+        /* Photo Section */
+        .photo-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .photo-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #E5E5EA;
+        }
+
+        .photo-thumb:hover {
+            opacity: 0.8;
+        }
+
+        .photo-thumb:active {
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
