@@ -1237,7 +1237,10 @@
 
                 // Update display
                 renderStatus(status);
-                renderControls(status);
+                // Don't re-render controls during preview mode - user is editing inputs
+                if (!isPreviewMode) {
+                    renderControls(status);
+                }
                 renderPositions(positions);
                 updateMap(status, positions);
 
