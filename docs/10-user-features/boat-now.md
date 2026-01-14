@@ -27,12 +27,19 @@
 Charts showing data from `gps_position` table, downsampled to 10-minute intervals (~30 points):
 
 1. **Wind Speed** - True wind speed over time (knots) with dynamic Y-axis
+   - Orange dashed average line with "Avg: X.X kts" label
 2. **Wind Direction** - True wind direction over time (degrees 0-360) with dynamic Y-axis
+   - Orange dashed average line with "Avg: X°" label
 3. **Position Track Map** - Leaflet map with OpenStreetMap tiles showing:
    - Blue polyline of movement track
    - Red marker for current position
-   - Green marker for 5-hour centroid (average position)
-   - Auto-zoom to fit track bounds
+   - Green marker for center point (5-hour average position)
+   - Orange dashed circle showing movement radius (max distance from center)
+   - Orange marker for farthest point from center
+   - Auto-zoom to fit movement radius bounds
+4. **Movement Stats** - Yellow box below map showing:
+   - Movement radius in cm/m/km (auto-scales based on distance)
+   - Calculated using Haversine formula for accurate distance
 
 ---
 
@@ -55,8 +62,9 @@ Charts showing data from `gps_position` table, downsampled to 10-minute interval
 ┌─────────────────────────────────────────────────────────────────┐
 │  Frontend (boat-now.html)                                       │
 │  ├── Current conditions display                                 │
-│  ├── 2 Chart.js line charts (wind speed, direction)             │
-│  ├── Leaflet map with position track                            │
+│  ├── 2 Chart.js line charts with annotation plugin (avg lines)  │
+│  ├── Leaflet map with position track + movement radius circle   │
+│  ├── Movement stats box (radius calculation)                    │
 │  └── Refresh on page reload only                                │
 └─────────────────────────────────────────────────────────────────┘
                               │
