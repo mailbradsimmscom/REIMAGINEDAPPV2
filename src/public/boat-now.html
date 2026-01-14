@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Current - BoatOS</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -195,6 +196,31 @@
             border-radius: 16px;
             font-size: 13px;
         }
+
+        .movement-stats {
+            background: #FFF8E5;
+            border: 1px solid #FFD60A;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .movement-stats .label {
+            font-size: 12px;
+            color: #8E8E93;
+            margin-bottom: 4px;
+        }
+
+        .movement-stats .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FF9500;
+        }
+
+        .section:last-child {
+            padding-bottom: 100px;
+        }
     </style>
 </head>
 <body>
@@ -308,6 +334,10 @@
                     <div class="chart-card">
                         <div class="chart-title">Position Track (5 hours)</div>
                         <div class="chart-container" id="positionMap" style="z-index: 1;"></div>
+                        <div class="movement-stats" id="movementStats">
+                            <div class="label">Movement Radius</div>
+                            <div class="value">Calculating...</div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -332,8 +362,17 @@
                 };
             }
 
+            // Calculate average
+            function getAverage(values) {
+                const validValues = values.filter(v => v !== null && v !== undefined);
+                if (validValues.length === 0) return null;
+                return validValues.reduce((a, b) => a + b, 0) / validValues.length;
+            }
+
             const windSpeedRange = getAxisRange(data.windSpeed);
             const windDirRange = getAxisRange(data.windDirection);
+            const windSpeedAvg = getAverage(data.windSpeed);
+            const windDirAvg = getAverage(data.windDirection);
 
             // Common chart options
             const commonOptions = {
@@ -358,7 +397,7 @@
                 }
             };
 
-            // Wind Speed Chart (dynamic Y-axis)
+            // Wind Speed Chart (dynamic Y-axis with average line)
             new Chart(document.getElementById('windSpeedChart'), {
                 type: 'line',
                 data: {
@@ -374,19 +413,42 @@
                 },
                 options: {
                     ...commonOptions,
+                    plugins: {
+                        ...commonOptions.plugins,
+                        annotation: {
+                            annotations: {
+                                averageLine: {
+                                    type: 'line',
+                                    yMin: windSpeedAvg,
+                                    yMax: windSpeedAvg,
+                                    borderColor: '#FF9500',
+                                    borderWidth: 2,
+                                    borderDash: [6, 4],
+                                    label: {
+                                        display: true,
+                                        content: `Avg: ${windSpeedAvg?.toFixed(1)} kts`,
+                                        position: 'end',
+                                        backgroundColor: '#FF9500',
+                                        color: '#fff',
+                                        font: { size: 11 }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         ...commonOptions.scales,
                         y: {
                             ...commonOptions.scales.y,
                             title: { display: true, text: 'knots' },
-                            min: Math.max(0, windSpeedRange.min), // Don't go below 0 for speed
+                            min: Math.max(0, windSpeedRange.min),
                             max: windSpeedRange.max
                         }
                     }
                 }
             });
 
-            // Wind Direction Chart (dynamic Y-axis)
+            // Wind Direction Chart (dynamic Y-axis with average line)
             new Chart(document.getElementById('windDirectionChart'), {
                 type: 'line',
                 data: {
@@ -402,13 +464,36 @@
                 },
                 options: {
                     ...commonOptions,
+                    plugins: {
+                        ...commonOptions.plugins,
+                        annotation: {
+                            annotations: {
+                                averageLine: {
+                                    type: 'line',
+                                    yMin: windDirAvg,
+                                    yMax: windDirAvg,
+                                    borderColor: '#FF9500',
+                                    borderWidth: 2,
+                                    borderDash: [6, 4],
+                                    label: {
+                                        display: true,
+                                        content: `Avg: ${windDirAvg?.toFixed(0)}°`,
+                                        position: 'end',
+                                        backgroundColor: '#FF9500',
+                                        color: '#fff',
+                                        font: { size: 11 }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         ...commonOptions.scales,
                         y: {
                             ...commonOptions.scales.y,
                             title: { display: true, text: 'degrees' },
-                            min: Math.max(0, windDirRange.min), // Don't go below 0
-                            max: Math.min(360, windDirRange.max) // Don't exceed 360
+                            min: Math.max(0, windDirRange.min),
+                            max: Math.min(360, windDirRange.max)
                         }
                     }
                 }
@@ -431,6 +516,7 @@
 
             if (coords.length === 0) {
                 document.getElementById('positionMap').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8E8E93;">No position data</div>';
+                document.getElementById('movementStats').innerHTML = '<div class="label">No position data</div>';
                 return;
             }
 
@@ -440,26 +526,66 @@
                 [0, 0]
             );
 
-            // Calculate bounds for auto-zoom
-            const lats = coords.map(c => c[0]);
-            const lons = coords.map(c => c[1]);
-            const bounds = [
-                [Math.min(...lats), Math.min(...lons)],
-                [Math.max(...lats), Math.max(...lons)]
-            ];
+            // Calculate max distance from centroid (movement radius)
+            function haversineDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371000; // Earth's radius in meters
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
 
-            // Initialize map centered on centroid
+            // Find max distance from centroid
+            let maxRadius = 0;
+            let farthestPoint = coords[0];
+            coords.forEach(coord => {
+                const dist = haversineDistance(centroid[0], centroid[1], coord[0], coord[1]);
+                if (dist > maxRadius) {
+                    maxRadius = dist;
+                    farthestPoint = coord;
+                }
+            });
+
+            // Update movement stats display
+            const statsDiv = document.getElementById('movementStats');
+            let radiusDisplay;
+            if (maxRadius < 1) {
+                radiusDisplay = `${(maxRadius * 100).toFixed(1)} cm`;
+            } else if (maxRadius < 100) {
+                radiusDisplay = `${maxRadius.toFixed(1)} m`;
+            } else {
+                radiusDisplay = `${(maxRadius / 1000).toFixed(2)} km`;
+            }
+            statsDiv.innerHTML = `
+                <div class="label">Movement Radius (5 hours)</div>
+                <div class="value">${radiusDisplay}</div>
+            `;
+
+            // Initialize map centered on centroid, zoomed in
             const map = L.map('positionMap', {
                 zoomControl: true,
                 attributionControl: false
-            }).setView(centroid, 16);
+            }).setView(centroid, 18);
 
             // Add OpenStreetMap tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19
             }).addTo(map);
 
-            // Draw track as polyline (gradient from old to new)
+            // Draw movement radius circle around centroid
+            L.circle(centroid, {
+                radius: Math.max(maxRadius, 5), // Minimum 5m radius for visibility
+                color: '#FF9500',
+                fillColor: '#FF9500',
+                fillOpacity: 0.1,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(map).bindPopup(`Movement radius: ${radiusDisplay}`);
+
+            // Draw track as polyline
             const polyline = L.polyline(coords, {
                 color: '#007AFF',
                 weight: 3,
@@ -483,12 +609,22 @@
                 color: '#fff',
                 weight: 2,
                 fillOpacity: 0.8
-            }).addTo(map).bindPopup('Centroid (5hr avg)');
+            }).addTo(map).bindPopup('Center Point');
 
-            // Fit map to track bounds with padding
-            if (coords.length > 1) {
-                map.fitBounds(bounds, { padding: [20, 20] });
+            // Mark farthest point from center
+            if (maxRadius > 1) {
+                L.circleMarker(farthestPoint, {
+                    radius: 5,
+                    fillColor: '#FF9500',
+                    color: '#fff',
+                    weight: 2,
+                    fillOpacity: 1
+                }).addTo(map).bindPopup(`Farthest: ${radiusDisplay} from center`);
             }
+
+            // Fit map to circle bounds with padding
+            const circleBounds = L.circle(centroid, { radius: Math.max(maxRadius * 1.5, 20) }).getBounds();
+            map.fitBounds(circleBounds, { padding: [20, 20] });
         }
     </script>
 </body>
