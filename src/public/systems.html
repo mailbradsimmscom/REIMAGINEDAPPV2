@@ -458,50 +458,67 @@
                 <div class="uuid-display" id="assetUuidDisplay"></div>
             </div>
 
-            <!-- Form Fields -->
+            <!-- Form Fields (v5 Schema) -->
             <div class="form-grid">
+                <!-- Row 1: Manufacturer + Model -->
                 <div class="form-field">
                     <label>Manufacturer <span class="required">*</span></label>
-                    <input type="text" id="manufacturerNorm">
+                    <select id="manufacturerId">
+                        <option value="">Select Manufacturer</option>
+                    </select>
                     <span class="error-indicator">✕</span>
                     <span class="error-message"></span>
                 </div>
 
                 <div class="form-field">
                     <label>Model <span class="required">*</span></label>
-                    <input type="text" id="modelNorm">
+                    <input type="text" id="modelNorm" placeholder="e.g., 4JH57">
+                    <span class="error-indicator">✕</span>
+                    <span class="error-message"></span>
+                </div>
+
+                <!-- Row 2: Product Type -->
+                <div class="form-field">
+                    <label>Product Type <span class="required">*</span></label>
+                    <select id="productTypeId">
+                        <option value="">Select Product Type</option>
+                    </select>
                     <span class="error-indicator">✕</span>
                     <span class="error-message"></span>
                 </div>
 
                 <div class="form-field">
-                    <label>System <span class="required">*</span></label>
-                    <input type="text" id="systemNorm">
+                    <!-- Placeholder for layout balance -->
+                </div>
+
+                <!-- Row 3: System Category + Subsystem Category -->
+                <div class="form-field">
+                    <label>System Category <span class="required">*</span></label>
+                    <select id="systemCategoryId" onchange="loadSubcategories()">
+                        <option value="">Select Category</option>
+                    </select>
                     <span class="error-indicator">✕</span>
                     <span class="error-message"></span>
                 </div>
 
                 <div class="form-field">
                     <label>Subsystem <span class="required">*</span></label>
-                    <input type="text" id="subsystemNorm">
+                    <select id="subsystemCategoryId" disabled>
+                        <option value="">Select Category First</option>
+                    </select>
                     <span class="error-indicator">✕</span>
                     <span class="error-message"></span>
                 </div>
 
-                <div class="form-field">
-                    <label>Canonical Model ID <span class="required">*</span></label>
-                    <input type="text" id="canonicalModelId">
-                    <span class="error-indicator">✕</span>
-                    <span class="error-message"></span>
-                </div>
-
+                <!-- Row 4: Description (full width) -->
                 <div class="form-field" style="grid-column: 1 / -1;">
                     <label>Description</label>
-                    <textarea id="description" rows="3"></textarea>
+                    <textarea id="description" rows="2" placeholder="Brief description of this system"></textarea>
                     <span class="error-indicator">✕</span>
                     <span class="error-message"></span>
                 </div>
 
+                <!-- Row 5: URLs -->
                 <div class="form-field">
                     <label>Manual URL</label>
                     <input type="url" id="manualUrl" placeholder="https://...">
@@ -515,49 +532,38 @@
                     <span class="error-indicator">✕</span>
                     <span class="error-message"></span>
                 </div>
-
-                <div class="form-field">
-                    <label>Spec Keywords</label>
-                    <input type="text" id="specKeywords">
-                    <span class="error-indicator">✕</span>
-                    <span class="error-message"></span>
-                </div>
-
-                <div class="form-field">
-                    <label>Synonyms (FTS)</label>
-                    <input type="text" id="synonymsFts">
-                    <span class="error-indicator">✕</span>
-                    <span class="error-message"></span>
-                </div>
-
-                <div class="form-field">
-                    <label>Synonyms (Human)</label>
-                    <input type="text" id="synonymsHuman">
-                    <span class="error-indicator">✕</span>
-                    <span class="error-message"></span>
-                </div>
-
-                <div class="form-field" style="grid-column: 1 / -1;">
-                    <label>Spec Keywords (JSON)</label>
-                    <textarea id="specKeywordsJsonb" rows="3" placeholder='{"key": "value"}'></textarea>
-                    <span class="error-indicator">✕</span>
-                    <span class="error-message"></span>
-                </div>
-
-                <div class="form-field" style="grid-column: 1 / -1;">
-                    <label>Synonyms (JSON)</label>
-                    <textarea id="synonymsJsonb" rows="3" placeholder='{"key": "value"}'></textarea>
-                    <span class="error-indicator">✕</span>
-                    <span class="error-message"></span>
-                </div>
-
-                <div class="form-field">
-                    <label>
-                        <input type="checkbox" id="manual" style="width: auto; margin-right: 8px;">
-                        Has Manual
-                    </label>
-                </div>
             </div>
+
+            <!-- OEM Details Section (Collapsible) -->
+            <details class="oem-section" style="margin-bottom: var(--spacing-xl);">
+                <summary style="cursor: pointer; font-weight: 600; padding: var(--spacing-md); background: var(--background-color); border-radius: var(--border-radius-small);">
+                    OEM Details (Optional)
+                </summary>
+                <div class="form-grid" style="margin-top: var(--spacing-md);">
+                    <div class="form-field">
+                        <label>OEM Manufacturer</label>
+                        <select id="oemManufacturerId">
+                            <option value="">None</option>
+                        </select>
+                        <span class="error-indicator">✕</span>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-field">
+                        <label>OEM Model</label>
+                        <input type="text" id="oemModel" placeholder="Original manufacturer model">
+                        <span class="error-indicator">✕</span>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-field">
+                        <label>OEM Part Number</label>
+                        <input type="text" id="oemPartNumber" placeholder="Part number for ordering">
+                        <span class="error-indicator">✕</span>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+            </details>
 
             <!-- Instances Section -->
             <div class="instances-section">
@@ -590,11 +596,148 @@
         let currentMode = null;
         let currentSystemData = null;
 
+        // Reference data cache (v5)
+        let refManufacturers = [];
+        let refProductTypes = [];
+        let refSystemCategories = [];
+        let refSubsystemCategories = [];
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', init);
 
         async function init() {
+            // Load all reference data for v5 form
+            await Promise.all([
+                loadRefManufacturers(),
+                loadRefProductTypes(),
+                loadRefSystemCategories(),
+                loadRefSubsystemCategories()
+            ]);
+            // Also load legacy manufacturers for Find/Edit mode
             await loadManufacturers();
+        }
+
+        // ============================================
+        // Reference Data Loading (v5)
+        // ============================================
+
+        async function loadRefManufacturers() {
+            try {
+                const response = await fetch('/api/system-management/ref/manufacturers');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    refManufacturers = data.data;
+                    populateManufacturerDropdowns();
+                }
+            } catch (error) {
+                showError('Failed to load manufacturers: ' + error.message);
+            }
+        }
+
+        async function loadRefProductTypes() {
+            try {
+                const response = await fetch('/api/system-management/ref/product-types');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    refProductTypes = data.data;
+                    const select = document.getElementById('productTypeId');
+                    select.innerHTML = '<option value="">Select Product Type</option>';
+
+                    data.data.forEach(pt => {
+                        const option = document.createElement('option');
+                        option.value = pt.id;
+                        option.textContent = pt.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                showError('Failed to load product types: ' + error.message);
+            }
+        }
+
+        async function loadRefSystemCategories() {
+            try {
+                const response = await fetch('/api/system-management/ref/categories');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    refSystemCategories = data.data;
+                    const select = document.getElementById('systemCategoryId');
+                    select.innerHTML = '<option value="">Select Category</option>';
+
+                    data.data.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat.id;
+                        option.textContent = cat.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                showError('Failed to load system categories: ' + error.message);
+            }
+        }
+
+        async function loadRefSubsystemCategories() {
+            try {
+                const response = await fetch('/api/system-management/ref/subcategories');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    refSubsystemCategories = data.data;
+                }
+            } catch (error) {
+                showError('Failed to load subsystem categories: ' + error.message);
+            }
+        }
+
+        function populateManufacturerDropdowns() {
+            // Main manufacturer dropdown
+            const mainSelect = document.getElementById('manufacturerId');
+            mainSelect.innerHTML = '<option value="">Select Manufacturer</option>';
+
+            // OEM manufacturer dropdown
+            const oemSelect = document.getElementById('oemManufacturerId');
+            oemSelect.innerHTML = '<option value="">None</option>';
+
+            refManufacturers.forEach(mfr => {
+                // Main dropdown
+                const option1 = document.createElement('option');
+                option1.value = mfr.id;
+                option1.textContent = mfr.name;
+                mainSelect.appendChild(option1);
+
+                // OEM dropdown
+                const option2 = document.createElement('option');
+                option2.value = mfr.id;
+                option2.textContent = mfr.name;
+                oemSelect.appendChild(option2);
+            });
+        }
+
+        function loadSubcategories() {
+            const categoryId = document.getElementById('systemCategoryId').value;
+            const subsystemSelect = document.getElementById('subsystemCategoryId');
+
+            if (!categoryId) {
+                subsystemSelect.disabled = true;
+                subsystemSelect.innerHTML = '<option value="">Select Category First</option>';
+                return;
+            }
+
+            // Filter subcategories by selected category (system_id is the FK to ref_system_categories)
+            const filtered = refSubsystemCategories.filter(sub => sub.system_id === categoryId);
+
+            subsystemSelect.disabled = false;
+            subsystemSelect.innerHTML = '<option value="">Select Subsystem</option>';
+
+            filtered.forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub.id;
+                option.textContent = sub.name;
+                subsystemSelect.appendChild(option);
+            });
         }
 
         // Set mode (edit or new)
@@ -655,22 +798,26 @@
             }
         }
 
-        // Clear form
+        // Clear form (v5)
         function clearForm() {
-            document.getElementById('manufacturerNorm').value = '';
+            // Required fields
+            document.getElementById('manufacturerId').value = '';
             document.getElementById('modelNorm').value = '';
-            document.getElementById('systemNorm').value = '';
-            document.getElementById('subsystemNorm').value = '';
-            document.getElementById('canonicalModelId').value = '';
+            document.getElementById('productTypeId').value = '';
+            document.getElementById('systemCategoryId').value = '';
+            document.getElementById('subsystemCategoryId').value = '';
+            document.getElementById('subsystemCategoryId').disabled = true;
+            document.getElementById('subsystemCategoryId').innerHTML = '<option value="">Select Category First</option>';
+
+            // Optional fields
             document.getElementById('description').value = '';
             document.getElementById('manualUrl').value = '';
             document.getElementById('oemPage').value = '';
-            document.getElementById('specKeywords').value = '';
-            document.getElementById('synonymsFts').value = '';
-            document.getElementById('synonymsHuman').value = '';
-            document.getElementById('specKeywordsJsonb').value = '';
-            document.getElementById('synonymsJsonb').value = '';
-            document.getElementById('manual').checked = false;
+
+            // OEM fields
+            document.getElementById('oemManufacturerId').value = '';
+            document.getElementById('oemModel').value = '';
+            document.getElementById('oemPartNumber').value = '';
 
             // Clear instances
             document.getElementById('instancesList').innerHTML = '';
@@ -770,43 +917,32 @@
             }
         }
 
-        // Populate form with system data
+        // Populate form with system data (v5)
         function populateForm(system) {
-            document.getElementById('manufacturerNorm').value = system.manufacturer_norm || '';
+            // Required FK fields
+            document.getElementById('manufacturerId').value = system.manufacturer_id || '';
             document.getElementById('modelNorm').value = system.model_norm || '';
-            document.getElementById('systemNorm').value = system.system_norm || '';
-            document.getElementById('subsystemNorm').value = system.subsystem_norm || '';
-            document.getElementById('canonicalModelId').value = system.canonical_model_id || '';
+            document.getElementById('productTypeId').value = system.product_type_id || '';
+            document.getElementById('systemCategoryId').value = system.system_category_id || '';
+
+            // Load subcategories for the selected category, then set value
+            if (system.system_category_id) {
+                loadSubcategories();
+                // Set subsystem after dropdown is populated
+                setTimeout(() => {
+                    document.getElementById('subsystemCategoryId').value = system.subsystem_category_id || '';
+                }, 100);
+            }
+
+            // Text fields
             document.getElementById('description').value = system.description || '';
             document.getElementById('manualUrl').value = system.manual_url || '';
             document.getElementById('oemPage').value = system.oem_page || '';
-            document.getElementById('specKeywords').value = system.spec_keywords || '';
-            document.getElementById('synonymsFts').value = system.synonyms_fts || '';
-            document.getElementById('synonymsHuman').value = system.synonyms_human || '';
 
-            // Populate JSONB fields (stringify if object, handle empty objects)
-            const specKeywordsJsonb = system.spec_keywords_jsonb;
-            if (specKeywordsJsonb && typeof specKeywordsJsonb === 'object') {
-                // Only show non-empty objects
-                const jsonString = JSON.stringify(specKeywordsJsonb, null, 2);
-                document.getElementById('specKeywordsJsonb').value =
-                    jsonString === '{}' ? '' : jsonString;
-            } else {
-                document.getElementById('specKeywordsJsonb').value = specKeywordsJsonb || '';
-            }
-
-            const synonymsJsonb = system.synonyms_jsonb;
-            if (synonymsJsonb && typeof synonymsJsonb === 'object') {
-                // Only show non-empty objects
-                const jsonString = JSON.stringify(synonymsJsonb, null, 2);
-                document.getElementById('synonymsJsonb').value =
-                    jsonString === '{}' ? '' : jsonString;
-            } else {
-                document.getElementById('synonymsJsonb').value = synonymsJsonb || '';
-            }
-
-            // Populate boolean field
-            document.getElementById('manual').checked = system.manual || false;
+            // OEM fields
+            document.getElementById('oemManufacturerId').value = system.oem_manufacturer_id || '';
+            document.getElementById('oemModel').value = system.oem_model || '';
+            document.getElementById('oemPartNumber').value = system.oem_part_number || '';
 
             // Load instances
             loadInstances(system.instances || []);
@@ -946,22 +1082,31 @@
             hideMessages();
             clearValidationErrors();
 
-            // Collect form data
+            // Get manufacturer name from the selected ID
+            const manufacturerId = document.getElementById('manufacturerId').value;
+            const selectedManufacturer = refManufacturers.find(m => m.id === manufacturerId);
+            const manufacturerNorm = selectedManufacturer ? selectedManufacturer.name : '';
+
+            // Collect form data (v5 schema)
             const systemData = {
-                manufacturer_norm: document.getElementById('manufacturerNorm').value.trim(),
+                // Required FK fields
+                manufacturer_id: manufacturerId || null,
+                manufacturer_norm: manufacturerNorm,
                 model_norm: document.getElementById('modelNorm').value.trim(),
-                system_norm: document.getElementById('systemNorm').value.trim(),
-                subsystem_norm: document.getElementById('subsystemNorm').value.trim(),
-                canonical_model_id: document.getElementById('canonicalModelId').value.trim(),
+                product_type_id: document.getElementById('productTypeId').value || null,
+                system_category_id: document.getElementById('systemCategoryId').value || null,
+                subsystem_category_id: document.getElementById('subsystemCategoryId').value || null,
+
+                // Optional text fields
                 description: document.getElementById('description').value.trim(),
                 manual_url: document.getElementById('manualUrl').value.trim(),
                 oem_page: document.getElementById('oemPage').value.trim(),
-                spec_keywords: document.getElementById('specKeywords').value.trim(),
-                synonyms_fts: document.getElementById('synonymsFts').value.trim(),
-                synonyms_human: document.getElementById('synonymsHuman').value.trim(),
-                spec_keywords_jsonb: document.getElementById('specKeywordsJsonb').value.trim(),
-                synonyms_jsonb: document.getElementById('synonymsJsonb').value.trim(),
-                manual: document.getElementById('manual').checked
+                // Note: model_synonyms removed from form - populated via LLM/DIP
+
+                // OEM fields
+                oem_manufacturer_id: document.getElementById('oemManufacturerId').value || null,
+                oem_model: document.getElementById('oemModel').value.trim(),
+                oem_part_number: document.getElementById('oemPartNumber').value.trim()
             };
 
             // Client-side validation
@@ -1086,15 +1231,16 @@
             }
         }
 
-        // Client-side validation
+        // Client-side validation (v5)
         function validateSystemData(data) {
             const errors = {};
 
-            if (!data.manufacturer_norm) errors.manufacturerNorm = 'Manufacturer is required';
+            // Required FK fields
+            if (!data.manufacturer_id) errors.manufacturerId = 'Manufacturer is required';
             if (!data.model_norm) errors.modelNorm = 'Model is required';
-            if (!data.system_norm) errors.systemNorm = 'System is required';
-            if (!data.subsystem_norm) errors.subsystemNorm = 'Subsystem is required';
-            if (!data.canonical_model_id) errors.canonicalModelId = 'Canonical Model ID is required';
+            if (!data.product_type_id) errors.productTypeId = 'Product Type is required';
+            if (!data.system_category_id) errors.systemCategoryId = 'System Category is required';
+            if (!data.subsystem_category_id) errors.subsystemCategoryId = 'Subsystem is required';
 
             // URL validation
             if (data.manual_url && !isValidUrl(data.manual_url)) {
@@ -1102,14 +1248,6 @@
             }
             if (data.oem_page && !isValidUrl(data.oem_page)) {
                 errors.oemPage = 'Invalid URL format';
-            }
-
-            // JSON validation
-            if (data.spec_keywords_jsonb && !isValidJson(data.spec_keywords_jsonb)) {
-                errors.specKeywordsJsonb = 'Invalid JSON format';
-            }
-            if (data.synonyms_jsonb && !isValidJson(data.synonyms_jsonb)) {
-                errors.synonymsJsonb = 'Invalid JSON format';
             }
 
             return {
@@ -1122,15 +1260,6 @@
             try {
                 new URL(url);
                 return url.startsWith('http://') || url.startsWith('https://');
-            } catch {
-                return false;
-            }
-        }
-
-        function isValidJson(jsonString) {
-            try {
-                JSON.parse(jsonString);
-                return true;
             } catch {
                 return false;
             }

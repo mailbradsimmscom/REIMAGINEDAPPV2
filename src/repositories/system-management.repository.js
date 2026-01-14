@@ -386,3 +386,119 @@ export async function getSystemsToFetch() {
     throw error;
   }
 }
+
+// ============================================
+// Reference Table Queries (v5 schema)
+// ============================================
+
+/**
+ * Get all manufacturers from ref_manufacturers table
+ * @returns {Promise<Array<Object>>} Array of manufacturer objects with id, name, synonyms
+ */
+export async function getRefManufacturers() {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('ref_manufacturers')
+      .select('id, name, synonyms, is_oem')
+      .order('name');
+
+    if (error) throw error;
+
+    return data || [];
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching ref_manufacturers', {
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Get all product types from ref_product_types table
+ * @returns {Promise<Array<Object>>} Array of product type objects
+ */
+export async function getRefProductTypes() {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('ref_product_types')
+      .select('id, name, synonyms')
+      .order('name');
+
+    if (error) throw error;
+
+    return data || [];
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching ref_product_types', {
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Get all system categories from ref_system_categories table
+ * @returns {Promise<Array<Object>>} Array of system category objects
+ */
+export async function getRefSystemCategories() {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { data, error } = await supabase
+      .from('ref_system_categories')
+      .select('id, name, synonyms')
+      .order('name');
+
+    if (error) throw error;
+
+    return data || [];
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching ref_system_categories', {
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Get subsystem categories, optionally filtered by parent category
+ * @param {string|null} categoryId - Optional parent category ID to filter by
+ * @returns {Promise<Array<Object>>} Array of subsystem category objects
+ */
+export async function getRefSubsystemCategories(categoryId = null) {
+  const supabase = await getSupabaseClient();
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    let query = supabase
+      .from('ref_subsystem_categories')
+      .select('id, name, synonyms, system_id')
+      .order('name');
+
+    if (categoryId) {
+      query = query.eq('system_id', categoryId);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return data || [];
+
+  } catch (error) {
+    requestLogger.error('Repository error fetching ref_subsystem_categories', {
+      error: error.message,
+      categoryId
+    });
+    throw error;
+  }
+}
