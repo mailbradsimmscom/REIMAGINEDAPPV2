@@ -1749,8 +1749,9 @@
 
                 // Update display
                 renderStatus(status);
-                // Don't re-render controls during preview mode - user is editing inputs
-                if (!isPreviewMode) {
+                // Don't re-render controls during preview mode or when calculate panel is open
+                const calculatePanelOpen = document.getElementById('calculatePanel')?.classList.contains('visible');
+                if (!isPreviewMode && !calculatePanelOpen) {
                     renderControls(status);
                 }
                 renderPositions(positions);
