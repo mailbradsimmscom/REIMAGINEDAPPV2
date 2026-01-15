@@ -29,7 +29,8 @@ router.get('/current', async (req, res) => {
         longitude: position.longitude,
         timestamp: position.timestamp,
         speed_over_ground: position.speed_over_ground,
-        course_over_ground: position.course_over_ground
+        course_over_ground: position.course_over_ground,
+        depth: position.depth
       },
       requestId: res.locals.requestId
     });

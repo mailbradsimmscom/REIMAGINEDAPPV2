@@ -446,6 +446,114 @@
         .login-error.visible {
             display: block;
         }
+
+        /* Calculate Panel */
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .button-row .button {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .calculate-panel {
+            background: #F2F2F7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .calculate-panel.visible {
+            display: block;
+        }
+
+        .calculate-panel label {
+            display: block;
+            font-size: 12px;
+            color: #8E8E93;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .calculate-panel input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            background: white;
+        }
+
+        .calculate-panel input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .compass-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .compass-display {
+            flex: 1;
+            background: white;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 24px;
+            font-family: 'SF Mono', Monaco, monospace;
+            text-align: center;
+        }
+
+        .compass-display.locked {
+            background: #E8F5E9;
+            border-color: #34C759;
+        }
+
+        .compass-display .compass-label {
+            font-size: 10px;
+            color: #8E8E93;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .lock-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            background: #007AFF;
+            color: white;
+        }
+
+        .lock-btn.locked {
+            background: #34C759;
+        }
+
+        .manual-bearing {
+            margin-top: 8px;
+        }
+
+        .manual-bearing input {
+            margin-bottom: 0;
+        }
+
+        .compass-unavailable {
+            font-size: 12px;
+            color: #8E8E93;
+            text-align: center;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
@@ -771,12 +879,29 @@
             if (!status.active) {
                 // Inactive - show activation controls
                 const hasInferredPosition = anchorWatchState.anchor_lat && anchorWatchState.anchor_lon;
+                const calcPanelVisible = document.getElementById('calculatePanel')?.classList.contains('visible') || false;
 
                 controlsContent.innerHTML = `
                     <div class="controls-section">
-                        <button id="inferBtn" class="button button-secondary" onclick="inferAnchorPosition()">
-                            Infer Anchor Position
-                        </button>
+                        <div class="button-row">
+                            <button id="inferBtn" class="button button-secondary" onclick="inferAnchorPosition()">
+                                Infer
+                            </button>
+                            <button id="calculateBtn" class="button button-secondary" onclick="toggleCalculatePanel()">
+                                Calculate
+                            </button>
+                        </div>
+                        <div id="calculatePanel" class="calculate-panel ${calcPanelVisible ? 'visible' : ''}">
+                            <label>Scope (m)</label>
+                            <input type="number" id="scopeInput" placeholder="Chain/rode length" step="0.1">
+                            <label>Depth (m)</label>
+                            <input type="number" id="depthInput" placeholder="Water depth" step="0.1">
+                            <label>Bearing to Anchor</label>
+                            <div id="compassSection"></div>
+                            <button class="button button-primary" onclick="calculateAnchorPosition()">
+                                Calculate Position
+                            </button>
+                        </div>
                         ${hasInferredPosition ? `
                         <div class="coord-inputs">
                             <label>Latitude</label>
@@ -1219,6 +1344,379 @@
                 alert('Failed to deactivate: ' + error.message);
             }
         }
+
+        // ============ CALCULATE FROM BOW FUNCTIONS ============
+
+        // Compass state
+        let compassState = {
+            available: false,
+            currentHeading: null,
+            lockedBearing: null,
+            watchId: null
+        };
+
+        // Toggle calculate panel visibility
+        function toggleCalculatePanel() {
+            const panel = document.getElementById('calculatePanel');
+            if (!panel) return;
+
+            const isVisible = panel.classList.toggle('visible');
+
+            if (isVisible) {
+                // Fetch current depth and initialize compass
+                fetchCurrentDepth();
+                initCompass();
+            } else {
+                // Stop compass when panel closed
+                stopCompass();
+            }
+        }
+
+        // Fetch current depth from GPS endpoint
+        async function fetchCurrentDepth() {
+            try {
+                const response = await fetch('/api/gps/current');
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.depth != null) {
+                    const depthInput = document.getElementById('depthInput');
+                    if (depthInput) {
+                        depthInput.value = result.data.depth.toFixed(1);
+                    }
+                }
+            } catch (error) {
+                console.log('Could not fetch depth:', error.message);
+            }
+        }
+
+        // Initialize device compass
+        async function initCompass() {
+            const compassSection = document.getElementById('compassSection');
+            if (!compassSection) return;
+
+            // Check if DeviceOrientationEvent is available
+            if (!window.DeviceOrientationEvent) {
+                showManualBearingOnly(compassSection, 'Device compass not available');
+                return;
+            }
+
+            // iOS 13+ requires permission
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    const permission = await DeviceOrientationEvent.requestPermission();
+                    if (permission !== 'granted') {
+                        showManualBearingOnly(compassSection, 'Compass permission denied');
+                        return;
+                    }
+                } catch (error) {
+                    showManualBearingOnly(compassSection, 'Compass permission error');
+                    return;
+                }
+            }
+
+            // Show compass UI
+            compassSection.innerHTML = `
+                <div class="compass-container">
+                    <div id="compassDisplay" class="compass-display">
+                        <span class="compass-label">BEARING</span>
+                        <span id="compassValue">---°</span>
+                    </div>
+                    <button id="lockBtn" class="lock-btn" onclick="toggleLockBearing()">Lock</button>
+                </div>
+                <div class="manual-bearing">
+                    <label>Or enter manually</label>
+                    <input type="number" id="manualBearingInput" placeholder="Bearing in degrees" min="0" max="360" step="1">
+                </div>
+            `;
+
+            compassState.available = true;
+            compassState.lockedBearing = null;
+
+            // Start listening to compass
+            window.addEventListener('deviceorientationabsolute', handleCompass, true);
+            window.addEventListener('deviceorientation', handleCompass, true);
+        }
+
+        // Handle compass readings
+        function handleCompass(event) {
+            if (compassState.lockedBearing !== null) return; // Don't update if locked
+
+            let heading = null;
+
+            // iOS uses webkitCompassHeading
+            if (event.webkitCompassHeading !== undefined) {
+                heading = event.webkitCompassHeading;
+            }
+            // Android/others use alpha (but need to invert)
+            else if (event.alpha !== null && event.absolute) {
+                heading = (360 - event.alpha) % 360;
+            }
+            else if (event.alpha !== null) {
+                heading = (360 - event.alpha) % 360;
+            }
+
+            if (heading !== null) {
+                compassState.currentHeading = Math.round(heading);
+                updateCompassDisplay(compassState.currentHeading);
+            }
+        }
+
+        // Update compass display
+        function updateCompassDisplay(heading) {
+            const compassValue = document.getElementById('compassValue');
+            if (compassValue) {
+                compassValue.textContent = heading + '°';
+            }
+        }
+
+        // Toggle lock bearing
+        function toggleLockBearing() {
+            const lockBtn = document.getElementById('lockBtn');
+            const compassDisplay = document.getElementById('compassDisplay');
+
+            if (compassState.lockedBearing === null) {
+                // Lock the current heading
+                compassState.lockedBearing = compassState.currentHeading;
+                if (lockBtn) {
+                    lockBtn.textContent = 'Unlock';
+                    lockBtn.classList.add('locked');
+                }
+                if (compassDisplay) {
+                    compassDisplay.classList.add('locked');
+                }
+            } else {
+                // Unlock
+                compassState.lockedBearing = null;
+                if (lockBtn) {
+                    lockBtn.textContent = 'Lock';
+                    lockBtn.classList.remove('locked');
+                }
+                if (compassDisplay) {
+                    compassDisplay.classList.remove('locked');
+                }
+            }
+        }
+
+        // Stop compass
+        function stopCompass() {
+            window.removeEventListener('deviceorientationabsolute', handleCompass, true);
+            window.removeEventListener('deviceorientation', handleCompass, true);
+            compassState.currentHeading = null;
+            compassState.lockedBearing = null;
+        }
+
+        // Show manual bearing input only
+        function showManualBearingOnly(container, message) {
+            compassState.available = false;
+            container.innerHTML = `
+                <div class="compass-unavailable">${message}</div>
+                <div class="manual-bearing">
+                    <input type="number" id="manualBearingInput" placeholder="Bearing in degrees" min="0" max="360" step="1">
+                </div>
+            `;
+        }
+
+        // Get the bearing to use for calculation
+        function getBearing() {
+            // Priority: locked compass > manual input > current compass
+            if (compassState.lockedBearing !== null) {
+                return compassState.lockedBearing;
+            }
+
+            const manualInput = document.getElementById('manualBearingInput');
+            if (manualInput && manualInput.value) {
+                const manual = parseFloat(manualInput.value);
+                if (!isNaN(manual) && manual >= 0 && manual <= 360) {
+                    return manual;
+                }
+            }
+
+            if (compassState.currentHeading !== null) {
+                return compassState.currentHeading;
+            }
+
+            return null;
+        }
+
+        // Calculate destination point given start, bearing, and distance
+        function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
+            const R = 6371000; // Earth radius in meters
+            const d = distanceMeters / R; // Angular distance
+            const brng = bearingDeg * Math.PI / 180; // Bearing in radians
+            const lat1Rad = lat1 * Math.PI / 180;
+            const lon1Rad = lon1 * Math.PI / 180;
+
+            const lat2Rad = Math.asin(
+                Math.sin(lat1Rad) * Math.cos(d) +
+                Math.cos(lat1Rad) * Math.sin(d) * Math.cos(brng)
+            );
+
+            const lon2Rad = lon1Rad + Math.atan2(
+                Math.sin(brng) * Math.sin(d) * Math.cos(lat1Rad),
+                Math.cos(d) - Math.sin(lat1Rad) * Math.sin(lat2Rad)
+            );
+
+            return {
+                latitude: lat2Rad * 180 / Math.PI,
+                longitude: lon2Rad * 180 / Math.PI
+            };
+        }
+
+        // Calculate anchor position from bow
+        async function calculateAnchorPosition() {
+            // Get inputs
+            const scopeInput = document.getElementById('scopeInput');
+            const depthInput = document.getElementById('depthInput');
+
+            const scope = parseFloat(scopeInput?.value);
+            const depth = parseFloat(depthInput?.value);
+            const bearing = getBearing();
+
+            // Validate inputs
+            if (isNaN(scope) || scope <= 0) {
+                alert('Please enter a valid scope (chain/rode length)');
+                return;
+            }
+
+            if (isNaN(depth) || depth <= 0) {
+                alert('Please enter a valid depth');
+                return;
+            }
+
+            if (depth >= scope) {
+                alert('Scope must be greater than depth');
+                return;
+            }
+
+            if (bearing === null) {
+                alert('Please lock a compass bearing or enter one manually');
+                return;
+            }
+
+            // Calculate horizontal distance
+            const horizontalDistance = Math.sqrt(scope * scope - depth * depth);
+
+            // Get current GPS position
+            try {
+                const response = await fetch('/api/gps/current');
+                const result = await response.json();
+
+                if (!result.success || !result.data || !result.data.latitude) {
+                    alert('Could not get current GPS position');
+                    return;
+                }
+
+                const currentLat = result.data.latitude;
+                const currentLon = result.data.longitude;
+
+                // Calculate anchor position
+                const anchorPos = destinationPoint(currentLat, currentLon, bearing, horizontalDistance);
+
+                // Update state
+                anchorWatchState.anchor_lat = anchorPos.latitude;
+                anchorWatchState.anchor_lon = anchorPos.longitude;
+
+                // Enter preview mode
+                isPreviewMode = true;
+
+                // Show on map (similar to inferAnchorPosition)
+                const anchorLatLng = [anchorPos.latitude, anchorPos.longitude];
+
+                if (!markers.anchor) {
+                    markers.anchor = L.marker(anchorLatLng, {
+                        icon: L.divIcon({
+                            html: '📍',
+                            iconSize: [30, 30],
+                            className: 'anchor-icon'
+                        }),
+                        draggable: true
+                    }).addTo(map);
+
+                    markers.anchor.on('dragend', function(e) {
+                        const newPos = e.target.getLatLng();
+                        anchorWatchState.anchor_lat = newPos.lat;
+                        anchorWatchState.anchor_lon = newPos.lng;
+
+                        if (markers.previewZone) {
+                            markers.previewZone.setLatLng([newPos.lat, newPos.lng]);
+                        }
+                        if (markers.radiusHandle) {
+                            const radius = parseInt(document.getElementById('radiusSlider')?.value || 50);
+                            const handlePos = calculatePointAtDistance([newPos.lat, newPos.lng], radius, 45);
+                            markers.radiusHandle.setLatLng(handlePos);
+                        }
+
+                        updateInputsFromMarker(newPos.lat, newPos.lng);
+                    });
+                } else {
+                    markers.anchor.setLatLng(anchorLatLng);
+                    if (markers.anchor.dragging) markers.anchor.dragging.enable();
+                }
+
+                // Create preview circle
+                const initialRadius = parseInt(document.getElementById('radiusSlider')?.value || 50);
+
+                if (markers.previewZone) map.removeLayer(markers.previewZone);
+                if (markers.radiusHandle) map.removeLayer(markers.radiusHandle);
+
+                markers.previewZone = L.circle(anchorLatLng, {
+                    radius: initialRadius,
+                    fillColor: '#007AFF',
+                    fillOpacity: 0.1,
+                    color: '#007AFF',
+                    weight: 2,
+                    dashArray: '5, 5'
+                }).addTo(map);
+
+                const handlePos = calculatePointAtDistance(anchorLatLng, initialRadius, 45);
+                markers.radiusHandle = L.marker(handlePos, {
+                    icon: L.divIcon({
+                        html: '⚪',
+                        iconSize: [24, 24],
+                        className: 'radius-handle-icon'
+                    }),
+                    draggable: true
+                }).addTo(map);
+
+                markers.radiusHandle.on('drag', function(e) {
+                    const handleLatLng = e.target.getLatLng();
+                    const anchor = [anchorWatchState.anchor_lat, anchorWatchState.anchor_lon];
+
+                    const R = 6371000;
+                    const lat1 = anchor[0] * Math.PI / 180;
+                    const lat2 = handleLatLng.lat * Math.PI / 180;
+                    const deltaLat = (handleLatLng.lat - anchor[0]) * Math.PI / 180;
+                    const deltaLng = (handleLatLng.lng - anchor[1]) * Math.PI / 180;
+
+                    const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+                              Math.cos(lat1) * Math.cos(lat2) *
+                              Math.sin(deltaLng/2) * Math.sin(deltaLng/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    const distance = R * c;
+
+                    const clampedRadius = Math.max(10, Math.min(200, Math.round(distance / 5) * 5));
+
+                    markers.previewZone.setRadius(clampedRadius);
+                    document.getElementById('radiusSlider').value = clampedRadius;
+                    document.getElementById('radiusValue').textContent = clampedRadius + ' m';
+                });
+
+                map.setView(anchorLatLng, 17);
+
+                // Re-render controls to show lat/lon input fields
+                renderControls({ active: false });
+
+                // Close calculate panel
+                const panel = document.getElementById('calculatePanel');
+                if (panel) panel.classList.remove('visible');
+                stopCompass();
+
+            } catch (error) {
+                alert('Error calculating position: ' + error.message);
+            }
+        }
+
+        // ============ END CALCULATE FROM BOW FUNCTIONS ============
 
         // Load all data
         async function loadData() {
