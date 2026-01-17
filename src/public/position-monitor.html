@@ -290,6 +290,13 @@
         .limit-status.match { color: var(--success-color); }
         .limit-status.mismatch { color: var(--error-color); }
 
+        .limit-value {
+            font-size: 14px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            min-width: 100px;
+        }
+
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -330,6 +337,20 @@
     </div>
 
     <div class="card">
+        <div class="card-title">Wind Speed</div>
+        <div class="position-display">
+            <div class="position-line" id="windSpeed">-- kt</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">True Wind Direction</div>
+        <div class="position-display">
+            <div class="position-line" id="windDirection">--°</div>
+        </div>
+    </div>
+
+    <div class="card">
         <div class="card-title">Reference Position</div>
         <div class="ddm-input-row">
             <label>Lat</label>
@@ -362,20 +383,27 @@
     <div class="card">
         <div class="card-title">Boundary Limits</div>
         <div class="limit-row">
-            <span class="limit-label">Lat must be</span>
+            <span class="limit-label">Lat</span>
+            <span class="limit-value" id="refLatDisplay">--</span>
             <div class="expectation-toggle small">
-                <button type="button" class="expectation-btn active" id="latExpectLess" data-coord="lat" data-expect="less">Less</button>
-                <button type="button" class="expectation-btn" id="latExpectMore" data-coord="lat" data-expect="more">More</button>
+                <button type="button" class="expectation-btn active" id="latExpectLess">Less</button>
+                <button type="button" class="expectation-btn" id="latExpectMore">More</button>
+                <button type="button" class="expectation-btn" id="latExpectIgnore">Ignore</button>
             </div>
             <span class="limit-status" id="latStatus">--</span>
         </div>
         <div class="limit-row">
-            <span class="limit-label">Lon must be</span>
+            <span class="limit-label">Lon</span>
+            <span class="limit-value" id="refLonDisplay">--</span>
             <div class="expectation-toggle small">
-                <button type="button" class="expectation-btn active" id="lonExpectLess" data-coord="lon" data-expect="less">Less</button>
-                <button type="button" class="expectation-btn" id="lonExpectMore" data-coord="lon" data-expect="more">More</button>
+                <button type="button" class="expectation-btn active" id="lonExpectLess">Less</button>
+                <button type="button" class="expectation-btn" id="lonExpectMore">More</button>
+                <button type="button" class="expectation-btn" id="lonExpectIgnore">Ignore</button>
             </div>
             <span class="limit-status" id="lonStatus">--</span>
+        </div>
+        <div class="button-row">
+            <button type="button" class="btn btn-primary" id="saveLimitsBtn">Save</button>
         </div>
     </div>
 
@@ -391,6 +419,8 @@
         const currentLatEl = document.getElementById('currentLat');
         const currentLonEl = document.getElementById('currentLon');
         const positionTimestampEl = document.getElementById('positionTimestamp');
+        const windSpeedEl = document.getElementById('windSpeed');
+        const windDirectionEl = document.getElementById('windDirection');
         const refLatDir = document.getElementById('refLatDir');
         const refLatDeg = document.getElementById('refLatDeg');
         const refLatMin = document.getElementById('refLatMin');
@@ -401,8 +431,13 @@
         const saveBtn = document.getElementById('saveBtn');
         const latExpectLessBtn = document.getElementById('latExpectLess');
         const latExpectMoreBtn = document.getElementById('latExpectMore');
+        const latExpectIgnoreBtn = document.getElementById('latExpectIgnore');
         const lonExpectLessBtn = document.getElementById('lonExpectLess');
         const lonExpectMoreBtn = document.getElementById('lonExpectMore');
+        const lonExpectIgnoreBtn = document.getElementById('lonExpectIgnore');
+        const refLatDisplay = document.getElementById('refLatDisplay');
+        const refLonDisplay = document.getElementById('refLonDisplay');
+        const saveLimitsBtn = document.getElementById('saveLimitsBtn');
         const statusIndicator = document.getElementById('statusIndicator');
         const statusText = document.getElementById('statusText');
         const latStatus = document.getElementById('latStatus');
@@ -491,16 +526,28 @@
                     currentPosition.lon = result.data.longitude;
                     currentPosition.timestamp = result.data.timestamp;
                     updatePositionDisplay();
+
+                    // Update wind displays
+                    windSpeedEl.textContent = result.data.true_wind_speed != null
+                        ? result.data.true_wind_speed.toFixed(1) + ' kt'
+                        : '-- kt';
+                    windDirectionEl.textContent = result.data.true_wind_direction != null
+                        ? result.data.true_wind_direction.toFixed(0) + '°'
+                        : '--°';
                 } else {
                     currentLatEl.textContent = "N --°--.---'";
                     currentLonEl.textContent = "W --°--.---'";
                     positionTimestampEl.textContent = 'No GPS data available';
+                    windSpeedEl.textContent = '-- kt';
+                    windDirectionEl.textContent = '--°';
                 }
             } catch (error) {
                 console.error('Error fetching GPS position:', error);
                 currentLatEl.textContent = 'Error';
                 currentLonEl.textContent = 'Error';
                 positionTimestampEl.textContent = 'Connection error';
+                windSpeedEl.textContent = '-- kt';
+                windDirectionEl.textContent = '--°';
             }
         }
 
@@ -522,8 +569,21 @@
         function updateExpectationUI() {
             latExpectLessBtn.classList.toggle('active', latExpectation === 'less');
             latExpectMoreBtn.classList.toggle('active', latExpectation === 'more');
+            latExpectIgnoreBtn.classList.toggle('active', latExpectation === 'ignore');
             lonExpectLessBtn.classList.toggle('active', lonExpectation === 'less');
             lonExpectMoreBtn.classList.toggle('active', lonExpectation === 'more');
+            lonExpectIgnoreBtn.classList.toggle('active', lonExpectation === 'ignore');
+        }
+
+        // Update reference display in boundary limits section
+        function updateReferenceDisplay() {
+            if (referencePosition.lat !== null) {
+                refLatDisplay.textContent = toDDM(referencePosition.lat, true);
+                refLonDisplay.textContent = toDDM(referencePosition.lon, false);
+            } else {
+                refLatDisplay.textContent = '--';
+                refLonDisplay.textContent = '--';
+            }
         }
 
         // Update status indicator and comparison
@@ -548,15 +608,34 @@
             const latIsLess = latDiff < 0;
             const lonIsLess = lonDiff < 0;
 
-            // Check if each matches its own expectation
-            const latMatches = (latExpectation === 'less') ? latIsLess : !latIsLess;
-            const lonMatches = (lonExpectation === 'less') ? lonIsLess : !lonIsLess;
+            // Check if each matches its own expectation (ignore always matches)
+            let latMatches, lonMatches;
+            if (latExpectation === 'ignore') {
+                latMatches = true;
+            } else {
+                latMatches = (latExpectation === 'less') ? latIsLess : !latIsLess;
+            }
+            if (lonExpectation === 'ignore') {
+                lonMatches = true;
+            } else {
+                lonMatches = (lonExpectation === 'less') ? lonIsLess : !lonIsLess;
+            }
 
             // Update status displays
-            latStatus.textContent = latMatches ? '✓' : '✗';
-            latStatus.className = 'limit-status ' + (latMatches ? 'match' : 'mismatch');
-            lonStatus.textContent = lonMatches ? '✓' : '✗';
-            lonStatus.className = 'limit-status ' + (lonMatches ? 'match' : 'mismatch');
+            if (latExpectation === 'ignore') {
+                latStatus.textContent = '–';
+                latStatus.className = 'limit-status';
+            } else {
+                latStatus.textContent = latMatches ? '✓' : '✗';
+                latStatus.className = 'limit-status ' + (latMatches ? 'match' : 'mismatch');
+            }
+            if (lonExpectation === 'ignore') {
+                lonStatus.textContent = '–';
+                lonStatus.className = 'limit-status';
+            } else {
+                lonStatus.textContent = lonMatches ? '✓' : '✗';
+                lonStatus.className = 'limit-status ' + (lonMatches ? 'match' : 'mismatch');
+            }
 
             // Update current position styling
             currentLatEl.className = 'position-line ' + (latMatches ? 'less' : 'more');
@@ -594,49 +673,77 @@
         });
 
         saveBtn.addEventListener('click', () => {
+            console.log('Save button clicked');
+            console.log('Raw values:', refLatDeg.value, refLatMin.value, refLonDeg.value, refLonMin.value);
+            console.log('refLonDeg element:', refLonDeg);
             const latDeg = parseFloat(refLatDeg.value);
             const latMin = parseFloat(refLatMin.value);
             const lonDeg = parseFloat(refLonDeg.value);
             const lonMin = parseFloat(refLonMin.value);
+            console.log('Parsed values:', { latDeg, latMin, lonDeg, lonMin });
 
             if (!isNaN(latDeg) && !isNaN(latMin) && !isNaN(lonDeg) && !isNaN(lonMin)) {
                 referencePosition.lat = ddmToDecimal(refLatDir.value, latDeg, latMin);
                 referencePosition.lon = ddmToDecimal(refLonDir.value, lonDeg, lonMin);
+                console.log('Reference position set:', referencePosition);
                 saveState();
+                updateReferenceDisplay();
                 updateStatus();
+
+                // Show saved feedback
+                saveBtn.textContent = 'Saved!';
+                setTimeout(() => { saveBtn.textContent = 'Save'; }, 1500);
+            } else {
+                console.log('Validation failed - NaN values detected');
+                alert(`Validation failed.\nRaw: "${refLatDeg.value}", "${refLatMin.value}", "${refLonDeg.value}", "${refLonMin.value}"\nParsed: latDeg=${latDeg}, latMin=${latMin}, lonDeg=${lonDeg}, lonMin=${lonMin}`);
             }
         });
 
         latExpectLessBtn.addEventListener('click', () => {
             latExpectation = 'less';
             updateExpectationUI();
-            saveState();
             updateStatus();
         });
 
         latExpectMoreBtn.addEventListener('click', () => {
             latExpectation = 'more';
             updateExpectationUI();
-            saveState();
             updateStatus();
         });
 
         lonExpectLessBtn.addEventListener('click', () => {
             lonExpectation = 'less';
             updateExpectationUI();
-            saveState();
             updateStatus();
         });
 
         lonExpectMoreBtn.addEventListener('click', () => {
             lonExpectation = 'more';
             updateExpectationUI();
-            saveState();
             updateStatus();
+        });
+
+        latExpectIgnoreBtn.addEventListener('click', () => {
+            latExpectation = 'ignore';
+            updateExpectationUI();
+            updateStatus();
+        });
+
+        lonExpectIgnoreBtn.addEventListener('click', () => {
+            lonExpectation = 'ignore';
+            updateExpectationUI();
+            updateStatus();
+        });
+
+        saveLimitsBtn.addEventListener('click', () => {
+            saveState();
+            saveLimitsBtn.textContent = 'Saved!';
+            setTimeout(() => { saveLimitsBtn.textContent = 'Save'; }, 1500);
         });
 
         // Initialize
         loadState();
+        updateReferenceDisplay();
         startPolling();
     </script>
 

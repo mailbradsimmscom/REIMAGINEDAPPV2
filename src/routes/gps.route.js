@@ -30,7 +30,9 @@ router.get('/current', async (req, res) => {
         timestamp: position.timestamp,
         speed_over_ground: position.speed_over_ground,
         course_over_ground: position.course_over_ground,
-        depth: position.depth
+        depth: position.depth,
+        true_wind_speed: position.true_wind_speed,
+        true_wind_direction: position.true_wind_direction
       },
       requestId: res.locals.requestId
     });
