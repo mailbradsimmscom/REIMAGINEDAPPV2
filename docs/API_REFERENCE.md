@@ -114,13 +114,31 @@
 **Response:**
 ```json
 {
-  "latitude": 38.5,
-  "longitude": -123.5,
-  "timestamp": "2025-12-10T...",
-  "speed_over_ground": 6.5,
-  "course_over_ground": 180
+  "success": true,
+  "data": {
+    "latitude": 38.5,
+    "longitude": -123.5,
+    "timestamp": "2025-12-10T...",
+    "speed_over_ground": 6.5,
+    "course_over_ground": 180,
+    "depth": 12.5,
+    "true_wind_speed": 15.2,
+    "true_wind_direction": 270
+  },
+  "requestId": "req_abc123"
 }
 ```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `latitude` | number | GPS latitude (decimal degrees) |
+| `longitude` | number | GPS longitude (decimal degrees) |
+| `timestamp` | string | ISO timestamp of position |
+| `speed_over_ground` | number | SOG in knots |
+| `course_over_ground` | number | COG in degrees |
+| `depth` | number | Depth in meters (if available) |
+| `true_wind_speed` | number | Wind speed in knots (if available) |
+| `true_wind_direction` | number | Wind direction in degrees (if available) |
 
 ---
 
@@ -644,6 +662,57 @@ Generates a new recap using OpenAI. Style must be `boring`, `exciting`, or `unhi
 | `unhinged` | Over-the-top legendary tale with Caribbean flavor, maximum verbosity |
 
 Returns generated HTML content with metadata (trips count, anchorages count, model used).
+
+---
+
+### Boat Now Endpoints
+
+Base path: `/api/boat-now`
+
+Current boat status with position, weather, and historical data.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/boat-now` | Get current status + 5-hour history |
+
+**GET /api/boat-now**
+
+Query params: `hours` (optional, default 5)
+
+Returns:
+- Current position (from gps_position)
+- Place name (from Nominatim)
+- Current weather (from Open-Meteo)
+- 5-hour history of wind speed, wind direction, lat/lon
+
+```json
+{
+  "success": true,
+  "data": {
+    "hasData": true,
+    "current": {
+      "position": { "latitude": 17.07, "longitude": -61.88, "timestamp": "..." },
+      "placeName": "Jolly Harbour, Antigua and Barbuda",
+      "weather": {
+        "temperature_c": 27.5,
+        "wind_speed_kts": 12.3,
+        "wind_direction": 95,
+        "wave_height_m": 1.2
+      }
+    },
+    "history": {
+      "pointCount": 150,
+      "data": {
+        "timestamps": [...],
+        "windSpeed": [...],
+        "windDirection": [...],
+        "latitude": [...],
+        "longitude": [...]
+      }
+    }
+  }
+}
+```
 
 ---
 

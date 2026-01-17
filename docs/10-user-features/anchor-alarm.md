@@ -6,7 +6,7 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 
 **Who uses it:** Boat owners at anchor
 **Access:** `/anchor-watch-admin.html`, `/position-monitor.html`
-**Last Updated:** 2026-01-09
+**Last Updated:** 2026-01-17
 
 ---
 
@@ -68,7 +68,62 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 
 ---
 
-## Recent Changes (2026-01-09)
+## Recent Changes (2026-01-17)
+
+### Position Monitor Enhancements
+
+The `/position-monitor.html` page now includes:
+
+#### Wind Data Display
+- **Wind Speed** card showing true wind speed in knots
+- **True Wind Direction** card showing wind direction in degrees
+- Both update every 5 seconds along with GPS position
+
+#### Boundary Limits Feature
+Allows setting position boundaries for drift monitoring:
+
+1. **Fill Current** - Copies current GPS position to reference fields
+2. **Save** - Saves reference position (shows "Saved!" confirmation)
+3. **Boundary Limits** section displays saved reference coordinates
+4. **Less/More/Ignore** toggles for each coordinate:
+   - **Less**: Current position must be less than reference
+   - **More**: Current position must be more than reference
+   - **Ignore**: Coordinate is not checked
+5. **Status indicator** at top shows green (within limits) or red (outside limits)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Position Monitor Layout                                         │
+├─────────────────────────────────────────────────────────────────┤
+│  [Status: Within Limits / Outside Limits / No Reference Set]    │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  CURRENT POSITION                                        │    │
+│  │  N 17°8.769'  /  W 61°45.942'                           │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌───────────────────────┐  ┌───────────────────────┐          │
+│  │  WIND SPEED           │  │  TRUE WIND DIRECTION  │          │
+│  │  23.1 kt              │  │  86°                  │          │
+│  └───────────────────────┘  └───────────────────────┘          │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  REFERENCE POSITION                                      │    │
+│  │  [N/S] [deg] ° [min] '   [Fill Current] [Save]          │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  BOUNDARY LIMITS                                         │    │
+│  │  Lat  N 17°8.777'  [Less] [More] [Ignore]  ✓            │    │
+│  │  Lon  W 61°45.943' [Less] [More] [Ignore]  ✓            │    │
+│  │                              [Save]                      │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Previous Changes (2026-01-09)
 
 ### 1. Map Centers on Current GPS When No Alarm Set
 
