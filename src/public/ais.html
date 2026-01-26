@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>AIS | BoatOS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            display: flex;
+            background: white;
+            padding: 8px 16px;
+            gap: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: #F2F2F7;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #8E8E93;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #007AFF;
+            color: white;
+        }
+
+        .tab-btn:active:not(.active) {
+            background: #E5E5EA;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 16px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Vessel Cards */
+        .vessel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .vessel-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vessel-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .vessel-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .vessel-meta {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-top: 4px;
+        }
+
+        .vessel-distance {
+            font-size: 15px;
+            font-weight: 600;
+            color: #007AFF;
+            white-space: nowrap;
+        }
+
+        .vessel-type-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #E5E5EA;
+            color: #8E8E93;
+        }
+
+        .vessel-type-badge.sailing {
+            background: #007AFF20;
+            color: #007AFF;
+        }
+
+        .vessel-type-badge.pleasure {
+            background: #34C75920;
+            color: #34C759;
+        }
+
+        .vessel-type-badge.nearby {
+            background: #FF950020;
+            color: #FF9500;
+        }
+
+        /* Heart Button */
+        .heart-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .heart-btn:active {
+            transform: scale(0.9);
+        }
+
+        .heart-btn.is-friend {
+            color: #FF3B30;
+        }
+
+        /* Add Friend Section */
+        .add-friend-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .add-friend-section h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #8E8E93;
+            margin-bottom: 4px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn:active:not(:disabled) {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #007AFF;
+            color: white;
+            width: 100%;
+        }
+
+        /* Loading & Empty States */
+        .loading, .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: max(env(safe-area-inset-bottom), 20px);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #323232;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: #34C759;
+        }
+
+        .toast.error {
+            background: #FF3B30;
+        }
+
+        /* Status info */
+        .status-bar {
+            background: white;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #8E8E93;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .status-bar strong {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/public/other-links.html" class="back-button">&larr;</a>
+        <h1>AIS</h1>
+    </header>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="around-us">Around Us</button>
+        <button class="tab-btn" data-tab="friends">Friends</button>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+        Loading...
+    </div>
+
+    <!-- Around Us Tab -->
+    <div class="tab-content active" id="around-us-content">
+        <div class="vessel-list" id="aroundUsList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Loading vessels...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Tab -->
+    <div class="tab-content" id="friends-content">
+        <!-- Add Friend Form -->
+        <div class="add-friend-section">
+            <h3>Add Friend Manually</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="friendMmsi">MMSI</label>
+                    <input type="text" id="friendMmsi" placeholder="e.g., 338328718">
+                </div>
+                <div class="form-group">
+                    <label for="friendName">Vessel Name</label>
+                    <input type="text" id="friendName" placeholder="e.g., Sea Breeze">
+                </div>
+            </div>
+            <button class="btn btn-primary" id="addFriendBtn">Add Friend</button>
+        </div>
+
+        <div class="vessel-list" id="friendsList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Loading friends...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/public/js/ais.js"></script>
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

@@ -51,9 +51,12 @@ const EnvSchema = z.object({
   ANCHOR_WATCH_WARNING_RATIO: z.string().optional().default('0.9'),
   ANCHOR_WATCH_CENTROID_SAMPLES: z.string().optional().default('20'),
   ANCHOR_WATCH_STALE_THRESHOLD_SEC: z.string().optional().default('300'),
-  // Telegram Bot Configuration
+  // Telegram Bot Configuration (Anchor Watch)
   TELEGRAM_BOT_TOKEN: z.string().optional(),
   TELEGRAM_CHAT_ID: z.string().optional(),
+  // Telegram DIP Review Bot (separate bot for agent escalations)
+  TELEGRAM_DIP_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_DIP_CHAT_ID: z.string().optional(),
   // Twilio SMS Configuration
   TWILIO_ACCOUNT_SID: z.string().optional(),
   TWILIO_AUTH_TOKEN: z.string().optional(),
@@ -63,7 +66,9 @@ const EnvSchema = z.object({
   PINECONE_DISABLED: z.string().optional(),
   SIDECAR_DISABLED: z.string().optional(),
   SUPABASE_DISABLED: z.string().optional(),
-  OPENAI_DISABLED: z.string().optional()
+  OPENAI_DISABLED: z.string().optional(),
+  // AIS Stream API for tracking friend vessels globally
+  AISSTREAM_API_KEY: z.string().optional()
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

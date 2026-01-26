@@ -29,6 +29,9 @@ import anchorWatchRouter from './anchor-watch.route.js';
 import telemetryRouter from './telemetry.route.js';
 import testResultsRouter from './test-results.route.js';
 import testAnalysisRouter from './test-analysis.route.js';
+import documentIngestRouter from './document-ingest.route.js';
+import referenceDataRouter from './reference-data.route.js';
+import aisRouter from './ais.route.js';
 
 const router = express.Router();
 
@@ -71,6 +74,9 @@ router.use('/anchor-watch', anchorWatchRouter);
 router.use('/telemetry', telemetryRouter);
 router.use('/test-results', testResultsRouter);
 router.use('/test-analysis', testAnalysisRouter);
+router.use('/documents', documentIngestRouter);
+router.use('/reference-data', referenceDataRouter);
+router.use('/ais', aisRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin
