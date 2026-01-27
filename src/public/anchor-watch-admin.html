@@ -279,6 +279,71 @@
             margin-bottom: 0;
         }
 
+        /* DDM Input Styles */
+        .ddm-input-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .ddm-input-row label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8E8E93;
+            width: 28px;
+            margin-bottom: 0;
+        }
+
+        .direction-select {
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            background: white;
+            width: 54px;
+            text-align: center;
+        }
+
+        .direction-select:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .degrees-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            background: white;
+            width: 60px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .minutes-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            background: white;
+            width: 90px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .degrees-input:focus, .minutes-input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .ddm-symbol {
+            font-size: 18px;
+            font-weight: 600;
+            color: #8E8E93;
+        }
+
         .table-container {
             overflow-x: auto;
         }
@@ -902,16 +967,40 @@
                                 Calculate Position
                             </button>
                         </div>
-                        ${hasInferredPosition ? `
+                        ${hasInferredPosition ? (() => {
+                            const latDDM = decimalToDDM(anchorWatchState.anchor_lat, true);
+                            const lonDDM = decimalToDDM(anchorWatchState.anchor_lon, false);
+                            return `
                         <div class="coord-inputs">
-                            <label>Latitude</label>
-                            <input type="text" id="anchorLatInput" value="${anchorWatchState.anchor_lat.toFixed(5)}"
-                                   onchange="updateAnchorFromInputs()" onkeyup="updateAnchorFromInputs()">
-                            <label>Longitude</label>
-                            <input type="text" id="anchorLonInput" value="${anchorWatchState.anchor_lon.toFixed(5)}"
-                                   onchange="updateAnchorFromInputs()" onkeyup="updateAnchorFromInputs()">
+                            <div class="ddm-input-row">
+                                <label>Lat</label>
+                                <select class="direction-select" id="anchorLatDir" onchange="updateAnchorFromInputs()">
+                                    <option value="N" ${latDDM.direction === 'N' ? 'selected' : ''}>N</option>
+                                    <option value="S" ${latDDM.direction === 'S' ? 'selected' : ''}>S</option>
+                                </select>
+                                <input type="number" class="degrees-input" id="anchorLatDeg" value="${latDDM.degrees}" min="0" max="90"
+                                       onchange="updateAnchorFromInputs()" oninput="updateAnchorFromInputs()">
+                                <span class="ddm-symbol">°</span>
+                                <input type="number" class="minutes-input" id="anchorLatMin" value="${latDDM.minutes.toFixed(3)}" step="0.001" min="0" max="59.999"
+                                       onchange="updateAnchorFromInputs()" oninput="updateAnchorFromInputs()">
+                                <span class="ddm-symbol">'</span>
+                            </div>
+                            <div class="ddm-input-row">
+                                <label>Lon</label>
+                                <select class="direction-select" id="anchorLonDir" onchange="updateAnchorFromInputs()">
+                                    <option value="E" ${lonDDM.direction === 'E' ? 'selected' : ''}>E</option>
+                                    <option value="W" ${lonDDM.direction === 'W' ? 'selected' : ''}>W</option>
+                                </select>
+                                <input type="number" class="degrees-input" id="anchorLonDeg" value="${lonDDM.degrees}" min="0" max="180"
+                                       onchange="updateAnchorFromInputs()" oninput="updateAnchorFromInputs()">
+                                <span class="ddm-symbol">°</span>
+                                <input type="number" class="minutes-input" id="anchorLonMin" value="${lonDDM.minutes.toFixed(3)}" step="0.001" min="0" max="59.999"
+                                       onchange="updateAnchorFromInputs()" oninput="updateAnchorFromInputs()">
+                                <span class="ddm-symbol">'</span>
+                            </div>
                         </div>
-                        ` : ''}
+                        `;
+                        })() : ''}
                         <div class="slider-container">
                             <div class="slider-label">
                                 <span>Radius</span>
@@ -1052,6 +1141,33 @@
             return `${toDDM(lat, true)}  ${toDDM(lon, false)}`;
         }
 
+        /**
+         * Convert decimal degrees to DDM components
+         */
+        function decimalToDDM(decimal, isLat) {
+            const abs = Math.abs(decimal);
+            const degrees = Math.floor(abs);
+            const minutes = (abs - degrees) * 60;
+            let direction;
+            if (isLat) {
+                direction = decimal >= 0 ? 'N' : 'S';
+            } else {
+                direction = decimal >= 0 ? 'E' : 'W';
+            }
+            return { direction, degrees, minutes };
+        }
+
+        /**
+         * Convert DDM to decimal degrees
+         */
+        function ddmToDecimal(direction, degrees, minutes) {
+            const decimal = parseFloat(degrees) + parseFloat(minutes) / 60;
+            if (direction === 'S' || direction === 'W') {
+                return -decimal;
+            }
+            return decimal;
+        }
+
         // Parse coordinate that might be in degrees.minutes.decimal format (e.g., 17.04.446)
         // or standard decimal format (e.g., 17.0741)
         function parseCoordinate(input) {
@@ -1081,16 +1197,28 @@
 
         // Update anchor position from input fields (input → map sync)
         function updateAnchorFromInputs() {
-            const latInput = document.getElementById('anchorLatInput');
-            const lonInput = document.getElementById('anchorLonInput');
+            const latDir = document.getElementById('anchorLatDir');
+            const latDeg = document.getElementById('anchorLatDeg');
+            const latMin = document.getElementById('anchorLatMin');
+            const lonDir = document.getElementById('anchorLonDir');
+            const lonDeg = document.getElementById('anchorLonDeg');
+            const lonMin = document.getElementById('anchorLonMin');
 
-            if (!latInput || !lonInput) return;
+            if (!latDir || !latDeg || !latMin || !lonDir || !lonDeg || !lonMin) return;
 
-            const lat = parseCoordinate(latInput.value);
-            const lon = parseCoordinate(lonInput.value);
+            const latDegVal = parseFloat(latDeg.value);
+            const latMinVal = parseFloat(latMin.value);
+            const lonDegVal = parseFloat(lonDeg.value);
+            const lonMinVal = parseFloat(lonMin.value);
 
             // Validate inputs are valid numbers
-            if (isNaN(lat) || isNaN(lon)) return;
+            if (isNaN(latDegVal) || isNaN(latMinVal) || isNaN(lonDegVal) || isNaN(lonMinVal)) return;
+
+            // Convert DDM to decimal
+            const lat = ddmToDecimal(latDir.value, latDegVal, latMinVal);
+            const lon = ddmToDecimal(lonDir.value, lonDegVal, lonMinVal);
+
+            // Validate ranges
             if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return;
 
             // Update state
@@ -1117,11 +1245,26 @@
 
         // Update input fields from map marker (map → input sync)
         function updateInputsFromMarker(lat, lon) {
-            const latInput = document.getElementById('anchorLatInput');
-            const lonInput = document.getElementById('anchorLonInput');
+            const latDir = document.getElementById('anchorLatDir');
+            const latDeg = document.getElementById('anchorLatDeg');
+            const latMin = document.getElementById('anchorLatMin');
+            const lonDir = document.getElementById('anchorLonDir');
+            const lonDeg = document.getElementById('anchorLonDeg');
+            const lonMin = document.getElementById('anchorLonMin');
 
-            if (latInput) latInput.value = lat.toFixed(5);
-            if (lonInput) lonInput.value = lon.toFixed(5);
+            if (latDir && latDeg && latMin) {
+                const latDDM = decimalToDDM(lat, true);
+                latDir.value = latDDM.direction;
+                latDeg.value = latDDM.degrees;
+                latMin.value = latDDM.minutes.toFixed(3);
+            }
+
+            if (lonDir && lonDeg && lonMin) {
+                const lonDDM = decimalToDDM(lon, false);
+                lonDir.value = lonDDM.direction;
+                lonDeg.value = lonDDM.degrees;
+                lonMin.value = lonDDM.minutes.toFixed(3);
+            }
         }
 
         // Infer anchor position
