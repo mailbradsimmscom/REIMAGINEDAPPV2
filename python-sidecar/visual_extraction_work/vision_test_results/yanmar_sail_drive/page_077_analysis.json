@@ -1,0 +1,50 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "TROUBLESHOOTING",
+      "bbox": {
+        "x": 15,
+        "y": 15,
+        "width": 70,
+        "height": 15
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Safety and Problem Identification Instructions",
+      "bbox": {
+        "x": 15,
+        "y": 35,
+        "width": 50,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 71,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clean page with clear text, introductory troubleshooting section with safety instructions"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp5zu1mwcp/page_77.jpg",
+    "analysis_time_seconds": 4.682058,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:49.295080",
+    "input_tokens": 2183,
+    "output_tokens": 264
+  },
+  "page_number": 77
+}

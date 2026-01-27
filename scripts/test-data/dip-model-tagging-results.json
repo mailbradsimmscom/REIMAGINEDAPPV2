@@ -1,0 +1,620 @@
+{
+  "specifications": [
+    {
+      "parameter": "Engine Type",
+      "value": "Vertical water cooled 4-cycle diesel engine",
+      "unit": "",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Type: Vertical water cooled 4-cycle diesel engine"
+    },
+    {
+      "parameter": "Number of Cylinders",
+      "value": "3",
+      "unit": "",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Number of Cylinders: 3"
+    },
+    {
+      "parameter": "Number of Cylinders",
+      "value": "4",
+      "unit": "",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Number of Cylinders: 4"
+    },
+    {
+      "parameter": "Bore x Stroke",
+      "value": "88 x 90",
+      "unit": "mm",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Bore x Stroke: 88 mm x 90 mm (3.46 in. x 3.54 in.)"
+    },
+    {
+      "parameter": "Bore x Stroke",
+      "value": "84 x 90",
+      "unit": "mm",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Bore x Stroke: 84 mm x 90 mm (3.31 in. x 3.54 in.)"
+    },
+    {
+      "parameter": "Displacement",
+      "value": "1.642",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Displacement: 1.642 L (100.2 cu in.)"
+    },
+    {
+      "parameter": "Displacement",
+      "value": "2.190",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Displacement: 2.190 L (133.6 cu in.)"
+    },
+    {
+      "parameter": "Displacement",
+      "value": "1.995",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Displacement: 1.995 L (121.7 cu in.)"
+    },
+    {
+      "parameter": "Continuous power",
+      "value": "26.8 kW (36 hp metric) / 2907 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Continuous power: 26.8 kW (36 hp metric) / 2907 min-1"
+    },
+    {
+      "parameter": "Continuous power",
+      "value": "30.1 kW (41 hp metric) / 2907 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH45"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Continuous power: 30.1 kW (41 hp metric) / 2907 min-1"
+    },
+    {
+      "parameter": "Continuous power",
+      "value": "38.1 kW (51.8 hp metric) / 2907 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "181",
+      "source_context": "Continuous power: 38.1 kW (51.8 hp metric) / 2907 min-1"
+    },
+    {
+      "parameter": "Continuous power",
+      "value": "53.5 kW (72.8 hp metric) / 3101 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH80"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Continuous power: 53.5 kW (72.8 hp metric) / 3101 min-1"
+    },
+    {
+      "parameter": "Continuous power",
+      "value": "73.6 kW (100 hp metric) / 3101 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "184",
+      "source_context": "Continuous power: 73.6 kW (100 hp metric) / 3101 min-1"
+    },
+    {
+      "parameter": "Fuel stop power at crankshaft",
+      "value": "29.4 kW (40 hp metric) / 3000 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Output at crankshaft/engine speed: 29.4 kW (40 hp metric) / 3000 min-1"
+    },
+    {
+      "parameter": "Fuel stop power at crankshaft",
+      "value": "33.1 kW (45 hp metric) / 3000 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH45"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Output at crankshaft/engine speed: 33.1 kW (45 hp metric) / 3000 min-1"
+    },
+    {
+      "parameter": "Fuel stop power at crankshaft",
+      "value": "41.9 kW (57 hp metric) / 3000 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "181",
+      "source_context": "Output at crankshaft/engine speed: 41.9 kW (57 hp metric) / 3000 min-1"
+    },
+    {
+      "parameter": "Fuel stop power at crankshaft",
+      "value": "58.8 kW (80 hp metric) / 3200 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH80"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Output at crankshaft/engine speed: 58.8 kW (80 hp metric) / 3200 min-1"
+    },
+    {
+      "parameter": "Fuel stop power at crankshaft",
+      "value": "80.9 kW (110 hp metric) / 3200 min-1",
+      "unit": "kW/min-1",
+      "applies_to_models": [
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "184",
+      "source_context": "Output at crankshaft/engine speed: 80.9 kW (110 hp metric) / 3200 min-1"
+    },
+    {
+      "parameter": "Air Charging",
+      "value": "Natural aspiration",
+      "unit": "",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Air Charging: Natural aspiration"
+    },
+    {
+      "parameter": "Air Charging",
+      "value": "Turbocharged with air cooler",
+      "unit": "",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Air Charging: Turbocharged with air cooler"
+    },
+    {
+      "parameter": "Combustion System",
+      "value": "Direct injection",
+      "unit": "",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Combustion System: Direct injection"
+    },
+    {
+      "parameter": "Maximum injection pressure",
+      "value": "150",
+      "unit": "MPa",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Variable pressure (Maximum injection pressure: 150 MPa)"
+    },
+    {
+      "parameter": "Maximum injection pressure",
+      "value": "160",
+      "unit": "MPa",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Variable pressure (Maximum injection pressure: 160 MPa)"
+    },
+    {
+      "parameter": "Engine oil capacity total at 7\u00b0 rake",
+      "value": "5.0",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Rake angle at rake angle 7\u00b0: Total**: 5.0 L (5.28 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity total at 0\u00b0 rake",
+      "value": "5.5",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "at rake angle 0\u00b0: 5.5 L (5.81 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity total at 7\u00b0 rake",
+      "value": "5.5",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Rake angle at rake angle 7\u00b0: Total**: 5.5 L (5.81 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity total at 0\u00b0 rake",
+      "value": "6.7",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "at rake angle 0\u00b0: Total**: 6.7 L (7.08 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity oil pan only at 7\u00b0 rake",
+      "value": "4.5",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Oil pan only: 4.5 L (4.76 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity oil pan only at 0\u00b0 rake",
+      "value": "5.0",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Oil pan only: 5.0 L (5.28 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity oil pan only at 7\u00b0 rake",
+      "value": "5.2",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Oil pan only: 5.2 L (5.49 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity oil pan only at 0\u00b0 rake",
+      "value": "6.4",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Oil pan only: 6.4 L (6.76 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity effective",
+      "value": "1.1",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Effective***: 1.1 L (1.16 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity effective",
+      "value": "1.4",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Effective***: 1.4 L (1.48 qt)"
+    },
+    {
+      "parameter": "Engine oil capacity effective",
+      "value": "2.4",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Effective***: 2.4 L (2.54 qt)"
+    },
+    {
+      "parameter": "Cooling water capacity engine",
+      "value": "4.5",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Engine: 4.5 L (4.76 qt)"
+    },
+    {
+      "parameter": "Cooling water capacity engine",
+      "value": "6.0",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57"
+      ],
+      "confidence": 0.95,
+      "page": "180",
+      "source_context": "Engine 6.0 L (6.34 qt)"
+    },
+    {
+      "parameter": "Cooling water capacity engine",
+      "value": "7.2",
+      "unit": "L",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "183",
+      "source_context": "Engine: 7.2 L (7.61 qt)"
+    },
+    {
+      "parameter": "Cooling water capacity reservoir",
+      "value": "0.8",
+      "unit": "L",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Reservoir: 0.8 L (0.85 qt)"
+    },
+    {
+      "parameter": "Starting motor voltage",
+      "value": "12",
+      "unit": "V",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Starting motor: DC 12 V - 1.4 kW"
+    },
+    {
+      "parameter": "Starting motor power",
+      "value": "1.4",
+      "unit": "kW",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "Starting motor: DC 12 V - 1.4 kW"
+    },
+    {
+      "parameter": "AC generator voltage",
+      "value": "12",
+      "unit": "V",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "AC generator: 12 V - 125 A"
+    },
+    {
+      "parameter": "AC generator current",
+      "value": "125",
+      "unit": "A",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "178",
+      "source_context": "AC generator: 12 V - 125 A"
+    },
+    {
+      "parameter": "Normal oil pressure at 3000 min-1",
+      "value": "0.28 to 0.54",
+      "unit": "MPa",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "71",
+      "source_context": "Normal oil pressure at 3000 min is 0.28 to 0.54 MPa (41 to 78 psi)"
+    },
+    {
+      "parameter": "Normal coolant operating temperature",
+      "value": "76 to 90",
+      "unit": "\u00b0C",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "confidence": 0.95,
+      "page": "71",
+      "source_context": "Normal coolant operating temperature is approximately 76\u00b0 to 90 \u00b0C (169\u00b0 to 194 \u00b0F)"
+    },
+    {
+      "parameter": "Marine Gear Oil Capacity KM35P",
+      "value": "0.5",
+      "unit": "L",
+      "applies_to_models": [
+        "KM35P"
+      ],
+      "confidence": 0.95,
+      "page": "179",
+      "source_context": "Lubricating Oil Capacity (total): 0.5 L (0.53 qt)"
+    },
+    {
+      "parameter": "Marine Gear Oil Capacity KM35A",
+      "value": "1.8",
+      "unit": "L",
+      "applies_to_models": [
+        "KM35A"
+      ],
+      "confidence": 0.95,
+      "page": "179",
+      "source_context": "Lubricating Oil Capacity (total): 1.8 L (1.90 qt)"
+    },
+    {
+      "parameter": "Marine Gear Oil Capacity KM4A1",
+      "value": "2.3",
+      "unit": "L",
+      "applies_to_models": [
+        "KM4A1"
+      ],
+      "confidence": 0.95,
+      "page": "182",
+      "source_context": "Lubricating Oil Capacity (total): 2.3 L (2.43 qt)"
+    },
+    {
+      "parameter": "Marine Gear Oil Capacity KMH4A",
+      "value": "1.8",
+      "unit": "L",
+      "applies_to_models": [
+        "KMH4A"
+      ],
+      "confidence": 0.95,
+      "page": "185",
+      "source_context": "Lubricating Oil Capacity (total): 1.8 L (1.90 qt)**"
+    },
+    {
+      "parameter": "Sail Drive Oil Capacity SD60-5",
+      "value": "3.1",
+      "unit": "L",
+      "applies_to_models": [
+        "SD60"
+      ],
+      "confidence": 0.95,
+      "page": "179",
+      "source_context": "Lubricating Oil Capacity (total): 3.1 L (3.3 qt)"
+    },
+    {
+      "parameter": "Sail Drive Oil Capacity SD60-5 Long Reach",
+      "value": "3.3",
+      "unit": "L",
+      "applies_to_models": [
+        "SD60"
+      ],
+      "confidence": 0.95,
+      "page": "179",
+      "source_context": "Long Reach (75 mm): 3.3 L (3.4 qt)"
+    }
+  ]
+}

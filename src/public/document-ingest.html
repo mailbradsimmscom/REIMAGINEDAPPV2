@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Ingest</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --success: #34C759;
+            --warning: #FF9500;
+            --error: #FF3B30;
+            --bg: #F2F2F7;
+            --surface: #FFFFFF;
+            --text: #000000;
+            --text-secondary: #8E8E93;
+            --border: #C6C6C8;
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .subtitle { color: var(--text-secondary); margin-bottom: 32px; }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 48px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .upload-zone.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .upload-icon { font-size: 48px; margin-bottom: 16px; }
+        .upload-text { font-size: 16px; color: var(--text-secondary); }
+        .upload-hint { font-size: 14px; color: var(--text-secondary); margin-top: 8px; }
+
+        #fileInput { display: none; }
+
+        /* Progress */
+        .progress-container { display: none; }
+        .progress-container.visible { display: block; }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .progress-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Models Section */
+        .models-section { display: none; }
+        .models-section.visible { display: block; }
+
+        .model-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .model-item:hover { border-color: var(--primary); }
+        .model-item.selected {
+            border-color: var(--primary);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .model-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .model-info { flex: 1; }
+        .model-name { font-weight: 600; font-size: 16px; }
+        .model-meta { font-size: 14px; color: var(--text-secondary); }
+
+        .model-name-input {
+            width: 100%;
+            font-weight: 600;
+            font-size: 16px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            padding: 6px 8px;
+            background: transparent;
+            color: var(--text);
+        }
+
+        .model-name-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .model-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .model-badge.primary { background: rgba(0, 122, 255, 0.1); color: var(--primary); }
+        .model-badge.referenced { background: rgba(142, 142, 147, 0.2); color: var(--text-secondary); }
+
+        /* Details Form (shown when model selected) */
+        .model-details {
+            display: none;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .model-details.visible { display: block; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover { background: #0056CC; }
+        .btn-primary:disabled { background: var(--text-secondary); cursor: not-allowed; }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .status-message.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        .status-message.success {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(52, 199, 89, 0.2);
+        }
+
+        /* Document Info */
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .doc-icon { font-size: 32px; }
+        .doc-name { font-weight: 600; }
+        .doc-meta { font-size: 14px; color: var(--text-secondary); }
+
+        /* Referenced Section */
+        .referenced-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .referenced-header:hover { background: rgba(0, 122, 255, 0.05); }
+
+        .referenced-content { display: none; }
+        .referenced-content.open { display: block; }
+
+        /* Validation States */
+        .form-group select.invalid {
+            border-color: var(--error);
+            background-color: rgba(255, 59, 48, 0.05);
+        }
+
+        .form-group select.valid {
+            border-color: var(--success);
+        }
+
+        .form-group .required-label::after {
+            content: ' *';
+            color: var(--error);
+        }
+
+        .validation-message {
+            padding: 12px 16px;
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            border-radius: 8px;
+            color: var(--error);
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .validation-message.visible {
+            display: block;
+        }
+
+        /* Add New Button */
+        .add-new-btn {
+            margin-top: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-new-btn:hover {
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        /* Modal for adding new values */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Pipeline Steps */
+        .pipeline-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .pipeline-step.active {
+            background: rgba(0, 122, 255, 0.1);
+            border: 1px solid var(--primary);
+        }
+
+        .pipeline-step.complete {
+            background: rgba(52, 199, 89, 0.1);
+        }
+
+        .pipeline-step.error {
+            background: rgba(255, 59, 48, 0.1);
+        }
+
+        .step-icon {
+            font-size: 24px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .step-info { flex: 1; }
+
+        .step-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .step-status {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .pipeline-step.active .step-status {
+            color: var(--primary);
+        }
+
+        .pipeline-step.complete .step-status {
+            color: var(--success);
+        }
+
+        .pipeline-step.error .step-status {
+            color: var(--error);
+        }
+
+        /* Vision Results */
+        .vision-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .warnings-list {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 13px;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .warning-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .warning-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+            .vision-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Document Ingest</h1>
+    <p class="subtitle">Upload a manual to detect and configure equipment</p>
+
+    <!-- Step 1: Upload -->
+    <div class="card" id="uploadCard">
+        <div class="card-title">Upload Document</div>
+        <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">📄</div>
+            <div class="upload-text">Drop PDF here or click to browse</div>
+            <div class="upload-hint">Supports PDF manuals up to 100MB</div>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf">
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-status" id="progressStatus">Uploading...</div>
+        </div>
+    </div>
+
+    <!-- Step 2: Model Selection -->
+    <div class="card models-section" id="modelsSection">
+        <div class="card-title">Detected Equipment</div>
+
+        <div class="doc-info" id="docInfo">
+            <div class="doc-icon">📄</div>
+            <div>
+                <div class="doc-name" id="docName">-</div>
+                <div class="doc-meta" id="docMeta">-</div>
+            </div>
+        </div>
+
+        <div id="statusMessage"></div>
+
+        <!-- Category Selection -->
+        <div class="category-section" style="margin-bottom: 24px; padding: 16px; background: var(--bg); border-radius: 8px;">
+            <div style="font-weight: 600; margin-bottom: 12px;">Equipment Classification</div>
+            <div id="categoryValidationMsg" class="validation-message">
+                Please fill in all required fields before confirming.
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required-label">Manufacturer</label>
+                    <select id="manufacturerSelect" onchange="validateCategories()">
+                        <option value="">Select manufacturer</option>
+                    </select>
+                    <button type="button" class="add-new-btn" onclick="addNewValue('manufacturer')">+ Add New</button>
+                </div>
+                <div class="form-group">
+                    <label class="required-label">Product Type</label>
+                    <select id="productTypeSelect" onchange="validateCategories()">
+                        <option value="">Select product type</option>
+                    </select>
+                    <button type="button" class="add-new-btn" onclick="addNewValue('product_type')">+ Add New</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required-label">System Category</label>
+                    <select id="systemCategorySelect" onchange="filterSubsystems(); validateCategories()">
+                        <option value="">Select system category</option>
+                    </select>
+                    <button type="button" class="add-new-btn" onclick="addNewValue('system_category')">+ Add New</button>
+                </div>
+                <div class="form-group">
+                    <label class="required-label">Subsystem Category</label>
+                    <select id="subsystemCategorySelect" onchange="validateCategories()">
+                        <option value="">Select subsystem category</option>
+                    </select>
+                    <button type="button" class="add-new-btn" onclick="addNewValue('subsystem_category')">+ Add New</button>
+                </div>
+            </div>
+        </div>
+
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">
+            Select the equipment you have installed on your boat:
+        </p>
+
+        <div id="primaryModels"></div>
+
+        <div class="referenced-header" id="referencedHeader" style="display: none;">
+            <span style="font-weight: 600; color: var(--text-secondary);">Referenced Products (Optional)</span>
+            <span id="referencedArrow">▼</span>
+        </div>
+        <div class="referenced-content" id="referencedContent"></div>
+
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="location.reload()">Cancel</button>
+            <button class="btn btn-primary" id="confirmBtn" disabled onclick="confirmSelection()">
+                Confirm & Process
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal for adding new values -->
+    <div class="modal-overlay" id="addNewModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">Add New Value</div>
+            <input type="text" class="modal-input" id="modalInput" placeholder="Enter new value">
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNewValue()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Processing Pipeline -->
+    <div class="card" id="processingCard" style="display: none;">
+        <div class="card-title">Processing Document</div>
+
+        <div class="pipeline-steps">
+            <div class="pipeline-step" id="step-document">
+                <div class="step-icon">⏳</div>
+                <div class="step-info">
+                    <div class="step-name">Creating Document Record</div>
+                    <div class="step-status" id="step-document-status">Waiting...</div>
+                </div>
+            </div>
+            <div class="pipeline-step" id="step-vision">
+                <div class="step-icon">⏳</div>
+                <div class="step-info">
+                    <div class="step-name">Extracting Diagrams & Tables</div>
+                    <div class="step-status" id="step-vision-status">Waiting...</div>
+                </div>
+            </div>
+            <div class="pipeline-step" id="step-complete">
+                <div class="step-icon">⏳</div>
+                <div class="step-info">
+                    <div class="step-name">Complete</div>
+                    <div class="step-status" id="step-complete-status">Waiting...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="processingDetails" style="margin-top: 16px;"></div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="card" id="successCard" style="display: none;">
+        <div class="status-message success">
+            <strong>Success!</strong> Document processed and diagrams extracted.
+        </div>
+        <div id="successDetails"></div>
+        <div id="visionResults" style="margin-top: 16px;"></div>
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="location.reload()">Upload Another</button>
+            <button class="btn btn-primary" onclick="location.href='/systems.html'">View Systems</button>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentFile = null;
+        let parseResult = null;
+        let detectionResult = null;
+        let storageResult = null; // { doc_id, storage_path, filename } from upload-storage
+        // Map of modelId -> { model, type, instances: [{ id, serial, location }] }
+        let selectedModels = new Map();
+        let instanceCounter = 0;
+
+        // Reference data from backend (populated after model detection)
+        let referenceData = {
+            manufacturers: [],
+            product_types: [],
+            system_categories: [],
+            subsystem_categories: []
+        };
+        let currentAddType = null; // Track which field we're adding to
+
+        const LOCATIONS = [
+            'Engine Room - Port', 'Engine Room - Starboard', 'Engine Room - Center',
+            'Helm Station', 'Nav Station', 'Flybridge', 'Cockpit', 'Salon', 'Galley',
+            'Master Cabin', 'Forward Cabin', 'Lazarette', 'Anchor Locker', 'Mast', 'Other'
+        ];
+
+        // Elements
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressStatus = document.getElementById('progressStatus');
+        const modelsSection = document.getElementById('modelsSection');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        // Upload handlers
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) handleFile(fileInput.files[0]);
+        });
+
+        // Referenced toggle
+        document.getElementById('referencedHeader').addEventListener('click', () => {
+            const content = document.getElementById('referencedContent');
+            const arrow = document.getElementById('referencedArrow');
+            content.classList.toggle('open');
+            arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+        });
+
+        async function handleFile(file) {
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                alert('Please upload a PDF file');
+                return;
+            }
+
+            currentFile = file;
+            uploadZone.classList.add('disabled');
+            progressContainer.classList.add('visible');
+            updateProgress(10, 'Uploading to storage...');
+
+            try {
+                // Step 1: Upload to storage first (to get doc_id)
+                updateProgress(15, 'Uploading to storage...');
+
+                const storageRes = await callUploadStorage(file);
+                if (!storageRes.success) {
+                    throw new Error(storageRes.error?.message || 'Failed to upload to storage');
+                }
+                storageResult = storageRes.data;
+                console.log('Storage upload complete:', storageResult);
+
+                // Step 2: Parse with LlamaParse (pass doc_id to store raw JSON)
+                updateProgress(30, 'Parsing document with LlamaParse...');
+
+                const parseRes = await callLlamaParse(file, storageResult.doc_id);
+                if (!parseRes.success) {
+                    throw new Error(parseRes.error || 'Failed to parse document');
+                }
+                parseResult = parseRes;
+                console.log('LlamaParse complete, json_stored:', parseRes.llamaparse_path ? 'yes' : 'no');
+
+                updateProgress(60, 'Detecting equipment models...');
+
+                // Step 2: Run model detection
+                detectionResult = await callModelDetection(parseResult.text, file.name);
+
+                if (!detectionResult.success) {
+                    throw new Error(detectionResult.error || 'Failed to detect models');
+                }
+
+                updateProgress(100, 'Detection complete!');
+
+                // Show results
+                setTimeout(() => showModelSelection(file, parseResult, detectionResult), 500);
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message);
+            }
+        }
+
+        async function callUploadStorage(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/admin/api/documents/upload-storage', {
+                method: 'POST',
+                headers: {
+                    'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Storage upload failed: ${response.status} - ${text}`);
+            }
+
+            return await response.json();
+        }
+
+        async function callLlamaParse(file, docId) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Pass doc_id as query param so Python can store raw JSON to Storage
+            const url = docId
+                ? `/python/v1/llamaparse?doc_id=${encodeURIComponent(docId)}`
+                : '/python/v1/llamaparse';
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`LlamaParse failed: ${response.status} - ${text}`);
+            }
+
+            return await response.json();
+        }
+
+        async function callModelDetection(markdown, filename) {
+            const response = await fetch('/python/v1/detect-models', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    markdown: markdown,
+                    doc_id: 'temp-' + Date.now(),
+                    filename: filename
+                })
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Model detection failed: ${response.status} - ${text}`);
+            }
+
+            const result = await response.json();
+
+            // Capture reference data for dropdown population
+            if (result.reference_data) {
+                referenceData = result.reference_data;
+            }
+
+            return result;
+        }
+
+        function updateProgress(percent, status) {
+            progressFill.style.width = percent + '%';
+            progressStatus.textContent = status;
+        }
+
+        // Error code mapping for user-friendly messages
+        const ERROR_MESSAGES = {
+            // Postgres error codes
+            '23505': 'This model already exists in the system. It may have been added from a previous document.',
+            '23503': 'A referenced item does not exist. Please check your selections.',
+            '23502': 'A required field is missing. Please fill in all required fields.',
+            // App-specific error codes
+            'DUPLICATE_CANONICAL': 'This model name already exists with a different format.',
+            'FK_VIOLATION': 'The referenced canonical model does not exist in the registry.',
+            'INVALID_CANONICAL': 'Invalid model name format. Names should not contain special characters.',
+            'INGEST_FAILED': 'Document processing failed. Please try again or contact support.',
+            'PARSE_ERROR': 'Could not parse the document. Make sure it is a valid PDF.',
+            'MODEL_DETECTION_FAILED': 'Could not detect models in the document. You can still proceed manually.',
+            // New structured error codes from service
+            'INVALID_PRIMARY': 'The selected primary system is invalid. Please select a valid model.',
+            'MULTIPLE_PRIMARIES': 'Only one installed primary system can be selected per document.',
+            'SYSTEM_CREATE_FAILED': 'Failed to create the system record. Please try again.',
+            'INSTANCE_CREATE_FAILED': 'System was created but the instance could not be added.',
+            'REFERENCED_SAVE_FAILED': 'Failed to save referenced systems. Please try again.',
+            'DB_ERROR': 'A database error occurred. Please try again.',
+            'DB_CONSTRAINT': 'A data constraint was violated. Check for duplicates or missing required fields.',
+        };
+
+        function parseErrorMessage(error) {
+            // Check if error is an object with code (structured error from backend)
+            if (error && typeof error === 'object') {
+                // First check if code maps directly to a friendly message
+                if (error.code && ERROR_MESSAGES[error.code]) {
+                    return ERROR_MESSAGES[error.code];
+                }
+                // Check for Postgres error codes embedded in the code field
+                if (error.code) {
+                    for (const [code, msg] of Object.entries(ERROR_MESSAGES)) {
+                        if (error.code.includes(code)) {
+                            return msg;
+                        }
+                    }
+                }
+                // Check for Postgres error codes in message
+                if (error.message) {
+                    for (const [code, msg] of Object.entries(ERROR_MESSAGES)) {
+                        if (error.message.includes(code)) {
+                            return msg;
+                        }
+                    }
+                    // Return the original message if no mapping found
+                    return error.message;
+                }
+            }
+            // String error - check for known patterns
+            if (typeof error === 'string') {
+                for (const [code, msg] of Object.entries(ERROR_MESSAGES)) {
+                    if (error.includes(code)) {
+                        return msg;
+                    }
+                }
+                return error;
+            }
+            return 'An unexpected error occurred. Please try again.';
+        }
+
+        function showError(message, details = null) {
+            progressContainer.classList.remove('visible');
+            uploadZone.classList.remove('disabled');
+
+            const friendlyMessage = parseErrorMessage(message);
+            const detailsHtml = details ? `<div style="margin-top: 8px; font-size: 13px; opacity: 0.8;">Details: ${details}</div>` : '';
+
+            document.getElementById('statusMessage').innerHTML =
+                `<div class="status-message error">
+                    <strong>Error:</strong> ${friendlyMessage}
+                    ${detailsHtml}
+                    <button onclick="this.parentElement.style.display='none'"
+                            style="float: right; background: none; border: none; cursor: pointer; font-size: 16px; opacity: 0.7;">✕</button>
+                </div>`;
+            modelsSection.classList.add('visible');
+        }
+
+        function showInlineError(containerId, message) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                const friendlyMessage = parseErrorMessage(message);
+                container.innerHTML = `<div class="status-message error" style="margin-bottom: 16px;">
+                    <strong>Error:</strong> ${friendlyMessage}
+                    <button onclick="this.parentElement.style.display='none'"
+                            style="float: right; background: none; border: none; cursor: pointer; font-size: 16px; opacity: 0.7;">✕</button>
+                </div>`;
+            }
+        }
+
+        function showModelSelection(file, parse, detection) {
+            document.getElementById('uploadCard').style.display = 'none';
+            modelsSection.classList.add('visible');
+
+            // Doc info
+            document.getElementById('docName').textContent = file.name;
+            document.getElementById('docMeta').textContent =
+                `${(parse.content_length / 1000).toFixed(0)}K chars | ${detection.confidence} confidence`;
+
+            // Populate category dropdowns from reference data and preselect suggestions
+            populateDropdowns();
+            preselectSuggestions();
+
+            // Validate categories after preselection (updates visual state)
+            setTimeout(() => validateCategories(), 50);
+
+            // Primary models
+            const primaryContainer = document.getElementById('primaryModels');
+            primaryContainer.innerHTML = '';
+
+            if (detection.primary_models && detection.primary_models.length > 0) {
+                detection.primary_models.forEach((model, i) => {
+                    primaryContainer.appendChild(createModelItem(model, 'primary', i));
+                });
+            } else {
+                primaryContainer.innerHTML = '<p style="color: var(--text-secondary);">No models detected. You can proceed without selecting any.</p>';
+            }
+
+            // Referenced products
+            if (detection.referenced_products && detection.referenced_products.length > 0) {
+                document.getElementById('referencedHeader').style.display = 'flex';
+                const refContainer = document.getElementById('referencedContent');
+                refContainer.innerHTML = '';
+                detection.referenced_products.forEach((prod, i) => {
+                    const name = typeof prod === 'string' ? prod : prod.model;
+                    refContainer.appendChild(createModelItem(name, 'referenced', i));
+                });
+            }
+
+            // Show detection evidence
+            if (detection.evidence) {
+                document.getElementById('statusMessage').innerHTML =
+                    `<div style="padding: 12px; background: var(--bg); border-radius: 8px; font-size: 14px; color: var(--text-secondary);">
+                        <strong>Detection:</strong> ${detection.evidence}
+                    </div>`;
+            }
+        }
+
+        function createModelItem(modelName, type, index) {
+            const id = `${type}-${index}`;
+            const wrapper = document.createElement('div');
+
+            const div = document.createElement('div');
+            div.className = 'model-item';
+            div.id = `item-${id}`;
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `check-${id}`;
+            checkbox.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleModel(id, type);
+            });
+
+            const info = document.createElement('div');
+            info.className = 'model-info';
+
+            const nameInput = document.createElement('input');
+            nameInput.className = 'model-name-input';
+            nameInput.type = 'text';
+            nameInput.value = modelName || '';
+            nameInput.autocomplete = 'off';
+            nameInput.spellcheck = false;
+            nameInput.id = `model-name-${id}`;
+            nameInput.addEventListener('click', (e) => e.stopPropagation());
+            nameInput.addEventListener('input', () => onModelNameEdited(type, index, id));
+
+            const meta = document.createElement('div');
+            meta.className = 'model-meta';
+            meta.textContent = `${detectionResult.manufacturer || ''} ${detectionResult.product_category || ''}`.trim();
+
+            info.appendChild(nameInput);
+            info.appendChild(meta);
+
+            const badge = document.createElement('span');
+            badge.className = `model-badge ${type}`;
+            badge.textContent = type === 'primary' ? 'Primary' : 'Ref';
+
+            div.appendChild(checkbox);
+            div.appendChild(info);
+            div.appendChild(badge);
+
+            div.addEventListener('click', () => toggleModel(id, type));
+
+            wrapper.appendChild(div);
+
+            // Only PRIMARY items get instance details (serial/location)
+            // REF items are just checkboxes - no instance info needed
+            if (type === 'primary') {
+                const details = document.createElement('div');
+                details.className = 'model-details';
+                details.id = `details-${id}`;
+                details.innerHTML = `
+                    <div id="instances-${id}"></div>
+                    <button type="button" class="btn btn-secondary" style="margin-top: 12px; padding: 10px 16px; font-size: 14px;"
+                            onclick="event.stopPropagation(); addInstance('${id}', '${type}')">
+                        + Add Another Instance
+                    </button>
+                `;
+                wrapper.appendChild(details);
+            }
+
+            return wrapper;
+        }
+
+        function getCurrentModelName(modelId) {
+            const input = document.getElementById(`model-name-${modelId}`);
+            return (input?.value || '').trim();
+        }
+
+        function onModelNameEdited(type, index, modelId) {
+            const newName = getCurrentModelName(modelId);
+            if (!newName) return;
+
+            // Persist the edit into detectionResult so we POST the corrected name.
+            if (type === 'primary') {
+                if (Array.isArray(detectionResult?.primary_models)) {
+                    detectionResult.primary_models[index] = newName;
+                }
+            } else {
+                if (Array.isArray(detectionResult?.referenced_products)) {
+                    const rp = detectionResult.referenced_products[index];
+                    if (typeof rp === 'string') {
+                        detectionResult.referenced_products[index] = newName;
+                    } else if (rp && typeof rp === 'object') {
+                        rp.model = newName;
+                    }
+                }
+            }
+
+            // If the model is currently selected, update the selection state too.
+            if (selectedModels.has(modelId)) {
+                const entry = selectedModels.get(modelId);
+                entry.model = newName;
+                selectedModels.set(modelId, entry);
+                updateConfirmButton();
+            }
+        }
+
+        function createInstanceRow(modelId, instanceId) {
+            const row = document.createElement('div');
+            row.className = 'form-row';
+            row.id = `instance-row-${instanceId}`;
+            row.style.marginBottom = '16px';
+            row.style.paddingBottom = '12px';
+            row.style.borderBottom = '1px solid var(--border)';
+            row.innerHTML = `
+                <div class="form-group">
+                    <label>Serial Number</label>
+                    <input type="text" id="serial-${instanceId}" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <select id="location-${instanceId}">
+                        <option value="">Select location</option>
+                        ${LOCATIONS.map(l => `<option value="${l}">${l}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+            return row;
+        }
+
+        function addInstance(modelId, type) {
+            const instanceId = `inst-${++instanceCounter}`;
+            const container = document.getElementById(`instances-${modelId}`);
+            container.appendChild(createInstanceRow(modelId, instanceId));
+
+            // Track this instance
+            if (selectedModels.has(modelId)) {
+                selectedModels.get(modelId).instances.push({ id: instanceId });
+            }
+            updateConfirmButton();
+        }
+
+        function toggleModel(id, type) {
+            const checkbox = document.getElementById(`check-${id}`);
+            const item = document.getElementById(`item-${id}`);
+            const modelName = getCurrentModelName(id);
+
+            checkbox.checked = !checkbox.checked;
+
+            if (checkbox.checked) {
+                item.classList.add('selected');
+
+                if (type === 'primary') {
+                    // PRIMARY: Show instance details and create first instance
+                    const details = document.getElementById(`details-${id}`);
+                    if (details) details.classList.add('visible');
+
+                    const instanceId = `inst-${++instanceCounter}`;
+                    const container = document.getElementById(`instances-${id}`);
+                    if (container) {
+                        container.innerHTML = '';
+                        container.appendChild(createInstanceRow(id, instanceId));
+                    }
+
+                    selectedModels.set(id, {
+                        model: modelName,
+                        type: type,
+                        instances: [{ id: instanceId }]
+                    });
+                } else {
+                    // REF: Just track as selected, no instances
+                    selectedModels.set(id, {
+                        model: modelName,
+                        type: type,
+                        instances: []  // No instances for referenced items
+                    });
+                }
+            } else {
+                item.classList.remove('selected');
+
+                if (type === 'primary') {
+                    const details = document.getElementById(`details-${id}`);
+                    if (details) details.classList.remove('visible');
+
+                    const container = document.getElementById(`instances-${id}`);
+                    if (container) container.innerHTML = '';
+                }
+
+                selectedModels.delete(id);
+            }
+
+            validateCategories();
+            updateConfirmButton();
+        }
+
+        function updateConfirmButton() {
+            // Count total instances across all selected models
+            let instanceCount = 0;
+            for (const [, data] of selectedModels) {
+                instanceCount += data.instances.length;
+            }
+
+            // Check if categories are valid (required when creating systems)
+            const categoriesValid = validateCategories();
+            const needsCategories = instanceCount > 0;
+
+            if (needsCategories && !categoriesValid) {
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = 'Fill Required Fields';
+            } else {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = instanceCount > 0
+                    ? `Confirm ${instanceCount} Instance${instanceCount > 1 ? 's' : ''} & Process`
+                    : 'Skip & Process Document Only';
+            }
+        }
+
+        function validateCategories() {
+            const manufacturer = document.getElementById('manufacturerSelect')?.value;
+            const productType = document.getElementById('productTypeSelect')?.value;
+            const systemCategory = document.getElementById('systemCategorySelect')?.value;
+            const subsystemCategory = document.getElementById('subsystemCategorySelect')?.value;
+
+            const fields = [
+                { id: 'manufacturerSelect', value: manufacturer },
+                { id: 'productTypeSelect', value: productType },
+                { id: 'systemCategorySelect', value: systemCategory },
+                { id: 'subsystemCategorySelect', value: subsystemCategory }
+            ];
+
+            let allValid = true;
+            const missing = [];
+
+            fields.forEach(field => {
+                const el = document.getElementById(field.id);
+                if (!el) return;
+
+                if (!field.value) {
+                    el.classList.add('invalid');
+                    el.classList.remove('valid');
+                    allValid = false;
+                    missing.push(el.previousElementSibling?.textContent?.replace(' *', '') || field.id);
+                } else {
+                    el.classList.remove('invalid');
+                    el.classList.add('valid');
+                }
+            });
+
+            // Show/hide validation message
+            const msgEl = document.getElementById('categoryValidationMsg');
+            if (msgEl) {
+                // Only show message if user has selected models but categories incomplete
+                const hasSelectedModels = selectedModels.size > 0;
+                if (hasSelectedModels && !allValid) {
+                    msgEl.textContent = `Please select: ${missing.join(', ')}`;
+                    msgEl.classList.add('visible');
+                } else {
+                    msgEl.classList.remove('visible');
+                }
+            }
+
+            return allValid;
+        }
+
+        // Pipeline step helpers
+        function updateStep(stepId, status, message, icon = null) {
+            const step = document.getElementById(`step-${stepId}`);
+            const statusEl = document.getElementById(`step-${stepId}-status`);
+            const iconEl = step.querySelector('.step-icon');
+
+            step.classList.remove('active', 'complete', 'error');
+            if (status === 'active') {
+                step.classList.add('active');
+                iconEl.textContent = icon || '⏳';
+            } else if (status === 'complete') {
+                step.classList.add('complete');
+                iconEl.textContent = icon || '✓';
+            } else if (status === 'error') {
+                step.classList.add('error');
+                iconEl.textContent = icon || '✗';
+            }
+            statusEl.textContent = message;
+        }
+
+        async function confirmSelection() {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Processing...';
+
+            // Build systems array - ONLY for PRIMARY items (one entry per instance)
+            // Build referenced_selections - just model names for REF items
+            const systems = [];
+            const referenced_selections = [];
+            const selected_models = []; // For vision pipeline
+
+            for (const [modelId, data] of selectedModels) {
+                if (data.type === 'primary') {
+                    selected_models.push(data.model);
+                    // PRIMARY: Create system entries with instance details
+                    for (const instance of data.instances) {
+                        const serial = document.getElementById(`serial-${instance.id}`)?.value || '';
+                        const location = document.getElementById(`location-${instance.id}`)?.value || '';
+
+                        systems.push({
+                            model_norm: data.model,
+                            manufacturer_norm: detectionResult.manufacturer || '',
+                            product_category: detectionResult.product_category || '',
+                            serial_number: serial || null,
+                            location: location || null,
+                            is_primary: true,
+                            source: 'document'
+                        });
+                    }
+                } else {
+                    // REF: Just the model name, no instances
+                    referenced_selections.push(data.model);
+                }
+            }
+
+            // Get selected category values
+            const manufacturer = document.getElementById('manufacturerSelect').value;
+            const productType = document.getElementById('productTypeSelect').value;
+            const systemCategory = document.getElementById('systemCategorySelect').value;
+            const subsystemCategory = document.getElementById('subsystemCategorySelect').value;
+
+            // Safety check - categories required when creating systems (PRIMARY selected)
+            if (systems.length > 0 && (!manufacturer || !productType || !systemCategory || !subsystemCategory)) {
+                validateCategories();
+                updateConfirmButton();
+                return;
+            }
+
+            // Show processing card
+            modelsSection.style.display = 'none';
+            document.getElementById('processingCard').style.display = 'block';
+
+            let docResult = null;
+            let visionResult = null;
+
+            try {
+                // ========================================
+                // Step 1: Create document record
+                // ========================================
+                updateStep('document', 'active', 'Creating document record...');
+
+                const docResponse = await fetch('/admin/api/documents', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                    },
+                    body: JSON.stringify({
+                        doc_id: storageResult?.doc_id || null,
+                        filename: currentFile.name,
+                        markdown_content: parseResult.text,
+                        manufacturer: manufacturer || detectionResult.manufacturer,
+                        product_type: productType,
+                        system_category: systemCategory,
+                        subsystem_category: subsystemCategory,
+                        models_detected: detectionResult.primary_models,
+                        referenced_products: detectionResult.referenced_products,
+                        systems: systems,
+                        referenced_selections: referenced_selections,
+                        storage_path: storageResult?.storage_path || null
+                    })
+                });
+
+                if (!docResponse.ok) {
+                    const err = await docResponse.json().catch(() => ({}));
+                    const errorObj = err.error || { code: 'UNKNOWN', message: `Failed to save: ${docResponse.status}` };
+                    throw new Error(parseErrorMessage(errorObj));
+                }
+
+                docResult = await docResponse.json();
+                updateStep('document', 'complete', `Document created, ${docResult.data?.systems_created || 0} systems`);
+
+                // ========================================
+                // Step 2: Run Vision Pipeline
+                // ========================================
+                updateStep('vision', 'active', 'Analyzing pages for diagrams...');
+
+                const docId = storageResult?.doc_id;
+                const storagePath = storageResult?.storage_path;
+
+                if (!docId || !storagePath) {
+                    updateStep('vision', 'complete', 'Skipped (no storage path)', '⊘');
+                } else if (selected_models.length === 0) {
+                    updateStep('vision', 'complete', 'Skipped (no models selected)', '⊘');
+                } else {
+                    // Call vision endpoint
+                    const visionResponse = await fetch(`/admin/api/documents/${docId}/vision`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        },
+                        body: JSON.stringify({
+                            storage_path: storagePath,
+                            selected_models: selected_models,
+                            referenced_selections: referenced_selections,
+                            pages: '1-100' // Process up to 100 pages
+                        })
+                    });
+
+                    if (!visionResponse.ok) {
+                        const err = await visionResponse.json().catch(() => ({}));
+                        // Vision failure is non-fatal - document is still created
+                        updateStep('vision', 'error', `Failed: ${err.error || visionResponse.status}`);
+                        visionResult = { success: false, error: err.error };
+                    } else {
+                        visionResult = await visionResponse.json();
+
+                        if (visionResult.success) {
+                            const data = visionResult.data || visionResult;
+                            const skipped = data.warnings?.filter(w => w.code === 'PAGE_SKIPPED_NOT_RELEVANT').length || 0;
+                            updateStep('vision', 'complete',
+                                `${data.assets_saved || 0} assets extracted, ${skipped} pages filtered`);
+                        } else {
+                            updateStep('vision', 'error', visionResult.error || 'Unknown error');
+                        }
+                    }
+                }
+
+                // ========================================
+                // Step 3: Complete
+                // ========================================
+                updateStep('complete', 'complete', 'All steps finished!');
+
+                // Wait a moment then show success
+                setTimeout(() => showSuccessScreen(docResult, visionResult, selected_models, referenced_selections), 800);
+
+            } catch (error) {
+                console.error('Error:', error);
+                // Update current step to error
+                const steps = ['document', 'vision', 'complete'];
+                for (const step of steps) {
+                    const el = document.getElementById(`step-${step}`);
+                    if (el.classList.contains('active')) {
+                        updateStep(step, 'error', error.message);
+                        break;
+                    }
+                }
+
+                // Add retry button
+                document.getElementById('processingDetails').innerHTML = `
+                    <div class="status-message error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                    <div class="action-buttons" style="margin-top: 16px;">
+                        <button class="btn btn-secondary" onclick="location.reload()">Start Over</button>
+                    </div>
+                `;
+            }
+        }
+
+        function showSuccessScreen(docResult, visionResult, selectedModels, referencedSelections) {
+            document.getElementById('processingCard').style.display = 'none';
+            document.getElementById('successCard').style.display = 'block';
+
+            // Build success details
+            const data = docResult?.data || {};
+            let detailsHtml = `<p><strong>Document:</strong> ${currentFile.name}</p>`;
+
+            if (data.installed_system) {
+                detailsHtml += `<p><strong>Installed System:</strong> ${data.installed_system.model_norm}</p>`;
+            } else if (data.systems_created > 0) {
+                detailsHtml += `<p><strong>Systems created:</strong> ${data.systems_created}</p>`;
+            }
+
+            if (data.instances_created > 0) {
+                detailsHtml += `<p><strong>Instances created:</strong> ${data.instances_created}</p>`;
+            }
+
+            if (data.referenced_systems_saved > 0) {
+                detailsHtml += `<p><strong>Referenced systems:</strong> ${data.referenced_systems_saved}</p>`;
+            }
+
+            document.getElementById('successDetails').innerHTML = detailsHtml;
+
+            // Build vision results
+            let visionHtml = '';
+            if (visionResult?.success) {
+                const vData = visionResult.data || visionResult;
+                const warnings = vData.warnings || [];
+                const skippedPages = warnings.filter(w => w.code === 'PAGE_SKIPPED_NOT_RELEVANT');
+
+                visionHtml = `
+                    <div style="font-weight: 600; margin-bottom: 12px;">Diagram Extraction Results</div>
+                    <div class="vision-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">${vData.pages_analyzed || 0}</div>
+                            <div class="stat-label">Pages Analyzed</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${vData.figures_cropped || 0}</div>
+                            <div class="stat-label">Figures</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${vData.tables_cropped || 0}</div>
+                            <div class="stat-label">Tables</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${skippedPages.length}</div>
+                            <div class="stat-label">Filtered Out</div>
+                        </div>
+                    </div>
+                `;
+
+                // Show some skipped page info if any
+                if (skippedPages.length > 0) {
+                    const modelSkipped = skippedPages.filter(w => w.models_on_page?.length > 0);
+                    const unknownSkipped = skippedPages.filter(w => !w.models_on_page?.length);
+
+                    visionHtml += `<details style="margin-top: 8px;">
+                        <summary style="cursor: pointer; color: var(--text-secondary); font-size: 13px;">
+                            ${skippedPages.length} pages filtered (click to expand)
+                        </summary>
+                        <div class="warnings-list" style="margin-top: 8px;">`;
+
+                    if (modelSkipped.length > 0) {
+                        visionHtml += `<div style="font-weight: 600; margin-bottom: 8px;">Wrong model (${modelSkipped.length}):</div>`;
+                        modelSkipped.slice(0, 5).forEach(w => {
+                            visionHtml += `<div class="warning-item">Page ${w.page_number}: ${w.models_on_page?.join(', ')}</div>`;
+                        });
+                        if (modelSkipped.length > 5) {
+                            visionHtml += `<div class="warning-item">...and ${modelSkipped.length - 5} more</div>`;
+                        }
+                    }
+
+                    if (unknownSkipped.length > 0) {
+                        visionHtml += `<div style="font-weight: 600; margin: 12px 0 8px;">Unknown attribution (${unknownSkipped.length}):</div>`;
+                        visionHtml += `<div class="warning-item">Pages with no model detected were skipped</div>`;
+                    }
+
+                    visionHtml += `</div></details>`;
+                }
+            } else if (visionResult?.error) {
+                visionHtml = `
+                    <div class="status-message error" style="margin-top: 0;">
+                        <strong>Vision extraction failed:</strong> ${visionResult.error}
+                        <p style="margin-top: 8px; font-size: 13px;">Document was still created. You can run diagram extraction later.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('visionResults').innerHTML = visionHtml;
+        }
+
+        // Dropdown population functions
+        function populateDropdowns() {
+            // Manufacturer
+            const mfrSelect = document.getElementById('manufacturerSelect');
+            mfrSelect.innerHTML = '<option value="">Select manufacturer</option>';
+            referenceData.manufacturers.forEach(m => {
+                mfrSelect.innerHTML += `<option value="${m}">${m}</option>`;
+            });
+
+            // Product Type
+            const typeSelect = document.getElementById('productTypeSelect');
+            typeSelect.innerHTML = '<option value="">Select product type</option>';
+            referenceData.product_types.forEach(t => {
+                typeSelect.innerHTML += `<option value="${t}">${t}</option>`;
+            });
+
+            // System Category
+            const sysSelect = document.getElementById('systemCategorySelect');
+            sysSelect.innerHTML = '<option value="">Select system category</option>';
+            referenceData.system_categories.forEach(s => {
+                sysSelect.innerHTML += `<option value="${s}">${s}</option>`;
+            });
+
+            // Subsystem - initially all, filtered when system selected
+            populateSubsystemDropdown();
+        }
+
+        function populateSubsystemDropdown(systemName = null) {
+            const subSelect = document.getElementById('subsystemCategorySelect');
+            subSelect.innerHTML = '<option value="">Select subsystem category</option>';
+
+            const filtered = systemName
+                ? referenceData.subsystem_categories.filter(s => s.system_name === systemName)
+                : referenceData.subsystem_categories;
+
+            filtered.forEach(s => {
+                subSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+        }
+
+        function filterSubsystems() {
+            const systemName = document.getElementById('systemCategorySelect').value;
+            populateSubsystemDropdown(systemName || null);
+        }
+
+        function preselectSuggestions() {
+            if (!detectionResult) return;
+
+            // Pre-select manufacturer
+            if (detectionResult.manufacturer) {
+                const mfrSelect = document.getElementById('manufacturerSelect');
+                const mfrValue = detectionResult.manufacturer;
+                // Try exact match first
+                if ([...mfrSelect.options].some(o => o.value === mfrValue)) {
+                    mfrSelect.value = mfrValue;
+                }
+            }
+
+            // Pre-select product type
+            if (detectionResult.product_type) {
+                const typeSelect = document.getElementById('productTypeSelect');
+                if ([...typeSelect.options].some(o => o.value === detectionResult.product_type)) {
+                    typeSelect.value = detectionResult.product_type;
+                }
+            }
+
+            // Pre-select system category
+            if (detectionResult.system_category) {
+                const sysSelect = document.getElementById('systemCategorySelect');
+                if ([...sysSelect.options].some(o => o.value === detectionResult.system_category)) {
+                    sysSelect.value = detectionResult.system_category;
+                    filterSubsystems(); // Update subsystem options
+                }
+            }
+
+            // Pre-select subsystem category
+            if (detectionResult.subsystem_category) {
+                const subSelect = document.getElementById('subsystemCategorySelect');
+                // Wait for filterSubsystems to populate options
+                setTimeout(() => {
+                    if ([...subSelect.options].some(o => o.value === detectionResult.subsystem_category)) {
+                        subSelect.value = detectionResult.subsystem_category;
+                    }
+                }, 10);
+            }
+        }
+
+        // Add new value modal
+        function addNewValue(type) {
+            currentAddType = type;
+            const labels = {
+                'manufacturer': 'Manufacturer',
+                'product_type': 'Product Type',
+                'system_category': 'System Category',
+                'subsystem_category': 'Subsystem Category'
+            };
+            document.getElementById('modalTitle').textContent = `Add New ${labels[type]}`;
+            document.getElementById('modalInput').value = '';
+            document.getElementById('addNewModal').classList.add('visible');
+            document.getElementById('modalInput').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('addNewModal').classList.remove('visible');
+            currentAddType = null;
+        }
+
+        async function saveNewValue() {
+            const value = document.getElementById('modalInput').value.trim();
+            if (!value) {
+                alert('Please enter a value');
+                return;
+            }
+
+            // Get current system category for subsystem parent
+            let parentSystemId = null;
+            if (currentAddType === 'subsystem_category') {
+                const systemName = document.getElementById('systemCategorySelect').value;
+                if (!systemName) {
+                    alert('Please select a System Category first');
+                    return;
+                }
+                // We'll need to look up the system_id from the name
+                // For now, pass the name and let backend resolve it
+                parentSystemId = systemName;
+            }
+
+            try {
+                const response = await fetch('/admin/api/reference-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                    },
+                    body: JSON.stringify({
+                        type: currentAddType,
+                        name: value,
+                        parent_system: parentSystemId
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `Failed to add: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                // Add to local reference data
+                if (currentAddType === 'manufacturer') {
+                    referenceData.manufacturers.push(value);
+                    referenceData.manufacturers.sort();
+                } else if (currentAddType === 'product_type') {
+                    referenceData.product_types.push(value);
+                    referenceData.product_types.sort();
+                } else if (currentAddType === 'system_category') {
+                    referenceData.system_categories.push(value);
+                } else if (currentAddType === 'subsystem_category') {
+                    referenceData.subsystem_categories.push({
+                        name: value,
+                        system_name: parentSystemId
+                    });
+                }
+
+                // Refresh dropdowns and select the new value
+                populateDropdowns();
+
+                // Select the new value
+                if (currentAddType === 'manufacturer') {
+                    document.getElementById('manufacturerSelect').value = value;
+                } else if (currentAddType === 'product_type') {
+                    document.getElementById('productTypeSelect').value = value;
+                } else if (currentAddType === 'system_category') {
+                    document.getElementById('systemCategorySelect').value = value;
+                } else if (currentAddType === 'subsystem_category') {
+                    filterSubsystems();
+                    document.getElementById('subsystemCategorySelect').value = value;
+                }
+
+                closeModal();
+
+            } catch (error) {
+                console.error('Error adding new value:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Init
+        updateConfirmButton();
+    </script>
+</body>
+</html>

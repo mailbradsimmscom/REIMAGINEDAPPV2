@@ -1,0 +1,162 @@
+{
+  "figures": [
+    {
+      "type": "other",
+      "title": "Yanmar Logo",
+      "description": "Stylized chevron logo at the top of the page representing the Yanmar brand.",
+      "bbox": {
+        "x": 25,
+        "y": 10,
+        "width": 50,
+        "height": 25
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "OPERATION MANUAL",
+      "bbox": {
+        "x": 0,
+        "y": 40,
+        "width": 100,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SAILDRIVE",
+      "bbox": {
+        "x": 0,
+        "y": 52,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SD",
+      "bbox": {
+        "x": 0,
+        "y": 58,
+        "width": 100,
+        "height": 12
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SD25",
+      "bbox": {
+        "x": 0,
+        "y": 72,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD25"
+      ]
+    },
+    {
+      "title": "SD60",
+      "bbox": {
+        "x": 0,
+        "y": 77,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD60"
+      ]
+    },
+    {
+      "title": "SD110",
+      "bbox": {
+        "x": 0,
+        "y": 82,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD110"
+      ]
+    },
+    {
+      "title": "SD150",
+      "bbox": {
+        "x": 0,
+        "y": 87,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD150"
+      ]
+    },
+    {
+      "title": "English",
+      "bbox": {
+        "x": 40,
+        "y": 93,
+        "width": 20,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "YANMAR",
+      "bbox": {
+        "x": 0,
+        "y": 97,
+        "width": 100,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": false,
+    "has_footer": false,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "This is a title page with clean layout and clear text, good quality."
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmphqnr_0tx/page_1.jpg",
+    "analysis_time_seconds": 9.669962,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:56:22.489946",
+    "input_tokens": 2183,
+    "output_tokens": 853
+  },
+  "page_number": 1
+}

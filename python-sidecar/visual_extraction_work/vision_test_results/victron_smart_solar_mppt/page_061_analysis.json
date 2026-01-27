@@ -1,0 +1,146 @@
+{
+  "figures": [
+    {
+      "type": "wiring_diagram",
+      "title": "Correct vs Incorrect Load Connection Configurations",
+      "description": "Three diagrams showing correct (A), incorrect (B), and correct with battery monitor (C) wiring configurations for solar charger load connections.",
+      "bbox": {
+        "x": 15,
+        "y": 75,
+        "width": 70,
+        "height": 20
+      },
+      "figure_reference": "Image A, B, C",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "8.10.1. Load output not able to run load",
+      "bbox": {
+        "x": 10,
+        "y": 25,
+        "width": 80,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "The load consumes excessive power",
+      "bbox": {
+        "x": 12,
+        "y": 33,
+        "width": 75,
+        "height": 10
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Note that for the 100/20 model, if it is configured to 36V or 48V, the load output current rating is limited to 1A.",
+      "bbox": {
+        "x": 12,
+        "y": 40,
+        "width": 75,
+        "height": 5
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "100/20"
+      ]
+    },
+    {
+      "title": "8.10.2. Incorrect load output current reading",
+      "bbox": {
+        "x": 10,
+        "y": 48,
+        "width": 80,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Correct current reading:",
+      "bbox": {
+        "x": 12,
+        "y": 56,
+        "width": 75,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Incorrect current reading:",
+      "bbox": {
+        "x": 12,
+        "y": 64,
+        "width": 75,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Bypassing the current reading:",
+      "bbox": {
+        "x": 12,
+        "y": 72,
+        "width": 75,
+        "height": 15
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.11. Miscellaneous issues",
+      "bbox": {
+        "x": 10,
+        "y": 90,
+        "width": 80,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 57,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "mixed",
+    "models_mentioned": [
+      "100/20"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Page contains troubleshooting information with clear wiring diagrams and model-specific notes for the 100/20 model"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp6__zh4g3/page_61.jpg",
+    "analysis_time_seconds": 12.797624,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:02:26.722408",
+    "input_tokens": 2198,
+    "output_tokens": 876
+  },
+  "page_number": 61
+}

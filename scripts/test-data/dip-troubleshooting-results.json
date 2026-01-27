@@ -1,0 +1,886 @@
+{
+  "troubleshooting": [
+    {
+      "symptom": "Engine does not start or starts with difficulty",
+      "symptom_variations": [
+        "won't start",
+        "no start",
+        "starter not working",
+        "hard to start"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Incomplete priming of fuel system",
+          "likelihood": "common",
+          "fix": "Carry out sufficient priming",
+          "fix_steps": [
+            "Open fuel cock",
+            "Loosen air bleed screw 2-3 turns",
+            "Push priming pump up and down about 60 times",
+            "Continue until fuel with no air bubbles flows",
+            "Tighten air bleed screw"
+          ]
+        },
+        {
+          "cause": "Fuel level in fuel tank is low",
+          "likelihood": "common",
+          "fix": "Add fuel",
+          "fix_steps": [
+            "Check fuel gauge",
+            "Fill tank with clean diesel fuel",
+            "Prime fuel system after refilling"
+          ]
+        },
+        {
+          "cause": "Clogged fuel inlet filter",
+          "likelihood": "common",
+          "fix": "Replace filter",
+          "fix_steps": [
+            "Close fuel cock",
+            "Remove old filter element",
+            "Install new filter element",
+            "Prime fuel system",
+            "Check for leaks"
+          ]
+        },
+        {
+          "cause": "Loose battery/starter terminal",
+          "likelihood": "common",
+          "fix": "Tighten terminals",
+          "fix_steps": [
+            "Turn off battery switch",
+            "Clean terminals",
+            "Tighten battery connections",
+            "Reconnect starter terminals"
+          ]
+        },
+        {
+          "cause": "Insufficient battery charge",
+          "likelihood": "common",
+          "fix": "Charge battery",
+          "fix_steps": [
+            "Check battery voltage",
+            "Charge battery if below 12V",
+            "Check electrolyte level",
+            "Test charging system"
+          ]
+        },
+        {
+          "cause": "Air trapped in fuel injection system",
+          "likelihood": "occasional",
+          "fix": "Bleed air from system and prime system",
+          "fix_steps": [
+            "Use priming pump to bleed air",
+            "Continue until no air bubbles",
+            "Check all fuel connections",
+            "Prime entire system"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "4JH57",
+        "VC20",
+        "SD60"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "159"
+    },
+    {
+      "symptom": "Engine stops suddenly",
+      "symptom_variations": [
+        "engine shuts down",
+        "sudden shutdown",
+        "engine quits"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Fuel level in fuel tank is low",
+          "likelihood": "common",
+          "fix": "Add fuel and prime",
+          "fix_steps": [
+            "Check fuel tank level",
+            "Add clean diesel fuel",
+            "Prime fuel system",
+            "Bleed air from lines"
+          ]
+        },
+        {
+          "cause": "Air trapped in fuel system or fuel injection",
+          "likelihood": "common",
+          "fix": "Bleed air",
+          "fix_steps": [
+            "Use priming pump to remove air",
+            "Loosen air bleed screws",
+            "Pump until fuel flows without bubbles",
+            "Tighten all connections"
+          ]
+        },
+        {
+          "cause": "Water trapped in fuel tank",
+          "likelihood": "occasional",
+          "fix": "Drain water from drain cock and fuel pipe, conduct priming",
+          "fix_steps": [
+            "Open fuel tank drain cock",
+            "Drain until clean fuel flows",
+            "Check fuel filter for water",
+            "Prime entire fuel system"
+          ]
+        },
+        {
+          "cause": "Clogged fuel filter",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Close fuel cock",
+            "Remove old filter",
+            "Install new filter element",
+            "Prime system",
+            "Start engine and check"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "160"
+    },
+    {
+      "symptom": "Engine is not running smoothly",
+      "symptom_variations": [
+        "rough idle",
+        "uneven running",
+        "engine misses",
+        "poor performance"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Operation failure of injection valve",
+          "likelihood": "occasional",
+          "fix": "Replace",
+          "fix_steps": [
+            "Diagnose injection system",
+            "Replace faulty injector",
+            "Have system professionally serviced"
+          ]
+        },
+        {
+          "cause": "Clogged fuel filter",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Close fuel cock",
+            "Remove old filter element",
+            "Install new filter",
+            "Prime system",
+            "Check operation"
+          ]
+        },
+        {
+          "cause": "Air trapped in fuel injection system",
+          "likelihood": "common",
+          "fix": "Bleed air from system and prime system",
+          "fix_steps": [
+            "Use priming pump",
+            "Bleed all air from lines",
+            "Prime entire system",
+            "Check for leaks"
+          ]
+        },
+        {
+          "cause": "Overload operation",
+          "likelihood": "common",
+          "fix": "Reduce load",
+          "fix_steps": [
+            "Reduce throttle setting",
+            "Check propeller condition",
+            "Verify proper gear ratio",
+            "Operate within engine specifications"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "160"
+    },
+    {
+      "symptom": "Abnormal smoke color",
+      "symptom_variations": [
+        "white smoke",
+        "black smoke",
+        "blue smoke",
+        "colored exhaust"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Clogged injection nozzle",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Have injectors professionally tested",
+            "Replace faulty injectors",
+            "Use proper fuel"
+          ]
+        },
+        {
+          "cause": "Overload operation",
+          "likelihood": "common",
+          "fix": "Reduce load",
+          "fix_steps": [
+            "Reduce throttle to recommended operating range",
+            "Check propeller pitch",
+            "Operate at proper engine speed"
+          ]
+        },
+        {
+          "cause": "Lubricant level too high",
+          "likelihood": "occasional",
+          "fix": "Lower the oil level",
+          "fix_steps": [
+            "Check oil dipstick",
+            "Drain excess oil",
+            "Maintain proper oil level"
+          ]
+        },
+        {
+          "cause": "Improper fuel",
+          "likelihood": "occasional",
+          "fix": "Replace with proper fuel",
+          "fix_steps": [
+            "Drain fuel system",
+            "Fill with recommended diesel fuel",
+            "Prime system",
+            "Replace fuel filter"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "160"
+    },
+    {
+      "symptom": "Insufficient output",
+      "symptom_variations": [
+        "low power",
+        "poor acceleration",
+        "lack of power",
+        "engine weak"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Clogged fuel filter",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Close fuel cock",
+            "Remove old filter",
+            "Install new filter element",
+            "Prime system"
+          ]
+        },
+        {
+          "cause": "Clogged injection hole",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Have injectors professionally cleaned or replaced",
+            "Use clean fuel",
+            "Replace fuel filter"
+          ]
+        },
+        {
+          "cause": "Insufficient seawater",
+          "likelihood": "common",
+          "fix": "Inspect seawater pump",
+          "fix_steps": [
+            "Check seawater discharge",
+            "Inspect impeller condition",
+            "Replace impeller if damaged",
+            "Check seawater intake"
+          ]
+        },
+        {
+          "cause": "Improper fuel",
+          "likelihood": "occasional",
+          "fix": "Replace with correct fuel",
+          "fix_steps": [
+            "Use recommended diesel fuel grade",
+            "Ensure proper cetane rating",
+            "Replace contaminated fuel"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "161"
+    },
+    {
+      "symptom": "Knocking",
+      "symptom_variations": [
+        "engine knock",
+        "pinging",
+        "metal noise",
+        "abnormal noise"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Sticking nozzle",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Have injection system professionally serviced",
+            "Replace faulty injectors",
+            "Use proper fuel"
+          ]
+        },
+        {
+          "cause": "Insufficient seawater",
+          "likelihood": "common",
+          "fix": "Replace seawater pump impeller",
+          "fix_steps": [
+            "Remove seawater pump cover",
+            "Inspect impeller",
+            "Replace if damaged",
+            "Check seawater flow"
+          ]
+        },
+        {
+          "cause": "Improper fuel",
+          "likelihood": "common",
+          "fix": "Replace with correct fuel",
+          "fix_steps": [
+            "Use recommended fuel grade",
+            "Ensure minimum cetane number 45",
+            "Replace contaminated fuel"
+          ]
+        },
+        {
+          "cause": "Water trapped in fuel",
+          "likelihood": "occasional",
+          "fix": "Replace fuel",
+          "fix_steps": [
+            "Drain water from fuel system",
+            "Replace contaminated fuel",
+            "Check fuel tank for water"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "161"
+    },
+    {
+      "symptom": "Low lubrication oil pressure",
+      "symptom_variations": [
+        "oil pressure alarm",
+        "low oil pressure light",
+        "insufficient oil pressure"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Clogged engine oil filter",
+          "likelihood": "common",
+          "fix": "Replace",
+          "fix_steps": [
+            "Turn off engine",
+            "Remove old filter",
+            "Install new filter element",
+            "Add oil if needed",
+            "Check oil level"
+          ]
+        },
+        {
+          "cause": "Insufficient engine oil quantity",
+          "likelihood": "common",
+          "fix": "Add oil",
+          "fix_steps": [
+            "Check oil dipstick",
+            "Add recommended oil to proper level",
+            "Check for leaks"
+          ]
+        },
+        {
+          "cause": "Engine oil temperature too high",
+          "likelihood": "common",
+          "fix": "Check the coolant level",
+          "fix_steps": [
+            "Check coolant level",
+            "Inspect cooling system",
+            "Check seawater flow",
+            "Reduce engine load"
+          ]
+        },
+        {
+          "cause": "Low viscosity of engine oil used",
+          "likelihood": "occasional",
+          "fix": "Replace the engine oil",
+          "fix_steps": [
+            "Use recommended oil viscosity",
+            "Change to proper grade oil",
+            "Follow temperature guidelines"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "163"
+    },
+    {
+      "symptom": "Coolant temperature too high",
+      "symptom_variations": [
+        "engine overheating",
+        "high temperature alarm",
+        "overheating"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Insufficient seawater",
+          "likelihood": "common",
+          "fix": "Check seawater system",
+          "fix_steps": [
+            "Check seawater discharge",
+            "Inspect seawater pump impeller",
+            "Clear any blockages",
+            "Check seacock is open"
+          ]
+        },
+        {
+          "cause": "Faulty thermostat",
+          "likelihood": "occasional",
+          "fix": "Replace",
+          "fix_steps": [
+            "Test thermostat operation",
+            "Replace if faulty",
+            "Check coolant circulation"
+          ]
+        },
+        {
+          "cause": "Loose drive belt of coolant pump",
+          "likelihood": "common",
+          "fix": "Adjust the belt tension",
+          "fix_steps": [
+            "Check belt tension",
+            "Adjust to proper specification",
+            "Replace belt if damaged"
+          ]
+        },
+        {
+          "cause": "Overloaded operation",
+          "likelihood": "common",
+          "fix": "Decrease the load",
+          "fix_steps": [
+            "Reduce throttle setting",
+            "Check propeller condition",
+            "Operate within specifications"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "163"
+    },
+    {
+      "symptom": "Battery low charge indicator does not go out during operation",
+      "symptom_variations": [
+        "charging system warning",
+        "alternator not charging",
+        "battery light on"
+      ],
+      "possible_causes": [
+        {
+          "cause": "V-ribbed belt is loose or broken",
+          "likelihood": "common",
+          "fix": "Replace V-ribbed belt or adjust tension",
+          "fix_steps": [
+            "Check belt condition",
+            "Adjust tension to specification",
+            "Replace if cracked or damaged"
+          ]
+        },
+        {
+          "cause": "Battery is defective",
+          "likelihood": "common",
+          "fix": "Check battery fluid level, specific gravity or replace battery",
+          "fix_steps": [
+            "Test battery voltage",
+            "Check electrolyte levels",
+            "Load test battery",
+            "Replace if necessary"
+          ]
+        },
+        {
+          "cause": "Alternator power generation failure",
+          "likelihood": "occasional",
+          "fix": "Consult authorized YANMAR Marine dealer or distributor",
+          "fix_steps": [
+            "Test alternator output",
+            "Check electrical connections",
+            "Have alternator tested professionally"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "163"
+    },
+    {
+      "symptom": "Starter does not turn or turns slowly",
+      "symptom_variations": [
+        "starter won't engage",
+        "slow cranking",
+        "starter motor failure"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Faulty starter relay",
+          "likelihood": "occasional",
+          "fix": "Consult authorized YANMAR Marine dealer or distributor",
+          "fix_steps": [
+            "Check relay operation",
+            "Test electrical connections",
+            "Replace faulty relay"
+          ]
+        },
+        {
+          "cause": "Faulty marine gear position",
+          "likelihood": "common",
+          "fix": "Shift to NEUTRAL and start",
+          "fix_steps": [
+            "Move control handle to neutral",
+            "Ensure neutral safety switch operates",
+            "Try starting again"
+          ]
+        },
+        {
+          "cause": "The fuse(50A) near the starter is burned out or the circuit is broken",
+          "likelihood": "occasional",
+          "fix": "Consult authorized YANMAR Marine dealer or distributor",
+          "fix_steps": [
+            "Check starter fuse",
+            "Test circuit continuity",
+            "Replace fuse if blown"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "163"
+    },
+    {
+      "symptom": "Water in sail drive seal indicator comes on",
+      "symptom_variations": [
+        "sail drive water alarm",
+        "seal water warning"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Rubber sail drive seal broken",
+          "likelihood": "occasional",
+          "fix": "Consult authorized YANMAR Marine dealer or distributor",
+          "fix_steps": [
+            "Stop engine immediately",
+            "Do not operate",
+            "Have seals inspected and replaced"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "SD60"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "163"
+    },
+    {
+      "symptom": "Tachometer does not turn on, even though the power switch is turned on",
+      "symptom_variations": [
+        "instrument panel dead",
+        "no display",
+        "gauges not working"
+      ],
+      "possible_causes": [
+        {
+          "cause": "No electrical current available",
+          "likelihood": "common",
+          "fix": "Consult authorized YANMAR Marine dealer or distributor",
+          "fix_steps": [
+            "Check battery switch position",
+            "Check fuse (3A) on instrument panel",
+            "Test circuit continuity"
+          ]
+        },
+        {
+          "cause": "The battery switch is turned off, the fuse (3A) on the instrument panel is burned out or the circuit is broken",
+          "likelihood": "common",
+          "fix": "Consult authorized YANMAR Marine dealer or distributor",
+          "fix_steps": [
+            "Turn on battery switch",
+            "Replace blown fuse",
+            "Check wiring harness"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "troubleshooting_table",
+      "page": "163"
+    },
+    {
+      "symptom": "White smoke from exhaust",
+      "symptom_variations": [
+        "white exhaust smoke",
+        "steam from exhaust"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Engine overfilled with oil",
+          "likelihood": "common",
+          "fix": "Drain excess oil to proper level",
+          "fix_steps": [
+            "Check oil dipstick",
+            "Drain oil to proper level",
+            "Check for other causes"
+          ]
+        },
+        {
+          "cause": "Water in cylinders",
+          "likelihood": "rare",
+          "fix": "Check cooling system for leaks",
+          "fix_steps": [
+            "Stop engine immediately",
+            "Check for coolant leaks",
+            "Have engine professionally inspected"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "procedure_note",
+      "page": "70"
+    },
+    {
+      "symptom": "Black smoke from exhaust",
+      "symptom_variations": [
+        "black exhaust smoke",
+        "sooty exhaust"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Engine overloading",
+          "likelihood": "common",
+          "fix": "Reduce load and check propeller",
+          "fix_steps": [
+            "Reduce throttle setting",
+            "Check propeller condition",
+            "Verify proper propeller pitch"
+          ]
+        },
+        {
+          "cause": "Clogged air filter",
+          "likelihood": "common",
+          "fix": "Clean or replace air filter",
+          "fix_steps": [
+            "Remove air filter element",
+            "Clean or replace",
+            "Check air intake system"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "procedure_note",
+      "page": "73"
+    },
+    {
+      "symptom": "Engine will not shut down with stop switch",
+      "symptom_variations": [
+        "won't stop",
+        "stop switch not working",
+        "engine keeps running"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Faulty stop switch",
+          "likelihood": "occasional",
+          "fix": "Use auxiliary stop switch",
+          "fix_steps": [
+            "Press auxiliary stop switch on ECU cover",
+            "Turn to STOP position",
+            "Have stop switch repaired"
+          ]
+        },
+        {
+          "cause": "Electrical system malfunction",
+          "likelihood": "rare",
+          "fix": "Turn off battery switch in emergency",
+          "fix_steps": [
+            "Turn off battery switch",
+            "This will cause alarm on restart",
+            "Have system checked by dealer"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "procedure_note",
+      "page": "76"
+    },
+    {
+      "symptom": "No seawater discharge from exhaust",
+      "symptom_variations": [
+        "no water from exhaust",
+        "dry exhaust",
+        "insufficient water flow"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Seawater pump impeller damaged",
+          "likelihood": "common",
+          "fix": "Replace impeller",
+          "fix_steps": [
+            "Remove seawater pump cover",
+            "Inspect impeller blades",
+            "Replace if cracked or damaged",
+            "Check wear plate"
+          ]
+        },
+        {
+          "cause": "Seacock closed",
+          "likelihood": "common",
+          "fix": "Open seacock",
+          "fix_steps": [
+            "Check seawater intake valve",
+            "Open seacock fully",
+            "Check for blockages"
+          ]
+        },
+        {
+          "cause": "Blocked seawater intake",
+          "likelihood": "common",
+          "fix": "Clear blockage",
+          "fix_steps": [
+            "Check thru-hull fitting",
+            "Remove any debris",
+            "Clear intake strainer"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "procedure_note",
+      "page": "71"
+    },
+    {
+      "symptom": "Engine vibration",
+      "symptom_variations": [
+        "excessive vibration",
+        "engine shaking",
+        "rough running"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Propeller shaft misalignment",
+          "likelihood": "common",
+          "fix": "Adjust propeller shaft alignment",
+          "fix_steps": [
+            "Check shaft alignment",
+            "Adjust engine mounts",
+            "Have alignment professionally checked"
+          ]
+        },
+        {
+          "cause": "Damaged propeller",
+          "likelihood": "common",
+          "fix": "Inspect and repair propeller",
+          "fix_steps": [
+            "Remove propeller",
+            "Check for damage",
+            "Have propeller repaired or balanced"
+          ]
+        },
+        {
+          "cause": "Engine mount problems",
+          "likelihood": "occasional",
+          "fix": "Check and adjust engine mounts",
+          "fix_steps": [
+            "Inspect flexible mounts",
+            "Check mount bolts",
+            "Adjust or replace as needed"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "procedure_note",
+      "page": "74"
+    },
+    {
+      "symptom": "Alarm buzzer sounds during operation",
+      "symptom_variations": [
+        "warning alarm",
+        "audible alarm",
+        "buzzer sounding"
+      ],
+      "possible_causes": [
+        {
+          "cause": "Engine coolant temperature too high",
+          "likelihood": "common",
+          "fix": "Stop engine and check cooling system",
+          "fix_steps": [
+            "Stop engine immediately",
+            "Check coolant level",
+            "Check seawater flow",
+            "Allow engine to cool"
+          ]
+        },
+        {
+          "cause": "Engine oil pressure too low",
+          "likelihood": "common",
+          "fix": "Stop engine and check oil level",
+          "fix_steps": [
+            "Stop engine immediately",
+            "Check oil level",
+            "Add oil if needed",
+            "Check for leaks"
+          ]
+        },
+        {
+          "cause": "Water in fuel",
+          "likelihood": "occasional",
+          "fix": "Drain water separator",
+          "fix_steps": [
+            "Drain fuel filter/water separator",
+            "Check fuel tank for water",
+            "Replace fuel filter"
+          ]
+        }
+      ],
+      "applies_to_models": [
+        "all"
+      ],
+      "source_type": "procedure_note",
+      "page": "74"
+    }
+  ]
+}

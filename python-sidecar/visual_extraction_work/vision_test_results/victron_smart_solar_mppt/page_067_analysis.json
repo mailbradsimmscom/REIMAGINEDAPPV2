@@ -1,0 +1,138 @@
+{
+  "figures": [
+    {
+      "type": "dimensional_drawing",
+      "title": "Dimensions 75/10 and 75/15",
+      "description": "Technical dimensional drawings showing front, side, and bottom views of the MPPT solar charger with measurements in millimeters, plus a 3D rendering.",
+      "bbox": {
+        "x": 10,
+        "y": 30,
+        "width": 85,
+        "height": 65
+      },
+      "figure_reference": "9.2.1",
+      "applies_to_models": [
+        "75/10",
+        "75/15"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "type": "other",
+      "title": "",
+      "description": "Product model header table showing four MPPT models",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 85,
+        "height": 8
+      },
+      "columns": [
+        "MPPT 75/10",
+        "MPPT 75/15",
+        "MPPT 100/15",
+        "MPPT 100/20"
+      ],
+      "is_multi_model": true,
+      "model_columns": {
+        "MPPT 75/10": "MPPT 75/10",
+        "MPPT 75/15": "MPPT 75/15",
+        "MPPT 100/15": "MPPT 100/15",
+        "MPPT 100/20": "MPPT 100/20"
+      },
+      "applies_to_models": [
+        "75/10",
+        "75/15",
+        "100/15",
+        "100/20"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Dimension Drawing - MPPT 75/10 - 75-15",
+      "description": "Small reference table in the dimensional drawing showing product codes and descriptions",
+      "bbox": {
+        "x": 55,
+        "y": 35,
+        "width": 30,
+        "height": 12
+      },
+      "columns": [
+        "Code",
+        "Description"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "75/10",
+        "75/15"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "Technical notes",
+      "bbox": {
+        "x": 10,
+        "y": 12,
+        "width": 85,
+        "height": 15
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "9.2. Dimension drawings",
+      "bbox": {
+        "x": 10,
+        "y": 27,
+        "width": 40,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "9.2.1. Dimensions 75/10 and 75/15",
+      "bbox": {
+        "x": 10,
+        "y": 32,
+        "width": 40,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "75/10",
+        "75/15"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 63,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "diagram",
+    "models_mentioned": [
+      "75/10",
+      "75/15",
+      "100/15",
+      "100/20"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Clear technical drawings with precise measurements"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmpve1w6q9r/page_67.jpg",
+    "analysis_time_seconds": 11.109704,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:03:54.825996",
+    "input_tokens": 2198,
+    "output_tokens": 880
+  },
+  "page_number": 67
+}

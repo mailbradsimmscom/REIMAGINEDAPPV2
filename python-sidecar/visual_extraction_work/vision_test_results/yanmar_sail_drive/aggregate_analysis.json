@@ -1,0 +1,471 @@
+{
+  "pdf": "/Users/brad/code/REIMAGINEDAPPV2/Rename/uploaded/yanmar_sail_drive.pdf",
+  "pages_analyzed": 5,
+  "models_mentioned": [
+    "SD110",
+    "SD150",
+    "SD25",
+    "SD60"
+  ],
+  "multi_model_tables": 0,
+  "model_specific_pages": 3,
+  "total_input_tokens": 10915,
+  "total_output_tokens": 2532,
+  "estimated_cost": 0.070725,
+  "results": [
+    {
+      "figures": [
+        {
+          "type": "exploded_view",
+          "title": "Component Identification - SD25",
+          "description": "Exploded view diagram showing all major components of the SD25 sail drive unit with numbered callouts identifying each part.",
+          "bbox": {
+            "x": 10,
+            "y": 15,
+            "width": 80,
+            "height": 70
+          },
+          "figure_reference": "Figure 1",
+          "applies_to_models": [
+            "SD25"
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "type": "parts_list",
+          "title": "Component identification legend",
+          "description": "Numbered list identifying all components shown in the exploded view diagram",
+          "bbox": {
+            "x": 10,
+            "y": 85,
+            "width": 80,
+            "height": 12
+          },
+          "columns": [
+            "Number",
+            "Component Name"
+          ],
+          "is_multi_model": false,
+          "model_columns": {},
+          "applies_to_models": [
+            "SD25"
+          ]
+        }
+      ],
+      "text_sections": [
+        {
+          "title": "PRODUCT OVERVIEW",
+          "bbox": {
+            "x": 10,
+            "y": 2,
+            "width": 80,
+            "height": 3
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "COMPONENT IDENTIFICATION",
+          "bbox": {
+            "x": 10,
+            "y": 6,
+            "width": 80,
+            "height": 3
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "SD25",
+          "bbox": {
+            "x": 10,
+            "y": 10,
+            "width": 20,
+            "height": 3
+          },
+          "content_type": "model_specific",
+          "applies_to_models": [
+            "SD25"
+          ]
+        }
+      ],
+      "page_metadata": {
+        "page_number": 10,
+        "has_header": true,
+        "has_footer": true,
+        "primary_content": "diagram",
+        "models_mentioned": [
+          "SD25"
+        ],
+        "is_model_specific_page": true,
+        "quality_notes": "Clear diagram with good resolution and complete component labeling"
+      },
+      "_metadata": {
+        "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_16.jpg",
+        "analysis_time_seconds": 7.470738,
+        "model": "claude-sonnet-4-20250514",
+        "timestamp": "2026-01-11T09:59:50.004112",
+        "input_tokens": 2183,
+        "output_tokens": 571
+      },
+      "page_number": 16
+    },
+    {
+      "figures": [
+        {
+          "type": "exploded_view",
+          "title": "SD60 Product Overview - Figure 2",
+          "description": "Detailed exploded view diagram of the SD60 saildrive unit showing all major components with numbered callouts including the propeller shaft, gear cases, flexible mount, and various internal components.",
+          "bbox": {
+            "x": 10,
+            "y": 15,
+            "width": 80,
+            "height": 70
+          },
+          "figure_reference": "Figure 2",
+          "applies_to_models": [
+            "SD60"
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "type": "parts_list",
+          "title": "Component Legend",
+          "description": "Numbered list of all components shown in the exploded view diagram, providing part names corresponding to the numbered callouts.",
+          "bbox": {
+            "x": 10,
+            "y": 85,
+            "width": 80,
+            "height": 10
+          },
+          "columns": [
+            "Number",
+            "Component Name"
+          ],
+          "is_multi_model": false,
+          "model_columns": {},
+          "applies_to_models": [
+            "SD60"
+          ]
+        }
+      ],
+      "text_sections": [
+        {
+          "title": "PRODUCT OVERVIEW",
+          "bbox": {
+            "x": 50,
+            "y": 5,
+            "width": 40,
+            "height": 5
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "SD60"
+          ]
+        },
+        {
+          "title": "SD60",
+          "bbox": {
+            "x": 10,
+            "y": 10,
+            "width": 10,
+            "height": 3
+          },
+          "content_type": "model_specific",
+          "applies_to_models": [
+            "SD60"
+          ]
+        }
+      ],
+      "page_metadata": {
+        "page_number": 11,
+        "has_header": true,
+        "has_footer": true,
+        "primary_content": "diagram",
+        "models_mentioned": [
+          "SD60"
+        ],
+        "is_model_specific_page": true,
+        "quality_notes": "Clear technical diagram with comprehensive parts list. Page specifically focuses on SD60 model."
+      },
+      "_metadata": {
+        "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_17.jpg",
+        "analysis_time_seconds": 8.457883,
+        "model": "claude-sonnet-4-20250514",
+        "timestamp": "2026-01-11T09:59:58.558076",
+        "input_tokens": 2183,
+        "output_tokens": 537
+      },
+      "page_number": 17
+    },
+    {
+      "figures": [
+        {
+          "type": "exploded_view",
+          "title": "Figure 3",
+          "description": "Exploded view diagram showing all major components of the SD110/SD150 sail drive unit with numbered callouts for each part.",
+          "bbox": {
+            "x": 10,
+            "y": 15,
+            "width": 80,
+            "height": 65
+          },
+          "figure_reference": "Figure 3",
+          "applies_to_models": [
+            "SD110",
+            "SD150"
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "type": "parts_list",
+          "title": "Parts List",
+          "description": "Numbered list of all components shown in the exploded view diagram, from dipstick to breather hose connection.",
+          "bbox": {
+            "x": 10,
+            "y": 82,
+            "width": 90,
+            "height": 15
+          },
+          "columns": [
+            "Number",
+            "Component Name"
+          ],
+          "is_multi_model": false,
+          "model_columns": {},
+          "applies_to_models": [
+            "SD110",
+            "SD150"
+          ]
+        }
+      ],
+      "text_sections": [
+        {
+          "title": "PRODUCT OVERVIEW",
+          "bbox": {
+            "x": 10,
+            "y": 5,
+            "width": 50,
+            "height": 5
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "SD110/SD150",
+          "bbox": {
+            "x": 10,
+            "y": 10,
+            "width": 30,
+            "height": 3
+          },
+          "content_type": "model_specific",
+          "applies_to_models": [
+            "SD110",
+            "SD150"
+          ]
+        }
+      ],
+      "page_metadata": {
+        "page_number": "12",
+        "has_header": false,
+        "has_footer": true,
+        "primary_content": "diagram",
+        "models_mentioned": [
+          "SD110",
+          "SD150"
+        ],
+        "is_model_specific_page": true,
+        "quality_notes": "Clear technical diagram with comprehensive parts list. Page specifically covers SD110/SD150 models only."
+      },
+      "_metadata": {
+        "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_18.jpg",
+        "analysis_time_seconds": 8.046832,
+        "model": "claude-sonnet-4-20250514",
+        "timestamp": "2026-01-11T10:00:06.711979",
+        "input_tokens": 2183,
+        "output_tokens": 541
+      },
+      "page_number": 18
+    },
+    {
+      "figures": [],
+      "tables": [],
+      "text_sections": [
+        {
+          "title": "PRODUCT OVERVIEW",
+          "bbox": {
+            "x": 50,
+            "y": 5,
+            "width": 50,
+            "height": 5
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "GALVANIC CORROSION",
+          "bbox": {
+            "x": 0,
+            "y": 15,
+            "width": 48,
+            "height": 5
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "CORROSION CONTROL",
+          "bbox": {
+            "x": 52,
+            "y": 15,
+            "width": 48,
+            "height": 5
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "",
+          "bbox": {
+            "x": 0,
+            "y": 20,
+            "width": 48,
+            "height": 75
+          },
+          "content_type": "instructions",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "",
+          "bbox": {
+            "x": 52,
+            "y": 20,
+            "width": 48,
+            "height": 75
+          },
+          "content_type": "instructions",
+          "applies_to_models": [
+            "all"
+          ]
+        }
+      ],
+      "page_metadata": {
+        "page_number": 13,
+        "has_header": false,
+        "has_footer": true,
+        "primary_content": "text",
+        "models_mentioned": [],
+        "is_model_specific_page": false,
+        "quality_notes": "Clear text explaining galvanic corrosion principles and control methods for marine applications"
+      },
+      "_metadata": {
+        "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_19.jpg",
+        "analysis_time_seconds": 6.054656,
+        "model": "claude-sonnet-4-20250514",
+        "timestamp": "2026-01-11T10:00:12.871089",
+        "input_tokens": 2183,
+        "output_tokens": 460
+      },
+      "page_number": 19
+    },
+    {
+      "figures": [],
+      "tables": [],
+      "text_sections": [
+        {
+          "title": "PRODUCT OVERVIEW",
+          "bbox": {
+            "x": 5,
+            "y": 5,
+            "width": 90,
+            "height": 8
+          },
+          "content_type": "heading",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "NOTICE",
+          "bbox": {
+            "x": 5,
+            "y": 15,
+            "width": 45,
+            "height": 15
+          },
+          "content_type": "warning",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "NOTICE",
+          "bbox": {
+            "x": 5,
+            "y": 35,
+            "width": 45,
+            "height": 40
+          },
+          "content_type": "warning",
+          "applies_to_models": [
+            "all"
+          ]
+        },
+        {
+          "title": "Electrical Connections and Regulations According to International Rules ISO 60092-507 IEC:2008",
+          "bbox": {
+            "x": 55,
+            "y": 15,
+            "width": 40,
+            "height": 80
+          },
+          "content_type": "instructions",
+          "applies_to_models": [
+            "all"
+          ]
+        }
+      ],
+      "page_metadata": {
+        "page_number": 14,
+        "has_header": true,
+        "has_footer": true,
+        "primary_content": "text",
+        "models_mentioned": [
+          "SD25",
+          "SD60",
+          "SD110",
+          "SD150"
+        ],
+        "is_model_specific_page": false,
+        "quality_notes": "Clear text page with warning notices about anode materials and electrical connections"
+      },
+      "_metadata": {
+        "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_20.jpg",
+        "analysis_time_seconds": 6.755769,
+        "model": "claude-sonnet-4-20250514",
+        "timestamp": "2026-01-11T10:00:19.718857",
+        "input_tokens": 2183,
+        "output_tokens": 423
+      },
+      "page_number": 20
+    }
+  ]
+}

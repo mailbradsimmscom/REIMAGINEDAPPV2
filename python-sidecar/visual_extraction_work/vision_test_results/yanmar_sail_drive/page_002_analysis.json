@@ -1,0 +1,103 @@
+{
+  "figures": [],
+  "tables": [
+    {
+      "type": "other",
+      "title": "",
+      "description": "Document identification table showing operation manual model codes and reference number",
+      "bbox": {
+        "x": 10,
+        "y": 85,
+        "width": 80,
+        "height": 10
+      },
+      "columns": [
+        "OPERATION MANUAL",
+        "MODEL",
+        "CODE"
+      ],
+      "is_multi_model": true,
+      "model_columns": {
+        "MODEL": [
+          "SD25",
+          "SD60",
+          "SD110",
+          "SD150"
+        ],
+        "CODE": [
+          "0ASDM-M00040"
+        ]
+      },
+      "applies_to_models": [
+        "SD25",
+        "SD60",
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "California Proposition 65 Warning",
+      "bbox": {
+        "x": 15,
+        "y": 20,
+        "width": 70,
+        "height": 15
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Disclaimers",
+      "bbox": {
+        "x": 10,
+        "y": 40,
+        "width": 80,
+        "height": 25
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "All Rights Reserved",
+      "bbox": {
+        "x": 10,
+        "y": 65,
+        "width": 80,
+        "height": 15
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Legal disclaimer and copyright page with model identification table"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmphqnr_0tx/page_2.jpg",
+    "analysis_time_seconds": 7.922389,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:56:30.503998",
+    "input_tokens": 2183,
+    "output_tokens": 513
+  },
+  "page_number": 2
+}

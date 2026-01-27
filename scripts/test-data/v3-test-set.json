@@ -1,0 +1,631 @@
+[
+  {
+    "table": "staging_spec_suggestions",
+    "id": "09e10ce1-eec9-42ce-ba44-57c189503f2e",
+    "result": "auto_approved",
+    "content": {
+      "id": "09e10ce1-eec9-42ce-ba44-57c189503f2e",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "approved_at": "2025-10-09T16:47:07.422786+00:00",
+      "created_at": "2025-10-09T16:47:07.422786+00:00",
+      "updated_at": "2025-10-09T16:47:07.422786+00:00",
+      "status": "pending",
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "description": "all",
+      "parameter": "Steak Temperature Setting",
+      "normalized_parameter": "cooking_temperature_steak",
+      "parameter_aliases": [
+        "steak temp",
+        "steak heat setting"
+      ],
+      "value": "550",
+      "range": "",
+      "units": "°F",
+      "normalized_units": "°C",
+      "converted_value": "288",
+      "category": "Performance",
+      "search_terms": [
+        "steak temperature",
+        "how hot for steak",
+        "steak cooking temp"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Section 6"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_spec_suggestions",
+    "id": "bae3d442-ba4c-4aa6-804e-1cf11f60491b",
+    "result": "auto_approved",
+    "content": {
+      "id": "bae3d442-ba4c-4aa6-804e-1cf11f60491b",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "approved_at": "2025-10-09T16:47:07.422786+00:00",
+      "created_at": "2025-10-09T16:47:07.422786+00:00",
+      "updated_at": "2025-10-09T16:47:07.422786+00:00",
+      "status": "pending",
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "description": "Kenyon Grill",
+      "parameter": "Maintenance Frequency",
+      "normalized_parameter": "cleaning_frequency",
+      "parameter_aliases": [
+        "cleaning schedule",
+        "maintenance schedule"
+      ],
+      "value": "after each use",
+      "range": "",
+      "units": "uses",
+      "normalized_units": "uses",
+      "converted_value": "1",
+      "category": "Maintenance",
+      "search_terms": [
+        "how often to clean",
+        "cleaning frequency",
+        "maintenance schedule"
+      ],
+      "concept_group": "maintenance_requirements",
+      "references": [
+        "Operation section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_spec_suggestions",
+    "id": "bd4478a4-2906-4bc0-aaa3-a916ca996e66",
+    "result": "auto_approved",
+    "content": {
+      "id": "bd4478a4-2906-4bc0-aaa3-a916ca996e66",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "approved_at": "2025-10-09T16:47:07.422786+00:00",
+      "created_at": "2025-10-09T16:47:07.422786+00:00",
+      "updated_at": "2025-10-09T16:47:07.422786+00:00",
+      "status": "pending",
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "description": "all",
+      "parameter": "Burger Temperature Setting",
+      "normalized_parameter": "cooking_temperature_burger",
+      "parameter_aliases": [
+        "burger temp",
+        "hamburger temperature"
+      ],
+      "value": "500",
+      "range": "",
+      "units": "°F",
+      "normalized_units": "°C",
+      "converted_value": "260",
+      "category": "Performance",
+      "search_terms": [
+        "burger temperature",
+        "how hot for burgers"
+      ],
+      "concept_group": "temperature_settings",
+      "references": [
+        "Section 6"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_playbook_hints",
+    "id": "75e83f79-3808-4741-8d88-a22dbd4fa468",
+    "result": "auto_approved",
+    "content": {
+      "id": "75e83f79-3808-4741-8d88-a22dbd4fa468",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "title": "Grease Fire Response",
+      "description": "Kenyon Grill",
+      "steps": [
+        "DO NOT use water on the fire",
+        "Smother fire or flame",
+        "OR use dry chemical extinguisher",
+        "OR use foam-type extinguisher"
+      ],
+      "expected_outcome": "Safe extinguishment of grease fire",
+      "preconditions": [
+        "Active grease fire"
+      ],
+      "error_codes": [],
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "status": "pending",
+      "created_at": "2025-10-09T16:47:07.264154+00:00",
+      "updated_at": "2025-10-09T16:47:07.264154+00:00",
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_playbook_hints",
+    "id": "9310e36d-1a39-4b3b-96a9-9c9440b29412",
+    "result": "auto_approved",
+    "content": {
+      "id": "9310e36d-1a39-4b3b-96a9-9c9440b29412",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "title": "Pre-Use Cleaning",
+      "description": "Kenyon Grill",
+      "steps": [
+        "Wipe stainless steel surfaces with damp cloth to remove residue",
+        "Apply stainless steel cleaner monthly",
+        "Clean touch control area with glass cleaner and soft towel",
+        "Use ceramic glass cleaner for stubborn stains on control area"
+      ],
+      "expected_outcome": "Clean grill surfaces ready for use",
+      "preconditions": [
+        "New grill or before use"
+      ],
+      "error_codes": [],
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "status": "pending",
+      "created_at": "2025-10-09T16:47:07.264154+00:00",
+      "updated_at": "2025-10-09T16:47:07.264154+00:00",
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_playbook_hints",
+    "id": "c25ea00d-73a8-437f-bc9a-aefc7cdedb73",
+    "result": "auto_approved",
+    "content": {
+      "id": "c25ea00d-73a8-437f-bc9a-aefc7cdedb73",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "title": "Post-Use Cleaning Protocol",
+      "description": "Kenyon Grill",
+      "steps": [
+        "Remove drip tray",
+        "Clean drip tray thoroughly",
+        "Clean baffle tray",
+        "Ensure no grease accumulation between cooking sessions"
+      ],
+      "expected_outcome": "Clean grill ready for next use",
+      "preconditions": [
+        "After each use"
+      ],
+      "error_codes": [],
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "status": "pending",
+      "created_at": "2025-10-09T16:47:07.264154+00:00",
+      "updated_at": "2025-10-09T16:47:07.264154+00:00",
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_playbook_hints",
+    "id": "d280d397-389a-4bed-893d-17ac8c4c7ae3",
+    "result": "auto_approved",
+    "content": {
+      "id": "d280d397-389a-4bed-893d-17ac8c4c7ae3",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "title": "Broken Grate Safety Protocol",
+      "description": "Kenyon Grill",
+      "steps": [
+        "Stop using grill immediately",
+        "Contact authorized service center",
+        "OR contact KENYON Customer Care at (860) 664-4906"
+      ],
+      "expected_outcome": "Prevention of electric shock and fire hazards",
+      "preconditions": [
+        "Broken grill grate or griddle"
+      ],
+      "error_codes": [],
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "status": "pending",
+      "created_at": "2025-10-09T16:47:07.264154+00:00",
+      "updated_at": "2025-10-09T16:47:07.264154+00:00",
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_intent_router",
+    "id": "45f15655-1a93-4766-83be-3cef5b721837",
+    "result": "auto_approved",
+    "content": {
+      "id": "45f15655-1a93-4766-83be-3cef5b721837",
+      "created_at": "2025-10-09T16:40:21.861335+00:00",
+      "updated_at": "2025-10-09T16:40:21.861335+00:00",
+      "created_by": "system",
+      "doc_id": "9e0b6fb811e2da69c0047656bd7ee8cf7d7dfd1e4302b0fd24230b3072b6aa03",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "dst810",
+      "asset_uid": "549c1e74-8bb9-5dc8-523b-53518c35c26b",
+      "description": "P617V, B617V, SS617V",
+      "question": "What are the dimensions of the DST810?",
+      "question_variations": [
+        "How big is the DST810?",
+        "What are the size specifications?",
+        "Give me the DST810 measurements"
+      ],
+      "answer": "Dimensions vary by material: 75 mm (2.94\") for Plastic, Bronze, and Stainless Steel models, and 125 mm (4.92\") for Bronze and Plastic models, with 5 mm (0.20\") thickness",
+      "question_type": "What",
+      "references": [
+        "DIMENSIONS section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_spec_suggestions",
+    "id": "d1798619-44ca-4375-b5a1-9562e7e12e05",
+    "result": "queued",
+    "content": {
+      "id": "d1798619-44ca-4375-b5a1-9562e7e12e05",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "approved_at": "2025-10-09T16:47:07.422786+00:00",
+      "created_at": "2025-10-09T16:47:07.422786+00:00",
+      "updated_at": "2025-10-09T16:47:07.422786+00:00",
+      "status": "pending",
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "description": "all",
+      "parameter": "Steak Power Setting",
+      "normalized_parameter": "power_level_steak",
+      "parameter_aliases": [
+        "steak power",
+        "steak heat level"
+      ],
+      "value": "16",
+      "range": "",
+      "units": "level",
+      "normalized_units": "level",
+      "converted_value": "16",
+      "category": "Performance",
+      "search_terms": [
+        "steak power level",
+        "power setting for steak"
+      ],
+      "concept_group": "power_settings",
+      "references": [
+        "Section 6"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_spec_suggestions",
+    "id": "fb7ea35e-6518-419a-8044-b1fc30f3cf81",
+    "result": "queued",
+    "content": {
+      "id": "fb7ea35e-6518-419a-8044-b1fc30f3cf81",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "approved_at": "2025-10-09T16:47:07.422786+00:00",
+      "created_at": "2025-10-09T16:47:07.422786+00:00",
+      "updated_at": "2025-10-09T16:47:07.422786+00:00",
+      "status": "pending",
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "description": "Kenyon Grill",
+      "parameter": "Control Panel Material",
+      "normalized_parameter": "control_panel_material",
+      "parameter_aliases": [
+        "touch control surface",
+        "control surface"
+      ],
+      "value": "ceramic glass",
+      "range": "",
+      "units": "",
+      "normalized_units": "",
+      "converted_value": null,
+      "category": "Physical",
+      "search_terms": [
+        "control panel material",
+        "touch control surface",
+        "what is the control panel made of"
+      ],
+      "concept_group": "construction_materials",
+      "references": [
+        "Before Using the Grill section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_intent_router",
+    "id": "1ceed70a-fc61-42f7-991b-57e864d0e2d4",
+    "result": "queued",
+    "content": {
+      "id": "1ceed70a-fc61-42f7-991b-57e864d0e2d4",
+      "created_at": "2025-10-09T16:40:21.861335+00:00",
+      "updated_at": "2025-10-09T16:40:21.861335+00:00",
+      "created_by": "system",
+      "doc_id": "9e0b6fb811e2da69c0047656bd7ee8cf7d7dfd1e4302b0fd24230b3072b6aa03",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "dst810",
+      "asset_uid": "549c1e74-8bb9-5dc8-523b-53518c35c26b",
+      "description": "DST810",
+      "question": "What are the technical specifications?",
+      "question_variations": [
+        "What are the DST810 specs?",
+        "Give me the technical details",
+        "What are the operating parameters?"
+      ],
+      "answer": "Technical specifications include: DPT: 15.5 m, SPD: 3.25 KTS, TEMP: 65°",
+      "question_type": "What",
+      "references": [
+        "Technical Specifications section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_intent_router",
+    "id": "47974b03-c889-4543-bb50-b9bfdbf67e15",
+    "result": "queued",
+    "content": {
+      "id": "47974b03-c889-4543-bb50-b9bfdbf67e15",
+      "created_at": "2025-10-09T16:40:21.861335+00:00",
+      "updated_at": "2025-10-09T16:40:21.861335+00:00",
+      "created_by": "system",
+      "doc_id": "9e0b6fb811e2da69c0047656bd7ee8cf7d7dfd1e4302b0fd24230b3072b6aa03",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "dst810",
+      "asset_uid": "549c1e74-8bb9-5dc8-523b-53518c35c26b",
+      "description": "DST810",
+      "question": "How many heel angles can be calibrated?",
+      "question_variations": [
+        "What is the maximum number of heel angle calibrations?",
+        "How many heel angles does DST810 support?",
+        "Tell me about heel angle calibration limits"
+      ],
+      "answer": "The DST810 can be calibrated at 5 heel angles and up to 10 speeds",
+      "question_type": "How",
+      "references": [
+        "Calibration Options section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_intent_router",
+    "id": "bced2d28-c0b1-4e82-b0d0-7c1463b2f61c",
+    "result": "queued",
+    "content": {
+      "id": "bced2d28-c0b1-4e82-b0d0-7c1463b2f61c",
+      "created_at": "2025-10-09T16:40:21.861335+00:00",
+      "updated_at": "2025-10-09T16:40:21.861335+00:00",
+      "created_by": "system",
+      "doc_id": "9e0b6fb811e2da69c0047656bd7ee8cf7d7dfd1e4302b0fd24230b3072b6aa03",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "dst810",
+      "asset_uid": "549c1e74-8bb9-5dc8-523b-53518c35c26b",
+      "description": "DST810",
+      "question": "What are the supported NMEA 2000 PGNs?",
+      "question_variations": [
+        "Which PGNs work with DST810?",
+        "What NMEA protocols are compatible?",
+        "List the supported PGN numbers"
+      ],
+      "answer": "Supported PGNs include 059904 (ISO Request), 060928 (ISO Address Claim), 065240 (Commanded Address), 59392 (ISO Acknowledgement), 126208, 126464, 126993, 126996, 126998, 127257, 128259, 128267, 128275, 130310, 130311, 130312, and 130316",
+      "question_type": "What",
+      "references": [
+        "NMEA 2000® Supported PGNs section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_golden_tests",
+    "id": "6324e5eb-8446-472a-b2d4-c21e2fe650c4",
+    "result": "queued",
+    "content": {
+      "id": "6324e5eb-8446-472a-b2d4-c21e2fe650c4",
+      "doc_id": "24db1280f8ef2692136c13f7d30acb2da3823674acde7e666d5219202a1b5380",
+      "query": "Is chartplotter NMEA 0183 baud rate correct?",
+      "expected": "38400 baud",
+      "created_at": "2025-10-08T23:43:09.44179+00:00",
+      "updated_at": "2025-10-08T23:43:09.44179+00:00",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "nais_500",
+      "asset_uid": "03243554-c801-a612-e90b-b312313f02b0",
+      "description": "NAIS-500",
+      "test_method": "Check chartplotter configuration",
+      "failure_indication": "AIS messages not displaying",
+      "related_procedures": [
+        "Chartplotter configuration"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_golden_tests",
+    "id": "8d398bf5-fe46-40ce-9784-f931423c04fe",
+    "result": "queued",
+    "content": {
+      "id": "8d398bf5-fe46-40ce-9784-f931423c04fe",
+      "doc_id": "65d5a6014b53b06b28cf1fcf0b53af780e8ee6f28f1626af7b0ede65d8cd4aeb",
+      "query": "Is valid MMSI number entered?",
+      "expected": "Valid MMSI number programmed before DSC use",
+      "created_at": "2025-10-09T00:28:33.029897+00:00",
+      "updated_at": "2025-10-09T00:28:33.029897+00:00",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "v100_v100_b_handset",
+      "asset_uid": "47c6f26c-02bd-7732-5d3a-3f51d4913c36",
+      "description": "RS100, RS100-B, V100, V100-B",
+      "test_method": "Check MMSI number in radio settings",
+      "failure_indication": "DSC functions will not work",
+      "related_procedures": [
+        "Initial Setup",
+        "DSC Configuration"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_golden_tests",
+    "id": "8e9c2be3-1243-44f7-adfc-654485d699a5",
+    "result": "queued",
+    "content": {
+      "id": "8e9c2be3-1243-44f7-adfc-654485d699a5",
+      "doc_id": "65d5a6014b53b06b28cf1fcf0b53af780e8ee6f28f1626af7b0ede65d8cd4aeb",
+      "query": "Is radio configured for correct region/country?",
+      "expected": "Radio region and country settings match operation location",
+      "created_at": "2025-10-09T00:28:33.029897+00:00",
+      "updated_at": "2025-10-09T00:28:33.029897+00:00",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "v100_v100_b_handset",
+      "asset_uid": "47c6f26c-02bd-7732-5d3a-3f51d4913c36",
+      "description": "RS100, RS100-B, V100, V100-B",
+      "test_method": "Check region/country settings in radio menu",
+      "failure_indication": "Radio may operate on incorrect frequencies or settings",
+      "related_procedures": [
+        "Initial Setup",
+        "Region Configuration"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_golden_tests",
+    "id": "ed46646a-b191-44f3-b9b5-6e1f3202b732",
+    "result": "queued",
+    "content": {
+      "id": "ed46646a-b191-44f3-b9b5-6e1f3202b732",
+      "doc_id": "65d5a6014b53b06b28cf1fcf0b53af780e8ee6f28f1626af7b0ede65d8cd4aeb",
+      "query": "Is there adequate separation distance from VHF antenna?",
+      "expected": "Minimum 2.1m separation between antenna and all persons",
+      "created_at": "2025-10-09T00:28:33.029897+00:00",
+      "updated_at": "2025-10-09T00:28:33.029897+00:00",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "v100_v100_b_handset",
+      "asset_uid": "47c6f26c-02bd-7732-5d3a-3f51d4913c36",
+      "description": "RS100, RS100-B, V100, V100-B",
+      "test_method": "Measure physical distance from antenna to nearest possible human position",
+      "failure_indication": "Risk of RF exposure exceeding safety limits",
+      "related_procedures": [
+        "Antenna Installation",
+        "RF Safety Compliance"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_golden_tests",
+    "id": "7798ab55-953d-4ff1-b97c-0f28e4f3e203",
+    "result": "queued",
+    "content": {
+      "id": "7798ab55-953d-4ff1-b97c-0f28e4f3e203",
+      "doc_id": "65d5a6014b53b06b28cf1fcf0b53af780e8ee6f28f1626af7b0ede65d8cd4aeb",
+      "query": "Is radio within VHF safety system range?",
+      "expected": "Within 20 nautical miles of shore-based Channel 70 system",
+      "created_at": "2025-10-09T00:28:33.029897+00:00",
+      "updated_at": "2025-10-09T00:28:33.029897+00:00",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "v100_v100_b_handset",
+      "asset_uid": "47c6f26c-02bd-7732-5d3a-3f51d4913c36",
+      "description": "RS100, RS100-B, V100, V100-B",
+      "test_method": "Verify distance to nearest Channel 70 station",
+      "failure_indication": "Distress calls may not be received by safety systems",
+      "related_procedures": [
+        "Installation Planning",
+        "Safety System Coverage"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_playbook_hints",
+    "id": "3b1a54f6-77a1-4e90-9261-04297fc13bfa",
+    "result": "pre_reject",
+    "content": {
+      "id": "3b1a54f6-77a1-4e90-9261-04297fc13bfa",
+      "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+      "title": "Verify Installation Space Requirements",
+      "description": "No Lid Built-In Grill with IntelliKEN Touch™",
+      "steps": [
+        "Measure cutout width - must be 19 3/4\" (502mm)",
+        "Measure cutout depth - must be 11 5/8\" (295mm)",
+        "Verify corner radius is 1/4\" (6mm)",
+        "Confirm total height clearance of 21\" (533mm) including 1\" drain fitting",
+        "Verify width clearance of 12\" (305mm)",
+        "Ensure depth clearance of 21\" (533mm)"
+      ],
+      "expected_outcome": "Installation space meets all dimensional requirements",
+      "preconditions": [
+        "Access to installation location",
+        "Measuring tools"
+      ],
+      "error_codes": [],
+      "manufacturer_norm": "Kenyon",
+      "model_norm": "silken_grill",
+      "asset_uid": "949d1562-68ae-2382-98cd-8647ff498aa7",
+      "status": "pending",
+      "created_at": "2025-10-09T16:47:07.264154+00:00",
+      "updated_at": "2025-10-09T16:47:07.264154+00:00",
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  },
+  {
+    "table": "staging_intent_router",
+    "id": "6f7a408c-1b73-4c52-9fe6-3b63049aa8e4",
+    "result": "pre_reject",
+    "content": {
+      "id": "6f7a408c-1b73-4c52-9fe6-3b63049aa8e4",
+      "created_at": "2025-10-09T16:40:21.861335+00:00",
+      "updated_at": "2025-10-09T16:40:21.861335+00:00",
+      "created_by": "system",
+      "doc_id": "9e0b6fb811e2da69c0047656bd7ee8cf7d7dfd1e4302b0fd24230b3072b6aa03",
+      "status": "pending",
+      "manufacturer_norm": "B&G",
+      "model_norm": "dst810",
+      "asset_uid": "549c1e74-8bb9-5dc8-523b-53518c35c26b",
+      "description": "DST810",
+      "question": "What app is used to calibrate the DST810?",
+      "question_variations": [
+        "Which application do I need for DST810 calibration?",
+        "How do I calibrate my DST810 device?",
+        "What software works with DST810?"
+      ],
+      "answer": "The Airmar CAST™ app is used to calibrate the DST810",
+      "question_type": "What",
+      "references": [
+        "CAST App With DST810 section"
+      ],
+      "processing_run_id": null,
+      "processing_started_at": null
+    }
+  }
+]

@@ -415,7 +415,8 @@ class DocumentRepository {
       const { data, error } = await supabase
         .from('systems')
         .update({
-          manual: manualValue
+          manual: manualValue,
+          Manual_Local_Copy: manualValue
         })
         .eq('asset_uid', assetUid)
         .select()
@@ -423,7 +424,7 @@ class DocumentRepository {
 
       if (error) throw error;
 
-      this.requestLogger.info('System manual flag updated', { assetUid, manual: manualValue });
+      this.requestLogger.info('System manual flags updated', { assetUid, manual: manualValue, Manual_Local_Copy: manualValue });
       return data;
     } catch (error) {
       this.requestLogger.error('Failed to update system manual flag', {

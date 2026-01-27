@@ -1,0 +1,798 @@
+{
+  "intent_routes": [
+    {
+      "question": "What engine oil viscosity should I use?",
+      "question_variations": [
+        "What SAE grade oil do I need?",
+        "What weight oil is recommended?",
+        "Which oil viscosity is best?"
+      ],
+      "answer": "SAE 10W-30 or SAE 15W-40 are the recommended oil viscosities. Engine oil 10W-30 and 15W-40 can be used throughout the year.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "57"
+    },
+    {
+      "question": "How much engine oil does the 4JH57 hold?",
+      "question_variations": [
+        "What is the oil capacity for 4JH57?",
+        "How many liters of oil for 4JH57?",
+        "Oil capacity 4JH57"
+      ],
+      "answer": "Total: 5.0 L (5.28 qt) at rake angle 7\u00b0, or 5.5 L (5.81 qt) at rake angle 0\u00b0. Oil pan only: 4.5 L (4.76 qt) or 5.0 L (5.28 qt).",
+      "question_type": "How",
+      "applies_to_models": [
+        "4JH57"
+      ],
+      "page": "181"
+    },
+    {
+      "question": "What fuel should I use?",
+      "question_variations": [
+        "What type of diesel fuel?",
+        "Which fuel is recommended?",
+        "What diesel specifications?"
+      ],
+      "answer": "Use diesel fuel complying with ASTM D975 No. 2-D S15, No. 1-D S15, EN590-2009, ISO 8217 DMX, BS 2869-A1 or A2, or JIS K2204 Grade No. 2. Sulfur content must not exceed 0.5% by volume.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "52"
+    },
+    {
+      "question": "How do I check the engine oil level?",
+      "question_variations": [
+        "How to check oil level?",
+        "Reading the dipstick procedure",
+        "Checking oil dipstick"
+      ],
+      "answer": "Make sure the engine is level. Remove dipstick and wipe with clean cloth. Fully reinsert dipstick, then remove. The oil level should be between upper and lower lines on the dipstick.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "58"
+    },
+    {
+      "question": "When should I change the engine oil?",
+      "question_variations": [
+        "Oil change interval",
+        "How often to change oil?",
+        "Engine oil replacement schedule"
+      ],
+      "answer": "Change the engine oil after the first 50 hours of operation and then at every 250 hours thereafter.",
+      "question_type": "When",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "57"
+    },
+    {
+      "question": "How do I bleed the fuel system?",
+      "question_variations": [
+        "Fuel system bleeding procedure",
+        "How to prime fuel system?",
+        "Air bleeding fuel lines"
+      ],
+      "answer": "Open fuel cock, loosen air bleed screw 2-3 turns, push priming pump up and down until fuel with no air bubbles flows (approx. 60 times), then tighten air bleed screw.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "56"
+    },
+    {
+      "question": "What is the normal coolant operating temperature?",
+      "question_variations": [
+        "Normal engine temperature",
+        "Operating temperature range",
+        "Coolant temp normal"
+      ],
+      "answer": "Normal coolant operating temperature is approximately 76\u00b0 to 90 \u00b0C (169\u00b0 to 194 \u00b0F).",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "question": "What is the normal oil pressure?",
+      "question_variations": [
+        "Engine oil pressure range",
+        "Normal oil pressure reading",
+        "Oil pressure specification"
+      ],
+      "answer": "Normal oil pressure at 3000 min-1 is 0.28 to 0.54 MPa (41 to 78 psi).",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "question": "How do I check the seawater pump impeller?",
+      "question_variations": [
+        "Inspecting impeller",
+        "Seawater pump maintenance",
+        "Checking pump impeller"
+      ],
+      "answer": "Loosen side cover bolts and remove cover. Inspect inside with flashlight. Check for cracked or nicked impeller blades, marred surfaces, or damaged wear plate. If no damage, install O-ring and side cover.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148"
+    },
+    {
+      "question": "When should I replace the seawater pump impeller?",
+      "question_variations": [
+        "Impeller replacement interval",
+        "How often change impeller?",
+        "Seawater pump impeller schedule"
+      ],
+      "answer": "The seawater pump impeller must be replaced every 1000 hours even if it is not damaged.",
+      "question_type": "When",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148"
+    },
+    {
+      "question": "How do I start the engine with instrument panel?",
+      "question_variations": [
+        "Starting procedure",
+        "Engine start steps",
+        "How to start engine"
+      ],
+      "answer": "Open seacock and fuel tank cock, put remote control in NEUTRAL, turn on battery switch, check alarm lamps work when power switch is pushed, then push start switch to start engine.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "69"
+    },
+    {
+      "question": "What should I check after the engine starts?",
+      "question_variations": [
+        "Post-start checks",
+        "After starting checklist",
+        "Engine startup verification"
+      ],
+      "answer": "Check gauges and alarms are normal, check for water/fuel/oil leaks, check smoke color and engine vibration, verify sufficient seawater discharge, keep engine at low speed to distribute oil.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "question": "How do I properly shut down the engine?",
+      "question_variations": [
+        "Engine shutdown procedure",
+        "Stopping the engine",
+        "Normal engine stop"
+      ],
+      "answer": "Reduce to low idle, put remote control in NEUTRAL, race engine 5 times, run at low speed for 5 minutes, push stop switch until engine stops, turn off power switch, wait 6 seconds before turning off battery switch.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "75"
+    },
+    {
+      "question": "What coolant should I use?",
+      "question_variations": [
+        "Coolant specification",
+        "Antifreeze type",
+        "Coolant requirements"
+      ],
+      "answer": "Use Texaco Long Life Coolant (LLC) product code 7997/7998 or Havoline Extended Life Antifreeze/Coolant product code 7994. LLC concentration should be 30-60%. Use soft water only, never hard water.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "61"
+    },
+    {
+      "question": "How often should I change the coolant?",
+      "question_variations": [
+        "Coolant change interval",
+        "When to replace coolant?",
+        "Coolant replacement schedule"
+      ],
+      "answer": "Change the coolant every year. When Long Life Coolant is used, replace every 2 years.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "150"
+    },
+    {
+      "question": "What marine gear oil should I use?",
+      "question_variations": [
+        "Marine gear lubricant",
+        "Transmission oil type",
+        "Gear oil specification"
+      ],
+      "answer": "For KM35P, KM35A, KM35A2, KM4A1, KM4A2, KMH4A, KMH50V-2: API Service Categories CD or higher, SAE Viscosity #20 or #30. For ZF30M, ZF25A, ZF25: ATF (Automatic Transmission Fluid).",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "59"
+    },
+    {
+      "question": "How do I check and add coolant?",
+      "question_variations": [
+        "Coolant level check",
+        "Adding coolant procedure",
+        "Checking cooling system"
+      ],
+      "answer": "Ensure drain cocks are closed, remove coolant filler cap when engine is cool, fill coolant tank until it overflows from filler port, tighten cap securely, check reservoir level at FULL mark.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "62"
+    },
+    {
+      "question": "When should I clean the air filter?",
+      "question_variations": [
+        "Air cleaner maintenance",
+        "Intake silencer cleaning",
+        "Air filter service interval"
+      ],
+      "answer": "Clean the intake silencer (air cleaner) element every 250 hours or 1 year of operation, whichever comes first.",
+      "question_type": "When",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "135"
+    },
+    {
+      "question": "How do I replace the fuel filter?",
+      "question_variations": [
+        "Fuel filter replacement",
+        "Changing fuel filter element",
+        "Fuel filter service"
+      ],
+      "answer": "Close fuel tank cock, remove filter with filter wrench, clean mounting surface, install new filter, hand-tighten until gasket contacts seat, then tighten 3/4 turn to 20-24 N\u00b7m, bleed fuel system.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148"
+    },
+    {
+      "question": "What does the oil pressure warning mean?",
+      "question_variations": [
+        "Low oil pressure alarm",
+        "Oil pressure indicator light",
+        "Oil warning lamp"
+      ],
+      "answer": "When engine oil pressure falls below normal, the oil pressure sensor sends a signal causing the indicator to light and alarm to sound. Stop operation immediately to avoid engine damage and check oil level and lubrication system.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "23"
+    },
+    {
+      "question": "How do I check the alternator belt tension?",
+      "question_variations": [
+        "V-belt tension check",
+        "Alternator belt adjustment",
+        "Belt tension specification"
+      ],
+      "answer": "Remove belt cover, check belt by pushing middle with finger (100 N force). Proper tension: belt should deflect 8-9 mm. Loosen 3 alternator bolts, adjust with adjusting bolt, retighten bolts.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "140"
+    },
+    {
+      "question": "What should I do if the engine overheats?",
+      "question_variations": [
+        "High coolant temperature",
+        "Engine overheating",
+        "Temperature alarm"
+      ],
+      "answer": "When coolant temperature reaches 95\u00b0C (203\u00b0F) or higher, the indicator lights and alarm sounds. Stop operation immediately to prevent damage and seizure. Check load and troubleshoot cooling system.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "23"
+    },
+    {
+      "question": "How do I drain the fuel filter water separator?",
+      "question_variations": [
+        "Water separator drain",
+        "Fuel filter water removal",
+        "Draining fuel system water"
+      ],
+      "answer": "Close fuel tank cock, remove fire-resistant cover, attach tube to drain plug, loosen drain plug counterclockwise to drain water/sediment, tighten plug, reinstall cover, bleed fuel system.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "144"
+    },
+    {
+      "question": "What is the continuous power rating for 4JH110?",
+      "question_variations": [
+        "4JH110 power output",
+        "Continuous power 4JH110",
+        "4JH110 horsepower rating"
+      ],
+      "answer": "Continuous power: 73.6 kW (100 hp metric) at 3101 min-1. Fuel stop power: 80.9 kW (110 hp metric) at 3200 min-1 at crankshaft.",
+      "question_type": "What",
+      "applies_to_models": [
+        "4JH110"
+      ],
+      "page": "184"
+    },
+    {
+      "question": "How do I operate the Vessel Control System VC20?",
+      "question_variations": [
+        "VC20 operation",
+        "Starting with VC20",
+        "VC20 system use"
+      ],
+      "answer": "Press Power switch on switch panel, authenticate YANMAR E-key if set, enter password if required, press control head SEL switch, move remote control to NEUTRAL, press Engine START/STOP switch.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "92"
+    },
+    {
+      "question": "What does the CHK ENG code mean?",
+      "question_variations": [
+        "Check engine light",
+        "Engine diagnostic code",
+        "CHK ENG warning"
+      ],
+      "answer": "CHK ENG indicates various engine system errors. Check the specific DTC (Diagnostic Trouble Code) displayed and refer to the troubleshooting chart. Common causes include sensor failures, fuel system issues, or ECU problems.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "164"
+    },
+    {
+      "question": "How do I register a YANMAR E-key?",
+      "question_variations": [
+        "E-key registration",
+        "Setting up YANMAR E-key",
+        "E-key programming"
+      ],
+      "answer": "Select YANMAR E-key-ON from main menu, when key registration screen displays and switch panel lamp blinks, hold key over key icon on switch panel, confirm registration status updated, up to 10 keys can be registered.",
+      "question_type": "How",
+      "applies_to_models": [
+        "VC20",
+        "VC30"
+      ],
+      "page": "95"
+    },
+    {
+      "question": "What is the difference between VC10, VC20, and VC30?",
+      "question_variations": [
+        "Vessel Control Systems comparison",
+        "VC10 vs VC20 vs VC30",
+        "Control system differences"
+      ],
+      "answer": "All three are YANMAR Vessel Control Systems for electronic engine control. VC20 and VC30 support YANMAR E-key authentication, while VC10 does not. VC30 is the newest system with enhanced features and display.",
+      "question_type": "What",
+      "applies_to_models": [
+        "VC10",
+        "VC20",
+        "VC30"
+      ],
+      "page": "34"
+    },
+    {
+      "question": "How do I use the trolling feature on KMH4A?",
+      "question_variations": [
+        "Trolling operation",
+        "KMH4A trolling",
+        "Low speed trolling"
+      ],
+      "answer": "Operate at low engine speed (1000 min-1 or less), reduce speed using trolling handle from high (H) to low (L), adjust to desired rate and secure. Return trolling handle to high (H) before normal operation.",
+      "question_type": "How",
+      "applies_to_models": [
+        "KMH4A"
+      ],
+      "page": "72"
+    },
+    {
+      "question": "What should I do for long-term storage?",
+      "question_variations": [
+        "Engine storage procedure",
+        "Winterizing engine",
+        "Long term storage prep"
+      ],
+      "answer": "Wipe engine exterior, drain water from fuel filters, drain or fill fuel tank, grease exposed cables, seal intake/exhaust openings, drain bilge, waterproof engine room, charge battery monthly, ensure power switch is off.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "173"
+    },
+    {
+      "question": "How do I drain the seawater cooling system?",
+      "question_variations": [
+        "Seawater system drain",
+        "Winterizing cooling system",
+        "Draining seawater"
+      ],
+      "answer": "Open seawater drain cocks on marine gear cooler and air cooler (if equipped). Remove four bolts from seawater pump side cover, remove cover and drain seawater. Install cover, tighten bolts, close all drain cocks.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "174"
+    },
+    {
+      "question": "What is the displacement of the 4JH80 engine?",
+      "question_variations": [
+        "4JH80 engine size",
+        "4JH80 displacement",
+        "Engine displacement 4JH80"
+      ],
+      "answer": "1.995 L (121.7 cu in.) displacement with 4 cylinders, bore x stroke of 84 mm x 90 mm (3.31 in. x 3.54 in.).",
+      "question_type": "What",
+      "applies_to_models": [
+        "4JH80"
+      ],
+      "page": "183"
+    },
+    {
+      "question": "How do I check the remote control cable adjustment?",
+      "question_variations": [
+        "Remote control adjustment",
+        "Cable adjustment procedure",
+        "Control cable setup"
+      ],
+      "answer": "Ensure control lever on engine moves to high-speed and low-speed stop positions when remote control is moved to HIGH and LOW. Adjust by loosening adjustment screw and repositioning cable.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "142"
+    },
+    {
+      "question": "What are the EPA emission standards for these engines?",
+      "question_variations": [
+        "Emission requirements",
+        "EPA compliance",
+        "Emission control standards"
+      ],
+      "answer": "3JH40 and 4JH45 (kW<37): NOx+HC 5.8g/kW-hr, CO 5.5g/kW-hr, PM 0.20g/kW-hr. 4JH57, 4JH80, 4JH110 (kW\u226537): NOx+HC 5.8g/kW-hr, CO 5.0g/kW-hr, PM 0.15-0.20g/kW-hr.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "211"
+    },
+    {
+      "question": "How do I use the warm up mode on Vessel Control?",
+      "question_variations": [
+        "Warm up operation",
+        "Shift disconnect mode",
+        "Neutral warm up"
+      ],
+      "answer": "Move remote control handle to NEUTRAL position (NEUTRAL lamp lights), press NTRL switch on control head (NEUTRAL lamp flashes), move remote control to control engine speed while gear remains in neutral.",
+      "question_type": "How",
+      "applies_to_models": [
+        "VC10",
+        "VC20",
+        "VC30"
+      ],
+      "page": "82"
+    },
+    {
+      "question": "What does the FUEL warning indicator mean?",
+      "question_variations": [
+        "Fuel warning light",
+        "Water in fuel alarm",
+        "Fuel system warning"
+      ],
+      "answer": "FUEL warning indicates water in fuel condition detected by the fuel filter/water separator. Drain water from the fuel filter/water separator immediately.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "165"
+    },
+    {
+      "question": "How do I adjust the propeller shaft alignment?",
+      "question_variations": [
+        "Shaft alignment procedure",
+        "Propeller alignment",
+        "Engine alignment check"
+      ],
+      "answer": "After first 50 hours, alignment should be checked and readjusted if necessary due to engine mount compression. Check for unusual noise and vibration. This requires specialized knowledge - consult authorized YANMAR dealer.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "143"
+    },
+    {
+      "question": "What is the recommended break-in procedure for new engines?",
+      "question_variations": [
+        "New engine break-in",
+        "Engine run-in procedure",
+        "New engine operation"
+      ],
+      "answer": "First 10 hours: no WOT over 1 minute, avoid low speed/light load over 30 minutes. 10-50 hours: run at max-400 min-1 (70% load), max-200 min-1 for 10 min every 30 min, WOT 4-5 min every 30 min.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "12"
+    },
+    {
+      "question": "How do I control the backup panel in emergency?",
+      "question_variations": [
+        "Emergency backup operation",
+        "Backup panel use",
+        "Manual engine control"
+      ],
+      "answer": "Check power switch on switch panel is OFF and remote control in NEUTRAL. Press power switch on backup panel to ON, use START/STOP switch for engine, adjust speed with sub throttle volume (counterclockwise lower, clockwise higher).",
+      "question_type": "How",
+      "applies_to_models": [
+        "VC10",
+        "VC20",
+        "VC30"
+      ],
+      "page": "90"
+    },
+    {
+      "question": "What does the SEAL warning mean for sail drive?",
+      "question_variations": [
+        "Sail drive seal warning",
+        "Water in seal alarm",
+        "SD60 seal indicator"
+      ],
+      "answer": "SEAL warning indicates water detected between the seals of the sail drive. This requires immediate attention to prevent damage to the sail drive unit.",
+      "question_type": "What",
+      "applies_to_models": [
+        "SD60"
+      ],
+      "page": "165"
+    },
+    {
+      "question": "How often should I perform daily checks?",
+      "question_variations": [
+        "Daily inspection routine",
+        "Pre-operation checks",
+        "Daily maintenance"
+      ],
+      "answer": "Perform daily checks before each operating day: visual inspection for leaks/damage, check fuel/oil/coolant levels, check battery electrolyte, alternator belt, remote control operation, and alarm indicators.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "137"
+    },
+    {
+      "question": "What should I do if seawater discharge is low?",
+      "question_variations": [
+        "Low seawater flow",
+        "Poor water discharge",
+        "Seawater pump problem"
+      ],
+      "answer": "If seawater discharge is too low, stop the engine immediately. Operation with inadequate seawater discharge will damage the impeller of the seawater pump. Check and replace impeller if necessary.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "question": "How do I set the engine speed limit mode?",
+      "question_variations": [
+        "Speed limit operation",
+        "Engine RPM limit",
+        "Throttle limitation"
+      ],
+      "answer": "Move remote control to Forward Idle position, press NTRL switch (lamp flashes), engine speed increases only to setting value even when accelerating. Default setting is 50% and can be changed via display.",
+      "question_type": "How",
+      "applies_to_models": [
+        "VC10",
+        "VC20",
+        "VC30"
+      ],
+      "page": "84"
+    },
+    {
+      "question": "What is the turbocharger boost pressure specification?",
+      "question_variations": [
+        "Boost pressure normal",
+        "Turbo pressure spec",
+        "4JH80 4JH110 boost pressure"
+      ],
+      "answer": "Monitor boost pressure through engine display. If 'bOOST' alarm appears indicating boost pressure too high, the system will reduce engine speed. Check air intake system and turbocharger for blockages.",
+      "question_type": "What",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "164"
+    },
+    {
+      "question": "How do I change from forward to reverse safely?",
+      "question_variations": [
+        "Shifting gears",
+        "Forward reverse operation",
+        "Marine gear shifting"
+      ],
+      "answer": "Moving handle quickly between forward/reverse activates gear shift delay (astern delay) - engine speed decreases to idle for several seconds. Move handle slowly between positions, pause at NEUTRAL before shifting to desired position.",
+      "question_type": "How",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "83"
+    },
+    {
+      "question": "What maintenance is required at 50 hours?",
+      "question_variations": [
+        "50 hour service",
+        "Initial maintenance",
+        "First service interval"
+      ],
+      "answer": "Drain fuel tank, change engine oil and oil filter, change marine gear oil and filter (if equipped), check alternator belt tension, adjust valve clearance, check remote control cables, adjust propeller shaft alignment.",
+      "question_type": "What",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "138"
+    }
+  ]
+}

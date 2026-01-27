@@ -1,0 +1,978 @@
+{
+  "procedures": [
+    {
+      "title": "Starting the Engine (B25/C35 Instrument Panel)",
+      "category": "operation",
+      "preconditions": [
+        "Open seacock if equipped",
+        "Open fuel tank cock",
+        "Put remote control handle in NEUTRAL",
+        "Turn on battery switch"
+      ],
+      "steps": [
+        "Turn on power switch on instrument panel",
+        "Push start switch and hold for maximum 15 seconds",
+        "Release start switch after engine starts",
+        "Check gauges indicators and alarms are normal",
+        "Check for water fuel or oil leakage",
+        "Check smoke color engine vibration and sound are normal",
+        "Check seawater discharge from outlet"
+      ],
+      "expected_outcome": "Engine starts successfully and runs normally with proper seawater discharge",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "69",
+      "warnings": [
+        "Never jump-start the engine",
+        "Never hold starter for longer than 15 seconds or starter motor will overheat",
+        "Ensure boat is clear of obstacles when testing gear engagement"
+      ]
+    },
+    {
+      "title": "Starting the Engine (VC10 Vessel Control System)",
+      "category": "operation",
+      "preconditions": [
+        "Open seacock if equipped",
+        "Open fuel tank cock",
+        "Turn battery switch on",
+        "Press Power switch on selected station",
+        "Enter password if Sys on by ID is set"
+      ],
+      "steps": [
+        "Press control head SEL switch",
+        "Wait for display to show engine data",
+        "Move remote control handle to N Neutral position",
+        "Press Engine START/STOP switch",
+        "Check engine conditions on VC10 display",
+        "Verify all systems are operating normally"
+      ],
+      "expected_outcome": "Engine starts and VC10 display shows normal engine conditions",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "78",
+      "warnings": [
+        "Engine will not start if Power switch is OFF",
+        "Do not press START/STOP switch except for stopping engine"
+      ]
+    },
+    {
+      "title": "Starting the Engine (VC20 Vessel Control System)",
+      "category": "operation",
+      "preconditions": [
+        "Open seacock if equipped",
+        "Open fuel tank cock",
+        "Turn battery switch on",
+        "Press Power switch on selected station",
+        "Authenticate YANMAR E-key if enabled",
+        "Enter password if Sys on by ID is set"
+      ],
+      "steps": [
+        "Press control head SEL switch",
+        "Wait for display to show engine data",
+        "Enter password if Start by ID is set",
+        "Move remote control handle to N Neutral position",
+        "Press Engine START/STOP switch",
+        "Check engine conditions on VC20 display"
+      ],
+      "expected_outcome": "Engine starts and VC20 display shows normal engine conditions",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "92",
+      "warnings": [
+        "Hold key fob in front of blinking lamp for authentication",
+        "Engine will not start if Power switch is OFF"
+      ]
+    },
+    {
+      "title": "Starting the Engine (VC30 Vessel Control System)",
+      "category": "operation",
+      "preconditions": [
+        "Open seacock if equipped",
+        "Open fuel tank cock",
+        "Turn battery switch on",
+        "Press Power switch on selected station",
+        "Authenticate YANMAR E-key if enabled",
+        "Enter password if Sys on by ID is set"
+      ],
+      "steps": [
+        "Press control head SEL switch",
+        "Wait for display to show engine data",
+        "Enter password if Start by ID is set",
+        "Move remote control handle to N Neutral position",
+        "Press Engine START/STOP switch",
+        "Check engine conditions on VC30 display"
+      ],
+      "expected_outcome": "Engine starts and VC30 display shows normal engine conditions",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "110",
+      "warnings": [
+        "Hold key fob in front of blinking lamp for authentication",
+        "Engine will not start if Power switch is OFF"
+      ]
+    },
+    {
+      "title": "Normal Engine Shutdown (B25/C35 Instrument Panel)",
+      "category": "operation",
+      "preconditions": [
+        "Engine running normally",
+        "Remote control handle in forward or reverse position"
+      ],
+      "steps": [
+        "Reduce engine speed to low idle",
+        "Put remote control handle in NEUTRAL",
+        "Race engine 5 times by accelerating from low to high speed",
+        "Allow engine to run at low speed without load for 5 minutes",
+        "Push and hold stop switch until engine completely stops",
+        "Push power switch off",
+        "Wait 6 seconds before turning battery switch off",
+        "Close fuel cock",
+        "Close seacock if equipped"
+      ],
+      "expected_outcome": "Engine shuts down properly and safely",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "75",
+      "warnings": [
+        "Continue to hold stop switch until engine completely stops",
+        "Do not turn battery switch off immediately after power switch"
+      ]
+    },
+    {
+      "title": "Normal Engine Shutdown (VC10/VC20/VC30 Systems)",
+      "category": "operation",
+      "preconditions": [
+        "Engine running normally",
+        "Remote control handle accessible"
+      ],
+      "steps": [
+        "Move remote control handle to N Neutral position",
+        "Cool engine down at low speed below 1000 min-1 for about 5 minutes",
+        "Press Engine START/STOP switch on selected station",
+        "Press Power switch and turn power OFF",
+        "Wait 6 seconds or more before turning battery switch off",
+        "Turn battery switch off",
+        "Close fuel tank cock",
+        "Close seacock"
+      ],
+      "expected_outcome": "Engine shuts down properly through vessel control system",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "86",
+      "warnings": [
+        "Do not press START/STOP switch when engine is stopped or it will restart",
+        "Allow 5 minutes cooling for turbocharger equipped engines"
+      ]
+    },
+    {
+      "title": "Bleeding the Fuel System",
+      "category": "maintenance",
+      "preconditions": [
+        "Fuel tank has adequate fuel",
+        "Fuel cock is open",
+        "Engine is not running"
+      ],
+      "steps": [
+        "Check fuel level in fuel tank and refill if necessary",
+        "Open fuel cock of fuel tank",
+        "Loosen air bleed screw two to three turns",
+        "Push up and down on priming pump to release air approximately 60 times",
+        "Continue pumping until stream of fuel with no air bubbles flows",
+        "Tighten air bleed screw"
+      ],
+      "expected_outcome": "Fuel system is properly primed with no air bubbles in fuel lines",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "56",
+      "warnings": [
+        "Diesel fuel is flammable and explosive",
+        "Always wear safety glasses when bleeding fuel system"
+      ]
+    },
+    {
+      "title": "Checking Engine Oil Level",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is level",
+        "Engine has been stopped for sufficient time for oil to settle"
+      ],
+      "steps": [
+        "Make sure engine is level",
+        "Remove dipstick and wipe with clean cloth",
+        "Fully reinsert dipstick",
+        "Remove dipstick and check oil level",
+        "Oil level should be between upper and lower lines on dipstick",
+        "Add oil if necessary",
+        "Fully reinsert dipstick"
+      ],
+      "expected_outcome": "Oil level is confirmed to be between minimum and maximum marks on dipstick",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "58",
+      "warnings": [
+        "Prevent dirt and debris from contaminating engine oil",
+        "Never overfill engine with oil"
+      ]
+    },
+    {
+      "title": "Changing Engine Oil and Filter (Initial 50 Hours)",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine oil is warm for easier draining",
+        "Proper disposal method available",
+        "New oil filter available",
+        "Correct grade engine oil available"
+      ],
+      "steps": [
+        "Turn engine off",
+        "Remove engine oil dipstick",
+        "Attach oil drain pump if equipped and pump out oil",
+        "Remove engine oil filter with filter wrench turning counterclockwise",
+        "Install new filter element hand tight until seal touches housing",
+        "Turn filter additional 3/4 turn clockwise",
+        "Fill with new engine oil to proper level",
+        "Perform trial run and check for oil leaks",
+        "Check oil level 10 minutes after stopping engine"
+      ],
+      "expected_outcome": "Fresh oil and filter installed with no leaks and proper oil level",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "139",
+      "warnings": [
+        "Hot oil can cause burns",
+        "Never mix different types of engine oil",
+        "Never overfill with oil"
+      ]
+    },
+    {
+      "title": "Changing Engine Oil and Filter (Every 250 Hours)",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine oil is warm for easier draining",
+        "Proper disposal method available",
+        "New oil filter available",
+        "Correct grade engine oil available"
+      ],
+      "steps": [
+        "Turn engine off",
+        "Remove engine oil dipstick",
+        "Attach oil drain pump if equipped and pump out oil",
+        "Remove engine oil filter with filter wrench turning counterclockwise",
+        "Install new filter element hand tight until seal touches housing",
+        "Turn filter additional 3/4 turn clockwise",
+        "Fill with new engine oil to proper level",
+        "Perform trial run and check for oil leaks",
+        "Check oil level 10 minutes after stopping engine"
+      ],
+      "expected_outcome": "Fresh oil and filter installed with no leaks and proper oil level",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "147",
+      "warnings": [
+        "Hot oil can cause burns",
+        "Never mix different types of engine oil",
+        "Never overfill with oil"
+      ]
+    },
+    {
+      "title": "Draining Fuel Filter/Water Separator (Every 50 Hours)",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is not running",
+        "Approved container available to catch fuel",
+        "Fuel tank cock can be accessed"
+      ],
+      "steps": [
+        "Close fuel tank cock",
+        "Loosen clamp screw and remove fire-resistant cover",
+        "Attach tube to drain plug",
+        "Loosen drain plug at bottom by turning counterclockwise",
+        "Drain off any water or sediment until clean fuel flows",
+        "Tighten drain plug",
+        "Remove drain tube",
+        "Install fire-resistant cover and tighten clamp screw",
+        "Bleed air from fuel system"
+      ],
+      "expected_outcome": "Water and contaminants removed from fuel system",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "144",
+      "warnings": [
+        "Fuel system is under pressure",
+        "Never use shop rag to catch fuel",
+        "Wipe up spills immediately"
+      ]
+    },
+    {
+      "title": "Replacing Fuel Filter Element (Every 250 Hours)",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is not running",
+        "New fuel filter available",
+        "Approved container for waste fuel"
+      ],
+      "steps": [
+        "Close fuel tank cock",
+        "Remove fuel filter with filter wrench",
+        "Apply thin film of clean diesel fuel to sealing surface of new filter gasket",
+        "Install new filter and hand-tighten",
+        "Use filter wrench and tighten to 20-24 N\u00b7m",
+        "Bleed fuel system",
+        "Check for fuel leaks",
+        "Dispose of waste properly"
+      ],
+      "expected_outcome": "New fuel filter installed with no leaks and proper fuel flow",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148",
+      "warnings": [
+        "Fuel system is under pressure",
+        "Never use shop rag to catch fuel",
+        "Wipe up spills immediately"
+      ]
+    },
+    {
+      "title": "Checking Seawater Pump Impeller",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is not running",
+        "Seawater system is drained",
+        "Proper tools available"
+      ],
+      "steps": [
+        "Loosen side cover bolts and remove side cover",
+        "Inspect inside of seawater pump with flashlight",
+        "Check for cracked or nicked impeller blades",
+        "Check for damaged wear plate",
+        "If no damage found install O-ring and side cover",
+        "If damage found disassemble and replace impeller",
+        "Check for water leaks from drain line during operation"
+      ],
+      "expected_outcome": "Seawater pump impeller confirmed in good condition or replaced if damaged",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148",
+      "warnings": [
+        "Large amount of continuous water leak indicates mechanical seal replacement needed"
+      ]
+    },
+    {
+      "title": "Replacing Seawater Pump Impeller (Every 1000 Hours)",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is not running",
+        "New impeller available",
+        "Special puller tools available"
+      ],
+      "steps": [
+        "Remove side cover of seawater pump",
+        "Install puller in impeller with M18x1.5 thread side toward cover",
+        "Turn jack screw clockwise to remove impeller from pump body",
+        "Install new impeller ensuring proper orientation",
+        "Reassemble pump cover with new O-ring",
+        "Test for proper seawater flow"
+      ],
+      "expected_outcome": "New impeller installed and seawater pump functioning properly",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148",
+      "warnings": [
+        "Impeller must be replaced every 1000 hours even if not damaged",
+        "Use proper puller tools to avoid damage"
+      ]
+    },
+    {
+      "title": "Checking and Adding Engine Coolant",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is cool",
+        "Proper coolant mixture available",
+        "All drain cocks are closed"
+      ],
+      "steps": [
+        "Ensure all drain cocks are closed",
+        "Loosen coolant filler cap to relieve pressure then remove cap",
+        "Pour coolant slowly into coolant tank to avoid air bubbles",
+        "Fill until coolant overflows from filler port",
+        "Align filler cap tabs with filler port notches",
+        "Tighten filler cap firmly",
+        "Check coolant level in reservoir should be at FULL mark",
+        "Add coolant to reservoir if necessary",
+        "Check rubber hose connecting reservoir to heat exchanger"
+      ],
+      "expected_outcome": "Coolant system properly filled and reservoir at correct level",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "62",
+      "warnings": [
+        "Never remove filler cap if engine is hot",
+        "Never pour cold coolant into hot engine",
+        "Always tighten cap securely"
+      ]
+    },
+    {
+      "title": "Changing Engine Coolant (Every 250 Hours)",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is cool",
+        "Proper replacement coolant available",
+        "Approved disposal method for old coolant"
+      ],
+      "steps": [
+        "Open all coolant drain cocks",
+        "Allow to drain completely",
+        "Dispose of waste coolant properly",
+        "Close all drain cocks",
+        "Fill coolant tank and reservoir with appropriate coolant mixture",
+        "Check for leaks after refilling",
+        "Test engine at operating temperature",
+        "Verify proper coolant circulation"
+      ],
+      "expected_outcome": "Fresh coolant installed with proper circulation and no leaks",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "150",
+      "warnings": [
+        "Wear eye protection and rubber gloves when handling coolant",
+        "Never mix different types of coolant"
+      ]
+    },
+    {
+      "title": "Checking and Adjusting Alternator V-ribbed Belt Tension",
+      "category": "maintenance",
+      "preconditions": [
+        "Power switch is off",
+        "Battery switch is off",
+        "Engine has run at idle for 5 minutes then stopped"
+      ],
+      "steps": [
+        "Remove belt cover",
+        "Check belt by pushing middle with finger using 100 N force",
+        "Belt should deflect 8 to 9 mm with proper tension",
+        "Loosen 3 alternator bolts",
+        "Screw in adjusting bolt and move alternator to adjust tension",
+        "Tighten 3 alternator bolts",
+        "Install belt cover",
+        "Inspect belt for wear frayed cords or damage"
+      ],
+      "expected_outcome": "Belt tension properly adjusted and belt condition verified",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "140",
+      "warnings": [
+        "Perform check with power and battery switches off",
+        "Never get oil on belt as it causes slipping",
+        "Check belt fits properly in ribbed grooves"
+      ]
+    },
+    {
+      "title": "Checking Battery Electrolyte Level (Serviceable Batteries)",
+      "category": "maintenance",
+      "preconditions": [
+        "Battery switch is turned off",
+        "Negative battery cable is disconnected",
+        "Eye protection and protective clothing available"
+      ],
+      "steps": [
+        "Turn off battery switch or disconnect negative battery cable",
+        "Remove battery plugs and check electrolyte level in all cells",
+        "If level is below minimum fill with distilled water to upper limit",
+        "Maximum fill level is 10-15 mm above plates",
+        "Replace plugs securely",
+        "Reconnect battery cable if disconnected"
+      ],
+      "expected_outcome": "Battery electrolyte at proper levels in all cells",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "145",
+      "warnings": [
+        "Battery contains sulfuric acid",
+        "Always wear safety goggles and protective clothing",
+        "Never operate with insufficient electrolyte"
+      ]
+    },
+    {
+      "title": "Cleaning Intake Silencer Air Cleaner Element",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine is not running",
+        "Neutral detergent available",
+        "Adequate ventilation for drying"
+      ],
+      "steps": [
+        "Disassemble intake silencer air cleaner",
+        "Remove element from housing",
+        "Clean element and housing with neutral detergent",
+        "Rinse thoroughly with clean water",
+        "Dry completely before reassembly",
+        "Reassemble intake silencer ensuring proper sealing"
+      ],
+      "expected_outcome": "Clean air cleaner element properly installed for optimal air flow",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "152",
+      "warnings": [
+        "Ensure element is completely dry before installation"
+      ]
+    },
+    {
+      "title": "Preparing Engine for Long-term Storage",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine will not be used for extended period",
+        "Access to engine exterior and systems",
+        "Proper storage location available"
+      ],
+      "steps": [
+        "Wipe off dust or oil from engine exterior",
+        "Drain water from fuel filters",
+        "Drain fuel tank completely or fill tank to prevent condensation",
+        "Grease exposed areas and joints of remote control cables",
+        "Seal intake silencer exhaust pipe to prevent moisture entry",
+        "Completely drain bilge in hull bottom",
+        "Waterproof engine room to prevent rain or seawater entry",
+        "Charge battery once monthly",
+        "Make sure power switch is off"
+      ],
+      "expected_outcome": "Engine properly prepared for extended storage without damage",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "173",
+      "warnings": [
+        "Do not drain coolant system",
+        "If seawater left inside may freeze and damage cooling system"
+      ]
+    },
+    {
+      "title": "Draining Seawater Cooling System",
+      "category": "maintenance",
+      "preconditions": [
+        "Risk of freezing temperatures",
+        "Engine is not running",
+        "Access to all drain cocks"
+      ],
+      "steps": [
+        "Open seawater drain cock on marine gear cooler if equipped",
+        "Open seawater drain cock on air cooler for 4JH80/4JH110 models",
+        "Remove four bolts attaching seawater pump side cover",
+        "Remove cover and drain seawater from pump",
+        "Install cover and tighten bolts",
+        "Close all drain cocks after draining complete"
+      ],
+      "expected_outcome": "All seawater drained from cooling system to prevent freeze damage",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "174",
+      "warnings": [
+        "Seawater left inside may freeze and damage cooling system below 0\u00b0C"
+      ]
+    },
+    {
+      "title": "Returning Engine to Service After Storage",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine has been in long-term storage",
+        "Fresh oil and filter available",
+        "Fuel system components accessible"
+      ],
+      "steps": [
+        "Replace oil and oil filter before running engine",
+        "Supply fuel if fuel tank was drained and prime fuel system",
+        "Confirm there is engine coolant in the engine",
+        "Operate engine at idle speed for 1 minute",
+        "Check fluid levels and inspect engine for leaks",
+        "Perform normal operational checks"
+      ],
+      "expected_outcome": "Engine returned to service safely with all systems functioning properly",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "176",
+      "warnings": [
+        "Replace oil and filter before running",
+        "Check all fluid levels before operation"
+      ]
+    },
+    {
+      "title": "Daily Engine Inspection Checks",
+      "category": "maintenance",
+      "preconditions": [
+        "Engine accessible for visual inspection",
+        "Adequate lighting available"
+      ],
+      "steps": [
+        "Check for engine oil leaks around engine",
+        "Check for fuel leaks especially high-pressure lines",
+        "Check for engine coolant leaks",
+        "Check for damaged or missing parts",
+        "Check for loose missing or damaged fasteners",
+        "Check electrical harnesses for damage or corrosion",
+        "Check hoses for cracks abrasions and damaged clamps",
+        "Check fuel filter water separator for water and contaminants",
+        "Check diesel fuel engine oil and coolant levels"
+      ],
+      "expected_outcome": "Engine confirmed in good condition with no leaks or damage before operation",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "137",
+      "warnings": [
+        "Never check for fuel leak with hands due to high-pressure spray danger",
+        "Take corrective action before operating if problems found"
+      ]
+    },
+    {
+      "title": "Remote Control Cable Adjustment",
+      "category": "maintenance",
+      "preconditions": [
+        "Remote control handle operates but needs adjustment",
+        "Access to engine control levers",
+        "Proper tools available"
+      ],
+      "steps": [
+        "For marine gear remote control ensure handle moves to correct NEUTRAL FORWARD REVERSE positions",
+        "Use NEUTRAL position as standard for adjustment",
+        "Loosen and retighten cable fitting to adjust",
+        "For engine speed control ensure control lever moves to high-speed and low-speed stop positions",
+        "Loosen adjustment screw for remote control cable",
+        "Adjust low-speed stop position first then high-speed stop position",
+        "Test operation through full range of motion"
+      ],
+      "expected_outcome": "Remote control handle operates smoothly with proper engagement at all positions",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "142",
+      "warnings": [
+        "Improper adjustment can prevent proper gear engagement or engine speed control"
+      ]
+    },
+    {
+      "title": "Engine Break-in Procedure (First 50 Hours)",
+      "category": "operation",
+      "preconditions": [
+        "New engine with less than 50 hours operation",
+        "Open water available for operation",
+        "Vessel can operate at various speeds"
+      ],
+      "steps": [
+        "During first 10 hours do not operate at WOT for more than 1 minute at time",
+        "From 10 to 50 hours run engine at maximum speed minus 400 min-1 most of time",
+        "Every 30 minutes run 10 minutes at maximum minus 200 min-1",
+        "Every 30 minutes run 4-5 minutes at WOT wide open throttle",
+        "Do not operate at low speed light load for more than 30 minutes",
+        "If operating at low speed race engine by accelerating from low to high speed 5 times"
+      ],
+      "expected_outcome": "Engine properly broken in for optimal performance and longevity",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "12",
+      "warnings": [
+        "Do not exceed 1 minute WOT during first 10 hours",
+        "Racing engine cleans carbon from cylinders and injection valves"
+      ]
+    },
+    {
+      "title": "Trolling Operation (KMH4A Marine Gear Only)",
+      "category": "operation",
+      "preconditions": [
+        "Engine equipped with KMH4A marine gear",
+        "Trolling handle properly adjusted",
+        "Engine speed below 1000 min-1"
+      ],
+      "steps": [
+        "Reduce engine speed to low idle less than 1000 min-1 before engaging trolling",
+        "Move trolling handle from high speed H to desired low speed L position",
+        "Adjust speed to desired trolling rate",
+        "Secure trolling handle in position",
+        "Before returning to normal operation put trolling handle in high-speed H position",
+        "Increase engine speed and continue normal operation"
+      ],
+      "expected_outcome": "Engine operates at controlled low speed suitable for trolling",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "72",
+      "warnings": [
+        "Reduce engine speed before engaging trolling",
+        "Return to high-speed position before normal operation"
+      ]
+    },
+    {
+      "title": "Warm Up Mode Operation (Vessel Control Systems)",
+      "category": "operation",
+      "preconditions": [
+        "Vessel control system installed",
+        "Engine started and running",
+        "Remote control handle accessible"
+      ],
+      "steps": [
+        "Move remote control handle to N Neutral position",
+        "NEUTRAL lamp will come on",
+        "Press NTRL switch of selected station control head",
+        "NEUTRAL lamp will flash",
+        "Move remote control handle to control engine speed while gear remains in neutral",
+        "To cancel warm up mode move handle to N Neutral and press NTRL switch again"
+      ],
+      "expected_outcome": "Engine speed can be controlled while transmission remains in neutral for warm up",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "82",
+      "warnings": [
+        "Only available with vessel control systems VC10 VC20 VC30"
+      ]
+    },
+    {
+      "title": "Engine Speed Limit Mode (Vessel Control Systems)",
+      "category": "operation",
+      "preconditions": [
+        "Vessel control system installed",
+        "Engine running in forward idle position"
+      ],
+      "steps": [
+        "Move remote control handle to Forward Idle position",
+        "Press NTRL switch of selected station",
+        "Lamp above NTRL switch will flash",
+        "Engine speed will be limited to preset value even with full throttle",
+        "To release mode move handle to Neutral Forward Idle or Reverse Idle position",
+        "Press NTRL switch to release Engine Speed Limit Mode"
+      ],
+      "expected_outcome": "Engine speed limited to safe preset value regardless of throttle position",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "84",
+      "warnings": [
+        "Default setting is 50% of maximum engine speed",
+        "Only available with vessel control systems"
+      ]
+    },
+    {
+      "title": "YANMAR E-key Registration (VC20/VC30 Systems)",
+      "category": "installation",
+      "preconditions": [
+        "VC20 or VC30 system installed",
+        "YANMAR E-key function enabled",
+        "Up to 10 key fobs available for registration"
+      ],
+      "steps": [
+        "Select YANMAR E-key ON from MAIN MENU",
+        "When key registration screen displays switch panel lamp blinks",
+        "Hold key fob over blinking key icon on switch panel",
+        "Confirm registration status updates on display",
+        "Repeat for additional keys up to 10 maximum",
+        "Close key registration screen to complete process"
+      ],
+      "expected_outcome": "Key fobs registered and authentication function enabled for system power on",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "95",
+      "warnings": [
+        "If you lose key contact authorized dealer",
+        "Key reset required for countries without radio certification"
+      ]
+    },
+    {
+      "title": "Emergency Engine Stop Procedures",
+      "category": "operation",
+      "preconditions": [
+        "Emergency situation requiring immediate engine shutdown"
+      ],
+      "steps": [
+        "Press Emergency Stop switch on switch panel immediately",
+        "Engine will stop immediately",
+        "Emergency Stop screen will show on display with audible alarm",
+        "After emergency passes press Emergency Stop switch to release",
+        "For instrument panel systems press Engine Auxiliary Stop switch on ECU cover",
+        "Turn switch to RUN position to release",
+        "Alternative emergency method turn off battery switch for engine control unit"
+      ],
+      "expected_outcome": "Engine stops immediately for emergency situations",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "89",
+      "warnings": [
+        "Use only in emergency situations",
+        "Normal shutdown procedures should be used under normal circumstances",
+        "Engine cannot restart while emergency stop is active"
+      ]
+    },
+    {
+      "title": "Backup Panel Operation",
+      "category": "operation",
+      "preconditions": [
+        "Primary control systems have failed",
+        "Backup panel is accessible",
+        "Remote control handle in NEUTRAL position"
+      ],
+      "steps": [
+        "Ensure power switch on switch panel is OFF",
+        "Ensure remote control handle is in N Neutral position",
+        "Press power switch to ON position on backup panel",
+        "Lamp will come on indicating backup panel is enabled",
+        "Engine can be started or stopped with START/STOP switch",
+        "Adjust engine speed using sub throttle control volume",
+        "Turn fully anti-clockwise before starting",
+        "For shutdown turn sub throttle fully anti-clockwise before stopping"
+      ],
+      "expected_outcome": "Engine can be controlled through backup panel in emergency",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "90",
+      "warnings": [
+        "Use only in emergency when primary controls fail",
+        "Always move throttle fully anti-clockwise first",
+        "Shift switch does not work on common rail engines"
+      ]
+    }
+  ]
+}

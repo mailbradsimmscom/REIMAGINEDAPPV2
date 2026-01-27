@@ -60,7 +60,7 @@ export function sanitizeText(value) {
 }
 
 /**
- * Validate system data for CREATE/UPDATE
+ * Validate system data for CREATE/UPDATE (v5 schema)
  * @param {Object} data - System data to validate
  * @param {boolean} isUpdate - True if updating existing system
  * @returns {Object} { valid: boolean, errors: Object }
@@ -68,55 +68,25 @@ export function sanitizeText(value) {
 export function validateSystemData(data, isUpdate = false) {
   const errors = {};
 
-  // Required fields (for business logic, even though DB allows null)
-  if (!isRequired(data.manufacturer_norm)) {
-    errors.manufacturer_norm = 'Manufacturer is required';
+  // Required FK fields (v5 schema)
+  if (!isRequired(data.manufacturer_id)) {
+    errors.manufacturer_id = 'Manufacturer is required';
   }
 
   if (!isRequired(data.model_norm)) {
     errors.model_norm = 'Model is required';
   }
 
-  if (!isRequired(data.system_norm)) {
-    errors.system_norm = 'System is required';
+  if (!isRequired(data.product_type_id)) {
+    errors.product_type_id = 'Product Type is required';
   }
 
-  if (!isRequired(data.subsystem_norm)) {
-    errors.subsystem_norm = 'Subsystem is required';
+  if (!isRequired(data.system_category_id)) {
+    errors.system_category_id = 'System Category is required';
   }
 
-  if (!isRequired(data.canonical_model_id)) {
-    errors.canonical_model_id = 'Canonical Model ID is required';
-  }
-
-  // URL validation (if provided)
-  if (data.manual_url && !isValidUrl(data.manual_url)) {
-    errors.manual_url = 'Invalid URL format';
-  }
-
-  if (data.oem_page && !isValidUrl(data.oem_page)) {
-    errors.oem_page = 'Invalid URL format';
-  }
-
-  // JSON validation (if provided)
-  if (data.spec_keywords_jsonb) {
-    const jsonStr = typeof data.spec_keywords_jsonb === 'string'
-      ? data.spec_keywords_jsonb
-      : JSON.stringify(data.spec_keywords_jsonb);
-
-    if (!isValidJson(jsonStr)) {
-      errors.spec_keywords_jsonb = 'Invalid JSON format';
-    }
-  }
-
-  if (data.synonyms_jsonb) {
-    const jsonStr = typeof data.synonyms_jsonb === 'string'
-      ? data.synonyms_jsonb
-      : JSON.stringify(data.synonyms_jsonb);
-
-    if (!isValidJson(jsonStr)) {
-      errors.synonyms_jsonb = 'Invalid JSON format';
-    }
+  if (!isRequired(data.subsystem_category_id)) {
+    errors.subsystem_category_id = 'Subsystem Category is required';
   }
 
   // asset_uid required for updates
@@ -152,37 +122,48 @@ export function validateInstanceData(data) {
 }
 
 /**
- * Sanitize system data before DB insert/update
+ * Sanitize system data before DB insert/update (v5 schema)
  * @param {Object} data - Raw system data
  * @returns {Object} Sanitized data
  */
 export function sanitizeSystemData(data) {
   const sanitized = {
+    // Required FK fields (v5)
+    manufacturer_id: data.manufacturer_id || null,
+    product_type_id: data.product_type_id || null,
+    system_category_id: data.system_category_id || null,
+    subsystem_category_id: data.subsystem_category_id || null,
+
+    // Text fields
     manufacturer_norm: sanitizeText(data.manufacturer_norm),
     model_norm: sanitizeText(data.model_norm),
     system_norm: sanitizeText(data.system_norm),
     subsystem_norm: sanitizeText(data.subsystem_norm),
-    canonical_model_id: sanitizeText(data.canonical_model_id),
     description: sanitizeText(data.description),
-    manual_url: sanitizeText(data.manual_url),
-    oem_page: sanitizeText(data.oem_page),
-    spec_keywords: sanitizeText(data.spec_keywords),
-    synonyms_fts: sanitizeText(data.synonyms_fts),
-    synonyms_human: sanitizeText(data.synonyms_human),
-    manual: data.manual === true || data.manual === 'true'
+
+    // OEM fields (optional)
+    oem_manufacturer_id: data.oem_manufacturer_id || null,
+    oem_model: sanitizeText(data.oem_model),
+    oem_part_number: sanitizeText(data.oem_part_number),
+
+    // Source tracking (v5)
+    source: data.source || 'manual_entry',
+    detected_from_doc_id: data.detected_from_doc_id || null
   };
 
-  // Handle JSONB fields
-  if (data.spec_keywords_jsonb) {
-    sanitized.spec_keywords_jsonb = typeof data.spec_keywords_jsonb === 'string'
-      ? JSON.parse(data.spec_keywords_jsonb)
-      : data.spec_keywords_jsonb;
-  }
-
-  if (data.synonyms_jsonb) {
-    sanitized.synonyms_jsonb = typeof data.synonyms_jsonb === 'string'
-      ? JSON.parse(data.synonyms_jsonb)
-      : data.synonyms_jsonb;
+  // Handle model_synonyms array (comma-separated string → array)
+  if (data.model_synonyms) {
+    if (typeof data.model_synonyms === 'string') {
+      // Split by comma, trim each, filter empty
+      sanitized.model_synonyms = data.model_synonyms
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+    } else if (Array.isArray(data.model_synonyms)) {
+      sanitized.model_synonyms = data.model_synonyms;
+    }
+  } else {
+    sanitized.model_synonyms = [];
   }
 
   // Include asset_uid for updates

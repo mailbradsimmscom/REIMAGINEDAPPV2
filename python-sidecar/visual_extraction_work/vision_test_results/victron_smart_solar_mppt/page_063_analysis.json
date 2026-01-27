@@ -1,0 +1,128 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "8.12. Error code overview",
+      "bbox": {
+        "x": 0,
+        "y": 5,
+        "width": 100,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.1. Error 1 - Battery temperature too high",
+      "bbox": {
+        "x": 0,
+        "y": 20,
+        "width": 100,
+        "height": 12
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.2. Error 2 - Battery voltage too high",
+      "bbox": {
+        "x": 0,
+        "y": 32,
+        "width": 100,
+        "height": 15
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.3. Error 17 - Solar charger overheated despite reduced output current",
+      "bbox": {
+        "x": 0,
+        "y": 47,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.4. Error 18 - Solar charger over-current",
+      "bbox": {
+        "x": 0,
+        "y": 55,
+        "width": 100,
+        "height": 20
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.5. Error 20 - Maximum bulk time exceeded",
+      "bbox": {
+        "x": 0,
+        "y": 75,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.6. Error 21 - Current sensor issue",
+      "bbox": {
+        "x": 0,
+        "y": 83,
+        "width": 100,
+        "height": 12
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.7. Error 26 - Terminal overheated",
+      "bbox": {
+        "x": 0,
+        "y": 95,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 59,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text content with error code troubleshooting information"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp6__zh4g3/page_63.jpg",
+    "analysis_time_seconds": 9.617539,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:02:44.539376",
+    "input_tokens": 2198,
+    "output_tokens": 755
+  },
+  "page_number": 63
+}

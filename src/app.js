@@ -125,6 +125,86 @@ app.use('/js', express.static(join(process.cwd(), 'src/public/js'), {
 }));
 app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
+// Python sidecar proxy routes (for document-ingest.html)
+app.post('/python/v1/llamaparse', async (req, res) => {
+  try {
+    const sidecarUrl = getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
+
+    // Collect the raw body for multipart forwarding
+    const chunks = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    const body = Buffer.concat(chunks);
+
+    // Forward query params (e.g., doc_id) to Python sidecar
+    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+    const targetUrl = `${sidecarUrl}/v1/llamaparse${queryString}`;
+
+    const response = await fetch(targetUrl, {
+      method: 'POST',
+      body: body,
+      headers: { 'Content-Type': req.headers['content-type'] }
+    });
+
+    const data = await response.json();
+    res.status(response.status).json(data);
+  } catch (error) {
+    logger.error('LlamaParse proxy error', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/python/v1/detect-models', express.json({ limit: '50mb' }), async (req, res) => {
+  try {
+    const sidecarUrl = getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
+
+    // Fetch reference tables to include in request
+    const { getSupabaseClient } = await import('./repositories/supabaseClient.js');
+    const supabase = await getSupabaseClient();
+
+    const [mfrs, types, systems, subsystems] = await Promise.all([
+      supabase.from('ref_manufacturers').select('name').order('name'),
+      supabase.from('ref_product_types').select('name').order('name'),
+      supabase.from('ref_system_categories').select('id, name').order('display_order'),
+      supabase.from('ref_subsystem_categories').select('id, name, system_id').order('display_order')
+    ]);
+
+    // Build subsystem list with parent system names
+    const systemMap = new Map(systems.data?.map(s => [s.id, s.name]) || []);
+    const subsystemList = (subsystems.data || []).map(sub => ({
+      name: sub.name,
+      system_id: sub.system_id,
+      system_name: systemMap.get(sub.system_id) || 'Unknown'
+    }));
+
+    // Add reference_data to request body
+    const enrichedBody = {
+      ...req.body,
+      reference_data: {
+        manufacturers: (mfrs.data || []).map(m => m.name),
+        product_types: (types.data || []).map(t => t.name),
+        system_categories: (systems.data || []).map(s => s.name),
+        subsystem_categories: subsystemList
+      }
+    };
+
+    const response = await fetch(`${sidecarUrl}/v1/detect-models`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(enrichedBody)
+    });
+
+    const data = await response.json();
+    // Include reference_data in response for frontend dropdown population
+    data.reference_data = enrichedBody.reference_data;
+    res.status(response.status).json(data);
+  } catch (error) {
+    logger.error('Model detection proxy error', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // PIN authentication endpoint (public - no auth required)
 app.post('/api/auth/pin', (req, res) => {
   const { pin } = req.body;
@@ -331,6 +411,28 @@ app.get('/upload', async (req, res) => {
     res.end(content);
   } catch (error) {
     res.status(404).json({ error: 'Upload page not found' });
+  }
+});
+
+// Document ingest page (new unified flow)
+app.get('/ingest', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/document-ingest.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Document ingest page not found' });
+  }
+});
+
+// Equipment onboarding page (document-first flow approval screen)
+app.get('/onboarding', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/onboarding.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Onboarding page not found' });
   }
 });
 

@@ -1,0 +1,544 @@
+{
+  "golden_rules": [
+    {
+      "query": "Engine oil pressure at 3000 min-1",
+      "expected_value": "0.28 to 0.54 MPa (41 to 78 psi)",
+      "test_method": "Check oil pressure gauge at 3000 rpm",
+      "failure_indication": "Oil pressure too low indicates lubrication system problem",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "query": "Normal coolant operating temperature range",
+      "expected_value": "76\u00b0 to 90 \u00b0C (169\u00b0 to 194 \u00b0F)",
+      "test_method": "Check coolant temperature gauge during operation",
+      "failure_indication": "Overheating if exceeds maximum limit",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "query": "Coolant high temperature alarm threshold",
+      "expected_value": "95 \u00b0C (203 \u00b0F) or higher",
+      "test_method": "Monitor coolant temperature indicator",
+      "failure_indication": "Engine damage and seizure if operation continues",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "23"
+    },
+    {
+      "query": "Engine oil capacity at 7\u00b0 rake angle for 3JH40",
+      "expected_value": "Total: 5.0 L (5.28 qt)",
+      "test_method": "Check oil level with dipstick between upper and lower marks",
+      "failure_indication": "Insufficient lubrication if below minimum",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "page": "178"
+    },
+    {
+      "query": "Engine oil capacity at 0\u00b0 rake angle for 3JH40",
+      "expected_value": "Total: 5.5 L (5.81 qt)",
+      "test_method": "Check oil level with dipstick between upper and lower marks",
+      "failure_indication": "Insufficient lubrication if below minimum",
+      "applies_to_models": [
+        "3JH40"
+      ],
+      "page": "178"
+    },
+    {
+      "query": "Engine oil capacity at 7\u00b0 rake angle for 4JH45/4JH57",
+      "expected_value": "Total: 5.0 L (5.28 qt)",
+      "test_method": "Check oil level with dipstick between upper and lower marks",
+      "failure_indication": "Insufficient lubrication if below minimum",
+      "applies_to_models": [
+        "4JH45",
+        "4JH57"
+      ],
+      "page": "180"
+    },
+    {
+      "query": "Engine oil capacity at 7\u00b0 rake angle for 4JH80/4JH110",
+      "expected_value": "Total: 5.5 L (5.81 qt)",
+      "test_method": "Check oil level with dipstick between upper and lower marks",
+      "failure_indication": "Insufficient lubrication if below minimum",
+      "applies_to_models": [
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "183"
+    },
+    {
+      "query": "V-ribbed belt deflection with 100N force",
+      "expected_value": "8 to 9 mm deflection",
+      "test_method": "Push on middle of belt with finger (100N force)",
+      "failure_indication": "Slipping and coolant pump failure if too loose",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "141"
+    },
+    {
+      "query": "Maximum starter motor cranking time",
+      "expected_value": "15 seconds maximum",
+      "test_method": "Time the cranking duration",
+      "failure_indication": "Starter motor overheating if exceeded",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "70"
+    },
+    {
+      "query": "Minimum waiting time between cranking attempts",
+      "expected_value": "15 seconds minimum",
+      "test_method": "Wait between cranking attempts",
+      "failure_indication": "Starter motor damage if not allowed to cool",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "70"
+    },
+    {
+      "query": "All alarm lamps illuminate during power-on self-test",
+      "expected_value": "All alarm lamps light up for 4 seconds",
+      "test_method": "Turn on power switch and observe indicators",
+      "failure_indication": "Warning system malfunction if lamps don't illuminate",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "31"
+    },
+    {
+      "query": "Seawater discharge from exhaust outlet during operation",
+      "expected_value": "Sufficient seawater discharge visible",
+      "test_method": "Visual inspection of water flow from exhaust",
+      "failure_indication": "Seawater pump impeller damage if insufficient discharge",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "71"
+    },
+    {
+      "query": "Fuel filter/water separator drain frequency when water detected",
+      "expected_value": "Drain immediately when water detected",
+      "test_method": "Check water separator for water presence",
+      "failure_indication": "Engine damage if water reaches injection system",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "144"
+    },
+    {
+      "query": "Battery electrolyte level check for serviceable batteries",
+      "expected_value": "Level between minimum and maximum marks",
+      "test_method": "Remove plugs and visually inspect electrolyte level",
+      "failure_indication": "Battery destruction if operated with insufficient electrolyte",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "145"
+    },
+    {
+      "query": "Remote control handle in NEUTRAL for engine start",
+      "expected_value": "Handle must be in NEUTRAL position",
+      "test_method": "Check remote control handle position before starting",
+      "failure_indication": "Safety equipment prevents starting in gear position",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "69"
+    },
+    {
+      "query": "Marine gear shifting at engine speeds below 1000 min-1",
+      "expected_value": "Shift only at idle speed (below 1000 min-1)",
+      "test_method": "Check engine speed before engaging clutch",
+      "failure_indication": "Marine gear damage if shifted at high speed",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "72"
+    },
+    {
+      "query": "Engine warm-up at low speed after cold start",
+      "expected_value": "Run at low speed under moderate load until normal temperature",
+      "test_method": "Monitor coolant temperature gauge during warm-up",
+      "failure_indication": "Poor combustion and white smoke if loaded when cold",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "70"
+    },
+    {
+      "query": "Engine idle period before shutdown",
+      "expected_value": "5 minutes at low speed without load",
+      "test_method": "Run engine at approximately 1000 min-1 for 5 minutes",
+      "failure_indication": "Reduced engine life if hot components not cooled properly",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "75"
+    },
+    {
+      "query": "Seacock closure after engine shutdown",
+      "expected_value": "Seacock must be closed after operation",
+      "test_method": "Manually close seawater intake valve",
+      "failure_indication": "Boat may sink if water enters through open seacock",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "76"
+    },
+    {
+      "query": "Racing engine periodically during low speed operation",
+      "expected_value": "Race engine every 2 hours during prolonged low speed operation",
+      "test_method": "With gear in NEUTRAL, accelerate from low to high speed 5 times",
+      "failure_indication": "Carbon buildup and poor performance if neglected",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "74"
+    },
+    {
+      "query": "Emergency stop switch operation",
+      "expected_value": "Engine stops immediately when pressed",
+      "test_method": "Press emergency stop switch",
+      "failure_indication": "Use only in emergency - causes sudden engine shutdown",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "76"
+    },
+    {
+      "query": "Oil filter tightening torque after gasket contact",
+      "expected_value": "Additional 3/4 turn clockwise after gasket contacts housing",
+      "test_method": "Hand tighten until gasket contacts, then wrench 3/4 turn more",
+      "failure_indication": "Oil leaks if under-tightened, filter damage if over-tightened",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "139"
+    },
+    {
+      "query": "Fuel system air bleeding after filter changes",
+      "expected_value": "Complete air bleeding until no bubbles in fuel flow",
+      "test_method": "Pump priming pump until steady fuel flow with no air bubbles",
+      "failure_indication": "Engine won't start if air remains in fuel system",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "56"
+    },
+    {
+      "query": "Coolant filler cap pressure release before removal",
+      "expected_value": "Loosen cap to relieve pressure before full removal",
+      "test_method": "Turn cap slightly counterclockwise to release pressure first",
+      "failure_indication": "Serious burns from steam and hot coolant if removed when hot",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "64"
+    },
+    {
+      "query": "Seawater pump impeller replacement interval",
+      "expected_value": "Replace every 1000 hours even if undamaged",
+      "test_method": "Check hour meter for 1000-hour intervals",
+      "failure_indication": "Cooling system failure if impeller fails unexpectedly",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "148"
+    },
+    {
+      "query": "Engine oil change after initial 50 hours",
+      "expected_value": "Must change oil and filter after first 50 hours",
+      "test_method": "Check hour meter for initial 50-hour mark",
+      "failure_indication": "Accelerated wear if contaminated break-in oil not changed",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "139"
+    },
+    {
+      "query": "Maximum ambient temperature for operation",
+      "expected_value": "Not above +40 \u00b0C (+104 \u00b0F)",
+      "test_method": "Check ambient air temperature",
+      "failure_indication": "Engine overheating and oil breakdown if exceeded",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "68"
+    },
+    {
+      "query": "Minimum ambient temperature for operation",
+      "expected_value": "Not below -16 \u00b0C (+5 \u00b0F)",
+      "test_method": "Check ambient air temperature",
+      "failure_indication": "Premature wear from hardened seals if operated too cold",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "68"
+    },
+    {
+      "query": "Wait time before turning off battery switch after power switch off",
+      "expected_value": "Wait 6 seconds or more",
+      "test_method": "Count 6 seconds after turning power switch off",
+      "failure_indication": "Alarm may be set at next activation if not allowed to settle",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "75"
+    },
+    {
+      "query": "VC10/VC20/VC30 SEL lamp operation for multi-station",
+      "expected_value": "SEL lamp flashes for multi-station configuration",
+      "test_method": "Press power switch and observe SEL lamp behavior",
+      "failure_indication": "Station selection not available if lamp doesn't flash",
+      "applies_to_models": [
+        "VC10",
+        "VC20",
+        "VC30"
+      ],
+      "page": "79"
+    },
+    {
+      "query": "VC10/VC20/VC30 SEL lamp operation for single station",
+      "expected_value": "SEL lamp comes on steady for single station",
+      "test_method": "Press power switch and observe SEL lamp behavior",
+      "failure_indication": "System not ready if lamp doesn't illuminate",
+      "applies_to_models": [
+        "VC10",
+        "VC20",
+        "VC30"
+      ],
+      "page": "79"
+    },
+    {
+      "query": "KM35P marine gear oil capacity",
+      "expected_value": "0.5 L (0.53 qt) total",
+      "test_method": "Check oil level with dipstick",
+      "failure_indication": "Gear damage if oil level too low",
+      "applies_to_models": [
+        "KM35P"
+      ],
+      "page": "179"
+    },
+    {
+      "query": "KM4A1 marine gear oil capacity",
+      "expected_value": "2.3 L (2.43 qt) total",
+      "test_method": "Check oil level with dipstick",
+      "failure_indication": "Gear damage if oil level too low",
+      "applies_to_models": [
+        "KM4A1"
+      ],
+      "page": "182"
+    },
+    {
+      "query": "SD60-5 sail drive oil capacity",
+      "expected_value": "3.1 L (3.3 qt) standard, 3.3 L (3.4 qt) long reach",
+      "test_method": "Check oil level with dipstick without screwing in",
+      "failure_indication": "Drive unit damage if oil level insufficient",
+      "applies_to_models": [
+        "SD60"
+      ],
+      "page": "179"
+    },
+    {
+      "query": "Fuel cetane number requirement",
+      "expected_value": "45 or higher cetane number",
+      "test_method": "Check fuel specification from supplier",
+      "failure_indication": "Poor combustion and engine damage if cetane too low",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "53"
+    },
+    {
+      "query": "Sulfur content in fuel requirement",
+      "expected_value": "Not exceed 0.5% by volume, preferably less than 0.05%",
+      "test_method": "Check fuel specification from supplier",
+      "failure_indication": "Engine damage and emissions non-compliance if exceeded",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "53"
+    },
+    {
+      "query": "Biodiesel fuel blend limit",
+      "expected_value": "Not exceed 7% biodiesel (B7), 93% standard diesel",
+      "test_method": "Check fuel supplier specifications",
+      "failure_indication": "Fuel system component damage and warranty void if exceeded",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "52"
+    },
+    {
+      "query": "LCD brightness adjustment steps",
+      "expected_value": "6 steps of 20% each (100%, 80%, 60%, 40%, 20%, 0%)",
+      "test_method": "Press and hold left button, then adjust brightness",
+      "failure_indication": "Display may be unreadable in certain lighting conditions",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "24"
+    },
+    {
+      "query": "Trolling handle position for normal operation (KMH4A)",
+      "expected_value": "Trolling handle must be in high-speed (H) position",
+      "test_method": "Check trolling handle position before normal operation",
+      "failure_indication": "Reduced engine speed if left in trolling position",
+      "applies_to_models": [
+        "KMH4A"
+      ],
+      "page": "73"
+    },
+    {
+      "query": "Maximum engine operation time at full throttle during break-in",
+      "expected_value": "Not more than 1 minute at WOT during first 10 hours",
+      "test_method": "Monitor throttle position and time during break-in period",
+      "failure_indication": "Engine damage if operated at full throttle too long when new",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "12"
+    },
+    {
+      "query": "Break-in operation schedule 10-50 hours",
+      "expected_value": "70% load most of the time, 80% load 10 min every 30 min, WOT 4-5 min every 30 min",
+      "test_method": "Monitor engine speed and load during break-in period",
+      "failure_indication": "Poor ring seating and increased oil consumption if not properly broken in",
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "page": "12"
+    }
+  ]
+}

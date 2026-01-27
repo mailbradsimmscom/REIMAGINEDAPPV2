@@ -1,0 +1,500 @@
+{
+  "pdf_path": "/Users/brad/Downloads/yanmar test.pdf",
+  "pages_processed": 30,
+  "total_assets": 18,
+  "primary_models": [
+    "3JH40",
+    "4JH45",
+    "4JH57",
+    "4JH80",
+    "4JH110"
+  ],
+  "referenced_systems": [
+    "VC10",
+    "VC20",
+    "SD605",
+    "KMH4A",
+    "KM4A"
+  ],
+  "timestamp": "2026-01-25T08:26:13.110441",
+  "assets": [
+    {
+      "page_number": 1,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 28.499999999999996,
+        "y": 11.4,
+        "width": 42.9,
+        "height": 53.6
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "high",
+      "evidence": "All models mentioned: ['3JH40', '4JH80', '4JH57', '4JH110', '4JH45']",
+      "related_elements": 6,
+      "crop_size": {
+        "width": 610,
+        "height": 1094
+      }
+    },
+    {
+      "page_number": 10,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 5.7,
+        "y": 52.800000000000004,
+        "width": 61.1,
+        "height": 22.7
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "high",
+      "evidence": "Universal section detected: INTRODUCTION",
+      "related_elements": 1,
+      "crop_size": {
+        "width": 1318,
+        "height": 766
+      }
+    },
+    {
+      "page_number": 10,
+      "asset_index": 1,
+      "asset_kind": "table",
+      "bbox": {
+        "x": 5.800000000000001,
+        "y": 13.700000000000001,
+        "width": 84.5,
+        "height": 14.6
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "high",
+      "evidence": "Universal section detected: INTRODUCTION",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 1792,
+        "height": 534
+      }
+    },
+    {
+      "page_number": 17,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 13.8,
+        "y": 9.5,
+        "width": 76.39999999999999,
+        "height": 48.8
+      },
+      "is_universal": false,
+      "applies_to_models": [
+        "4JH57"
+      ],
+      "referenced_systems": [],
+      "confidence": "high",
+      "evidence": "Specific models mentioned: ['4JH57']",
+      "related_elements": 2,
+      "crop_size": {
+        "width": 1628,
+        "height": 1514
+      }
+    },
+    {
+      "page_number": 22,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 50.1,
+        "y": 16.2,
+        "width": 40.0,
+        "height": 51.5
+      },
+      "is_universal": false,
+      "applies_to_models": [
+        "4JH45",
+        "4JH57"
+      ],
+      "referenced_systems": [],
+      "confidence": "high",
+      "evidence": "Specific models mentioned: ['4JH45', '4JH57']",
+      "related_elements": 11,
+      "crop_size": {
+        "width": 891,
+        "height": 1591
+      }
+    },
+    {
+      "page_number": 22,
+      "asset_index": 1,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 5.7,
+        "y": 16.2,
+        "width": 40.5,
+        "height": 53.400000000000006
+      },
+      "is_universal": false,
+      "applies_to_models": [
+        "4JH45",
+        "4JH57"
+      ],
+      "referenced_systems": [],
+      "confidence": "high",
+      "evidence": "Specific models mentioned: ['4JH45', '4JH57']",
+      "related_elements": 13,
+      "crop_size": {
+        "width": 901,
+        "height": 1646
+      }
+    },
+    {
+      "page_number": 24,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 6.7,
+        "y": 26.5,
+        "width": 38.5,
+        "height": 24.8
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 2,
+      "crop_size": {
+        "width": 861,
+        "height": 826
+      }
+    },
+    {
+      "page_number": 24,
+      "asset_index": 1,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 37.1,
+        "y": 15.1,
+        "width": 53.1,
+        "height": 47.8
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 5,
+      "crop_size": {
+        "width": 1156,
+        "height": 1485
+      }
+    },
+    {
+      "page_number": 24,
+      "asset_index": 2,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 50.7,
+        "y": 42.1,
+        "width": 38.9,
+        "height": 20.8
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 2,
+      "crop_size": {
+        "width": 869,
+        "height": 711
+      }
+    },
+    {
+      "page_number": 25,
+      "asset_index": 0,
+      "asset_kind": "table",
+      "bbox": {
+        "x": 9.6,
+        "y": 9.0,
+        "width": 84.8,
+        "height": 66.3
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [
+        "KMH4A"
+      ],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 1798,
+        "height": 2015
+      }
+    },
+    {
+      "page_number": 27,
+      "asset_index": 0,
+      "asset_kind": "table",
+      "bbox": {
+        "x": 9.6,
+        "y": 11.700000000000001,
+        "width": 84.8,
+        "height": 23.799999999999997
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 1798,
+        "height": 797
+      }
+    },
+    {
+      "page_number": 28,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 10.5,
+        "y": 58.8,
+        "width": 75.6,
+        "height": 29.500000000000004
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 7,
+      "crop_size": {
+        "width": 1612,
+        "height": 961
+      }
+    },
+    {
+      "page_number": 28,
+      "asset_index": 1,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 10.5,
+        "y": 30.599999999999998,
+        "width": 75.6,
+        "height": 57.699999999999996
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 8,
+      "crop_size": {
+        "width": 1612,
+        "height": 1769
+      }
+    },
+    {
+      "page_number": 29,
+      "asset_index": 0,
+      "asset_kind": "table",
+      "bbox": {
+        "x": 9.5,
+        "y": 8.5,
+        "width": 85.0,
+        "height": 15.299999999999999
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 1802,
+        "height": 554
+      }
+    },
+    {
+      "page_number": 30,
+      "asset_index": 0,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 6.0,
+        "y": 65.9,
+        "width": 12.6,
+        "height": 9.199999999999998
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 336,
+        "height": 378
+      }
+    },
+    {
+      "page_number": 30,
+      "asset_index": 1,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 5.7,
+        "y": 12.5,
+        "width": 82.5,
+        "height": 57.60000000000001
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 9,
+      "crop_size": {
+        "width": 1752,
+        "height": 1766
+      }
+    },
+    {
+      "page_number": 30,
+      "asset_index": 2,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 6.2,
+        "y": 52.300000000000004,
+        "width": 12.6,
+        "height": 9.299999999999997
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 336,
+        "height": 381
+      }
+    },
+    {
+      "page_number": 30,
+      "asset_index": 3,
+      "asset_kind": "figure",
+      "bbox": {
+        "x": 50.5,
+        "y": 52.1,
+        "width": 12.6,
+        "height": 9.299999999999997
+      },
+      "is_universal": true,
+      "applies_to_models": [
+        "3JH40",
+        "4JH45",
+        "4JH57",
+        "4JH80",
+        "4JH110"
+      ],
+      "referenced_systems": [],
+      "confidence": "low",
+      "evidence": "No specific models mentioned - defaulting to universal",
+      "related_elements": 0,
+      "crop_size": {
+        "width": 336,
+        "height": 382
+      }
+    }
+  ]
+}

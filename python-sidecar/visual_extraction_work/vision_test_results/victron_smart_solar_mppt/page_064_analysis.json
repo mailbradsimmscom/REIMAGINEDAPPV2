@@ -1,0 +1,108 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "8.12.8. Error 28 - Power stage issue",
+      "bbox": {
+        "x": 0,
+        "y": 5,
+        "width": 100,
+        "height": 12
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.9. Error 33 - PV over voltage",
+      "bbox": {
+        "x": 0,
+        "y": 17,
+        "width": 100,
+        "height": 15
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.10. Error 38, 39 - PV input shutdown",
+      "bbox": {
+        "x": 0,
+        "y": 32,
+        "width": 100,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.11. Error 40 - PV input failed to shutdown",
+      "bbox": {
+        "x": 0,
+        "y": 57,
+        "width": 100,
+        "height": 10
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.12. Error 80 to 88 - PV input shutdown",
+      "bbox": {
+        "x": 0,
+        "y": 67,
+        "width": 100,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.13. Error 116 - Calibration data lost",
+      "bbox": {
+        "x": 0,
+        "y": 92,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 60,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "75/10",
+      "75/15",
+      "100/15",
+      "100/20",
+      "150/35"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text content with troubleshooting procedures for various error codes"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp6__zh4g3/page_64.jpg",
+    "analysis_time_seconds": 9.756362,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:02:54.392223",
+    "input_tokens": 2198,
+    "output_tokens": 633
+  },
+  "page_number": 64
+}

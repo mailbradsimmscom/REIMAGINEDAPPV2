@@ -63,8 +63,8 @@ export class DocumentDeletionService {
         document_info: {
           title: doc.title,
           filename: doc.filename,
-          manufacturer: doc.manufacturer,
-          model: doc.model,
+          manufacturer: doc.manufacturer_norm,
+          model: doc.model_norm,
           size: doc.size,
           created_at: doc.created_at
         },

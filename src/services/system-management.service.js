@@ -288,9 +288,10 @@ export async function deleteSystem(assetUid) {
 /**
  * Create a new instance
  * @param {Object} instanceData - Instance data to create
+ * @param {Object} [denormalizedFields] - Optional denormalized fields (manufacturer_norm, model_norm, system_norm, subsystem_norm)
  * @returns {Promise<Object>} { success, data?, error?, validationErrors? }
  */
-export async function createInstance(instanceData) {
+export async function createInstance(instanceData, denormalizedFields = {}) {
   const requestLogger = logger.createRequestLogger();
 
   try {
@@ -313,13 +314,18 @@ export async function createInstance(instanceData) {
       instanceIndex = await repo.getNextInstanceIndex(instanceData.asset_uid);
     }
 
-    // Prepare instance data
+    // Prepare instance data with optional denormalized fields
     const instance = {
       instance_uid: instanceUid,
       asset_uid: instanceData.asset_uid,
       serial_number: instanceData.serial_number || null,
       location: instanceData.location || null,
-      instance_index: instanceIndex
+      instance_index: instanceIndex,
+      // Include denormalized fields if provided (for document-ingest flow)
+      ...(denormalizedFields.manufacturer_norm && { manufacturer_norm: denormalizedFields.manufacturer_norm }),
+      ...(denormalizedFields.model_norm && { model_norm: denormalizedFields.model_norm }),
+      ...(denormalizedFields.system_norm && { system_norm: denormalizedFields.system_norm }),
+      ...(denormalizedFields.subsystem_norm && { subsystem_norm: denormalizedFields.subsystem_norm })
     };
 
     requestLogger.info('Creating instance', { instanceUid, assetUid: instanceData.asset_uid });
@@ -329,10 +335,7 @@ export async function createInstance(instanceData) {
 
     return {
       success: true,
-      data: {
-        instance_uid: created.instance_uid,
-        message: 'Instance created successfully'
-      }
+      data: created  // Return full instance data for downstream use
     };
 
   } catch (error) {
@@ -423,6 +426,92 @@ export async function deleteInstance(instanceUid) {
     requestLogger.error('Service error archiving instance', {
       error: error.message,
       instanceUid
+    });
+    return { success: false, error: error.message };
+  }
+}
+
+// ============================================
+// Reference Table Services (v5 schema)
+// ============================================
+
+/**
+ * Get list of all manufacturers from ref_manufacturers
+ * @returns {Promise<Object>} { success, data?, error? }
+ */
+export async function getRefManufacturersList() {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    requestLogger.info('Fetching ref_manufacturers list');
+    const data = await repo.getRefManufacturers();
+    return { success: true, data };
+
+  } catch (error) {
+    requestLogger.error('Service error getting ref_manufacturers', {
+      error: error.message
+    });
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get list of all product types from ref_product_types
+ * @returns {Promise<Object>} { success, data?, error? }
+ */
+export async function getRefProductTypesList() {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    requestLogger.info('Fetching ref_product_types list');
+    const data = await repo.getRefProductTypes();
+    return { success: true, data };
+
+  } catch (error) {
+    requestLogger.error('Service error getting ref_product_types', {
+      error: error.message
+    });
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get list of all system categories from ref_system_categories
+ * @returns {Promise<Object>} { success, data?, error? }
+ */
+export async function getRefSystemCategoriesList() {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    requestLogger.info('Fetching ref_system_categories list');
+    const data = await repo.getRefSystemCategories();
+    return { success: true, data };
+
+  } catch (error) {
+    requestLogger.error('Service error getting ref_system_categories', {
+      error: error.message
+    });
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get list of subsystem categories, optionally filtered by parent category
+ * @param {string|null} categoryId - Optional parent category ID
+ * @returns {Promise<Object>} { success, data?, error? }
+ */
+export async function getRefSubsystemCategoriesList(categoryId = null) {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    requestLogger.info('Fetching ref_subsystem_categories list', { categoryId });
+    const data = await repo.getRefSubsystemCategories(categoryId);
+    return { success: true, data };
+
+  } catch (error) {
+    requestLogger.error('Service error getting ref_subsystem_categories', {
+      error: error.message,
+      categoryId
     });
     return { success: false, error: error.message };
   }

@@ -1,0 +1,163 @@
+{
+  "figures": [
+    {
+      "type": "exploded_view",
+      "title": "Figure 6",
+      "description": "Exploded view diagram showing the internal components and solenoid valve locations (marked as 1 and 2) within the transmission housing.",
+      "bbox": {
+        "x": 10,
+        "y": 35,
+        "width": 40,
+        "height": 35
+      },
+      "figure_reference": "Figure 6",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "type": "photo",
+      "title": "Figure 7",
+      "description": "Detailed view showing the cover removal process with screw locations marked as item 1.",
+      "bbox": {
+        "x": 10,
+        "y": 75,
+        "width": 40,
+        "height": 25
+      },
+      "figure_reference": "Figure 7",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "type": "photo",
+      "title": "Figure 8 No solenoid activated (neutral)",
+      "description": "Photo showing the solenoid valve position when no solenoid is activated, representing neutral position.",
+      "bbox": {
+        "x": 55,
+        "y": 15,
+        "width": 40,
+        "height": 25
+      },
+      "figure_reference": "Figure 8",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "type": "photo",
+      "title": "Figure 9 Solenoid for ahead activated",
+      "description": "Photo showing the solenoid valve position when the ahead solenoid is manually activated using the red knob.",
+      "bbox": {
+        "x": 55,
+        "y": 45,
+        "width": 40,
+        "height": 25
+      },
+      "figure_reference": "Figure 9",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "type": "photo",
+      "title": "Figure 10 Solenoid for aster activated",
+      "description": "Photo showing the solenoid valve position when the astern solenoid is manually activated.",
+      "bbox": {
+        "x": 55,
+        "y": 75,
+        "width": 40,
+        "height": 25
+      },
+      "figure_reference": "Figure 10",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "EMERGENCY PROCEDURE (SD110/SD150)",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 85,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "Use of safety device in case of power supply failure",
+      "bbox": {
+        "x": 10,
+        "y": 12,
+        "width": 85,
+        "height": 20
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "Manual solenoid activation instructions",
+      "bbox": {
+        "x": 55,
+        "y": 5,
+        "width": 40,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "TROUBLESHOOTING",
+      "bbox": {
+        "x": 55,
+        "y": 0,
+        "width": 40,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": "73",
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "mixed",
+    "models_mentioned": [
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Clear technical diagrams and photos showing emergency solenoid activation procedure"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp5zu1mwcp/page_79.jpg",
+    "analysis_time_seconds": 14.493848,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:59:13.535596",
+    "input_tokens": 2183,
+    "output_tokens": 1020
+  },
+  "page_number": 79
+}

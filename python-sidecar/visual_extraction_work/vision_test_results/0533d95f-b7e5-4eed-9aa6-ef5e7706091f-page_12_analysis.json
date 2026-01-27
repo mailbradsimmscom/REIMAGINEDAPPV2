@@ -1,0 +1,129 @@
+{
+  "figures": [
+    {
+      "type": "exploded_view",
+      "title": "EXPLODED VIEW",
+      "description": "Technical exploded view diagram of a Marco marine pump showing all component parts with numbered labels for identification and assembly reference.",
+      "bbox": {
+        "x": 10,
+        "y": 25,
+        "width": 80,
+        "height": 70
+      },
+      "figure_reference": null,
+      "numbered_parts": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "type": "other",
+      "title": "ANTIVIBRATION MOUNT",
+      "description": "Small detail diagram showing antivibration mount installation with note that fixings/screws are not included.",
+      "bbox": {
+        "x": 75,
+        "y": 80,
+        "width": 15,
+        "height": 10
+      },
+      "figure_reference": null,
+      "numbered_parts": []
+    }
+  ],
+  "tables": [
+    {
+      "type": "parts_list",
+      "title": "EXPLODED VIEW",
+      "description": "Comprehensive parts list table showing position numbers, quantities, Italian descriptions, English descriptions, and spare part availability for all pump components.",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 80,
+        "height": 20
+      },
+      "columns": [
+        "Pos.",
+        "Q.ta",
+        "Descrizione",
+        "Description",
+        "Ricambio Spare Part"
+      ],
+      "is_multi_model": false,
+      "model_columns": {}
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "EXPLODED VIEW",
+      "bbox": {
+        "x": 10,
+        "y": 1,
+        "width": 80,
+        "height": 4
+      },
+      "content_type": "heading"
+    },
+    {
+      "title": "ANTIVIBRATION MOUNT",
+      "bbox": {
+        "x": 70,
+        "y": 85,
+        "width": 25,
+        "height": 3
+      },
+      "content_type": "heading"
+    },
+    {
+      "title": "FIXINGS/SCREWS NOT INCLUDED",
+      "bbox": {
+        "x": 70,
+        "y": 88,
+        "width": 25,
+        "height": 2
+      },
+      "content_type": "notes"
+    }
+  ],
+  "page_metadata": {
+    "page_number": "12",
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "mixed",
+    "quality_notes": "Clear technical diagram with comprehensive parts table, good quality reproduction"
+  },
+  "_metadata": {
+    "image_path": "/Users/brad/code/REIMAGINEDAPPV2/python-sidecar/visual_extraction_work/ab4f40f6c7db8160bdbbbe7bdfd123d669280b403b4718ff682639cbbca957ee/images/0533d95f-b7e5-4eed-9aa6-ef5e7706091f-page_12.jpg",
+    "analysis_time_seconds": 10.867053,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:49:04.967360",
+    "input_tokens": 2093,
+    "output_tokens": 715
+  }
+}

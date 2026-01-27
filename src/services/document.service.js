@@ -469,6 +469,57 @@ class DocumentService {
 
       const fileBuffer = await fileData.arrayBuffer();
 
+      // ===== DOCUMENT-FIRST ARCHITECTURE (v5) =====
+      // Check if we're resuming after user approved models
+      const isResumingAfterApproval = job.status_v2 === 'model_selection' && job.selected_models?.length > 0;
+
+      if (!isResumingAfterApproval) {
+        // Step 1.5: Model Detection - analyze document to find what models it covers
+        await documentRepository.updateJobStatusV2(jobId, 'model_detection');
+
+        this.requestLogger.info('Starting model detection', { jobId, fileName });
+
+        const modelDetectionResult = await this.detectModelsFromDocument(fileBuffer, job.doc_id, fileName);
+
+        if (modelDetectionResult.success && modelDetectionResult.primary_models?.length > 0) {
+          // Store detected models in job
+          await documentRepository.updateJobStatus(jobId, job.status, {
+            models_detected: modelDetectionResult.primary_models,
+            referenced_products: modelDetectionResult.referenced_products || [],
+            manufacturer_detected: modelDetectionResult.manufacturer,
+            product_category: modelDetectionResult.product_category
+          });
+
+          // Set status to model_selection (blocking - waits for user)
+          await documentRepository.updateJobStatusV2(jobId, 'model_selection');
+
+          this.requestLogger.info('Model detection complete, awaiting user approval', {
+            jobId,
+            modelsDetected: modelDetectionResult.primary_models,
+            referencedProducts: modelDetectionResult.referenced_products?.length || 0
+          });
+
+          // STOP HERE - user needs to approve models on onboarding.html
+          // Processing will resume when confirm-systems endpoint is called
+          return {
+            success: true,
+            status: 'awaiting_approval',
+            models_detected: modelDetectionResult.primary_models,
+            referenced_products: modelDetectionResult.referenced_products,
+            message: 'Model detection complete. Awaiting user approval.'
+          };
+        }
+
+        // No models detected - continue with processing (legacy flow)
+        this.requestLogger.warn('No models detected, continuing with legacy flow', { jobId });
+      } else {
+        this.requestLogger.info('Resuming processing after model approval', {
+          jobId,
+          selectedModels: job.selected_models
+        });
+      }
+      // ===== END DOCUMENT-FIRST ARCHITECTURE =====
+
       // Step 2: Process document with Python sidecar (PDF → chunks → embeddings → Pinecone)
       this.requestLogger.info('Starting document processing', {
         jobId,
@@ -554,8 +605,8 @@ class DocumentService {
         job.storage_path,
         {
           job_id: job.job_id,
-          manufacturer: document.manufacturer,
-          model: document.model
+          manufacturer: document.manufacturer_norm,
+          model: document.model_norm
         }
       );
 
@@ -766,6 +817,102 @@ class DocumentService {
     }
   }
 
+  /**
+   * Detect models covered by a document using LLM analysis
+   * Document-first architecture: parse PDF then detect models before user selects
+   * @param {ArrayBuffer} fileBuffer - PDF file content
+   * @param {string} docId - Document ID
+   * @param {string} fileName - Original filename
+   * @returns {Object} Detection result with primary_models, referenced_products, etc.
+   */
+  async detectModelsFromDocument(fileBuffer, docId, fileName) {
+    try {
+      this.checkSidecarAvailability();
+
+      const { getEnv } = await import('../config/env.js');
+      const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
+
+      // Step 1: Parse the PDF to get markdown
+      this.requestLogger.info('Parsing PDF for model detection', { docId, fileName });
+
+      const formData = new FormData();
+      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
+      formData.append('file', blob, fileName);
+      formData.append('extract_tables', 'true');
+      formData.append('ocr_enabled', 'true');
+
+      // Call LlamaParse to get markdown (also stores raw JSON to Storage)
+      // Pass doc_id as query param (Form fields don't work reliably with file uploads in FastAPI)
+      const llamaparseUrl = docId
+        ? `${sidecarUrl}/v1/llamaparse?doc_id=${encodeURIComponent(docId)}`
+        : `${sidecarUrl}/v1/llamaparse`;
+      const parseResponse = await fetch(llamaparseUrl, {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(300000) // 5 minute timeout for parsing
+      });
+
+      if (!parseResponse.ok) {
+        const errorText = await parseResponse.text();
+        throw new Error(`LlamaParse failed: ${parseResponse.status} - ${errorText}`);
+      }
+
+      const parseResult = await parseResponse.json();
+
+      if (!parseResult.success || !parseResult.text) {
+        this.requestLogger.warn('LlamaParse returned no content', { docId });
+        return { success: false, error: 'No content parsed from document' };
+      }
+
+      this.requestLogger.info('PDF parsed, calling model detection', {
+        docId,
+        contentLength: parseResult.text.length
+      });
+
+      // Step 2: Call detect-models with the parsed markdown
+      const detectResponse = await fetch(`${sidecarUrl}/v1/detect-models`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          markdown: parseResult.text,
+          doc_id: docId,
+          filename: fileName
+        }),
+        signal: AbortSignal.timeout(120000) // 2 minute timeout
+      });
+
+      if (!detectResponse.ok) {
+        const errorText = await detectResponse.text();
+        throw new Error(`Model detection failed: ${detectResponse.status} - ${errorText}`);
+      }
+
+      const detectResult = await detectResponse.json();
+
+      this.requestLogger.info('Model detection complete', {
+        docId,
+        success: detectResult.success,
+        primaryModels: detectResult.primary_models,
+        referencedProducts: detectResult.referenced_products?.length || 0,
+        manufacturer: detectResult.manufacturer,
+        confidence: detectResult.confidence
+      });
+
+      return detectResult;
+
+    } catch (error) {
+      this.requestLogger.error('Model detection failed', {
+        docId,
+        error: error.message
+      });
+      return {
+        success: false,
+        error: error.message,
+        primary_models: [],
+        referenced_products: []
+      };
+    }
+  }
+
   // Call Python sidecar for document processing
   async callPythonSidecar(fileBuffer, job, document, fileName) {
     try {
@@ -781,8 +928,8 @@ class DocumentService {
       // Add metadata
       const metadata = {
         doc_id: job.doc_id,
-        manufacturer: document.manufacturer,
-        model: document.model,
+        manufacturer: document.manufacturer_norm,
+        model: document.model_norm,
         revision_date: document.revision_date,
         language: document.language,
         job_id: job.job_id,

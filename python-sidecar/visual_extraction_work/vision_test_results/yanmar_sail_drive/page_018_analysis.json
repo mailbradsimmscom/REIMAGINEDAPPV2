@@ -1,0 +1,93 @@
+{
+  "figures": [
+    {
+      "type": "exploded_view",
+      "title": "Figure 3",
+      "description": "Exploded view diagram showing all major components of the SD110/SD150 sail drive unit with numbered callouts for each part.",
+      "bbox": {
+        "x": 10,
+        "y": 15,
+        "width": 80,
+        "height": 65
+      },
+      "figure_reference": "Figure 3",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "type": "parts_list",
+      "title": "Parts List",
+      "description": "Numbered list of all components shown in the exploded view diagram, from dipstick to breather hose connection.",
+      "bbox": {
+        "x": 10,
+        "y": 82,
+        "width": 90,
+        "height": 15
+      },
+      "columns": [
+        "Number",
+        "Component Name"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "PRODUCT OVERVIEW",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 50,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SD110/SD150",
+      "bbox": {
+        "x": 10,
+        "y": 10,
+        "width": 30,
+        "height": 3
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": "12",
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "diagram",
+    "models_mentioned": [
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Clear technical diagram with comprehensive parts list. Page specifically covers SD110/SD150 models only."
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_18.jpg",
+    "analysis_time_seconds": 8.046832,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:00:06.711979",
+    "input_tokens": 2183,
+    "output_tokens": 541
+  },
+  "page_number": 18
+}

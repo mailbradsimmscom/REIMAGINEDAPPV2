@@ -1,0 +1,167 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "MPPT solar charger manual",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "6.5. Shutdown and restart procedure",
+      "bbox": {
+        "x": 0,
+        "y": 8,
+        "width": 100,
+        "height": 2
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "6.6. Maintenance procedure",
+      "bbox": {
+        "x": 0,
+        "y": 10,
+        "width": 100,
+        "height": 2
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "7. Monitoring",
+      "bbox": {
+        "x": 0,
+        "y": 12,
+        "width": 100,
+        "height": 2
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "7.1. LED indications through 7.4. Monitoring via a GX device and VRM",
+      "bbox": {
+        "x": 5,
+        "y": 14,
+        "width": 95,
+        "height": 10
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8. Troubleshooting",
+      "bbox": {
+        "x": 0,
+        "y": 24,
+        "width": 100,
+        "height": 2
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.1. Solar charger is damaged through 8.3.5. Low lithium battery temperature",
+      "bbox": {
+        "x": 5,
+        "y": 26,
+        "width": 95,
+        "height": 16
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.4. Solar charger is externally controlled through 8.5.7. Reverse PV polarity",
+      "bbox": {
+        "x": 5,
+        "y": 42,
+        "width": 95,
+        "height": 14
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.6. Batteries are undercharged through 8.7.4. Battery old, faulty or undersized",
+      "bbox": {
+        "x": 5,
+        "y": 56,
+        "width": 95,
+        "height": 16
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.8. Solar charger not achieving full output through 8.10.2. Incorrect load output current reading",
+      "bbox": {
+        "x": 5,
+        "y": 72,
+        "width": 95,
+        "height": 12
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.11. Miscellaneous issues through 8.12.8. Error 28 - Power stage issue",
+      "bbox": {
+        "x": 5,
+        "y": 84,
+        "width": 95,
+        "height": 16
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "This appears to be a table of contents page showing section headings and page numbers for the manual"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmps0eix0v0/page_3.jpg",
+    "analysis_time_seconds": 14.04389,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:01:16.855830",
+    "input_tokens": 2198,
+    "output_tokens": 1015
+  },
+  "page_number": 3
+}

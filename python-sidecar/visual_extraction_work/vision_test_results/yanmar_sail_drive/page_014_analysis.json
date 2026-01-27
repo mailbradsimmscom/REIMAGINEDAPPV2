@@ -1,0 +1,120 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "SAFETY",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "NOTICE",
+      "bbox": {
+        "x": 5,
+        "y": 8,
+        "width": 90,
+        "height": 12
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Saildrive oil temperature warning",
+      "bbox": {
+        "x": 5,
+        "y": 20,
+        "width": 90,
+        "height": 8
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Anode material specifications",
+      "bbox": {
+        "x": 5,
+        "y": 28,
+        "width": 90,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Component tightening requirements",
+      "bbox": {
+        "x": 5,
+        "y": 53,
+        "width": 90,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Replacement parts notice",
+      "bbox": {
+        "x": 5,
+        "y": 61,
+        "width": 90,
+        "height": 8
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Modification restrictions",
+      "bbox": {
+        "x": 5,
+        "y": 69,
+        "width": 90,
+        "height": 15
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 8,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text throughout, safety information applies to all SD series models"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmppjvmmgrt/page_14.jpg",
+    "analysis_time_seconds": 7.947997,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:14.944560",
+    "input_tokens": 2183,
+    "output_tokens": 616
+  },
+  "page_number": 14
+}

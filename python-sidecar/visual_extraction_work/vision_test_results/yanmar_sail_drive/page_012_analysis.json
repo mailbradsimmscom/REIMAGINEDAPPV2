@@ -1,0 +1,196 @@
+{
+  "figures": [
+    {
+      "type": "other",
+      "title": "Exposure Hazard Icon",
+      "description": "Icon showing person with protective equipment to illustrate safety gear requirements.",
+      "bbox": {
+        "x": 5,
+        "y": 15,
+        "width": 8,
+        "height": 15
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Entanglement Hazard Icon",
+      "description": "Icon showing person with rotating machinery to illustrate entanglement risks.",
+      "bbox": {
+        "x": 5,
+        "y": 32,
+        "width": 8,
+        "height": 15
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Burn Hazard Icon",
+      "description": "Icon showing hot surface warning to illustrate burn risks from engine components.",
+      "bbox": {
+        "x": 5,
+        "y": 60,
+        "width": 8,
+        "height": 10
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Exhaust Hazard Icon",
+      "description": "Icon showing person with respiratory protection to illustrate exhaust gas dangers.",
+      "bbox": {
+        "x": 55,
+        "y": 15,
+        "width": 8,
+        "height": 15
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Electrical Shock Hazard Icon",
+      "description": "Icon showing hand with electrical warning to illustrate electrical shock risks.",
+      "bbox": {
+        "x": 55,
+        "y": 75,
+        "width": 8,
+        "height": 15
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "SAFETY",
+      "bbox": {
+        "x": 5,
+        "y": 2,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Exposure Hazard!",
+      "bbox": {
+        "x": 15,
+        "y": 10,
+        "width": 35,
+        "height": 25
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Entanglement Hazard!",
+      "bbox": {
+        "x": 15,
+        "y": 32,
+        "width": 35,
+        "height": 25
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Burn Hazard!",
+      "bbox": {
+        "x": 15,
+        "y": 57,
+        "width": 35,
+        "height": 15
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Sudden Movement Hazard!",
+      "bbox": {
+        "x": 15,
+        "y": 72,
+        "width": 35,
+        "height": 8
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Exhaust Hazard!",
+      "bbox": {
+        "x": 65,
+        "y": 10,
+        "width": 30,
+        "height": 60
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Electrical Shock Hazard!",
+      "bbox": {
+        "x": 65,
+        "y": 75,
+        "width": 30,
+        "height": 20
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": "6",
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear safety warning page with good icon visibility and text readability"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmppjvmmgrt/page_12.jpg",
+    "analysis_time_seconds": 13.169295,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:57:52.829410",
+    "input_tokens": 2183,
+    "output_tokens": 1126
+  },
+  "page_number": 12
+}

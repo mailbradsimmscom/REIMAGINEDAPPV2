@@ -1,7 +1,7 @@
-# Code Update #103: Stormglass Weather API Integration
+# Code Update #73: Stormglass Weather API Integration & UI Redesign
 
-**Date:** 2026-01-04
-**Status:** ✅ Phase 1 Complete - Data Import Working
+**Date:** 2026-01-04 → 2026-01-05
+**Status:** ✅ Phase 1 Complete (Data Import) | ✅ Phase 2 Complete (UI Redesign)
 **Branch:** Stable-v4-Working
 
 ---
@@ -163,28 +163,104 @@ node scripts/import-stormglass-cache.mjs            # Actual import
 
 ---
 
-## Next Steps
+## Phase 2: UI Redesign (Complete) - 2026-01-05
 
-### Phase 2: UI Integration
-- [ ] Add Stormglass as selectable source in weather-area-view.html
-- [ ] Show multi-source comparison table on weather detail page
-- [ ] Add source reliability indicator based on spread
+### Summary
+Complete redesign of `weather-area-view.html` from table-based layout to PredictWind-inspired card-based interface.
+
+### New Design Features
+
+**Navigation:**
+- Fixed time nav at top (5am, 9am, 1pm, 5pm, 9pm)
+- Fixed day nav at bottom with scrollable 10-day range (e.g., "Sun 5", "Mon 6", "Tue 7")
+- 2D picker: select day + time block to view forecast
+
+**Weather Card Contents:**
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Morning                                    9AM - 1PM       │
+├─────────────────────────────────────────────────────────────┤
+│  💨 WIND     E 12 kn (11-13)  G:18                         │
+│  [OM|SG|NOAA|ECMWF|MeteoFR|Mtblue]  ← 6 sources            │
+│                                                             │
+│  🌊 WAVE HT  E 1.1m (0.9-1.3)                              │
+│  [OM|SG|NOAA|ECMWF|MeteoFR|Mtblue|Calc] ← 7 cols w/ calc   │
+│                                                             │
+│  ⏱️ PERIOD   8s (7-9)                                      │
+│  [OM|SG|NOAA|ECMWF|MeteoFR|Mtblue]                         │
+│                                                             │
+│  🌀 Swell: 0.8m @ 7s                                       │
+│  〰️ Wind Wave: 0.5m                                        │
+│  🌧️ Rain: 2mm                                              │
+│  ✓ Current: 0.4kn E (crossing swell)                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Source Grid (6 columns):**
+- OM (Open-Meteo)
+- SG (Stormglass blend)
+- NOAA
+- ECMWF
+- MeteoFR (Météo France)
+- Mtblue (Meteoblue) - **displayed in red as outlier**
+
+**Wave Height has 7th column: Calc**
+- Calculated value: `√(Swell² + Wind Wave²)`
+- Displayed in green
+- Excludes Meteoblue from calculation
+
+**Current-Swell Relationship:**
+- Calculates angle between current direction and swell travel
+- Shows warning icon and text:
+  - `⚠️ opposing swell - steeper waves` (≤45° difference)
+  - `✓ crossing swell` (45-135°)
+  - `✓ following swell` (≥135°)
+
+### Technical Changes
+
+**File:** `src/public/weather-area-view.html` (complete rewrite)
+- Reduced from 1,460 lines of table mess to ~850 lines of clean card-based UI
+- Mobile-first responsive design
+- PredictWind-inspired blue card gradient
+- 60s fetch timeout (fixes previous timeout issues)
+
+**Key Functions:**
+- `getMetricBySource()` - extracts values per source from forecast data
+- `calculateStats()` - computes avg/min/max for consensus display
+- `renderSourceGrid()` - renders the 6-7 column comparison grid
+- `renderCard()` - builds the full weather card HTML
+
+### Wave Height Physics
+
+**Formula:** `Combined Wave Height = √(Swell² + Wind Wave²)`
+
+Waves don't simply add - they combine via root-sum-square:
+- 0.8m swell + 0.5m wind wave = 0.94m combined (not 1.3m)
+
+This is because swell and wind waves have different periods/directions.
+
+### Current vs Swell (New Feature)
+
+When tidal current opposes swell direction, waves become steeper and more dangerous.
+- Current direction = where water flows TO
+- Swell direction = where waves come FROM
+- If current flows toward where swell is traveling = opposing = ⚠️ warning
+
+### Next Steps
 
 ### Phase 3: Automated Fetching
-- [ ] Add Stormglass to weather-fetch.service.js
+- [ ] Add Stormglass to weather-fetch.service.js (currently manual only)
 - [ ] Implement credit/quota tracking (10/day limit)
-- [ ] Schedule fetch strategically (once per day, or on-demand only)
+- [ ] Add "Fetch Stormglass" button functionality (currently placeholder)
 
-### Phase 4: Meteoblue Decision
-Options:
-1. **Stop using Meteoblue for wave data** - Only use for Douglas sea state, salinity, currents
-2. **Investigate Meteoblue** - May be using wrong coordinates or different metric
-3. **Remove Meteoblue entirely** - If other data isn't valuable enough for the cost
+### Phase 4: Summary Bar
+- [ ] Add bar graph above cards showing 7-10 day overview
+- [ ] Traffic light indicators (green/yellow/red) per day
 
-### Phase 5: Source Reliability Scoring
-- Track historical accuracy per source vs actual conditions
-- Weight sources by reliability in the UI
-- Alert when sources disagree significantly
+### Phase 5: Tides Integration
+- [ ] Add Stormglass Tide API (separate endpoint)
+- [ ] Show high/low tide times on card
+- [ ] Note: Tide is separate from wave height calculation
 
 ---
 

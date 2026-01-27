@@ -1,0 +1,93 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "MPPT solar charger manual",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Error 116 - Calibration data lost explanation",
+      "bbox": {
+        "x": 0,
+        "y": 8,
+        "width": 100,
+        "height": 20
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.14. Error 117 - Incompatible firmware",
+      "bbox": {
+        "x": 0,
+        "y": 28,
+        "width": 100,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.12.15. Error 119 - Settings data lost",
+      "bbox": {
+        "x": 0,
+        "y": 53,
+        "width": 100,
+        "height": 35
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Error recovery:",
+      "bbox": {
+        "x": 0,
+        "y": 65,
+        "width": 100,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 61,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SmartSolar",
+      "BlueSolar",
+      "GX"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear troubleshooting documentation for firmware and configuration errors"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp6__zh4g3/page_65.jpg",
+    "analysis_time_seconds": 7.185215,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:03:01.674512",
+    "input_tokens": 2198,
+    "output_tokens": 503
+  },
+  "page_number": 65
+}

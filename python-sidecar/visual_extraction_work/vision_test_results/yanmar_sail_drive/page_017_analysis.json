@@ -1,0 +1,89 @@
+{
+  "figures": [
+    {
+      "type": "exploded_view",
+      "title": "SD60 Product Overview - Figure 2",
+      "description": "Detailed exploded view diagram of the SD60 saildrive unit showing all major components with numbered callouts including the propeller shaft, gear cases, flexible mount, and various internal components.",
+      "bbox": {
+        "x": 10,
+        "y": 15,
+        "width": 80,
+        "height": 70
+      },
+      "figure_reference": "Figure 2",
+      "applies_to_models": [
+        "SD60"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "type": "parts_list",
+      "title": "Component Legend",
+      "description": "Numbered list of all components shown in the exploded view diagram, providing part names corresponding to the numbered callouts.",
+      "bbox": {
+        "x": 10,
+        "y": 85,
+        "width": 80,
+        "height": 10
+      },
+      "columns": [
+        "Number",
+        "Component Name"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "SD60"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "PRODUCT OVERVIEW",
+      "bbox": {
+        "x": 50,
+        "y": 5,
+        "width": 40,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD60"
+      ]
+    },
+    {
+      "title": "SD60",
+      "bbox": {
+        "x": 10,
+        "y": 10,
+        "width": 10,
+        "height": 3
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD60"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 11,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "diagram",
+    "models_mentioned": [
+      "SD60"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Clear technical diagram with comprehensive parts list. Page specifically focuses on SD60 model."
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_17.jpg",
+    "analysis_time_seconds": 8.457883,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:59:58.558076",
+    "input_tokens": 2183,
+    "output_tokens": 537
+  },
+  "page_number": 17
+}

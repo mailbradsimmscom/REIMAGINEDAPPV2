@@ -1,0 +1,93 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "8.11.1. Only voltage readings, no current or power",
+      "bbox": {
+        "x": 5,
+        "y": 8,
+        "width": 90,
+        "height": 12
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "75/10",
+        "100/15"
+      ]
+    },
+    {
+      "title": "8.11.2. Unable to select 36V or 48V battery voltage",
+      "bbox": {
+        "x": 5,
+        "y": 22,
+        "width": 90,
+        "height": 10
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.11.3. Unable to operate as a DC-DC charger or power supply",
+      "bbox": {
+        "x": 5,
+        "y": 34,
+        "width": 90,
+        "height": 20
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.11.4. Interrupted firmware update",
+      "bbox": {
+        "x": 5,
+        "y": 56,
+        "width": 90,
+        "height": 6
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.11.5. Ground current",
+      "bbox": {
+        "x": 5,
+        "y": 64,
+        "width": 90,
+        "height": 28
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 58,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "75/10",
+      "100/15"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear troubleshooting section with specific model references for certain issues"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp6__zh4g3/page_62.jpg",
+    "analysis_time_seconds": 8.00048,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:02:34.815721",
+    "input_tokens": 2198,
+    "output_tokens": 531
+  },
+  "page_number": 62
+}

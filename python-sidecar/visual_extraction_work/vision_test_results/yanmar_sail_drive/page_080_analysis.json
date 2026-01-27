@@ -1,0 +1,50 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "TROUBLESHOOTING",
+      "bbox": {
+        "x": 5,
+        "y": 5,
+        "width": 90,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Steps 3-4",
+      "bbox": {
+        "x": 5,
+        "y": 15,
+        "width": 85,
+        "height": 25
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 74,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Page appears to be continuation of troubleshooting section with only 2 procedural steps visible"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp5zu1mwcp/page_80.jpg",
+    "analysis_time_seconds": 4.270295,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:59:17.887559",
+    "input_tokens": 2183,
+    "output_tokens": 271
+  },
+  "page_number": 80
+}

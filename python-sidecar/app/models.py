@@ -175,3 +175,133 @@ class DIPPacketResponse(BaseModel):
     golden_tests_file: str
     processing_time: float
     error: Optional[str] = None
+
+
+# Model Detection Models (v5 Pipeline - Document-First Architecture)
+class ReferenceData(BaseModel):
+    """Reference table data for LLM to select from"""
+    manufacturers: List[str] = Field(default_factory=list, description="Known manufacturer names")
+    product_types: List[str] = Field(default_factory=list, description="Known product types")
+    system_categories: List[str] = Field(default_factory=list, description="Known system categories")
+    subsystem_categories: List[Dict[str, Any]] = Field(default_factory=list, description="Known subsystem categories with parent system")
+
+
+class ModelDetectionRequest(BaseModel):
+    """Request for detecting models covered by a document"""
+    markdown: str = Field(..., description="Full parsed markdown content from LlamaParse")
+    doc_id: str = Field(..., description="Document UUID")
+    filename: str = Field(..., description="Original filename for context")
+    reference_data: Optional[ReferenceData] = Field(None, description="Reference table data for categorization")
+
+
+class ReferencedProduct(BaseModel):
+    """A product referenced in the document but not the primary subject"""
+    model: str = Field(..., description="Model number/name")
+    type: Optional[str] = Field(None, description="Product type (e.g., 'Vessel Control System')")
+    manufacturer: Optional[str] = Field(None, description="Manufacturer if different from primary")
+
+
+class ModelDetectionResponse(BaseModel):
+    """Response from model detection - document-first architecture"""
+    success: bool
+    manufacturer: Optional[str] = Field(None, description="Detected/suggested manufacturer name")
+    product_category: Optional[str] = Field(None, description="Product type/category (legacy)")
+    product_type: Optional[str] = Field(None, description="Suggested product type from reference table")
+    system_category: Optional[str] = Field(None, description="Suggested system category from reference table")
+    subsystem_category: Optional[str] = Field(None, description="Suggested subsystem category from reference table")
+    primary_models: List[str] = Field(default_factory=list, description="Primary model numbers this manual is FOR")
+    referenced_products: List[ReferencedProduct] = Field(default_factory=list, description="Other products mentioned but not primary subject")
+    is_multi_model: bool = Field(default=False, description="True if manual covers multiple models")
+    confidence: str = Field(default="low", description="Confidence level: high, medium, low")
+    evidence: str = Field(default="", description="Brief explanation of how models were detected")
+    processing_time: float
+    error: Optional[str] = None
+
+    # Legacy field for backwards compatibility
+    @property
+    def models_detected(self) -> List[str]:
+        return self.primary_models
+
+
+class LlamaParseResponse(BaseModel):
+    """Response from LlamaParse document parsing"""
+    success: bool
+    text: str = Field(default="", description="Full parsed text/markdown content")
+    content_length: int = Field(default=0, description="Length of parsed content in characters")
+    sections_count: int = Field(default=0, description="Number of sections extracted")
+    llamaparse_path: Optional[str] = Field(default=None, description="Storage path to llamaparse_raw.json if stored")
+    processing_time: float
+    error: Optional[str] = None
+
+
+# ============================================================================
+# Vision Analysis Models (Stage 6-7)
+# ============================================================================
+
+class VisionAnalysisPath(BaseModel):
+    """Result for a single page analysis"""
+    page_number: int
+    analysis_path: str = Field(..., description="Storage path to page analysis JSON")
+    figures_found: int = Field(default=0)
+    tables_found: int = Field(default=0)
+
+
+class VisionAnalyzeRequest(BaseModel):
+    """Request for Vision Stage 6: analyze pages"""
+    doc_id: str = Field(..., description="Document ID")
+    storage_path: str = Field(..., description="Supabase Storage path to PDF")
+    models_covered: List[str] = Field(default_factory=list, description="All models covered by document (informational)")
+    selected_models: List[str] = Field(..., description="User-approved primary models (tag universe)")
+    referenced_selections: List[str] = Field(default_factory=list, description="User's selected referenced systems (e.g., VC20, SD605)")
+    pages: str = Field(default="1-10", description="Page range to analyze (e.g., '1-10' or '1,5,10')")
+    context: str = Field(default="", description="Document context for Vision prompt")
+
+
+class VisionAnalyzeResponse(BaseModel):
+    """Response from Vision Stage 6: analyze pages"""
+    success: bool
+    pages_analyzed: int = Field(default=0)
+    pages_skipped: int = Field(default=0, description="Pages skipped (not relevant to user's model selection)")
+    analysis_paths: List[VisionAnalysisPath] = Field(default_factory=list)
+    warnings: List[Dict[str, Any]] = Field(default_factory=list)
+    processing_time: float = Field(default=0.0)
+    error: Optional[str] = None
+
+
+class VisionCropRequest(BaseModel):
+    """Request for Vision Stage 7: crop figures"""
+    doc_id: str = Field(..., description="Document ID")
+    storage_path: str = Field(..., description="Supabase Storage path to PDF")
+    analysis_paths: List[VisionAnalysisPath] = Field(..., description="Analysis results from Stage 6")
+
+
+class VisionAsset(BaseModel):
+    """A cropped asset (figure or table) with metadata"""
+    doc_id: str
+    page_number: int
+    asset_kind: str = Field(..., description="'figure' or 'table'")
+    asset_index: int = Field(..., description="0-based index within (doc_id, page_number, asset_kind)")
+    asset_type: Optional[str] = Field(None, description="Subtype: wiring_diagram, specifications, etc.")
+    title: Optional[str] = None
+    description: Optional[str] = None
+    bbox: Dict[str, float] = Field(..., description="Percentage bbox {x, y, width, height}")
+    storage_path: str = Field(..., description="Storage path to cropped image")
+    analysis_path: str = Field(..., description="Storage path to page analysis JSON")
+    applies_to_models: List[str] = Field(..., description="Canonical primary models")
+    referenced_systems: List[str] = Field(default_factory=list, description="Canonical referenced systems")
+    is_universal: bool = Field(default=False, description="True if applies to all selected_models")
+    confidence: str = Field(default="low", description="Model attribution confidence: high, medium, low")
+    attribution_warnings: List[str] = Field(default_factory=list, description="Warning codes: MODEL_ATTRIBUTION_DEFAULTED, etc.")
+    asset_json: Dict[str, Any] = Field(..., description="Full element payload after canonicalization")
+
+
+class VisionCropResponse(BaseModel):
+    """Response from Vision Stage 7: crop figures"""
+    success: bool
+    assets: List[VisionAsset] = Field(default_factory=list)
+    figures_cropped: int = Field(default=0)
+    tables_cropped: int = Field(default=0)
+    manifest_path: Optional[str] = Field(None, description="Storage path to manifest.json")
+    warnings: List[Dict[str, Any]] = Field(default_factory=list)
+    processing_time: float = Field(default=0.0)
+    error: Optional[str] = None

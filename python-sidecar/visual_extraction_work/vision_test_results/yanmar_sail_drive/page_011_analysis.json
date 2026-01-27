@@ -1,0 +1,191 @@
+{
+  "figures": [
+    {
+      "type": "other",
+      "title": "Explosion Hazard Warning Icon",
+      "description": "Warning icon showing explosion/fire symbol used for the danger warning about hydrogen gas production during battery charging.",
+      "bbox": {
+        "x": 5,
+        "y": 25,
+        "width": 15,
+        "height": 15
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Fire Hazard Warning Icon",
+      "description": "Fire flame symbol used for multiple fire hazard warnings throughout the safety section.",
+      "bbox": {
+        "x": 5,
+        "y": 55,
+        "width": 10,
+        "height": 10
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Fire Hazard Warning Icon",
+      "description": "Fire flame symbol used for the undersized wiring fire hazard warning.",
+      "bbox": {
+        "x": 55,
+        "y": 15,
+        "width": 10,
+        "height": 10
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Sever Hazard Warning Icon",
+      "description": "Gear/mechanical symbol warning about rotating propeller hazards during service.",
+      "bbox": {
+        "x": 55,
+        "y": 45,
+        "width": 10,
+        "height": 10
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Alcohol and Drug Hazard Warning Icon",
+      "description": "Prohibition symbol showing crossed-out alcohol and drug symbols warning against operating under influence.",
+      "bbox": {
+        "x": 55,
+        "y": 85,
+        "width": 10,
+        "height": 10
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "SAFETY",
+      "bbox": {
+        "x": 50,
+        "y": 5,
+        "width": 45,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "During Operation and Maintenance",
+      "bbox": {
+        "x": 5,
+        "y": 12,
+        "width": 40,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "DANGER - Explosion Hazard!",
+      "bbox": {
+        "x": 5,
+        "y": 20,
+        "width": 45,
+        "height": 35
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Fire Hazard!",
+      "bbox": {
+        "x": 5,
+        "y": 50,
+        "width": 45,
+        "height": 15
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "WARNING - Fire Hazard!",
+      "bbox": {
+        "x": 55,
+        "y": 10,
+        "width": 40,
+        "height": 10
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Sever Hazard!",
+      "bbox": {
+        "x": 55,
+        "y": 35,
+        "width": 40,
+        "height": 45
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Alcohol and Drug Hazard!",
+      "bbox": {
+        "x": 55,
+        "y": 82,
+        "width": 40,
+        "height": 10
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 5,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear safety warning page with multiple hazard categories and warning symbols"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmppjvmmgrt/page_11.jpg",
+    "analysis_time_seconds": 14.204962,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:57:39.562783",
+    "input_tokens": 2183,
+    "output_tokens": 1122
+  },
+  "page_number": 11
+}

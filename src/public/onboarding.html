@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Onboarding</title>
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header p {
+            font-size: 17px;
+            color: var(--text-secondary);
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            margin-right: var(--spacing-md);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Document Info */
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .doc-icon {
+            font-size: 32px;
+        }
+
+        .doc-details {
+            flex: 1;
+        }
+
+        .doc-filename {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .doc-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-select, .form-input {
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Model List */
+        .model-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .model-item {
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .model-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .model-item.selected {
+            border-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.02);
+        }
+
+        .model-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .model-checkbox {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .model-info {
+            flex: 1;
+        }
+
+        .model-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .model-type {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .model-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .model-badge.primary {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .model-badge.referenced {
+            background: rgba(142, 142, 147, 0.2);
+            color: var(--text-secondary);
+        }
+
+        /* System Details Form (shown when model is selected) */
+        .system-details {
+            display: none;
+            padding: var(--spacing-lg);
+            background: var(--background-color);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .system-details.visible {
+            display: block;
+        }
+
+        .system-details .form-row {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .system-details .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Collapsible Section */
+        .collapsible-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .collapsible-header:hover {
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .collapsible-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .collapsible-arrow {
+            transition: transform 0.2s ease;
+        }
+
+        .collapsible-header.open .collapsible-arrow {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            display: none;
+        }
+
+        .collapsible-content.open {
+            display: block;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+            margin-top: var(--spacing-xl);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-small);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            min-width: 140px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056CC;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-secondary);
+            background: var(--background-color);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xxl);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error-message {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-small);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            text-align: center;
+        }
+
+        /* Success State */
+        .success-message {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-small);
+            border: 1px solid rgba(52, 199, 89, 0.2);
+            text-align: center;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Equipment Onboarding</h1>
+            <p>Configure the systems detected from your uploaded manual</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="card">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading document information...</p>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="card" style="display: none;">
+            <div class="error-message">
+                <p id="errorText">Failed to load job information</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='/upload.html'">Back to Upload</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" style="display: none;">
+            <!-- Document Info Card -->
+            <div class="card">
+                <div class="card-title">Document Information</div>
+                <div class="doc-info">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-details">
+                        <div class="doc-filename" id="docFilename">-</div>
+                        <div class="doc-meta" id="docMeta">-</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="manufacturer">Manufacturer</label>
+                        <select class="form-select" id="manufacturer">
+                            <option value="">Select Manufacturer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="productCategory">Product Category</label>
+                        <select class="form-select" id="productCategory">
+                            <option value="">Select Category</option>
+                            <option value="engine">Engine</option>
+                            <option value="generator">Generator</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="rigging">Rigging</option>
+                            <option value="safety">Safety Equipment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primary Models Card -->
+            <div class="card">
+                <div class="card-title">Primary Models Detected</div>
+                <div class="card-subtitle">Select the models installed on your boat. For each selected model, provide details below.</div>
+                <div class="model-list" id="primaryModelsList">
+                    <!-- Models will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Referenced Products Card (Collapsible) -->
+            <div class="card" id="referencedCard" style="display: none;">
+                <div class="collapsible-header" id="referencedHeader">
+                    <span class="collapsible-title">Referenced Products (Optional)</span>
+                    <span class="collapsible-arrow">▼</span>
+                </div>
+                <div class="collapsible-content" id="referencedContent">
+                    <div class="card-subtitle">These products are mentioned in the manual but are not the primary subject.</div>
+                    <div class="model-list" id="referencedModelsList">
+                        <!-- Referenced products will be populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='/upload.html'">Cancel</button>
+                <button class="btn btn-primary" id="confirmBtn" disabled onclick="onboarding.confirmSystems()">
+                    Confirm & Process
+                </button>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="successState" class="card" style="display: none;">
+            <div class="success-message">
+                <p><strong>Systems Created Successfully!</strong></p>
+                <p id="successDetails">Processing will continue in the background.</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='/upload.html'">Upload Another</button>
+                <button class="btn btn-primary" onclick="window.location.href='/systems.html'">View Systems</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class EquipmentOnboarding {
+            constructor() {
+                this.jobId = null;
+                this.jobData = null;
+                this.selectedModels = new Map(); // model -> details
+                this.locations = [
+                    'Engine Room - Port',
+                    'Engine Room - Starboard',
+                    'Engine Room - Center',
+                    'Helm Station',
+                    'Nav Station',
+                    'Flybridge',
+                    'Cockpit',
+                    'Salon',
+                    'Galley',
+                    'Master Cabin',
+                    'Forward Cabin',
+                    'Lazarette',
+                    'Anchor Locker',
+                    'Bow',
+                    'Stern',
+                    'Mast',
+                    'Other'
+                ];
+                this.init();
+            }
+
+            async init() {
+                // Get jobId from URL
+                const params = new URLSearchParams(window.location.search);
+                this.jobId = params.get('jobId');
+
+                if (!this.jobId) {
+                    this.showError('No job ID provided. Please start from the upload page.');
+                    return;
+                }
+
+                // Setup event listeners
+                this.setupEventListeners();
+
+                // Load manufacturers
+                await this.loadManufacturers();
+
+                // Load job data
+                await this.loadJobData();
+            }
+
+            setupEventListeners() {
+                // Collapsible toggle
+                document.getElementById('referencedHeader').addEventListener('click', () => {
+                    const header = document.getElementById('referencedHeader');
+                    const content = document.getElementById('referencedContent');
+                    header.classList.toggle('open');
+                    content.classList.toggle('open');
+                });
+            }
+
+            async loadManufacturers() {
+                try {
+                    const response = await fetch('/admin/api/manufacturers', {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+
+                    if (!response.ok) throw new Error('Failed to load manufacturers');
+
+                    const result = await response.json();
+                    const select = document.getElementById('manufacturer');
+
+                    result.data.manufacturers.forEach(name => {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        option.textContent = name;
+                        select.appendChild(option);
+                    });
+
+                    // Add "Other" option
+                    const otherOption = document.createElement('option');
+                    otherOption.value = '__other__';
+                    otherOption.textContent = '+ Add New Manufacturer';
+                    select.appendChild(otherOption);
+
+                } catch (error) {
+                    console.error('Failed to load manufacturers:', error);
+                }
+            }
+
+            async loadJobData() {
+                try {
+                    const response = await fetch(`/admin/api/jobs/${this.jobId}`, {
+                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+                        throw new Error(result.error?.message || 'Failed to load job');
+                    }
+
+                    this.jobData = result.data;
+                    this.renderJobData();
+
+                } catch (error) {
+                    console.error('Failed to load job:', error);
+                    this.showError(error.message);
+                }
+            }
+
+            renderJobData() {
+                // Hide loading, show main content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+
+                // Document info
+                const filename = this.jobData.params?.filename || this.jobData.doc_id || 'Unknown Document';
+                document.getElementById('docFilename').textContent = filename;
+
+                const uploadDate = this.jobData.created_at
+                    ? new Date(this.jobData.created_at).toLocaleDateString()
+                    : 'Unknown';
+                document.getElementById('docMeta').textContent = `Uploaded ${uploadDate}`;
+
+                // Set manufacturer if detected
+                if (this.jobData.manufacturer_detected) {
+                    document.getElementById('manufacturer').value = this.jobData.manufacturer_detected;
+                } else if (this.jobData.manufacturer_norm) {
+                    document.getElementById('manufacturer').value = this.jobData.manufacturer_norm;
+                }
+
+                // Set category if detected
+                if (this.jobData.product_category) {
+                    document.getElementById('productCategory').value = this.jobData.product_category;
+                }
+
+                // Render primary models
+                const primaryModels = this.jobData.models_detected || this.jobData.primary_models || [];
+                this.renderModelList('primaryModelsList', primaryModels, 'primary');
+
+                // Render referenced products
+                const referencedProducts = this.jobData.referenced_products || [];
+                if (referencedProducts.length > 0) {
+                    document.getElementById('referencedCard').style.display = 'block';
+                    this.renderModelList('referencedModelsList', referencedProducts, 'referenced');
+                }
+
+                // If no models detected, show message
+                if (primaryModels.length === 0) {
+                    document.getElementById('primaryModelsList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <p>No models were detected in this document.</p>
+                            <p>You can manually add systems after processing.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            renderModelList(containerId, models, type) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+
+                models.forEach((model, index) => {
+                    // Handle both string and object formats
+                    const modelName = typeof model === 'string' ? model : model.model;
+                    const modelType = typeof model === 'object' ? model.type : null;
+                    const modelManufacturer = typeof model === 'object' ? model.manufacturer : null;
+
+                    const modelId = `${type}-${index}`;
+                    const item = document.createElement('div');
+                    item.className = 'model-item';
+                    item.id = `model-item-${modelId}`;
+
+                    item.innerHTML = `
+                        <div class="model-header" onclick="onboarding.toggleModel('${modelId}', '${modelName}', '${type}')">
+                            <input type="checkbox" class="model-checkbox" id="checkbox-${modelId}"
+                                   onclick="event.stopPropagation(); onboarding.toggleModel('${modelId}', '${modelName}', '${type}')">
+                            <div class="model-info">
+                                <div class="model-name">${modelName}</div>
+                                ${modelType ? `<div class="model-type">${modelType}${modelManufacturer ? ` - ${modelManufacturer}` : ''}</div>` : ''}
+                            </div>
+                            <span class="model-badge ${type}">${type === 'primary' ? 'Primary' : 'Reference'}</span>
+                        </div>
+                        <div class="system-details" id="details-${modelId}">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Serial Number</label>
+                                    <input type="text" class="form-input" id="serial-${modelId}"
+                                           placeholder="Optional"
+                                           onchange="onboarding.updateModelDetail('${modelId}', 'serial', this.value)">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Location</label>
+                                    <select class="form-select" id="location-${modelId}"
+                                            onchange="onboarding.updateModelDetail('${modelId}', 'location', this.value)">
+                                        <option value="">Select Location</option>
+                                        ${this.locations.map(loc => `<option value="${loc}">${loc}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Install Date</label>
+                                    <input type="date" class="form-input" id="installDate-${modelId}"
+                                           onchange="onboarding.updateModelDetail('${modelId}', 'installDate', this.value)">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Notes</label>
+                                    <input type="text" class="form-input" id="notes-${modelId}"
+                                           placeholder="Optional notes"
+                                           onchange="onboarding.updateModelDetail('${modelId}', 'notes', this.value)">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(item);
+                });
+            }
+
+            toggleModel(modelId, modelName, type) {
+                const checkbox = document.getElementById(`checkbox-${modelId}`);
+                const item = document.getElementById(`model-item-${modelId}`);
+                const details = document.getElementById(`details-${modelId}`);
+
+                // Toggle checkbox if clicked on header
+                checkbox.checked = !checkbox.checked;
+
+                if (checkbox.checked) {
+                    item.classList.add('selected');
+                    details.classList.add('visible');
+                    this.selectedModels.set(modelId, {
+                        model: modelName,
+                        type: type,
+                        serial: '',
+                        location: '',
+                        installDate: '',
+                        notes: ''
+                    });
+                } else {
+                    item.classList.remove('selected');
+                    details.classList.remove('visible');
+                    this.selectedModels.delete(modelId);
+                }
+
+                this.updateConfirmButton();
+            }
+
+            updateModelDetail(modelId, field, value) {
+                if (this.selectedModels.has(modelId)) {
+                    const data = this.selectedModels.get(modelId);
+                    data[field] = value;
+                    this.selectedModels.set(modelId, data);
+                }
+            }
+
+            updateConfirmButton() {
+                const btn = document.getElementById('confirmBtn');
+                const hasSelection = this.selectedModels.size > 0;
+                btn.disabled = !hasSelection;
+
+                if (hasSelection) {
+                    btn.textContent = `Confirm ${this.selectedModels.size} System${this.selectedModels.size > 1 ? 's' : ''} & Process`;
+                } else {
+                    btn.textContent = 'Confirm & Process';
+                }
+            }
+
+            async confirmSystems() {
+                const btn = document.getElementById('confirmBtn');
+                btn.disabled = true;
+                btn.textContent = 'Creating Systems...';
+
+                try {
+                    // Build systems array from selected models
+                    const systems = [];
+                    const manufacturer = document.getElementById('manufacturer').value;
+                    const category = document.getElementById('productCategory').value;
+
+                    for (const [modelId, data] of this.selectedModels) {
+                        systems.push({
+                            model_norm: data.model,
+                            manufacturer_norm: manufacturer,
+                            product_category: category,
+                            serial_number: data.serial || null,
+                            location: data.location || null,
+                            install_date: data.installDate || null,
+                            notes: data.notes || null,
+                            is_primary: data.type === 'primary',
+                            source: 'document'
+                        });
+                    }
+
+                    // Call the confirm-systems endpoint
+                    const response = await fetch(`/document/jobs/${this.jobId}/confirm-systems`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        },
+                        body: JSON.stringify({
+                            systems: systems,
+                            manufacturer: manufacturer,
+                            product_category: category
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+                        throw new Error(result.error?.message || 'Failed to create systems');
+                    }
+
+                    // Show success state
+                    this.showSuccess(result.data);
+
+                } catch (error) {
+                    console.error('Failed to confirm systems:', error);
+                    btn.disabled = false;
+                    btn.textContent = `Confirm ${this.selectedModels.size} System${this.selectedModels.size > 1 ? 's' : ''} & Process`;
+                    alert(`Error: ${error.message}`);
+                }
+            }
+
+            showError(message) {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('errorState').style.display = 'block';
+                document.getElementById('errorText').textContent = message;
+            }
+
+            showSuccess(data) {
+                document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('successState').style.display = 'block';
+
+                const details = [];
+                if (data.systems_created) {
+                    details.push(`${data.systems_created} system${data.systems_created > 1 ? 's' : ''} created`);
+                }
+                if (data.message) {
+                    details.push(data.message);
+                }
+
+                document.getElementById('successDetails').textContent = details.join('. ') || 'Processing will continue in the background.';
+            }
+        }
+
+        // Initialize
+        let onboarding;
+        document.addEventListener('DOMContentLoaded', () => {
+            onboarding = new EquipmentOnboarding();
+        });
+    </script>
+
+    <!-- Mobile Navigation -->
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

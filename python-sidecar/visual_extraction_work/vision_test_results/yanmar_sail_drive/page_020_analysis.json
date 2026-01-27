@@ -1,0 +1,81 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "PRODUCT OVERVIEW",
+      "bbox": {
+        "x": 5,
+        "y": 5,
+        "width": 90,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "NOTICE",
+      "bbox": {
+        "x": 5,
+        "y": 15,
+        "width": 45,
+        "height": 15
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "NOTICE",
+      "bbox": {
+        "x": 5,
+        "y": 35,
+        "width": 45,
+        "height": 40
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Electrical Connections and Regulations According to International Rules ISO 60092-507 IEC:2008",
+      "bbox": {
+        "x": 55,
+        "y": 15,
+        "width": 40,
+        "height": 80
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 14,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text page with warning notices about anode materials and electrical connections"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_20.jpg",
+    "analysis_time_seconds": 6.755769,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:00:19.718857",
+    "input_tokens": 2183,
+    "output_tokens": 423
+  },
+  "page_number": 20
+}

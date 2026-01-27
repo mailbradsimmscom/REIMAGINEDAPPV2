@@ -43,7 +43,7 @@ echo "================================"
 # Start Python with venv (background)
 echo -e "${GREEN}1. Starting Python sidecar (port 8000)...${NC}"
 cd python-sidecar
-venv/bin/python3 -m app.main > ../logs/python.log 2>&1 &
+.venv/bin/python3 -m app.main > ../logs/python.log 2>&1 &
 PYTHON_PID=$!
 cd ..
 sleep 14

@@ -1,0 +1,91 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "PRODUCT OVERVIEW",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 80,
+        "height": 15
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "OVERVIEW",
+      "bbox": {
+        "x": 10,
+        "y": 20,
+        "width": 20,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Owner/Operator Responsibilities",
+      "bbox": {
+        "x": 10,
+        "y": 25,
+        "width": 45,
+        "height": 45
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "New Saildrive Break-In:",
+      "bbox": {
+        "x": 55,
+        "y": 25,
+        "width": 40,
+        "height": 20
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Dealer/Distributor Responsibilities",
+      "bbox": {
+        "x": 55,
+        "y": 50,
+        "width": 40,
+        "height": 35
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 9,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text document with general responsibilities and procedures applicable to all SD series models"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmppjvmmgrt/page_15.jpg",
+    "analysis_time_seconds": 7.101064,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:22.138632",
+    "input_tokens": 2183,
+    "output_tokens": 477
+  },
+  "page_number": 15
+}

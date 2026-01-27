@@ -55,7 +55,6 @@ const SYNONYMS_PROMPT = `You are a marine equipment search expert. Generate ALL 
 Equipment Details:
 Manufacturer: {manufacturer}
 Model: {model}
-Canonical ID: {canonical_model_id}
 Description: {description}
 
 Rules:
@@ -119,7 +118,6 @@ async function generateSynonyms(system) {
   const prompt = SYNONYMS_PROMPT
     .replace('{manufacturer}', system.manufacturer_norm || 'Unknown')
     .replace('{model}', system.model_norm || 'Unknown')
-    .replace('{canonical_model_id}', system.canonical_model_id || 'Unknown')
     .replace('{description}', system.description || 'No description available');
 
   requestLogger.debug('Generating synonyms', {

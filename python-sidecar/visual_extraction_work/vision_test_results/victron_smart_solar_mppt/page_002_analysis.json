@@ -1,0 +1,74 @@
+{
+  "figures": [],
+  "tables": [
+    {
+      "type": "other",
+      "title": "Table of Contents",
+      "description": "Complete table of contents listing all sections of the manual with page numbers, organized into 6 main sections covering safety, introduction, features, installation, configuration, and operation",
+      "bbox": {
+        "x": 10,
+        "y": 15,
+        "width": 80,
+        "height": 70
+      },
+      "columns": [
+        "Section Title",
+        "Page Number"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "MPPT solar charger manual",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 80,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Table of Contents",
+      "bbox": {
+        "x": 10,
+        "y": 12,
+        "width": 30,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "table",
+    "models_mentioned": [
+      "75/10",
+      "100/20"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear table of contents page with comprehensive section listing. Only specific model references are 75/10 and 100/20 mentioned in section 1.4 regarding FCC compliance."
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmps0eix0v0/page_2.jpg",
+    "analysis_time_seconds": 7.889305,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:01:02.699058",
+    "input_tokens": 2198,
+    "output_tokens": 479
+  },
+  "page_number": 2
+}

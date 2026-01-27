@@ -1,0 +1,141 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "MPPT solar charger manual",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "1. Safety precautions",
+      "bbox": {
+        "x": 0,
+        "y": 10,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "1.1. General safety precautions",
+      "bbox": {
+        "x": 5,
+        "y": 20,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Read this manual carefully. It contains important instructions that need to be followed during installation, operation and maintenance. Save these instructions for future reference on operation and maintenance.",
+      "bbox": {
+        "x": 10,
+        "y": 28,
+        "width": 85,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Danger of battery explosion from sparking. Danger of electric shock. Install the product in a heatproof environment. Ensure therefore that there are no chemicals, plastic parts, curtains or other textiles, etc. in the immediate vicinity of the equipment. The product is not allowed to be mounted in a user accessible area. Ensure that the equipment is used under the correct operating conditions. Never operate it in a wet environment. Never use the product at sites where gas or dust explosions could occur. Ensure that there is always sufficient free space around the product for ventilation. Refer to the specifications provided by the manufacturer of the battery to ensure that the battery is suitable for use with this product. The battery manufacturer's safety instructions should always be observed. Protect the solar modules from incident light during installation, e.g. cover them. Never touch uninsulated cable ends. Use only insulated tools. This product is designed and tested in accordance with international standards. The equipment should be used for the designated application only. Connections must always be made in the sequence described in the Installation [11] chapter of this manual. The installer of the product must provide a means for cable strain relief to prevent the transmission of stress to the connections. In addition to this manual, the system operation or service manual must include a battery maintenance manual applicable to the type of batteries used.",
+      "bbox": {
+        "x": 10,
+        "y": 38,
+        "width": 85,
+        "height": 50
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "1.2. Wiring safety precautions",
+      "bbox": {
+        "x": 5,
+        "y": 75,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Use flexible multi-stranded copper cable for the battery and PV connections. The diameter of the individual strand of the cable used should not exceed 0.4mm (0.016 inch) or have a surface area exceeding 0.125mm\u00b2 (AWG26). The maximum operating temperature is 90\u00b0C (194\u00b0F). A 25mm\u00b2 cable, for example, should have at least 196 strands (class 5 or higher stranding according to VDE 0295, IEC 60228 and BS6360). An AWG2 gauge cable should have at least 259/26 stranding (259 strands of AWG26). Example of suitable cable: class 5 \"Tri-rated\" cable (it has three approvals: American (UL), Canadian (CSA) and British (BS)). In case of thicker strands the contact area will be too small and the resulting high contact resistance will cause severe overheating, eventually resulting in fire. See below figure for examples of what cable to use and not to use.",
+      "bbox": {
+        "x": 10,
+        "y": 82,
+        "width": 85,
+        "height": 15
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Page 1",
+      "bbox": {
+        "x": 5,
+        "y": 95,
+        "width": 15,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Safety precautions",
+      "bbox": {
+        "x": 75,
+        "y": 95,
+        "width": 20,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 1,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear safety precautions page with proper warning formatting and Victron Energy branding"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmps0eix0v0/page_5.jpg",
+    "analysis_time_seconds": 27.479435,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:01:50.587362",
+    "input_tokens": 2198,
+    "output_tokens": 1291
+  },
+  "page_number": 5
+}

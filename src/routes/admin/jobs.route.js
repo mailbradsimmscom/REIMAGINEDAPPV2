@@ -149,19 +149,11 @@ router.get('/:jobId', async (req, res, next) => {
     if (job.doc_id) {
       try {
         document = await documentRepository.getDocument(job.doc_id);
-        log.info('Document fetched for job', { 
-          jobId, 
-          docId: job.doc_id, 
+        log.info('Document fetched for job', {
+          jobId,
+          docId: job.doc_id,
           manufacturer_norm: document?.manufacturer_norm,
-          model_norm: document?.model_norm,
-          manufacturer: document?.manufacturer,
-          model: document?.model
-        });
-        
-        // Debug: log what we're actually returning
-        log.info('Returning data for progress page', {
-          manufacturer_norm: document?.manufacturer || job.manufacturer_norm,
-          model_norm: document?.model || job.model_norm
+          model_norm: document?.model_norm
         });
       } catch (docError) {
         log.warn('Could not fetch document details', { docId: job.doc_id, error: docError.message });
@@ -179,8 +171,10 @@ router.get('/:jobId', async (req, res, next) => {
             manufacturer_norm: document?.manufacturer_norm || job.manufacturer_norm,
             model_norm: document?.model_norm || job.model_norm,
             system_norm: document?.system_norm || job.system_norm,
-            manufacturer: document?.manufacturer,
-            model: document?.model,
+            // v5 pipeline fields for model selection
+            models_detected: job.models_detected || [],
+            user_model_variant: document?.model_norm || job.model_norm || null,
+            selected_models: job.selected_models || [],
             created_at: job.created_at,
             updated_at: job.updated_at,
             started_at: job.started_at,

@@ -1,0 +1,71 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "Error Codes and Descriptions",
+      "bbox": {
+        "x": 0,
+        "y": 15,
+        "width": 100,
+        "height": 50
+      },
+      "content_type": "specifications",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "9. Technical specifications",
+      "bbox": {
+        "x": 0,
+        "y": 70,
+        "width": 100,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Model Specifications by Type",
+      "bbox": {
+        "x": 0,
+        "y": 75,
+        "width": 100,
+        "height": 15
+      },
+      "content_type": "specifications",
+      "applies_to_models": [
+        "75/10",
+        "75/15",
+        "100/15",
+        "100/20"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "75/10",
+      "75/15",
+      "100/15",
+      "100/20"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "This appears to be a table of contents or index page showing error codes and technical specifications sections with page references"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmps0eix0v0/page_4.jpg",
+    "analysis_time_seconds": 6.058931,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:01:23.005110",
+    "input_tokens": 2198,
+    "output_tokens": 376
+  },
+  "page_number": 4
+}

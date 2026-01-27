@@ -1,0 +1,89 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "PRODUCT OVERVIEW",
+      "bbox": {
+        "x": 50,
+        "y": 5,
+        "width": 50,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "GALVANIC CORROSION",
+      "bbox": {
+        "x": 0,
+        "y": 15,
+        "width": 48,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "CORROSION CONTROL",
+      "bbox": {
+        "x": 52,
+        "y": 15,
+        "width": 48,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "",
+      "bbox": {
+        "x": 0,
+        "y": 20,
+        "width": 48,
+        "height": 75
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "",
+      "bbox": {
+        "x": 52,
+        "y": 20,
+        "width": 48,
+        "height": 75
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 13,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text explaining galvanic corrosion principles and control methods for marine applications"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp_4s1vuvr/page_19.jpg",
+    "analysis_time_seconds": 6.054656,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:00:12.871089",
+    "input_tokens": 2183,
+    "output_tokens": 460
+  },
+  "page_number": 19
+}

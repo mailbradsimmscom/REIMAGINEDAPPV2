@@ -1,0 +1,54 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "PERIODIC MAINTENANCE (SD110/SD150)",
+      "bbox": {
+        "x": 0,
+        "y": 5,
+        "width": 100,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "This Page Intentionally Left Blank",
+      "bbox": {
+        "x": 20,
+        "y": 45,
+        "width": 60,
+        "height": 10
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 70,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Intentionally blank page with header indicating periodic maintenance section for SD110/SD150 models"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp5zu1mwcp/page_76.jpg",
+    "analysis_time_seconds": 4.820405,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:44.537616",
+    "input_tokens": 2183,
+    "output_tokens": 290
+  },
+  "page_number": 76
+}

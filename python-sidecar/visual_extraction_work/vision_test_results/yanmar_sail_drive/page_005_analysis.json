@@ -1,0 +1,108 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "TABLE OF CONTENTS",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "PERIODIC MAINTENANCE (SD60)",
+      "bbox": {
+        "x": 0,
+        "y": 10,
+        "width": 100,
+        "height": 40
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD60"
+      ]
+    },
+    {
+      "title": "PERIODIC MAINTENANCE (SD110/SD150)",
+      "bbox": {
+        "x": 0,
+        "y": 50,
+        "width": 100,
+        "height": 40
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "TROUBLESHOOTING",
+      "bbox": {
+        "x": 0,
+        "y": 90,
+        "width": 30,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "EMERGENCY PROCEDURE (SD110/SD150)",
+      "bbox": {
+        "x": 0,
+        "y": 93,
+        "width": 50,
+        "height": 3
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "SPECIFICATIONS",
+      "bbox": {
+        "x": 0,
+        "y": 96,
+        "width": 30,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear table of contents page with model-specific sections clearly indicated"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmphqnr_0tx/page_5.jpg",
+    "analysis_time_seconds": 7.240251,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:56:52.969762",
+    "input_tokens": 2183,
+    "output_tokens": 574
+  },
+  "page_number": 5
+}

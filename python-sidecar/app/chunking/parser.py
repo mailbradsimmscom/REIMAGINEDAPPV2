@@ -29,6 +29,7 @@ class DocumentParser:
         self.parser = LlamaParse(
             api_key=api_key,
             result_type="markdown",  # Get structured markdown output
+            extract_layout=True,  # Enable layout[] with bboxes in JSON output
             verbose=True,
             language="en",
             # Optimize for technical documentation
@@ -117,6 +118,102 @@ class DocumentParser:
 
         except Exception as e:
             logger.error(f"Failed to parse document {file_path}: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+
+    async def parse_document_with_layout(
+        self,
+        file_path: str,
+        filename: Optional[str] = None,
+        target_pages: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Parse document and return markdown + raw JSON with layout data.
+
+        Uses aget_json() to get full LlamaParse response including:
+        - pages[].items[] - text content with bboxes
+        - pages[].layout[] - visual elements (pictures, tables) with bboxes
+
+        Args:
+            file_path: Path to document file
+            filename: Optional original filename (for metadata)
+            target_pages: Optional comma-separated 0-indexed pages (e.g., "0,1,2")
+
+        Returns:
+            Dict containing:
+                - success: bool
+                - markdown: str (combined markdown from all pages)
+                - raw_json: Dict (full LlamaParse JSON response for storage)
+                - pages_count: int
+                - error: str (if failed)
+        """
+        try:
+            path = Path(file_path)
+            if not path.exists():
+                return {
+                    "success": False,
+                    "error": f"File not found: {file_path}"
+                }
+
+            doc_name = filename or path.name
+            logger.info(f"Parsing document with layout: {doc_name}")
+
+            # Create parser with target_pages if specified
+            if target_pages:
+                parser = LlamaParse(
+                    api_key=self.parser.api_key,
+                    result_type="markdown",
+                    extract_layout=True,
+                    verbose=True,
+                    language="en",
+                    target_pages=target_pages,
+                    parsing_instruction=self.parser.parsing_instruction
+                )
+                json_result = await parser.aget_json(file_path)
+            else:
+                json_result = await self.parser.aget_json(file_path)
+
+            if not json_result or len(json_result) == 0:
+                return {
+                    "success": False,
+                    "error": "No content extracted from document"
+                }
+
+            # LlamaParse returns list, take first element
+            raw_json = json_result[0]
+            pages = raw_json.get('pages', [])
+
+            # Extract markdown from pages
+            markdown_parts = []
+            for page in pages:
+                # Get markdown from items
+                for item in page.get('items', []):
+                    if item.get('type') == 'heading':
+                        level = item.get('lvl', 1)
+                        markdown_parts.append(f"{'#' * level} {item.get('value', '')}")
+                    elif item.get('type') == 'table':
+                        markdown_parts.append(item.get('md', ''))
+                    elif item.get('value'):
+                        markdown_parts.append(item.get('value', ''))
+
+            full_markdown = "\n\n".join(markdown_parts)
+
+            logger.info(
+                f"Successfully parsed {doc_name} with layout: "
+                f"{len(pages)} pages, {len(full_markdown)} chars"
+            )
+
+            return {
+                "success": True,
+                "markdown": full_markdown,
+                "raw_json": raw_json,
+                "pages_count": len(pages)
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to parse document with layout {file_path}: {e}")
             return {
                 "success": False,
                 "error": str(e)

@@ -1,0 +1,99 @@
+{
+  "figures": [],
+  "tables": [
+    {
+      "type": "other",
+      "title": "TABLE OF CONTENTS",
+      "description": "Table of contents showing page numbers for various sections including operation, maintenance, and procedures",
+      "bbox": {
+        "x": 10,
+        "y": 10,
+        "width": 80,
+        "height": 80
+      },
+      "columns": [
+        "Topic",
+        "Page Number"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "TABLE OF CONTENTS",
+      "bbox": {
+        "x": 10,
+        "y": 5,
+        "width": 60,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "BEFORE YOU OPERATE",
+      "bbox": {
+        "x": 15,
+        "y": 15,
+        "width": 40,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SAILDRIVE OPERATION",
+      "bbox": {
+        "x": 15,
+        "y": 35,
+        "width": 40,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "PERIODIC MAINTENANCE (SD25)",
+      "bbox": {
+        "x": 15,
+        "y": 55,
+        "width": 40,
+        "height": 3
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD25"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "table",
+    "models_mentioned": [
+      "SD25"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear table of contents page with one section specifically marked for SD25 model"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmphqnr_0tx/page_4.jpg",
+    "analysis_time_seconds": 7.484569,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:56:45.638856",
+    "input_tokens": 2183,
+    "output_tokens": 534
+  },
+  "page_number": 4
+}

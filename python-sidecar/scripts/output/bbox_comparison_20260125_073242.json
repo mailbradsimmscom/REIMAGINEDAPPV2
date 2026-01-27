@@ -1,0 +1,21 @@
+{
+  "pdf_path": "/Users/brad/Downloads/yanmar test.pdf",
+  "timestamp": "20260125_073242",
+  "llamaparse": {
+    "success": true,
+    "processing_time": 49.627561,
+    "elements": []
+  },
+  "vision": {
+    "assets": []
+  },
+  "comparison": {
+    "llamaparse_count": 0,
+    "vision_count": 0,
+    "llamaparse_by_type": {},
+    "vision_by_type": {},
+    "matches": [],
+    "llamaparse_only": [],
+    "vision_only": []
+  }
+}

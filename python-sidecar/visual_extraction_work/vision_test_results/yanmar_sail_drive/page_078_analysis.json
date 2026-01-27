@@ -1,0 +1,99 @@
+{
+  "figures": [],
+  "tables": [
+    {
+      "type": "troubleshooting",
+      "title": "TROUBLESHOOTING",
+      "description": "A troubleshooting table with symptoms, possible causes, and remedies for SD25, SD60, SD110/SD150 models",
+      "bbox": {
+        "x": 5,
+        "y": 15,
+        "width": 90,
+        "height": 80
+      },
+      "columns": [
+        "Symptom",
+        "Possibly caused by",
+        "Remedy"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "SD25",
+        "SD60",
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "TROUBLESHOOTING",
+      "bbox": {
+        "x": 5,
+        "y": 5,
+        "width": 90,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD25",
+        "SD60",
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "First of all check, whether all items of operating instructions have been complied with. The following assists you in troubleshooting.",
+      "bbox": {
+        "x": 5,
+        "y": 10,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SD25, SD60, SD110/SD150",
+      "bbox": {
+        "x": 5,
+        "y": 16,
+        "width": 40,
+        "height": 3
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "SD25",
+        "SD60",
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": "72",
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "table",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear table format with systematic troubleshooting information. Footer shows 'SD Series Operation Manual' and 'YANMAR' branding."
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp5zu1mwcp/page_78.jpg",
+    "analysis_time_seconds": 9.535613,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:58.928060",
+    "input_tokens": 2183,
+    "output_tokens": 691
+  },
+  "page_number": 78
+}

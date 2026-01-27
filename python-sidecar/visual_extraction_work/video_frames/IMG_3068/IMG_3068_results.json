@@ -1,0 +1,648 @@
+{
+  "video": "/Users/brad/code/REIMAGINEDAPPV2/code updates/IMG_3068.MOV",
+  "frames_analyzed": 14,
+  "interval_seconds": 3.0,
+  "timestamp": "2026-01-13T08:28:17.967843",
+  "summary": {
+    "unique_equipment": [
+      {
+        "manufacturer": "Unknown",
+        "model_number": "Not readable",
+        "serial_number": "Not readable",
+        "equipment_type": "Electronic control unit or inverter",
+        "description": "Black rectangular electronic device with white label/nameplate and multiple cable connections",
+        "confidence": "low",
+        "location_in_frame": "center",
+        "seen_in_frames": [
+          "IMG_3068_frame_0001.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "Unknown",
+        "model_number": "",
+        "serial_number": "",
+        "equipment_type": "pressure gauge",
+        "description": "Circular gauge with colored zones (red, yellow, green) and analog needle display",
+        "confidence": "high",
+        "location_in_frame": "bottom-right",
+        "seen_in_frames": [
+          "IMG_3068_frame_0002.jpg",
+          "IMG_3068_frame_0002.jpg",
+          "IMG_3068_frame_0002.jpg"
+        ],
+        "detection_count": 3
+      },
+      {
+        "manufacturer": "Unknown",
+        "model_number": "Not visible",
+        "serial_number": "Not visible",
+        "equipment_type": "engine",
+        "description": "White marine engine/motor unit with cooling hoses and electrical connections",
+        "confidence": "high",
+        "location_in_frame": "center-left",
+        "seen_in_frames": [
+          "IMG_3068_frame_0003.jpg",
+          "IMG_3068_frame_0003.jpg",
+          "IMG_3068_frame_0003.jpg",
+          "IMG_3068_frame_0011.jpg",
+          "IMG_3068_frame_0011.jpg"
+        ],
+        "detection_count": 5
+      },
+      {
+        "manufacturer": "Unknown",
+        "model_number": "Not clearly visible",
+        "serial_number": "Not visible",
+        "equipment_type": "pump or motor",
+        "description": "Cylindrical device with yellow label/band and metallic connections",
+        "confidence": "medium",
+        "location_in_frame": "center-right",
+        "seen_in_frames": [
+          "IMG_3068_frame_0003.jpg",
+          "IMG_3068_frame_0005.jpg"
+        ],
+        "detection_count": 2
+      },
+      {
+        "manufacturer": "Racor",
+        "model_number": "",
+        "serial_number": "",
+        "equipment_type": "fuel filter/water separator",
+        "description": "Yellow and black fuel filter assembly with clear bowls and metal fittings",
+        "confidence": "high",
+        "location_in_frame": "center-left",
+        "seen_in_frames": [
+          "IMG_3068_frame_0004.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "",
+        "model_number": "",
+        "serial_number": "",
+        "equipment_type": "water pump or circulation pump",
+        "description": "White cylindrical pump with metal fittings and hose connections",
+        "confidence": "medium",
+        "location_in_frame": "bottom-right",
+        "seen_in_frames": [
+          "IMG_3068_frame_0004.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "Unknown",
+        "model_number": "Partially visible - appears to end in '360i'",
+        "serial_number": "Not visible",
+        "equipment_type": "Engine or engine component",
+        "description": "Blue component/label with '360i' visible on the left side",
+        "confidence": "medium",
+        "location_in_frame": "left side",
+        "seen_in_frames": [
+          "IMG_3068_frame_0005.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "Unknown",
+        "model_number": "Unknown",
+        "serial_number": "Unknown",
+        "equipment_type": "Heat exchanger or radiator",
+        "description": "Large rectangular heat exchanger with finned cooling surface and white/metal housing",
+        "confidence": "medium",
+        "location_in_frame": "center-left",
+        "seen_in_frames": [
+          "IMG_3068_frame_0006.jpg",
+          "IMG_3068_frame_0006.jpg",
+          "IMG_3068_frame_0009.jpg",
+          "IMG_3068_frame_0009.jpg",
+          "IMG_3068_frame_0009.jpg"
+        ],
+        "detection_count": 5
+      },
+      {
+        "manufacturer": "ULTRAFLEX",
+        "model_number": "Partially visible but not clearly readable",
+        "serial_number": "Not clearly visible",
+        "equipment_type": "Marine steering actuator/pump",
+        "description": "Black rectangular hydraulic steering pump unit with white manufacturer label and connecting rod/actuator arm extending from it",
+        "confidence": "high",
+        "location_in_frame": "center",
+        "seen_in_frames": [
+          "IMG_3068_frame_0007.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "Ultraflex",
+        "model_number": "Not clearly visible",
+        "serial_number": "Not clearly visible",
+        "equipment_type": "Control system/actuator",
+        "description": "Black rectangular device with Ultraflex USA branding and white label",
+        "confidence": "medium",
+        "location_in_frame": "center-right",
+        "seen_in_frames": [
+          "IMG_3068_frame_0008.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "Blue Sea",
+        "model_number": "ML-RBS",
+        "serial_number": "Not clearly visible",
+        "equipment_type": "battery_switch",
+        "description": "Black battery switch/isolator with pink/red battery terminals and wiring harness",
+        "confidence": "high",
+        "location_in_frame": "left side",
+        "seen_in_frames": [
+          "IMG_3068_frame_0013.jpg"
+        ],
+        "detection_count": 1
+      },
+      {
+        "manufacturer": "Not clearly visible",
+        "model_number": "Not clearly visible",
+        "serial_number": "Not clearly visible",
+        "equipment_type": "junction_box",
+        "description": "White rectangular junction box or electrical enclosure with mounting screws",
+        "confidence": "medium",
+        "location_in_frame": "center",
+        "seen_in_frames": [
+          "IMG_3068_frame_0013.jpg",
+          "IMG_3068_frame_0013.jpg"
+        ],
+        "detection_count": 2
+      },
+      {
+        "manufacturer": "Mastervolt",
+        "model_number": "Not clearly visible",
+        "serial_number": "Not visible",
+        "equipment_type": "Marine electrical equipment/inverter",
+        "description": "White rectangular unit with Mastervolt branding and various warning symbols/icons",
+        "confidence": "high",
+        "location_in_frame": "center-right",
+        "seen_in_frames": [
+          "IMG_3068_frame_0014.jpg"
+        ],
+        "detection_count": 1
+      }
+    ],
+    "total_detections": 25,
+    "frames_analyzed": 14
+  },
+  "frame_results": [
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not readable",
+          "serial_number": "Not readable",
+          "equipment_type": "Electronic control unit or inverter",
+          "description": "Black rectangular electronic device with white label/nameplate and multiple cable connections",
+          "confidence": "low",
+          "location_in_frame": "center"
+        }
+      ],
+      "text_labels": [
+        "CE marking visible on nameplate",
+        "Additional text on label but not legible due to blur"
+      ],
+      "observations": "Image shows what appears to be a marine electrical/electronic component with multiple colored wires (red, blue, white, yellow) connected. The device has a professional nameplate with barcode and text, suggesting it's marine-grade equipment. White cable management or conduit visible on the left side.",
+      "image_quality": "poor",
+      "lighting": "fair",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not readable\",\n      \"serial_number\": \"Not readable\", \n      \"equipment_type\": \"Electronic control unit or inverter\",\n      \"description\": \"Black rectangular electronic device with white label/nameplate and multiple cable connections\",\n      \"confidence\": \"low\",\n      \"location_in_frame\": \"center\"\n    }\n  ],\n  \"text_labels\": [\"CE marking visible on nameplate\", \"Additional text on label but not legible due to blur\"],\n  \"observations\": \"Image shows what appears to be a marine electrical/electronic component with multiple colored wires (red, blue, white, yellow) connected. The device has a professional nameplate with barcode and text, suggesting it's marine-grade equipment. White cable management or conduit visible on the left side.\",\n  \"image_quality\": \"poor\",\n  \"lighting\": \"fair\"\n}\n```\n\nThe image is significantly blurred, making it impossible to read specific manufacturer names, model numbers, or serial numbers clearly. While there's clearly marine electrical equipment present with proper labeling and CE marking, the motion blur prevents accurate identification of the specific details that would be needed for equipment identification.",
+      "_frame": "IMG_3068_frame_0001.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 287
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Unknown",
+          "model_number": "",
+          "serial_number": "",
+          "equipment_type": "pressure gauge",
+          "description": "Circular gauge with colored zones (red, yellow, green) and analog needle display",
+          "confidence": "high",
+          "location_in_frame": "bottom-right"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "",
+          "serial_number": "",
+          "equipment_type": "valve or fitting",
+          "description": "Metal valve or fitting with cross-handle, appears to be mounted on white panel",
+          "confidence": "medium",
+          "location_in_frame": "center-right"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "",
+          "serial_number": "",
+          "equipment_type": "pump or filter housing",
+          "description": "Metal component with mounting flanges and what appears to be a black hose connection",
+          "confidence": "medium",
+          "location_in_frame": "left side"
+        }
+      ],
+      "text_labels": [
+        "Small green indicator dot visible on white panel",
+        "Some text visible on gauge face but not clearly readable"
+      ],
+      "observations": "Engine bay appears to be well-organized with white fiberglass compartments. Various metal fittings and components are visible. There's a clear view of what appears to be a bilge or mechanical compartment with multiple systems. The components appear to be marine-grade with proper mounting. Black hoses/cables are visible connecting various components.",
+      "image_quality": "fair",
+      "lighting": "good",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"\",\n      \"serial_number\": \"\",\n      \"equipment_type\": \"pressure gauge\",\n      \"description\": \"Circular gauge with colored zones (red, yellow, green) and analog needle display\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"bottom-right\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"\",\n      \"serial_number\": \"\",\n      \"equipment_type\": \"valve or fitting\",\n      \"description\": \"Metal valve or fitting with cross-handle, appears to be mounted on white panel\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center-right\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"\",\n      \"serial_number\": \"\",\n      \"equipment_type\": \"pump or filter housing\",\n      \"description\": \"Metal component with mounting flanges and what appears to be a black hose connection\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"left side\"\n    }\n  ],\n  \"text_labels\": [\n    \"Small green indicator dot visible on white panel\",\n    \"Some text visible on gauge face but not clearly readable\"\n  ],\n  \"observations\": \"Engine bay appears to be well-organized with white fiberglass compartments. Various metal fittings and components are visible. There's a clear view of what appears to be a bilge or mechanical compartment with multiple systems. The components appear to be marine-grade with proper mounting. Black hoses/cables are visible connecting various components.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"good\"\n}\n```",
+      "_frame": "IMG_3068_frame_0002.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 414
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not visible",
+          "serial_number": "Not visible",
+          "equipment_type": "engine",
+          "description": "White marine engine/motor unit with cooling hoses and electrical connections",
+          "confidence": "high",
+          "location_in_frame": "center-left"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not clearly visible",
+          "serial_number": "Not visible",
+          "equipment_type": "pump or motor",
+          "description": "Cylindrical device with yellow label/band and metallic connections",
+          "confidence": "medium",
+          "location_in_frame": "center-right"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not visible",
+          "serial_number": "Not visible",
+          "equipment_type": "electrical junction box",
+          "description": "Black electrical box with multiple wire connections and terminals",
+          "confidence": "medium",
+          "location_in_frame": "top-center"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not visible",
+          "serial_number": "Not visible",
+          "equipment_type": "storage container",
+          "description": "Pink/magenta colored container or housing",
+          "confidence": "low",
+          "location_in_frame": "top-left"
+        }
+      ],
+      "text_labels": [
+        "Yellow warning or identification label on cylindrical device",
+        "Some text visible on white containers but not legible"
+      ],
+      "observations": "Engine bay appears to be well-organized with proper cable management. Multiple white plastic containers/bottles visible, likely for fluids. Several hoses and electrical connections present. The cylindrical device on the right may be a bilge pump or circulation pump based on its mounting and connections.",
+      "image_quality": "fair",
+      "lighting": "fair",
+      "_raw_response": "Looking at this engine bay frame, I can identify several pieces of equipment despite the somewhat blurry image quality:\n\n```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not visible\",\n      \"serial_number\": \"Not visible\", \n      \"equipment_type\": \"engine\",\n      \"description\": \"White marine engine/motor unit with cooling hoses and electrical connections\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-left\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not clearly visible\",\n      \"serial_number\": \"Not visible\",\n      \"equipment_type\": \"pump or motor\",\n      \"description\": \"Cylindrical device with yellow label/band and metallic connections\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center-right\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not visible\",\n      \"serial_number\": \"Not visible\",\n      \"equipment_type\": \"electrical junction box\",\n      \"description\": \"Black electrical box with multiple wire connections and terminals\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"top-center\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not visible\",\n      \"serial_number\": \"Not visible\",\n      \"equipment_type\": \"storage container\",\n      \"description\": \"Pink/magenta colored container or housing\",\n      \"confidence\": \"low\",\n      \"location_in_frame\": \"top-left\"\n    }\n  ],\n  \"text_labels\": [\"Yellow warning or identification label on cylindrical device\", \"Some text visible on white containers but not legible\"],\n  \"observations\": \"Engine bay appears to be well-organized with proper cable management. Multiple white plastic containers/bottles visible, likely for fluids. Several hoses and electrical connections present. The cylindrical device on the right may be a bilge pump or circulation pump based on its mounting and connections.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"fair\"\n}\n```",
+      "_frame": "IMG_3068_frame_0003.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 507
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Racor",
+          "model_number": "",
+          "serial_number": "",
+          "equipment_type": "fuel filter/water separator",
+          "description": "Yellow and black fuel filter assembly with clear bowls and metal fittings",
+          "confidence": "high",
+          "location_in_frame": "center-left"
+        },
+        {
+          "manufacturer": "",
+          "model_number": "",
+          "serial_number": "",
+          "equipment_type": "water pump or circulation pump",
+          "description": "White cylindrical pump with metal fittings and hose connections",
+          "confidence": "medium",
+          "location_in_frame": "bottom-right"
+        }
+      ],
+      "text_labels": [
+        "RACOR",
+        "Partial text visible on white pump label (not fully readable)"
+      ],
+      "observations": "Engine bay shows fuel system components with stainless steel tubing and professional marine-grade fittings. The Racor fuel filter appears to be a dual-bowl system commonly used in marine diesel applications. White painted or powder-coated surfaces suggest a well-maintained vessel. Multiple hose clamps and brass fittings visible throughout the installation.",
+      "image_quality": "good",
+      "lighting": "good",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Racor\",\n      \"model_number\": \"\",\n      \"serial_number\": \"\",\n      \"equipment_type\": \"fuel filter/water separator\",\n      \"description\": \"Yellow and black fuel filter assembly with clear bowls and metal fittings\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-left\"\n    },\n    {\n      \"manufacturer\": \"\",\n      \"model_number\": \"\",\n      \"serial_number\": \"\",\n      \"equipment_type\": \"water pump or circulation pump\",\n      \"description\": \"White cylindrical pump with metal fittings and hose connections\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"bottom-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"RACOR\",\n    \"Partial text visible on white pump label (not fully readable)\"\n  ],\n  \"observations\": \"Engine bay shows fuel system components with stainless steel tubing and professional marine-grade fittings. The Racor fuel filter appears to be a dual-bowl system commonly used in marine diesel applications. White painted or powder-coated surfaces suggest a well-maintained vessel. Multiple hose clamps and brass fittings visible throughout the installation.\",\n  \"image_quality\": \"good\",\n  \"lighting\": \"good\"\n}\n```",
+      "_frame": "IMG_3068_frame_0004.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 327
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Partially visible - appears to end in '360i'",
+          "serial_number": "Not visible",
+          "equipment_type": "Engine or engine component",
+          "description": "Blue component/label with '360i' visible on the left side",
+          "confidence": "medium",
+          "location_in_frame": "left side"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not clearly visible",
+          "serial_number": "Not visible",
+          "equipment_type": "Pump or mechanical component",
+          "description": "Purple/magenta colored component with white circular logo in center of frame",
+          "confidence": "medium",
+          "location_in_frame": "center"
+        }
+      ],
+      "text_labels": [
+        "360i (partial, on blue component)",
+        "White circular logo on purple component (text not legible)"
+      ],
+      "observations": "Engine bay shows various mechanical components including hoses, clamps, and what appears to be engine mounting hardware. There's a distinctive purple/magenta colored component that could be a pump or motor. Several hose clamps and connections are visible. The angle and lighting make it difficult to read most manufacturer markings clearly.",
+      "image_quality": "fair",
+      "lighting": "dim",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Partially visible - appears to end in '360i'\",\n      \"serial_number\": \"Not visible\",\n      \"equipment_type\": \"Engine or engine component\",\n      \"description\": \"Blue component/label with '360i' visible on the left side\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"left side\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not clearly visible\",\n      \"serial_number\": \"Not visible\", \n      \"equipment_type\": \"Pump or mechanical component\",\n      \"description\": \"Purple/magenta colored component with white circular logo in center of frame\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center\"\n    }\n  ],\n  \"text_labels\": [\n    \"360i (partial, on blue component)\",\n    \"White circular logo on purple component (text not legible)\"\n  ],\n  \"observations\": \"Engine bay shows various mechanical components including hoses, clamps, and what appears to be engine mounting hardware. There's a distinctive purple/magenta colored component that could be a pump or motor. Several hose clamps and connections are visible. The angle and lighting make it difficult to read most manufacturer markings clearly.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"dim\"\n}\n```",
+      "_frame": "IMG_3068_frame_0005.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 343
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Unknown",
+          "serial_number": "Unknown",
+          "equipment_type": "Heat exchanger or radiator",
+          "description": "Large rectangular heat exchanger with finned cooling surface and white/metal housing",
+          "confidence": "medium",
+          "location_in_frame": "center-left"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Unknown",
+          "serial_number": "Unknown",
+          "equipment_type": "Electronic control unit or battery charger",
+          "description": "Purple/pink colored rectangular device with display or control panel",
+          "confidence": "low",
+          "location_in_frame": "upper-right"
+        }
+      ],
+      "text_labels": [
+        "Partial red text visible on white surface - appears to be manufacturer marking but not fully readable"
+      ],
+      "observations": "Engine bay appears crowded with various components. Multiple hoses and cables visible but difficult to trace due to image angle and blur. White and metallic components suggest marine engine installation. Purple component suggests modern electronic equipment typical of boat electrical systems.",
+      "image_quality": "poor",
+      "lighting": "fair",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Unknown\",\n      \"serial_number\": \"Unknown\",\n      \"equipment_type\": \"Heat exchanger or radiator\",\n      \"description\": \"Large rectangular heat exchanger with finned cooling surface and white/metal housing\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center-left\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Unknown\", \n      \"serial_number\": \"Unknown\",\n      \"equipment_type\": \"Electronic control unit or battery charger\",\n      \"description\": \"Purple/pink colored rectangular device with display or control panel\",\n      \"confidence\": \"low\",\n      \"location_in_frame\": \"upper-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"Partial red text visible on white surface - appears to be manufacturer marking but not fully readable\"\n  ],\n  \"observations\": \"Engine bay appears crowded with various components. Multiple hoses and cables visible but difficult to trace due to image angle and blur. White and metallic components suggest marine engine installation. Purple component suggests modern electronic equipment typical of boat electrical systems.\",\n  \"image_quality\": \"poor\",\n  \"lighting\": \"fair\"\n}\n```",
+      "_frame": "IMG_3068_frame_0006.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 311
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "ULTRAFLEX",
+          "model_number": "Partially visible but not clearly readable",
+          "serial_number": "Not clearly visible",
+          "equipment_type": "Marine steering actuator/pump",
+          "description": "Black rectangular hydraulic steering pump unit with white manufacturer label and connecting rod/actuator arm extending from it",
+          "confidence": "high",
+          "location_in_frame": "center"
+        }
+      ],
+      "text_labels": [
+        "ULTRAFLEX S.p.A.",
+        "Various product/specification text on white label (not fully legible due to angle/resolution)"
+      ],
+      "observations": "This appears to be a marine engine bay or compartment with an ULTRAFLEX hydraulic steering system prominently displayed. Multiple black hoses and cables are visible, suggesting hydraulic lines and electrical connections. There's what appears to be a white component or reservoir in the upper left. The steering actuator has a metal rod extending from it, typical of marine hydraulic steering systems. Cable management appears organized with protective sleeving visible on some runs.",
+      "image_quality": "fair",
+      "lighting": "dim",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"ULTRAFLEX\",\n      \"model_number\": \"Partially visible but not clearly readable\",\n      \"serial_number\": \"Not clearly visible\",\n      \"equipment_type\": \"Marine steering actuator/pump\",\n      \"description\": \"Black rectangular hydraulic steering pump unit with white manufacturer label and connecting rod/actuator arm extending from it\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center\"\n    }\n  ],\n  \"text_labels\": [\n    \"ULTRAFLEX S.p.A.\",\n    \"Various product/specification text on white label (not fully legible due to angle/resolution)\"\n  ],\n  \"observations\": \"This appears to be a marine engine bay or compartment with an ULTRAFLEX hydraulic steering system prominently displayed. Multiple black hoses and cables are visible, suggesting hydraulic lines and electrical connections. There's what appears to be a white component or reservoir in the upper left. The steering actuator has a metal rod extending from it, typical of marine hydraulic steering systems. Cable management appears organized with protective sleeving visible on some runs.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"dim\"\n}\n```",
+      "_frame": "IMG_3068_frame_0007.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 292
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Ultraflex",
+          "model_number": "Not clearly visible",
+          "serial_number": "Not clearly visible",
+          "equipment_type": "Control system/actuator",
+          "description": "Black rectangular device with Ultraflex USA branding and white label",
+          "confidence": "medium",
+          "location_in_frame": "center-right"
+        }
+      ],
+      "text_labels": [
+        "ULTRAFLEX USA",
+        "Yellow tape with partial text visible"
+      ],
+      "observations": "Engine bay showing various hoses, cables, and wiring harnesses. Multiple black corrugated hoses and wiring bundles are visible throughout the compartment. There appears to be a bilge hose or similar large corrugated hose with yellow tape/labeling on the left side. The white hull/interior surfaces suggest this is a fiberglass boat. Cable management appears organized with proper bundling and routing.",
+      "image_quality": "fair",
+      "lighting": "dim",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Ultraflex\",\n      \"model_number\": \"Not clearly visible\",\n      \"serial_number\": \"Not clearly visible\",\n      \"equipment_type\": \"Control system/actuator\",\n      \"description\": \"Black rectangular device with Ultraflex USA branding and white label\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"ULTRAFLEX USA\",\n    \"Yellow tape with partial text visible\"\n  ],\n  \"observations\": \"Engine bay showing various hoses, cables, and wiring harnesses. Multiple black corrugated hoses and wiring bundles are visible throughout the compartment. There appears to be a bilge hose or similar large corrugated hose with yellow tape/labeling on the left side. The white hull/interior surfaces suggest this is a fiberglass boat. Cable management appears organized with proper bundling and routing.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"dim\"\n}\n```",
+      "_frame": "IMG_3068_frame_0008.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 262
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "unknown",
+          "model_number": "unknown",
+          "serial_number": "unknown",
+          "equipment_type": "fluid reservoir/tank",
+          "description": "Large white cylindrical tank or reservoir with black hoses and fittings connected",
+          "confidence": "medium",
+          "location_in_frame": "center"
+        },
+        {
+          "manufacturer": "unknown",
+          "model_number": "unknown",
+          "serial_number": "unknown",
+          "equipment_type": "hydraulic/fluid lines",
+          "description": "Multiple black corrugated hoses with protective covering, some with colored tape markers",
+          "confidence": "high",
+          "location_in_frame": "throughout frame"
+        },
+        {
+          "manufacturer": "unknown",
+          "model_number": "unknown",
+          "serial_number": "unknown",
+          "equipment_type": "mounting bracket/clamp",
+          "description": "Black mounting hardware securing hoses and components",
+          "confidence": "medium",
+          "location_in_frame": "center-right"
+        }
+      ],
+      "text_labels": [
+        "Some small white labels/stickers visible but text not legible in this resolution"
+      ],
+      "observations": "This appears to be part of a boat's hydraulic or fluid system, possibly related to steering, trim tabs, or other hydraulic components. The white cylindrical component could be a hydraulic fluid reservoir or accumulator tank. Multiple black hoses suggest a complex hydraulic system with various connections. Some hoses have colored tape markers (yellow, red, green visible) which likely indicate different circuits or functions. The installation appears professional with proper mounting and protection for the hoses.",
+      "image_quality": "fair",
+      "lighting": "good",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"unknown\",\n      \"model_number\": \"unknown\",\n      \"serial_number\": \"unknown\",\n      \"equipment_type\": \"fluid reservoir/tank\",\n      \"description\": \"Large white cylindrical tank or reservoir with black hoses and fittings connected\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center\"\n    },\n    {\n      \"manufacturer\": \"unknown\",\n      \"model_number\": \"unknown\",\n      \"serial_number\": \"unknown\",\n      \"equipment_type\": \"hydraulic/fluid lines\",\n      \"description\": \"Multiple black corrugated hoses with protective covering, some with colored tape markers\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"throughout frame\"\n    },\n    {\n      \"manufacturer\": \"unknown\",\n      \"model_number\": \"unknown\",\n      \"serial_number\": \"unknown\",\n      \"equipment_type\": \"mounting bracket/clamp\",\n      \"description\": \"Black mounting hardware securing hoses and components\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"Some small white labels/stickers visible but text not legible in this resolution\"\n  ],\n  \"observations\": \"This appears to be part of a boat's hydraulic or fluid system, possibly related to steering, trim tabs, or other hydraulic components. The white cylindrical component could be a hydraulic fluid reservoir or accumulator tank. Multiple black hoses suggest a complex hydraulic system with various connections. Some hoses have colored tape markers (yellow, red, green visible) which likely indicate different circuits or functions. The installation appears professional with proper mounting and protection for the hoses.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"good\"\n}\n```",
+      "_frame": "IMG_3068_frame_0009.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 441
+      }
+    },
+    {
+      "equipment_detected": [],
+      "text_labels": [],
+      "observations": "The image appears to be taken from inside a boat's engine compartment or cabin area. There is significant motion blur throughout the frame, making it impossible to read any text, model numbers, or serial numbers. I can see what appears to be white fiberglass surfaces typical of boat construction, some colored elements including red and yellow components, and what looks like various hoses or cables, but no specific equipment can be definitively identified due to the blur.",
+      "image_quality": "poor",
+      "lighting": "fair",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [],\n  \"text_labels\": [],\n  \"observations\": \"The image appears to be taken from inside a boat's engine compartment or cabin area. There is significant motion blur throughout the frame, making it impossible to read any text, model numbers, or serial numbers. I can see what appears to be white fiberglass surfaces typical of boat construction, some colored elements including red and yellow components, and what looks like various hoses or cables, but no specific equipment can be definitively identified due to the blur.\",\n  \"image_quality\": \"poor\",\n  \"lighting\": \"fair\"\n}\n```",
+      "_frame": "IMG_3068_frame_0010.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 143
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not visible",
+          "serial_number": "Not readable",
+          "equipment_type": "Control unit/inverter",
+          "description": "Gray metal control unit with green LED indicator light and white information label",
+          "confidence": "medium",
+          "location_in_frame": "center"
+        },
+        {
+          "manufacturer": "Unknown",
+          "model_number": "Not visible",
+          "serial_number": "Not visible",
+          "equipment_type": "Junction box/electrical enclosure",
+          "description": "White plastic electrical enclosure with manufacturer label, appears to have cable entry points",
+          "confidence": "medium",
+          "location_in_frame": "left side"
+        }
+      ],
+      "text_labels": [
+        "White information/specification label on gray control unit (text not legible)",
+        "Manufacturer label on white junction box (text not legible)"
+      ],
+      "observations": "The engine bay shows professional marine electrical installation with proper cable management. Gray flexible conduit is visible for cable protection. The green LED on the main control unit suggests the system is powered and operational. Multiple cable connections are visible but specific routing is difficult to trace due to image angle.",
+      "image_quality": "fair",
+      "lighting": "dim",
+      "_raw_response": "Looking at this boat engine bay image, I can identify several pieces of equipment:\n\n```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not visible\",\n      \"serial_number\": \"Not readable\",\n      \"equipment_type\": \"Control unit/inverter\",\n      \"description\": \"Gray metal control unit with green LED indicator light and white information label\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Not visible\",\n      \"serial_number\": \"Not visible\",\n      \"equipment_type\": \"Junction box/electrical enclosure\",\n      \"description\": \"White plastic electrical enclosure with manufacturer label, appears to have cable entry points\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"left side\"\n    }\n  ],\n  \"text_labels\": [\n    \"White information/specification label on gray control unit (text not legible)\",\n    \"Manufacturer label on white junction box (text not legible)\"\n  ],\n  \"observations\": \"The engine bay shows professional marine electrical installation with proper cable management. Gray flexible conduit is visible for cable protection. The green LED on the main control unit suggests the system is powered and operational. Multiple cable connections are visible but specific routing is difficult to trace due to image angle.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"dim\"\n}\n```\n\nThe image shows what appears to be a well-organized marine electrical system, but the lighting and image resolution make it difficult to read specific model numbers, serial numbers, or manufacturer information from the visible labels and nameplates.",
+      "_frame": "IMG_3068_frame_0011.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 394
+      }
+    },
+    {
+      "equipment_detected": [],
+      "observations": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Cannot determine\",\n      \"serial_number\": \"Cannot determine\",\n      \"equipment_type\": \"Engine room blower relay\",\n      \"description\": \"White electrical control box with 'ENGINE ROOM BLOWER RELAYS' text visible on nameplate, contains relay switches and electrical components\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-left\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Cannot determine\", \n      \"serial_number\": \"Cannot determine\",\n      \"equipment_type\": \"Seacock valve\",\n      \"description\": \"White/gray through-hull seacock valve with lever handle, connected to green marine hoses with hose clamps\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"ENGINE ROOM BLOWER RELAYS\",\n    \"MARINE\" (visible on hose clamps)\n  ],\n  \"observations\": \"This appears to be a well-organized marine engine compartment with proper marine-grade components. The green hoses appear to be marine sanitation or cooling water lines based on their color coding. White braided hose visible on the right side. Multiple electrical junction boxes mounted on white panels. Black corrugated conduit for wire protection visible in upper portions of frame.\",\n  \"image_quality\": \"good\",\n  \"lighting\": \"good\"\n}\n```",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Cannot determine\",\n      \"serial_number\": \"Cannot determine\",\n      \"equipment_type\": \"Engine room blower relay\",\n      \"description\": \"White electrical control box with 'ENGINE ROOM BLOWER RELAYS' text visible on nameplate, contains relay switches and electrical components\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-left\"\n    },\n    {\n      \"manufacturer\": \"Unknown\",\n      \"model_number\": \"Cannot determine\", \n      \"serial_number\": \"Cannot determine\",\n      \"equipment_type\": \"Seacock valve\",\n      \"description\": \"White/gray through-hull seacock valve with lever handle, connected to green marine hoses with hose clamps\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"ENGINE ROOM BLOWER RELAYS\",\n    \"MARINE\" (visible on hose clamps)\n  ],\n  \"observations\": \"This appears to be a well-organized marine engine compartment with proper marine-grade components. The green hoses appear to be marine sanitation or cooling water lines based on their color coding. White braided hose visible on the right side. Multiple electrical junction boxes mounted on white panels. Black corrugated conduit for wire protection visible in upper portions of frame.\",\n  \"image_quality\": \"good\",\n  \"lighting\": \"good\"\n}\n```",
+      "_frame": "IMG_3068_frame_0012.jpg",
+      "_parse_error": true
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Blue Sea",
+          "model_number": "ML-RBS",
+          "serial_number": "Not clearly visible",
+          "equipment_type": "battery_switch",
+          "description": "Black battery switch/isolator with pink/red battery terminals and wiring harness",
+          "confidence": "high",
+          "location_in_frame": "left side"
+        },
+        {
+          "manufacturer": "Not clearly visible",
+          "model_number": "Not clearly visible",
+          "serial_number": "Not clearly visible",
+          "equipment_type": "junction_box",
+          "description": "White rectangular junction box or electrical enclosure with mounting screws",
+          "confidence": "medium",
+          "location_in_frame": "center"
+        },
+        {
+          "manufacturer": "Not clearly visible",
+          "model_number": "Not clearly visible",
+          "serial_number": "Not clearly visible",
+          "equipment_type": "electrical_component",
+          "description": "White electrical component or control box on the right side",
+          "confidence": "low",
+          "location_in_frame": "right side"
+        }
+      ],
+      "text_labels": [
+        "BLUE SEA (on battery switch)",
+        "ML-RBS (model designation)",
+        "WARNING labels on battery switch",
+        "12V INTERCEL (partially visible on white component)"
+      ],
+      "observations": "Engine bay compartment with organized electrical components. Red and black wiring visible indicating positive/negative battery connections. Corrugated wire loom protection throughout. Red panel visible at top of frame. Professional marine electrical installation with proper wire management and protective conduit.",
+      "image_quality": "good",
+      "lighting": "good",
+      "_raw_response": "```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Blue Sea\",\n      \"model_number\": \"ML-RBS\",\n      \"serial_number\": \"Not clearly visible\",\n      \"equipment_type\": \"battery_switch\",\n      \"description\": \"Black battery switch/isolator with pink/red battery terminals and wiring harness\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"left side\"\n    },\n    {\n      \"manufacturer\": \"Not clearly visible\",\n      \"model_number\": \"Not clearly visible\", \n      \"serial_number\": \"Not clearly visible\",\n      \"equipment_type\": \"junction_box\",\n      \"description\": \"White rectangular junction box or electrical enclosure with mounting screws\",\n      \"confidence\": \"medium\",\n      \"location_in_frame\": \"center\"\n    },\n    {\n      \"manufacturer\": \"Not clearly visible\",\n      \"model_number\": \"Not clearly visible\",\n      \"serial_number\": \"Not clearly visible\", \n      \"equipment_type\": \"electrical_component\",\n      \"description\": \"White electrical component or control box on the right side\",\n      \"confidence\": \"low\",\n      \"location_in_frame\": \"right side\"\n    }\n  ],\n  \"text_labels\": [\n    \"BLUE SEA (on battery switch)\",\n    \"ML-RBS (model designation)\",\n    \"WARNING labels on battery switch\",\n    \"12V INTERCEL (partially visible on white component)\"\n  ],\n  \"observations\": \"Engine bay compartment with organized electrical components. Red and black wiring visible indicating positive/negative battery connections. Corrugated wire loom protection throughout. Red panel visible at top of frame. Professional marine electrical installation with proper wire management and protective conduit.\",\n  \"image_quality\": \"good\",\n  \"lighting\": \"good\"\n}\n```",
+      "_frame": "IMG_3068_frame_0013.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 437
+      }
+    },
+    {
+      "equipment_detected": [
+        {
+          "manufacturer": "Mastervolt",
+          "model_number": "Not clearly visible",
+          "serial_number": "Not visible",
+          "equipment_type": "Marine electrical equipment/inverter",
+          "description": "White rectangular unit with Mastervolt branding and various warning symbols/icons",
+          "confidence": "high",
+          "location_in_frame": "center-right"
+        }
+      ],
+      "text_labels": [
+        "MASTERVOLT",
+        "MAINTENANCE FREE",
+        "Various safety/warning symbols",
+        "Recycling symbol visible",
+        "Warning triangles and electrical symbols"
+      ],
+      "observations": "The image shows part of a boat's engine compartment with white-painted surfaces and organized cable management. The Mastervolt unit appears to be a marine-grade electrical component, likely an inverter or battery charger, with multiple warning labels and safety symbols typical of marine electrical equipment. There are organized cable runs visible, and the installation appears professional with proper marine-grade mounting.",
+      "image_quality": "fair",
+      "lighting": "good",
+      "_raw_response": "Looking at this marine engine bay image, I can identify several items:\n\n```json\n{\n  \"equipment_detected\": [\n    {\n      \"manufacturer\": \"Mastervolt\",\n      \"model_number\": \"Not clearly visible\",\n      \"serial_number\": \"Not visible\",\n      \"equipment_type\": \"Marine electrical equipment/inverter\",\n      \"description\": \"White rectangular unit with Mastervolt branding and various warning symbols/icons\",\n      \"confidence\": \"high\",\n      \"location_in_frame\": \"center-right\"\n    }\n  ],\n  \"text_labels\": [\n    \"MASTERVOLT\",\n    \"MAINTENANCE FREE\",\n    \"Various safety/warning symbols\",\n    \"Recycling symbol visible\",\n    \"Warning triangles and electrical symbols\"\n  ],\n  \"observations\": \"The image shows part of a boat's engine compartment with white-painted surfaces and organized cable management. The Mastervolt unit appears to be a marine-grade electrical component, likely an inverter or battery charger, with multiple warning labels and safety symbols typical of marine electrical equipment. There are organized cable runs visible, and the installation appears professional with proper marine-grade mounting.\",\n  \"image_quality\": \"fair\",\n  \"lighting\": \"good\"\n}\n```\n\nThe image shows a clean, well-organized marine electrical installation. The Mastervolt equipment is the most clearly identifiable component, though the specific model number is not legible in this view. The presence of multiple warning symbols and the \"MAINTENANCE FREE\" text suggests this is likely a sealed battery charger or inverter unit designed for marine applications.",
+      "_frame": "IMG_3068_frame_0014.jpg",
+      "_tokens": {
+        "input": 2009,
+        "output": 366
+      }
+    }
+  ],
+  "estimated_cost": 0.146211
+}

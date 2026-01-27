@@ -1,0 +1,219 @@
+{
+  "figures": [],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "MPPT solar charger manual",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Bluetooth check",
+      "bbox": {
+        "x": 5,
+        "y": 10,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Communication without Bluetooth:",
+      "bbox": {
+        "x": 10,
+        "y": 15,
+        "width": 80,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.9.2. VE.Direct port",
+      "bbox": {
+        "x": 5,
+        "y": 25,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Problems with the VE.Direct port are uncommon, but if encountered, they are likely due to the following issues:",
+      "bbox": {
+        "x": 5,
+        "y": 30,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Jumper in VE.Direct port",
+      "bbox": {
+        "x": 5,
+        "y": 35,
+        "width": 90,
+        "height": 15
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Physical cable connector or data port issue",
+      "bbox": {
+        "x": 5,
+        "y": 50,
+        "width": 90,
+        "height": 10
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "VE.Direct communication issues",
+      "bbox": {
+        "x": 5,
+        "y": 60,
+        "width": 90,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "VE.Direct TX port issues",
+      "bbox": {
+        "x": 5,
+        "y": 68,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "VE.Direct RX Port issues",
+      "bbox": {
+        "x": 5,
+        "y": 73,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.9.3. VE.Smart Networking",
+      "bbox": {
+        "x": 5,
+        "y": 78,
+        "width": 90,
+        "height": 8
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "8.10. Load output issues",
+      "bbox": {
+        "x": 5,
+        "y": 86,
+        "width": 90,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Battery voltage threshold",
+      "bbox": {
+        "x": 5,
+        "y": 91,
+        "width": 90,
+        "height": 3
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Page 56",
+      "bbox": {
+        "x": 5,
+        "y": 97,
+        "width": 20,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Troubleshooting",
+      "bbox": {
+        "x": 75,
+        "y": 97,
+        "width": 20,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 56,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear text content focused on troubleshooting VE.Direct port and load output issues"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp6__zh4g3/page_60.jpg",
+    "analysis_time_seconds": 15.169878,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:02:13.736335",
+    "input_tokens": 2198,
+    "output_tokens": 1207
+  },
+  "page_number": 60
+}

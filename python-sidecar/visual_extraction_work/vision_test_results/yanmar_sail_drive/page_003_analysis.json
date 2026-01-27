@@ -1,0 +1,97 @@
+{
+  "figures": [],
+  "tables": [
+    {
+      "type": "other",
+      "title": "TABLE OF CONTENTS",
+      "description": "Table of contents listing all sections and page numbers for the manual",
+      "bbox": {
+        "x": 15,
+        "y": 20,
+        "width": 70,
+        "height": 70
+      },
+      "columns": [
+        "Section",
+        "Page"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "TABLE OF CONTENTS",
+      "bbox": {
+        "x": 25,
+        "y": 15,
+        "width": 50,
+        "height": 15
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "INTRODUCTION",
+      "bbox": {
+        "x": 15,
+        "y": 35,
+        "width": 30,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SAFETY",
+      "bbox": {
+        "x": 15,
+        "y": 42,
+        "width": 30,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "PRODUCT OVERVIEW",
+      "bbox": {
+        "x": 15,
+        "y": 55,
+        "width": 30,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "table",
+    "models_mentioned": [],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear table of contents page with standard manual sections"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmphqnr_0tx/page_3.jpg",
+    "analysis_time_seconds": 7.476976,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:56:38.066380",
+    "input_tokens": 2183,
+    "output_tokens": 507
+  },
+  "page_number": 3
+}

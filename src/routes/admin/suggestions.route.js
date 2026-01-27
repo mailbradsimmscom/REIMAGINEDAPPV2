@@ -99,8 +99,8 @@ router.get('/pending', adminOnly, requireServices(['supabase']), async (req, res
         context: item.context || '',
         confidence: parseFloat(item.confidence) || 0,
         page: parseInt(item.page) || null,
-        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
-        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
+        model: item.documents?.model_norm || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || 'Unknown Manufacturer'
       })),
       
       ...playbookHints.data.map(item => ({
@@ -111,8 +111,8 @@ router.get('/pending', adminOnly, requireServices(['supabase']), async (req, res
         context: item.description || '',
         confidence: parseFloat(item.confidence) || 0,
         page: parseInt(item.page) || null,
-        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
-        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
+        model: item.documents?.model_norm || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || 'Unknown Manufacturer'
       })),
       
       ...intentRouter.data.map(item => ({
@@ -123,8 +123,8 @@ router.get('/pending', adminOnly, requireServices(['supabase']), async (req, res
         context: '',
         confidence: parseFloat(item.confidence) || 0,
         page: parseInt(item.page) || null,
-        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
-        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
+        model: item.documents?.model_norm || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || 'Unknown Manufacturer'
       })),
       
       ...goldenTests.data.map(item => ({
@@ -135,8 +135,8 @@ router.get('/pending', adminOnly, requireServices(['supabase']), async (req, res
         context: item.expected || '',
         confidence: parseFloat(item.confidence) || 0,
         page: parseInt(item.page) || null,
-        model: item.documents?.model_norm || item.documents?.model || 'Unknown Model',
-        manufacturer: item.documents?.manufacturer_norm || item.documents?.manufacturer || 'Unknown Manufacturer'
+        model: item.documents?.model_norm || 'Unknown Model',
+        manufacturer: item.documents?.manufacturer_norm || 'Unknown Manufacturer'
       }))
     ];
 

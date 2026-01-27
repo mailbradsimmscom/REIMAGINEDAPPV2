@@ -1,0 +1,151 @@
+{
+  "figures": [
+    {
+      "type": "dimensional_drawing",
+      "title": "Dimensions 100/15",
+      "description": "Technical dimensional drawing showing multiple views (front, side, bottom) of the 100/15 model with measurements and mounting details, plus a 3D rendering of the blue charge controller unit.",
+      "bbox": {
+        "x": 5,
+        "y": 5,
+        "width": 90,
+        "height": 45
+      },
+      "figure_reference": "9.2.2",
+      "applies_to_models": [
+        "100/15"
+      ]
+    },
+    {
+      "type": "dimensional_drawing",
+      "title": "Dimensions 100/20",
+      "description": "Technical dimensional drawing showing multiple views (front, side, bottom, detail A) of the 100/20 model with measurements and mounting configuration, plus a 3D rendering of the blue charge controller with heat sink.",
+      "bbox": {
+        "x": 5,
+        "y": 55,
+        "width": 90,
+        "height": 40
+      },
+      "figure_reference": "9.2.3",
+      "applies_to_models": [
+        "100/20"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "type": "specifications",
+      "title": "Model specifications for 100/15",
+      "description": "Table showing SmartSolar and BlueSolar MPPT model numbers for the 100/15 series",
+      "bbox": {
+        "x": 65,
+        "y": 8,
+        "width": 30,
+        "height": 8
+      },
+      "columns": [
+        "Model Type",
+        "Part Number"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "100/15"
+      ]
+    },
+    {
+      "type": "specifications",
+      "title": "Model specifications for 100/20",
+      "description": "Table showing SmartSolar and BlueSolar MPPT model numbers for the 100/20 series across different voltage ratings",
+      "bbox": {
+        "x": 65,
+        "y": 58,
+        "width": 30,
+        "height": 12
+      },
+      "columns": [
+        "Model Type",
+        "Part Number"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "100/20"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "9.2.2. Dimensions 100/15",
+      "bbox": {
+        "x": 5,
+        "y": 2,
+        "width": 40,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "100/15"
+      ]
+    },
+    {
+      "title": "9.2.3. Dimensions 100/20",
+      "bbox": {
+        "x": 5,
+        "y": 52,
+        "width": 40,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "100/20"
+      ]
+    },
+    {
+      "title": "Dimensions in mm",
+      "bbox": {
+        "x": 65,
+        "y": 42,
+        "width": 20,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "100/15"
+      ]
+    },
+    {
+      "title": "Dimensions in mm",
+      "bbox": {
+        "x": 65,
+        "y": 92,
+        "width": 20,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "100/20"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": "64",
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "diagram",
+    "models_mentioned": [
+      "100/15",
+      "100/20"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Clear technical drawings with detailed measurements and 3D renderings"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmpve1w6q9r/page_68.jpg",
+    "analysis_time_seconds": 12.436348,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:04:07.632674",
+    "input_tokens": 2198,
+    "output_tokens": 974
+  },
+  "page_number": 68
+}

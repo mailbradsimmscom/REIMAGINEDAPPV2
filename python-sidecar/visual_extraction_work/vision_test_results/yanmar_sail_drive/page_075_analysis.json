@@ -1,0 +1,119 @@
+{
+  "figures": [],
+  "tables": [
+    {
+      "type": "procedure_steps",
+      "title": "PERIODIC MAINTENANCE (SD110/SD150)",
+      "description": "Maintenance schedule table showing required procedures at different time intervals",
+      "bbox": {
+        "x": 0,
+        "y": 10,
+        "width": 100,
+        "height": 80
+      },
+      "columns": [
+        "Every 2000 Hours or 2 Years",
+        "Every 7 Years"
+      ],
+      "is_multi_model": false,
+      "model_columns": {},
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "text_sections": [
+    {
+      "title": "PERIODIC MAINTENANCE (SD110/SD150)",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 15
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "Every 2000 Hours or 2 Years",
+      "bbox": {
+        "x": 0,
+        "y": 15,
+        "width": 50,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "Every 7 Years",
+      "bbox": {
+        "x": 50,
+        "y": 15,
+        "width": 50,
+        "height": 10
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "Maintenance instructions for 2000 hours/2 years",
+      "bbox": {
+        "x": 0,
+        "y": 25,
+        "width": 50,
+        "height": 60
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    },
+    {
+      "title": "Maintenance instructions for 7 years",
+      "bbox": {
+        "x": 50,
+        "y": 25,
+        "width": 50,
+        "height": 60
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "SD110",
+        "SD150"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 69,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "table",
+    "models_mentioned": [
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Clear maintenance schedule with specific model identification in header"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmp5zu1mwcp/page_75.jpg",
+    "analysis_time_seconds": 8.485401,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:39.639284",
+    "input_tokens": 2183,
+    "output_tokens": 665
+  },
+  "page_number": 75
+}

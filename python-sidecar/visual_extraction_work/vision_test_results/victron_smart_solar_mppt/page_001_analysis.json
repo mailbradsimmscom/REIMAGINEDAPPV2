@@ -1,0 +1,126 @@
+{
+  "figures": [
+    {
+      "type": "photo",
+      "title": "SmartSolar MPPT Charge Controller",
+      "description": "Product image showing the blue Victron SmartSolar MPPT charge controller with LCD display, status LEDs, and connection terminals.",
+      "bbox": {
+        "x": 25,
+        "y": 35,
+        "width": 50,
+        "height": 40
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "victron energy BLUE POWER",
+      "bbox": {
+        "x": 20,
+        "y": 8,
+        "width": 60,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "ENGLISH",
+      "bbox": {
+        "x": 85,
+        "y": 8,
+        "width": 10,
+        "height": 3
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "MPPT solar charger manual",
+      "bbox": {
+        "x": 15,
+        "y": 78,
+        "width": 70,
+        "height": 8
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SmartSolar MPPT 75/10 up to 100/20",
+      "bbox": {
+        "x": 15,
+        "y": 85,
+        "width": 70,
+        "height": 5
+      },
+      "content_type": "model_specific",
+      "applies_to_models": [
+        "75/10",
+        "75/15",
+        "100/15",
+        "100/20"
+      ]
+    },
+    {
+      "title": "Rev 09 - 02/2025",
+      "bbox": {
+        "x": 70,
+        "y": 92,
+        "width": 25,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "This manual is also available in HTML5.",
+      "bbox": {
+        "x": 50,
+        "y": 95,
+        "width": 45,
+        "height": 3
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": null,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "mixed",
+    "models_mentioned": [
+      "75/10",
+      "75/15",
+      "100/15",
+      "100/20"
+    ],
+    "is_model_specific_page": true,
+    "quality_notes": "Cover page with clear product image and model range specification"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmps0eix0v0/page_1.jpg",
+    "analysis_time_seconds": 10.215475,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T10:00:54.714211",
+    "input_tokens": 2198,
+    "output_tokens": 715
+  },
+  "page_number": 1
+}

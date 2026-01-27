@@ -12,6 +12,144 @@ import { logger } from '../utils/logger.js';
 
 const router = Router();
 
+// ============================================
+// Reference Table Endpoints (v5 schema)
+// ============================================
+
+/**
+ * GET /api/system-management/ref/manufacturers
+ * Returns all manufacturers from ref_manufacturers table
+ */
+router.get('/ref/manufacturers', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await service.getRefManufacturersList();
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching ref_manufacturers', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/system-management/ref/product-types
+ * Returns all product types from ref_product_types table
+ */
+router.get('/ref/product-types', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await service.getRefProductTypesList();
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching ref_product_types', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/system-management/ref/categories
+ * Returns all system categories from ref_system_categories table
+ */
+router.get('/ref/categories', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const result = await service.getRefSystemCategoriesList();
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching ref_system_categories', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/system-management/ref/subcategories
+ * Returns subsystem categories, optionally filtered by parent category
+ * Query params: categoryId (optional)
+ */
+router.get('/ref/subcategories', async (req, res, next) => {
+  const requestLogger = logger.createRequestLogger();
+  const { categoryId } = req.query;
+
+  try {
+    const result = await service.getRefSubsystemCategoriesList(categoryId || null);
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        requestId: requestLogger.requestId
+      });
+    }
+
+    res.json({
+      success: true,
+      data: result.data,
+      requestId: requestLogger.requestId
+    });
+
+  } catch (error) {
+    requestLogger.error('Route error fetching ref_subsystem_categories', {
+      error: error.message
+    });
+    next(error);
+  }
+});
+
+// ============================================
+// Legacy Endpoints (from systems table)
+// ============================================
+
 /**
  * GET /api/system-management/manufacturers
  * Returns list of all manufacturers

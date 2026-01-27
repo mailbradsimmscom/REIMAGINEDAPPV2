@@ -579,6 +579,318 @@
             white-space: nowrap;
             border: 0;
         }
+
+        /* Status Section */
+        .status-section {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .status-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+        }
+
+        .status-section h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            margin-right: var(--spacing-md);
+        }
+
+        .status-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .status-progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+            width: 0%;
+        }
+
+        .status-progress-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .status-doc-info {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-manufacturer {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .status-separator {
+            margin: 0 var(--spacing-sm);
+            color: var(--border-color);
+        }
+
+        .status-model {
+            color: var(--text-primary);
+        }
+
+        .status-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .status-step {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) 0;
+        }
+
+        .status-step-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .status-step-icon.pending {
+            color: var(--border-color);
+        }
+
+        .status-step-icon.active {
+            color: var(--primary-color);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .status-step-icon.completed {
+            color: var(--success-color);
+        }
+
+        .status-step-icon.error {
+            color: var(--error-color);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-step-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            flex-grow: 1;
+        }
+
+        .status-step.active .status-step-label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .status-step.completed .status-step-label {
+            color: var(--text-primary);
+        }
+
+        .status-step-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        /* Interaction Section */
+        .interaction-section {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 2px solid var(--primary-color);
+        }
+
+        .interaction-content {
+            min-height: 100px;
+        }
+
+        .interaction-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .interaction-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .interaction-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .interaction-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .interaction-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .interaction-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        .interaction-option.recommended {
+            border-color: var(--success-color);
+        }
+
+        .interaction-option.recommended::after {
+            content: '← matches systems table';
+            font-size: 12px;
+            color: var(--success-color);
+            margin-left: auto;
+        }
+
+        .interaction-option input[type="checkbox"],
+        .interaction-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .interaction-option-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .interaction-option-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: var(--spacing-sm);
+        }
+
+        .interaction-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+        }
+
+        /* Completion Metrics */
+        .completion-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Model Selection Options */
+        .model-selection-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .model-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .model-option:hover {
+            border-color: var(--accent-color);
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .model-option.recommended {
+            border-color: var(--success-color);
+            background: rgba(52, 199, 89, 0.1);
+        }
+
+        .model-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-color);
+        }
+
+        .model-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .recommended-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 10px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -649,6 +961,36 @@
                 <button type="submit" class="btn btn-primary" id="uploadBtn" disabled>Upload Document</button>
             </div>
         </form>
+
+        <!-- Inline Status Section -->
+        <div class="status-section" id="statusSection" style="display: none;">
+            <h3>Processing Status</h3>
+
+            <!-- Progress Bar -->
+            <div class="status-progress-bar">
+                <div class="status-progress-fill" id="statusProgressFill"></div>
+            </div>
+            <div class="status-progress-text" id="statusProgressText">0%</div>
+
+            <!-- Document Info -->
+            <div class="status-doc-info" id="statusDocInfo">
+                <span class="status-manufacturer" id="statusManufacturer">-</span>
+                <span class="status-separator">•</span>
+                <span class="status-model" id="statusModel">-</span>
+            </div>
+
+            <!-- Step List -->
+            <div class="status-steps" id="statusSteps">
+                <!-- Steps will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Interaction Area -->
+        <div class="interaction-section" id="interactionSection" style="display: none;">
+            <div class="interaction-content" id="interactionContent">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
 
     </div>
 
@@ -950,15 +1292,24 @@
                         // Upload successful
                         this.hideUploadProgress();
 
-                        // Show progress popup and start tracking
+                        // Show inline status and start tracking
                         if (result.data && result.data.job_id) {
-                            this.showProgressPopup(result.data.job_id);
+                            this.showInlineStatus(result.data.job_id, manufacturer, model);
                         } else {
-                            alert('Document uploaded successfully!');
+                            this.showInteraction(`
+                                <div class="interaction-title" style="color: var(--success-color);">Upload Complete</div>
+                                <div class="interaction-description">Document uploaded successfully!</div>
+                                <div class="interaction-actions">
+                                    <button class="btn btn-secondary" onclick="window.documentUpload.resetForNewUpload()">Upload Another</button>
+                                </div>
+                            `);
                         }
 
-                        // Clear the form
-                        this.clearForm();
+                        // Clear the form but keep status visible
+                        this.selectedFile = null;
+                        document.getElementById('fileInput').value = '';
+                        document.getElementById('selectedFile').classList.remove('show');
+                        document.getElementById('uploadBtn').disabled = true;
                     } else {
                         throw new Error(result.error?.message || 'Upload failed');
                     }
@@ -966,7 +1317,13 @@
                 } catch (error) {
                     console.error('Upload error:', error);
                     this.hideUploadProgress();
-                    alert(`Upload failed: ${error.message}`);
+                    this.showInteraction(`
+                        <div class="interaction-title" style="color: var(--error-color);">Upload Failed</div>
+                        <div class="interaction-description">${error.message}</div>
+                        <div class="interaction-actions">
+                            <button class="btn btn-secondary" onclick="window.documentUpload.hideInteraction()">Dismiss</button>
+                        </div>
+                    `);
                 }
             }
 
@@ -1002,223 +1359,99 @@
                 }
             }
 
-            // Progress tracking functionality (ported from testing-progress.html)
-            showProgressPopup(jobId) {
-                // Create popup overlay
-                const overlay = document.createElement('div');
-                overlay.id = 'progress-popup-overlay';
-                overlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.5);
-                    z-index: 10000;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                `;
+            // Inline status tracking (v5 - replaces popup)
+            showInlineStatus(jobId, manufacturer, model) {
+                // Show the status section
+                const statusSection = document.getElementById('statusSection');
+                statusSection.style.display = 'block';
 
-                // Create progress card
-                const progressCard = document.createElement('div');
-                progressCard.id = 'progress-popup-card';
-                progressCard.innerHTML = `
-                    <div class="progress-card">
-                        <div class="card-header">
-                            <div class="manufacturer" id="popup-manufacturer">Loading...</div>
-                            <div class="system" id="popup-system">Loading...</div>
-                        </div>
-                        
-                        <div class="progress-container">
-                            <svg class="progress-ring" viewBox="0 0 200 200">
-                                <circle class="progress-ring-circle progress-ring-background" cx="100" cy="100" r="90"></circle>
-                                <circle class="progress-ring-circle progress-ring-fill" cx="100" cy="100" r="90" id="popup-progress-circle"></circle>
-                            </svg>
-                            
-                            <div class="progress-stage">
-                                <div id="popup-current-stage">Loading...</div>
-                                <div class="progress-percentage" id="popup-progress-percentage">0%</div>
-                            </div>
-                        </div>
-                        
-                        <div id="popup-error-message" class="error-message" style="display: none;"></div>
+                // Set document info
+                document.getElementById('statusManufacturer').textContent = manufacturer || '-';
+                document.getElementById('statusModel').textContent = model || '-';
 
-                        <div id="popup-completion-metrics" style="display: none; margin-top: 20px; padding: 16px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.8;"></div>
+                // Render the step list
+                this.renderStepList();
 
-                        <button class="close-button" onclick="closeProgressPopup()">OK</button>
-                    </div>
-                `;
+                // Reset progress
+                this.updateInlineProgress(0, '#007AFF');
 
-                // Add CSS styles
-                const style = document.createElement('style');
-                style.textContent = `
-                    .progress-card {
-                        background: #FFFFFF;
-                        border-radius: 12px;
-                        padding: 32px;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                        border: 1px solid #C6C6C8;
-                        width: 300px;
-                        text-align: center;
-                        transition: all 0.3s ease;
-                    }
-
-                    .card-header {
-                        margin-bottom: 24px;
-                    }
-
-                    .manufacturer {
-                        font-size: 14px;
-                        font-weight: 600;
-                        color: #8E8E93;
-                        margin-bottom: 4px;
-                    }
-
-                    .system {
-                        font-size: 16px;
-                        font-weight: 700;
-                        color: #000000;
-                        margin-bottom: 8px;
-                    }
-
-                    .progress-container {
-                        position: relative;
-                        width: 200px;
-                        height: 200px;
-                        margin: 0 auto 24px;
-                    }
-
-                    .progress-ring {
-                        width: 100%;
-                        height: 100%;
-                        transform: rotate(-90deg);
-                    }
-
-                    .progress-ring-circle {
-                        fill: none;
-                        stroke-width: 12;
-                        stroke-linecap: round;
-                        transition: stroke-dashoffset 0.5s ease-in-out;
-                    }
-
-                    .progress-ring-background {
-                        stroke: #C6C6C8;
-                    }
-
-                    .progress-ring-fill {
-                        stroke-dasharray: 565.48;
-                        stroke-dashoffset: 565.48;
-                    }
-
-                    .progress-stage {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        font-size: 18px;
-                        font-weight: 600;
-                        color: #000000;
-                        text-align: center;
-                        line-height: 1.2;
-                    }
-
-                    .progress-percentage {
-                        font-size: 14px;
-                        color: #8E8E93;
-                        margin-top: 4px;
-                    }
-
-                    .status-indicator {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 4px;
-                        padding: 8px 12px;
-                        border-radius: 8px;
-                        font-size: 12px;
-                        font-weight: 600;
-                        text-transform: uppercase;
-                        letter-spacing: 0.5px;
-                    }
-
-                    .status-indicator.active {
-                        background: #007AFF;
-                        color: white;
-                    }
-
-                    .status-indicator.completed {
-                        background: #34C759;
-                        color: white;
-                    }
-
-                    .status-indicator.error {
-                        background: #FF3B30;
-                        color: white;
-                    }
-
-                    .loading-spinner {
-                        display: inline-block;
-                        width: 16px;
-                        height: 16px;
-                        border: 2px solid #C6C6C8;
-                        border-radius: 50%;
-                        border-top-color: #007AFF;
-                        animation: spin 1s ease-in-out infinite;
-                    }
-
-                    @keyframes spin {
-                        to { transform: rotate(360deg); }
-                    }
-
-                    .error-message {
-                        color: #FF3B30;
-                        font-size: 14px;
-                        margin-top: 16px;
-                        padding: 8px;
-                        background: rgba(255, 59, 48, 0.1);
-                        border-radius: 8px;
-                        border: 1px solid rgba(255, 59, 48, 0.2);
-                    }
-
-                    .close-button {
-                        background: #007AFF;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        padding: 8px 16px;
-                        font-size: 14px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                        margin-top: 16px;
-                    }
-
-                    .close-button:hover {
-                        background: #0056CC;
-                        transform: translateY(-1px);
-                    }
-                `;
-
-                document.head.appendChild(style);
-                overlay.appendChild(progressCard);
-                document.body.appendChild(overlay);
-
-                // Set initial UI state for uploading
-                const stageEl = document.getElementById('popup-current-stage');
-                const percentageEl = document.getElementById('popup-progress-percentage');
-                if (stageEl) stageEl.textContent = 'Uploading';
-                if (percentageEl) percentageEl.textContent = '0%';
-                this.updateProgressRing(0, '#007AFF');
+                // Store job info
+                this.currentJobId = jobId;
 
                 // Start tracking progress
                 this.startProgressTracking(jobId);
             }
 
-            closeProgressPopup() {
-                const overlay = document.getElementById('progress-popup-overlay');
-                if (overlay) {
-                    overlay.remove();
+            renderStepList() {
+                const stepsContainer = document.getElementById('statusSteps');
+                stepsContainer.innerHTML = '';
+
+                this.STAGES.forEach((stage, index) => {
+                    const stepEl = document.createElement('div');
+                    stepEl.className = 'status-step';
+                    stepEl.id = `step-${stage.name}`;
+                    stepEl.innerHTML = `
+                        <span class="status-step-icon pending">○</span>
+                        <span class="status-step-label">${stage.label}</span>
+                        <span class="status-step-detail" id="step-detail-${stage.name}"></span>
+                    `;
+                    stepsContainer.appendChild(stepEl);
+                });
+            }
+
+            updateInlineProgress(progress, color) {
+                const progressFill = document.getElementById('statusProgressFill');
+                const progressText = document.getElementById('statusProgressText');
+
+                if (progressFill) {
+                    progressFill.style.width = `${progress}%`;
+                    progressFill.style.backgroundColor = color;
                 }
+                if (progressText) {
+                    progressText.textContent = `${Math.round(progress)}%`;
+                }
+            }
+
+            updateStepStatus(stageName, status, detail = '') {
+                const stepEl = document.getElementById(`step-${stageName}`);
+                if (!stepEl) return;
+
+                const iconEl = stepEl.querySelector('.status-step-icon');
+                const detailEl = document.getElementById(`step-detail-${stageName}`);
+
+                // Remove existing status classes
+                stepEl.classList.remove('pending', 'active', 'completed', 'error');
+                iconEl.classList.remove('pending', 'active', 'completed', 'error');
+
+                // Set new status
+                stepEl.classList.add(status);
+                iconEl.classList.add(status);
+
+                // Update icon
+                switch (status) {
+                    case 'completed':
+                        iconEl.textContent = '✓';
+                        break;
+                    case 'active':
+                        iconEl.textContent = '◉';
+                        break;
+                    case 'error':
+                        iconEl.textContent = '✗';
+                        break;
+                    default:
+                        iconEl.textContent = '○';
+                }
+
+                // Update detail text
+                if (detailEl) {
+                    detailEl.textContent = detail;
+                }
+            }
+
+            hideInlineStatus() {
+                const statusSection = document.getElementById('statusSection');
+                statusSection.style.display = 'none';
+
                 // Clear any intervals
                 if (window.progressInterval) {
                     clearInterval(window.progressInterval);
@@ -1226,17 +1459,171 @@
                 }
             }
 
-            // Processing stages configuration (10 stages)
+            // Interaction area methods
+            showInteraction(content) {
+                const interactionSection = document.getElementById('interactionSection');
+                const interactionContent = document.getElementById('interactionContent');
+
+                interactionContent.innerHTML = content;
+                interactionSection.style.display = 'block';
+            }
+
+            hideInteraction() {
+                const interactionSection = document.getElementById('interactionSection');
+                interactionSection.style.display = 'none';
+            }
+
+            // Model selection prompt for multi-model manuals
+            showModelSelectionPrompt(modelsDetected, jobId, userModelVariant) {
+                // Build checkbox list for detected models
+                const modelOptions = modelsDetected.map(model => {
+                    const isRecommended = userModelVariant && model.toLowerCase().includes(userModelVariant.toLowerCase());
+                    return `
+                        <label class="model-option ${isRecommended ? 'recommended' : ''}">
+                            <input type="checkbox" name="model-select" value="${model}" ${isRecommended ? 'checked' : ''}>
+                            <span class="model-label">${model}</span>
+                            ${isRecommended ? '<span class="recommended-badge">Your Model</span>' : ''}
+                        </label>
+                    `;
+                }).join('');
+
+                const promptHTML = `
+                    <div class="interaction-title">Which model is installed on REIMAGINED?</div>
+                    <div class="interaction-description">
+                        This manual covers multiple models. Select the one(s) that apply to your boat
+                        so we can tag the content correctly.
+                    </div>
+                    <div class="model-selection-options">
+                        ${modelOptions}
+                    </div>
+                    <div class="interaction-actions">
+                        <button class="btn btn-primary" onclick="window.documentUpload.submitModelSelection('${jobId}')">
+                            Confirm Selection
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.documentUpload.submitModelSelection('${jobId}', true)">
+                            Use All Models
+                        </button>
+                    </div>
+                `;
+
+                this.showInteraction(promptHTML);
+            }
+
+            async submitModelSelection(jobId, useAll = false) {
+                // Get selected models
+                let selectedModels;
+                if (useAll) {
+                    // Select all checkboxes
+                    selectedModels = Array.from(document.querySelectorAll('input[name="model-select"]'))
+                        .map(cb => cb.value);
+                } else {
+                    selectedModels = Array.from(document.querySelectorAll('input[name="model-select"]:checked'))
+                        .map(cb => cb.value);
+                }
+
+                if (selectedModels.length === 0) {
+                    alert('Please select at least one model.');
+                    return;
+                }
+
+                try {
+                    // Show loading state
+                    this.showInteraction(`
+                        <div class="interaction-title">Saving Selection...</div>
+                        <div class="interaction-description">Processing your model selection.</div>
+                    `);
+
+                    const response = await fetch(`/document/jobs/${jobId}/model-selection`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
+                        },
+                        body: JSON.stringify({ selected_models: selectedModels })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+                        throw new Error(result.error?.message || 'Failed to save model selection');
+                    }
+
+                    // Hide interaction - polling will pick up the new stage
+                    this.hideInteraction();
+
+                } catch (error) {
+                    console.error('Error submitting model selection:', error);
+                    this.showInteraction(`
+                        <div class="interaction-title" style="color: var(--error-color);">Selection Failed</div>
+                        <div class="interaction-description">${error.message}</div>
+                        <div class="interaction-actions">
+                            <button class="btn btn-secondary" onclick="window.documentUpload.hideInteraction()">Dismiss</button>
+                        </div>
+                    `);
+                }
+            }
+
+            showCompletionMetrics(counters) {
+                const metricsHTML = `
+                    <div class="interaction-title">Processing Complete</div>
+                    <div class="completion-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">${counters.chunks_total || 0}</div>
+                            <div class="metric-label">Chunks</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${counters.vectors_upserted || 0}</div>
+                            <div class="metric-label">Vectors</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${counters.figures_extracted || 0}</div>
+                            <div class="metric-label">Figures</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${counters.specs_count || 0}</div>
+                            <div class="metric-label">Specs</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${counters.colloquial_keywords_count || 0}</div>
+                            <div class="metric-label">Keywords</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">$${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
+                            <div class="metric-label">Cost</div>
+                        </div>
+                    </div>
+                    <div class="interaction-actions" style="margin-top: var(--spacing-lg);">
+                        <button class="btn btn-secondary" onclick="window.documentUpload.resetForNewUpload()">Upload Another</button>
+                    </div>
+                `;
+                this.showInteraction(metricsHTML);
+            }
+
+            resetForNewUpload() {
+                this.hideInlineStatus();
+                this.hideInteraction();
+                this.clearForm();
+            }
+
+            // Processing stages configuration (v5 pipeline - 14 stages)
             STAGES = [
-                { name: 'uploading', label: 'Uploading', color: '#007AFF', progress: 10 },
-                { name: 'verifying', label: 'Verifying', color: '#007AFF', progress: 20 },
-                { name: 'parsing', label: 'Parsing', color: '#5856D6', progress: 30 },
-                { name: 'chunking', label: 'Chunking', color: '#5856D6', progress: 40 },
-                { name: 'embedding', label: 'Embedding', color: '#FF9500', progress: 50 },
-                { name: 'indexing', label: 'Indexing', color: '#FF9500', progress: 60 },
-                { name: 'colloquial_extraction', label: 'Colloquial Extraction', color: '#5AC8FA', progress: 70 },
-                { name: 'extracting', label: 'Extracting', color: '#5AC8FA', progress: 80 },
-                { name: 'storing', label: 'Storing', color: '#5AC8FA', progress: 90 },
+                { name: 'uploading', label: 'Uploading', color: '#007AFF', progress: 7 },
+                { name: 'verifying', label: 'Verifying', color: '#007AFF', progress: 14 },
+                { name: 'model_detection', label: 'Model Detection', color: '#5856D6', progress: 21, isNew: true },
+                { name: 'model_selection', label: 'Model Selection', color: '#5856D6', progress: 28, isNew: true, blocking: true },
+                { name: 'parsing', label: 'Parsing', color: '#5856D6', progress: 35 },
+                { name: 'vision_analysis', label: 'Vision Analysis', color: '#FF9500', progress: 42, isNew: true },
+                { name: 'figure_cropping', label: 'Figure Cropping', color: '#FF9500', progress: 49, isNew: true },
+                { name: 'chunking', label: 'Chunking', color: '#FF9500', progress: 56 },
+                { name: 'embedding', label: 'Embedding', color: '#5AC8FA', progress: 63 },
+                { name: 'indexing', label: 'Indexing', color: '#5AC8FA', progress: 70 },
+                { name: 'colloquial_extraction', label: 'Colloquial Extraction', color: '#5AC8FA', progress: 77 },
+                { name: 'dip_extraction', label: 'DIP Extraction', color: '#AF52DE', progress: 84 },
+                { name: 'storing', label: 'Storing', color: '#AF52DE', progress: 91 },
                 { name: 'completed', label: 'Completed', color: '#34C759', progress: 100 }
             ];
 
@@ -1255,90 +1642,91 @@
                 return stageConfig ? stageConfig.label : stage;
             }
 
-            updateProgressRing(progress, color) {
-                const circle = document.getElementById('popup-progress-circle');
-                if (!circle) return;
-                
-                const circumference = 2 * Math.PI * 90; // radius = 90
-                const offset = circumference - (progress / 100) * circumference;
-                
-                circle.style.strokeDashoffset = offset;
-                circle.style.stroke = color;
-            }
-
             updateProgressUI(jobData) {
-                // Update header
-                const manufacturer = jobData.manufacturer_norm || 
-                                   jobData.params?.manufacturer || 
-                                   jobData.manufacturer || 
+                // Update header info
+                const manufacturer = jobData.manufacturer_norm ||
+                                   jobData.params?.manufacturer ||
+                                   jobData.manufacturer ||
                                    'Unknown Manufacturer';
-                const system = jobData.model_norm || 
-                              jobData.params?.model || 
-                              jobData.model || 
-                              jobData.doc_id || 
+                const model = jobData.model_norm ||
+                              jobData.params?.model ||
+                              jobData.model ||
+                              jobData.doc_id ||
                               'Unknown System';
-                
-                const manufacturerEl = document.getElementById('popup-manufacturer');
-                const systemEl = document.getElementById('popup-system');
-                if (manufacturerEl) manufacturerEl.textContent = manufacturer;
-                if (systemEl) systemEl.textContent = system;
-                
-                // Update progress
-                const stage = jobData.status_v2 || 'upload_complete';
-                const progress = this.getProgressForStage(stage);
-                const color = this.getColorForStage(stage);
-                const label = this.getLabelForStage(stage);
-                
-                // Build progress text (clean, no chunk counting)
-                let progressText = `${Math.round(progress)}%`;
-                
-                const stageEl = document.getElementById('popup-current-stage');
-                const percentageEl = document.getElementById('popup-progress-percentage');
-                if (stageEl) stageEl.textContent = label;
-                if (percentageEl) percentageEl.textContent = progressText;
+
+                document.getElementById('statusManufacturer').textContent = manufacturer;
+                document.getElementById('statusModel').textContent = model;
+
+                // Get current stage from job data
+                const currentStage = jobData.status_v2 || 'uploading';
+                const progress = this.getProgressForStage(currentStage);
+                const color = this.getColorForStage(currentStage);
 
                 // Check for failure state
-                const isFailed = jobData.status === 'failed' || stage === 'failed';
+                const isFailed = jobData.status === 'failed' || currentStage === 'failed';
 
-                // Update progress ring with RED color if failed
+                // Update progress bar
                 if (isFailed) {
-                    this.updateProgressRing(progress, '#FF3B30'); // Red
+                    this.updateInlineProgress(progress, '#FF3B30'); // Red
                 } else {
-                    this.updateProgressRing(progress, color);
+                    this.updateInlineProgress(progress, color);
                 }
 
-                // Show completion metrics when job is done
-                const metricsEl = document.getElementById('popup-completion-metrics');
-                if (metricsEl) {
-                    if (stage === 'completed') {
-                        const counters = jobData.counters || {};
-                        const metricsHTML = `
-                            <div><strong>Chunks:</strong> ${counters.chunks_total || 0}</div>
-                            <div><strong>Vectors:</strong> ${counters.vectors_upserted || 0}</div>
-                            <div><strong>Colloquial Keywords:</strong> ${counters.colloquial_keywords_count || 0}</div>
-                            <div><strong>Specs:</strong> ${counters.specs_count || 0}</div>
-                            <div><strong>Golden Rules:</strong> ${counters.golden_count || 0}</div>
-                            <div><strong>Q&A Pairs:</strong> ${counters.intent_count || 0}</div>
-                            <div><strong>Procedures:</strong> ${counters.procedures_count || 0}</div>
-                            <div><strong>Colloquial Tokens:</strong> ${(counters.colloquial_tokens_used || 0).toLocaleString()}</div>
-                            <div><strong>Total Cost:</strong> $${(counters.estimated_cost_usd || 0).toFixed(2)}</div>
-                        `;
-                        metricsEl.innerHTML = metricsHTML;
-                        metricsEl.style.display = 'block';
+                // Update step statuses
+                let foundCurrent = false;
+                for (const stage of this.STAGES) {
+                    if (stage.name === currentStage) {
+                        foundCurrent = true;
+                        if (isFailed) {
+                            this.updateStepStatus(stage.name, 'error', 'Failed');
+                        } else if (stage.name === 'completed') {
+                            this.updateStepStatus(stage.name, 'completed');
+                        } else {
+                            // Get detail text if available
+                            let detail = '';
+                            if (currentStage === 'vision_analysis' && jobData.counters?.vision_pages_processed) {
+                                detail = `page ${jobData.counters.vision_pages_processed} of ${jobData.counters.total_pages || '?'}`;
+                            } else if (currentStage === 'chunking' && jobData.counters?.chunks_total) {
+                                detail = `${jobData.counters.chunks_total} chunks`;
+                            } else if (currentStage === 'embedding' && jobData.counters?.vectors_upserted) {
+                                detail = `${jobData.counters.vectors_upserted} vectors`;
+                            }
+                            this.updateStepStatus(stage.name, 'active', detail);
+                        }
+                    } else if (!foundCurrent) {
+                        // Stages before current are completed
+                        this.updateStepStatus(stage.name, 'completed');
                     } else {
-                        metricsEl.style.display = 'none';
+                        // Stages after current are pending
+                        this.updateStepStatus(stage.name, 'pending');
                     }
                 }
 
-                // Update stage text for failed state
-                if (isFailed && stageEl) {
-                    stageEl.textContent = 'Failed';
+                // Show completion metrics when job is done
+                if (currentStage === 'completed') {
+                    this.showCompletionMetrics(jobData.counters || {});
                 }
 
-                // Hide error message if job is processing successfully
-                const errorEl = document.getElementById('popup-error-message');
-                if (errorEl && !isFailed) {
-                    errorEl.style.display = 'none';
+                // Handle model_selection blocking stage - redirect to onboarding page
+                if (currentStage === 'model_selection' && jobData.models_detected && jobData.models_detected.length > 0) {
+                    // Stop polling and redirect to onboarding page
+                    if (window.progressInterval) {
+                        clearInterval(window.progressInterval);
+                        window.progressInterval = null;
+                    }
+                    window.location.href = `/onboarding?jobId=${jobData.job_id}`;
+                    return;
+                }
+
+                // Handle errors
+                if (isFailed && jobData.error) {
+                    this.showInteraction(`
+                        <div class="interaction-title" style="color: var(--error-color);">Processing Failed</div>
+                        <div class="interaction-description">${jobData.error}</div>
+                        <div class="interaction-actions">
+                            <button class="btn btn-secondary" onclick="window.documentUpload.resetForNewUpload()">Try Again</button>
+                        </div>
+                    `);
                 }
             }
 
@@ -1372,11 +1760,14 @@
 
                 } catch (error) {
                     console.error('Error fetching job status:', error);
-                    const errorEl = document.getElementById('popup-error-message');
-                    if (errorEl) {
-                        errorEl.textContent = `Error: ${error.message}`;
-                        errorEl.style.display = 'block';
-                    }
+                    // Show error in interaction area
+                    this.showInteraction(`
+                        <div class="interaction-title" style="color: var(--error-color);">Status Check Failed</div>
+                        <div class="interaction-description">${error.message}</div>
+                        <div class="interaction-actions">
+                            <button class="btn btn-secondary" onclick="window.documentUpload.hideInteraction()">Dismiss</button>
+                        </div>
+                    `);
                 }
             }
 
@@ -1508,21 +1899,9 @@
         }
 
         // Initialize the upload page when the DOM loads
-        // Make closeProgressPopup available globally for the close button
-        window.closeProgressPopup = function() {
-            const overlay = document.getElementById('progress-popup-overlay');
-            if (overlay) {
-                overlay.remove();
-            }
-            // Clear any intervals
-            if (window.progressInterval) {
-                clearInterval(window.progressInterval);
-                window.progressInterval = null;
-            }
-        };
-
         document.addEventListener('DOMContentLoaded', () => {
-            new DocumentUpload();
+            // Create instance and expose globally for onclick handlers
+            window.documentUpload = new DocumentUpload();
         });
     </script>
 

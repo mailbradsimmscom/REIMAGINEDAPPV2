@@ -1,0 +1,205 @@
+{
+  "figures": [
+    {
+      "type": "other",
+      "title": "Eye Protection Icon",
+      "description": "Icon showing a person wearing safety goggles/eye protection equipment.",
+      "bbox": {
+        "x": 15,
+        "y": 55,
+        "width": 10,
+        "height": 8
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Slipping Hazard Icon",
+      "description": "Icon showing a person slipping/falling to illustrate slip and trip hazards.",
+      "bbox": {
+        "x": 15,
+        "y": 75,
+        "width": 8,
+        "height": 8
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Recycling Symbol",
+      "description": "Standard three-arrow recycling symbol for environmental responsibility.",
+      "bbox": {
+        "x": 55,
+        "y": 45,
+        "width": 8,
+        "height": 8
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "SAFETY",
+      "bbox": {
+        "x": 50,
+        "y": 1,
+        "width": 45,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "CAUTION - Poor Lighting Hazard!",
+      "bbox": {
+        "x": 5,
+        "y": 8,
+        "width": 40,
+        "height": 12
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Tool Hazard!",
+      "bbox": {
+        "x": 5,
+        "y": 22,
+        "width": 40,
+        "height": 12
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Exposure Hazard!",
+      "bbox": {
+        "x": 5,
+        "y": 38,
+        "width": 40,
+        "height": 18
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Slipping and Tripping Hazard!",
+      "bbox": {
+        "x": 5,
+        "y": 62,
+        "width": 40,
+        "height": 20
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "NOTICE",
+      "bbox": {
+        "x": 52,
+        "y": 8,
+        "width": 43,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Daily Checks and Maintenance Notice",
+      "bbox": {
+        "x": 52,
+        "y": 15,
+        "width": 43,
+        "height": 12
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Environmental Responsibility",
+      "bbox": {
+        "x": 52,
+        "y": 32,
+        "width": 43,
+        "height": 20
+      },
+      "content_type": "notes",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Hazardous Material Disposal Guidelines",
+      "bbox": {
+        "x": 52,
+        "y": 55,
+        "width": 43,
+        "height": 15
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Design Modification Restrictions",
+      "bbox": {
+        "x": 52,
+        "y": 72,
+        "width": 43,
+        "height": 18
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 7,
+    "has_header": true,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear safety information page with good visual hierarchy using icons and warning sections"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmppjvmmgrt/page_13.jpg",
+    "analysis_time_seconds": 13.975212,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:58:06.901610",
+    "input_tokens": 2183,
+    "output_tokens": 1127
+  },
+  "page_number": 13
+}

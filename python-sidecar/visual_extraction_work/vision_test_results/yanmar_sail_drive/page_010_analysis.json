@@ -1,0 +1,177 @@
+{
+  "figures": [
+    {
+      "type": "other",
+      "title": "Safety Icon - Manual/Documentation",
+      "description": "Icon depicting an open book, used to emphasize reading operation manual before use.",
+      "bbox": {
+        "x": 340,
+        "y": 120,
+        "width": 15,
+        "height": 12
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "type": "other",
+      "title": "Crush Hazard Warning Icon",
+      "description": "Icon showing a person being crushed by a falling object, illustrating the danger of standing under a hoisted saildrive.",
+      "bbox": {
+        "x": 360,
+        "y": 590,
+        "width": 25,
+        "height": 30
+      },
+      "figure_reference": null,
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "tables": [],
+  "text_sections": [
+    {
+      "title": "SAFETY",
+      "bbox": {
+        "x": 53,
+        "y": 8,
+        "width": 25,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "SAFETY PRECAUTIONS",
+      "bbox": {
+        "x": 53,
+        "y": 30,
+        "width": 40,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "General Information",
+      "bbox": {
+        "x": 53,
+        "y": 50,
+        "width": 25,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Before You Operate",
+      "bbox": {
+        "x": 421,
+        "y": 30,
+        "width": 30,
+        "height": 5
+      },
+      "content_type": "heading",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "DANGER",
+      "bbox": {
+        "x": 421,
+        "y": 55,
+        "width": 35,
+        "height": 8
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Crush Hazard!",
+      "bbox": {
+        "x": 421,
+        "y": 520,
+        "width": 30,
+        "height": 5
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "General safety precautions text",
+      "bbox": {
+        "x": 53,
+        "y": 70,
+        "width": 40,
+        "height": 45
+      },
+      "content_type": "instructions",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Danger warning bullet points",
+      "bbox": {
+        "x": 421,
+        "y": 85,
+        "width": 35,
+        "height": 40
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    },
+    {
+      "title": "Crush hazard bullet points",
+      "bbox": {
+        "x": 421,
+        "y": 540,
+        "width": 35,
+        "height": 35
+      },
+      "content_type": "warning",
+      "applies_to_models": [
+        "all"
+      ]
+    }
+  ],
+  "page_metadata": {
+    "page_number": 4,
+    "has_header": false,
+    "has_footer": true,
+    "primary_content": "text",
+    "models_mentioned": [
+      "SD25",
+      "SD60",
+      "SD110",
+      "SD150"
+    ],
+    "is_model_specific_page": false,
+    "quality_notes": "Clear page with safety information applicable to all SD series models"
+  },
+  "_metadata": {
+    "image_path": "/var/folders/yy/0gxz3lds6wv4z2ncr46n8l8m0000gn/T/tmppjvmmgrt/page_10.jpg",
+    "analysis_time_seconds": 13.537827,
+    "model": "claude-sonnet-4-20250514",
+    "timestamp": "2026-01-11T09:57:25.264935",
+    "input_tokens": 2183,
+    "output_tokens": 966
+  },
+  "page_number": 10
+}

@@ -5,6 +5,7 @@ import { getEnv } from './config/env.js';
 import { logger } from './utils/logger.js';
 import { printRoutes } from './debug/printRoutes.js';
 import { telegramBotService } from './services/telegram-bot.service.js';
+import { dipTelegramBotService } from './services/dip-telegram-bot.service.js';
 import { anchorWatchAlertsService } from './services/anchor-watch-alerts.service.js';
 import { startWeatherCollector, stopWeatherCollector } from './services/trips/weather-collector.service.js';
 
@@ -39,6 +40,7 @@ const server = app.listen(port, async () => {
   if (env.NODE_ENV === 'production') {
     try {
       await telegramBotService.start();
+      await dipTelegramBotService.start();
       anchorWatchAlertsService.start();
       logger.info('Background services initialized (production mode)');
     } catch (error) {
@@ -56,6 +58,7 @@ process.on('SIGTERM', async () => {
   const env = getEnv();
   if (env.NODE_ENV === 'production') {
     await telegramBotService.stop();
+    await dipTelegramBotService.stop();
     anchorWatchAlertsService.stop();
   }
   server.close(() => {
@@ -70,6 +73,7 @@ process.on('SIGINT', async () => {
   const env = getEnv();
   if (env.NODE_ENV === 'production') {
     await telegramBotService.stop();
+    await dipTelegramBotService.stop();
     anchorWatchAlertsService.stop();
   }
   server.close(() => {
