@@ -4,10 +4,12 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const supabase = createClient(
-  'https://eriquneakfcfmeecqyof.supabase.co',
-  'sb_secret_VYgTw3lmc1DNcFxrQNaV-w_tDqqxiyR'
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
 );
 
 const docId = '0409b82f230dae2b3550a1ffc3c60b10ba1b364120fbc85358b8bee7a012cdaa';

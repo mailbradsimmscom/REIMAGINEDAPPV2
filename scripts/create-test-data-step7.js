@@ -10,8 +10,8 @@ async function createTestData() {
   console.log('🧪 Creating test data for knowledge_facts view...\n');
 
   try {
-    const supabaseUrl = 'https://eriquneakfcfmeecqyof.supabase.co';
-    const supabaseKey = 'sb_secret_VYgTw3lmc1DNcFxrQNaV-w_tDqqxiyR';
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     
     const supabase = createClient(supabaseUrl, supabaseKey);
 

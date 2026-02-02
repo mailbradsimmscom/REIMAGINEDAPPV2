@@ -5,13 +5,15 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function checkPlaybookHintsStructure() {
   console.log('🔍 Checking playbook_hints table structure...\n');
 
   try {
-    const supabaseUrl = 'https://eriquneakfcfmeecqyof.supabase.co';
-    const supabaseKey = 'sb_secret_VYgTw3lmc1DNcFxrQNaV-w_tDqqxiyR';
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     
     const supabase = createClient(supabaseUrl, supabaseKey);
 

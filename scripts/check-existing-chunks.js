@@ -10,8 +10,8 @@ async function checkExistingDocumentChunks() {
   console.log('🔍 Checking existing document_chunks records...\n');
 
   try {
-    const supabaseUrl = 'https://eriquneakfcfmeecqyof.supabase.co';
-    const supabaseKey = 'sb_secret_VYgTw3lmc1DNcFxrQNaV-w_tDqqxiyR';
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     
     const supabase = createClient(supabaseUrl, supabaseKey);
 

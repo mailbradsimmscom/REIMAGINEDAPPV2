@@ -11,8 +11,8 @@ async function findMinChunksWithAllDIPs() {
   console.log('🔍 Finding document with minimum chunks and all 4 DIP extraction types...\n');
 
   try {
-    const supabaseUrl = process.env.SUPABASE_URL || 'https://eriquneakfcfmeecqyof.supabase.co';
-    const supabaseKey = process.env.PY_SUPABASE_SERVICE_KEY || 'sb_secret_VYgTw3lmc1DNcFxrQNaV-w_tDqqxiyR';
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.SUPABASE_URL;
+    const supabaseKey = process.env.PY_SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 

@@ -11,8 +11,8 @@ async function testGoldenTestsTable() {
 
   try {
     // Use the credentials from the running container
-    const supabaseUrl = 'https://eriquneakfcfmeecqyof.supabase.co';
-    const supabaseKey = 'sb_secret_VYgTw3lmc1DNcFxrQNaV-w_tDqqxiyR'; // Service role key
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY; // Service role key
     
     const supabase = createClient(supabaseUrl, supabaseKey);
     console.log('✅ Supabase client initialized');
