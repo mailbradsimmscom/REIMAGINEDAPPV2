@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 import json
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -32,7 +32,8 @@ from .models import (
     ModelDetectionRequest, ModelDetectionResponse, ReferencedProduct, LlamaParseResponse,
     VisionAnalyzeRequest, VisionAnalyzeResponse, VisionAnalysisPath,
     VisionCropRequest, VisionCropResponse, VisionAsset,
-    DIPRunRequest, DIPRunResponse, DIPModeResult
+    DIPRunRequest, DIPRunResponse, DIPModeResult,
+    IndexDocumentRequest, IndexDocumentResponse
 )
 import asyncio
 import anthropic
@@ -1862,6 +1863,365 @@ Extract information that is relevant to the selected models. If content applies 
         total_inserted=total_inserted,
         processing_time=round(processing_time, 2)
     )
+
+
+# ============================================================================
+# v5 INDEX DOCUMENT ENDPOINT
+# ============================================================================
+
+async def _fetch_llamaparse_raw_json(doc_id: str, supabase_url: str, supabase_key: str) -> Optional[list]:
+    """
+    Fetch raw llamaparse JSON from Supabase storage.
+
+    Returns the pages array with 'page' and 'md' fields, or None on failure.
+    """
+    url = supabase_url.rstrip("/")
+    headers = {
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}"
+    }
+
+    json_path = f"manuals/{doc_id}/llamaparse_raw.json"
+
+    try:
+        response = requests.get(
+            f"{url}/storage/v1/object/documents/{json_path}",
+            headers=headers
+        )
+
+        if response.status_code != 200:
+            logger.error(f"Failed to fetch llamaparse_raw.json: {response.status_code}")
+            return None
+
+        return response.json()
+
+    except Exception as e:
+        logger.error(f"Error fetching llamaparse_raw.json: {e}")
+        return None
+
+
+def _extract_sections_from_markdown(markdown: str) -> List[Dict[str, Any]]:
+    """
+    Extract hierarchical sections from markdown.
+
+    Identifies sections by markdown headers (# ## ### etc.)
+    and builds hierarchical structure.
+
+    This is a copy of parser._extract_sections to avoid dependency issues.
+    """
+    sections = []
+    lines = markdown.split('\n')
+
+    current_section = None
+    current_content = []
+    char_position = 0
+
+    for line in lines:
+        line_length = len(line) + 1  # +1 for newline
+
+        # Check if line is a heading
+        if line.startswith('#'):
+            # Save previous section if exists
+            if current_section is not None:
+                current_section['content'] = '\n'.join(current_content).strip()
+                current_section['end_char'] = char_position
+                sections.append(current_section)
+
+            # Start new section
+            level = len(line) - len(line.lstrip('#'))
+            title = line.lstrip('#').strip()
+
+            current_section = {
+                'level': level,
+                'title': title,
+                'start_char': char_position,
+                'content': '',
+                'end_char': 0
+            }
+            current_content = []
+        else:
+            # Add to current section content
+            if current_section is not None:
+                current_content.append(line)
+
+        char_position += line_length
+
+    # Save final section
+    if current_section is not None:
+        current_section['content'] = '\n'.join(current_content).strip()
+        current_section['end_char'] = char_position
+        sections.append(current_section)
+
+    return sections
+
+
+async def _delete_existing_index_data(doc_id: str, supabase_url: str, supabase_key: str) -> Dict[str, Any]:
+    """
+    Delete existing chunks from Supabase and Pinecone for a document.
+
+    Returns dict with deletion results.
+    """
+    url = supabase_url.rstrip("/")
+    headers = {
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}"
+    }
+
+    deleted_chunks = 0
+    deleted_vectors = 0
+
+    try:
+        # Step 1: Get existing chunk IDs from Supabase
+        response = requests.get(
+            f"{url}/rest/v1/document_chunks?doc_id=eq.{doc_id}&select=chunk_id",
+            headers=headers
+        )
+
+        if response.status_code == 200:
+            chunks = response.json()
+            chunk_ids = [c['chunk_id'] for c in chunks if c.get('chunk_id')]
+
+            if chunk_ids:
+                # Step 2: Delete from Pinecone
+                if pinecone_client and pinecone_client.index:
+                    delete_result = pinecone_client.delete_vectors(chunk_ids)
+                    if delete_result.get('success'):
+                        deleted_vectors = delete_result.get('deleted_count', len(chunk_ids))
+                        logger.info(f"Deleted {deleted_vectors} vectors from Pinecone for {doc_id}")
+
+                # Step 3: Delete from Supabase
+                delete_response = requests.delete(
+                    f"{url}/rest/v1/document_chunks?doc_id=eq.{doc_id}",
+                    headers=headers
+                )
+
+                if delete_response.status_code in [200, 204]:
+                    deleted_chunks = len(chunk_ids)
+                    logger.info(f"Deleted {deleted_chunks} chunks from Supabase for {doc_id}")
+
+        return {
+            'success': True,
+            'deleted_chunks': deleted_chunks,
+            'deleted_vectors': deleted_vectors
+        }
+
+    except Exception as e:
+        logger.error(f"Error deleting existing index data: {e}")
+        return {
+            'success': False,
+            'error': str(e),
+            'deleted_chunks': deleted_chunks,
+            'deleted_vectors': deleted_vectors
+        }
+
+
+@app.post("/v1/index-document", response_model=IndexDocumentResponse)
+async def index_document(request: IndexDocumentRequest):
+    """
+    v5 Index Document: Chunk document with model tagging and store in Pinecone.
+
+    Pipeline:
+    1. Fetch llamaparse_raw.json from Supabase Storage
+    2. Build markdown with page headers
+    3. Extract sections for hierarchical context
+    4. Chunk with v5 model tagging (high-recall: no skipping)
+    5. Generate embeddings (text-embedding-3-large)
+    6. Upsert to Pinecone and Supabase document_chunks
+
+    Request fields:
+    - doc_id: Document ID (required to fetch llamaparse_raw.json)
+    - models_covered: All primary models the manual covers
+    - selected_models: User's installed primary model(s)
+    - referenced_selections: User's selected referenced systems
+    - filename: Original filename for metadata
+    - force_reindex: If true, delete existing chunks first
+    """
+    start_time = time.time()
+    doc_id = request.doc_id
+
+    logger.info(f"Index document request: doc_id={doc_id}, models_covered={request.models_covered}, "
+                f"selected_models={request.selected_models}, force_reindex={request.force_reindex}")
+
+    # ========================================================================
+    # Validation
+    # ========================================================================
+    if not request.models_covered or len(request.models_covered) == 0:
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            error_code="MODELS_COVERED_MISSING",
+            error="models_covered is required and cannot be empty",
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    # ========================================================================
+    # Get credentials
+    # ========================================================================
+    supabase_url = os.getenv('SUPABASE_URL')
+    supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('PY_SUPABASE_SERVICE_KEY')
+
+    if not supabase_url or not supabase_key:
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            error_code="CONFIG_ERROR",
+            error="Missing Supabase configuration",
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    # ========================================================================
+    # Force reindex: delete existing chunks
+    # ========================================================================
+    if request.force_reindex:
+        logger.info(f"Force reindex: deleting existing chunks for {doc_id}")
+        delete_result = await _delete_existing_index_data(doc_id, supabase_url, supabase_key)
+        if not delete_result['success']:
+            logger.warning(f"Failed to delete existing data: {delete_result.get('error')}")
+
+    # ========================================================================
+    # Fetch llamaparse_raw.json
+    # ========================================================================
+    pages_data = await _fetch_llamaparse_raw_json(doc_id, supabase_url, supabase_key)
+
+    if not pages_data:
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            error_code="LLAMAPARSE_NOT_FOUND",
+            error=f"Could not fetch llamaparse_raw.json for document {doc_id}",
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    # ========================================================================
+    # Build markdown with page headers
+    # ========================================================================
+    markdown_parts = []
+    for page in pages_data:
+        page_num = page.get('page', 0)
+        md = page.get('md', '')
+        if md:
+            markdown_parts.append(f"## Page {page_num}\n{md}")
+
+    full_markdown = "\n\n".join(markdown_parts)
+
+    if not full_markdown or len(full_markdown.strip()) == 0:
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            error_code="EMPTY_DOCUMENT",
+            error="Document has no content to index",
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    logger.info(f"Built markdown: {len(full_markdown)} chars from {len(pages_data)} pages")
+
+    # ========================================================================
+    # Extract sections
+    # ========================================================================
+    sections = _extract_sections_from_markdown(full_markdown)
+    logger.info(f"Extracted {len(sections)} sections")
+
+    # ========================================================================
+    # Get or initialize chunker and embedding service
+    # ========================================================================
+    try:
+        from .chunking import get_chunker, get_embedding_service
+        chunker = get_chunker()
+        embedding_service = get_embedding_service(pinecone_client=pinecone_client)
+    except Exception as e:
+        logger.error(f"Failed to initialize chunking components: {e}")
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            error_code="INIT_ERROR",
+            error=f"Failed to initialize chunking: {str(e)}",
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    # ========================================================================
+    # Chunk document with v5 model tagging
+    # ========================================================================
+    try:
+        # Build metadata for v5 tagging
+        chunk_metadata = {
+            'doc_id': doc_id,
+            'models_covered': request.models_covered,
+            'selected_models': request.selected_models,
+            'referenced_selections': request.referenced_selections,
+            'filename': request.filename,
+            'file_type': '.pdf'  # Default to PDF
+        }
+
+        document_chunks = chunker.chunk_document(
+            markdown=full_markdown,
+            sections=sections,
+            document_id=doc_id,
+            filename=request.filename,
+            metadata=chunk_metadata
+        )
+
+        logger.info(f"Created {document_chunks.total_chunks} chunks, "
+                    f"{document_chunks.total_tokens} tokens, "
+                    f"{document_chunks.chunks_skipped} skipped")
+
+    except Exception as e:
+        logger.error(f"Failed to chunk document: {e}")
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            error_code="CHUNKING_ERROR",
+            error=f"Failed to chunk document: {str(e)}",
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    # ========================================================================
+    # Generate embeddings and store in Pinecone + Supabase
+    # ========================================================================
+    try:
+        processing_result = await embedding_service.process_document_chunks(document_chunks)
+
+        if not processing_result.get('success'):
+            return IndexDocumentResponse(
+                success=False,
+                doc_id=doc_id,
+                chunks_created=document_chunks.total_chunks,
+                error_code="EMBEDDING_ERROR",
+                error=f"Failed to generate embeddings: {processing_result.get('error')}",
+                processing_time=round(time.time() - start_time, 2)
+            )
+
+        # Extract results
+        pinecone_result = processing_result.get('pinecone_result', {})
+        supabase_result = processing_result.get('supabase_result', {})
+
+        vectors_upserted = pinecone_result.get('upserted_count', 0)
+
+        logger.info(f"Successfully indexed document {doc_id}: "
+                    f"{document_chunks.total_chunks} chunks, "
+                    f"{vectors_upserted} vectors, "
+                    f"{document_chunks.total_tokens} tokens")
+
+        return IndexDocumentResponse(
+            success=True,
+            doc_id=doc_id,
+            chunks_created=document_chunks.total_chunks,
+            chunks_skipped=document_chunks.chunks_skipped,
+            vectors_upserted=vectors_upserted,
+            total_tokens=document_chunks.total_tokens,
+            statistics=document_chunks.get_statistics(),
+            processing_time=round(time.time() - start_time, 2)
+        )
+
+    except Exception as e:
+        logger.error(f"Failed to generate embeddings and store: {e}")
+        return IndexDocumentResponse(
+            success=False,
+            doc_id=doc_id,
+            chunks_created=document_chunks.total_chunks,
+            error_code="STORAGE_ERROR",
+            error=f"Failed to store chunks: {str(e)}",
+            processing_time=round(time.time() - start_time, 2)
+        )
 
 
 # ============================================================================
