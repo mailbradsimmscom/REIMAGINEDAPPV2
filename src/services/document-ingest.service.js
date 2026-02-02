@@ -241,6 +241,15 @@ export async function createDocumentSystemLink({ docId, assetUid, isPrimary }) {
 
 /**
  * Save referenced systems to document_referenced_systems
+ *
+ * Stores ALL detected referenced products from model detection, marking which
+ * ones the user selected. This enables DIP to compute exclude lists:
+ *   exclude_refs = detected_refs (user_selected=false)
+ *
+ * @param {string} docId - Document ID
+ * @param {string[]} referencedSelections - Models the user selected as installed
+ * @param {Array} referencedProducts - ALL models detected by model detection
+ * @param {string} filename - Document filename for evidence
  */
 export async function saveReferencedSystems({
   docId,
@@ -252,17 +261,28 @@ export async function saveReferencedSystems({
   const errors = [];
   const saved = [];
 
-  const refsToSave = referencedSelections ||
-    (referencedProducts || []).map(rp => typeof rp === 'string' ? rp : rp.model).filter(Boolean);
+  // Normalize referencedSelections to an array of model strings
+  const userSelections = new Set(
+    (referencedSelections || []).map(r => typeof r === 'string' ? r : r.model).filter(Boolean)
+  );
 
-  if (!refsToSave || refsToSave.length === 0) {
-    return { success: true, data: { saved: [], count: 0 } };
+  // Get ALL detected refs from referencedProducts
+  const allDetectedRefs = (referencedProducts || [])
+    .map(rp => typeof rp === 'string' ? rp : rp.model)
+    .filter(Boolean);
+
+  // If no detected refs, nothing to save
+  if (allDetectedRefs.length === 0) {
+    return { success: true, data: { saved: [], count: 0, userSelected: 0 } };
   }
 
-  for (const refModel of refsToSave) {
+  // Save ALL detected refs, marking user_selected appropriately
+  for (const refModel of allDetectedRefs) {
     const refData = (referencedProducts || []).find(rp =>
       (typeof rp === 'string' ? rp : rp.model) === refModel
     );
+
+    const isUserSelected = userSelections.has(refModel);
 
     const record = {
       doc_id: docId,
@@ -270,7 +290,8 @@ export async function saveReferencedSystems({
       source: 'detected',
       raw_model: typeof refData === 'object' ? refData.model : refModel,
       raw_manufacturer: typeof refData === 'object' ? refData.manufacturer : null,
-      evidence: `Referenced in ${filename}`
+      evidence: `Referenced in ${filename}`,
+      user_selected: isUserSelected
     };
 
     try {
@@ -284,7 +305,7 @@ export async function saveReferencedSystems({
           error: parseDbError(refError, `Failed to save reference: ${refModel}`)
         });
       } else {
-        saved.push(refModel);
+        saved.push({ model: refModel, user_selected: isUserSelected });
       }
     } catch (error) {
       errors.push({
@@ -293,6 +314,8 @@ export async function saveReferencedSystems({
       });
     }
   }
+
+  const userSelectedCount = saved.filter(s => s.user_selected).length;
 
   if (errors.length > 0 && saved.length === 0) {
     return {
@@ -309,14 +332,22 @@ export async function saveReferencedSystems({
   if (errors.length > 0) {
     return {
       success: true,
-      data: { saved, count: saved.length },
+      data: {
+        saved: saved.map(s => s.model),
+        count: saved.length,
+        userSelected: userSelectedCount
+      },
       warnings: errors
     };
   }
 
   return {
     success: true,
-    data: { saved, count: saved.length }
+    data: {
+      saved: saved.map(s => s.model),
+      count: saved.length,
+      userSelected: userSelectedCount
+    }
   };
 }
 

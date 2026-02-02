@@ -77,7 +77,8 @@ export function createChatProxyService({
       system_details_fetch_ms: 0,
       equipment_context_update_ms: 0,
       python_call_ms: 0,
-      response_format_ms: 0
+      response_format_ms: 0,
+      retrieval_scope_ms: 0  // v5: computed in Python, extracted for UI parity
     };
 
   try {
@@ -914,6 +915,12 @@ export function createChatProxyService({
 
     // Build result object matching previous format
     const step7Start = Date.now();
+
+    // Extract retrieval_scope_ms from Python detailed_metrics for UI parity
+    if (pythonResult.detailed_metrics?.timing_summary?.breakdown?.retrieval_scope_ms) {
+      nodeTiming.retrieval_scope_ms = pythonResult.detailed_metrics.timing_summary.breakdown.retrieval_scope_ms;
+    }
+
     const result = {
       response: pythonResult.response,
       thread_id: pythonResult.thread_id || threadId,  // Include thread_id from Python or use normalized one

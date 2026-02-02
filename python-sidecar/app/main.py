@@ -31,8 +31,13 @@ from .models import (
     DIPRequest, DIPResponse, DIPPacketRequest, DIPPacketResponse, DIPGenerateRequest,
     ModelDetectionRequest, ModelDetectionResponse, ReferencedProduct, LlamaParseResponse,
     VisionAnalyzeRequest, VisionAnalyzeResponse, VisionAnalysisPath,
-    VisionCropRequest, VisionCropResponse, VisionAsset
+    VisionCropRequest, VisionCropResponse, VisionAsset,
+    DIPRunRequest, DIPRunResponse, DIPModeResult
 )
+import asyncio
+import anthropic
+import time
+import random
 from .pinecone_client import pinecone_client
 from .dip_processor import DIPProcessor
 import re
@@ -1166,6 +1171,700 @@ async def _write_dip_artifacts(url, headers, doc_id, dip_result):
 #         raise HTTPException(status_code=500, detail=str(e))
 
 # ============================================================================
+# V5 DIP EXTRACTION ENDPOINT - Streaming + Parallelism + Prompt Caching
+# ============================================================================
+
+# DIP mode to database table mapping
+DIP_MODE_TABLE_MAP = {
+    'specs': 'spec_suggestions',
+    'troubleshooting': 'troubleshooting',
+    'procedures': 'playbook_hints',
+    'golden_rules': 'golden_tests',
+    'intent_router': 'intent_router'
+}
+
+# DIP extraction prompts for each mode
+DIP_MODE_PROMPTS = {
+    'specs': """Extract all technical specifications from this document.
+For each specification, extract:
+- hint_type: category (voltage, pressure, temperature, flow_rate, dimension, weight, capacity, etc.)
+- value: the numeric or text value
+- unit: measurement unit if applicable
+- context: surrounding text that explains this spec
+- page: page number if identifiable
+
+Return JSON array: [{"hint_type": "...", "value": "...", "unit": "...", "context": "...", "page": null}]
+Only include clearly stated specifications. Maximum 50 items.""",
+
+    'troubleshooting': """Extract all troubleshooting information from this document.
+For each issue, extract:
+- symptom: the problem description
+- cause: likely cause(s)
+- solution: step-by-step fix
+- error_code: any error codes mentioned
+- page: page number if identifiable
+
+Return JSON array: [{"symptom": "...", "cause": "...", "solution": "...", "error_code": null, "page": null}]
+Only include actual troubleshooting content. Maximum 50 items.""",
+
+    'procedures': """Extract all maintenance, operation, and installation procedures from this document.
+For each procedure, extract:
+- title: procedure name
+- preconditions: what must be true before starting (array)
+- steps: ordered list of steps (array)
+- expected_outcome: what should happen when done correctly
+- models: which models this applies to (array)
+- error_codes: related error codes (array)
+
+Return JSON array: [{"title": "...", "preconditions": [...], "steps": [...], "expected_outcome": "...", "models": [...], "error_codes": [...]}]
+Maximum 25 procedures.""",
+
+    'golden_rules': """Extract critical safety rules, warnings, and best practices from this document.
+For each rule, extract:
+- test_name: short name for the rule
+- test_type: category (safety, warning, caution, best_practice)
+- description: full description of the rule
+- steps: verification steps if applicable (array)
+- expected_result: what compliance looks like
+
+Return JSON array: [{"test_name": "...", "test_type": "...", "description": "...", "steps": [...], "expected_result": "..."}]
+Maximum 30 items.""",
+
+    'intent_router': """Extract common questions and intents that users might have about this equipment.
+For each intent, extract:
+- intent_type: category (how_to, troubleshooting, specification, safety, maintenance)
+- prompt: example question a user might ask
+- context: what topic/section this relates to
+
+Return JSON array: [{"intent_type": "...", "prompt": "...", "context": "..."}]
+Focus on practical questions users would ask. Maximum 40 items."""
+}
+
+# Max document chars for prompt
+MAX_MARKDOWN_CHARS = 300000
+
+# Retry configuration
+MAX_RETRIES = 3
+RETRY_BASE_DELAY = 1.0  # seconds
+
+
+async def _fetch_document_markdown(doc_id: str, supabase_url: str, supabase_key: str) -> Optional[str]:
+    """Fetch document content from llamaparse_raw.json and convert to markdown."""
+    url = supabase_url.rstrip("/")
+    headers = {
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}"
+    }
+
+    json_path = f"manuals/{doc_id}/llamaparse_raw.json"
+
+    try:
+        response = requests.get(
+            f"{url}/storage/v1/object/documents/{json_path}",
+            headers=headers
+        )
+
+        if response.status_code != 200:
+            logger.error(f"Failed to fetch llamaparse_raw.json: {response.status_code}")
+            return None
+
+        pages_data = response.json()
+
+        # Build markdown from pages
+        markdown_parts = []
+        for page in pages_data:
+            page_num = page.get('page', 0)
+            md = page.get('md', '')
+            if md:
+                markdown_parts.append(f"## Page {page_num}\n{md}")
+
+        full_markdown = "\n\n".join(markdown_parts)
+
+        # Truncate if too long
+        if len(full_markdown) > MAX_MARKDOWN_CHARS:
+            full_markdown = full_markdown[:MAX_MARKDOWN_CHARS]
+            logger.info(f"Truncated document to {MAX_MARKDOWN_CHARS} chars")
+
+        return full_markdown
+
+    except Exception as e:
+        logger.error(f"Error fetching document markdown: {e}")
+        return None
+
+
+async def _run_dip_mode_with_cache(
+    mode: str,
+    cached_prefix: list,
+    client: anthropic.AsyncAnthropic,
+    model: str,
+    doc_id: str,
+    selected_models: list,
+    supabase_url: str,
+    supabase_key: str
+) -> DIPModeResult:
+    """Run a single DIP mode with prompt caching and retry logic."""
+    start_time = time.time()
+
+    mode_prompt = DIP_MODE_PROMPTS.get(mode, "")
+    if not mode_prompt:
+        return DIPModeResult(
+            mode=mode,
+            success=False,
+            error="Unknown DIP mode",
+            error_code="UNKNOWN_MODE"
+        )
+
+    # Build messages with cached prefix + mode-specific prompt
+    messages = [
+        {
+            "role": "user",
+            "content": cached_prefix + [
+                {"type": "text", "text": f"\n\n{mode_prompt}"}
+            ]
+        }
+    ]
+
+    last_error = None
+    for attempt in range(MAX_RETRIES):
+        try:
+            response = await client.messages.create(
+                model=model,
+                max_tokens=8000,
+                messages=messages
+            )
+
+            # Parse response
+            response_text = response.content[0].text if response.content else ""
+
+            # Extract JSON from response
+            try:
+                # Try to find JSON array in response
+                json_match = re.search(r'\[[\s\S]*\]', response_text)
+                if json_match:
+                    extracted_data = json.loads(json_match.group())
+                else:
+                    extracted_data = []
+            except json.JSONDecodeError:
+                extracted_data = []
+                logger.warning(f"Failed to parse JSON from {mode} response")
+
+            # Insert to database
+            inserted_count = 0
+            if extracted_data:
+                inserted_count = await _insert_dip_results(
+                    mode=mode,
+                    doc_id=doc_id,
+                    data=extracted_data,
+                    selected_models=selected_models,
+                    supabase_url=supabase_url,
+                    supabase_key=supabase_key
+                )
+
+            duration_ms = int((time.time() - start_time) * 1000)
+
+            # Extract cache metrics if available
+            cache_read = 0
+            cache_create = 0
+            if hasattr(response, 'usage'):
+                cache_read = getattr(response.usage, 'cache_read_input_tokens', 0) or 0
+                cache_create = getattr(response.usage, 'cache_creation_input_tokens', 0) or 0
+                if cache_read > 0 or cache_create > 0:
+                    logger.info(f"DIP {mode} cache metrics: read={cache_read}, create={cache_create}")
+
+            return DIPModeResult(
+                mode=mode,
+                success=True,
+                count=len(extracted_data),
+                inserted=inserted_count,
+                duration_ms=duration_ms,
+                cache_creation_input_tokens=cache_create,
+                cache_read_input_tokens=cache_read
+            )
+
+        except anthropic.RateLimitError as e:
+            last_error = e
+            delay = RETRY_BASE_DELAY * (2 ** attempt) + random.uniform(0, 1)
+            logger.warning(f"DIP {mode} rate limited (attempt {attempt + 1}), retrying in {delay:.1f}s")
+            await asyncio.sleep(delay)
+
+        except anthropic.APIStatusError as e:
+            if e.status_code in [529, 503]:  # Overloaded
+                last_error = e
+                delay = RETRY_BASE_DELAY * (2 ** attempt) + random.uniform(0, 1)
+                logger.warning(f"DIP {mode} API overloaded (attempt {attempt + 1}), retrying in {delay:.1f}s")
+                await asyncio.sleep(delay)
+            else:
+                return DIPModeResult(
+                    mode=mode,
+                    success=False,
+                    error=str(e),
+                    error_code="API_ERROR",
+                    duration_ms=int((time.time() - start_time) * 1000)
+                )
+
+        except asyncio.TimeoutError:
+            last_error = "Timeout"
+            delay = RETRY_BASE_DELAY * (2 ** attempt) + random.uniform(0, 1)
+            logger.warning(f"DIP {mode} timeout (attempt {attempt + 1}), retrying in {delay:.1f}s")
+            await asyncio.sleep(delay)
+
+        except Exception as e:
+            return DIPModeResult(
+                mode=mode,
+                success=False,
+                error=str(e),
+                error_code="EXTRACTION_ERROR",
+                duration_ms=int((time.time() - start_time) * 1000)
+            )
+
+    # All retries exhausted
+    return DIPModeResult(
+        mode=mode,
+        success=False,
+        error=f"Failed after {MAX_RETRIES} retries: {last_error}",
+        error_code="RETRY_EXHAUSTED",
+        duration_ms=int((time.time() - start_time) * 1000)
+    )
+
+
+async def _insert_dip_results(
+    mode: str,
+    doc_id: str,
+    data: list,
+    selected_models: list,
+    supabase_url: str,
+    supabase_key: str
+) -> int:
+    """Insert extracted DIP data into the appropriate database table."""
+    table_name = DIP_MODE_TABLE_MAP.get(mode)
+    if not table_name:
+        return 0
+
+    url = supabase_url.rstrip("/")
+    headers = {
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+    }
+
+    # Transform data for each table's schema
+    rows = []
+    for item in data:
+        row = {"doc_id": doc_id}
+
+        if mode == 'specs':
+            row.update({
+                "hint_type": item.get("hint_type", "unknown"),
+                "value": str(item.get("value", "")),
+                "unit": item.get("unit"),
+                "context": item.get("context"),
+                "page": item.get("page"),
+                "confidence": 0.8
+            })
+        elif mode == 'troubleshooting':
+            row.update({
+                "symptom": item.get("symptom", ""),
+                "cause": item.get("cause", ""),
+                "solution": item.get("solution", ""),
+                "error_code": item.get("error_code"),
+                "page": item.get("page"),
+                "applies_to_models": selected_models
+            })
+        elif mode == 'procedures':
+            row.update({
+                "title": item.get("title", ""),
+                "preconditions": item.get("preconditions", []),
+                "steps": item.get("steps", []),
+                "expected_outcome": item.get("expected_outcome", ""),
+                "models": item.get("models", selected_models),
+                "error_codes": item.get("error_codes", []),
+                "confidence": 0.9
+            })
+        elif mode == 'golden_rules':
+            row.update({
+                "test_name": item.get("test_name", ""),
+                "test_type": item.get("test_type", "best_practice"),
+                "description": item.get("description", ""),
+                "steps": item.get("steps", []),
+                "expected_result": item.get("expected_result", ""),
+                "confidence": 0.85
+            })
+        elif mode == 'intent_router':
+            row.update({
+                "intent_type": item.get("intent_type", "how_to"),
+                "prompt": item.get("prompt", ""),
+                "context": item.get("context", ""),
+                "confidence": 0.8
+            })
+
+        rows.append(row)
+
+    if not rows:
+        return 0
+
+    try:
+        response = requests.post(
+            f"{url}/rest/v1/{table_name}",
+            headers=headers,
+            json=rows
+        )
+
+        if response.status_code in [200, 201]:
+            logger.info(f"Inserted {len(rows)} rows into {table_name}")
+            return len(rows)
+        else:
+            logger.error(f"Failed to insert into {table_name}: {response.status_code} {response.text}")
+            return 0
+
+    except Exception as e:
+        logger.error(f"Error inserting into {table_name}: {e}")
+        return 0
+
+
+async def _delete_existing_dip_data(doc_id: str, modes: list, supabase_url: str, supabase_key: str):
+    """Delete existing DIP data for a document before rerun."""
+    url = supabase_url.rstrip("/")
+    headers = {
+        "apikey": supabase_key,
+        "Authorization": f"Bearer {supabase_key}"
+    }
+
+    for mode in modes:
+        table_name = DIP_MODE_TABLE_MAP.get(mode)
+        if table_name:
+            try:
+                response = requests.delete(
+                    f"{url}/rest/v1/{table_name}?doc_id=eq.{doc_id}",
+                    headers=headers
+                )
+                if response.status_code in [200, 204]:
+                    logger.info(f"Deleted existing {mode} data for {doc_id}")
+            except Exception as e:
+                logger.warning(f"Failed to delete {mode} data: {e}")
+
+
+async def _dip_run_stream_generator(request: DIPRunRequest):
+    """SSE generator for streaming DIP extraction progress."""
+    start_time = time.time()
+    doc_id = request.doc_id
+    modes = request.modes
+
+    # Get credentials
+    supabase_url = os.getenv('SUPABASE_URL')
+    supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-sonnet-4-20250514')
+
+    if not all([supabase_url, supabase_key, anthropic_key]):
+        yield f"event: run_failed\ndata: {json.dumps({'error_code': 'CONFIG_ERROR', 'error': 'Missing required configuration'})}\n\n"
+        return
+
+    # Initialize async Anthropic client
+    client = anthropic.AsyncAnthropic(api_key=anthropic_key)
+
+    # Emit run_started
+    yield f"event: run_started\ndata: {json.dumps({'doc_id': doc_id, 'modes': modes, 'parallelism': 2, 'cache_control': 'ephemeral', 'warmup_mode': 'intent_router'})}\n\n"
+
+    try:
+        # Fetch document content
+        markdown = await _fetch_document_markdown(doc_id, supabase_url, supabase_key)
+        if not markdown:
+            yield f"event: run_failed\ndata: {json.dumps({'error_code': 'DOCUMENT_NOT_FOUND', 'error': 'Failed to fetch document content'})}\n\n"
+            return
+
+        # Delete existing data if force_rerun
+        if request.force_rerun:
+            await _delete_existing_dip_data(doc_id, modes, supabase_url, supabase_key)
+
+        # Build context section
+        context_section = f"""You are analyzing a technical manual for marine equipment.
+Document ID: {doc_id}
+Models covered: {', '.join(request.models_covered)}
+User's selected models: {', '.join(request.selected_models)}
+
+Extract information that is relevant to the selected models. If content applies to all models, include it."""
+
+        # Build cached prefix (context + document)
+        cached_prefix = [
+            {
+                "type": "text",
+                "text": context_section + f"\n\nDOCUMENT CONTENT:\n{markdown}",
+                "cache_control": {"type": "ephemeral"}
+            }
+        ]
+
+        # Organize modes: warmup first, then others
+        warmup_mode = 'intent_router' if 'intent_router' in modes else modes[0]
+        other_modes = [m for m in modes if m != warmup_mode]
+
+        results = []
+        modes_completed = []
+        modes_failed = []
+        total_inserted = 0
+        total_extracted = 0
+        cache_creation_tokens = 0
+        cache_read_tokens = 0
+
+        # Wave 0: Warmup (creates cache)
+        yield f"event: mode_started\ndata: {json.dumps({'mode': warmup_mode})}\n\n"
+
+        warmup_result = await _run_dip_mode_with_cache(
+            mode=warmup_mode,
+            cached_prefix=cached_prefix,
+            client=client,
+            model=anthropic_model,
+            doc_id=doc_id,
+            selected_models=request.selected_models,
+            supabase_url=supabase_url,
+            supabase_key=supabase_key
+        )
+
+        results.append(warmup_result)
+
+        # Accumulate cache metrics from warmup
+        cache_creation_tokens += warmup_result.cache_creation_input_tokens
+        cache_read_tokens += warmup_result.cache_read_input_tokens
+
+        if warmup_result.success:
+            modes_completed.append(warmup_mode)
+            total_inserted += warmup_result.inserted
+            total_extracted += warmup_result.count
+            yield f"event: mode_completed\ndata: {json.dumps({'mode': warmup_mode, 'inserted': warmup_result.inserted, 'count': warmup_result.count, 'duration_ms': warmup_result.duration_ms})}\n\n"
+            # Emit cache metrics after warmup (cache should be created here)
+            if cache_creation_tokens > 0:
+                yield f"event: run_cache_metrics\ndata: {json.dumps({'cache_creation_input_tokens': cache_creation_tokens, 'cache_read_input_tokens': cache_read_tokens})}\n\n"
+        else:
+            modes_failed.append(warmup_mode)
+            yield f"event: mode_failed\ndata: {json.dumps({'mode': warmup_mode, 'error_code': warmup_result.error_code, 'error': warmup_result.error})}\n\n"
+            yield f"event: warmup_failed_continuing\ndata: {json.dumps({'error_code': warmup_result.error_code, 'error': warmup_result.error, 'retries_attempted': MAX_RETRIES, 'caching_still_attempted': True})}\n\n"
+
+        # Wave 1 & 2: Run remaining modes in parallel batches of 2
+        for i in range(0, len(other_modes), 2):
+            batch = other_modes[i:i+2]
+
+            # Emit mode_started for batch
+            for mode in batch:
+                yield f"event: mode_started\ndata: {json.dumps({'mode': mode})}\n\n"
+
+            # Run batch concurrently
+            tasks = [
+                _run_dip_mode_with_cache(
+                    mode=mode,
+                    cached_prefix=cached_prefix,
+                    client=client,
+                    model=anthropic_model,
+                    doc_id=doc_id,
+                    selected_models=request.selected_models,
+                    supabase_url=supabase_url,
+                    supabase_key=supabase_key
+                )
+                for mode in batch
+            ]
+
+            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            # Process batch results
+            for mode, result in zip(batch, batch_results):
+                if isinstance(result, Exception):
+                    result = DIPModeResult(
+                        mode=mode,
+                        success=False,
+                        error=str(result),
+                        error_code="TASK_ERROR"
+                    )
+
+                results.append(result)
+
+                # Accumulate cache metrics
+                cache_creation_tokens += result.cache_creation_input_tokens
+                cache_read_tokens += result.cache_read_input_tokens
+
+                if result.success:
+                    modes_completed.append(mode)
+                    total_inserted += result.inserted
+                    total_extracted += result.count
+                    yield f"event: mode_completed\ndata: {json.dumps({'mode': mode, 'inserted': result.inserted, 'count': result.count, 'duration_ms': result.duration_ms})}\n\n"
+                else:
+                    modes_failed.append(mode)
+                    yield f"event: mode_failed\ndata: {json.dumps({'mode': mode, 'error_code': result.error_code, 'error': result.error})}\n\n"
+
+        # Emit final cache metrics (total across all modes)
+        if cache_creation_tokens > 0 or cache_read_tokens > 0:
+            yield f"event: run_cache_metrics\ndata: {json.dumps({'cache_creation_input_tokens': cache_creation_tokens, 'cache_read_input_tokens': cache_read_tokens})}\n\n"
+
+        # Emit run_completed
+        processing_time = time.time() - start_time
+        yield f"event: run_completed\ndata: {json.dumps({'modes_completed': modes_completed, 'modes_failed': modes_failed, 'total_inserted': total_inserted, 'total_extracted': total_extracted, 'processing_time': round(processing_time, 2), 'cache_creation_input_tokens': cache_creation_tokens, 'cache_read_input_tokens': cache_read_tokens})}\n\n"
+
+    except asyncio.CancelledError:
+        logger.info(f"DIP run cancelled for {doc_id}")
+        yield f"event: run_failed\ndata: {json.dumps({'error_code': 'CANCELLED', 'error': 'Run was cancelled'})}\n\n"
+        raise
+
+    except Exception as e:
+        logger.error(f"DIP run failed for {doc_id}: {e}")
+        yield f"event: run_failed\ndata: {json.dumps({'error_code': 'RUN_ERROR', 'error': str(e)})}\n\n"
+
+
+@app.post("/v1/dip/run")
+async def run_dip_extraction(request: DIPRunRequest):
+    """
+    Run v5 DIP extraction with streaming support.
+
+    If stream=true: Returns SSE stream with per-mode progress events.
+    If stream=false: Returns JSON DIPRunResponse after all modes complete.
+
+    Features:
+    - Prompt caching (cache_control: ephemeral) for efficiency
+    - Warmup mode (intent_router) to create cache
+    - Parallelism=2 for remaining modes
+    - Retry/backoff for 429/529/timeouts
+    - 30-minute timeout budget
+    """
+    logger.info(f"DIP run request: doc_id={request.doc_id}, modes={request.modes}, stream={request.stream}")
+
+    if request.stream:
+        return StreamingResponse(
+            _dip_run_stream_generator(request),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no"
+            }
+        )
+
+    # Non-streaming: collect all results and return JSON
+    start_time = time.time()
+    results = []
+    modes_completed = []
+    modes_failed = []
+    total_inserted = 0
+    total_extracted = 0
+
+    # Get credentials
+    supabase_url = os.getenv('SUPABASE_URL')
+    supabase_key = os.getenv('SUPABASE_SERVICE_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    anthropic_model = os.getenv('ANTHROPIC_MODEL', 'claude-sonnet-4-20250514')
+
+    if not all([supabase_url, supabase_key, anthropic_key]):
+        return DIPRunResponse(
+            success=False,
+            doc_id=request.doc_id,
+            modes_requested=request.modes,
+            error="Missing required configuration",
+            error_code="CONFIG_ERROR"
+        )
+
+    # Fetch document
+    markdown = await _fetch_document_markdown(request.doc_id, supabase_url, supabase_key)
+    if not markdown:
+        return DIPRunResponse(
+            success=False,
+            doc_id=request.doc_id,
+            modes_requested=request.modes,
+            error="Failed to fetch document content",
+            error_code="DOCUMENT_NOT_FOUND"
+        )
+
+    # Delete existing if force_rerun
+    if request.force_rerun:
+        await _delete_existing_dip_data(request.doc_id, request.modes, supabase_url, supabase_key)
+
+    # Initialize client and build cached prefix
+    client = anthropic.AsyncAnthropic(api_key=anthropic_key)
+
+    context_section = f"""You are analyzing a technical manual for marine equipment.
+Document ID: {request.doc_id}
+Models covered: {', '.join(request.models_covered)}
+User's selected models: {', '.join(request.selected_models)}
+
+Extract information that is relevant to the selected models. If content applies to all models, include it."""
+
+    cached_prefix = [
+        {
+            "type": "text",
+            "text": context_section + f"\n\nDOCUMENT CONTENT:\n{markdown}",
+            "cache_control": {"type": "ephemeral"}
+        }
+    ]
+
+    # Run modes: warmup first, then parallel
+    warmup_mode = 'intent_router' if 'intent_router' in request.modes else request.modes[0]
+    other_modes = [m for m in request.modes if m != warmup_mode]
+
+    # Warmup
+    warmup_result = await _run_dip_mode_with_cache(
+        mode=warmup_mode,
+        cached_prefix=cached_prefix,
+        client=client,
+        model=anthropic_model,
+        doc_id=request.doc_id,
+        selected_models=request.selected_models,
+        supabase_url=supabase_url,
+        supabase_key=supabase_key
+    )
+    results.append(warmup_result)
+    if warmup_result.success:
+        modes_completed.append(warmup_mode)
+        total_inserted += warmup_result.inserted
+        total_extracted += warmup_result.count
+    else:
+        modes_failed.append(warmup_mode)
+
+    # Parallel execution of remaining modes
+    for i in range(0, len(other_modes), 2):
+        batch = other_modes[i:i+2]
+        tasks = [
+            _run_dip_mode_with_cache(
+                mode=mode,
+                cached_prefix=cached_prefix,
+                client=client,
+                model=anthropic_model,
+                doc_id=request.doc_id,
+                selected_models=request.selected_models,
+                supabase_url=supabase_url,
+                supabase_key=supabase_key
+            )
+            for mode in batch
+        ]
+
+        batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for mode, result in zip(batch, batch_results):
+            if isinstance(result, Exception):
+                result = DIPModeResult(
+                    mode=mode,
+                    success=False,
+                    error=str(result),
+                    error_code="TASK_ERROR"
+                )
+            results.append(result)
+            if result.success:
+                modes_completed.append(mode)
+                total_inserted += result.inserted
+                total_extracted += result.count
+            else:
+                modes_failed.append(mode)
+
+    processing_time = time.time() - start_time
+
+    return DIPRunResponse(
+        success=len(modes_failed) == 0,
+        doc_id=request.doc_id,
+        modes_requested=request.modes,
+        modes_completed=modes_completed,
+        modes_failed=modes_failed,
+        results=results,
+        total_extracted=total_extracted,
+        total_inserted=total_inserted,
+        processing_time=round(processing_time, 2)
+    )
+
+
+# ============================================================================
 # CHAT ENDPOINTS - LangGraph Integration with DIP Tables
 # ============================================================================
 
@@ -1599,28 +2298,28 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
             matching_refs = set(all_ref) & set(all_referenced)
             if matching_refs:
                 # Page is about a referenced system the user selected - KEEP
-                # Must set applies_to_models to user's selected primaries (DB constraint)
+                # Use models_covered (doc-universal) not user selection for storage (Decision B2)
                 attribution_warnings.append('APPLIES_TO_DEFAULTED_FROM_REFERENCED_ONLY_PAGE')
-                user_models_list = list(user_models) if user_models else []
+                attribution_warnings.append('MODEL_ATTRIBUTION_DEFAULTED')
                 return {
-                    'is_universal': True,  # Trivially universal for this user's selection
-                    'applies_to_models': user_models_list,
+                    'is_universal': True,
+                    'applies_to_models': all_models.copy() if isinstance(all_models, list) else list(all_models),
                     'referenced_systems': list(matching_refs),
                     'confidence': 'medium',
                     'attribution_warnings': attribution_warnings,
-                    'evidence': f"Referenced system page: {list(matching_refs)} (applies_to defaulted to user selection)"
+                    'evidence': f"Referenced system page: {list(matching_refs)} (applies_to defaulted to models_covered)"
                 }
-            # No primary models AND no matching referenced systems - skip
+            # No primary models AND no matching referenced systems
+            # Decision A: Keep as doc-universal (applies to all models_covered)
             attribution_warnings.append('MODEL_ATTRIBUTION_DEFAULTED')
             attribution_warnings.append('MODEL_CONFIDENCE_LOW')
             return {
-                'is_universal': False,
-                'applies_to_models': [],
+                'is_universal': True,
+                'applies_to_models': all_models.copy() if isinstance(all_models, list) else list(all_models),
                 'referenced_systems': all_ref,
                 'confidence': 'low',
                 'attribution_warnings': attribution_warnings,
-                'evidence': "No specific models mentioned - skipping (unknown attribution)",
-                'skip_reason': 'unknown_attribution'
+                'evidence': "No models mentioned; defaulted to doc-universal (models_covered)"
             }
         else:
             return {
@@ -1634,9 +2333,8 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
 
     def should_keep_for_user(model_info, user_models, user_referenced):
         """Decide if figure is relevant to user's selection."""
-        # B2: Skip pages with unknown attribution
-        if model_info.get('skip_reason') == 'unknown_attribution':
-            return False, "skipped - unknown attribution (no models detected)"
+        # Note: unknown_attribution skip removed per Decision A - no-model pages
+        # with diagrams are now kept as doc-universal
         if model_info['is_universal']:
             return True, "universal"
         for um in user_models:

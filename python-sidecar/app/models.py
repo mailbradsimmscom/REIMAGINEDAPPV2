@@ -305,3 +305,80 @@ class VisionCropResponse(BaseModel):
     warnings: List[Dict[str, Any]] = Field(default_factory=list)
     processing_time: float = Field(default=0.0)
     error: Optional[str] = None
+
+
+# ============================================================================
+# v5 Index Document Models (Chunk → Embed → Pinecone)
+# ============================================================================
+
+class IndexDocumentRequest(BaseModel):
+    """Request for v5 indexing: chunk document and store in Pinecone with model tags"""
+    doc_id: str = Field(..., description="Document ID (required to fetch llamaparse_raw.json)")
+    models_covered: List[str] = Field(..., description="All primary models the manual covers (from documents table)")
+    selected_models: List[str] = Field(..., description="User's installed primary model(s)")
+    referenced_selections: List[str] = Field(default_factory=list, description="User's selected referenced systems (accessories)")
+    filename: str = Field(default="document.pdf", description="Original filename for metadata")
+    force_reindex: bool = Field(default=False, description="If true, delete existing chunks before indexing")
+
+
+class IndexDocumentResponse(BaseModel):
+    """Response from v5 indexing"""
+    success: bool
+    doc_id: str
+    chunks_created: int = Field(default=0, description="Number of chunks created")
+    chunks_skipped: int = Field(default=0, description="Chunks skipped due to unknown attribution")
+    vectors_upserted: int = Field(default=0, description="Vectors upserted to Pinecone")
+    total_tokens: int = Field(default=0, description="Total tokens processed")
+    statistics: Dict[str, Any] = Field(default_factory=dict, description="Chunking statistics")
+    processing_time: float = Field(default=0.0)
+    error_code: Optional[str] = Field(default=None, description="Error code: MODELS_COVERED_MISSING, LLAMAPARSE_NOT_FOUND, etc.")
+    error: Optional[str] = Field(default=None, description="Human-readable error message")
+
+
+# ============================================================================
+# v5 DIP Run Models (Extract specs, procedures, troubleshooting, etc.)
+# ============================================================================
+
+class DIPRunRequest(BaseModel):
+    """Request for v5 DIP extraction: extract structured data from document"""
+    doc_id: str = Field(..., description="Document ID (required to fetch llamaparse_raw.json)")
+    models_covered: List[str] = Field(..., description="All primary models the manual covers")
+    selected_models: List[str] = Field(..., description="User's installed primary model(s)")
+    referenced_selections: List[str] = Field(default_factory=list, description="User's selected referenced systems")
+    exclude_models: List[str] = Field(default_factory=list, description="Pre-computed exclude list (optional, will compute if empty)")
+    modes: List[str] = Field(
+        default_factory=lambda: ["specs", "troubleshooting", "procedures", "golden_rules", "intent_router"],
+        description="Which DIP extractions to run: specs, troubleshooting, procedures, golden_rules, intent_router"
+    )
+    force_rerun: bool = Field(default=False, description="If true, delete existing DIP rows for this doc before inserting")
+    stream: bool = Field(default=False, description="If true, return SSE stream instead of JSON response")
+
+
+class DIPModeResult(BaseModel):
+    """Result for a single DIP mode"""
+    mode: str
+    success: bool
+    count: int = Field(default=0, description="Number of records extracted")
+    inserted: int = Field(default=0, description="Number of records inserted to DB")
+    duration_ms: int = Field(default=0, description="Time taken for this mode in milliseconds")
+    error: Optional[str] = None
+    error_code: Optional[str] = None
+    cache_creation_input_tokens: int = Field(default=0, description="Tokens used to create cache")
+    cache_read_input_tokens: int = Field(default=0, description="Tokens read from cache")
+
+
+class DIPRunResponse(BaseModel):
+    """Response from v5 DIP extraction"""
+    success: bool
+    doc_id: str
+    modes_requested: List[str] = Field(default_factory=list)
+    modes_completed: List[str] = Field(default_factory=list)
+    modes_failed: List[str] = Field(default_factory=list)
+    results: List[DIPModeResult] = Field(default_factory=list, description="Per-mode results")
+    total_extracted: int = Field(default=0, description="Total records extracted across all modes")
+    total_inserted: int = Field(default=0, description="Total records inserted to DB")
+    processing_time: float = Field(default=0.0)
+    cache_creation_input_tokens: int = Field(default=0, description="Tokens used to create cache (warm-up call)")
+    cache_read_input_tokens: int = Field(default=0, description="Tokens read from cache (subsequent calls)")
+    error_code: Optional[str] = None
+    error: Optional[str] = None

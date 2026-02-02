@@ -13,6 +13,10 @@ import {
   generateDocId
 } from '../../services/document-ingest.service.js';
 import { runVisionPipeline, getDocumentAssets, getDocumentAssetSummary } from '../../services/vision-pipeline.service.js';
+import { runV5Indexing } from '../../services/v5-index.service.js';
+import { runV5ColloquialKeywords } from '../../services/v5-colloquial.service.js';
+import { runDipExtraction } from '../../services/v5-dip.service.js';
+import { storeDipRunParams, streamDipExtraction } from '../../services/dip-stream.service.js';
 import { VisionPipelineRequestSchema } from '../../schemas/document.schema.js';
 import { logger } from '../../utils/logger.js';
 import { getSupabaseStorageClient, getSupabaseClient } from '../../repositories/supabaseClient.js';
@@ -575,6 +579,379 @@ router.post('/upload-storage', async (req, res) => {
       }
     });
   }
+});
+
+/**
+ * POST /admin/api/documents/:docId/index
+ * v5 Index: Chunk document and store in Pinecone with model tags
+ *
+ * Body:
+ * - selected_models: string[] (required) - User's installed primary model(s)
+ * - referenced_selections: string[] (optional) - User's selected referenced systems
+ * - force_reindex: boolean (optional) - If true, delete existing chunks first
+ * - skip_dip: boolean (optional) - If true, skip DIP extraction (for streaming DIP separately)
+ */
+router.post('/:docId/index', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const {
+      selected_models: selectedModels,
+      referenced_selections: referencedSelections = [],
+      force_reindex: forceReindex = false,
+      asset_uid: assetUid = null,
+      skip_dip: skipDip = false
+    } = req.body;
+
+    // Validate required fields
+    if (!selectedModels || selectedModels.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'selected_models is required and cannot be empty'
+        }
+      });
+    }
+
+    log.info('Starting v5 indexing', {
+      docId,
+      selectedModels,
+      referencedSelections,
+      forceReindex
+    });
+
+    const result = await runV5Indexing({
+      docId,
+      selectedModels,
+      referencedSelections,
+      forceReindex
+    });
+
+    if (!result.success) {
+      log.error('v5 indexing failed', {
+        docId,
+        error: result.error,
+        message: result.error_message
+      });
+
+      return res.status(500).json({
+        success: false,
+        error: {
+          code: result.error || 'INDEXING_FAILED',
+          message: result.error_message || 'Indexing failed'
+        }
+      });
+    }
+
+    log.info('v5 indexing complete', {
+      docId,
+      chunksCreated: result.chunks_created,
+      vectorsUpserted: result.vectors_upserted
+    });
+
+    // Optional: post-indexing colloquial extraction to populate systems.colloquial_keywords.
+    // This depends on Pinecone content and is non-fatal.
+    let colloquial = null;
+    if (assetUid) {
+      const colloquialResult = await runV5ColloquialKeywords({
+        assetUid,
+        docId,
+        selectedModels
+      });
+      colloquial = colloquialResult.success
+        ? { success: true, ...colloquialResult }
+        : { success: false, error: colloquialResult.error, message: colloquialResult.error_message };
+    }
+
+    // Optional: post-indexing DIP extraction (specs, troubleshooting, procedures, etc.)
+    // This is non-fatal - document is still searchable if DIP fails.
+    // Can be skipped with skip_dip=true for streaming DIP separately.
+    let dip = null;
+    if (skipDip) {
+      log.info('Skipping DIP extraction (skip_dip=true)', { docId });
+      dip = { skipped: true };
+    } else {
+      try {
+        log.info('Starting post-index DIP extraction', { docId, selectedModels, referencedSelections });
+        const dipResult = await runDipExtraction({
+          docId,
+          selectedModels,
+          referencedSelections,
+          forceRerun: forceReindex // If reindexing, also rerun DIP
+        });
+        dip = dipResult.success
+          ? {
+              success: true,
+              modes_completed: dipResult.modes_completed,
+              modes_failed: dipResult.modes_failed,
+              results: dipResult.results,
+              total_extracted: dipResult.total_extracted,
+              total_inserted: dipResult.total_inserted,
+              processing_time: dipResult.processing_time
+            }
+          : {
+              success: false,
+              error: dipResult.error_code,
+              message: dipResult.error,
+              modes_completed: dipResult.modes_completed || [],
+              modes_failed: dipResult.modes_failed || [],
+              results: dipResult.results || []
+            };
+      } catch (dipError) {
+        log.error('DIP extraction failed (non-fatal)', { docId, error: dipError.message });
+        dip = { success: false, error: 'DIP_ERROR', message: dipError.message };
+      }
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        doc_id: docId,
+        chunks_created: result.chunks_created,
+        chunks_skipped: result.chunks_skipped,
+        vectors_upserted: result.vectors_upserted,
+        total_tokens: result.total_tokens,
+        statistics: result.statistics,
+        processing_time: result.processing_time,
+        colloquial,
+        dip
+      }
+    });
+
+  } catch (error) {
+    log.error('v5 indexing error', { error: error.message, stack: error.stack });
+
+    return res.status(500).json({
+      success: false,
+      error: {
+        code: 'INDEX_ERROR',
+        message: error.message
+      }
+    });
+  }
+});
+
+/**
+ * POST /admin/api/documents/:docId/dip
+ * v5 DIP: Extract specs, troubleshooting, procedures, golden rules, intent router
+ *
+ * Body:
+ * - selected_models: string[] (required) - User's installed primary model(s)
+ * - referenced_selections: string[] (optional) - User's selected referenced systems
+ * - modes: string[] (optional) - DIP modes to run (default: all)
+ * - force_rerun: boolean (optional) - If true, delete existing DIP rows first
+ */
+router.post('/:docId/dip', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const {
+      selected_models: selectedModels,
+      referenced_selections: referencedSelections = [],
+      modes = ['specs', 'troubleshooting', 'procedures', 'golden_rules', 'intent_router'],
+      force_rerun: forceRerun = false
+    } = req.body;
+
+    // Validate required fields
+    if (!selectedModels || selectedModels.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'selected_models is required and cannot be empty'
+        }
+      });
+    }
+
+    log.info('Starting v5 DIP extraction', {
+      docId,
+      selectedModels,
+      referencedSelections,
+      modes,
+      forceRerun
+    });
+
+    const result = await runDipExtraction({
+      docId,
+      selectedModels,
+      referencedSelections,
+      modes,
+      forceRerun
+    });
+
+    if (!result.success) {
+      log.error('v5 DIP extraction failed', {
+        docId,
+        error: result.error,
+        errorCode: result.error_code
+      });
+
+      return res.status(500).json({
+        success: false,
+        error: {
+          code: result.error_code || 'DIP_FAILED',
+          message: result.error || 'DIP extraction failed'
+        },
+        data: {
+          modes_completed: result.modes_completed || [],
+          modes_failed: result.modes_failed || [],
+          results: result.results || [],
+          total_inserted: result.total_inserted || 0
+        }
+      });
+    }
+
+    log.info('v5 DIP extraction complete', {
+      docId,
+      modesCompleted: result.modes_completed,
+      totalInserted: result.total_inserted
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        doc_id: docId,
+        modes_requested: result.modes_requested,
+        modes_completed: result.modes_completed,
+        modes_failed: result.modes_failed,
+        results: result.results,
+        total_extracted: result.total_extracted,
+        total_inserted: result.total_inserted,
+        processing_time: result.processing_time
+      }
+    });
+
+  } catch (error) {
+    log.error('v5 DIP extraction error', { error: error.message, stack: error.stack });
+
+    return res.status(500).json({
+      success: false,
+      error: {
+        code: 'DIP_ERROR',
+        message: error.message
+      }
+    });
+  }
+});
+
+// ============================================================================
+// DIP Streaming Endpoints (Two-Step: POST start -> GET stream)
+// ============================================================================
+
+/**
+ * POST /admin/api/documents/:docId/dip/run
+ * Start a DIP streaming run - stores params and returns a dip_run_id
+ *
+ * Body: { selected_models, referenced_selections, modes, force_rerun }
+ * Returns: { success: true, data: { dip_run_id } }
+ */
+router.post('/:docId/dip/run', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const {
+      selected_models: selectedModels,
+      referenced_selections: referencedSelections = [],
+      modes = ['specs', 'troubleshooting', 'procedures', 'golden_rules', 'intent_router'],
+      force_rerun: forceRerun = false
+    } = req.body;
+
+    // Validate required fields
+    if (!selectedModels || selectedModels.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'selected_models is required and cannot be empty'
+        }
+      });
+    }
+
+    // Fetch document to get models_covered
+    const supabase = getSupabaseClient();
+    const { data: document, error: docError } = await supabase
+      .from('documents')
+      .select('models_covered')
+      .eq('doc_id', docId)
+      .single();
+
+    if (docError || !document) {
+      log.error('Document not found for DIP stream', { docId, error: docError?.message });
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'DOCUMENT_NOT_FOUND',
+          message: `Document ${docId} not found`
+        }
+      });
+    }
+
+    const modelsCovered = document.models_covered;
+    if (!modelsCovered || modelsCovered.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'MODELS_COVERED_MISSING',
+          message: 'Document is missing models_covered; rerun model detection before DIP.'
+        }
+      });
+    }
+
+    // Store params and get run ID
+    const dipRunId = storeDipRunParams({
+      docId,
+      selectedModels,
+      referencedSelections,
+      modelsCovered,
+      modes,
+      forceRerun
+    });
+
+    log.info('DIP streaming run created', { docId, dipRunId, modes });
+
+    return res.json({
+      success: true,
+      data: {
+        dip_run_id: dipRunId
+      }
+    });
+
+  } catch (error) {
+    log.error('DIP run start error', { error: error.message, stack: error.stack });
+    return res.status(500).json({
+      success: false,
+      error: {
+        code: 'DIP_RUN_START_ERROR',
+        message: error.message
+      }
+    });
+  }
+});
+
+/**
+ * GET /admin/api/documents/dip/stream/:runId
+ * Stream DIP extraction progress via SSE
+ *
+ * Returns: SSE event stream
+ */
+router.get('/dip/stream/:runId', async (req, res) => {
+  const { runId } = req.params;
+
+  log.info('DIP stream requested', { runId });
+
+  // Set SSE headers
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+
+  // Handle client disconnect
+  const abortController = new AbortController();
+  req.on('close', () => {
+    log.info('DIP stream client disconnected', { runId });
+    abortController.abort();
+  });
+
+  // Stream from sidecar
+  await streamDipExtraction(runId, res, abortController.signal);
 });
 
 export default router;

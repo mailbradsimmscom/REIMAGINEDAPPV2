@@ -11,16 +11,21 @@
  *   node scripts/reset-test-upload.cjs --asset-uid=engine-yanmar
  *   node scripts/reset-test-upload.cjs --all  (clears ALL test data)
  *
- * What gets cleared:
- *   - jobs table (test jobs)
- *   - documents table
- *   - document_chunks table
- *   - staging_* DIP tables
+ * What gets cleared (--all):
+ *   - document_chunks
+ *   - Production DIP tables: spec_suggestions, playbook_hints, golden_tests, intent_router, troubleshooting
+ *   - Staging DIP tables: staging_*
+ *   - document_referenced_systems
+ *   - document_systems (junction table)
+ *   - doc_assets
+ *   - instances
+ *   - documents
+ *   - systems
+ *   - jobs
  *   - Pinecone vectors
- *   - Storage: /dip/*, /page-screenshots/*, /manuals/*
+ *   - Storage: /dip/*, /page-screenshots/*, /manuals/*, /figures/*
  *
  * What is PRESERVED:
- *   - systems, instances (your test system stays)
  *   - agent_training_decisions, agent_config
  *   - Reference tables (ref_*)
  */
@@ -50,12 +55,28 @@ const targetAssetUid = assetUidArg ? assetUidArg.split('=')[1] : null;
 async function clearDatabase(docIds) {
   console.log('\n📦 Clearing database tables...');
 
+  // Order matters due to FK constraints - delete children first, then parents
+  // Tables written by the ingest process:
   const tables = [
+    // 1. Document-dependent tables (FK to documents.doc_id)
     { name: 'document_chunks', fk: 'doc_id' },
+    { name: 'doc_assets', fk: 'doc_id' },
+    { name: 'document_referenced_systems', fk: 'doc_id' },
+    { name: 'document_systems', fk: 'doc_id' },
+    // 2. DIP production tables (FK to documents.doc_id)
+    { name: 'spec_suggestions', fk: 'doc_id' },
+    { name: 'playbook_hints', fk: 'doc_id' },
+    { name: 'golden_tests', fk: 'doc_id' },
+    { name: 'intent_router', fk: 'doc_id' },
+    { name: 'troubleshooting', fk: 'doc_id' },
+    // 3. Staging tables (if any remain)
     { name: 'staging_spec_suggestions', fk: 'doc_id' },
     { name: 'staging_playbook_hints', fk: 'doc_id' },
     { name: 'staging_intent_router', fk: 'doc_id' },
     { name: 'staging_golden_tests', fk: 'doc_id' },
+    { name: 'staging_troubleshooting', fk: 'doc_id' },
+    // 4. Jobs
+    { name: 'jobs', fk: 'doc_id' },
   ];
 
   for (const table of tables) {
@@ -71,11 +92,25 @@ async function clearDatabase(docIds) {
         continue;
       }
 
-      const { error, count } = await query;
+      const { error } = await query;
       if (error) throw error;
       console.log(`  ✅ ${table.name} - cleared`);
     } catch (err) {
       console.log(`  ⚠️  ${table.name} - ${err.message}`);
+    }
+  }
+
+  // Clear instances (FK to systems.asset_uid)
+  if (clearAll) {
+    try {
+      const { error } = await supabase
+        .from('instances')
+        .delete()
+        .neq('instance_uid', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      console.log('  ✅ instances - cleared');
+    } catch (err) {
+      console.log(`  ⚠️  instances - ${err.message}`);
     }
   }
 
@@ -94,19 +129,18 @@ async function clearDatabase(docIds) {
     console.log(`  ⚠️  documents - ${err.message}`);
   }
 
-  // Clear jobs table
-  try {
-    let query = supabase.from('jobs').delete();
-    if (docIds && docIds.length > 0) {
-      query = query.in('doc_id', docIds);
-    } else if (clearAll) {
-      query = query.neq('doc_id', '00000000-0000-0000-0000-000000000000');
+  // Clear systems table (after instances and document_systems)
+  if (clearAll) {
+    try {
+      const { error } = await supabase
+        .from('systems')
+        .delete()
+        .neq('asset_uid', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      console.log('  ✅ systems - cleared');
+    } catch (err) {
+      console.log(`  ⚠️  systems - ${err.message}`);
     }
-    const { error } = await query;
-    if (error) throw error;
-    console.log('  ✅ jobs - cleared');
-  } catch (err) {
-    console.log(`  ⚠️  jobs - ${err.message}`);
   }
 }
 
@@ -148,7 +182,8 @@ async function clearStorage(docIds) {
   const buckets = [
     { bucket: 'documents', prefix: 'dip' },
     { bucket: 'documents', prefix: 'page-screenshots' },
-    { bucket: 'documents', prefix: 'manuals' }  // Also clear uploaded PDFs for --all
+    { bucket: 'documents', prefix: 'manuals' },
+    { bucket: 'documents', prefix: 'figures' }
   ];
 
   for (const { bucket, prefix } of buckets) {
@@ -252,7 +287,18 @@ async function getDocIds() {
 async function showCurrentState() {
   console.log('\n📊 Current state:');
 
-  const tables = ['jobs', 'documents', 'document_chunks', 'staging_spec_suggestions'];
+  const tables = [
+    'documents',
+    'systems',
+    'instances',
+    'document_chunks',
+    'spec_suggestions',
+    'troubleshooting',
+    'playbook_hints',
+    'golden_tests',
+    'intent_router'
+  ];
+
   for (const table of tables) {
     try {
       const { count, error } = await supabase

@@ -19,6 +19,7 @@ import asyncio
 
 from ..debug_logger import chat_debug
 from ..services.perplexity_service import PerplexityService
+from ..services.retrieval_scope_builder import RetrievalScopeBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -38,11 +39,13 @@ class ChatWorkflowSequential:
         self.llm_service = llm_service
         self.dip_retriever = dip_retriever
         self.pinecone_client = pinecone_client
+        self.retrieval_scope_builder = RetrievalScopeBuilder()
 
         chat_debug.step('WORKFLOW_INIT', {
             'has_llm_service': llm_service is not None,
             'has_dip_retriever': dip_retriever is not None,
-            'has_pinecone_client': pinecone_client is not None
+            'has_pinecone_client': pinecone_client is not None,
+            'has_retrieval_scope_builder': True
         })
 
         logger.info("✅ Sequential chat workflow initialized (No LangGraph)")
@@ -203,6 +206,7 @@ class ChatWorkflowSequential:
             # Collect detailed metrics for stats panel
             # Get all timing values
             classification_ms = state.get("classification_duration_ms", 0)
+            retrieval_scope_ms = state.get("retrieval_scope_duration_ms", 0)
             dip_ms = state.get("dip_duration_ms", 0)
             pinecone_ms = state.get("pinecone_duration_ms", 0)
             ranking_ms = state.get("pinecone_complexity_filtering", {}).get("ranking_duration_ms", 0)
@@ -211,7 +215,7 @@ class ChatWorkflowSequential:
             assembly_ms = state.get("assembly_duration_ms", 0)
 
             # Calculate totals
-            total_measured = classification_ms + dip_ms + pinecone_ms + ranking_ms + synthesis_ms + perplexity_ms + assembly_ms
+            total_measured = classification_ms + retrieval_scope_ms + dip_ms + pinecone_ms + ranking_ms + synthesis_ms + perplexity_ms + assembly_ms
 
             detailed_metrics = {
                 "timing_summary": {
@@ -220,6 +224,7 @@ class ChatWorkflowSequential:
                     "unmeasured_ms": processing_time - total_measured,
                     "breakdown": {
                         "classification_ms": classification_ms,
+                        "retrieval_scope_ms": retrieval_scope_ms,
                         "dip_retrieval_ms": dip_ms,
                         "pinecone_search_ms": pinecone_ms,
                         "chunk_ranking_ms": ranking_ms,
@@ -227,6 +232,17 @@ class ChatWorkflowSequential:
                         "perplexity_ms": perplexity_ms,
                         "assembly_ms": assembly_ms
                     }
+                },
+                "retrieval_scope": {
+                    "duration_ms": retrieval_scope_ms,
+                    "focus_assets_count": len(state.get("retrieval_scope", {}).get("focus_assets", [])),
+                    "focus_models": state.get("retrieval_scope", {}).get("focus_models", []),
+                    "boat_models_count": len(state.get("retrieval_scope", {}).get("boat_models", [])),
+                    "candidate_primary_docs_count": len(state.get("retrieval_scope", {}).get("candidate_primary_doc_ids", [])),
+                    "candidate_referencing_docs_count": len(state.get("retrieval_scope", {}).get("candidate_referencing_doc_ids", [])),
+                    "cache_hit": state.get("retrieval_scope", {}).get("cache_hit", False),
+                    "tier_used_pinecone": (state.get("pinecone_results") or {}).get("tier_used", "unknown"),
+                    "tier_used_dip": self._get_dip_tier_summary(state.get("dip_results", []))
                 },
                 "classification": {
                     "duration_ms": classification_ms,
@@ -245,9 +261,10 @@ class ChatWorkflowSequential:
                 "pinecone": {
                     "duration_ms": pinecone_ms,
                     "total_matches": (state.get("pinecone_results") or {}).get("total_matches", 0),
-                    "filtered_matches": (state.get("pinecone_results") or {}).get("filtered_matches", 0),
+                    "filtered_matches": (state.get("pinecone_results") or {}).get("after_dedup", 0),
                     "chunks": [],  # Will be populated below
-                    "metadata_filter_used": (state.get("pinecone_results") or {}).get("metadata_filter_used", False),
+                    "metadata_filter_used": (state.get("pinecone_results") or {}).get("metadata_filter", "none"),
+                    "tier_used": (state.get("pinecone_results") or {}).get("tier_used", "unknown"),
                     "complexity_based_filtering": state.get("pinecone_complexity_filtering", {})
                 },
                 "chunk_ranking": {
@@ -302,6 +319,7 @@ class ChatWorkflowSequential:
             logger.info(f"  - Unmeasured gap: {processing_time - total_measured}ms")
             logger.info("📊 BREAKDOWN:")
             logger.info(f"  - Classification: {classification_ms}ms")
+            logger.info(f"  - Retrieval scope: {retrieval_scope_ms}ms")
             logger.info(f"  - DIP retrieval: {dip_ms}ms")
             logger.info(f"  - Pinecone search: {pinecone_ms}ms")
             logger.info(f"  - Chunk ranking: {ranking_ms}ms")
@@ -633,7 +651,7 @@ class ChatWorkflowSequential:
     async def _retrieve_data(self, state: Dict[str, Any]) -> Dict[str, Any]:
         """
         Retrieve data from DIP tables and Pinecone
-        INTELLIGENCE: Uses classified keywords, enhanced Pinecone search with equipment emphasis
+        INTELLIGENCE: Uses classified keywords, v5 retrieval scope for filtering
         """
         try:
             state["processing_steps"].append("data_retrieval")
@@ -642,6 +660,35 @@ class ChatWorkflowSequential:
                 'primary_equipment': (state.get('primary_equipment') or {}).get('model', 'none'),
                 'classification_intent': (state.get('classification') or {}).get('intent', 'unknown')
             })
+
+            # ===== BUILD RETRIEVAL SCOPE (v5) =====
+            scope_start = datetime.now()
+            retrieval_scope = await self.retrieval_scope_builder.build_retrieval_scope(
+                thread_id=state.get("thread_id"),
+                systems_context=state.get("systems_context", []),
+                primary_equipment=state.get("primary_equipment"),
+            )
+            scope_duration_ms = int((datetime.now() - scope_start).total_seconds() * 1000)
+
+            # Store scope in state for telemetry and downstream use
+            state["retrieval_scope"] = retrieval_scope
+            state["retrieval_scope_duration_ms"] = scope_duration_ms
+
+            chat_debug.step('RETRIEVAL_SCOPE_BUILT', {
+                'focus_assets_count': len(retrieval_scope.get("focus_assets", [])),
+                'focus_models': retrieval_scope.get("focus_models", []),
+                'boat_models_count': len(retrieval_scope.get("boat_models", [])),
+                'candidate_primary_docs_count': len(retrieval_scope.get("candidate_primary_doc_ids", [])),
+                'candidate_referencing_docs_count': len(retrieval_scope.get("candidate_referencing_doc_ids", [])),
+                'cache_hit': retrieval_scope.get("cache_hit", False),
+                'duration_ms': scope_duration_ms
+            })
+
+            logger.info(f"🎯 RETRIEVAL SCOPE: focus={retrieval_scope.get('focus_models', [])}, "
+                       f"primary_docs={len(retrieval_scope.get('candidate_primary_doc_ids', []))}, "
+                       f"ref_docs={len(retrieval_scope.get('candidate_referencing_doc_ids', []))}, "
+                       f"cache_hit={retrieval_scope.get('cache_hit', False)}, "
+                       f"duration={scope_duration_ms}ms")
 
             # Determine table types based on classification
             classification = state.get("classification", {})
@@ -687,12 +734,13 @@ class ChatWorkflowSequential:
                     f"(keywords={used_keywords}, equipment={equipment_name}, original='{state['user_query']}')"
                 )
 
-                # Query DIP tables
+                # Query DIP tables with v5 scope
                 if hasattr(self.dip_retriever, 'query_production_dip_tables'):
                     equipment_results = await self.dip_retriever.query_production_dip_tables(
                         query=search_query,
                         table_types=table_types,
-                        systems_context=focused_context
+                        systems_context=focused_context,
+                        retrieval_scope=retrieval_scope
                     )
                 else:
                     equipment_results = await self.dip_retriever.query_dip_tables(
@@ -727,7 +775,8 @@ class ChatWorkflowSequential:
                 query=pinecone_query,
                 equipment_context=state["systems_context"],
                 original_query=state["user_query"],
-                complexity_score=state["classification"].get("complexity_score", 0.5)
+                complexity_score=state["classification"].get("complexity_score", 0.5),
+                retrieval_scope=retrieval_scope
             )
             pinecone_duration = (datetime.now() - pinecone_start).total_seconds() * 1000
 
@@ -1067,6 +1116,21 @@ class ChatWorkflowSequential:
 
     # ========== HELPER METHODS (Keep from original) ==========
 
+    def _get_dip_tier_summary(self, dip_results: List[Dict[str, Any]]) -> str:
+        """Get summary of tiers used across DIP tables."""
+        if not dip_results:
+            return "none"
+
+        tiers = [r.get("tier_used", "unknown") for r in dip_results if r.get("tier_used")]
+        if not tiers:
+            return "unknown"
+
+        # Return most common tier, or "mixed" if multiple
+        unique_tiers = set(tiers)
+        if len(unique_tiers) == 1:
+            return tiers[0]
+        return f"mixed({','.join(sorted(unique_tiers))})"
+
     def _format_sources(self, state: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Format DIP results, Pinecone chunks, AND Perplexity citations for API response"""
         sources = []
@@ -1192,14 +1256,22 @@ class ChatWorkflowSequential:
                 "metadata": {"workflow": "error"}
             }
 
-    async def _query_pinecone_for_equipment(self, query: str, equipment_context: List[Dict[str, Any]],
-                                           original_query: str = None, complexity_score: float = 0.5) -> Optional[Dict[str, Any]]:
+    async def _query_pinecone_for_equipment(
+        self,
+        query: str,
+        equipment_context: List[Dict[str, Any]],
+        original_query: str = None,
+        complexity_score: float = 0.5,
+        retrieval_scope: Optional[Dict[str, Any]] = None
+    ) -> Optional[Dict[str, Any]]:
         """
-        INTELLIGENCE: Multi-system Pinecone search with parallel execution
+        v5 Pinecone search with doc scoping and model-tag filters.
 
-        Searches Pinecone for ALL equipment in context (not just first).
-        Each equipment gets its own search with metadata filter.
-        Results are combined, deduplicated, ranked, and capped at 20 chunks.
+        Uses retrieval_scope to build two-category filter:
+        - Primary docs: allow is_universal OR model overlap
+        - Referencing docs: require referenced_systems overlap (strict)
+
+        Implements Tier A → B → C fallback (threshold: <3 chunks).
         """
         if not self.pinecone_client:
             chat_debug.step('PINECONE_SKIP', {'reason': 'client_not_available'})
@@ -1207,27 +1279,34 @@ class ChatWorkflowSequential:
             return None
 
         try:
-            # ===== MULTI-SYSTEM PINECONE SEARCH =====
-            logger.info("🔀 Starting MULTI-SYSTEM Pinecone search")
-            logger.info(f"  → Equipment count: {len(equipment_context)}")
+            # ===== v5 PINECONE SEARCH =====
+            logger.info("🔀 Starting v5 Pinecone search with doc scoping")
             logger.info(f"  → Complexity score: {complexity_score}")
 
             # Adaptive top_k based on query complexity
-            top_k_per_system = 100 if complexity_score >= 0.7 else 50
+            top_k = 100 if complexity_score >= 0.7 else 50
 
-            logger.info(f"  → Top-k per system: {top_k_per_system}")
+            # Extract scope values
+            focus_models = retrieval_scope.get("focus_models", []) if retrieval_scope else []
+            boat_models = retrieval_scope.get("boat_models", []) if retrieval_scope else []
+            primary_doc_ids = retrieval_scope.get("candidate_primary_doc_ids", []) if retrieval_scope else []
+            referencing_doc_ids = retrieval_scope.get("candidate_referencing_doc_ids", []) if retrieval_scope else []
 
-            # Build equipment list for logging (avoid nested f-string escaping issues)
-            equipment_list_str = [f"{eq.get('manufacturer', '')} {eq.get('model', '')}".strip() for eq in equipment_context]
-            logger.info(f"  → Equipment list: {equipment_list_str}")
+            logger.info(f"  → Focus models: {focus_models}")
+            logger.info(f"  → Boat models: {boat_models}")
+            logger.info(f"  → Primary doc_ids: {len(primary_doc_ids)}")
+            logger.info(f"  → Referencing doc_ids: {len(referencing_doc_ids)}")
+            logger.info(f"  → Top-k: {top_k}")
 
-            chat_debug.step('MULTI_SYSTEM_PINECONE_START', {
-                'equipment_count': len(equipment_context),
-                'complexity_score': complexity_score,
-                'top_k_per_system': top_k_per_system
+            chat_debug.step('V5_PINECONE_START', {
+                'focus_models': focus_models,
+                'boat_models_count': len(boat_models),
+                'primary_docs_count': len(primary_doc_ids),
+                'referencing_docs_count': len(referencing_doc_ids),
+                'top_k': top_k
             })
 
-            # Build equipment-aware search query (SAME AS CURRENT)
+            # Build equipment names for query enhancement
             equipment_names = []
             for eq in equipment_context:
                 manufacturer = eq.get('manufacturer', '')
@@ -1239,7 +1318,7 @@ class ChatWorkflowSequential:
                 elif model:
                     equipment_names.append(model)
 
-            # Build enhanced query with equipment emphasis (SAME AS CURRENT)
+            # Build enhanced query with equipment emphasis
             enhanced_query = query
             if equipment_names:
                 equipment_emphasis = " ".join([name for name in equipment_names for _ in range(3)])
@@ -1250,251 +1329,133 @@ class ChatWorkflowSequential:
                     f"enhanced={enhanced_query[:100]}..."
                 )
 
-            # ===== PARALLEL SEARCH IMPLEMENTATION =====
-            async def search_single_equipment(idx: int, eq: Dict[str, Any]):
-                """
-                Search Pinecone for single equipment with metadata filter
-                Returns dict with success, matches, duration, and error info
-                """
-                equipment_start = datetime.now()
-                manufacturer = eq.get('manufacturer', '').strip()
-                model = eq.get('model', '').strip()
+            # ===== TIER FALLBACK LOGIC =====
+            # Threshold: <3 chunks triggers fallback to next tier
+            TIER_THRESHOLD = 3
 
-                logger.info(f"🔍 [PINECONE_SEARCH_{idx+1}] START")
-                logger.info(f"  → Manufacturer: {manufacturer}")
-                logger.info(f"  → Model: {model}")
-                logger.info(f"  → Top-k: {top_k_per_system}")
+            # Determine starting tier
+            has_candidates = bool(primary_doc_ids or referencing_doc_ids)
+            if not has_candidates:
+                # No candidate docs: skip to Tier C
+                logger.info("⚠️  No candidate docs - skipping to Tier C")
+                starting_tier = "C"
+            else:
+                starting_tier = "A"
 
-                # Build metadata filter for THIS equipment (not first, THIS one)
-                metadata_filter = {}
-                if manufacturer:
-                    metadata_filter['manufacturer'] = manufacturer
-                if model:
-                    metadata_filter['model'] = model
-
-                logger.info(f"  → Metadata filter: {metadata_filter}")
-
-                try:
-                    # Search Pinecone with THIS equipment's filter
-                    # Use asyncio.to_thread() to run sync call in thread pool for true parallelism
-                    search_result = await asyncio.to_thread(
-                        self.pinecone_client.search_vectors,
-                        query=enhanced_query,
-                        top_k=top_k_per_system,
-                        include_metadata=True,
-                        include_values=False,
-                        filter_dict=metadata_filter if metadata_filter else None
-                    )
-
-                    duration_ms = (datetime.now() - equipment_start).total_seconds() * 1000
-
-                    if search_result.get("success"):
-                        matches = search_result.get("matches", [])
-                        logger.info(f"✅ [PINECONE_SEARCH_{idx+1}] SUCCESS")
-                        logger.info(f"  → Duration: {duration_ms:.2f}ms")
-                        logger.info(f"  → Matches: {len(matches)}")
-                        if matches:
-                            logger.info(f"  → Score range: {matches[0].get('score', 0):.3f} - {matches[-1].get('score', 0):.3f}")
-                        else:
-                            logger.info(f"  → No matches")
-
-                        chat_debug.timing(f'pinecone_search_{idx+1}', duration_ms, {
-                            'equipment': f"{manufacturer} {model}",
-                            'matches': len(matches)
-                        })
-
-                        return {
-                            'success': True,
-                            'equipment_index': idx,
-                            'equipment': f"{manufacturer} {model}",
-                            'matches': matches,
-                            'duration_ms': duration_ms
-                        }
-                    else:
-                        error_msg = search_result.get('error', 'Unknown error')
-                        logger.warning(f"⚠️  [PINECONE_SEARCH_{idx+1}] FAILED")
-                        logger.warning(f"  → Error: {error_msg}")
-                        logger.warning(f"  → Duration: {duration_ms:.2f}ms")
-
-                        return {
-                            'success': False,
-                            'equipment_index': idx,
-                            'equipment': f"{manufacturer} {model}",
-                            'error': error_msg,
-                            'duration_ms': duration_ms
-                        }
-
-                except Exception as e:
-                    duration_ms = (datetime.now() - equipment_start).total_seconds() * 1000
-                    logger.error(f"❌ [PINECONE_SEARCH_{idx+1}] EXCEPTION")
-                    logger.error(f"  → Error: {str(e)}")
-                    logger.error(f"  → Duration: {duration_ms:.2f}ms")
-
-                    chat_debug.error(f'pinecone_search_{idx+1}', e, {
-                        'equipment': f"{manufacturer} {model}"
-                    })
-
-                    return {
-                        'success': False,
-                        'equipment_index': idx,
-                        'equipment': f"{manufacturer} {model}",
-                        'error': str(e),
-                        'duration_ms': duration_ms
-                    }
-
-            # Launch parallel searches for ALL equipment
-            search_tasks = [
-                search_single_equipment(idx, eq)
-                for idx, eq in enumerate(equipment_context)
-            ]
-            parallel_start = datetime.now()
-
-            logger.info(f"🚀 Launching {len(search_tasks)} parallel Pinecone searches")
-
-            search_results = await asyncio.gather(*search_tasks, return_exceptions=True)
-
-            parallel_duration = (datetime.now() - parallel_start).total_seconds() * 1000
-
-            logger.info(f"✅ Parallel searches COMPLETE")
-            logger.info(f"  → Total duration: {parallel_duration:.2f}ms")
-            logger.info(f"  → Avg per search: {parallel_duration / len(search_tasks):.2f}ms" if search_tasks else "  → No searches to average")
-
-            # ===== COLLECT AND ANALYZE RESULTS =====
+            tier_used = starting_tier
             all_matches = []
-            search_stats = {
-                'total_searches': len(search_results),
-                'successful': 0,
-                'failed': 0,
-                'exceptions': 0,
-                'total_matches': 0,
-                'per_equipment': []
-            }
 
-            for idx, result in enumerate(search_results):
-                if isinstance(result, Exception):
-                    search_stats['exceptions'] += 1
-                    logger.error(f"❌ Search {idx+1} raised exception: {result}")
-                    continue
+            # Try Tier A if we have candidates
+            if starting_tier == "A":
+                tier_a_filter = self._build_v5_pinecone_filter(
+                    tier="A",
+                    primary_doc_ids=primary_doc_ids,
+                    referencing_doc_ids=referencing_doc_ids,
+                    model_list=focus_models
+                )
+                logger.info(f"🔍 Tier A filter: {tier_a_filter}")
 
-                equipment_stat = {
-                    'index': idx,
-                    'equipment': result.get('equipment', 'unknown'),
-                    'success': result.get('success', False),
-                    'matches': 0,
-                    'duration_ms': result.get('duration_ms', 0)
-                }
+                tier_a_result = await self._execute_pinecone_search(
+                    query=enhanced_query,
+                    filter_dict=tier_a_filter,
+                    top_k=top_k
+                )
+                all_matches = tier_a_result.get("matches", [])
+                logger.info(f"  → Tier A results: {len(all_matches)} chunks")
 
-                if result.get("success"):
-                    search_stats['successful'] += 1
-                    matches = result.get("matches", [])
-                    equipment_stat['matches'] = len(matches)
-                    search_stats['total_matches'] += len(matches)
-                    all_matches.extend(matches)
+                # Fallback to Tier B if too few
+                if len(all_matches) < TIER_THRESHOLD:
+                    logger.info(f"⚠️  Tier A returned <{TIER_THRESHOLD} chunks, trying Tier B")
+                    tier_used = "B"
 
-                    logger.info(f"  → Search {idx+1}: {len(matches)} matches ({result.get('equipment')})")
-                else:
-                    search_stats['failed'] += 1
-                    logger.warning(f"  → Search {idx+1}: FAILED ({result.get('equipment')})")
+                    tier_b_filter = self._build_v5_pinecone_filter(
+                        tier="B",
+                        primary_doc_ids=primary_doc_ids,
+                        referencing_doc_ids=referencing_doc_ids,
+                        model_list=boat_models
+                    )
+                    logger.info(f"🔍 Tier B filter: {tier_b_filter}")
 
-                search_stats['per_equipment'].append(equipment_stat)
+                    tier_b_result = await self._execute_pinecone_search(
+                        query=enhanced_query,
+                        filter_dict=tier_b_filter,
+                        top_k=top_k
+                    )
+                    all_matches = tier_b_result.get("matches", [])
+                    logger.info(f"  → Tier B results: {len(all_matches)} chunks")
 
-            logger.info(f"📊 Search statistics:")
-            logger.info(f"  → Successful: {search_stats['successful']}/{search_stats['total_searches']}")
-            logger.info(f"  → Failed: {search_stats['failed']}")
-            logger.info(f"  → Exceptions: {search_stats['exceptions']}")
-            logger.info(f"  → Total matches (before filter): {search_stats['total_matches']}")
+                    # Fallback to Tier C if still too few
+                    if len(all_matches) < TIER_THRESHOLD:
+                        logger.info(f"⚠️  Tier B returned <{TIER_THRESHOLD} chunks, trying Tier C")
+                        tier_used = "C"
 
-            # ===== THRESHOLD FILTERING =====
+            # Tier C: no doc restriction, just boat_models
+            if tier_used == "C":
+                tier_c_filter = self._build_v5_pinecone_filter(
+                    tier="C",
+                    primary_doc_ids=[],
+                    referencing_doc_ids=[],
+                    model_list=boat_models
+                )
+                logger.info(f"🔍 Tier C filter: {tier_c_filter}")
+
+                tier_c_result = await self._execute_pinecone_search(
+                    query=enhanced_query,
+                    filter_dict=tier_c_filter if tier_c_filter else None,
+                    top_k=top_k
+                )
+                all_matches = tier_c_result.get("matches", [])
+                logger.info(f"  → Tier C results: {len(all_matches)} chunks")
+
+            logger.info(f"✅ Final tier used: {tier_used}")
+
+            # ===== POST-PROCESSING (threshold, dedup, rank, cap) =====
+            # Threshold filtering
             threshold = 0.2
-            before_threshold = len(all_matches)
             threshold_filtered = [m for m in all_matches if m.get('score', 0) >= threshold]
-            filtered_count = before_threshold - len(threshold_filtered)
+            logger.info(f"🔍 Threshold filtering (>= {threshold}): {len(all_matches)} → {len(threshold_filtered)}")
 
-            logger.info(f"🔍 Threshold filtering (>= {threshold})")
-            logger.info(f"  → Before: {before_threshold}")
-            logger.info(f"  → After: {len(threshold_filtered)}")
-            logger.info(f"  → Filtered out: {filtered_count}")
-
-            if len(threshold_filtered) > 0:
-                scores = [m.get('score', 0) for m in threshold_filtered]
-                logger.info(f"  → Score range: {min(scores):.3f} - {max(scores):.3f}")
-                logger.info(f"  → Avg score: {sum(scores)/len(scores):.3f}")
-
-            # ===== DEDUPLICATION BY VECTOR ID =====
+            # Deduplication by vector ID
             seen_ids = set()
             deduped_matches = []
-            duplicate_count = 0
-            dedup_details = []
-
             for match in threshold_filtered:
                 vector_id = match.get('id')
                 if vector_id and vector_id not in seen_ids:
                     seen_ids.add(vector_id)
                     deduped_matches.append(match)
-                elif vector_id:
-                    duplicate_count += 1
-                    dedup_details.append({
-                        'vector_id': vector_id,
-                        'score': match.get('score', 0),
-                        'manufacturer': match.get('metadata', {}).get('manufacturer'),
-                        'model': match.get('metadata', {}).get('model')
-                    })
+            logger.info(f"🔄 Deduplication: {len(threshold_filtered)} → {len(deduped_matches)}")
 
-            logger.info(f"🔄 Deduplication (by vector ID)")
-            logger.info(f"  → Before: {len(threshold_filtered)}")
-            logger.info(f"  → After: {len(deduped_matches)}")
-            logger.info(f"  → Duplicates removed: {duplicate_count}")
-
-            if duplicate_count > 0 and duplicate_count <= 5:
-                logger.debug(f"  → Duplicate details: {dedup_details}")
-
-            # ===== RANKING BY SEMANTIC SCORE =====
+            # Rank by semantic score
             ranked_matches = sorted(deduped_matches, key=lambda m: m.get('score', 0), reverse=True)
 
-            logger.info(f"📊 Ranking (by semantic score)")
-            logger.info(f"  → Total ranked: {len(ranked_matches)}")
-            if len(ranked_matches) > 0:
-                logger.info(f"  → Top score: {ranked_matches[0].get('score', 0):.3f}")
-                logger.info(f"  → Bottom score: {ranked_matches[-1].get('score', 0):.3f}")
-
-            # ===== CAP AT 10 CHUNKS =====
+            # Cap at 10 chunks
             final_matches = ranked_matches[:10]
-            capped_count = len(ranked_matches) - len(final_matches)
-
-            logger.info(f"✂️  Final cap (max 10 chunks)")
-            logger.info(f"  → Before cap: {len(ranked_matches)}")
-            logger.info(f"  → After cap: {len(final_matches)}")
-            logger.info(f"  → Capped: {capped_count}")
+            logger.info(f"✂️  Final cap (max 10): {len(ranked_matches)} → {len(final_matches)}")
 
             # ===== FINAL SUMMARY =====
-            logger.info(f"🎯 MULTI-SYSTEM PINECONE COMPLETE")
-            logger.info(f"  → Total searches: {search_stats['total_searches']}")
-            logger.info(f"  → Successful: {search_stats['successful']}")
-            logger.info(f"  → Raw matches: {search_stats['total_matches']}")
+            logger.info(f"🎯 v5 PINECONE COMPLETE")
+            logger.info(f"  → Tier used: {tier_used}")
+            logger.info(f"  → Raw matches: {len(all_matches)}")
             logger.info(f"  → After threshold: {len(threshold_filtered)}")
             logger.info(f"  → After dedup: {len(deduped_matches)}")
             logger.info(f"  → Final chunks: {len(final_matches)}")
-            logger.info(f"  → Total duration: {parallel_duration:.2f}ms")
 
-            chat_debug.step('MULTI_SYSTEM_PINECONE_COMPLETE', {
-                'total_searches': search_stats['total_searches'],
-                'successful_searches': search_stats['successful'],
-                'final_chunks': len(final_matches),
-                'duration_ms': parallel_duration
+            chat_debug.step('V5_PINECONE_COMPLETE', {
+                'tier_used': tier_used,
+                'raw_matches': len(all_matches),
+                'final_chunks': len(final_matches)
             })
 
-            # ===== RETURN RESULT =====
             return {
                 "success": True,
                 "matches": final_matches,
                 "enhanced_query": enhanced_query,
                 "equipment_context": equipment_names,
                 "match_count": len(final_matches),
-                "metadata_filter": "multi_system",  # Indicate we searched multiple systems
+                "metadata_filter": f"v5_tier_{tier_used}",
+                "tier_used": tier_used,
                 "threshold": threshold,
-                "total_matches": search_stats['total_matches'],
-                "searches_performed": search_stats['total_searches'],
-                "successful_searches": search_stats['successful'],
+                "total_matches": len(all_matches),
                 "after_threshold": len(threshold_filtered),
                 "after_dedup": len(deduped_matches)
             }
@@ -1507,3 +1468,96 @@ class ChatWorkflowSequential:
                 "error": str(e),
                 "enhanced_query": query
             }
+
+    def _build_v5_pinecone_filter(
+        self,
+        tier: str,
+        primary_doc_ids: List[str],
+        referencing_doc_ids: List[str],
+        model_list: List[str]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Build Pinecone filter for v5 retrieval.
+
+        Tier A/B: Two-category OR filter
+          - Primary docs: is_universal OR model overlap
+          - Referencing docs: referenced_systems overlap (strict)
+
+        Tier C: No doc restriction, just model filtering
+        """
+        if tier == "C":
+            # Tier C: no doc restriction, just boat_models
+            if not model_list:
+                return None  # No filter at all
+
+            return {
+                "$or": [
+                    {"is_universal": {"$eq": True}},
+                    {"primary_models": {"$in": model_list}},
+                    {"referenced_systems": {"$in": model_list}}
+                ]
+            }
+
+        # Tier A or B: two-category filter
+        clauses = []
+
+        # Primary docs clause: allow is_universal
+        if primary_doc_ids:
+            primary_clause = {
+                "$and": [
+                    {"doc_id": {"$in": primary_doc_ids}},
+                    {
+                        "$or": [
+                            {"is_universal": {"$eq": True}},
+                            {"primary_models": {"$in": model_list}} if model_list else {"is_universal": {"$eq": True}},
+                            {"referenced_systems": {"$in": model_list}} if model_list else {"is_universal": {"$eq": True}}
+                        ]
+                    }
+                ]
+            }
+            clauses.append(primary_clause)
+
+        # Referencing docs clause: strict (only chunks that mention focus system)
+        if referencing_doc_ids and model_list:
+            referencing_clause = {
+                "$and": [
+                    {"doc_id": {"$in": referencing_doc_ids}},
+                    {"referenced_systems": {"$in": model_list}}
+                ]
+            }
+            clauses.append(referencing_clause)
+
+        if not clauses:
+            return None
+
+        if len(clauses) == 1:
+            return clauses[0]
+
+        return {"$or": clauses}
+
+    async def _execute_pinecone_search(
+        self,
+        query: str,
+        filter_dict: Optional[Dict[str, Any]],
+        top_k: int
+    ) -> Dict[str, Any]:
+        """Execute a single Pinecone search with given filter."""
+        try:
+            search_result = await asyncio.to_thread(
+                self.pinecone_client.search_vectors,
+                query=query,
+                top_k=top_k,
+                include_metadata=True,
+                include_values=False,
+                filter_dict=filter_dict
+            )
+
+            if search_result.get("success"):
+                return {"matches": search_result.get("matches", [])}
+            else:
+                logger.warning(f"Pinecone search failed: {search_result.get('error')}")
+                return {"matches": []}
+
+        except Exception as e:
+            logger.error(f"Pinecone search exception: {e}")
+            return {"matches": []}

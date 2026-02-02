@@ -66,9 +66,14 @@ class ChunkMetadata:
     chunk_strategy_version: str = "semantic_v2"
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
-    # Asset linking (for DIP system)
+    # Asset linking (for DIP system) - DEPRECATED, use v5 fields below
     linked_asset_uid: Optional[str] = None
     linked_system_name: Optional[str] = None
+
+    # v5 model tagging (replaces legacy asset linking for filtering)
+    primary_models: List[str] = field(default_factory=list)  # Subset of models_covered this chunk applies to
+    referenced_systems: List[str] = field(default_factory=list)  # Referenced systems mentioned in chunk
+    is_universal: bool = False  # True when chunk applies to all models_covered
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
@@ -96,7 +101,14 @@ class ChunkMetadata:
         if 'section_hierarchy' in metadata:
             metadata['section_hierarchy'] = [str(s) for s in metadata['section_hierarchy']]
 
+        # v5 model tagging fields - ensure lists of strings
+        if 'primary_models' in metadata:
+            metadata['primary_models'] = [str(m) for m in metadata['primary_models']]
+        if 'referenced_systems' in metadata:
+            metadata['referenced_systems'] = [str(r) for r in metadata['referenced_systems']]
+
         # CRITICAL: Filter out None values - Pinecone rejects null
+        # Note: Empty lists are valid (e.g., referenced_systems=[] means no accessories)
         metadata = {k: v for k, v in metadata.items() if v is not None}
 
         return metadata
@@ -197,6 +209,7 @@ class DocumentChunks:
     chunks: List[Chunk]
     total_chunks: int
     total_tokens: int
+    chunks_skipped: int = 0  # Chunks skipped due to unknown attribution (D2-A)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -207,6 +220,7 @@ class DocumentChunks:
             'chunks': [chunk.to_dict() for chunk in self.chunks],
             'total_chunks': self.total_chunks,
             'total_tokens': self.total_tokens,
+            'chunks_skipped': self.chunks_skipped,
             'metadata': self.metadata
         }
 
@@ -219,6 +233,7 @@ class DocumentChunks:
             chunks=[Chunk.from_dict(c) for c in data['chunks']],
             total_chunks=data['total_chunks'],
             total_tokens=data['total_tokens'],
+            chunks_skipped=data.get('chunks_skipped', 0),
             metadata=data.get('metadata', {})
         )
 
@@ -235,6 +250,7 @@ class DocumentChunks:
         return {
             'total_chunks': self.total_chunks,
             'total_tokens': self.total_tokens,
+            'chunks_skipped': self.chunks_skipped,
             'avg_tokens_per_chunk': self.total_tokens / max(self.total_chunks, 1),
             'chunks_with_tables': sum(1 for c in self.chunks if c.metadata.has_tables),
             'chunks_with_lists': sum(1 for c in self.chunks if c.metadata.has_lists),

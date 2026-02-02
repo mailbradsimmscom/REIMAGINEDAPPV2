@@ -1,38 +1,85 @@
 """
-Production DIP Retriever for live data queries
+Production DIP Retriever for v5 Chat Retrieval
+
+Uses v5 filtering:
+- doc_id scoping (candidate_doc_ids)
+- applies_to_models overlap with focus/boat models
+- Two queries per table (model-scoped + universal), then union/dedupe
+- Tier A → B → C fallback (threshold: <2 rows)
+
+See: .cursor/plans/v5_chat_retrieval_v5_tags_and_doc_scoping.plan.md
 """
-from typing import List, Dict, Any, Optional
-from .base import BaseService
+
 import logging
+from typing import Any, Dict, List, Optional
+
+from .base import BaseService
 
 logger = logging.getLogger(__name__)
 
-class ProductionDIPRetriever(BaseService):
-    """Production DIP table retriever for live data"""
 
-    # Production table names (without staging_ prefix)
+def _pg_array_literal(values: list[str]) -> str:
+    """
+    Build PostgREST array literal like "{A,B}" for overlap/contains operators.
+    """
+    safe = [v.replace('"', '').replace('{', '').replace('}', '').replace(',', '') for v in values if v]
+    return "{" + ",".join(safe) + "}"
+
+
+def _dedupe_rows(rows: list[dict]) -> list[dict]:
+    """
+    Deduplicate rows by stable primary key.
+    Prefer 'id' or 'uid', fallback to composite key.
+    """
+    seen: set[str] = set()
+    out: list[dict] = []
+    for r in rows:
+        key = str(r.get("id") or r.get("uid") or (
+            r.get("doc_id"),
+            r.get("symptom") or r.get("parameter") or r.get("question") or r.get("expected_outcome"),
+            r.get("cause") or r.get("value") or r.get("answer")
+        ))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(r)
+    return out
+
+
+class ProductionDIPRetriever(BaseService):
+    """
+    Production DIP table retriever with v5 filtering.
+
+    Table mapping for 5 DIP buckets:
+    - specs → spec_suggestions
+    - procedures → playbook_hints
+    - troubleshooting → troubleshooting
+    - golden_rules → golden_tests
+    - routing → intent_router
+    """
+
+    # Production table mapping (5 buckets)
     PRODUCTION_TABLES = {
         'spec': 'spec_suggestions',
         'procedure': 'playbook_hints',
-        'troubleshooting': 'golden_tests',
+        'troubleshooting': 'troubleshooting',  # NOT golden_tests
+        'golden_rules': 'golden_tests',
         'routing': 'intent_router'
     }
 
-    # Alternative production table patterns to try
-    ALTERNATIVE_TABLES = {
-        'spec': ['dip_specs', 'production_specs', 'specifications'],
-        'procedure': ['dip_procedures', 'production_procedures', 'procedures'],
-        'troubleshooting': ['dip_troubleshooting', 'production_tests', 'troubleshooting_guides'],
-        'routing': ['dip_routing', 'production_routing', 'routing_rules']
-    }
+    # Per-table query limit (performance guardrail)
+    PER_TABLE_LIMIT = 200
+
+    # Tier fallback threshold
+    TIER_THRESHOLD = 2
 
     def __init__(self):
         super().__init__()
-        self._validated_tables = {}
+        self._validated_tables: Dict[str, str] = {}
         self._table_validation_complete = False
 
     async def validate_production_tables(self) -> Dict[str, str]:
-        """Validate which production tables actually exist"""
+        """Validate which production tables actually exist."""
         if self._table_validation_complete:
             return self._validated_tables
 
@@ -42,41 +89,43 @@ class ProductionDIPRetriever(BaseService):
 
         validated = {}
 
-        for table_type, primary_table in self.PRODUCTION_TABLES.items():
-            # Try primary table name first
-            tables_to_try = [primary_table] + self.ALTERNATIVE_TABLES.get(table_type, [])
-
-            for table_name in tables_to_try:
-                try:
-                    # Test table existence with a minimal query
-                    result = self.supabase.table(table_name).select('*').limit(1).execute()
-                    validated[table_type] = table_name
-                    logger.info(f"✅ Validated production table '{table_type}' -> '{table_name}'")
-                    break
-                except Exception as e:
-                    if 'does not exist' in str(e) or 'relation' in str(e):
-                        logger.debug(f"Table '{table_name}' does not exist")
-                        continue
-                    else:
-                        logger.warning(f"Error checking table '{table_name}': {e}")
-                        continue
-
-            if table_type not in validated:
-                logger.warning(f"❌ No production table found for type '{table_type}'")
+        for table_type, table_name in self.PRODUCTION_TABLES.items():
+            try:
+                # Test table existence with a minimal query
+                result = self.supabase.table(table_name).select('*').limit(1).execute()
+                validated[table_type] = table_name
+                logger.info(f"✅ Validated production table '{table_type}' -> '{table_name}'")
+            except Exception as e:
+                if 'does not exist' in str(e) or 'relation' in str(e):
+                    logger.warning(f"❌ Table '{table_name}' does not exist for type '{table_type}'")
+                else:
+                    logger.warning(f"Error checking table '{table_name}': {e}")
 
         self._validated_tables = validated
         self._table_validation_complete = True
 
-        logger.info(f"Production table validation complete: {validated}")
+        logger.info(f"Production table validation complete: {list(validated.keys())}")
         return validated
 
     async def query_production_dip_tables(
         self,
         query: str,
         table_types: List[str],
-        systems_context: Optional[List[Dict[str, Any]]] = None
+        systems_context: Optional[List[Dict[str, Any]]] = None,
+        retrieval_scope: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
-        """Query production DIP tables with validation"""
+        """
+        Query production DIP tables with v5 filtering.
+
+        Args:
+            query: Search query text
+            table_types: List of table types to query (spec, procedure, troubleshooting, etc.)
+            systems_context: Equipment context (legacy, used for fallback)
+            retrieval_scope: v5 retrieval scope with candidate_doc_ids, focus_models, boat_models
+
+        Returns:
+            List of result dicts with table_type, table_name, results, count
+        """
         if not self.supabase:
             logger.warning("Supabase not available, returning empty results")
             return []
@@ -87,7 +136,24 @@ class ProductionDIPRetriever(BaseService):
             logger.error("No validated production tables available")
             return []
 
+        # Extract v5 scope
+        focus_models = retrieval_scope.get("focus_models", []) if retrieval_scope else []
+        boat_models = retrieval_scope.get("boat_models", []) if retrieval_scope else []
+        candidate_doc_ids = retrieval_scope.get("candidate_doc_ids", []) if retrieval_scope else []
+
+        logger.info(f"🔍 DIP v5 Query: focus_models={focus_models}, boat_models={len(boat_models)}, candidate_docs={len(candidate_doc_ids)}")
+
+        # Determine starting tier
+        has_candidates = bool(candidate_doc_ids)
+        if not has_candidates:
+            starting_tier = "C"
+            logger.info("⚠️  No candidate docs - starting at Tier C")
+        else:
+            starting_tier = "A"
+
         results = []
+        total_rows = 0
+        tier_used = starting_tier
 
         for table_type in table_types:
             if table_type not in validated_tables:
@@ -97,8 +163,15 @@ class ProductionDIPRetriever(BaseService):
             table_name = validated_tables[table_type]
 
             try:
-                table_results = await self._query_single_production_table(
-                    table_name, query, systems_context
+                # Query with tier fallback
+                table_results, table_tier = await self._query_table_with_tiers(
+                    table_name=table_name,
+                    table_type=table_type,
+                    query=query,
+                    starting_tier=starting_tier,
+                    candidate_doc_ids=candidate_doc_ids,
+                    focus_models=focus_models,
+                    boat_models=boat_models
                 )
 
                 if table_results:
@@ -106,67 +179,210 @@ class ProductionDIPRetriever(BaseService):
                         'table_type': table_type,
                         'table_name': table_name,
                         'results': table_results,
-                        'count': len(table_results)
+                        'count': len(table_results),
+                        'tier_used': table_tier
                     })
-                    logger.debug(f"Retrieved {len(table_results)} results from production table {table_name}")
+                    total_rows += len(table_results)
+                    logger.info(f"✅ {table_type}: {len(table_results)} rows (tier {table_tier})")
 
             except Exception as e:
                 logger.error(f"Failed to query production table {table_name}: {e}")
                 continue
 
+        logger.info(f"🎯 DIP v5 Complete: {len(results)} tables, {total_rows} total rows")
         return results
 
-    async def _query_single_production_table(
+    async def _query_table_with_tiers(
         self,
         table_name: str,
+        table_type: str,
         query: str,
-        systems_context: Optional[List[Dict[str, Any]]] = None
+        starting_tier: str,
+        candidate_doc_ids: List[str],
+        focus_models: List[str],
+        boat_models: List[str]
+    ) -> tuple[List[Dict[str, Any]], str]:
+        """
+        Query a single table with Tier A → B → C fallback.
+
+        Returns (results, tier_used)
+        """
+        tier = starting_tier
+        results = []
+
+        # Tier A: focus_models + candidate_doc_ids
+        if tier == "A":
+            results = await self._query_table_v5(
+                table_name=table_name,
+                table_type=table_type,
+                query=query,
+                candidate_doc_ids=candidate_doc_ids,
+                allowed_models=focus_models
+            )
+
+            if len(results) >= self.TIER_THRESHOLD:
+                return results, "A"
+
+            # Fallback to Tier B
+            tier = "B"
+            logger.debug(f"  {table_type}: Tier A returned {len(results)} rows, trying Tier B")
+
+        # Tier B: boat_models + candidate_doc_ids
+        if tier == "B":
+            results = await self._query_table_v5(
+                table_name=table_name,
+                table_type=table_type,
+                query=query,
+                candidate_doc_ids=candidate_doc_ids,
+                allowed_models=boat_models
+            )
+
+            if len(results) >= self.TIER_THRESHOLD:
+                return results, "B"
+
+            # Fallback to Tier C
+            tier = "C"
+            logger.debug(f"  {table_type}: Tier B returned {len(results)} rows, trying Tier C")
+
+        # Tier C: boat_models, no doc restriction
+        if tier == "C":
+            results = await self._query_table_v5(
+                table_name=table_name,
+                table_type=table_type,
+                query=query,
+                candidate_doc_ids=[],  # No doc restriction
+                allowed_models=boat_models
+            )
+            return results, "C"
+
+        return results, tier
+
+    async def _query_table_v5(
+        self,
+        table_name: str,
+        table_type: str,
+        query: str,
+        candidate_doc_ids: List[str],
+        allowed_models: List[str]
     ) -> List[Dict[str, Any]]:
-        """Query single production table with enhanced filtering"""
-        try:
-            # Build base query with production-optimized approach
-            query_builder = self.supabase.table(table_name)
-            query_builder = query_builder.select('*')
+        """
+        Query a table with v5 filtering using two queries (model-scoped + universal).
+        """
+        # Query 1: model-scoped rows
+        model_scoped = await self._dip_query_model_scoped(
+            table_name=table_name,
+            table_type=table_type,
+            query=query,
+            candidate_doc_ids=candidate_doc_ids,
+            allowed_models=allowed_models
+        )
 
-            # Add systems context filter (more restrictive for production)
-            has_asset_uids = False
-            if systems_context:
-                asset_uids = [
-                    ctx.get('asset_uid')
-                    for ctx in systems_context
-                    if ctx.get('asset_uid')
-                ]
-                if asset_uids:
-                    # Use 'in' filter for production efficiency
-                    query_builder = query_builder.in_('asset_uid', asset_uids)
-                    has_asset_uids = True
+        # Query 2: universal rows (applies_to_models contains "all")
+        universal = await self._dip_query_universal(
+            table_name=table_name,
+            table_type=table_type,
+            query=query,
+            candidate_doc_ids=candidate_doc_ids
+        )
 
-            # Add production-specific filters (skip text search if we have asset_uids)
-            if not has_asset_uids:
-                query_builder = self._add_production_table_filters(
-                    query_builder, table_name, query
-                )
+        # Union and dedupe
+        combined = model_scoped + universal
+        deduped = _dedupe_rows(combined)
 
-            # Add production limits for performance
-            query_builder = query_builder.limit(200)  # Production limit
+        return deduped
 
-            # Execute query
-            result = query_builder.execute()
-            return result.data if result.data else []
-
-        except Exception as e:
-            logger.error(f"Production table query failed for {table_name}: {e}")
+    async def _dip_query_model_scoped(
+        self,
+        table_name: str,
+        table_type: str,
+        query: str,
+        candidate_doc_ids: List[str],
+        allowed_models: List[str]
+    ) -> List[Dict[str, Any]]:
+        """Query for rows where applies_to_models overlaps with allowed_models."""
+        if not allowed_models:
             return []
 
-    def _add_production_table_filters(self, query_builder, table_name: str, query: str):
-        """Add production-optimized table-specific filters"""
-        query_lower = query.lower()
-
         try:
-            # Production-optimized filters with performance considerations
-            if 'spec' in table_name or 'suggestion' in table_name:
-                # Specs: search in text columns including flattened JSONB
-                query_builder = query_builder.or_(
+            qb = self.supabase.table(table_name).select("*")
+
+            # doc_id scoping (if available)
+            if candidate_doc_ids:
+                try:
+                    qb = qb.in_("doc_id", candidate_doc_ids)
+                except Exception:
+                    # Table may not have doc_id; proceed without
+                    pass
+
+            # applies_to_models overlap filter
+            try:
+                qb = qb.filter("applies_to_models", "ov", _pg_array_literal(allowed_models))
+            except Exception as e:
+                logger.warning(f"Table {table_name} may not have applies_to_models: {e}")
+                return []
+
+            # Text relevance filter
+            qb = self._add_text_filters(qb, table_name, table_type, query)
+
+            # Status filter (allow both dip_extracted and approved)
+            qb = self._add_status_filter(qb, table_name)
+
+            # Limit
+            qb = qb.limit(self.PER_TABLE_LIMIT)
+
+            result = qb.execute()
+            return result.data or []
+
+        except Exception as e:
+            logger.error(f"Model-scoped query failed for {table_name}: {e}")
+            return []
+
+    async def _dip_query_universal(
+        self,
+        table_name: str,
+        table_type: str,
+        query: str,
+        candidate_doc_ids: List[str]
+    ) -> List[Dict[str, Any]]:
+        """Query for rows where applies_to_models contains "all"."""
+        try:
+            qb = self.supabase.table(table_name).select("*")
+
+            # doc_id scoping (if available)
+            if candidate_doc_ids:
+                try:
+                    qb = qb.in_("doc_id", candidate_doc_ids)
+                except Exception:
+                    pass
+
+            # applies_to_models contains "all" filter
+            try:
+                qb = qb.filter("applies_to_models", "cs", _pg_array_literal(["all"]))
+            except Exception as e:
+                logger.warning(f"Table {table_name} may not have applies_to_models: {e}")
+                return []
+
+            # Text relevance filter
+            qb = self._add_text_filters(qb, table_name, table_type, query)
+
+            # Status filter
+            qb = self._add_status_filter(qb, table_name)
+
+            # Limit
+            qb = qb.limit(self.PER_TABLE_LIMIT)
+
+            result = qb.execute()
+            return result.data or []
+
+        except Exception as e:
+            logger.error(f"Universal query failed for {table_name}: {e}")
+            return []
+
+    def _add_text_filters(self, qb, table_name: str, table_type: str, query: str):
+        """Add text relevance filters based on table type."""
+        try:
+            if table_type == 'spec':
+                qb = qb.or_(
                     f"parameter.ilike.%{query}%,"
                     f"normalized_parameter.ilike.%{query}%,"
                     f"value.ilike.%{query}%,"
@@ -178,18 +394,24 @@ class ProductionDIPRetriever(BaseService):
                     f"references_text.ilike.%{query}%"
                 )
 
-            elif 'playbook' in table_name or 'procedure' in table_name or 'hint' in table_name:
-                # Procedures: search in text columns including flattened JSONB
-                query_builder = query_builder.or_(
+            elif table_type == 'procedure':
+                qb = qb.or_(
                     f"expected_outcome.ilike.%{query}%,"
                     f"steps_text.ilike.%{query}%,"
                     f"preconditions_text.ilike.%{query}%,"
                     f"error_codes_text.ilike.%{query}%"
                 )
 
-            elif 'golden' in table_name or 'test' in table_name or 'troubleshoot' in table_name:
-                # Troubleshooting: search in text columns including flattened JSONB
-                query_builder = query_builder.or_(
+            elif table_type == 'troubleshooting':
+                qb = qb.or_(
+                    f"symptom.ilike.%{query}%,"
+                    f"cause.ilike.%{query}%,"
+                    f"solution.ilike.%{query}%,"
+                    f"test_method.ilike.%{query}%"
+                )
+
+            elif table_type == 'golden_rules':
+                qb = qb.or_(
                     f"query.ilike.%{query}%,"
                     f"expected.ilike.%{query}%,"
                     f"test_method.ilike.%{query}%,"
@@ -197,9 +419,8 @@ class ProductionDIPRetriever(BaseService):
                     f"related_procedures_text.ilike.%{query}%"
                 )
 
-            elif 'intent' in table_name or 'routing' in table_name or 'router' in table_name:
-                # Intent routing: search in text columns including flattened JSONB
-                query_builder = query_builder.or_(
+            elif table_type == 'routing':
+                qb = qb.or_(
                     f"question.ilike.%{query}%,"
                     f"answer.ilike.%{query}%,"
                     f"question_type.ilike.%{query}%,"
@@ -207,42 +428,41 @@ class ProductionDIPRetriever(BaseService):
                     f"references_text.ilike.%{query}%"
                 )
 
-            # Add production status filter (only approved content)
-            # Production tables use 'approved' status
-            try:
-                query_builder = query_builder.eq('status', 'approved')
-            except:
-                # If no status field, continue without it
-                pass
-
         except Exception as e:
-            logger.warning(f"Could not apply production filters to {table_name}: {e}")
-            # Return basic text search fallback
-            query_builder = query_builder.text_search('content', query)
+            logger.warning(f"Could not apply text filters to {table_name}: {e}")
 
-        return query_builder
+        return qb
+
+    def _add_status_filter(self, qb, table_name: str):
+        """
+        Add status filter allowing both 'dip_extracted' and 'approved'.
+
+        Per plan: existing data uses 'dip_extracted', we want forward compatibility.
+        """
+        try:
+            # Use in_ for multiple status values
+            qb = qb.in_("status", ["dip_extracted", "approved"])
+        except Exception:
+            # If no status field, continue without it
+            pass
+
+        return qb
 
     def health_check(self) -> Dict[str, Any]:
-        """Health check for production DIP retriever"""
+        """Health check for production DIP retriever."""
         base_health = super().health_check()
 
-        # Add production-specific health info
-        production_health = {
+        return {
             **base_health,
             'service': 'ProductionDIPRetriever',
             'validated_tables': self._validated_tables,
             'table_validation_complete': self._table_validation_complete,
-            'production_mode': True
+            'production_mode': True,
+            'v5_filtering': True
         }
 
-        if self._validated_tables:
-            production_health['available_table_types'] = list(self._validated_tables.keys())
-            production_health['table_count'] = len(self._validated_tables)
-
-        return production_health
-
     async def get_table_stats(self) -> Dict[str, Any]:
-        """Get statistics about production tables"""
+        """Get statistics about production tables."""
         if not self.supabase:
             return {"error": "Supabase not available"}
 
@@ -251,7 +471,6 @@ class ProductionDIPRetriever(BaseService):
 
         for table_type, table_name in validated_tables.items():
             try:
-                # Get row count
                 result = self.supabase.table(table_name).select('*', count='exact').limit(1).execute()
                 stats[table_type] = {
                     'table_name': table_name,

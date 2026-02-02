@@ -62,7 +62,7 @@ async function fetchPineconeChunks(manufacturer, model) {
         },
         body: JSON.stringify({
           query: `${manufacturer} ${model}`,
-          top_k: 15,
+          topK: 15,
           filter: {
             manufacturer: manufacturer,
             model: model
@@ -97,6 +97,79 @@ async function fetchPineconeChunks(manufacturer, model) {
     requestLogger.error('Failed to fetch Pinecone chunks', {
       manufacturer,
       model,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Fetch chunks from Pinecone for a specific document + user-selected models (v5 tagging).
+ *
+ * This is intended to run AFTER indexing has upserted chunks to Pinecone with:
+ * - doc_id
+ * - primary_models[]
+ * - is_universal
+ */
+async function fetchPineconeChunksV5({ docId, selectedModels }) {
+  const safeSelected = Array.isArray(selectedModels) ? selectedModels.filter(Boolean) : [];
+  if (!docId) throw new Error('docId is required');
+  if (safeSelected.length === 0) throw new Error('selectedModels is required and cannot be empty');
+
+  try {
+    const env = getEnv();
+
+    // Set 2-minute timeout for Pinecone search
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 120000); // 2 minutes
+
+    const filter = {
+      doc_id: { $eq: docId },
+      $or: [
+        { is_universal: { $eq: true } },
+        { primary_models: { $in: safeSelected } }
+      ]
+    };
+
+    let response;
+    try {
+      // Query text doesn't matter much as long as we constrain by filter;
+      // we just want representative chunks for LLM to extract colloquial terms.
+      response = await fetch(`${env.PYTHON_SIDECAR_URL}/v1/pinecone/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `${safeSelected[0]} manual`,
+          topK: 25,
+          filter
+        }),
+        signal: abortController.signal
+      });
+      clearTimeout(timeoutId);
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name === 'AbortError') {
+        throw new Error('Pinecone search timeout: Search took longer than 2 minutes');
+      }
+      throw fetchError;
+    }
+
+    const data = await response.json();
+    if (!data.success || !data.matches) {
+      throw new Error(`Pinecone search failed: ${data.error || 'Unknown error'}`);
+    }
+
+    requestLogger.info('Fetched chunks from Pinecone (v5)', {
+      docId,
+      selectedModels: safeSelected,
+      chunksFound: data.matches.length
+    });
+
+    return data.matches;
+  } catch (error) {
+    requestLogger.error('Failed to fetch Pinecone chunks (v5)', {
+      docId,
+      selectedModels: safeSelected,
       error: error.message
     });
     throw error;
@@ -312,4 +385,98 @@ export async function extractColloquialKeywords(manufacturer, model) {
     });
     throw error;
   }
+}
+
+/**
+ * v5 entry point: extract colloquial keywords based on a doc's indexed chunks
+ * and the user's selected primary model(s).
+ *
+ * Runs AFTER indexing, because it depends on Pinecone content.
+ */
+export async function extractColloquialKeywordsV5({ docId, selectedModels }) {
+  requestLogger.info('Starting colloquial keyword extraction (v5)', { docId, selectedModels });
+
+  const MAX_RETRIES = 3;
+  const RETRY_DELAYS = [10000, 5000, 5000]; // 10s, 5s, 5s
+
+  let chunks = [];
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const delay = RETRY_DELAYS[attempt - 1];
+      requestLogger.info('Waiting before Pinecone search attempt (v5)', {
+        docId,
+        attempt,
+        delayMs: delay
+      });
+      // Wait before each attempt (including first), matching legacy behavior.
+      // This reduces flakiness immediately after indexing.
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(delay);
+
+      // eslint-disable-next-line no-await-in-loop
+      chunks = await fetchPineconeChunksV5({ docId, selectedModels });
+
+      if (chunks.length > 0) break;
+
+      requestLogger.warn('No chunks found in Pinecone (v5)', {
+        docId,
+        attempt,
+        retriesRemaining: MAX_RETRIES - attempt
+      });
+    } catch (error) {
+      lastError = error;
+      requestLogger.warn('Pinecone search attempt failed (v5)', {
+        docId,
+        attempt,
+        error: error.message,
+        retriesRemaining: MAX_RETRIES - attempt
+      });
+    }
+  }
+
+  if (chunks.length === 0) {
+    requestLogger.warn('No chunks found in Pinecone after all retry attempts (v5)', {
+      docId,
+      attemptsTotal: MAX_RETRIES,
+      lastError: lastError?.message
+    });
+    return {
+      keywords: '',
+      stats: {
+        colloquial_keywords_count: 0,
+        colloquial_tokens_used: 0
+      }
+    };
+  }
+
+  const terms = await extractTermsWithLLM(chunks);
+  if (terms.length === 0) {
+    return {
+      keywords: '',
+      stats: {
+        colloquial_keywords_count: 0,
+        colloquial_tokens_used: 0
+      }
+    };
+  }
+
+  const keywords = terms.join(', ');
+  const estimatedTokens = 2450;
+
+  requestLogger.info('Colloquial keyword extraction complete (v5)', {
+    docId,
+    keywordsCount: terms.length,
+    keywords: keywords.substring(0, 100) + (keywords.length > 100 ? '...' : ''),
+    tokensUsed: estimatedTokens
+  });
+
+  return {
+    keywords,
+    stats: {
+      colloquial_keywords_count: terms.length,
+      colloquial_tokens_used: estimatedTokens
+    }
+  };
 }

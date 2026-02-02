@@ -21,6 +21,129 @@ from .models import Chunk, ChunkMetadata, DocumentChunks
 
 logger = logging.getLogger(__name__)
 
+# Universal section indicators (shared with Vision Stage 6)
+UNIVERSAL_SECTIONS = [
+    'SAFETY', 'TABLE OF CONTENTS', 'RECORD OF OWNERSHIP',
+    'WARRANTY', 'DISCLAIMER', 'PRECAUTION', 'NOTICE'
+]
+
+
+def find_models_in_text(text: str, models_covered: List[str], referenced_selections: List[str]) -> Tuple[List[str], List[str]]:
+    """
+    Find model numbers mentioned in text.
+
+    Returns:
+        (primary_models_found, referenced_systems_found)
+    """
+    if not text:
+        return [], []
+
+    text_upper = text.upper()
+
+    found_primary = []
+    for model in (models_covered or []):
+        if model.upper() in text_upper:
+            found_primary.append(model)
+
+    found_referenced = []
+    for ref in (referenced_selections or []):
+        if ref.upper() in text_upper:
+            found_referenced.append(ref)
+
+    return found_primary, found_referenced
+
+
+def is_universal_section(text: str) -> bool:
+    """Check if text indicates a universal section (SAFETY/WARRANTY/etc.)."""
+    if not text:
+        return False
+    text_upper = text.upper()
+    return any(section in text_upper for section in UNIVERSAL_SECTIONS)
+
+
+def compute_v5_tags(
+    chunk_text: str,
+    section_hierarchy: List[str],
+    models_covered: List[str],
+    selected_models: List[str],  # Not used (Rule 5: never default to user selection)
+    referenced_selections: List[str]
+) -> Dict[str, Any]:
+    """
+    Compute v5 model tags for a chunk using HIGH-RECALL indexing rules.
+
+    Rules (in priority order per addendum 2026-01-27):
+    - Rule 0: Always detect referenced_systems from text
+    - Rule 1: Section/header model inheritance (highest priority)
+    - Rule 2: Chunk text explicit model mentions
+    - Rule 3: Universal-by-section keywords (SAFETY/WARRANTY)
+    - Rule 4: Default to manual-universal if no model signal
+    - Rule 5: Never skip, never default to selected_models
+
+    Returns:
+        {
+            'primary_models': [...],
+            'referenced_systems': [...],
+            'is_universal': bool
+        }
+    """
+    models_covered_set = set(models_covered or [])
+
+    # Rule 0: Always detect referenced_systems from chunk text
+    _, found_referenced = find_models_in_text(
+        chunk_text, [], referenced_selections
+    )
+
+    # Rule 1: Check section_hierarchy for model mentions
+    models_from_headers = []
+    for header in (section_hierarchy or []):
+        header_models, _ = find_models_in_text(header, models_covered, [])
+        models_from_headers.extend(header_models)
+    models_from_headers = list(set(models_from_headers))  # dedupe
+
+    # Rule 2: Check chunk text for model mentions
+    models_from_text, _ = find_models_in_text(chunk_text, models_covered, [])
+
+    # Rule 3: Check if any header is a universal section
+    is_universal_by_section = any(is_universal_section(h) for h in (section_hierarchy or []))
+
+    # Determine primary_models and is_universal (priority order)
+
+    # Priority 1: Section header models (Rule 1)
+    if models_from_headers:
+        primary_models = models_from_headers
+        is_universal = (set(primary_models) == models_covered_set) and len(models_covered_set) > 0
+        return {
+            'primary_models': primary_models,
+            'referenced_systems': found_referenced,
+            'is_universal': is_universal
+        }
+
+    # Priority 2: Chunk text models (Rule 2)
+    if models_from_text:
+        primary_models = models_from_text
+        is_universal = (set(primary_models) == models_covered_set) and len(models_covered_set) > 0
+        return {
+            'primary_models': primary_models,
+            'referenced_systems': found_referenced,
+            'is_universal': is_universal
+        }
+
+    # Priority 3: Universal section keywords (Rule 3)
+    if is_universal_by_section:
+        return {
+            'primary_models': list(models_covered or []),
+            'referenced_systems': found_referenced,
+            'is_universal': True
+        }
+
+    # Rule 4: Default to manual-universal (HIGH RECALL - no skip!)
+    # "No model mentioned" ≠ "unknown". The manual itself provides the scope.
+    return {
+        'primary_models': list(models_covered or []),
+        'referenced_systems': found_referenced,
+        'is_universal': True
+    }
+
 
 class SemanticChunker:
     """
@@ -95,6 +218,13 @@ class SemanticChunker:
         try:
             logger.info(f"Chunking document {filename}: {len(markdown)} chars")
 
+            # Extract v5 tag inputs from metadata
+            models_covered = metadata.get('models_covered', [])
+            selected_models = metadata.get('selected_models', [])
+            referenced_selections = metadata.get('referenced_selections', [])
+
+            logger.info(f"v5 tagging: models_covered={models_covered}, selected={selected_models}, refs={referenced_selections}")
+
             # Split using new markdown-aware chunker
             raw_chunks_with_tokens = self._chunk_markdown(markdown)
 
@@ -105,11 +235,24 @@ class SemanticChunker:
 
             # Build Chunk objects with full metadata
             chunks = []
+            skipped_chunks = 0
             total_tokens = 0
 
             for i, (chunk_text, token_count) in enumerate(raw_chunks_with_tokens):
                 # Find section hierarchy for this chunk
                 section_info = self._find_section(chunk_text, sections, markdown)
+
+                # Compute v5 tags for this chunk (high-recall: no skipping)
+                v5_tags = compute_v5_tags(
+                    chunk_text=chunk_text,
+                    section_hierarchy=section_info['hierarchy'],
+                    models_covered=models_covered,
+                    selected_models=selected_models,
+                    referenced_selections=referenced_selections
+                )
+
+                # Note: High-recall indexing - we no longer skip chunks.
+                # skipped_chunks stays 0; filtering happens at query time.
 
                 # Count chars
                 char_count = len(chunk_text)
@@ -137,7 +280,7 @@ class SemanticChunker:
 
                     # Chunk identification
                     chunk_id=chunk_id,
-                    chunk_index=i,
+                    chunk_index=len(chunks),  # Use actual index (accounts for skipped chunks)
 
                     # Section hierarchy
                     section_hierarchy=section_info['hierarchy'],
@@ -146,7 +289,7 @@ class SemanticChunker:
 
                     # Relationships
                     parent_chunk_id=None,
-                    previous_chunk_id=chunks[i-1].metadata.chunk_id if i > 0 else None,
+                    previous_chunk_id=chunks[-1].metadata.chunk_id if chunks else None,
                     next_chunk_id=None,
 
                     # Metrics
@@ -161,9 +304,14 @@ class SemanticChunker:
                     content_snippet=chunk_text[:200],
                     keywords=[],
 
-                    # Asset linking
+                    # Asset linking (legacy)
                     linked_asset_uid=metadata.get('asset_uid'),
-                    linked_system_name=metadata.get('system_name')
+                    linked_system_name=metadata.get('system_name'),
+
+                    # v5 model tagging
+                    primary_models=v5_tags['primary_models'],
+                    referenced_systems=v5_tags['referenced_systems'],
+                    is_universal=v5_tags['is_universal']
                 )
 
                 # Create chunk
@@ -171,19 +319,20 @@ class SemanticChunker:
                     content=chunk_text,
                     metadata=chunk_metadata
                 )
-                chunks.append(chunk)
+                # Set next_chunk_id for previous chunk before appending
+                if chunks:
+                    chunks[-1].metadata.next_chunk_id = chunk_id
 
-                # Set next_chunk_id for previous chunk
-                if i > 0:
-                    chunks[i-1].metadata.next_chunk_id = chunk_id
+                chunks.append(chunk)
 
             # Extract BM25 keywords across all chunks
             self._extract_keywords(chunks)
 
+            avg_tokens = total_tokens / len(chunks) if chunks else 0
             logger.info(
-                f"Created {len(chunks)} chunks, "
+                f"Created {len(chunks)} chunks (skipped {skipped_chunks} unknown attribution), "
                 f"total {total_tokens} tokens, "
-                f"avg {total_tokens/len(chunks):.0f} tokens/chunk"
+                f"avg {avg_tokens:.0f} tokens/chunk"
             )
 
             return DocumentChunks(
@@ -192,6 +341,7 @@ class SemanticChunker:
                 chunks=chunks,
                 total_chunks=len(chunks),
                 total_tokens=total_tokens,
+                chunks_skipped=skipped_chunks,
                 metadata=metadata
             )
 
