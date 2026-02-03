@@ -187,11 +187,19 @@ export async function runVisionPipeline({
       analysisPaths: analyzeResponse.analysis_paths?.length || 0
     });
 
+    // 10-minute timeout for crop-figures (search_blob generation can take 5+ minutes)
+    const CROP_TIMEOUT_MS = 10 * 60 * 1000;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), CROP_TIMEOUT_MS);
+
     const response = await fetch(`${sidecarUrl}/v1/vision/crop-figures`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cropRequest)
+      body: JSON.stringify(cropRequest),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -243,6 +251,7 @@ export async function runVisionPipeline({
       title: asset.title || null,
       description: asset.description || null,
       figure_reference: asset.figure_reference || null,
+      search_blob: asset.search_blob || null,
       bbox: asset.bbox,
       storage_path: asset.storage_path,
       analysis_path: asset.analysis_path,

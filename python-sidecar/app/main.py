@@ -3586,6 +3586,25 @@ async def crop_figures_from_analysis(request: VisionCropRequest):
 
         pdf.close()
 
+        # Generate search_blobs for all assets
+        if assets:
+            try:
+                logger.info(f"Generating search_blobs for {len(assets)} assets...")
+                # Download llamaparse_raw.json for snippet extraction
+                llamaparse_path = f"manuals/{request.doc_id}/llamaparse_raw.json"
+                llamaparse_bytes = supabase.storage.from_('documents').download(llamaparse_path)
+                llamaparse_data = json.loads(llamaparse_bytes.decode('utf-8')) if llamaparse_bytes else {}
+
+                assets = await _generate_search_blobs(assets, llamaparse_data, request.doc_id)
+                blobs_generated = sum(1 for a in assets if a.search_blob)
+                logger.info(f"Generated {blobs_generated} search_blobs")
+            except Exception as blob_error:
+                logger.warning(f"Search blob generation failed: {blob_error}")
+                warnings.append({
+                    'code': 'SEARCH_BLOB_GENERATION_FAILED',
+                    'error': str(blob_error)
+                })
+
         # Create manifest
         manifest_path = None
         try:
@@ -4219,6 +4238,138 @@ async def _crop_and_upload_element(
         is_universal=element.get('is_universal', False),
         asset_json=asset_json
     )
+
+
+# ============================================================================
+# SEARCH BLOB GENERATION (for asset searchability)
+# ============================================================================
+
+async def _generate_search_blobs(
+    assets: List[VisionAsset],
+    llamaparse_data: dict,
+    doc_id: str
+) -> List[VisionAsset]:
+    """
+    Generate search_blob for each asset using OpenAI gpt-4o-mini.
+
+    Uses the surrounding text from llamaparse to create searchable descriptions.
+    Uses AsyncOpenAI with parallel batches of 10 for speed.
+    """
+    import asyncio
+    from openai import AsyncOpenAI
+
+    openai_client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    pages_by_num = {p['page']: p for p in llamaparse_data.get('pages', [])}
+
+    BATCH_SIZE = 10
+
+    async def process_single_asset(asset: VisionAsset) -> VisionAsset:
+        """Generate search_blob for a single asset."""
+        try:
+            page_data = pages_by_num.get(asset.page_number, {})
+            snippet = _extract_snippet_for_asset(page_data, asset.asset_index, asset.asset_kind)
+
+            prompt = f"""You are helping make a technical diagram searchable. Given the following information about a figure/diagram from a marine equipment manual, write a concise searchable description (100-150 words max).
+
+Include:
+- What type of diagram this is (wiring diagram, exploded view, installation diagram, parts list, schematic, etc.)
+- Key components or parts shown
+- What system or equipment it relates to
+- Any part numbers or references visible
+- What a technician might search for to find this diagram
+
+ASSET INFO:
+- Page: {asset.page_number}
+- Type: {asset.asset_kind}
+- Title: {asset.title or 'Unknown'}
+- Figure Reference: {asset.figure_reference or 'None'}
+- Existing Description: {asset.description or 'None'}
+
+SURROUNDING TEXT FROM DOCUMENT:
+{snippet or 'No surrounding text available'}
+
+Write a natural, searchable description. Do not use bullet points. Do not repeat "this diagram shows" - just describe what it is."""
+
+            response = await openai_client.chat.completions.create(
+                model='gpt-4o-mini',
+                messages=[{'role': 'user', 'content': prompt}],
+                max_tokens=300,
+                temperature=0.3
+            )
+
+            asset.search_blob = response.choices[0].message.content.strip() if response.choices else None
+
+        except Exception as e:
+            logger.warning(f"Failed to generate search_blob for page {asset.page_number} idx {asset.asset_index}: {e}")
+            asset.search_blob = None
+
+        return asset
+
+    # Process in parallel batches of 10
+    for i in range(0, len(assets), BATCH_SIZE):
+        batch = assets[i:i + BATCH_SIZE]
+        batch_num = (i // BATCH_SIZE) + 1
+        total_batches = (len(assets) + BATCH_SIZE - 1) // BATCH_SIZE
+        logger.info(f"Processing search_blob batch {batch_num}/{total_batches} ({len(batch)} assets)")
+        await asyncio.gather(*[process_single_asset(a) for a in batch])
+
+    return assets
+
+
+def _extract_snippet_for_asset(page_data: dict, asset_index: int, asset_kind: str) -> str:
+    """Extract surrounding text snippet for an asset from LlamaParse page data."""
+    items = page_data.get('items', [])
+    layout = page_data.get('layout', [])
+
+    # Find layout elements of this kind
+    layout_label = 'picture' if asset_kind == 'figure' else 'table'
+    layout_elements = sorted(
+        [el for el in layout if el.get('label') == layout_label and not el.get('isLikelyNoise')],
+        key=lambda e: (e.get('bbox', {}).get('y', 0), e.get('bbox', {}).get('x', 0))
+    )
+
+    if asset_index >= len(layout_elements):
+        return ''
+
+    # Find image items (correlate with layout pictures for figures)
+    image_items = [(i, item) for i, item in enumerate(items) if item.get('type') == 'image']
+
+    snippet_parts = []
+
+    if asset_kind == 'figure' and asset_index < len(image_items):
+        image_idx, image_item = image_items[asset_index]
+
+        # Get items before (up to 10, stop at previous image)
+        for i in range(image_idx - 1, max(0, image_idx - 10) - 1, -1):
+            item = items[i]
+            if item.get('type') == 'image':
+                break
+            if item.get('type') == 'heading':
+                snippet_parts.insert(0, f"[HEADING] {item.get('value', '')}")
+                break
+            if item.get('type') == 'text' and item.get('value', '').strip():
+                snippet_parts.insert(0, f"[TEXT] {item.get('value', '').strip()}")
+
+        # Add figure reference
+        if image_item.get('alt'):
+            snippet_parts.append(f"[FIGURE REF] {image_item.get('alt')}")
+
+        # Get items after (up to 15, stop at next image or heading)
+        for i in range(image_idx + 1, min(len(items), image_idx + 15)):
+            item = items[i]
+            if item.get('type') in ('image', 'heading'):
+                break
+            if item.get('type') == 'text' and item.get('value', '').strip():
+                snippet_parts.append(f"[TEXT] {item.get('value', '').strip()}")
+    else:
+        # Fallback for tables or unmatched figures
+        for item in items[:20]:
+            if item.get('type') == 'heading':
+                snippet_parts.append(f"[HEADING] {item.get('value', '')}")
+            elif item.get('type') == 'text' and item.get('value', '').strip():
+                snippet_parts.append(f"[TEXT] {item.get('value', '').strip()[:200]}")
+
+    return '\n'.join(snippet_parts)
 
 
 if __name__ == "__main__":

@@ -1311,6 +1311,281 @@
             statusEl.textContent = message;
         }
 
+        // Track active EventSource for cleanup
+        let activeEventSource = null;
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (activeEventSource) {
+                activeEventSource.close();
+                activeEventSource = null;
+            }
+        });
+
+        // Helper to update DIP mode row UI
+        function updateModeRow(mode, status, detail = '') {
+            const row = document.getElementById(`dip-mode-${mode}`);
+            if (!row) return;
+            row.className = `dip-mode-row ${status}`;
+            const icon = row.querySelector('.dip-mode-icon');
+            if (status === 'active') {
+                icon.textContent = '';
+            } else if (status === 'complete') {
+                icon.textContent = '✓';
+            } else if (status === 'error') {
+                icon.textContent = '✗';
+            }
+            if (detail) {
+                row.innerHTML = `<span class="dip-mode-icon">${icon.textContent}</span> ${row.textContent.split(' ')[0]} <span style="color: var(--text-secondary); font-size: 12px;">${detail}</span>`;
+            }
+        }
+
+        /**
+         * Run indexing pipeline (Pinecone + colloquial)
+         * Returns: { success, data, error }
+         */
+        async function runIndexing({ docId, selected_models, referenced_selections, installedAssetUid }) {
+            const startTime = Date.now();
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/index`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        selected_models,
+                        referenced_selections,
+                        asset_uid: installedAssetUid,
+                        skip_dip: true
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    const errorMsg = err.error?.message || `HTTP ${response.status}`;
+                    updateStep('indexing', 'error', `Failed: ${errorMsg}`);
+                    return { success: false, error: errorMsg, duration_ms: Date.now() - startTime };
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    const data = result.data || result;
+                    const colloq = data.colloquial;
+                    const colloqSummary = (colloq && colloq.success && colloq.keywords_saved)
+                        ? `, ${colloq.keywords_count || 0} colloquial terms`
+                        : '';
+                    updateStep('indexing', 'complete',
+                        `${data.chunks_created || 0} chunks, ${data.vectors_upserted || 0} vectors${colloqSummary}`);
+                    return { success: true, data, duration_ms: Date.now() - startTime };
+                } else {
+                    const errorMsg = result.error?.message || 'Unknown error';
+                    updateStep('indexing', 'error', errorMsg);
+                    return { success: false, error: errorMsg, duration_ms: Date.now() - startTime };
+                }
+            } catch (err) {
+                console.error('Indexing error:', err);
+                updateStep('indexing', 'error', `Error: ${err.message}`);
+                return { success: false, error: err.message, duration_ms: Date.now() - startTime };
+            }
+        }
+
+        /**
+         * Run DIP streaming extraction
+         * Returns: { success, modes_completed, modes_failed, total_inserted, error }
+         */
+        async function runDipStreaming({ docId, selected_models, referenced_selections }) {
+            const startTime = Date.now();
+            try {
+                // Step 1: Start DIP run
+                const startResponse = await window.adminFetch(`/admin/api/documents/${docId}/dip/run`, {
+                    method: 'POST',
+                    body: JSON.stringify({ selected_models, referenced_selections })
+                });
+
+                if (!startResponse.ok) {
+                    const err = await startResponse.json().catch(() => ({}));
+                    throw new Error(err.error?.message || 'Failed to start DIP run');
+                }
+
+                const startResult = await startResponse.json();
+                const dipRunId = startResult.data?.dip_run_id;
+
+                if (!dipRunId) {
+                    throw new Error('No dip_run_id returned');
+                }
+
+                // Show DIP modes panel
+                document.getElementById('dip-modes-panel').style.display = 'block';
+
+                // Step 2: Stream progress via EventSource
+                const adminToken = window.getAdminToken();
+                const result = await new Promise((resolve, reject) => {
+                    const eventSource = new EventSource(`/admin/api/documents/dip/stream/${dipRunId}?token=${adminToken}`);
+                    activeEventSource = eventSource; // Track for cleanup
+
+                    let modesCompleted = [];
+                    let modesFailed = [];
+                    let totalInserted = 0;
+
+                    eventSource.addEventListener('run_started', (e) => {
+                        updateStep('dip', 'active', `Running (warm-up + 2 at a time)...`);
+                    });
+
+                    eventSource.addEventListener('mode_started', (e) => {
+                        const data = JSON.parse(e.data);
+                        updateModeRow(data.mode, 'active');
+                    });
+
+                    eventSource.addEventListener('mode_completed', (e) => {
+                        const data = JSON.parse(e.data);
+                        modesCompleted.push(data.mode);
+                        totalInserted += data.inserted || 0;
+                        let statusText = `${data.inserted || 0} items`;
+                        if (data.cache_read_input_tokens > 0) {
+                            statusText += ` (cache: ${data.cache_read_input_tokens})`;
+                        } else if (data.cache_creation_input_tokens > 0) {
+                            statusText += ` (cache created: ${data.cache_creation_input_tokens})`;
+                        }
+                        updateModeRow(data.mode, 'complete', statusText);
+                    });
+
+                    eventSource.addEventListener('mode_failed', (e) => {
+                        const data = JSON.parse(e.data);
+                        modesFailed.push(data.mode);
+                        updateModeRow(data.mode, 'error', data.error || 'Failed');
+                    });
+
+                    eventSource.addEventListener('run_cache_metrics', (e) => {
+                        const data = JSON.parse(e.data);
+                        const cacheInfo = document.getElementById('dip-cache-info');
+                        if (cacheInfo && (data.cache_creation_input_tokens || data.cache_read_input_tokens)) {
+                            cacheInfo.textContent = `Cache: ${data.cache_creation_input_tokens || 0} created, ${data.cache_read_input_tokens || 0} read`;
+                        }
+                    });
+
+                    eventSource.addEventListener('run_completed', (e) => {
+                        eventSource.close();
+                        activeEventSource = null;
+                        resolve({
+                            success: modesFailed.length === 0,
+                            modes_completed: modesCompleted,
+                            modes_failed: modesFailed,
+                            total_inserted: totalInserted,
+                            duration_ms: Date.now() - startTime
+                        });
+                    });
+
+                    eventSource.addEventListener('run_failed', (e) => {
+                        const data = JSON.parse(e.data);
+                        eventSource.close();
+                        activeEventSource = null;
+                        const err = new Error(data.error || 'DIP run failed');
+                        err.code = data.error_code;
+                        reject(err);
+                    });
+
+                    eventSource.onerror = (err) => {
+                        eventSource.close();
+                        activeEventSource = null;
+                        const error = new Error('DIP stream connection failed');
+                        error.code = 'CONNECTION_FAILED';
+                        reject(error);
+                    };
+
+                    // Timeout after 35 minutes
+                    setTimeout(() => {
+                        eventSource.close();
+                        activeEventSource = null;
+                        const err = new Error('DIP extraction timed out');
+                        err.code = 'CLIENT_TIMEOUT';
+                        reject(err);
+                    }, 35 * 60 * 1000);
+                });
+
+                // Update final status
+                if (result.success) {
+                    updateStep('dip', 'complete',
+                        `${result.total_inserted} items extracted (${result.modes_completed.length} modes)`);
+                } else if (result.modes_completed?.length > 0) {
+                    updateStep('dip', 'error',
+                        `Partial: ${result.total_inserted} items, ${result.modes_failed.length} modes failed`);
+                }
+
+                return result;
+
+            } catch (dipErr) {
+                console.error('DIP streaming error:', dipErr);
+
+                let errorMsg;
+                switch (dipErr.code) {
+                    case 'DIP_TIMEOUT':
+                        errorMsg = 'Timed out after 30 minutes. Try running with fewer modes.';
+                        break;
+                    case 'CLIENT_TIMEOUT':
+                        errorMsg = 'Client-side timeout. The server may still be processing.';
+                        break;
+                    case 'RUN_NOT_FOUND':
+                        errorMsg = 'DIP run expired. Please restart the process.';
+                        break;
+                    case 'CONNECTION_FAILED':
+                        errorMsg = 'Connection lost. Check your network and try again.';
+                        break;
+                    case 'SIDECAR_ERROR':
+                        errorMsg = `Server error: ${dipErr.message}`;
+                        break;
+                    default:
+                        errorMsg = dipErr.message || 'Unknown error';
+                }
+
+                updateStep('dip', 'error', errorMsg);
+                return {
+                    success: false,
+                    error: dipErr.message,
+                    error_code: dipErr.code,
+                    duration_ms: Date.now() - startTime
+                };
+            }
+        }
+
+        /**
+         * Run vision pipeline (analyze pages + crop figures + generate search_blobs)
+         * Returns: { success, data, error }
+         */
+        async function runVision({ docId, storagePath, selected_models, referenced_selections }) {
+            const startTime = Date.now();
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/vision`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        storage_path: storagePath,
+                        selected_models,
+                        referenced_selections,
+                        pages: '1-100'
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    const errorMsg = err.error || `HTTP ${response.status}`;
+                    updateStep('vision', 'error', `Failed: ${errorMsg}`);
+                    return { success: false, error: errorMsg, duration_ms: Date.now() - startTime };
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    const data = result.data || result;
+                    const skipped = data.warnings?.filter(w => w.code === 'PAGE_SKIPPED_NOT_RELEVANT').length || 0;
+                    updateStep('vision', 'complete',
+                        `${data.assets_saved || 0} assets extracted, ${skipped} pages filtered`);
+                    return { success: true, data, duration_ms: Date.now() - startTime };
+                } else {
+                    updateStep('vision', 'error', result.error || 'Unknown error');
+                    return { success: false, error: result.error, duration_ms: Date.now() - startTime };
+                }
+            } catch (err) {
+                console.error('Vision error:', err);
+                updateStep('vision', 'error', `Error: ${err.message}`);
+                return { success: false, error: err.message, duration_ms: Date.now() - startTime };
+            }
+        }
+
         async function confirmSelection() {
             confirmBtn.disabled = true;
             confirmBtn.textContent = 'Processing...';
@@ -1399,288 +1674,112 @@
                 updateStep('document', 'complete', `Document created, ${docResult.data?.systems_created || 0} systems`);
 
                 // ========================================
-                // Step 2: Run Vision Pipeline
-                // ========================================
-                updateStep('vision', 'active', 'Analyzing pages for diagrams...');
-
-                const docId = storageResult?.doc_id;
-                const storagePath = storageResult?.storage_path;
-
-                if (!docId || !storagePath) {
-                    updateStep('vision', 'complete', 'Skipped (no storage path)', '⊘');
-                } else if (selected_models.length === 0) {
-                    updateStep('vision', 'complete', 'Skipped (no models selected)', '⊘');
-                } else {
-                    // Call vision endpoint
-                    const visionResponse = await window.adminFetch(`/admin/api/documents/${docId}/vision`, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            storage_path: storagePath,
-                            selected_models: selected_models,
-                            referenced_selections: referenced_selections,
-                            pages: '1-100' // Process up to 100 pages
-                        })
-                    });
-
-                    if (!visionResponse.ok) {
-                        const err = await visionResponse.json().catch(() => ({}));
-                        // Vision failure is non-fatal - document is still created
-                        updateStep('vision', 'error', `Failed: ${err.error || visionResponse.status}`);
-                        visionResult = { success: false, error: err.error };
-                    } else {
-                        visionResult = await visionResponse.json();
-
-                        if (visionResult.success) {
-                            const data = visionResult.data || visionResult;
-                            const skipped = data.warnings?.filter(w => w.code === 'PAGE_SKIPPED_NOT_RELEVANT').length || 0;
-                            updateStep('vision', 'complete',
-                                `${data.assets_saved || 0} assets extracted, ${skipped} pages filtered`);
-                        } else {
-                            updateStep('vision', 'error', visionResult.error || 'Unknown error');
-                        }
-                    }
-                }
-
-                // ========================================
-                // Step 3: Run Indexing Pipeline (skip_dip=true, we stream DIP separately)
+                // Step 2-4: Run Vision + Indexing + DIP in PARALLEL
                 // ========================================
                 let indexingResult = null;
                 let dipResult = null;
-                updateStep('indexing', 'active', 'Chunking and indexing content...');
+                const parallelStartTime = Date.now();
 
-                const indexDocId = storageResult?.doc_id;
-                if (!indexDocId) {
+                const docId = storageResult?.doc_id;
+                const storagePath = storageResult?.storage_path;
+                const installedAssetUid = docResult?.data?.installed_system?.asset_uid || null;
+
+                if (!docId) {
+                    updateStep('vision', 'complete', 'Skipped (no doc_id)', '⊘');
                     updateStep('indexing', 'complete', 'Skipped (no doc_id)', '⊘');
                     updateStep('dip', 'complete', 'Skipped (no doc_id)', '⊘');
                 } else if (selected_models.length === 0) {
+                    updateStep('vision', 'complete', 'Skipped (no models selected)', '⊘');
                     updateStep('indexing', 'complete', 'Skipped (no models selected)', '⊘');
                     updateStep('dip', 'complete', 'Skipped (no models selected)', '⊘');
                 } else {
-                    try {
-                        const installedAssetUid = docResult?.data?.installed_system?.asset_uid || null;
-                        const indexResponse = await window.adminFetch(`/admin/api/documents/${indexDocId}/index`, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                selected_models: selected_models,
-                                referenced_selections: referenced_selections,
-                                asset_uid: installedAssetUid,
-                                skip_dip: true  // We'll stream DIP separately
-                            })
-                        });
+                    // Start ALL THREE tasks simultaneously
+                    updateStep('vision', 'active', 'Analyzing pages for diagrams...');
+                    updateStep('indexing', 'active', 'Chunking and indexing content...');
+                    updateStep('dip', 'active', 'Starting DIP extraction...');
 
-                        if (!indexResponse.ok) {
-                            const err = await indexResponse.json().catch(() => ({}));
-                            updateStep('indexing', 'error', `Failed: ${err.error?.message || indexResponse.status}`);
-                            indexingResult = { success: false, error: err.error };
-                            updateStep('dip', 'complete', 'Skipped (indexing failed)', '⊘');
-                        } else {
-                            indexingResult = await indexResponse.json();
+                    const visionPromise = storagePath
+                        ? runVision({ docId, storagePath, selected_models, referenced_selections })
+                        : Promise.resolve({ success: false, error: 'No storage path', skipped: true });
 
-                            if (indexingResult.success) {
-                                const data = indexingResult.data || indexingResult;
-                                const colloq = data.colloquial;
-                                const colloqSummary = (colloq && colloq.success && colloq.keywords_saved)
-                                    ? `, ${colloq.keywords_count || 0} colloquial terms`
-                                    : '';
-                                updateStep('indexing', 'complete',
-                                    `${data.chunks_created || 0} chunks, ${data.vectors_upserted || 0} vectors${colloqSummary}`);
+                    const indexingPromise = runIndexing({
+                        docId,
+                        selected_models,
+                        referenced_selections,
+                        installedAssetUid
+                    });
 
-                                // ========================================
-                                // Step 3b: Stream DIP extraction
-                                // ========================================
-                                updateStep('dip', 'active', 'Starting DIP extraction...');
-                                document.getElementById('dip-modes-panel').style.display = 'block';
+                    const dipPromise = runDipStreaming({
+                        docId,
+                        selected_models,
+                        referenced_selections
+                    });
 
-                                // Helper to update mode row UI
-                                const updateModeRow = (mode, status, detail = '') => {
-                                    const row = document.getElementById(`dip-mode-${mode}`);
-                                    if (!row) return;
-                                    row.className = `dip-mode-row ${status}`;
-                                    const icon = row.querySelector('.dip-mode-icon');
-                                    if (status === 'active') {
-                                        icon.textContent = '';
-                                    } else if (status === 'complete') {
-                                        icon.textContent = '✓';
-                                    } else if (status === 'error') {
-                                        icon.textContent = '✗';
-                                    }
-                                    if (detail) {
-                                        row.innerHTML = `<span class="dip-mode-icon">${icon.textContent}</span> ${row.textContent.split(' ')[0]} <span style="color: var(--text-secondary); font-size: 12px;">${detail}</span>`;
-                                    }
-                                };
+                    // Wait for ALL THREE to complete (regardless of individual success/failure)
+                    const [visionSettled, indexingSettled, dipSettled] = await Promise.allSettled([
+                        visionPromise, indexingPromise, dipPromise
+                    ]);
 
-                                try {
-                                    // Step 1: Start DIP run
-                                    const startResponse = await window.adminFetch(`/admin/api/documents/${indexDocId}/dip/run`, {
-                                        method: 'POST',
-                                        body: JSON.stringify({
-                                            selected_models: selected_models,
-                                            referenced_selections: referenced_selections
-                                        })
-                                    });
+                    // Extract results
+                    visionResult = visionSettled.status === 'fulfilled'
+                        ? visionSettled.value
+                        : { success: false, error: visionSettled.reason?.message || 'Unknown error' };
 
-                                    if (!startResponse.ok) {
-                                        const err = await startResponse.json().catch(() => ({}));
-                                        throw new Error(err.error?.message || 'Failed to start DIP run');
-                                    }
-
-                                    const startResult = await startResponse.json();
-                                    const dipRunId = startResult.data?.dip_run_id;
-
-                                    if (!dipRunId) {
-                                        throw new Error('No dip_run_id returned');
-                                    }
-
-                                    // Step 2: Stream progress via EventSource
-                                    // Note: EventSource can't send headers, so pass token as query param
-                                    const adminToken = window.getAdminToken();
-                                    dipResult = await new Promise((resolve, reject) => {
-                                        const eventSource = new EventSource(`/admin/api/documents/dip/stream/${dipRunId}?token=${adminToken}`);
-                                        let modesCompleted = [];
-                                        let modesFailed = [];
-                                        let totalInserted = 0;
-
-                                        eventSource.addEventListener('run_started', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            updateStep('dip', 'active', `Running (warm-up + 2 at a time)...`);
-                                        });
-
-                                        eventSource.addEventListener('mode_started', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            updateModeRow(data.mode, 'active');
-                                        });
-
-                                        eventSource.addEventListener('mode_completed', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            modesCompleted.push(data.mode);
-                                            totalInserted += data.inserted || 0;
-                                            // Build status text with optional cache info
-                                            let statusText = `${data.inserted || 0} items`;
-                                            if (data.cache_read_input_tokens > 0) {
-                                                statusText += ` (cache: ${data.cache_read_input_tokens})`;
-                                            } else if (data.cache_creation_input_tokens > 0) {
-                                                statusText += ` (cache created: ${data.cache_creation_input_tokens})`;
-                                            }
-                                            updateModeRow(data.mode, 'complete', statusText);
-                                        });
-
-                                        eventSource.addEventListener('mode_failed', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            modesFailed.push(data.mode);
-                                            updateModeRow(data.mode, 'error', data.error || 'Failed');
-                                        });
-
-                                        eventSource.addEventListener('run_cache_metrics', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            const cacheInfo = document.getElementById('dip-cache-info');
-                                            if (cacheInfo && (data.cache_creation_input_tokens || data.cache_read_input_tokens)) {
-                                                cacheInfo.textContent = `Cache: ${data.cache_creation_input_tokens || 0} created, ${data.cache_read_input_tokens || 0} read`;
-                                            }
-                                        });
-
-                                        eventSource.addEventListener('run_completed', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            eventSource.close();
-                                            resolve({
-                                                success: modesFailed.length === 0,
-                                                modes_completed: modesCompleted,
-                                                modes_failed: modesFailed,
-                                                total_inserted: totalInserted
-                                            });
-                                        });
-
-                                        eventSource.addEventListener('run_failed', (e) => {
-                                            const data = JSON.parse(e.data);
-                                            eventSource.close();
-                                            // Include error_code for specific handling
-                                            const err = new Error(data.error || 'DIP run failed');
-                                            err.code = data.error_code;
-                                            reject(err);
-                                        });
-
-                                        eventSource.onerror = (err) => {
-                                            eventSource.close();
-                                            const error = new Error('DIP stream connection failed');
-                                            error.code = 'CONNECTION_FAILED';
-                                            reject(error);
-                                        };
-
-                                        // Timeout after 35 minutes (slightly longer than server timeout)
-                                        setTimeout(() => {
-                                            eventSource.close();
-                                            const err = new Error('DIP extraction timed out');
-                                            err.code = 'CLIENT_TIMEOUT';
-                                            reject(err);
-                                        }, 35 * 60 * 1000);
-                                    });
-
-                                    // Update final status
-                                    if (dipResult.success) {
-                                        updateStep('dip', 'complete',
-                                            `${dipResult.total_inserted} items extracted (${dipResult.modes_completed.length} modes)`);
-                                    } else if (dipResult.modes_completed?.length > 0) {
-                                        updateStep('dip', 'error',
-                                            `Partial: ${dipResult.total_inserted} items, ${dipResult.modes_failed.length} modes failed`);
-                                    } else {
-                                        updateStep('dip', 'error', 'DIP extraction failed');
-                                    }
-
-                                } catch (dipErr) {
-                                    console.error('DIP streaming error:', dipErr);
-
-                                    // Show specific error messages based on error code
-                                    let errorMsg;
-                                    switch (dipErr.code) {
-                                        case 'DIP_TIMEOUT':
-                                            errorMsg = 'Timed out after 30 minutes. Try running with fewer modes.';
-                                            break;
-                                        case 'CLIENT_TIMEOUT':
-                                            errorMsg = 'Client-side timeout. The server may still be processing.';
-                                            break;
-                                        case 'RUN_NOT_FOUND':
-                                            errorMsg = 'DIP run expired. Please restart the process.';
-                                            break;
-                                        case 'CONNECTION_FAILED':
-                                            errorMsg = 'Connection lost. Check your network and try again.';
-                                            break;
-                                        case 'SIDECAR_ERROR':
-                                            errorMsg = `Server error: ${dipErr.message}`;
-                                            break;
-                                        default:
-                                            errorMsg = dipErr.message || 'Unknown error';
-                                    }
-
-                                    updateStep('dip', 'error', errorMsg);
-                                    dipResult = { success: false, error: dipErr.message, error_code: dipErr.code };
-                                }
-
-                            } else {
-                                updateStep('indexing', 'error', indexingResult.error?.message || 'Unknown error');
-                                updateStep('dip', 'complete', 'Skipped (indexing failed)', '⊘');
-                            }
-                        }
-                    } catch (indexErr) {
-                        console.error('Indexing error:', indexErr);
-                        updateStep('indexing', 'error', `Error: ${indexErr.message}`);
-                        updateStep('dip', 'complete', 'Skipped (indexing failed)', '⊘');
-                        indexingResult = { success: false, error: indexErr.message };
+                    // Handle skipped vision (no storage path)
+                    if (visionResult.skipped) {
+                        updateStep('vision', 'complete', 'Skipped (no storage path)', '⊘');
                     }
+
+                    indexingResult = indexingSettled.status === 'fulfilled'
+                        ? indexingSettled.value
+                        : { success: false, error: indexingSettled.reason?.message || 'Unknown error' };
+
+                    dipResult = dipSettled.status === 'fulfilled'
+                        ? dipSettled.value
+                        : { success: false, error: dipSettled.reason?.message || 'Unknown error' };
+
+                    // Log parallel timing
+                    const parallelDuration = Date.now() - parallelStartTime;
+                    console.log(`Parallel execution completed in ${parallelDuration}ms`, {
+                        vision_ms: visionResult.duration_ms,
+                        indexing_ms: indexingResult.duration_ms,
+                        dip_ms: dipResult.duration_ms,
+                        total_parallel_ms: parallelDuration
+                    });
                 }
 
                 // ========================================
-                // Step 4: Complete
+                // Step 5: Complete
                 // ========================================
-                updateStep('complete', 'complete', 'All steps finished!');
+                const visionOk = visionResult?.success !== false || visionResult?.skipped;
+                const indexingOk = indexingResult?.success !== false;
+                const dipOk = dipResult?.success !== false;
+                const hasErrors = !visionOk || !indexingOk || !dipOk;
 
-                // Store for retry functionality
+                if (hasErrors) {
+                    updateStep('complete', 'complete', 'Completed with errors', '⚠');
+                } else {
+                    updateStep('complete', 'complete', 'Complete');
+                }
+
+                // Store for retry functionality (extended to support per-task retry)
                 window.lastIngestState = {
                     docId: storageResult?.doc_id,
+                    storagePath: storageResult?.storage_path,
                     selectedModels: selected_models,
-                    referencedSelections: referenced_selections
+                    referencedSelections: referenced_selections,
+                    installedAssetUid,
+                    visionResult,
+                    indexingResult,
+                    dipResult,
+                    visionFailed: !visionOk,
+                    indexingFailed: !indexingOk,
+                    dipFailed: !dipOk
                 };
 
                 // Embed dipResult into indexingResult for backwards compatibility with showSuccessScreen
-                if (indexingResult && indexingResult.data && dipResult) {
+                if (indexingResult && dipResult) {
+                    if (!indexingResult.data) indexingResult.data = {};
                     indexingResult.data.dip = dipResult;
                 }
                 // Wait a moment then show success

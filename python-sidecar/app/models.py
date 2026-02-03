@@ -285,6 +285,7 @@ class VisionAsset(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     figure_reference: Optional[str] = Field(None, description="Figure reference like 'FIG. 3-8'")
+    search_blob: Optional[str] = Field(None, description="LLM-generated searchable description")
     bbox: Dict[str, float] = Field(..., description="Percentage bbox {x, y, width, height}")
     storage_path: str = Field(..., description="Storage path to cropped image")
     analysis_path: str = Field(..., description="Storage path to page analysis JSON")
