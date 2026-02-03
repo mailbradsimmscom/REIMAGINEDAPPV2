@@ -242,6 +242,7 @@ export async function runVisionPipeline({
       asset_type: asset.asset_type || null,
       title: asset.title || null,
       description: asset.description || null,
+      figure_reference: asset.figure_reference || null,
       bbox: asset.bbox,
       storage_path: asset.storage_path,
       analysis_path: asset.analysis_path,

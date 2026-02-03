@@ -128,6 +128,19 @@ async function clearDatabase(docIds) {
   } catch (err) {
     console.log(`  ⚠️  documents - ${err.message}`);
   }
+  // Clear maintenance_agent_memory table (after instances and document_systems)
+  if (clearAll) {
+    try {
+      const { error } = await supabase
+        .from('maintenance_agent_memory')
+        .delete()
+        .neq('asset_uid', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      console.log('  ✅ maintenance_agent_memory - cleared');
+    } catch (err) {
+      console.log(`  ⚠️  maintenance_agent_memory - ${err.message}`);
+    }
+  }
 
   // Clear systems table (after instances and document_systems)
   if (clearAll) {

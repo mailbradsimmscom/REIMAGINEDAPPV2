@@ -994,6 +994,13 @@
 
     </div>
 
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
+
     <script>
         class DocumentUpload {
             constructor() {
@@ -1050,9 +1057,7 @@
 
             async loadManufacturers() {
                 try {
-                    const response = await fetch('/admin/api/manufacturers', {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
+                    const response = await window.adminFetch('/admin/api/manufacturers');
                     
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1091,9 +1096,7 @@
                         return;
                     }
 
-                    const response = await fetch(`/admin/api/models?manufacturer=${encodeURIComponent(manufacturer.name)}`, {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
+                    const response = await window.adminFetch(`/admin/api/models?manufacturer=${encodeURIComponent(manufacturer.name)}`);
                     
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1274,11 +1277,8 @@
                     formData.append('metadata', JSON.stringify(metadata));
 
                     // Upload to the document ingest endpoint (same as old admin dashboard)
-                    const response = await fetch('/document/ingest', {
+                    const response = await window.adminFetch('/document/ingest', {
                         method: 'POST',
-                        headers: {
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        },
                         body: formData
                     });
 
@@ -1533,12 +1533,8 @@
                         <div class="interaction-description">Processing your model selection.</div>
                     `);
 
-                    const response = await fetch(`/document/jobs/${jobId}/model-selection`, {
+                    const response = await window.adminFetch(`/document/jobs/${jobId}/model-selection`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        },
                         body: JSON.stringify({ selected_models: selectedModels })
                     });
 
@@ -1732,11 +1728,7 @@
 
             async fetchJobStatus(jobId) {
                 try {
-                    const response = await fetch(`/admin/api/jobs/${jobId}`, {
-                        headers: {
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        }
-                    });
+                    const response = await window.adminFetch(`/admin/api/jobs/${jobId}`);
 
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1825,9 +1817,7 @@
                     console.log('🌐 Making request to:', url);
 
                     // Query the systems table for asset_uid
-                    const response = await fetch(url, {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
+                    const response = await window.adminFetch(url);
                     
                     console.log('📡 Response status:', response.status, response.statusText);
                     

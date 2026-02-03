@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Results Dashboard</title>
-    <script>
-        // Auto-set admin token from environment (for development)
-        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
-        if (ADMIN_TOKEN && !localStorage.getItem('x-admin-token')) {
-            localStorage.setItem('x-admin-token', ADMIN_TOKEN);
-        }
-    </script>
     <style>
         :root {
             --primary-color: #007AFF;
@@ -518,6 +511,12 @@
     </style>
 </head>
 <body>
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
     <div class="container">
         <header>
             <h1>Test Results Dashboard</h1>

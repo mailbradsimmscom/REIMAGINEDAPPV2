@@ -3003,6 +3003,50 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
             return True, f"matches referenced ({list(matching_refs)})"
         return False, f"not relevant (page has {model_info['applies_to_models']})"
 
+    def extract_figure_context(items: list, figure_index: int) -> tuple:
+        """
+        Extract title, description, figure_reference from LlamaParse items array.
+        Correlates layout picture index with items array image elements.
+
+        Returns: (title, description, figure_reference)
+        """
+        # Find all image items in order (these correspond to layout pictures)
+        image_items = [(i, item) for i, item in enumerate(items)
+                       if item.get('type') == 'image']
+
+        if figure_index >= len(image_items):
+            return None, None, None
+
+        idx, image_item = image_items[figure_index]
+
+        # figure_reference from alt attribute (e.g., "FIG. 3-8")
+        figure_reference = image_item.get('alt')
+
+        # title: look backwards for preceding heading (H2 or H3)
+        title = None
+        for i in range(idx - 1, -1, -1):
+            prev_item = items[i]
+            if prev_item.get('type') == 'heading':
+                title = prev_item.get('value')
+                break
+            if prev_item.get('type') == 'image':
+                break  # Stop at previous image
+
+        # description: look forwards for legend/callout text (lines starting with -)
+        description = None
+        for i in range(idx + 1, len(items)):
+            next_item = items[i]
+            if next_item.get('type') == 'text':
+                text = next_item.get('value', '').strip()
+                # Check if it looks like a legend (bullet points or numbered list)
+                if text.startswith('-') or text.startswith('•') or (len(text) > 0 and text[0].isdigit()):
+                    description = text
+                    break
+            if next_item.get('type') in ('image', 'heading'):
+                break  # Stop at next image or heading
+
+        return title, description, figure_reference
+
     def find_related_elements(page_data, layout, picture_bbox):
         """
         Find elements spatially related to a picture (captions, parts lists).
@@ -3251,12 +3295,16 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
                 model_info = analyze_page_for_models(page_data, all_models, user_referenced, user_models)
 
                 # Find figures and tables in layout
-                pictures = [
-                    elem for elem in layout
-                    if elem.get('label') == 'picture'
-                    and not elem.get('isLikelyNoise', False)
-                    and elem.get('bbox', {}).get('h', 0) > 0.08
-                ]
+                # Sort by y then x to match reading order (items array order)
+                pictures = sorted(
+                    [
+                        elem for elem in layout
+                        if elem.get('label') == 'picture'
+                        and not elem.get('isLikelyNoise', False)
+                        and elem.get('bbox', {}).get('h', 0) > 0.08
+                    ],
+                    key=lambda e: (e.get('bbox', {}).get('y', 0), e.get('bbox', {}).get('x', 0))
+                )
                 tables = [
                     elem for elem in layout
                     if elem.get('label') in ('table', 'form')
@@ -3287,19 +3335,25 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
                 logger.info(f"Page {page_num}: KEEP - {reason} ({len(pictures)} pictures, {len(tables)} tables)")
 
                 # Build figures array for analysis result
+                # Get items array for context extraction (title, description, figure_reference)
+                items = page_data.get('items', [])
+
                 figures = []
                 for i, elem in enumerate(pictures):
                     elem_bbox = elem.get('bbox', {})
                     merged_bbox, related = find_related_elements(page_data, layout, elem_bbox)
+
+                    # Extract context from LlamaParse items
+                    title, description, figure_ref = extract_figure_context(items, i)
 
                     # Convert bbox from 0-1 to 0-100 percentage
                     # Note: 'type' field intentionally omitted - Stage 7 hardcodes asset_kind
                     # and uses element.get('type') for asset_type (specific subtype like 'exploded_view')
                     figures.append({
                         'id': f"fig_{page_num}_{i}",
-                        'title': None,  # Could be extracted from caption if available
-                        'description': None,
-                        'figure_reference': None,
+                        'title': title,
+                        'description': description,
+                        'figure_reference': figure_ref,
                         'bbox': {
                             'x': merged_bbox['x'] * 100,
                             'y': merged_bbox['y'] * 100,
@@ -4156,6 +4210,7 @@ async def _crop_and_upload_element(
         asset_type=element.get('type'),
         title=element.get('title'),
         description=element.get('description'),
+        figure_reference=element.get('figure_reference'),
         bbox=bbox,
         storage_path=storage_path,
         analysis_path=analysis_path,

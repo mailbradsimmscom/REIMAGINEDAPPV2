@@ -284,6 +284,7 @@ class VisionAsset(BaseModel):
     asset_type: Optional[str] = Field(None, description="Subtype: wiring_diagram, specifications, etc.")
     title: Optional[str] = None
     description: Optional[str] = None
+    figure_reference: Optional[str] = Field(None, description="Figure reference like 'FIG. 3-8'")
     bbox: Dict[str, float] = Field(..., description="Percentage bbox {x, y, width, height}")
     storage_path: str = Field(..., description="Storage path to cropped image")
     analysis_path: str = Field(..., description="Storage path to page analysis JSON")

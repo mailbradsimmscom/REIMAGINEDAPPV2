@@ -296,6 +296,12 @@
     </style>
 </head>
 <body>
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -330,18 +336,6 @@
         let modelsData = [];
         let chunksCache = {}; // Cache chunks by model
         let selectedVectorIds = new Set();
-        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
-
-        // Helper function to add admin token to fetch options
-        function withAdminToken(options = {}) {
-            return {
-                ...options,
-                headers: {
-                    ...options.headers,
-                    'X-Admin-Token': ADMIN_TOKEN
-                }
-            };
-        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', init);
@@ -353,7 +347,7 @@
         // Load all models with chunk counts
         async function loadModels() {
             try {
-                const response = await fetch('/admin/pinecone-admin/models', withAdminToken());
+                const response = await window.adminFetch('/admin/pinecone-admin/models');
                 const data = await response.json();
 
                 if (!data.success) {
@@ -428,11 +422,10 @@
             children.innerHTML = '<li style="padding: var(--spacing-md); color: var(--text-secondary);">Loading chunks...</li>';
 
             try {
-                const response = await fetch('/admin/pinecone-admin/chunks', withAdminToken({
+                const response = await window.adminFetch('/admin/pinecone-admin/chunks', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ model })
-                }));
+                });
 
                 const data = await response.json();
 
@@ -641,12 +634,11 @@
             try {
                 const vectorIds = Array.from(selectedVectorIds);
 
-                const response = await fetch('/admin/pinecone-admin/chunks', withAdminToken({
+                const response = await window.adminFetch('/admin/pinecone-admin/chunks', {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ vectorIds })
-                }));
-                
+                });
+
                 const data = await response.json();
                 
                 if (!data.success) {

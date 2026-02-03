@@ -519,6 +519,12 @@
     </style>
 </head>
 <body>
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
     <div class="container">
         <div class="header">
             <div class="header-content">
@@ -605,10 +611,8 @@
 
             async loadData() {
                 try {
-                    const response = await fetch('/admin/api/testing/golden-tests', {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
-                    
+                    const response = await window.adminFetch('/admin/api/testing/golden-tests');
+
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
@@ -810,13 +814,9 @@
                 const itemIds = Array.from(this.selectedItems);
                 
                 try {
-                    const response = await fetch('/admin/api/testing/golden-tests/approve', {
+                    const response = await window.adminFetch('/admin/api/testing/golden-tests/approve', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        },
-                        body: JSON.stringify({ 
+                        body: JSON.stringify({
                             itemIds,
                             approved_by: 'admin'
                         })
@@ -843,12 +843,8 @@
                 const itemIds = Array.from(this.selectedItems);
                 
                 try {
-                    const response = await fetch('/admin/api/testing/golden-tests/decline', {
+                    const response = await window.adminFetch('/admin/api/testing/golden-tests/decline', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        },
                         body: JSON.stringify({ itemIds })
                     });
 

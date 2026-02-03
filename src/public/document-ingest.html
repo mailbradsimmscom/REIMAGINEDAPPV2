@@ -708,6 +708,13 @@
         </div>
     </div>
 
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
+
     <script>
         // State
         let currentFile = null;
@@ -822,11 +829,8 @@
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch('/admin/api/documents/upload-storage', {
+            const response = await window.adminFetch('/admin/api/documents/upload-storage', {
                 method: 'POST',
-                headers: {
-                    'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                },
                 body: formData
             });
 
@@ -1367,12 +1371,8 @@
                 // ========================================
                 updateStep('document', 'active', 'Creating document record...');
 
-                const docResponse = await fetch('/admin/api/documents', {
+                const docResponse = await window.adminFetch('/admin/api/documents', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                    },
                     body: JSON.stringify({
                         doc_id: storageResult?.doc_id || null,
                         filename: currentFile.name,
@@ -1412,12 +1412,8 @@
                     updateStep('vision', 'complete', 'Skipped (no models selected)', '⊘');
                 } else {
                     // Call vision endpoint
-                    const visionResponse = await fetch(`/admin/api/documents/${docId}/vision`, {
+                    const visionResponse = await window.adminFetch(`/admin/api/documents/${docId}/vision`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        },
                         body: JSON.stringify({
                             storage_path: storagePath,
                             selected_models: selected_models,
@@ -1462,12 +1458,8 @@
                 } else {
                     try {
                         const installedAssetUid = docResult?.data?.installed_system?.asset_uid || null;
-                        const indexResponse = await fetch(`/admin/api/documents/${indexDocId}/index`, {
+                        const indexResponse = await window.adminFetch(`/admin/api/documents/${indexDocId}/index`, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                            },
                             body: JSON.stringify({
                                 selected_models: selected_models,
                                 referenced_selections: referenced_selections,
@@ -1519,12 +1511,8 @@
 
                                 try {
                                     // Step 1: Start DIP run
-                                    const startResponse = await fetch(`/admin/api/documents/${indexDocId}/dip/run`, {
+                                    const startResponse = await window.adminFetch(`/admin/api/documents/${indexDocId}/dip/run`, {
                                         method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                                        },
                                         body: JSON.stringify({
                                             selected_models: selected_models,
                                             referenced_selections: referenced_selections
@@ -1545,7 +1533,7 @@
 
                                     // Step 2: Stream progress via EventSource
                                     // Note: EventSource can't send headers, so pass token as query param
-                                    const adminToken = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
+                                    const adminToken = window.getAdminToken();
                                     dipResult = await new Promise((resolve, reject) => {
                                         const eventSource = new EventSource(`/admin/api/documents/dip/stream/${dipRunId}?token=${adminToken}`);
                                         let modesCompleted = [];
@@ -1999,12 +1987,8 @@
             }
 
             try {
-                const response = await fetch('/admin/api/reference-data', {
+                const response = await window.adminFetch('/admin/api/reference-data', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                    },
                     body: JSON.stringify({
                         type: currentAddType,
                         name: value,

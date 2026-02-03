@@ -542,6 +542,12 @@
     </style>
 </head>
 <body>
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
     <div class="container">
         <div class="header">
             <h1>📚 Document Library</h1>
@@ -791,9 +797,7 @@
 
             async loadDocuments() {
                 try {
-                    const response = await fetch('/admin/api/upload/documents', {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
+                    const response = await window.adminFetch('/admin/api/upload/documents');
 
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -971,9 +975,7 @@
 
                 // Fetch deletion preview
                 try {
-                    const response = await fetch(`/admin/api/documents/${docId}/deletion-preview`, {
-                        headers: { 'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0' }
-                    });
+                    const response = await window.adminFetch(`/admin/api/documents/${docId}/deletion-preview`);
 
                     if (!response.ok) {
                         throw new Error('Failed to load deletion preview');
@@ -1089,12 +1091,8 @@
                 }
 
                 try {
-                    const response = await fetch(`/admin/api/documents/${this.currentDeleteDoc}`, {
+                    const response = await window.adminFetch(`/admin/api/documents/${this.currentDeleteDoc}`, {
                         method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                        },
                         body: JSON.stringify({
                             deletionOptions,
                             confirmation: this.currentDeleteDoc.toUpperCase(),

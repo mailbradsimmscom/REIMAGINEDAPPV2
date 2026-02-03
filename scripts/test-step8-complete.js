@@ -13,11 +13,12 @@ import { getEnv } from '../src/config/env.js';
 import { createClient } from '@supabase/supabase-js';
 
 const scriptLogger = logger.createRequestLogger();
+const env = getEnv();
 
 // Test configuration
 const TEST_CONFIG = {
   baseUrl: 'http://localhost:3000',
-  adminToken: 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0',
+  adminToken: env.ADMIN_TOKEN,
   timeout: 10000
 };
 

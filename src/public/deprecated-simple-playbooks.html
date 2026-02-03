@@ -104,6 +104,12 @@
     </style>
 </head>
 <body>
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
     <div class="container">
         <h1>📋 Playbook Hints Viewer</h1>
         <div id="loading" class="loading">Loading playbook data...</div>
@@ -175,11 +181,7 @@
             try {
                 console.log('Loading playbooks...');
                 
-                const response = await fetch('/admin/api/playbooks', {
-                    headers: {
-                        'x-admin-token': 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0'
-                    }
-                });
+                const response = await window.adminFetch('/admin/api/playbooks');
 
                 console.log('Response status:', response.status);
 

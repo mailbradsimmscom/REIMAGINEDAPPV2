@@ -439,6 +439,12 @@
     </style>
 </head>
 <body>
+    <!-- Load admin auth module -->
+    <script type="module">
+        import { adminFetch, getAdminToken } from '/public/js/admin/auth.js';
+        window.adminFetch = adminFetch;
+        window.getAdminToken = getAdminToken;
+    </script>
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -564,18 +570,12 @@
         let currentLogs = [];
         let autoRefresh = true;
         let refreshInterval = null;
-        const ADMIN_TOKEN = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
 
         // Helper function to escape HTML
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-
-        // Helper function to add admin token
-        function getAdminToken() {
-            return ADMIN_TOKEN;
         }
 
         // Initialize
@@ -635,9 +635,7 @@
                     limit: 100
                 });
 
-                const response = await fetch(`/admin/api/logs/stream?${params}`, {
-                    headers: { 'x-admin-token': getAdminToken() }
-                });
+                const response = await window.adminFetch(`/admin/api/logs/stream?${params}`);
 
                 const data = await response.json();
 
