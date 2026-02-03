@@ -7482,7 +7482,7 @@
      … +16 lines (ctrl+o to expand)
 
 ⏺ Bash(docker exec reimaginedappv2-sidecar-1 env | grep SUPABASE | sort)
-  ⎿ PY_SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc
+  ⎿ PY_SUPABASE_SERVICE_KEY=XXXXXXXX
     1NjY1ODE0NywiZXhwIjoyMDcyMjM0MTQ3fQ.wXS2MlxRBqc7aH7KBIpgDh7MxtseLALetoyy1xF_oHU
     SUPABASE_BUCKET=documents
     … +2 lines (ctrl+o to expand)
@@ -11293,7 +11293,7 @@
 ⏺ Search(pattern: "ADMIN_TOKEN", glob: "*.env*", output_mode: "content")
   ⎿  Found 2 lines (ctrl+o to expand)
 
-⏺ Bash(curl -s "http://localhost:3000/admin/api/introspect/tables" -H "x-admin-token: d0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0" | jq '.data[] |…)
+⏺ Bash(curl -s "http://localhost:3000/admin/api/introspect/tables" -H "x-admin-token: XXXXXXXX" | jq '.data[] |…)
   ⎿  {                            
        "success": false,
        "data": null,
@@ -11608,7 +11608,7 @@
         9 +        - OPENAI_API_KEY=${OPENAI_API_KEY}
           + KIc16XX-xJQPeVDQBpkA
        10 +        - SUPABASE_URL=https://eriquneakfcfmeecqyof.supabase.co
-       11 +        - SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6M
+       11 +        - SUPABASE_SERVICE_KEY=XXXXXXXX
           + Tc1NjY1ODE0NywiZXhwIjoyMDcyMjM0MTQ3fQ.wXS2MlxRBqc7aH7KBIpgDh7MxtseLALetoyy1xF_oHU
        12 +        - DATABASE_URL=postgresql://postgres.eriquneakfcfmeecqyof:KaZyZqcSDxjh0bYS@aws-0-us-west-1.pooler.supabase.com:6543/postgres
        13          - PYTHONPATH=/app
@@ -21288,13 +21288,13 @@
 
 ⏺ Let me first check what's in the systems table to confirm the Fortress anchor data:
 
-⏺ Bash(curl -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMD…)
+⏺ Bash(curl -H "apikey: XXXXXXXX)
   ⎿  curl: option : blank argument where content is expected        
      curl: try 'curl --help' or 'curl --manual' for more information
 
 ⏺ Let me fix that curl command:
 
-⏺ Bash(curl -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMD…)
+⏺ Bash(curl -H "apikey: XXXXXXXX)
   ⎿  {                                                                       
        "message": "Invalid API key",
        "hint": "Double check your Supabase `anon` or `service_role` API key."

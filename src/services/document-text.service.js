@@ -232,7 +232,7 @@ async function extractFromStorage(docId, maxPages, requestLogger) {
   try {
     requestLogger.debug('text_extraction.storage_attempt', { docId, maxPages });
     
-    const storage = getSupabaseStorageClient();
+    const storage = await getSupabaseStorageClient();
     if (!storage) {
       requestLogger.warn('text_extraction.storage_unavailable', { docId });
       return { success: false, text: '', error: 'Storage unavailable' };

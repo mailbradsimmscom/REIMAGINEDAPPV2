@@ -18,7 +18,7 @@ def test_storage_upload():
     
     # Get environment variables
     supabase_url = os.getenv('SUPABASE_URL')
-    supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjY1ODE0NywiZXhwIjoyMDcyMjM0MTQ3fQ.wXS2MlxRBqc7aH7KBIpgDh7MxtseLALetoyy1xF_oHU"
+    supabase_key = os.getenv('PY_SUPABASE_SERVICE_KEY')
     
     print(f"🌐 Supabase URL: {supabase_url}")
     print(f"🔑 Supabase key: {supabase_key[:20]}..." if supabase_key else "None")

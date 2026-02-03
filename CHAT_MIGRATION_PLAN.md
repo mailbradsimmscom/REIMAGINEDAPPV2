@@ -298,7 +298,7 @@ npm run dev
 # Test DIP service directly in Node REPL or via test script
 curl -X POST http://localhost:3000/api/chat/process \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer d0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0" \
+  -H "Authorization: Bearer XXXXXXXX" \
   -d '{
     "query": "troubleshooting anchor windlass",
     "threadId": "00000000-0000-0000-0000-000000000001"
@@ -311,7 +311,7 @@ curl -X POST http://localhost:3000/api/chat/process \
 ```bash
 curl -X POST http://localhost:3000/api/chat/process \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer d0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0" \
+  -H "Authorization: Bearer XXXXXXXX" \
   -d '{
     "query": "tell me about my DST810",
     "threadId": "00000000-0000-0000-0000-000000000002"
@@ -329,7 +329,7 @@ curl -X POST http://localhost:3000/api/chat/process \
 # First message
 curl -X POST http://localhost:3000/api/chat/process \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer d0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0" \
+  -H "Authorization: Bearer XXXXXXXX" \
   -d '{
     "query": "what is the pressure rating for my fortress anchor",
     "threadId": "test-thread-001"
@@ -338,7 +338,7 @@ curl -X POST http://localhost:3000/api/chat/process \
 # Second message (should remember previous context)
 curl -X POST http://localhost:3000/api/chat/process \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer d0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0" \
+  -H "Authorization: Bearer XXXXXXXX" \
   -d '{
     "query": "how do I install it",
     "threadId": "test-thread-001"

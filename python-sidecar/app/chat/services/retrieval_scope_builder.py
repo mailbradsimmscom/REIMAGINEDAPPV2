@@ -124,6 +124,11 @@ class RetrievalScopeBuilder(BaseService):
             primary_set = set(primary_doc_ids)
             referencing_doc_ids = [d for d in referencing_doc_ids if d not in primary_set]
 
+            # referenced_systems: model keys to query in DIP referenced_systems column
+            # When focus equipment is referenced by other docs, use focus_models
+            # This enables retrieval of DIP rows tagged with referenced_systems overlap
+            referenced_systems = list(set(focus_models)) if referencing_doc_ids else []
+
             result = {
                 "focus_assets": focus_assets,
                 "focus_models": list(set(focus_models)),
@@ -131,6 +136,7 @@ class RetrievalScopeBuilder(BaseService):
                 "candidate_primary_doc_ids": primary_doc_ids,
                 "candidate_referencing_doc_ids": referencing_doc_ids,
                 "candidate_doc_ids": primary_doc_ids + referencing_doc_ids,
+                "referenced_systems": referenced_systems,  # for DIP referenced_systems filtering
                 "cache_hit": False,
                 "duration_ms": int((time.time() - start_time) * 1000),
             }
@@ -324,6 +330,7 @@ class RetrievalScopeBuilder(BaseService):
             "candidate_primary_doc_ids": [],
             "candidate_referencing_doc_ids": [],
             "candidate_doc_ids": [],
+            "referenced_systems": [],  # for DIP referenced_systems filtering
             "cache_hit": False,
             "duration_ms": int((time.time() - start_time) * 1000),
         }

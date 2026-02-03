@@ -47,7 +47,7 @@
 ⏺ Read(~/code/REIMAGINEDAPPV2/.env)
   ⎿  Read 64 lines (ctrl+o to expand)
 
-⏺ Bash(SUPABASE_URL='https://eriquneakfcfmeecqyof.supabase.co' SUPABASE_SERVICE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha…)
+⏺ Bash(SUPABASE_URL='https://eriquneakfcfmeecqyof.supabase.co' SUPABASE_SERVICE_KEY='XXXXXXXX)
   ⎿  Testing search_systems RPC:   
        fortress: 1 rows
          603ed86f... rank:0.0967147

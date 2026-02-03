@@ -140,8 +140,10 @@ class ProductionDIPRetriever(BaseService):
         focus_models = retrieval_scope.get("focus_models", []) if retrieval_scope else []
         boat_models = retrieval_scope.get("boat_models", []) if retrieval_scope else []
         candidate_doc_ids = retrieval_scope.get("candidate_doc_ids", []) if retrieval_scope else []
+        # Extract referenced_systems for referenced-scoped queries (avoids polluting primary-only queries)
+        referenced_systems = retrieval_scope.get("referenced_systems", []) if retrieval_scope else []
 
-        logger.info(f"🔍 DIP v5 Query: focus_models={focus_models}, boat_models={len(boat_models)}, candidate_docs={len(candidate_doc_ids)}")
+        logger.info(f"🔍 DIP v5 Query: focus_models={focus_models}, boat_models={len(boat_models)}, candidate_docs={len(candidate_doc_ids)}, referenced_systems={len(referenced_systems)}")
 
         # Determine starting tier
         has_candidates = bool(candidate_doc_ids)
@@ -171,7 +173,8 @@ class ProductionDIPRetriever(BaseService):
                     starting_tier=starting_tier,
                     candidate_doc_ids=candidate_doc_ids,
                     focus_models=focus_models,
-                    boat_models=boat_models
+                    boat_models=boat_models,
+                    referenced_systems=referenced_systems
                 )
 
                 if table_results:
@@ -200,7 +203,8 @@ class ProductionDIPRetriever(BaseService):
         starting_tier: str,
         candidate_doc_ids: List[str],
         focus_models: List[str],
-        boat_models: List[str]
+        boat_models: List[str],
+        referenced_systems: Optional[List[str]] = None
     ) -> tuple[List[Dict[str, Any]], str]:
         """
         Query a single table with Tier A → B → C fallback.
@@ -210,14 +214,15 @@ class ProductionDIPRetriever(BaseService):
         tier = starting_tier
         results = []
 
-        # Tier A: focus_models + candidate_doc_ids
+        # Tier A: focus_models + candidate_doc_ids + referenced_systems
         if tier == "A":
             results = await self._query_table_v5(
                 table_name=table_name,
                 table_type=table_type,
                 query=query,
                 candidate_doc_ids=candidate_doc_ids,
-                allowed_models=focus_models
+                allowed_models=focus_models,
+                referenced_systems=referenced_systems
             )
 
             if len(results) >= self.TIER_THRESHOLD:
@@ -227,14 +232,15 @@ class ProductionDIPRetriever(BaseService):
             tier = "B"
             logger.debug(f"  {table_type}: Tier A returned {len(results)} rows, trying Tier B")
 
-        # Tier B: boat_models + candidate_doc_ids
+        # Tier B: boat_models + candidate_doc_ids + referenced_systems
         if tier == "B":
             results = await self._query_table_v5(
                 table_name=table_name,
                 table_type=table_type,
                 query=query,
                 candidate_doc_ids=candidate_doc_ids,
-                allowed_models=boat_models
+                allowed_models=boat_models,
+                referenced_systems=referenced_systems
             )
 
             if len(results) >= self.TIER_THRESHOLD:
@@ -244,14 +250,15 @@ class ProductionDIPRetriever(BaseService):
             tier = "C"
             logger.debug(f"  {table_type}: Tier B returned {len(results)} rows, trying Tier C")
 
-        # Tier C: boat_models, no doc restriction
+        # Tier C: boat_models, no doc restriction + referenced_systems
         if tier == "C":
             results = await self._query_table_v5(
                 table_name=table_name,
                 table_type=table_type,
                 query=query,
                 candidate_doc_ids=[],  # No doc restriction
-                allowed_models=boat_models
+                allowed_models=boat_models,
+                referenced_systems=referenced_systems
             )
             return results, "C"
 
@@ -263,10 +270,14 @@ class ProductionDIPRetriever(BaseService):
         table_type: str,
         query: str,
         candidate_doc_ids: List[str],
-        allowed_models: List[str]
+        allowed_models: List[str],
+        referenced_systems: Optional[List[str]] = None
     ) -> List[Dict[str, Any]]:
         """
-        Query a table with v5 filtering using two queries (model-scoped + universal).
+        Query a table with v5 filtering using three queries:
+        1. model-scoped (applies_to_models overlap)
+        2. universal (applies_to_models contains "all")
+        3. referenced-scoped (referenced_systems overlap) - only if referenced_systems provided
         """
         # Query 1: model-scoped rows
         model_scoped = await self._dip_query_model_scoped(
@@ -285,8 +296,19 @@ class ProductionDIPRetriever(BaseService):
             candidate_doc_ids=candidate_doc_ids
         )
 
+        # Query 3: referenced-scoped rows (if referenced_systems provided)
+        referenced = []
+        if referenced_systems:
+            referenced = await self._dip_query_referenced_scoped(
+                table_name=table_name,
+                table_type=table_type,
+                query=query,
+                candidate_doc_ids=candidate_doc_ids,
+                referenced_systems=referenced_systems
+            )
+
         # Union and dedupe
-        combined = model_scoped + universal
+        combined = model_scoped + universal + referenced
         deduped = _dedupe_rows(combined)
 
         return deduped
@@ -378,6 +400,55 @@ class ProductionDIPRetriever(BaseService):
             logger.error(f"Universal query failed for {table_name}: {e}")
             return []
 
+    async def _dip_query_referenced_scoped(
+        self,
+        table_name: str,
+        table_type: str,
+        query: str,
+        candidate_doc_ids: List[str],
+        referenced_systems: List[str]
+    ) -> List[Dict[str, Any]]:
+        """Query for rows where referenced_systems overlaps with provided systems.
+
+        This retrieves DIP rows that are about referenced systems (e.g., VC20 windlass)
+        without polluting primary-only queries.
+        """
+        if not referenced_systems:
+            return []
+
+        try:
+            qb = self.supabase.table(table_name).select("*")
+
+            # doc_id scoping (if available)
+            if candidate_doc_ids:
+                try:
+                    qb = qb.in_("doc_id", candidate_doc_ids)
+                except Exception:
+                    pass
+
+            # referenced_systems overlap filter
+            try:
+                qb = qb.filter("referenced_systems", "ov", _pg_array_literal(referenced_systems))
+            except Exception as e:
+                logger.warning(f"Table {table_name} may not have referenced_systems: {e}")
+                return []
+
+            # Text relevance filter
+            qb = self._add_text_filters(qb, table_name, table_type, query)
+
+            # Status filter
+            qb = self._add_status_filter(qb, table_name)
+
+            # Limit
+            qb = qb.limit(self.PER_TABLE_LIMIT)
+
+            result = qb.execute()
+            return result.data or []
+
+        except Exception as e:
+            logger.error(f"Referenced-scoped query failed for {table_name}: {e}")
+            return []
+
     def _add_text_filters(self, qb, table_name: str, table_type: str, query: str):
         """Add text relevance filters based on table type."""
         try:
@@ -406,8 +477,8 @@ class ProductionDIPRetriever(BaseService):
                 qb = qb.or_(
                     f"symptom.ilike.%{query}%,"
                     f"cause.ilike.%{query}%,"
-                    f"solution.ilike.%{query}%,"
-                    f"test_method.ilike.%{query}%"
+                    f"resolution.ilike.%{query}%,"
+                    f"check_action.ilike.%{query}%"
                 )
 
             elif table_type == 'golden_rules':

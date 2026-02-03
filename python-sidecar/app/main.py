@@ -1185,60 +1185,121 @@ DIP_MODE_TABLE_MAP = {
 }
 
 # DIP extraction prompts for each mode
+# NOTE: These are TEMPLATES - {selected_models} and {referenced_selections} are injected at runtime
 DIP_MODE_PROMPTS = {
     'specs': """Extract all technical specifications from this document.
-For each specification, extract:
-- hint_type: category (voltage, pressure, temperature, flow_rate, dimension, weight, capacity, etc.)
-- value: the numeric or text value
-- unit: measurement unit if applicable
-- context: surrounding text that explains this spec
-- page: page number if identifiable
 
-Return JSON array: [{"hint_type": "...", "value": "...", "unit": "...", "context": "...", "page": null}]
-Only include clearly stated specifications. Maximum 50 items.""",
+For each specification, extract:
+- parameter: what is being specified (e.g., "Operating Voltage", "Maximum Flow Rate")
+- value: the numeric or text value
+- units: measurement unit if applicable (use plural form)
+- category: specification category (voltage, pressure, temperature, flow_rate, dimension, weight, capacity, etc.)
+- description: surrounding context that explains this specification
+- references: array of page/section references where this spec appears
+- applies_to_models: which PRIMARY models this applies to (from allowed list below, or ["all"] if universal)
+- referenced_systems: which REFERENCED systems this relates to (from allowed list below, or [] if none)
+
+TAGGING RULES:
+- applies_to_models: Use ONLY values from this list: {selected_models}, OR use ["all"] for universal specs
+- referenced_systems: Use ONLY values from this list: {referenced_selections}, OR use [] if not about a referenced system
+- If "all" is used in applies_to_models, it must be the ONLY value: ["all"]
+- Never invent model/system keys outside these lists
+
+Return ONLY a valid JSON array (no markdown, no extra text):
+[{{"parameter": "...", "value": "...", "units": "...", "category": "...", "description": "...", "references": [], "applies_to_models": [...], "referenced_systems": [...]}}]
+
+Maximum 50 items. Only include clearly stated specifications.""",
 
     'troubleshooting': """Extract all troubleshooting information from this document.
-For each issue, extract:
-- symptom: the problem description
-- cause: likely cause(s)
-- solution: step-by-step fix
-- error_code: any error codes mentioned
-- page: page number if identifiable
 
-Return JSON array: [{"symptom": "...", "cause": "...", "solution": "...", "error_code": null, "page": null}]
-Only include actual troubleshooting content. Maximum 50 items.""",
+For each issue, extract:
+- symptom: the problem description (REQUIRED)
+- cause: the primary likely cause (REQUIRED - use first cause if multiple)
+- check_action: diagnostic step to verify the cause
+- resolution: step-by-step fix or solution
+- possible_causes: array of possible causes if multiple exist, each with: {{"cause": "...", "likelihood": "high/medium/low", "fix": "...", "fix_steps": [...]}}
+- applies_to_models: which PRIMARY models this applies to (from allowed list below, or ["all"] if universal)
+- referenced_systems: which REFERENCED systems this relates to (from allowed list below, or [] if none)
+
+TAGGING RULES:
+- applies_to_models: Use ONLY values from this list: {selected_models}, OR use ["all"] for universal issues
+- referenced_systems: Use ONLY values from this list: {referenced_selections}, OR use [] if not about a referenced system
+- If "all" is used in applies_to_models, it must be the ONLY value: ["all"]
+- Never invent model/system keys outside these lists
+
+Return ONLY a valid JSON array (no markdown, no extra text):
+[{{"symptom": "...", "cause": "...", "check_action": "...", "resolution": "...", "possible_causes": [...], "applies_to_models": [...], "referenced_systems": [...]}}]
+
+Maximum 50 items. Only include actual troubleshooting content.""",
 
     'procedures': """Extract all maintenance, operation, and installation procedures from this document.
-For each procedure, extract:
-- title: procedure name
-- preconditions: what must be true before starting (array)
-- steps: ordered list of steps (array)
-- expected_outcome: what should happen when done correctly
-- models: which models this applies to (array)
-- error_codes: related error codes (array)
 
-Return JSON array: [{"title": "...", "preconditions": [...], "steps": [...], "expected_outcome": "...", "models": [...], "error_codes": [...]}]
+For each procedure, extract:
+- title: procedure name (REQUIRED)
+- description: brief description of the procedure's purpose
+- preconditions: what must be true before starting (array of strings)
+- steps: ordered list of steps (REQUIRED - array of strings)
+- expected_outcome: what should happen when done correctly
+- error_codes: related error codes (array of strings)
+- applies_to_models: which PRIMARY models this applies to (from allowed list below, or ["all"] if universal)
+- referenced_systems: which REFERENCED systems this relates to (from allowed list below, or [] if none)
+
+TAGGING RULES:
+- applies_to_models: Use ONLY values from this list: {selected_models}, OR use ["all"] for universal procedures
+- referenced_systems: Use ONLY values from this list: {referenced_selections}, OR use [] if not about a referenced system
+- If "all" is used in applies_to_models, it must be the ONLY value: ["all"]
+- Never invent model/system keys outside these lists
+
+Return ONLY a valid JSON array (no markdown, no extra text):
+[{{"title": "...", "description": "...", "preconditions": [...], "steps": [...], "expected_outcome": "...", "error_codes": [...], "applies_to_models": [...], "referenced_systems": [...]}}]
+
 Maximum 25 procedures.""",
 
     'golden_rules': """Extract critical safety rules, warnings, and best practices from this document.
-For each rule, extract:
-- test_name: short name for the rule
-- test_type: category (safety, warning, caution, best_practice)
-- description: full description of the rule
-- steps: verification steps if applicable (array)
-- expected_result: what compliance looks like
 
-Return JSON array: [{"test_name": "...", "test_type": "...", "description": "...", "steps": [...], "expected_result": "..."}]
+For each rule, extract:
+- query: the rule phrased as a test question (REQUIRED, e.g., "Is the circuit breaker OFF before servicing?")
+- expected: what compliant behavior/result looks like (REQUIRED)
+- description: full description of the rule
+- test_method: how to verify compliance (safety, warning, caution, best_practice, inspection, measurement)
+- failure_indication: what non-compliance looks like
+- related_procedures: array of related procedure names or references
+- applies_to_models: which PRIMARY models this applies to (from allowed list below, or ["all"] if universal)
+- referenced_systems: which REFERENCED systems this relates to (from allowed list below, or [] if none)
+
+TAGGING RULES:
+- applies_to_models: Use ONLY values from this list: {selected_models}, OR use ["all"] for universal rules
+- referenced_systems: Use ONLY values from this list: {referenced_selections}, OR use [] if not about a referenced system
+- If "all" is used in applies_to_models, it must be the ONLY value: ["all"]
+- Never invent model/system keys outside these lists
+
+Return ONLY a valid JSON array (no markdown, no extra text):
+[{{"query": "...", "expected": "...", "description": "...", "test_method": "...", "failure_indication": "...", "related_procedures": [...], "applies_to_models": [...], "referenced_systems": [...]}}]
+
 Maximum 30 items.""",
 
     'intent_router': """Extract common questions and intents that users might have about this equipment.
-For each intent, extract:
-- intent_type: category (how_to, troubleshooting, specification, safety, maintenance)
-- prompt: example question a user might ask
-- context: what topic/section this relates to
 
-Return JSON array: [{"intent_type": "...", "prompt": "...", "context": "..."}]
-Focus on practical questions users would ask. Maximum 40 items."""
+For each intent, extract:
+- question: example question a user might ask (REQUIRED)
+- question_type: category (how_to, troubleshooting, specification, safety, maintenance, other)
+- answer: the answer to the question based on the document
+- description: additional context about the question topic
+- question_variations: array of alternative phrasings of the same question
+- references: array of page/section references where the answer can be found
+- applies_to_models: which PRIMARY models this applies to (from allowed list below, or ["all"] if universal)
+- referenced_systems: which REFERENCED systems this relates to (from allowed list below, or [] if none)
+
+TAGGING RULES:
+- applies_to_models: Use ONLY values from this list: {selected_models}, OR use ["all"] for universal questions
+- referenced_systems: Use ONLY values from this list: {referenced_selections}, OR use [] if not about a referenced system
+- If "all" is used in applies_to_models, it must be the ONLY value: ["all"]
+- Never invent model/system keys outside these lists
+
+Return ONLY a valid JSON array (no markdown, no extra text):
+[{{"question": "...", "question_type": "...", "answer": "...", "description": "...", "question_variations": [...], "references": [...], "applies_to_models": [...], "referenced_systems": [...]}}]
+
+Maximum 40 items. Focus on practical questions users would ask."""
 }
 
 # Max document chars for prompt
@@ -1249,8 +1310,38 @@ MAX_RETRIES = 3
 RETRY_BASE_DELAY = 1.0  # seconds
 
 
+def _extract_markdown_from_page(page: dict) -> str:
+    """
+    Extract markdown text from a LlamaParse page object.
+
+    LlamaParse pages have 'items' array with structured content:
+    - {type: 'heading', lvl: N, value: '...'} -> # heading
+    - {type: 'table', md: '...'} -> table markdown
+    - {type: 'text', value: '...'} -> plain text
+    """
+    parts = []
+    for item in page.get('items', []):
+        item_type = item.get('type', '')
+        if item_type == 'heading':
+            level = item.get('lvl', 1)
+            value = item.get('value', '')
+            if value:
+                parts.append(f"{'#' * level} {value}")
+        elif item_type == 'table':
+            md = item.get('md', '')
+            if md:
+                parts.append(md)
+        elif item.get('value'):
+            parts.append(item.get('value', ''))
+    return '\n\n'.join(parts)
+
+
 async def _fetch_document_markdown(doc_id: str, supabase_url: str, supabase_key: str) -> Optional[str]:
-    """Fetch document content from llamaparse_raw.json and convert to markdown."""
+    """
+    Fetch document content from llamaparse_raw.json and convert to markdown.
+
+    Handles the LlamaParse JSON format: {pages: [{page: N, items: [...]}]}
+    """
     url = supabase_url.rstrip("/")
     headers = {
         "apikey": supabase_key,
@@ -1269,13 +1360,29 @@ async def _fetch_document_markdown(doc_id: str, supabase_url: str, supabase_key:
             logger.error(f"Failed to fetch llamaparse_raw.json: {response.status_code}")
             return None
 
-        pages_data = response.json()
+        raw_json = response.json()
+
+        # Handle both formats:
+        # 1. LlamaParse format: {pages: [{page: N, items: [...]}]}
+        # 2. Legacy format: [{page: N, md: '...'}]
+        if isinstance(raw_json, dict) and 'pages' in raw_json:
+            pages_data = raw_json.get('pages', [])
+        elif isinstance(raw_json, list):
+            pages_data = raw_json
+        else:
+            logger.error(f"Unexpected llamaparse_raw.json format: {type(raw_json)}")
+            return None
 
         # Build markdown from pages
         markdown_parts = []
         for page in pages_data:
             page_num = page.get('page', 0)
+
+            # Try legacy 'md' field first, then extract from 'items'
             md = page.get('md', '')
+            if not md and 'items' in page:
+                md = _extract_markdown_from_page(page)
+
             if md:
                 markdown_parts.append(f"## Page {page_num}\n{md}")
 
@@ -1300,20 +1407,27 @@ async def _run_dip_mode_with_cache(
     model: str,
     doc_id: str,
     selected_models: list,
+    referenced_selections: list,
     supabase_url: str,
     supabase_key: str
 ) -> DIPModeResult:
     """Run a single DIP mode with prompt caching and retry logic."""
     start_time = time.time()
 
-    mode_prompt = DIP_MODE_PROMPTS.get(mode, "")
-    if not mode_prompt:
+    mode_prompt_template = DIP_MODE_PROMPTS.get(mode, "")
+    if not mode_prompt_template:
         return DIPModeResult(
             mode=mode,
             success=False,
             error="Unknown DIP mode",
             error_code="UNKNOWN_MODE"
         )
+
+    # Format prompt with allowlists for tagging
+    mode_prompt = mode_prompt_template.format(
+        selected_models=json.dumps(selected_models),
+        referenced_selections=json.dumps(referenced_selections)
+    )
 
     # Build messages with cached prefix + mode-specific prompt
     messages = [
@@ -1337,28 +1451,93 @@ async def _run_dip_mode_with_cache(
             # Parse response
             response_text = response.content[0].text if response.content else ""
 
-            # Extract JSON from response
+            # Extract JSON from response with retry on failure (Decision #8)
+            extracted_data = None
+            json_parse_error = None
+
             try:
                 # Try to find JSON array in response
                 json_match = re.search(r'\[[\s\S]*\]', response_text)
                 if json_match:
                     extracted_data = json.loads(json_match.group())
                 else:
-                    extracted_data = []
-            except json.JSONDecodeError:
+                    json_parse_error = "No JSON array found in response"
+            except json.JSONDecodeError as e:
+                json_parse_error = str(e)
+
+            # Decision #8: Retry once with "JSON only" repair instruction
+            if json_parse_error is not None:
+                logger.warning(f"DIP {mode}: JSON parse failed ({json_parse_error}), attempting repair request")
+                try:
+                    repair_messages = messages + [
+                        {"role": "assistant", "content": response_text},
+                        {"role": "user", "content": "Your response was not valid JSON. Please respond with ONLY a valid JSON array, no markdown fences, no explanation text. Just the raw JSON array starting with [ and ending with ]."}
+                    ]
+                    repair_response = await client.messages.create(
+                        model=model,
+                        max_tokens=8000,
+                        messages=repair_messages
+                    )
+                    repair_text = repair_response.content[0].text if repair_response.content else ""
+                    json_match = re.search(r'\[[\s\S]*\]', repair_text)
+                    if json_match:
+                        extracted_data = json.loads(json_match.group())
+                        logger.info(f"DIP {mode}: JSON repair succeeded")
+                    else:
+                        # Still no valid JSON after repair - fail the mode
+                        return DIPModeResult(
+                            mode=mode,
+                            success=False,
+                            error="Invalid JSON after repair attempt",
+                            error_code="INVALID_JSON",
+                            duration_ms=int((time.time() - start_time) * 1000)
+                        )
+                except json.JSONDecodeError:
+                    # Repair also failed - fail the mode
+                    return DIPModeResult(
+                        mode=mode,
+                        success=False,
+                        error="Invalid JSON after repair attempt",
+                        error_code="INVALID_JSON",
+                        duration_ms=int((time.time() - start_time) * 1000)
+                    )
+                except Exception as repair_error:
+                    logger.error(f"DIP {mode}: JSON repair request failed: {repair_error}")
+                    return DIPModeResult(
+                        mode=mode,
+                        success=False,
+                        error=f"JSON repair failed: {repair_error}",
+                        error_code="INVALID_JSON",
+                        duration_ms=int((time.time() - start_time) * 1000)
+                    )
+
+            # At this point extracted_data should be a list (possibly empty)
+            if extracted_data is None:
                 extracted_data = []
-                logger.warning(f"Failed to parse JSON from {mode} response")
 
             # Insert to database
             inserted_count = 0
+            skipped_count = 0
             if extracted_data:
-                inserted_count = await _insert_dip_results(
+                inserted_count, skipped_count = await _insert_dip_results(
                     mode=mode,
                     doc_id=doc_id,
                     data=extracted_data,
                     selected_models=selected_models,
+                    referenced_selections=referenced_selections,
                     supabase_url=supabase_url,
                     supabase_key=supabase_key
+                )
+
+            # Decision #9: If N>0 items returned but 0 valid after validation, fail the mode
+            total_items = len(extracted_data)
+            if total_items > 0 and inserted_count == 0:
+                return DIPModeResult(
+                    mode=mode,
+                    success=False,
+                    error=f"All {total_items} extracted items failed schema validation",
+                    error_code="SCHEMA_VALIDATION_FAILED",
+                    duration_ms=int((time.time() - start_time) * 1000)
                 )
 
             duration_ms = int((time.time() - start_time) * 1000)
@@ -1375,7 +1554,7 @@ async def _run_dip_mode_with_cache(
             return DIPModeResult(
                 mode=mode,
                 success=True,
-                count=len(extracted_data),
+                count=total_items,
                 inserted=inserted_count,
                 duration_ms=duration_ms,
                 cache_creation_input_tokens=cache_create,
@@ -1433,10 +1612,20 @@ async def _insert_dip_results(
     doc_id: str,
     data: list,
     selected_models: list,
+    referenced_selections: list,
     supabase_url: str,
     supabase_key: str
-) -> int:
-    """Insert extracted DIP data into the appropriate database table."""
+) -> tuple[int, int]:
+    """Insert extracted DIP data into the appropriate database table.
+
+    Returns:
+        tuple[int, int]: (inserted_count, skipped_count)
+
+    Implements:
+    - Decision #7: referenced_systems = item.referenced_systems ∩ referenced_selections
+    - Decision #9: Skip invalid items; fail mode if 0 valid from N>0
+    - Decision #11: If "all" in applies_to_models, normalize to ["all"]
+    """
     table_name = DIP_MODE_TABLE_MAP.get(mode)
     if not table_name:
         return 0
@@ -1449,60 +1638,128 @@ async def _insert_dip_results(
         "Prefer": "return=minimal"
     }
 
+    # Helper: normalize applies_to_models per Decision #11 + intersect with selected_models
+    def normalize_applies_to_models(raw_models):
+        if not raw_models or not isinstance(raw_models, list):
+            return []
+        # If "all" is present, normalize to ["all"] exclusively (Decision #11)
+        if "all" in raw_models:
+            return ["all"]
+        # Intersect with selected_models to prevent LLM from inventing keys
+        allowed_set = set(selected_models)
+        filtered = [m for m in raw_models if m in allowed_set]
+        return filtered if filtered else []
+
+    # Helper: intersect referenced_systems with allowed selections per Decision #7
+    def filter_referenced_systems(raw_systems):
+        if not raw_systems or not isinstance(raw_systems, list):
+            return []
+        allowed_set = set(referenced_selections)
+        return [s for s in raw_systems if s in allowed_set]
+
+    # Required fields per table (Decision #9)
+    REQUIRED_FIELDS = {
+        'specs': [],  # No strict NOT NULL besides doc_id
+        'troubleshooting': ['symptom', 'cause'],
+        'procedures': ['title', 'steps'],
+        'golden_rules': ['query', 'expected'],
+        'intent_router': ['question']
+    }
+
+    required = REQUIRED_FIELDS.get(mode, [])
+
     # Transform data for each table's schema
     rows = []
+    skipped_count = 0
     for item in data:
-        row = {"doc_id": doc_id}
+        # Decision #9: Skip items missing required fields
+        missing = [f for f in required if not item.get(f)]
+        if missing:
+            logger.warning(f"DIP {mode}: skipping item missing required fields: {missing}")
+            skipped_count += 1
+            continue
+
+        row = {
+            "doc_id": doc_id,
+            "status": "dip_extracted"
+        }
+
+        # Common tagging fields for all modes
+        applies_to = normalize_applies_to_models(item.get("applies_to_models", []))
+        referenced = filter_referenced_systems(item.get("referenced_systems", []))
 
         if mode == 'specs':
             row.update({
-                "hint_type": item.get("hint_type", "unknown"),
+                "parameter": item.get("parameter", ""),
                 "value": str(item.get("value", "")),
-                "unit": item.get("unit"),
-                "context": item.get("context"),
-                "page": item.get("page"),
-                "confidence": 0.8
+                "units": item.get("units", ""),
+                "description": item.get("description"),
+                "category": item.get("category"),
+                "references": item.get("references", []),
+                "applies_to_models": applies_to,
+                "referenced_systems": referenced
             })
         elif mode == 'troubleshooting':
+            # Handle multi-cause: if possible_causes exists but cause is empty, use first cause
+            cause = item.get("cause", "")
+            possible_causes = item.get("possible_causes")
+            if not cause and possible_causes and isinstance(possible_causes, list) and len(possible_causes) > 0:
+                first_cause = possible_causes[0]
+                if isinstance(first_cause, dict):
+                    cause = first_cause.get("cause", "")
+
             row.update({
                 "symptom": item.get("symptom", ""),
-                "cause": item.get("cause", ""),
-                "solution": item.get("solution", ""),
-                "error_code": item.get("error_code"),
-                "page": item.get("page"),
-                "applies_to_models": selected_models
+                "cause": cause,
+                "check_action": item.get("check_action"),
+                "resolution": item.get("resolution"),
+                "possible_causes": possible_causes,
+                "applies_to_models": applies_to,
+                "referenced_systems": referenced
             })
         elif mode == 'procedures':
             row.update({
                 "title": item.get("title", ""),
+                "description": item.get("description"),
                 "preconditions": item.get("preconditions", []),
                 "steps": item.get("steps", []),
                 "expected_outcome": item.get("expected_outcome", ""),
-                "models": item.get("models", selected_models),
                 "error_codes": item.get("error_codes", []),
-                "confidence": 0.9
+                "applies_to_models": applies_to,
+                "referenced_systems": referenced
             })
         elif mode == 'golden_rules':
             row.update({
-                "test_name": item.get("test_name", ""),
-                "test_type": item.get("test_type", "best_practice"),
+                "query": item.get("query", ""),
+                "expected": item.get("expected", ""),
+                "test_method": item.get("test_method", ""),
                 "description": item.get("description", ""),
-                "steps": item.get("steps", []),
-                "expected_result": item.get("expected_result", ""),
-                "confidence": 0.85
+                "failure_indication": item.get("failure_indication", ""),
+                "related_procedures": item.get("related_procedures", []),
+                "applies_to_models": applies_to,
+                "referenced_systems": referenced
             })
         elif mode == 'intent_router':
             row.update({
-                "intent_type": item.get("intent_type", "how_to"),
-                "prompt": item.get("prompt", ""),
-                "context": item.get("context", ""),
-                "confidence": 0.8
+                "question": item.get("question", ""),
+                "question_type": item.get("question_type", ""),
+                "answer": item.get("answer", ""),
+                "description": item.get("description"),
+                "question_variations": item.get("question_variations", []),
+                "references": item.get("references", []),
+                "applies_to_models": applies_to,
+                "referenced_systems": referenced
             })
 
         rows.append(row)
 
+    # Log skipped items for debugging
+    if skipped_count > 0:
+        logger.warning(f"DIP {mode}: skipped {skipped_count}/{len(data)} items due to missing required fields")
+
     if not rows:
-        return 0
+        # Return (0, skipped_count) - no rows to insert, but track skipped
+        return (0, skipped_count)
 
     try:
         response = requests.post(
@@ -1513,18 +1770,21 @@ async def _insert_dip_results(
 
         if response.status_code in [200, 201]:
             logger.info(f"Inserted {len(rows)} rows into {table_name}")
-            return len(rows)
+            return (len(rows), skipped_count)
         else:
             logger.error(f"Failed to insert into {table_name}: {response.status_code} {response.text}")
-            return 0
+            return (0, skipped_count)
 
     except Exception as e:
         logger.error(f"Error inserting into {table_name}: {e}")
-        return 0
+        return (0, skipped_count)
 
 
 async def _delete_existing_dip_data(doc_id: str, modes: list, supabase_url: str, supabase_key: str):
-    """Delete existing DIP data for a document before rerun."""
+    """Delete existing DIP data for a document before rerun.
+
+    Decision #4: Preserve approved rows - only delete where status != 'approved'
+    """
     url = supabase_url.rstrip("/")
     headers = {
         "apikey": supabase_key,
@@ -1535,12 +1795,13 @@ async def _delete_existing_dip_data(doc_id: str, modes: list, supabase_url: str,
         table_name = DIP_MODE_TABLE_MAP.get(mode)
         if table_name:
             try:
+                # Preserve approved rows per Decision #4
                 response = requests.delete(
-                    f"{url}/rest/v1/{table_name}?doc_id=eq.{doc_id}",
+                    f"{url}/rest/v1/{table_name}?doc_id=eq.{doc_id}&status=neq.approved",
                     headers=headers
                 )
                 if response.status_code in [200, 204]:
-                    logger.info(f"Deleted existing {mode} data for {doc_id}")
+                    logger.info(f"Deleted existing {mode} data for {doc_id} (preserved approved rows)")
             except Exception as e:
                 logger.warning(f"Failed to delete {mode} data: {e}")
 
@@ -1578,13 +1839,23 @@ async def _dip_run_stream_generator(request: DIPRunRequest):
         if request.force_rerun:
             await _delete_existing_dip_data(doc_id, modes, supabase_url, supabase_key)
 
-        # Build context section
+        # Build context section with exclude_models for precision
+        exclude_models = request.exclude_models or []
+        exclude_instruction = ""
+        if exclude_models:
+            exclude_instruction = f"""
+Models to EXCLUDE (skip content specific to these): {', '.join(exclude_models)}"""
+
         context_section = f"""You are analyzing a technical manual for marine equipment.
 Document ID: {doc_id}
-Models covered: {', '.join(request.models_covered)}
-User's selected models: {', '.join(request.selected_models)}
+Models covered by this document: {', '.join(request.models_covered)}
+User's selected models (INCLUDE these): {', '.join(request.selected_models)}
+User's selected referenced systems: {', '.join(request.referenced_selections) if request.referenced_selections else 'None'}{exclude_instruction}
 
-Extract information that is relevant to the selected models. If content applies to all models, include it."""
+Extract information that is relevant to the selected models and referenced systems.
+- If content applies to ALL selected models, use applies_to_models=["all"]
+- SKIP content that is specific to excluded models
+- Content about referenced systems should have those systems in referenced_systems field"""
 
         # Build cached prefix (context + document)
         cached_prefix = [
@@ -1617,6 +1888,7 @@ Extract information that is relevant to the selected models. If content applies 
             model=anthropic_model,
             doc_id=doc_id,
             selected_models=request.selected_models,
+            referenced_selections=request.referenced_selections,
             supabase_url=supabase_url,
             supabase_key=supabase_key
         )
@@ -1631,7 +1903,7 @@ Extract information that is relevant to the selected models. If content applies 
             modes_completed.append(warmup_mode)
             total_inserted += warmup_result.inserted
             total_extracted += warmup_result.count
-            yield f"event: mode_completed\ndata: {json.dumps({'mode': warmup_mode, 'inserted': warmup_result.inserted, 'count': warmup_result.count, 'duration_ms': warmup_result.duration_ms})}\n\n"
+            yield f"event: mode_completed\ndata: {json.dumps({'mode': warmup_mode, 'inserted': warmup_result.inserted, 'count': warmup_result.count, 'duration_ms': warmup_result.duration_ms, 'cache_creation_input_tokens': warmup_result.cache_creation_input_tokens, 'cache_read_input_tokens': warmup_result.cache_read_input_tokens})}\n\n"
             # Emit cache metrics after warmup (cache should be created here)
             if cache_creation_tokens > 0:
                 yield f"event: run_cache_metrics\ndata: {json.dumps({'cache_creation_input_tokens': cache_creation_tokens, 'cache_read_input_tokens': cache_read_tokens})}\n\n"
@@ -1657,6 +1929,7 @@ Extract information that is relevant to the selected models. If content applies 
                     model=anthropic_model,
                     doc_id=doc_id,
                     selected_models=request.selected_models,
+                    referenced_selections=request.referenced_selections,
                     supabase_url=supabase_url,
                     supabase_key=supabase_key
                 )
@@ -1685,7 +1958,7 @@ Extract information that is relevant to the selected models. If content applies 
                     modes_completed.append(mode)
                     total_inserted += result.inserted
                     total_extracted += result.count
-                    yield f"event: mode_completed\ndata: {json.dumps({'mode': mode, 'inserted': result.inserted, 'count': result.count, 'duration_ms': result.duration_ms})}\n\n"
+                    yield f"event: mode_completed\ndata: {json.dumps({'mode': mode, 'inserted': result.inserted, 'count': result.count, 'duration_ms': result.duration_ms, 'cache_creation_input_tokens': result.cache_creation_input_tokens, 'cache_read_input_tokens': result.cache_read_input_tokens})}\n\n"
                 else:
                     modes_failed.append(mode)
                     yield f"event: mode_failed\ndata: {json.dumps({'mode': mode, 'error_code': result.error_code, 'error': result.error})}\n\n"
@@ -1873,7 +2146,11 @@ async def _fetch_llamaparse_raw_json(doc_id: str, supabase_url: str, supabase_ke
     """
     Fetch raw llamaparse JSON from Supabase storage.
 
-    Returns the pages array with 'page' and 'md' fields, or None on failure.
+    Handles both formats:
+    1. LlamaParse format: {pages: [{page: N, items: [...]}]}
+    2. Legacy format: [{page: N, md: '...'}]
+
+    Returns normalized list of pages with 'page' and 'md' fields, or None on failure.
     """
     url = supabase_url.rstrip("/")
     headers = {
@@ -1893,7 +2170,28 @@ async def _fetch_llamaparse_raw_json(doc_id: str, supabase_url: str, supabase_ke
             logger.error(f"Failed to fetch llamaparse_raw.json: {response.status_code}")
             return None
 
-        return response.json()
+        raw_json = response.json()
+
+        # Handle both formats
+        if isinstance(raw_json, dict) and 'pages' in raw_json:
+            # LlamaParse format: {pages: [{page: N, items: [...]}]}
+            pages_data = raw_json.get('pages', [])
+            # Convert to normalized format with 'md' extracted from 'items'
+            normalized = []
+            for page in pages_data:
+                page_num = page.get('page', 0)
+                # Extract markdown from items if no 'md' field
+                md = page.get('md', '')
+                if not md and 'items' in page:
+                    md = _extract_markdown_from_page(page)
+                normalized.append({'page': page_num, 'md': md})
+            return normalized
+        elif isinstance(raw_json, list):
+            # Legacy format: [{page: N, md: '...'}] - already normalized
+            return raw_json
+        else:
+            logger.error(f"Unexpected llamaparse_raw.json format: {type(raw_json)}")
+            return None
 
     except Exception as e:
         logger.error(f"Error fetching llamaparse_raw.json: {e}")

@@ -354,7 +354,7 @@
 > well wait. go look at the system table and tell me what fortress I have.
 
 ⏺ Bash(curl -X POST "http://eriquneakfcfmeecqyof.supabase.co/rest/v1/rpc/search_systems" \
-        -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI…)
+        -H "apikey: XXXXXXXX)
   ⎿  <html>                                           
      <head><title>301 Moved Permanently</title></head>
      <body>

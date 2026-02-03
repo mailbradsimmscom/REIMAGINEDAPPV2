@@ -372,13 +372,13 @@
 
 ⏺ Let me first check what's in the systems table to confirm the Fortress anchor data:
 
-⏺ Bash(curl -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMD…)
+⏺ Bash(curl -H "apikey: XXXXXXXX)
   ⎿  curl: option : blank argument where content is expected        
      curl: try 'curl --help' or 'curl --manual' for more information
 
 ⏺ Let me fix that curl command:
 
-⏺ Bash(curl -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaXF1bmVha2ZjZm1lZWNxeW9mIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMD…)
+⏺ Bash(curl -H "apikey: XXXXXXXX)
   ⎿  {                                                                       
        "message": "Invalid API key",
        "hint": "Double check your Supabase `anon` or `service_role` API key."

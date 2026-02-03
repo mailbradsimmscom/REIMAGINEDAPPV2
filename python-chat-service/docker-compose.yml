@@ -9,7 +9,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_SERVICE_KEY=${PY_SUPABASE_SERVICE_KEY}
-      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres.eriquneakfcfmeecqyof:KaZyZqcSDxjh0bYS@aws-0-us-west-1.pooler.supabase.com:6543/postgres}
+      - DATABASE_URL=${DATABASE_URL}
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
     volumes:

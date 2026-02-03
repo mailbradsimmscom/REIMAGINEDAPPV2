@@ -866,7 +866,7 @@ router.post('/:docId/dip/run', async (req, res) => {
     }
 
     // Fetch document to get models_covered
-    const supabase = getSupabaseClient();
+    const supabase = await getSupabaseClient();
     const { data: document, error: docError } = await supabase
       .from('documents')
       .select('models_covered')

@@ -12,6 +12,9 @@ function readAdminToken(req) {
     const m = auth.match(/^Bearer\s+(.+)$/i);
     if (m) return m[1].trim();
   }
+  // Also check query param (needed for EventSource/SSE which can't send headers)
+  const q = req.query?.token;
+  if (q && typeof q === 'string') return q.trim();
   return null;
 }
 

@@ -701,6 +701,7 @@
         </div>
         <div id="successDetails"></div>
         <div id="visionResults" style="margin-top: 16px;"></div>
+        <div id="dipResults" style="margin-top: 16px;"></div>
         <div class="action-buttons">
             <button class="btn btn-secondary" onclick="location.reload()">Upload Another</button>
             <button class="btn btn-primary" onclick="location.href='/systems.html'">View Systems</button>
@@ -1543,8 +1544,10 @@
                                     }
 
                                     // Step 2: Stream progress via EventSource
+                                    // Note: EventSource can't send headers, so pass token as query param
+                                    const adminToken = 'd0bf5af4f2e469d29e051e39e9569a76a283ad4d5c68935e38321320137b05d0';
                                     dipResult = await new Promise((resolve, reject) => {
-                                        const eventSource = new EventSource(`/admin/api/documents/dip/stream/${dipRunId}`);
+                                        const eventSource = new EventSource(`/admin/api/documents/dip/stream/${dipRunId}?token=${adminToken}`);
                                         let modesCompleted = [];
                                         let modesFailed = [];
                                         let totalInserted = 0;
@@ -1563,7 +1566,14 @@
                                             const data = JSON.parse(e.data);
                                             modesCompleted.push(data.mode);
                                             totalInserted += data.inserted || 0;
-                                            updateModeRow(data.mode, 'complete', `${data.inserted || 0} items`);
+                                            // Build status text with optional cache info
+                                            let statusText = `${data.inserted || 0} items`;
+                                            if (data.cache_read_input_tokens > 0) {
+                                                statusText += ` (cache: ${data.cache_read_input_tokens})`;
+                                            } else if (data.cache_creation_input_tokens > 0) {
+                                                statusText += ` (cache created: ${data.cache_creation_input_tokens})`;
+                                            }
+                                            updateModeRow(data.mode, 'complete', statusText);
                                         });
 
                                         eventSource.addEventListener('mode_failed', (e) => {
@@ -1803,6 +1813,62 @@
             }
 
             document.getElementById('visionResults').innerHTML = visionHtml;
+
+            // Build DIP extraction results
+            let dipHtml = '';
+            const dipData = indexingResult?.data?.dip;
+            if (dipData?.success || dipData?.modes_completed?.length > 0) {
+                const modesCompleted = dipData.modes_completed || [];
+                const modesFailed = dipData.modes_failed || [];
+                const totalInserted = dipData.total_inserted || 0;
+                const totalExtracted = dipData.total_extracted || 0;
+
+                dipHtml = `
+                    <div style="font-weight: 600; margin-bottom: 12px;">DIP Extraction Results</div>
+                    <div class="vision-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">${totalInserted}</div>
+                            <div class="stat-label">Items Inserted</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${modesCompleted.length}</div>
+                            <div class="stat-label">Modes Completed</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${modesFailed.length}</div>
+                            <div class="stat-label">Modes Failed</div>
+                        </div>
+                    </div>
+                `;
+
+                // Show mode details
+                if (modesCompleted.length > 0 || modesFailed.length > 0) {
+                    dipHtml += `<details style="margin-top: 8px;">
+                        <summary style="cursor: pointer; color: var(--text-secondary); font-size: 13px;">
+                            Mode details (click to expand)
+                        </summary>
+                        <div style="margin-top: 8px; font-size: 13px;">`;
+
+                    if (modesCompleted.length > 0) {
+                        dipHtml += `<div style="color: var(--success); margin-bottom: 4px;">✅ Completed: ${modesCompleted.join(', ')}</div>`;
+                    }
+                    if (modesFailed.length > 0) {
+                        dipHtml += `<div style="color: var(--error);">❌ Failed: ${modesFailed.join(', ')}</div>`;
+                    }
+
+                    dipHtml += `</div></details>`;
+                }
+            } else if (dipData?.error) {
+                dipHtml = `
+                    <div style="font-weight: 600; margin-bottom: 12px;">DIP Extraction Results</div>
+                    <div class="status-message error" style="margin-top: 0;">
+                        <strong>DIP extraction failed:</strong> ${dipData.error}
+                        <p style="margin-top: 8px; font-size: 13px;">Document was still created. You can run DIP extraction later.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('dipResults').innerHTML = dipHtml;
         }
 
         // Dropdown population functions
