@@ -229,10 +229,24 @@ Add `<script src="/public/js/mobile-hamburger.js"></script>` to all 19 mobile pa
 
 ## Considerations
 
-### Pages with existing headers
-Some pages may already have a top bar/header. The hamburger button needs to coexist:
-- Use absolute positioning within existing headers, OR
-- Inject a minimal top bar only if none exists
+### Replacing back arrows
+Most pages have a ← back button (`.back-button` or `.back-btn`) in their header. The hamburger replaces these:
+- `mobile-hamburger.js` automatically hides existing back buttons on init
+- The hamburger ☰ appears in the same top-left position
+- Users navigate "back" by opening the menu and tapping the parent page
+
+Pages with back arrows (11 pages):
+- `boat-now.html` → was linking to unified-mobile.html
+- `supplies.html` → was linking to unified-mobile.html
+- `trips.html` → was linking to unified-mobile.html
+- `trip-detail.html` → was linking to /trips
+- `season-recap.html` → was linking to other-links.html
+- `weather-area-view.html` → was linking to weather-areas.html
+- `anchorages.html` → was linking to unified-mobile.html
+- `ais.html` → was linking to unified-mobile.html
+- `other-links.html` → was linking to unified-mobile.html
+- `chat-mobile.html` → was using history.back()
+- `position-monitor.html` → TBD
 
 ### Maintenance cross-service link
 Same logic as mobile-nav.js - detect hostname and build correct URL for port 3001.

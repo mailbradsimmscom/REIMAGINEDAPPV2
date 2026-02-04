@@ -243,9 +243,28 @@
         if (e.key === 'Escape') closeMenu();
     });
 
+    // Hide existing back buttons (hamburger replaces them)
+    function hideBackButtons() {
+        var selectors = [
+            '.back-button',
+            '.back-btn',
+            'a[href*="unified-mobile"]',
+        ];
+        selectors.forEach(function(sel) {
+            document.querySelectorAll(sel).forEach(function(el) {
+                // Only hide if it looks like a back arrow (short text content)
+                var text = (el.textContent || '').trim();
+                if (text.length <= 6 || text === 'Back' || text === '\u2039 Back') {
+                    el.style.display = 'none';
+                }
+            });
+        });
+    }
+
     function init() {
         injectStyles();
         injectMenu();
+        hideBackButtons();
     }
 
     if (document.readyState === 'loading') {
