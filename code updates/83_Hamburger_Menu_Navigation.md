@@ -1,47 +1,52 @@
 # Hamburger Menu Navigation
 
 **Created:** 2026-02-04
-**Status:** Planning
+**Status:** In Progress (Phase 1 complete, testing)
 **Priority:** Medium (UX)
 
 ---
 
 ## Summary
 
-Add a shared hamburger menu (top-left) to all mobile/public pages, providing grouped navigation to the full page tree. Complements the existing bottom nav which handles core quick-access items.
+Add a shared hamburger menu (top-left) to all mobile/public pages, replacing existing ← back arrows. Provides grouped navigation to the full page tree. Complements the existing bottom nav which handles core quick-access items.
 
 ---
 
-## Current Navigation
+## Progress
 
-```
-┌──────────────────────────────┐
-│         Page Content          │
-│                               │
-│    (no top nav on most pages) │
-│                               │
-├───────────────────────────────┤
-│  🏠  ⚓  🔌  🔧  💬          │  ← Bottom nav (5 items)
-└───────────────────────────────┘
-```
+### Completed
+- [x] Created `src/public/js/mobile-hamburger.js` (self-injecting IIFE)
+- [x] Menu structure: 5 groups, 14 items
+- [x] Slide-out animation, backdrop, Escape key close
+- [x] Auto-hides existing back buttons (`.back-button`, `.back-btn`)
+- [x] Active page highlighting
+- [x] Safe-area aware (iPhone notch/home indicator)
+- [x] Cross-service maintenance URL detection
+- [x] Test page wired: `weather-areas.html`
 
-**Problem:** 19 pages, only 5 in bottom nav. No way to navigate to weather, supplies, trips, etc. except going Home first.
+### Remaining
+- [ ] Test hamburger on production (weather-areas.html deployed)
+- [ ] Fix any CSS/positioning issues from testing
+- [ ] Add `<script src="/public/js/mobile-hamburger.js"></script>` to remaining 18 mobile pages
+- [ ] Verify back-button hiding works on all 11 pages with ← arrows
+- [ ] Test on iOS Safari, Chrome
+- [ ] Update design doc with any changes from testing
 
 ---
 
-## Proposed Navigation
+## Architecture
 
 ```
 ┌─ ☰ ──────────── Page Title ──┐
 │                               │
-│         Page Content          │
+│         Page Content          │     ☰ replaces ← back arrow
 │                               │
 ├───────────────────────────────┤
-│  🏠  ⚓  🔌  🔧  💬          │  ← Bottom nav (unchanged)
+│  🏠  ⚓  🔌  🔧  💬          │     Bottom nav (unchanged)
 └───────────────────────────────┘
 ```
 
-Tapping ☰ opens a slide-out menu from the left:
+Tapping ☰ opens slide-out menu:
 
 ```
 ┌───────────────────┬───────────┐
@@ -116,148 +121,86 @@ BOAT MANAGEMENT
 
 ---
 
-## Implementation Plan
+## Files Created/Modified
 
-### Phase 1: Create shared hamburger component
+### New Files
+- `src/public/js/mobile-hamburger.js` - Hamburger menu component (~210 lines)
 
-**File:** `src/public/js/mobile-hamburger.js`
+### Modified Files
+- `src/public/weather-areas.html` - Added hamburger script (test page)
 
-Same pattern as `mobile-nav.js`:
-- IIFE, self-contained
-- Injects CSS + HTML into page
-- Loaded via `<script src="/public/js/mobile-hamburger.js"></script>`
-- Highlights current page in menu
-- Slide-out animation (left to right)
-- Backdrop overlay (tap to close)
-- Scrollable menu content
-
-### Phase 2: Add to all mobile pages
-
-Add `<script src="/public/js/mobile-hamburger.js"></script>` to all 19 mobile pages (same as mobile-nav.js pattern).
-
-### Phase 3: Test
-
-- Test on all pages
-- Verify menu opens/closes
-- Verify correct page highlighted
-- Verify links work (including cross-service maintenance link)
-- Test on iOS Safari, Chrome
-
----
-
-## Technical Design
-
-### CSS Approach
-
-```css
-/* Hamburger button - fixed top-left */
-.hamburger-btn {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 200;
-    padding: 16px;
-    padding-top: calc(16px + env(safe-area-inset-top));
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-/* Slide-out menu */
-.hamburger-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    background: #FFFFFF;
-    z-index: 300;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    overflow-y: auto;
-    padding-top: calc(16px + env(safe-area-inset-top));
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
-}
-
-.hamburger-menu.open {
-    transform: translateX(0);
-}
-
-/* Backdrop */
-.hamburger-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 250;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.hamburger-backdrop.visible {
-    opacity: 1;
-    pointer-events: auto;
-}
-```
-
-### Menu Structure
-
+### Files to Modify (remaining rollout)
+All 18 remaining mobile pages need this line added before `</body>`:
 ```html
-<div class="hamburger-menu">
-    <a href="..." class="menu-item menu-home active">🏠 Home</a>
-
-    <div class="menu-group-label">BOAT STATUS</div>
-    <a href="..." class="menu-item">Current Status</a>
-    <a href="..." class="menu-item">Power System</a>
-    <a href="..." class="menu-item">AIS Tracking</a>
-    <a href="..." class="menu-item">Position Monitor</a>
-
-    <div class="menu-group-label">NAVIGATION</div>
-    <!-- ... -->
-</div>
+<script src="/public/js/mobile-hamburger.js"></script>
 ```
 
-### Interaction
-
-- Tap ☰ → menu slides in, backdrop appears
-- Tap backdrop → menu slides out
-- Tap menu item → navigate to page
-- Swipe left on menu → close (stretch goal)
+Pages:
+- `src/public/unified-mobile.html`
+- `src/public/boat-now.html`
+- `src/public/victron-mobile.html`
+- `src/public/ais.html`
+- `src/public/position-monitor.html`
+- `src/public/anchor-watch-admin.html`
+- `src/public/anchorages.html`
+- `src/public/trips.html`
+- `src/public/trip-detail.html`
+- `src/public/season-recap.html`
+- `src/public/weather-area-view.html`
+- `src/public/weather-area-add.html`
+- `src/public/supplies.html`
+- `src/public/maintenance-review.html`
+- `src/public/maintenance-tasks-list.html`
+- `src/public/index-mobile.html`
+- `src/public/chat-mobile.html`
+- `src/public/other-links.html`
 
 ---
 
-## Considerations
+## Back Arrow Replacement
 
-### Replacing back arrows
-Most pages have a ← back button (`.back-button` or `.back-btn`) in their header. The hamburger replaces these:
-- `mobile-hamburger.js` automatically hides existing back buttons on init
-- The hamburger ☰ appears in the same top-left position
-- Users navigate "back" by opening the menu and tapping the parent page
+The hamburger replaces existing ← back buttons. `mobile-hamburger.js` auto-hides them on init.
 
-Pages with back arrows (11 pages):
-- `boat-now.html` → was linking to unified-mobile.html
-- `supplies.html` → was linking to unified-mobile.html
-- `trips.html` → was linking to unified-mobile.html
-- `trip-detail.html` → was linking to /trips
-- `season-recap.html` → was linking to other-links.html
-- `weather-area-view.html` → was linking to weather-areas.html
-- `anchorages.html` → was linking to unified-mobile.html
-- `ais.html` → was linking to unified-mobile.html
-- `other-links.html` → was linking to unified-mobile.html
-- `chat-mobile.html` → was using history.back()
-- `position-monitor.html` → TBD
+| Page | Back Arrow | Was Linking To |
+|------|-----------|----------------|
+| `boat-now.html` | `←` (.back-button) | unified-mobile.html |
+| `supplies.html` | `←` (.back-btn) | unified-mobile.html |
+| `trips.html` | `‹` (.back-button) | unified-mobile.html |
+| `trip-detail.html` | `‹` (.back-button) | /trips |
+| `season-recap.html` | `←` (.back-button) | other-links.html |
+| `weather-area-view.html` | `‹` (.back-btn) | weather-areas.html |
+| `anchorages.html` | `←` (.back-button) | unified-mobile.html |
+| `ais.html` | `←` (.back-button) | unified-mobile.html |
+| `other-links.html` | `←` (.back-button) | unified-mobile.html |
+| `chat-mobile.html` | `‹ Back` (button) | history.back() |
+| `position-monitor.html` | TBD | TBD |
 
-### Maintenance cross-service link
-Same logic as mobile-nav.js - detect hostname and build correct URL for port 3001.
+---
 
-### Z-index layering
+## Technical Details
+
+### Z-index Layering
 ```
-z-index: 300  → hamburger menu
-z-index: 250  → backdrop
-z-index: 200  → hamburger button
-z-index: 100  → bottom nav (existing)
+z-index: 300  → hamburger menu (slide-out panel)
+z-index: 250  → backdrop (dark overlay)
+z-index: 200  → hamburger button (☰)
+z-index: 100  → bottom nav (existing mobile-nav.js)
 ```
+
+### Cross-Service Links
+Maintenance links detect hostname:
+- `chat.catamaranos.com` → `https://admin.catamaranos.com`
+- `boatos-main.onrender.com` → `https://boatos-maintenance.onrender.com`
+- `localhost` → `http://localhost:3001`
+- Local IP → `{protocol}//{ip}:3001`
+
+### Key Implementation Details
+- IIFE pattern (same as mobile-nav.js)
+- Double-init guard: `window.__hamburgerMenuInitialized`
+- Hides back buttons by matching `.back-button`, `.back-btn`, and links to unified-mobile
+- Body gets `padding-top: calc(48px + env(safe-area-inset-top))` for hamburger space
+- Menu width: 270px
+- Transition: 0.3s cubic-bezier
 
 ---
 
@@ -266,17 +209,14 @@ z-index: 100  → bottom nav (existing)
 | Factor | Assessment |
 |--------|------------|
 | Complexity | Low - Same pattern as mobile-nav.js |
-| Risk | Low - Additive only, no existing code changes |
+| Risk | Very Low - Additive, existing pages unchanged |
 | Rollback | Remove script tag from pages |
 | Testing | Manual on each page |
 
 ---
 
-## Estimated Effort
+## References
 
-| Phase | Effort |
-|-------|--------|
-| Create hamburger component | 1-2 hours |
-| Add to all pages | 30 min |
-| Testing | 1 hour |
-| **Total** | **3-4 hours** |
+- Hamburger component: `src/public/js/mobile-hamburger.js`
+- Bottom nav component: `src/public/js/mobile-nav.js`
+- Test page: `src/public/weather-areas.html`

@@ -118,3 +118,6 @@ pi/
 
 # Supabase temp files
 supabase/.temp/
+
+# Live DB schema dump (regenerated, not source-controlled)
+scripts/migrations/actual/*_tables/
