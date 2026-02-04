@@ -96,6 +96,9 @@ RELEVANT TECHNICAL DATA FROM DIP TABLES:
 RELEVANT DOCUMENTS FROM KNOWLEDGE BASE:
 {pinecone_context}
 
+RELEVANT DIAGRAMS & TABLES (figures from manuals - reference these by figure number when helpful):
+{doc_assets_context}
+
 QUERY INTENT: {intent}
 
 {format_rules}

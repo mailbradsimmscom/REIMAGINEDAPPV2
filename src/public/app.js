@@ -447,7 +447,31 @@ function addEnhancedMessage(text, sources = []) {
 
   // Create main content with source tag at top
   let content = `<div class="bubble">${sourceTag}<div class="content">${htmlContent}</div>`;
-  
+
+  // Add inline diagrams/tables if DOC_ASSETS source exists with count > 0
+  const docAssetsSource = sources.find(s => s.type === 'DOC_ASSETS' && s.count > 0);
+  if (docAssetsSource && docAssetsSource.data && docAssetsSource.data.length > 0) {
+    content += `<div class="doc-assets-strip">`;
+    content += `<div class="doc-assets-header">📐 Related Diagrams & Tables</div>`;
+    content += `<div class="doc-assets-items">`;
+    docAssetsSource.data.forEach((asset, idx) => {
+      const figRef = asset.figure_reference || '';
+      const title = asset.title || `Page ${asset.page_number}`;
+      const kind = asset.asset_kind === 'table' ? '📊' : '🖼️';
+      const thumbUrl = asset.public_url || '';
+      content += `
+        <div class="doc-asset-item" data-asset-index="${idx}" data-asset-url="${thumbUrl}">
+          <div class="doc-asset-thumb" style="background-image: url('${thumbUrl}')"></div>
+          <div class="doc-asset-info">
+            <span class="doc-asset-kind">${kind}</span>
+            <span class="doc-asset-ref">${figRef}</span>
+            <span class="doc-asset-title">${title}</span>
+          </div>
+        </div>`;
+    });
+    content += `</div></div>`;
+  }
+
   // Add source bubbles if sources exist
   if (sources.length > 0) {
     content += `<div class="source-bubbles">`;
@@ -459,17 +483,27 @@ function addEnhancedMessage(text, sources = []) {
     });
     content += `</div>`;
   }
-  
+
   content += `<div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div></div>`;
-  
+
   wrapper.innerHTML = content;
-  
+
   // Add click handlers for source bubbles
   wrapper.querySelectorAll('.source-bubble').forEach(bubble => {
     bubble.addEventListener('click', () => {
       const sourceIndex = parseInt(bubble.dataset.sourceIndex);
       const source = sources[sourceIndex];
       showSourceDetails(source, sourceIndex + 1);
+    });
+  });
+
+  // Add click handlers for doc asset items (open full-size image)
+  wrapper.querySelectorAll('.doc-asset-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const url = item.dataset.assetUrl;
+      if (url) {
+        window.open(url, '_blank');
+      }
     });
   });
 
@@ -937,17 +971,18 @@ function getSourceIcon(sourceType) {
 
 // Stats Panel Functions
 function initializeStatsPanel() {
-  const toggleBtn = document.getElementById('toggleStatsBtn');
+  const toggleBtns = document.querySelectorAll('[data-toggle-stats]');
   const closeBtn = document.getElementById('closeStatsBtn');
   const chatSection = document.getElementById('chatSection');
   const appContainer = document.querySelector('.app');
 
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
+  // Attach click handler to all toggle buttons
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
       chatSection.classList.toggle('show-stats');
       if (appContainer) appContainer.classList.toggle('show-stats');
     });
-  }
+  });
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {

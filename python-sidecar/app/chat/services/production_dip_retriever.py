@@ -46,6 +46,68 @@ def _dedupe_rows(rows: list[dict]) -> list[dict]:
     return out
 
 
+# Stop words to filter out from search terms
+STOP_WORDS = {
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+    'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
+    'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
+    'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'need',
+    'how', 'what', 'when', 'where', 'why', 'which', 'who', 'whom',
+    'this', 'that', 'these', 'those', 'it', 'its', 'my', 'your', 'our',
+    'me', 'about', 'tell', 'show', 'get', 'give'
+}
+
+# Max terms to use in DIP text search
+MAX_TERMS = 6
+
+# Columns to search per table type
+COLUMNS_BY_TABLE_TYPE = {
+    'spec': ['parameter', 'normalized_parameter', 'value', 'range', 'category',
+             'concept_group', 'parameter_aliases_text', 'search_terms_text', 'references_text'],
+    'procedure': ['expected_outcome', 'steps_text', 'preconditions_text', 'error_codes_text'],
+    'troubleshooting': ['symptom', 'cause', 'resolution', 'check_action'],
+    'golden_rules': ['query', 'expected', 'test_method', 'failure_indication', 'related_procedures_text'],
+    'routing': ['question', 'answer', 'question_type', 'question_variations_text', 'references_text']
+}
+
+
+def normalize_terms(keywords: List[str], user_query: str = "") -> List[str]:
+    """
+    Normalize search keywords into a deduplicated term list.
+
+    - Lowercase
+    - Strip punctuation
+    - Dedupe
+    - Drop stop words
+    - Enforce min length >= 3
+    - Cap to MAX_TERMS
+    """
+    import re
+
+    # Combine keywords and user query words
+    all_words = []
+    for kw in keywords:
+        all_words.extend(kw.lower().split())
+    if user_query and not keywords:
+        all_words.extend(user_query.lower().split())
+
+    # Normalize each word
+    terms = []
+    seen = set()
+    for word in all_words:
+        # Strip punctuation
+        clean = re.sub(r'[^\w]', '', word)
+        # Skip if too short, stop word, or already seen
+        if len(clean) < 3 or clean in STOP_WORDS or clean in seen:
+            continue
+        seen.add(clean)
+        terms.append(clean)
+        if len(terms) >= MAX_TERMS:
+            break
+
+    return terms
+
+
 class ProductionDIPRetriever(BaseService):
     """
     Production DIP table retriever with v5 filtering.
@@ -143,7 +205,9 @@ class ProductionDIPRetriever(BaseService):
         # Extract referenced_systems for referenced-scoped queries (avoids polluting primary-only queries)
         referenced_systems = retrieval_scope.get("referenced_systems", []) if retrieval_scope else []
 
-        logger.info(f"🔍 DIP v5 Query: focus_models={focus_models}, boat_models={len(boat_models)}, candidate_docs={len(candidate_doc_ids)}, referenced_systems={len(referenced_systems)}")
+        # Normalize query into search terms (OR-across-terms instead of phrase)
+        terms = normalize_terms(query.split() if query else [], query)
+        logger.info(f"🔍 DIP v5 Query: focus_models={focus_models}, boat_models={len(boat_models)}, candidate_docs={len(candidate_doc_ids)}, referenced_systems={len(referenced_systems)}, terms={terms}")
 
         # Determine starting tier
         has_candidates = bool(candidate_doc_ids)
@@ -169,7 +233,7 @@ class ProductionDIPRetriever(BaseService):
                 table_results, table_tier = await self._query_table_with_tiers(
                     table_name=table_name,
                     table_type=table_type,
-                    query=query,
+                    terms=terms,
                     starting_tier=starting_tier,
                     candidate_doc_ids=candidate_doc_ids,
                     focus_models=focus_models,
@@ -199,7 +263,7 @@ class ProductionDIPRetriever(BaseService):
         self,
         table_name: str,
         table_type: str,
-        query: str,
+        terms: List[str],
         starting_tier: str,
         candidate_doc_ids: List[str],
         focus_models: List[str],
@@ -219,7 +283,7 @@ class ProductionDIPRetriever(BaseService):
             results = await self._query_table_v5(
                 table_name=table_name,
                 table_type=table_type,
-                query=query,
+                terms=terms,
                 candidate_doc_ids=candidate_doc_ids,
                 allowed_models=focus_models,
                 referenced_systems=referenced_systems
@@ -237,7 +301,7 @@ class ProductionDIPRetriever(BaseService):
             results = await self._query_table_v5(
                 table_name=table_name,
                 table_type=table_type,
-                query=query,
+                terms=terms,
                 candidate_doc_ids=candidate_doc_ids,
                 allowed_models=boat_models,
                 referenced_systems=referenced_systems
@@ -255,7 +319,7 @@ class ProductionDIPRetriever(BaseService):
             results = await self._query_table_v5(
                 table_name=table_name,
                 table_type=table_type,
-                query=query,
+                terms=terms,
                 candidate_doc_ids=[],  # No doc restriction
                 allowed_models=boat_models,
                 referenced_systems=referenced_systems
@@ -268,7 +332,7 @@ class ProductionDIPRetriever(BaseService):
         self,
         table_name: str,
         table_type: str,
-        query: str,
+        terms: List[str],
         candidate_doc_ids: List[str],
         allowed_models: List[str],
         referenced_systems: Optional[List[str]] = None
@@ -283,7 +347,7 @@ class ProductionDIPRetriever(BaseService):
         model_scoped = await self._dip_query_model_scoped(
             table_name=table_name,
             table_type=table_type,
-            query=query,
+            terms=terms,
             candidate_doc_ids=candidate_doc_ids,
             allowed_models=allowed_models
         )
@@ -292,7 +356,7 @@ class ProductionDIPRetriever(BaseService):
         universal = await self._dip_query_universal(
             table_name=table_name,
             table_type=table_type,
-            query=query,
+            terms=terms,
             candidate_doc_ids=candidate_doc_ids
         )
 
@@ -302,7 +366,7 @@ class ProductionDIPRetriever(BaseService):
             referenced = await self._dip_query_referenced_scoped(
                 table_name=table_name,
                 table_type=table_type,
-                query=query,
+                terms=terms,
                 candidate_doc_ids=candidate_doc_ids,
                 referenced_systems=referenced_systems
             )
@@ -317,7 +381,7 @@ class ProductionDIPRetriever(BaseService):
         self,
         table_name: str,
         table_type: str,
-        query: str,
+        terms: List[str],
         candidate_doc_ids: List[str],
         allowed_models: List[str]
     ) -> List[Dict[str, Any]]:
@@ -343,8 +407,8 @@ class ProductionDIPRetriever(BaseService):
                 logger.warning(f"Table {table_name} may not have applies_to_models: {e}")
                 return []
 
-            # Text relevance filter
-            qb = self._add_text_filters(qb, table_name, table_type, query)
+            # Text relevance filter (OR across terms × columns)
+            qb = self._add_text_filters(qb, table_name, table_type, terms)
 
             # Status filter (allow both dip_extracted and approved)
             qb = self._add_status_filter(qb, table_name)
@@ -363,7 +427,7 @@ class ProductionDIPRetriever(BaseService):
         self,
         table_name: str,
         table_type: str,
-        query: str,
+        terms: List[str],
         candidate_doc_ids: List[str]
     ) -> List[Dict[str, Any]]:
         """Query for rows where applies_to_models contains "all"."""
@@ -384,8 +448,8 @@ class ProductionDIPRetriever(BaseService):
                 logger.warning(f"Table {table_name} may not have applies_to_models: {e}")
                 return []
 
-            # Text relevance filter
-            qb = self._add_text_filters(qb, table_name, table_type, query)
+            # Text relevance filter (OR across terms × columns)
+            qb = self._add_text_filters(qb, table_name, table_type, terms)
 
             # Status filter
             qb = self._add_status_filter(qb, table_name)
@@ -404,7 +468,7 @@ class ProductionDIPRetriever(BaseService):
         self,
         table_name: str,
         table_type: str,
-        query: str,
+        terms: List[str],
         candidate_doc_ids: List[str],
         referenced_systems: List[str]
     ) -> List[Dict[str, Any]]:
@@ -433,8 +497,8 @@ class ProductionDIPRetriever(BaseService):
                 logger.warning(f"Table {table_name} may not have referenced_systems: {e}")
                 return []
 
-            # Text relevance filter
-            qb = self._add_text_filters(qb, table_name, table_type, query)
+            # Text relevance filter (OR across terms × columns)
+            qb = self._add_text_filters(qb, table_name, table_type, terms)
 
             # Status filter
             qb = self._add_status_filter(qb, table_name)
@@ -449,55 +513,29 @@ class ProductionDIPRetriever(BaseService):
             logger.error(f"Referenced-scoped query failed for {table_name}: {e}")
             return []
 
-    def _add_text_filters(self, qb, table_name: str, table_type: str, query: str):
-        """Add text relevance filters based on table type."""
+    def _add_text_filters(self, qb, table_name: str, table_type: str, terms: List[str]):
+        """
+        Add text relevance filters based on table type.
+
+        Uses OR across terms × columns: any term matching any column passes.
+        """
+        if not terms:
+            # No terms = no text filter (return all rows within v5 scope)
+            return qb
+
+        columns = COLUMNS_BY_TABLE_TYPE.get(table_type, [])
+        if not columns:
+            return qb
+
         try:
-            if table_type == 'spec':
-                qb = qb.or_(
-                    f"parameter.ilike.%{query}%,"
-                    f"normalized_parameter.ilike.%{query}%,"
-                    f"value.ilike.%{query}%,"
-                    f"range.ilike.%{query}%,"
-                    f"category.ilike.%{query}%,"
-                    f"concept_group.ilike.%{query}%,"
-                    f"parameter_aliases_text.ilike.%{query}%,"
-                    f"search_terms_text.ilike.%{query}%,"
-                    f"references_text.ilike.%{query}%"
-                )
+            # Build OR conditions: term1 in col1, term1 in col2, ..., term2 in col1, ...
+            conditions = []
+            for term in terms:
+                for col in columns:
+                    conditions.append(f"{col}.ilike.%{term}%")
 
-            elif table_type == 'procedure':
-                qb = qb.or_(
-                    f"expected_outcome.ilike.%{query}%,"
-                    f"steps_text.ilike.%{query}%,"
-                    f"preconditions_text.ilike.%{query}%,"
-                    f"error_codes_text.ilike.%{query}%"
-                )
-
-            elif table_type == 'troubleshooting':
-                qb = qb.or_(
-                    f"symptom.ilike.%{query}%,"
-                    f"cause.ilike.%{query}%,"
-                    f"resolution.ilike.%{query}%,"
-                    f"check_action.ilike.%{query}%"
-                )
-
-            elif table_type == 'golden_rules':
-                qb = qb.or_(
-                    f"query.ilike.%{query}%,"
-                    f"expected.ilike.%{query}%,"
-                    f"test_method.ilike.%{query}%,"
-                    f"failure_indication.ilike.%{query}%,"
-                    f"related_procedures_text.ilike.%{query}%"
-                )
-
-            elif table_type == 'routing':
-                qb = qb.or_(
-                    f"question.ilike.%{query}%,"
-                    f"answer.ilike.%{query}%,"
-                    f"question_type.ilike.%{query}%,"
-                    f"question_variations_text.ilike.%{query}%,"
-                    f"references_text.ilike.%{query}%"
-                )
+            if conditions:
+                qb = qb.or_(",".join(conditions))
 
         except Exception as e:
             logger.warning(f"Could not apply text filters to {table_name}: {e}")

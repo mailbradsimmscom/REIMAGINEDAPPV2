@@ -20,6 +20,7 @@ import asyncio
 from ..debug_logger import chat_debug
 from ..services.perplexity_service import PerplexityService
 from ..services.retrieval_scope_builder import RetrievalScopeBuilder
+from ..services.doc_assets_retriever import DocAssetsRetriever
 
 logger = logging.getLogger(__name__)
 
@@ -40,12 +41,14 @@ class ChatWorkflowSequential:
         self.dip_retriever = dip_retriever
         self.pinecone_client = pinecone_client
         self.retrieval_scope_builder = RetrievalScopeBuilder()
+        self.doc_assets_retriever = DocAssetsRetriever()
 
         chat_debug.step('WORKFLOW_INIT', {
             'has_llm_service': llm_service is not None,
             'has_dip_retriever': dip_retriever is not None,
             'has_pinecone_client': pinecone_client is not None,
-            'has_retrieval_scope_builder': True
+            'has_retrieval_scope_builder': True,
+            'has_doc_assets_retriever': True
         })
 
         logger.info("✅ Sequential chat workflow initialized (No LangGraph)")
@@ -832,6 +835,29 @@ class ChatWorkflowSequential:
                     'complexity_score': complexity_score
                 })
 
+            # ===== DOC_ASSETS RETRIEVAL (figures/tables) =====
+            doc_assets_start = datetime.now()
+            try:
+                classification = state.get("classification", {})
+                doc_assets_result = await self.doc_assets_retriever.query_doc_assets(
+                    query=state["user_query"],
+                    retrieval_scope=retrieval_scope,
+                    search_keywords=classification.get("search_keywords", []),
+                    intent=classification.get("intent")
+                )
+                state["doc_assets_results"] = doc_assets_result
+                state["doc_assets_duration_ms"] = int((datetime.now() - doc_assets_start).total_seconds() * 1000)
+
+                chat_debug.step('DOC_ASSETS_RESULTS', {
+                    'total_matched': doc_assets_result.get('metrics', {}).get('total_matched', 0),
+                    'selected_count': doc_assets_result.get('count', 0),
+                    'duration_ms': state["doc_assets_duration_ms"]
+                })
+            except Exception as doc_assets_error:
+                logger.warning(f"Doc assets retrieval failed (non-fatal): {doc_assets_error}")
+                state["doc_assets_results"] = {'type': 'DOC_ASSETS', 'count': 0, 'data': [], 'metrics': {}}
+                state["doc_assets_duration_ms"] = 0
+
             logger.debug(f"Retrieved data from {len(all_dip_results)} DIP table(s)")
 
         except Exception as e:
@@ -882,7 +908,8 @@ class ChatWorkflowSequential:
                 dip_results=state["dip_results"],
                 pinecone_results=state["pinecone_results"],
                 conversation_summary=state.get("conversation_summary"),
-                synthesis_model=state.get("synthesis_model")
+                synthesis_model=state.get("synthesis_model"),
+                doc_assets_results=state.get("doc_assets_results")
             )
 
             llm_duration = (datetime.now() - llm_start).total_seconds() * 1000
@@ -1174,6 +1201,17 @@ class ChatWorkflowSequential:
                 'data': [
                     {'url': url} for url in perplexity_citations
                 ]
+            })
+
+        # Add DOC_ASSETS (figures/tables) as a source
+        doc_assets_results = state.get("doc_assets_results", {})
+        if doc_assets_results and doc_assets_results.get("count", 0) > 0:
+            sources.append({
+                'type': 'DOC_ASSETS',
+                'count': doc_assets_results.get('count', 0),
+                'equipment': {},
+                'data': doc_assets_results.get('data', []),
+                'metrics': doc_assets_results.get('metrics', {})
             })
 
         return sources

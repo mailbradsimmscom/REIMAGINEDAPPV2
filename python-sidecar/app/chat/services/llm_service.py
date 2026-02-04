@@ -151,7 +151,8 @@ class LLMService:
                                 dip_results: List[Dict[str, Any]],
                                 pinecone_results: Optional[Dict[str, Any]] = None,
                                 conversation_summary: Optional[str] = None,
-                                synthesis_model: Optional[str] = None) -> str:
+                                synthesis_model: Optional[str] = None,
+                                doc_assets_results: Optional[Dict[str, Any]] = None) -> str:
         """
         Synthesize natural language response from structured data with conversation memory
 
@@ -163,6 +164,7 @@ class LLMService:
             dip_results: Results from DIP table queries
             pinecone_results: Results from Pinecone search (optional)
             conversation_summary: Weighted conversation history (optional)
+            doc_assets_results: Results from doc_assets retrieval (figures/tables)
 
         Returns:
             Natural language response
@@ -171,6 +173,7 @@ class LLMService:
         equipment_context = self._format_equipment_context(systems_context)
         dip_context = self._format_dip_context(dip_results)
         pinecone_context = self._format_pinecone_context(pinecone_results)
+        doc_assets_context = self._format_doc_assets_context(doc_assets_results)
 
         intent = classification.get("intent", "general_information") if classification else "general_information"
 
@@ -181,6 +184,7 @@ class LLMService:
             conversation_summary=conversation_summary or "No previous conversation context.",
             dip_context=dip_context,
             pinecone_context=pinecone_context,
+            doc_assets_context=doc_assets_context,
             intent=intent,
             format_rules=RESPONSE_FORMAT_RULES,
             synthesis_instructions=SYNTHESIS_INSTRUCTIONS
@@ -734,5 +738,47 @@ class LLMService:
             # Include FULL content - no character limits, let LLM extract what's needed
             if doc_content:
                 lines.append(f"   Content: {doc_content}")
+
+        return "\n".join(lines)
+
+    def _format_doc_assets_context(self, doc_assets_results: Optional[Dict[str, Any]]) -> str:
+        """Format doc_assets (figures/tables) for LLM prompts"""
+        if not doc_assets_results:
+            return "No relevant diagrams or tables found."
+
+        assets = doc_assets_results.get("data", [])
+        if not assets:
+            return "No relevant diagrams or tables found."
+
+        lines = []
+        lines.append(f"Found {len(assets)} relevant diagram(s)/table(s) from the manual:")
+
+        for i, asset in enumerate(assets):
+            asset_kind = asset.get("asset_kind", "figure").upper()
+            figure_ref = asset.get("figure_reference", "")
+            title = asset.get("title", "")
+            page = asset.get("page_number", "")
+            description = asset.get("description", "")
+            search_blob = asset.get("search_blob", "")
+
+            # Build reference string
+            ref_str = f"{asset_kind}"
+            if figure_ref:
+                ref_str += f" {figure_ref}"
+            if title:
+                ref_str += f": {title}"
+
+            lines.append(f"\n{i+1}. {ref_str} (page {page})")
+
+            # Include description if available
+            if description:
+                lines.append(f"   Shows: {description}")
+
+            # Include search_blob summary (truncated for context)
+            if search_blob:
+                blob_preview = search_blob[:300] + "..." if len(search_blob) > 300 else search_blob
+                lines.append(f"   Context: {blob_preview}")
+
+        lines.append("\nWhen referencing these visuals, mention the figure number (e.g., 'See FIG. 3-8') so the user can locate them.")
 
         return "\n".join(lines)
