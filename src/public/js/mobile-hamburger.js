@@ -252,6 +252,8 @@
         ];
         selectors.forEach(function(sel) {
             document.querySelectorAll(sel).forEach(function(el) {
+                // Skip elements inside the hamburger menu
+                if (el.closest('.hamburger-menu')) return;
                 // Only hide if it looks like a back arrow (short text content)
                 var text = (el.textContent || '').trim();
                 if (text.length <= 6 || text === 'Back' || text === '\u2039 Back') {
