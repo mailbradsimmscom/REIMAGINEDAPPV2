@@ -1,6 +1,7 @@
 import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
+import { generateRefTableSynonyms } from '../../services/keywords-synonyms-generation.service.js';
 
 const router = express.Router();
 
@@ -157,6 +158,41 @@ router.post('/', async (req, res) => {
     }
 
     logger.info('Reference data added', { type, name, id: result.id });
+
+    // Auto-enrich with LLM-generated synonyms and description
+    const tableMap = {
+      manufacturer: 'ref_manufacturers',
+      product_type: 'ref_product_types',
+      system_category: 'ref_system_categories',
+      subsystem_category: 'ref_subsystem_categories'
+    };
+    const dbTable = tableMap[type];
+
+    if (dbTable && result.id) {
+      try {
+        const enrichment = await generateRefTableSynonyms(type, name.trim());
+
+        if (enrichment.synonyms.length > 0 || enrichment.description) {
+          const updateData = {};
+          if (enrichment.synonyms.length > 0) updateData.synonyms = enrichment.synonyms;
+          if (enrichment.description) updateData.description = enrichment.description;
+
+          const { error: enrichError } = await supabase
+            .from(dbTable)
+            .update(updateData)
+            .eq('id', result.id);
+
+          if (enrichError) {
+            logger.warn('Failed to enrich ref table entry', { type, name, error: enrichError.message });
+          } else {
+            Object.assign(result, updateData);
+            logger.info('Ref table entry enriched', { type, name, synonymsCount: enrichment.synonyms.length });
+          }
+        }
+      } catch (enrichErr) {
+        logger.warn('LLM enrichment failed for ref table entry', { type, name, error: enrichErr.message });
+      }
+    }
 
     return res.json({
       success: true,

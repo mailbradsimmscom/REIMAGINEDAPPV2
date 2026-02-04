@@ -7,7 +7,7 @@ const EXTRACTION_PROMPT = `You are a marine expert looking at a colloquial sente
 OUTPUT FORMAT: Return JSON array only.
 
 RULES:
-1. Extract explicit mentions (V100, Zeus, fortress anchor)
+1. Extract explicit mentions (V100, Zeus, anchor)
 2. Infer implicit systems:
    - "GPS data" implies GPS receiver exists
    - "wind data" implies wind sensor exists
@@ -30,14 +30,20 @@ Query: "autopilot not responding to wind data"
   {"name": "wind sensor", "confidence": 0.75, "role": "data_source"}
 ]
 
-Query: "tell me about fortress anchor"
+Query: "tell me about my anchor"
 [
-  {"name": "fortress anchor", "confidence": 1.0, "role": "equipment"}
+  {"name": "anchor", "confidence": 1.0, "role": "equipment"}
 ]
 
-Query: "tell me the models of harken winches I have?"
+Query: "what watermaker do I have?"
 [
-  {"name": "harken winches", "confidence": 0.9, "role": "equipment"}
+  {"name": "watermaker", "confidence": 0.9, "role": "equipment"}
+]
+
+Query: "engine overheating alarm keeps going off"
+[
+  {"name": "engine", "confidence": 1.0, "role": "equipment"},
+  {"name": "cooling system", "confidence": 0.7, "role": "equipment"}
 ]
 
 Query: "what types of anchors do I have"

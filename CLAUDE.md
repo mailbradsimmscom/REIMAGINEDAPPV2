@@ -79,6 +79,33 @@ This means:
 
 ---
 
+### Rule #3: Use the Live DB Schema — Never Guess
+
+**NEVER assume database schema from migration files.** Migration files may be outdated, incomplete, or tables may have been created directly in Supabase.
+
+**Instead, use the live schema dump:**
+
+```bash
+# Generate/refresh the live schema snapshot
+node scripts/migrations/actual/dump-live-schema.mjs
+```
+
+This creates a dated folder at `scripts/migrations/actual/<YYYY-MM-DD>_tables/` containing:
+- `_schema_summary.md` — All tables with row counts, column counts, FK counts, index counts
+- `<table_name>.md` — Per-table: columns, types, nullability, defaults, PKs, FKs, indexes, constraints
+- `functions.md` — All 200+ RPC function signatures with full SQL bodies
+- `foreign_keys.md` — Complete FK relationship map
+- `views.md` — View definitions
+
+**Before ANY work involving database tables:**
+1. Check for the most recent `*_tables/` folder in `scripts/migrations/actual/`
+2. Read the relevant table `.md` file(s) for ground truth
+3. If the snapshot looks stale, re-run the dump script
+
+**Why:** Tables like `ref_canonical_models` and `ref_model_synonyms` exist in the live DB but have NO migration files. Relying on migration files alone will produce wrong assumptions.
+
+---
+
 ## Additional Rules (.cursorrules)
 
 ## Architecture Overview
@@ -173,6 +200,10 @@ router.use(adminGate);  // Already protected by parent
 ---
 
 ## File Locations
+
+### Database Schema (Source of Truth)
+- **Live schema dump:** `scripts/migrations/actual/<YYYY-MM-DD>_tables/` (run `node scripts/migrations/actual/dump-live-schema.mjs` to refresh)
+- **DO NOT rely on** `scripts/migrations/*.sql` for current schema — they may be incomplete
 
 ### Configuration
 - **Environment:** `src/config/env.js` (Zod schema + validation)

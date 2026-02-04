@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Edit Trip | BoatOS</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active { background: #E5E5EA; }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .card {
+            background: white;
+            margin: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #8E8E93;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #8E8E93;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #C6C6C8;
+            border-radius: 8px;
+            background: white;
+            font-family: inherit;
+            -webkit-appearance: none;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+
+        .form-input[readonly] {
+            background: #F2F2F7;
+            color: #8E8E93;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn:active { transform: scale(0.97); }
+
+        .btn-primary {
+            background: #007AFF;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #F2F2F7;
+            color: #000;
+            border: 1px solid #C6C6C8;
+        }
+
+        .btn-danger {
+            background: none;
+            color: #FF3B30;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .btn-save-section {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        /* Sail Events List */
+        .event-list {
+            list-style: none;
+        }
+
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .event-item:last-child { border-bottom: none; }
+
+        .event-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .event-time {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-bottom: 2px;
+        }
+
+        .event-config {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .event-notes {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .add-row {
+            padding-top: 12px;
+            text-align: center;
+        }
+
+        /* Comments List */
+        .comment-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .comment-item:last-child { border-bottom: none; }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: #8E8E93;
+        }
+
+        .comment-text {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .comment-edit-input {
+            width: 100%;
+            padding: 8px;
+            font-size: 15px;
+            border: 1px solid #007AFF;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .comment-edit-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+
+        .add-comment-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .add-comment-form input {
+            flex: 1;
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #C6C6C8;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .add-comment-form input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+        }
+
+        /* Sail Config Buttons */
+        .sail-config-section {
+            margin-bottom: 16px;
+        }
+
+        .sail-config-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #8E8E93;
+            margin-bottom: 8px;
+        }
+
+        .sail-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .sail-btn {
+            padding: 8px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #C6C6C8;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .sail-btn.active {
+            background: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+
+        .sail-btn:active { transform: scale(0.95); }
+
+        /* Loading & States */
+        .loading {
+            text-align: center;
+            padding: 60px 16px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-state {
+            text-align: center;
+            padding: 60px 16px;
+            color: #FF3B30;
+        }
+
+        .empty-text {
+            text-align: center;
+            padding: 20px;
+            color: #8E8E93;
+            font-size: 14px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a id="backBtn" href="/trips" class="back-button">&#8249;</a>
+            <h1>Edit Trip</h1>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <div>Loading trip...</div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" id="errorState" style="display:none;"></div>
+
+    <!-- Content -->
+    <div id="contentContainer" style="display:none;">
+
+        <!-- Trip Details Card -->
+        <div class="card">
+            <div class="card-title">Trip Details</div>
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-input" id="titleInput" placeholder="Trip title">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Started At</label>
+                <input type="datetime-local" class="form-input" id="startedAtInput">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ended At</label>
+                <input type="datetime-local" class="form-input" id="endedAtInput">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Duration</label>
+                <input type="text" class="form-input" id="durationDisplay" readonly>
+            </div>
+            <button class="btn btn-primary btn-save-section" id="saveTripBtn">Save Trip Details</button>
+        </div>
+
+        <!-- Sail Events Card -->
+        <div class="card">
+            <div class="card-title">Sail Events</div>
+            <ul class="event-list" id="sailEventsList"></ul>
+            <div id="sailEventsEmpty" class="empty-text" style="display:none;">No sail events recorded</div>
+            <div class="add-row">
+                <button class="btn btn-secondary" id="addSailEventBtn">+ Add Sail Event</button>
+            </div>
+        </div>
+
+        <!-- Comments Card -->
+        <div class="card">
+            <div class="card-title">Notes</div>
+            <div id="commentsList"></div>
+            <div id="commentsEmpty" class="empty-text" style="display:none;">No notes yet</div>
+            <div class="add-comment-form">
+                <input type="text" id="commentInput" placeholder="Add a note...">
+                <button class="btn btn-primary btn-small" id="addCommentBtn">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sail Event Modal -->
+    <div class="modal-overlay" id="sailEventModal">
+        <div class="modal">
+            <div class="modal-title" id="sailModalTitle">Add Sail Event</div>
+
+            <div class="form-group">
+                <label class="form-label">Start Time</label>
+                <input type="datetime-local" class="form-input" id="sailStartInput">
+            </div>
+            <div class="form-group">
+                <label class="form-label">End Time</label>
+                <input type="datetime-local" class="form-input" id="sailEndInput">
+            </div>
+
+            <div class="sail-config-section">
+                <div class="sail-config-label">Main Sail</div>
+                <div class="sail-btn-group" id="mainSailBtns">
+                    <button class="sail-btn" data-value="full">Full</button>
+                    <button class="sail-btn" data-value="1reef">1 Reef</button>
+                    <button class="sail-btn" data-value="2reef">2 Reef</button>
+                    <button class="sail-btn" data-value="3reef">3 Reef</button>
+                    <button class="sail-btn" data-value="">Down</button>
+                </div>
+            </div>
+
+            <div class="sail-config-section">
+                <div class="sail-config-label">Headsails</div>
+                <div class="sail-btn-group" id="headsailBtns">
+                    <button class="sail-btn" data-sail="jib">Jib</button>
+                    <button class="sail-btn" data-sail="code_zero">Code Zero</button>
+                    <button class="sail-btn" data-sail="asym_spinnaker">Asym</button>
+                    <button class="sail-btn" data-sail="staysail">Staysail</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-input" id="sailNotesInput" rows="2" placeholder="Optional notes..."></textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="sailModalCancel">Cancel</button>
+                <button class="btn btn-primary" id="sailModalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-title" id="deleteModalTitle">Delete?</div>
+            <div id="deleteModalText" style="color:#8E8E93;font-size:14px;margin-bottom:16px;"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="deleteCancelBtn">Cancel</button>
+                <button class="btn" id="deleteConfirmBtn" style="background:#FF3B30;color:white;">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/public/js/trips/trip-edit.js"></script>
+
+    <!-- Mobile Navigation Components -->
+    <script src="/public/js/mobile-hamburger.js"></script>
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

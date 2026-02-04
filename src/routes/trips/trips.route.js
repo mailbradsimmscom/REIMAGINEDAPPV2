@@ -213,24 +213,24 @@ router.post('/:id/resume', async (req, res) => {
 
 /**
  * PATCH /api/trips/:id
- * Update trip (title)
+ * Update trip (title, started_at, ended_at)
  */
 router.patch('/:id', async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
     const { id } = req.params;
-    const { title } = req.body;
+    const { title, started_at, ended_at } = req.body;
 
-    if (!title) {
+    if (!title && !started_at && !ended_at) {
       return res.status(400).json({
         success: false,
-        error: 'Title is required',
+        error: 'At least one field (title, started_at, ended_at) is required',
         requestId: res.locals.requestId
       });
     }
 
-    const trip = await tripsService.updateTrip(id, { title });
+    const trip = await tripsService.updateTrip(id, { title, started_at, ended_at });
 
     return res.json({
       success: true,
@@ -239,7 +239,8 @@ router.patch('/:id', async (req, res) => {
     });
   } catch (error) {
     requestLogger.error('Error updating trip', { error: error.message, tripId: req.params.id });
-    return res.status(500).json({
+    const status = error.message.includes('must be after') ? 400 : 500;
+    return res.status(status).json({
       success: false,
       error: error.message,
       requestId: res.locals.requestId
@@ -285,16 +286,13 @@ router.post('/:id/sail-event', async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { main_sail, jib, code_zero, asym_spinnaker, staysail, notes } = req.body;
+    const { main_sail, jib, code_zero, asym_spinnaker, staysail, notes,
+            started_at, ended_at, latitude, longitude, allow_completed } = req.body;
 
     const sailEvent = await tripsService.recordSailEvent(id, {
-      main_sail,
-      jib,
-      code_zero,
-      asym_spinnaker,
-      staysail,
-      notes
-    });
+      main_sail, jib, code_zero, asym_spinnaker, staysail, notes,
+      started_at, ended_at, latitude, longitude
+    }, { allowCompleted: !!allow_completed });
 
     requestLogger.info('Sail event recorded', { tripId: id, sailEventId: sailEvent.id });
 
@@ -306,11 +304,52 @@ router.post('/:id/sail-event', async (req, res) => {
   } catch (error) {
     requestLogger.error('Error recording sail event', { error: error.message, tripId: req.params.id });
     const status = error.message.includes('not found') ? 404 :
-                   error.message.includes('active trips') ? 400 : 500;
+                   error.message.includes('active trips') || error.message.includes('cannot be') ||
+                   error.message.includes('must be') ? 400 : 500;
     return res.status(status).json({
       success: false,
       error: error.message,
       requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * PATCH /api/trips/:id/sail-events/:eventId
+ * Update a sail event
+ */
+router.patch('/:id/sail-events/:eventId', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id, eventId } = req.params;
+    const updated = await tripsService.updateSailEvent(id, eventId, req.body);
+    return res.json({ success: true, data: updated, requestId: res.locals.requestId });
+  } catch (error) {
+    requestLogger.error('Error updating sail event', { error: error.message });
+    const status = error.message.includes('not found') ? 404 :
+                   error.message.includes('cannot be') || error.message.includes('must be') ? 400 : 500;
+    return res.status(status).json({
+      success: false, error: error.message, requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * DELETE /api/trips/:id/sail-events/:eventId
+ * Delete a sail event
+ */
+router.delete('/:id/sail-events/:eventId', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id, eventId } = req.params;
+    await tripsService.deleteSailEvent(id, eventId);
+    return res.json({ success: true, message: 'Sail event deleted', requestId: res.locals.requestId });
+  } catch (error) {
+    requestLogger.error('Error deleting sail event', { error: error.message });
+    return res.status(500).json({
+      success: false, error: error.message, requestId: res.locals.requestId
     });
   }
 });
@@ -542,6 +581,35 @@ router.delete('/:id/comments/:commentId', async (req, res) => {
       success: false,
       error: error.message,
       requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * PATCH /api/trips/:id/comments/:commentId
+ * Update a comment
+ */
+router.patch('/:id/comments/:commentId', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const { id, commentId } = req.params;
+    const { comment } = req.body;
+
+    if (!comment || !comment.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Comment text is required',
+        requestId: res.locals.requestId
+      });
+    }
+
+    const data = await tripsService.updateComment(id, commentId, comment.trim());
+    return res.json({ success: true, data, requestId: res.locals.requestId });
+  } catch (error) {
+    requestLogger.error('Error updating comment', { error: error.message });
+    return res.status(500).json({
+      success: false, error: error.message, requestId: res.locals.requestId
     });
   }
 });

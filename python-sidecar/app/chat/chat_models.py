@@ -60,6 +60,9 @@ class ChatRequest(BaseModel):
     equipment_inference: Optional[Dict[str, Any]] = None
     table_types: Optional[List[str]] = None
 
+    # Model aliases resolved by Node via ref_model_synonyms
+    resolved_model_aliases: Optional[List[str]] = []
+
     # Model selection for synthesis
     synthesis_model: Optional[str] = None  # Default None = use env var OPENAI_MODEL
 

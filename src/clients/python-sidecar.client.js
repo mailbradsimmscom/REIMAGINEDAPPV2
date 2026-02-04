@@ -45,6 +45,7 @@ export function createPythonSidecarClient({
     threadId = null,
     conversationSummary = null,
     memoryContext = null,
+    resolvedModelAliases = [],
     stream = false
   }) {
     const env = envConfigDep.getEnv();
@@ -60,7 +61,8 @@ export function createPythonSidecarClient({
     systems_context: systemsContext,
     thread_id: threadId,
     conversation_summary: conversationSummary,
-    memory_context: memoryContext
+    memory_context: memoryContext,
+    resolved_model_aliases: resolvedModelAliases
   };
 
     if (stream) {

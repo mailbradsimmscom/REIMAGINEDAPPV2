@@ -458,6 +458,23 @@
             background: #FF3B30;
             color: white;
         }
+
+        .edit-btn {
+            color: #007AFF;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
     </style>
 </head>
 <body>
@@ -466,7 +483,10 @@
             <a href="/trips" class="back-button">&#8249;</a>
             <h1 id="tripTitle">Loading...</h1>
         </div>
-        <button class="delete-btn" id="deleteBtn">Delete</button>
+        <div class="header-actions">
+            <button class="edit-btn" id="editBtn" style="display:none;">Edit</button>
+            <button class="delete-btn" id="deleteBtn">Delete</button>
+        </div>
     </header>
 
     <!-- Loading State -->
@@ -578,7 +598,8 @@
     <!-- Trip Detail JS -->
     <script src="/js/trips/trip-detail.js"></script>
 
-    <!-- Mobile Navigation -->
+    <!-- Mobile Navigation Components -->
+    <script src="/public/js/mobile-hamburger.js"></script>
     <script src="/public/js/mobile-nav.js"></script>
 </body>
 </html>

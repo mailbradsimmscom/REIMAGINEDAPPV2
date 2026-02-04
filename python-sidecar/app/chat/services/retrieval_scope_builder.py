@@ -18,22 +18,9 @@ import time
 from typing import Any, Optional
 
 from .base import BaseService
+from ...utils.normalize import normalize_model_key as _normalize_model_key
 
 logger = logging.getLogger(__name__)
-
-
-def _normalize_model_key(raw: str) -> str:
-    """
-    Lightweight normalization for model keys.
-
-    Python should NOT create canonical forms (Node is authority).
-    This is best-effort guard for legacy/test rows only.
-
-    Rules: uppercase, strip whitespace/hyphen/underscore
-    """
-    if not raw:
-        return ""
-    return raw.upper().replace(" ", "").replace("-", "").replace("_", "")
 
 
 def _compute_equipment_hash(asset_uids: list[str]) -> str:
@@ -64,6 +51,7 @@ class RetrievalScopeBuilder(BaseService):
         thread_id: str | None,
         systems_context: list[dict],
         primary_equipment: dict | None,
+        resolved_model_aliases: list[str] | None = None,
     ) -> dict:
         """
         Build retrieval scope for v5 filtering.
@@ -72,6 +60,7 @@ class RetrievalScopeBuilder(BaseService):
             thread_id: Optional thread ID for caching
             systems_context: Equipment list from Node (asset identity + display fields)
             primary_equipment: Focus equipment chosen by classifier (state["primary_equipment"])
+            resolved_model_aliases: Canonical model keys resolved by Node from ref_model_synonyms
 
         Returns:
             {
@@ -115,6 +104,16 @@ class RetrievalScopeBuilder(BaseService):
                 self._get_primary_doc_ids(focus_assets),
                 self._get_referencing_doc_ids_for_focus(focus_assets, systems_context),
             )
+
+            # Merge resolved_model_aliases into focus_models
+            if resolved_model_aliases:
+                merged_aliases = [_normalize_model_key(a) for a in resolved_model_aliases if a]
+                if merged_aliases:
+                    focus_models = list(set(focus_models + merged_aliases))
+                    logger.info(
+                        f"🔗 Merged {len(merged_aliases)} model alias(es) into focus_models: "
+                        f"{merged_aliases}"
+                    )
 
             # Dedupe doc_ids
             primary_doc_ids = list(set(primary_doc_ids))

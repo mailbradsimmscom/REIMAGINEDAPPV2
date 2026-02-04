@@ -270,15 +270,53 @@ async function listMinimal() {
   return data ?? [];
 }
 
+/**
+ * Resolve normalized model keys to canonical models via ref_model_synonyms.
+ * Returns an array of canonical_model strings for any synonym_norm matches.
+ *
+ * @param {string[]} normalizedModels - Array of normalized model keys (from normalizeModelKey())
+ * @returns {Promise<string[]>} - Canonical model strings that matched
+ */
+export async function resolveModelAliases(normalizedModels) {
+  if (!normalizedModels || normalizedModels.length === 0) return [];
+
+  const supabase = await checkSupabaseAvailability();
+
+  try {
+    const { data, error } = await supabase
+      .from('ref_model_synonyms')
+      .select('canonical_model, synonym_norm')
+      .in('synonym_norm', normalizedModels);
+
+    if (error) {
+      const err = new Error(`Failed to resolve model aliases: ${error.message}`);
+      err.cause = error;
+      err.context = { operation: 'resolve_model_aliases', modelCount: normalizedModels.length };
+      throw err;
+    }
+
+    // Return unique canonical models
+    const canonicals = [...new Set((data || []).map(r => r.canonical_model).filter(Boolean))];
+    return canonicals;
+
+  } catch (error) {
+    if (!error.context) {
+      error.context = { operation: 'resolve_model_aliases', modelCount: normalizedModels.length };
+    }
+    throw error;
+  }
+}
+
 export {
   getSystemByUid,
   updateSpecKeywords,
   listMinimal
 };
 
-export default { 
-  listSystems, 
-  getSystemByAssetUid, 
-  searchSystems, 
-  lookupSystemByManufacturerAndModel
+export default {
+  listSystems,
+  getSystemByAssetUid,
+  searchSystems,
+  lookupSystemByManufacturerAndModel,
+  resolveModelAliases
 };

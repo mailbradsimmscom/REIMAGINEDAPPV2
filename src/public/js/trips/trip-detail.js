@@ -35,6 +35,7 @@ class TripDetail {
     this.contentContainer = document.getElementById('contentContainer');
     this.tripTitle = document.getElementById('tripTitle');
     this.deleteBtn = document.getElementById('deleteBtn');
+    this.editBtn = document.getElementById('editBtn');
 
     // Stats
     this.statDistance = document.getElementById('statDistance');
@@ -70,6 +71,7 @@ class TripDetail {
 
   bindEvents() {
     this.deleteBtn?.addEventListener('click', () => this.showDeleteModal());
+    this.editBtn?.addEventListener('click', () => this.editTrip());
     this.cancelDelete?.addEventListener('click', () => this.hideDeleteModal());
     this.confirmDelete?.addEventListener('click', () => this.deleteTrip());
     this.addCommentBtn?.addEventListener('click', () => this.addComment());
@@ -106,6 +108,11 @@ class TripDetail {
 
     // Title
     this.tripTitle.textContent = trip.title || 'Untitled Trip';
+
+    // Show edit button for completed trips
+    if (trip.status === 'completed' && this.editBtn) {
+      this.editBtn.style.display = 'inline-block';
+    }
 
     // Stats
     this.statDistance.innerHTML = `${trip.distance_nm?.toFixed(1) || '0.0'} <span class="stat-unit">nm</span>`;
@@ -517,6 +524,10 @@ class TripDetail {
     } finally {
       this.addCommentBtn.disabled = false;
     }
+  }
+
+  editTrip() {
+    window.location.href = `/trips/edit?id=${this.tripId}`;
   }
 
   showDeleteModal() {

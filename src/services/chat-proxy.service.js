@@ -14,6 +14,7 @@ import * as pythonSidecar from '../clients/python-sidecar.client.js';
 import { chatDebug as defaultChatDebug } from '../utils/chat-debug-logger.js';
 import * as equipmentExtraction from './equipment-extraction.service.js';
 import { ERR } from '../constants/errorCodes.js';
+import { normalizeModelKey } from '../utils/normalize-model-key.js';
 
 // Pure helper functions - extracted for testability
 import { extractKeywords } from './chat-proxy/helpers.js';
@@ -829,11 +830,36 @@ export function createChatProxyService({
       }
     }));
 
+    // STEP 6B: Resolve model aliases via ref_model_synonyms
+    // Maps model_norms from matched equipment to canonical forms for Pinecone/DIP filtering
+    let resolvedModelAliases = [];
+    try {
+      const modelNorms = systemsContext
+        .map(eq => normalizeModelKey(eq.model))
+        .filter(Boolean);
+      const uniqueNorms = [...new Set(modelNorms)];
+
+      if (uniqueNorms.length > 0) {
+        resolvedModelAliases = await systemsRepository.resolveModelAliases(uniqueNorms);
+        if (resolvedModelAliases.length > 0) {
+          requestLogger.info('🔗 Resolved model aliases', {
+            inputModels: uniqueNorms,
+            resolvedAliases: resolvedModelAliases
+          });
+        }
+      }
+    } catch (aliasError) {
+      requestLogger.warn('Failed to resolve model aliases (non-blocking)', {
+        error: aliasError.message
+      });
+    }
+
     // STEP 7: Call Python sequential workflow (replaces DIP, Pinecone, OpenAI completion)
     chatDebug.step('PYTHON_WORKFLOW_CALL', {
       systemsContextCount: systemsContext.length,
       hasConversationSummary: !!conversationContext.conversation_summary,
       hasEquipmentInference: !!equipmentInference,
+      resolvedModelAliases: resolvedModelAliases.length,
       streaming: stream
     });
 
@@ -851,6 +877,7 @@ export function createChatProxyService({
           total_exchanges: conversationContext.total_exchanges,
           equipment_inference: equipmentInference
         },
+        resolvedModelAliases,
         stream: true
       });
 
@@ -882,7 +909,8 @@ export function createChatProxyService({
         accumulated_equipment: conversationContext.accumulated_equipment,
         total_exchanges: conversationContext.total_exchanges,
         equipment_inference: equipmentInference
-      }
+      },
+      resolvedModelAliases
     });
     const workflowDuration = Date.now() - workflowStart;
     nodeTiming.python_call_ms = workflowDuration;

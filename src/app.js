@@ -319,6 +319,17 @@ app.get('/trips/detail', async (req, res) => {
   }
 });
 
+// Trip edit page
+app.get('/trips/edit', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/trip-edit.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Trip edit page not found' });
+  }
+});
+
 // Anchorages tracking page
 app.get('/anchorages', async (req, res) => {
   try {

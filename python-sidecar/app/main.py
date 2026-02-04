@@ -41,21 +41,12 @@ import time
 import random
 from .pinecone_client import pinecone_client
 from .dip_processor import DIPProcessor
+from .utils.normalize import normalize_model_key
 import re
 
 # ============================================================================
 # CANONICAL MODEL NORMALIZATION
 # ============================================================================
-
-def normalize_model_key(raw: str) -> str:
-    """
-    Normalize model name for canonical matching.
-    Rules: uppercase, remove whitespace/hyphen/underscore.
-    Example: "VC 20" -> "VC20", "vc-20" -> "VC20"
-    """
-    if not raw:
-        return ""
-    return re.sub(r'[\s\-_]', '', raw.upper())
 
 
 async def canonicalize_model(raw: str, manufacturer_id: Optional[str] = None) -> str:
@@ -537,19 +528,18 @@ Analyze the provided technical manual and identify:
 {ref_section}
 Return ONLY valid JSON in this exact format:
 {{
-  "manufacturer": "Yanmar",
-  "product_type": "Engine",
-  "system_category": "Propulsion",
-  "subsystem_category": "Engines",
-  "primary_models": ["3JH40", "4JH45", "4JH57", "4JH80", "4JH110"],
-  "is_multi_model": true,
+  "manufacturer": "B&G",
+  "product_type": "Chartplotter",
+  "system_category": "Navigation",
+  "subsystem_category": "Chartplotters & MFDs",
+  "primary_models": ["Zeus 3S 16"],
+  "is_multi_model": false,
   "referenced_products": [
-    {{"model": "VC10", "type": "Vessel Control System", "manufacturer": "Yanmar"}},
-    {{"model": "VC20", "type": "Vessel Control System", "manufacturer": "Yanmar"}},
-    {{"model": "KM35", "type": "Marine Gear", "manufacturer": "Yanmar"}}
+    {{"model": "4JH57", "type": "Engine", "manufacturer": "Yanmar"}},
+    {{"model": "ZEN15048VDC", "type": "Watermaker", "manufacturer": "Schenker"}}
   ],
   "confidence": "high",
-  "evidence": "Found explicit model list in title page and specifications section"
+  "evidence": "Found model name on title page and specifications section"
 }}
 
 IMPORTANT:
@@ -2584,7 +2574,8 @@ if chat_enabled:
                                 thread_id=request.thread_id,
                                 conversation_summary=request.conversation_summary,
                                 memory_context=request.memory_context,
-                                synthesis_model=request.synthesis_model
+                                synthesis_model=request.synthesis_model,
+                                resolved_model_aliases=request.resolved_model_aliases or []
                             ):
                                 event_type = event.pop("event")
                                 yield f"event: {event_type}\ndata: {json.dumps(event)}\n\n"
@@ -2657,7 +2648,8 @@ if chat_enabled:
                     thread_id=request.thread_id,
                     conversation_summary=request.conversation_summary,
                     memory_context=request.memory_context,
-                    synthesis_model=request.synthesis_model
+                    synthesis_model=request.synthesis_model,
+                    resolved_model_aliases=request.resolved_model_aliases or []
                 )
                 workflow_duration = (datetime.now() - workflow_start).total_seconds() * 1000
 

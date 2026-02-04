@@ -79,29 +79,26 @@ Examples:
 
 Return ONLY the keyword string, nothing else.`;
 
-const SYNONYMS_PROMPT = `You are a marine equipment search expert. Generate ALL possible spelling, format variations, short forms, abbreviations, etc. of this product name that users might search for.
+const SYNONYMS_PROMPT = `You are a marine equipment search expert. Generate search terms a boat owner or technician might use to find this product. Focus on MEANING, not formatting.
 
 Equipment Details:
 Manufacturer: {manufacturer}
 Model: {model}
-Canonical ID: {canonical_model_id}
 Description: {description}
 
-Rules:
-- Include uppercase, lowercase, mixed case variations
-- Include with/without spaces, hyphens, underscores
-- Include manufacturer prefix variations (e.g., "B&G HALO24", "BGHALO24", "B&GHALO24")
-- Include short forms and abbreviations (e.g., "DST" for "Depth/Speed/Temp")
-- Include number format variations (e.g., "24", "24+", "24 plus")
-- Include acronyms and industry shorthand
-- Include common typos and misspellings
-- Return as space-separated string
-- Generate 20-50 variations
+Priority (most to least important):
+1. Semantic/colloquial terms — what boat owners call it (e.g., "watermaker", "desal", "marine grill", "BBQ", "nav screen")
+2. Brand + product combinations (e.g., "Kenyon grill", "B&G plotter", "Schenker watermaker")
+3. Common misspellings and phonetic variants (e.g., "Keynon", "Shenker", "Furuno" vs "Faruno")
+4. Abbreviations and acronyms (e.g., "MFD", "AP", "RO", "DST")
+5. A small set of format variants — model with/without spaces/hyphens (e.g., "ZEN 150", "ZEN-150", "ZEN150")
 
-Examples:
-- "DST810 DST-810 dst810 DST 810 dst-810 DST810 Smart Multisensor dst depth speed temp"
-- "HALO24+ HALO24 halo24+ HALO-24+ halo 24 plus B&G HALO24 BGHALO24 B&GHALO24"
-- "NAIS500 NAIS-500 nais 500 AIS transponder class b ais"
+Do NOT:
+- Repeat the same word with only case changes (one form is enough)
+- Generate dozens of spacing/hyphen permutations
+- Pad output with near-duplicate entries
+
+Return as a space-separated string. Generate as many DISTINCT, USEFUL terms as possible.
 
 Return ONLY the synonym string, nothing else.`;
 
@@ -190,13 +187,12 @@ async function generateSynonyms(system) {
   const prompt = SYNONYMS_PROMPT
     .replace('{manufacturer}', system.manufacturer_norm || 'Unknown')
     .replace('{model}', system.model_norm || 'Unknown')
-    .replace('{canonical_model_id}', system.canonical_model_id || 'Unknown')
     .replace('{description}', system.description || 'No description available');
 
   const response = await getOpenAIClient().chat.completions.create({
     model: model,
     messages: [{ role: 'user', content: prompt }],
-    max_tokens: 200,
+    max_tokens: 600,
     temperature: 0.5
   });
 

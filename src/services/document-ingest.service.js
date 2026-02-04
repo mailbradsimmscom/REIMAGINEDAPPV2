@@ -1,6 +1,7 @@
 import { getSupabaseClient } from '../repositories/supabaseClient.js';
 import { createSystem, createInstance } from './system-management.service.js';
 import { logger } from '../utils/logger.js';
+import { normalizeModelKey } from '../utils/normalize-model-key.js';
 import crypto from 'crypto';
 
 /**
@@ -87,6 +88,8 @@ export async function lookupReferenceIds({ manufacturer, product_type, system_ca
  */
 export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, docId }) {
   const supabase = await getSupabaseClient();
+  // L1 normalize model key before lookup and write
+  const normalizedModel = normalizeModelKey(modelNorm);
 
   try {
     // Check if system already exists
@@ -94,11 +97,11 @@ export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, 
       .from('systems')
       .select('asset_uid, model_norm, manufacturer_norm')
       .eq('manufacturer_norm', manufacturerNorm)
-      .eq('model_norm', modelNorm)
+      .eq('model_norm', normalizedModel)
       .single();
 
     if (existingSystem && !lookupError) {
-      log.info('Reusing existing system', { assetUid: existingSystem.asset_uid, model: modelNorm });
+      log.info('Reusing existing system', { assetUid: existingSystem.asset_uid, model: normalizedModel });
       return {
         success: true,
         data: {
@@ -112,7 +115,7 @@ export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, 
     const systemRecord = {
       manufacturer_id: refIds.manufacturerId,
       manufacturer_norm: manufacturerNorm,
-      model_norm: modelNorm,
+      model_norm: normalizedModel,
       product_type_id: refIds.productTypeId,
       system_category_id: refIds.systemCategoryId,
       subsystem_category_id: refIds.subsystemCategoryId,
@@ -137,7 +140,7 @@ export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, 
       };
     }
 
-    log.info('System created', { assetUid: systemResult.data.asset_uid, model: modelNorm });
+    log.info('System created', { assetUid: systemResult.data.asset_uid, model: normalizedModel });
 
     return {
       success: true,
@@ -174,7 +177,7 @@ export async function createInstanceForSystem({
 
     const denormalizedFields = {
       manufacturer_norm: manufacturerNorm,
-      model_norm: modelNorm,
+      model_norm: normalizeModelKey(modelNorm),
       system_norm: systemNorm,
       subsystem_norm: subsystemNorm
     };
@@ -286,7 +289,7 @@ export async function saveReferencedSystems({
 
     const record = {
       doc_id: docId,
-      canonical_model: refModel,
+      canonical_model: normalizeModelKey(refModel),
       source: 'detected',
       raw_model: typeof refData === 'object' ? refData.model : refModel,
       raw_manufacturer: typeof refData === 'object' ? refData.manufacturer : null,
@@ -366,13 +369,17 @@ export async function upsertDocumentRecord({
   const supabase = await getSupabaseClient();
 
   try {
-    // models_covered = primary models only (NOT referenced systems)
-    const modelsCovered = (modelsDetected || []).filter((v, i, a) => v && a.indexOf(v) === i);
+    // models_covered = primary models only (NOT referenced systems), L1 normalized + deduped
+    const modelsCovered = [...new Set(
+      (modelsDetected || []).filter(Boolean).map(m => normalizeModelKey(m))
+    )];
+
+    const normalizedPrimary = normalizeModelKey(primaryModelNorm || modelsDetected?.[0] || '');
 
     const docRecord = {
       doc_id: docId,
       manufacturer_norm: manufacturer || null,
-      model_norm: primaryModelNorm || modelsDetected?.[0] || null,
+      model_norm: normalizedPrimary || null,
       models_covered: modelsCovered.length > 0 ? modelsCovered : null,
       is_multi_model: (modelsDetected?.length || 0) > 1,
       asset_uid: primaryAssetUid || null

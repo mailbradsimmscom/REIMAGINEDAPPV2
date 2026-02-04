@@ -59,7 +59,8 @@ class ChatWorkflowSequential:
                           thread_id: Optional[str] = None,
                           conversation_summary: Optional[str] = None,
                           memory_context: Optional[Dict[str, Any]] = None,
-                          synthesis_model: Optional[str] = None) -> Dict[str, Any]:
+                          synthesis_model: Optional[str] = None,
+                          resolved_model_aliases: Optional[List[str]] = None) -> Dict[str, Any]:
         """
         Process chat query through sequential workflow
 
@@ -98,6 +99,7 @@ class ChatWorkflowSequential:
                 "conversation_summary": conversation_summary,
                 "memory_context": memory_context,
                 "synthesis_model": synthesis_model,  # Model selection for synthesis
+                "resolved_model_aliases": resolved_model_aliases or [],  # Canonical aliases from Node
                 "classification": None,
                 "primary_equipment": None,
                 "secondary_equipment": [],
@@ -374,7 +376,8 @@ class ChatWorkflowSequential:
         thread_id: Optional[str] = None,
         conversation_summary: Optional[str] = None,
         memory_context: Optional[Dict[str, Any]] = None,
-        synthesis_model: Optional[str] = None
+        synthesis_model: Optional[str] = None,
+        resolved_model_aliases: Optional[List[str]] = None
     ) -> AsyncGenerator[Dict[str, Any], None]:
         """
         Streaming version of process_chat - yields events as they complete.
@@ -398,6 +401,7 @@ class ChatWorkflowSequential:
                 "conversation_summary": conversation_summary,
                 "memory_context": memory_context,
                 "synthesis_model": synthesis_model,
+                "resolved_model_aliases": resolved_model_aliases or [],
                 "classification": None,
                 "primary_equipment": None,
                 "secondary_equipment": [],
@@ -670,6 +674,7 @@ class ChatWorkflowSequential:
                 thread_id=state.get("thread_id"),
                 systems_context=state.get("systems_context", []),
                 primary_equipment=state.get("primary_equipment"),
+                resolved_model_aliases=state.get("resolved_model_aliases", []),
             )
             scope_duration_ms = int((datetime.now() - scope_start).total_seconds() * 1000)
 

@@ -370,17 +370,43 @@ export async function resumeTrip(tripId) {
 }
 
 /**
- * Update trip title
+ * Update trip details (title, started_at, ended_at)
+ * All fields optional - only provided fields are updated
  */
-export async function updateTrip(tripId, { title }) {
+export async function updateTrip(tripId, { title, started_at, ended_at }) {
   const supabase = await getSupabaseClient();
+
+  const updateData = { updated_at: new Date().toISOString() };
+  if (title !== undefined) updateData.title = title;
+  if (started_at !== undefined) updateData.started_at = started_at;
+  if (ended_at !== undefined) updateData.ended_at = ended_at;
+
+  // Recalculate duration if either time changed
+  if (started_at !== undefined || ended_at !== undefined) {
+    let startTime = started_at;
+    let endTime = ended_at;
+
+    // Fetch missing time from DB if only one was provided
+    if (!startTime || !endTime) {
+      const { data: existing } = await supabase
+        .from('trips').select('started_at, ended_at').eq('id', tripId).single();
+      if (!startTime) startTime = existing?.started_at;
+      if (!endTime) endTime = existing?.ended_at;
+    }
+
+    if (startTime && endTime) {
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      if (end <= start) {
+        throw new Error('ended_at must be after started_at');
+      }
+      updateData.duration_minutes = Math.round((end - start) / 60000);
+    }
+  }
 
   const { data: trip, error } = await supabase
     .from('trips')
-    .update({
-      title,
-      updated_at: new Date().toISOString()
-    })
+    .update(updateData)
     .eq('id', tripId)
     .select()
     .single();
@@ -478,15 +504,16 @@ function formatDuration(ms) {
 
 /**
  * Record a sail configuration change
- * Position is auto-filled from latest telemetry
+ * Position is auto-filled from latest telemetry for active trips
+ * For completed trips, pass allowCompleted and provide times manually
  */
-export async function recordSailEvent(tripId, sailConfig) {
+export async function recordSailEvent(tripId, sailConfig, { allowCompleted = false } = {}) {
   const supabase = await getSupabaseClient();
 
-  // Verify trip exists and is active
+  // Verify trip exists
   const { data: trip, error: tripError } = await supabase
     .from('trips')
-    .select('id, status')
+    .select('id, status, started_at, ended_at')
     .eq('id', tripId)
     .single();
 
@@ -494,20 +521,45 @@ export async function recordSailEvent(tripId, sailConfig) {
     throw new Error('Trip not found');
   }
 
-  if (trip.status !== 'active') {
+  if (!allowCompleted && trip.status !== 'active') {
     throw new Error('Can only record sail events for active trips');
   }
 
-  // Get latest telemetry position
-  const { data: latestTelemetry } = await supabase
-    .from('trip_telemetry')
-    .select('latitude, longitude')
-    .eq('trip_id', tripId)
-    .order('recorded_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  // For active trips, auto-fill position from telemetry
+  // For completed trips (edit mode), use provided lat/lon
+  let position = { latitude: null, longitude: null };
+  if (trip.status === 'active') {
+    const { data: latestTelemetry } = await supabase
+      .from('trip_telemetry')
+      .select('latitude, longitude')
+      .eq('trip_id', tripId)
+      .order('recorded_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    position = latestTelemetry || position;
+  } else {
+    position = {
+      latitude: sailConfig.latitude || null,
+      longitude: sailConfig.longitude || null
+    };
+  }
 
-  const position = latestTelemetry || { latitude: null, longitude: null };
+  // Validate time range against trip bounds
+  if (sailConfig.started_at && trip.started_at) {
+    if (new Date(sailConfig.started_at) < new Date(trip.started_at)) {
+      throw new Error('Sail event start time cannot be before trip start');
+    }
+  }
+  if (sailConfig.ended_at && trip.ended_at) {
+    if (new Date(sailConfig.ended_at) > new Date(trip.ended_at)) {
+      throw new Error('Sail event end time cannot be after trip end');
+    }
+  }
+  if (sailConfig.started_at && sailConfig.ended_at) {
+    if (new Date(sailConfig.ended_at) <= new Date(sailConfig.started_at)) {
+      throw new Error('Sail event end time must be after start time');
+    }
+  }
 
   // Insert sail event
   const { data: sailEvent, error } = await supabase
@@ -521,7 +573,9 @@ export async function recordSailEvent(tripId, sailConfig) {
       code_zero: sailConfig.code_zero || false,
       asym_spinnaker: sailConfig.asym_spinnaker || false,
       staysail: sailConfig.staysail || false,
-      notes: sailConfig.notes || null
+      notes: sailConfig.notes || null,
+      started_at: sailConfig.started_at || null,
+      ended_at: sailConfig.ended_at || null
     })
     .select()
     .single();
@@ -650,6 +704,88 @@ export async function deleteComment(tripId, commentId) {
   }
 
   return { success: true };
+}
+
+/**
+ * Update a sail event (for editing completed trips)
+ */
+export async function updateSailEvent(tripId, eventId, data) {
+  const supabase = await getSupabaseClient();
+
+  // Verify trip exists and get bounds for validation
+  const { data: trip } = await supabase
+    .from('trips').select('started_at, ended_at').eq('id', tripId).single();
+  if (!trip) throw new Error('Trip not found');
+
+  // Validate times against trip bounds
+  if (data.started_at && trip.started_at) {
+    if (new Date(data.started_at) < new Date(trip.started_at)) {
+      throw new Error('Sail event start time cannot be before trip start');
+    }
+  }
+  if (data.ended_at && trip.ended_at) {
+    if (new Date(data.ended_at) > new Date(trip.ended_at)) {
+      throw new Error('Sail event end time cannot be after trip end');
+    }
+  }
+  if (data.started_at && data.ended_at) {
+    if (new Date(data.ended_at) <= new Date(data.started_at)) {
+      throw new Error('Sail event end time must be after start time');
+    }
+  }
+
+  // Build update payload with only allowed fields
+  const updateData = {};
+  const allowedFields = ['main_sail', 'jib', 'code_zero', 'asym_spinnaker',
+                          'staysail', 'notes', 'started_at', 'ended_at'];
+  for (const field of allowedFields) {
+    if (data[field] !== undefined) updateData[field] = data[field];
+  }
+
+  const { data: updated, error } = await supabase
+    .from('trip_sail_events')
+    .update(updateData)
+    .eq('id', eventId)
+    .eq('trip_id', tripId)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Failed to update sail event: ${error.message}`);
+  return updated;
+}
+
+/**
+ * Delete a sail event
+ */
+export async function deleteSailEvent(tripId, eventId) {
+  const supabase = await getSupabaseClient();
+
+  const { error } = await supabase
+    .from('trip_sail_events')
+    .delete()
+    .eq('id', eventId)
+    .eq('trip_id', tripId);
+
+  if (error) throw new Error(`Failed to delete sail event: ${error.message}`);
+  return { success: true };
+}
+
+/**
+ * Update a comment's text
+ */
+export async function updateComment(tripId, commentId, comment) {
+  const supabase = await getSupabaseClient();
+
+  const { data, error } = await supabase
+    .from('trip_comments')
+    .update({ comment })
+    .eq('id', commentId)
+    .eq('trip_id', tripId)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Failed to update comment: ${error.message}`);
+  return data;
 }
 
 /**

@@ -30,10 +30,10 @@ KNOWLEDGE HIERARCHY:
 4. TROUBLESHOOTING: Combine document knowledge with your expertise about common issues
 
 YOUR EXPERTISE:
-- You have extensive training about marine equipment - Marco pumps, Victron systems, Schenker watermakers, etc.
+- You have extensive training about marine equipment - marine pumps, inverters, watermakers, chartplotters, engines, anchoring systems, etc.
 - You understand how these systems work, common failure modes, and service procedures
 - USE this knowledge, but always contextualize to the user's specific equipment
-- When using general knowledge, briefly note it: "Based on standard Marco pump service procedures..."
+- When using general knowledge, briefly note it: "Based on standard marine pump service procedures..."
 
 WHAT MAKES YOU BETTER THAN GENERIC CHATGPT:
 - You KNOW their exact equipment (model, specs from documents)
@@ -76,7 +76,7 @@ Respond with valid JSON only:
     "complexity_score": 0.2,
     "table_types_needed": ["spec", "routing"],
     "primary_equipment_index": 0,
-    "search_keywords": ["anchor", "fortress", "specifications"],
+    "search_keywords": ["engine", "oil change", "service interval"],
     "reasoning": "Brief explanation of your analysis"
 }}"""
 
