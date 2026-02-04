@@ -47,6 +47,7 @@ router.use((req, res, next) => {
 
 // Mount all other routes (these require admin auth)
 router.use('/health', healthRouter);
+router.use('/systems/minimal', systemsMinimalRoute);
 router.use('/systems', systemsRouter);
 router.use('/logs', logsRouter);
 router.use('/manufacturers', manufacturersRouter);
@@ -57,7 +58,6 @@ router.use('/metrics', metricsRouter);
 // router.use('/snapshots', snapshotsRouter);
 router.use('/suggestions', suggestionsRouter);
 router.use('/testing', testingRouter);
-router.use("/systems/minimal", systemsMinimalRoute);
 router.use('/text-extraction', textExtractionRouter);
 router.use('/jobs', jobsRouter);
 router.use('/docs', documentRouter);

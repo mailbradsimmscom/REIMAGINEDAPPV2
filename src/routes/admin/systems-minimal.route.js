@@ -9,7 +9,7 @@ const router = Router();
  * GET /admin/api/systems/minimal
  * Get minimal system data for admin dropdowns
  */
-router.get('/minimal', adminOnly, requireServices(['supabase']), async (_req, res, next) => {
+router.get('/', adminOnly, requireServices(['supabase']), async (_req, res, next) => {
   try {
     const rows = await listMinimal();
     res.json({

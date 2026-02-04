@@ -1370,9 +1370,10 @@
 
         function showAddReferencedModal() {
             document.getElementById('refModelInput').value = '';
-            document.getElementById('refSuggestions').classList.remove('open');
             document.getElementById('addReferencedModal').classList.add('visible');
             document.getElementById('refModelInput').focus();
+            // Show all systems immediately
+            filterRefSuggestions('');
         }
 
         function closeRefModal() {
@@ -1381,15 +1382,17 @@
 
         function filterRefSuggestions(query) {
             const container = document.getElementById('refSuggestions');
-            if (!query || query.length < 2) {
+            if (allSystems.length === 0) {
                 container.classList.remove('open');
                 return;
             }
-            const q = query.toLowerCase();
-            const matches = allSystems.filter(s =>
-                (s.model_norm || '').toLowerCase().includes(q) ||
-                (s.manufacturer_norm || '').toLowerCase().includes(q)
-            ).slice(0, 10);
+            const q = (query || '').toLowerCase().trim();
+            const matches = q.length === 0
+                ? allSystems.slice(0, 20)
+                : allSystems.filter(s =>
+                    (s.model_norm || '').toLowerCase().includes(q) ||
+                    (s.manufacturer_norm || '').toLowerCase().includes(q)
+                ).slice(0, 20);
 
             if (matches.length === 0) {
                 container.classList.remove('open');
