@@ -331,6 +331,25 @@
             background: rgba(0, 122, 255, 0.1);
         }
 
+        .ref-suggestions {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-top: 4px;
+            display: none;
+        }
+        .ref-suggestions.open { display: block; }
+        .ref-suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        .ref-suggestion-item:last-child { border-bottom: none; }
+        .ref-suggestion-item:hover { background: rgba(0, 122, 255, 0.1); }
+        .ref-suggestion-item .mfr { color: var(--text-secondary); font-size: 12px; }
+
         /* Modal for adding new values */
         .modal-overlay {
             display: none;
@@ -618,6 +637,9 @@
             <span id="referencedArrow">▼</span>
         </div>
         <div class="referenced-content" id="referencedContent"></div>
+        <button type="button" class="add-new-btn" id="addReferencedBtn"
+                style="display: none; margin-top: 8px;"
+                onclick="showAddReferencedModal()">+ Add Referenced Product</button>
 
         <div class="action-buttons">
             <button class="btn btn-secondary" onclick="location.reload()">Cancel</button>
@@ -635,6 +657,21 @@
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveNewValue()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding referenced product -->
+    <div class="modal-overlay" id="addReferencedModal">
+        <div class="modal-content">
+            <div class="modal-title">Add Referenced Product</div>
+            <input type="text" class="modal-input" id="refModelInput"
+                   placeholder="Search existing systems or type model name"
+                   autocomplete="off">
+            <div id="refSuggestions" class="ref-suggestions"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeRefModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAddReferenced()">Add</button>
             </div>
         </div>
     </div>
@@ -724,6 +761,7 @@
         // Map of modelId -> { model, type, instances: [{ id, serial, location }] }
         let selectedModels = new Map();
         let instanceCounter = 0;
+        let allSystems = []; // cached systems for autocomplete
 
         // Reference data from backend (populated after model detection)
         let referenceData = {
@@ -733,6 +771,18 @@
             subsystem_categories: []
         };
         let currentAddType = null; // Track which field we're adding to
+
+        async function loadSystemsList() {
+            try {
+                const response = await window.adminFetch('/admin/api/systems/minimal');
+                if (response.ok) {
+                    const result = await response.json();
+                    allSystems = result.data?.systems || [];
+                }
+            } catch (e) {
+                console.warn('Failed to load systems list for autocomplete', e);
+            }
+        }
 
         const LOCATIONS = [
             'Engine Room - Port', 'Engine Room - Starboard', 'Engine Room - Center',
@@ -1013,15 +1063,20 @@
                 primaryContainer.innerHTML = '<p style="color: var(--text-secondary);">No models detected. You can proceed without selecting any.</p>';
             }
 
-            // Referenced products
+            // Referenced products — always show header + add button
+            document.getElementById('referencedHeader').style.display = 'flex';
+            document.getElementById('addReferencedBtn').style.display = '';
+            loadSystemsList(); // fire-and-forget
+
             if (detection.referenced_products && detection.referenced_products.length > 0) {
-                document.getElementById('referencedHeader').style.display = 'flex';
                 const refContainer = document.getElementById('referencedContent');
                 refContainer.innerHTML = '';
                 detection.referenced_products.forEach((prod, i) => {
                     const name = typeof prod === 'string' ? prod : prod.model;
                     refContainer.appendChild(createModelItem(name, 'referenced', i));
                 });
+                // Auto-open so user sees detected refs
+                refContainer.classList.add('open');
             }
 
             // Show detection evidence
@@ -1310,6 +1365,94 @@
             }
             statusEl.textContent = message;
         }
+
+        // --- Add Referenced Product ---
+
+        function showAddReferencedModal() {
+            document.getElementById('refModelInput').value = '';
+            document.getElementById('refSuggestions').classList.remove('open');
+            document.getElementById('addReferencedModal').classList.add('visible');
+            document.getElementById('refModelInput').focus();
+        }
+
+        function closeRefModal() {
+            document.getElementById('addReferencedModal').classList.remove('visible');
+        }
+
+        function filterRefSuggestions(query) {
+            const container = document.getElementById('refSuggestions');
+            if (!query || query.length < 2) {
+                container.classList.remove('open');
+                return;
+            }
+            const q = query.toLowerCase();
+            const matches = allSystems.filter(s =>
+                (s.model_norm || '').toLowerCase().includes(q) ||
+                (s.manufacturer_norm || '').toLowerCase().includes(q)
+            ).slice(0, 10);
+
+            if (matches.length === 0) {
+                container.classList.remove('open');
+                return;
+            }
+
+            container.innerHTML = '';
+            matches.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'ref-suggestion-item';
+                div.dataset.model = s.model_norm;
+                div.dataset.manufacturer = s.manufacturer_norm || '';
+                div.innerHTML = `<div>${escapeHtml(s.model_norm)}</div><div class="mfr">${escapeHtml(s.manufacturer_norm || '')}</div>`;
+                container.appendChild(div);
+            });
+            container.classList.add('open');
+        }
+
+        function escapeHtml(str) {
+            if (str == null) return '';
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        function confirmAddReferenced() {
+            const model = document.getElementById('refModelInput').value.trim();
+            if (!model) return;
+
+            // Add to detectionResult.referenced_products
+            if (!detectionResult.referenced_products) detectionResult.referenced_products = [];
+            detectionResult.referenced_products.push({ model: model, type: 'User Added', manufacturer: '' });
+
+            // Render the new item
+            const refContainer = document.getElementById('referencedContent');
+            const index = detectionResult.referenced_products.length - 1;
+            refContainer.appendChild(createModelItem(model, 'referenced', index));
+
+            // Ensure content is open so user sees the new item
+            refContainer.classList.add('open');
+            document.getElementById('referencedArrow').textContent = '▲';
+
+            // Auto-select the new item
+            const id = `referenced-${index}`;
+            toggleModel(id, 'referenced');
+
+            // Close modal
+            closeRefModal();
+        }
+
+        // Ref suggestions: event delegation for clicks
+        document.getElementById('refSuggestions').addEventListener('click', (e) => {
+            const item = e.target.closest('.ref-suggestion-item');
+            if (item) {
+                document.getElementById('refModelInput').value = item.dataset.model;
+                document.getElementById('refSuggestions').classList.remove('open');
+            }
+        });
+
+        // Ref input: filter on typing
+        document.getElementById('refModelInput').addEventListener('input', (e) => {
+            filterRefSuggestions(e.target.value);
+        });
 
         // Track active EventSource for cleanup
         let activeEventSource = null;
