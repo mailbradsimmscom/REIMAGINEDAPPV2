@@ -192,7 +192,8 @@ async function getDipStagingStats() {
     'staging_spec_suggestions',
     'staging_playbook_hints',
     'staging_intent_router',
-    'staging_golden_tests'
+    'staging_golden_tests',
+    'staging_troubleshooting'
   ];
 
   // Collect stats by asset_uid across all tables
@@ -258,6 +259,30 @@ async function getDipStagingStats() {
     totalDeclined,
     byTable: tableStats
   };
+}
+
+/**
+ * Get DIP production table counts (the 5 live tables)
+ */
+async function getDipProductionStats() {
+  const tables = [
+    'spec_suggestions',
+    'playbook_hints',
+    'intent_router',
+    'golden_tests',
+    'troubleshooting'
+  ];
+
+  const byTable = {};
+  let total = 0;
+
+  await Promise.all(tables.map(async (table) => {
+    const count = await getCount(table);
+    byTable[table] = count;
+    total += count;
+  }));
+
+  return { total, byTable };
 }
 
 /**
@@ -479,6 +504,7 @@ export async function getFunnelStats() {
     documentsInStorage,
     jobsByStatus,
     dipStagingStats,
+    dipProductionStats,
     maintenanceStats,
     liveTaskStats,
     pineconeStats,
@@ -491,6 +517,7 @@ export async function getFunnelStats() {
     getCount('documents', { storage_path: 'NOT_NULL' }),
     getGroupedCounts('jobs', 'status'),
     getDipStagingStats(),
+    getDipProductionStats(),
     getMaintenanceAgentStats(),
     getLiveTaskStats(),
     getPineconeStats(),
@@ -588,10 +615,8 @@ export async function getFunnelStats() {
         id: 'dip_production',
         label: 'Production Tables',
         description: 'Approved items for Chat AI',
-        count: dipStagingStats.totalApproved,
-        breakdown: Object.fromEntries(
-          Object.entries(dipStagingStats.byTable).map(([table, stats]) => [table, stats.approved || 0])
-        ),
+        count: dipProductionStats.total,
+        breakdown: dipProductionStats.byTable,
         icon: '💬'
       }
     ]

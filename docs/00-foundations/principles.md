@@ -382,58 +382,115 @@ router.post('/', adminOnly, validate(createPlaybookSchema, 'body'), async (req, 
 
 **The Rule:** All `/admin/*` routes protected by parent router middleware.
 
-**Token Reading (src/middleware/admin.js:6-16):**
+### Token Reading (src/middleware/admin.js:6-18)
+
+Tokens can be supplied via three methods (checked in order):
+
 ```javascript
 function readAdminToken(req) {
   const h = req.headers;
   const x = h['x-admin-token'];
   const auth = h['authorization'];
+  // 1. x-admin-token header (primary method)
   if (x && typeof x === 'string') return x.trim();
+  // 2. Authorization: Bearer <token> header
   if (auth && typeof auth === 'string') {
     const m = auth.match(/^Bearer\s+(.+)$/i);
     if (m) return m[1].trim();
   }
+  // 3. Query parameter ?token=<token> (needed for EventSource/SSE)
+  const q = req.query?.token;
+  if (q && typeof q === 'string') return q.trim();
   return null;
 }
 ```
 
-**Admin Gate (src/middleware/admin.js:28-63):**
+**Why query param?** The browser's `EventSource` API (used for SSE streaming, e.g., DIP extraction progress) cannot set custom headers. The `?token=` query parameter allows SSE endpoints to authenticate.
+
+### Security Logging
+
+Token values are never logged in full. Two masking functions protect credentials:
+
+```javascript
+// Mask: shows first 4 + last 4 chars with ellipsis
+function mask(token) {
+  // "abc123xyz" → "abc1…xyz", short tokens: "ab" → "**"
+}
+
+// Hash: SHA-256 truncated to 12 hex chars (for correlation without exposure)
+function tokenHash(token) {
+  return crypto.createHash('sha256').update(token).digest('hex').slice(0,12);
+}
+```
+
+Failed auth logs `supplied: mask(supplied), supplied_sha: tokenHash(supplied)`.
+Successful auth logs only `supplied_sha: tokenHash(supplied)` at debug level.
+
+### Admin Gate (src/middleware/admin.js:31-66)
+
 ```javascript
 export function adminGate(req, res, next) {
   const env = getEnv({ loose: true });
   const expected = env.ADMIN_TOKEN;
   const supplied = readAdminToken(req);
 
-  if (!expected) {
-    return res.status(401).json({
-      success: false,
-      error: { code: ERR.ADMIN_DISABLED, message: 'Admin token not configured' },
-    });
-  }
-  if (!supplied) {
-    return res.status(401).json({
-      success: false,
-      error: { code: ERR.UNAUTHORIZED, message: 'Admin access required' },
-    });
-  }
-  if (supplied !== expected) {
-    logger.warn('Admin auth: bad token', { supplied: mask(supplied) });
-    return res.status(403).json({
-      success: false,
-      error: { code: ERR.FORBIDDEN, message: 'Invalid admin token' },
-    });
-  }
-  return next();
+  if (!expected)  → 401 ERR.ADMIN_DISABLED  // Token not configured on server
+  if (!supplied)  → 401 ERR.UNAUTHORIZED    // No token provided
+  if (mismatch)   → 403 ERR.FORBIDDEN       // Wrong token (logged with mask + hash)
+  // Success → next() (logged at debug level with hash only)
 }
 
 export const adminOnly = adminGate;
 ```
 
-**Parent Router Protection (src/routes/admin/index.js:36):**
+### Optional Admin Gate
+
+For routes that work with or without admin access:
+
+```javascript
+export async function optionalAdminGate(req, res, next) {
+  // Sets req.isAdmin = true/false based on token validity
+  // Never rejects - always calls next()
+}
+```
+
+### PIN-Based Client Auth (src/public/js/admin/auth.js)
+
+Admin pages use a PIN-unlock flow instead of hardcoded tokens:
+
+```
+1. Page loads → checks localStorage for 'adminToken'
+2. If no token → prompts user for PIN via window.prompt()
+3. PIN submitted to POST /api/auth/pin
+4. Server validates PIN → returns { success: true, token: "<admin-token>" }
+5. Token stored in localStorage for future requests
+6. All admin API calls use adminFetch() wrapper
+```
+
+**Key functions:**
+| Function | Purpose |
+|----------|---------|
+| `getAdminToken()` | Read token from localStorage |
+| `clearAdminToken()` | Remove stored token |
+| `ensureAdminToken()` | Get token or prompt for PIN (loops until valid) |
+| `adminFetch(url, options)` | Fetch wrapper with x-admin-token header, auto-retries on 401/403 |
+
+**Auto-retry on auth failure:** If `adminFetch()` gets 401/403, it clears the stored token, re-prompts for PIN, and retries once. Handles FormData bodies by not setting Content-Type header.
+
+### Admin Boot (src/public/js/admin/boot.js)
+
+Initializes the admin dashboard SPA:
+- Hydrates HTML includes via `hydrateIncludes()`
+- Initializes section controllers (dashboard, docUpload, dip, jobs, chunks, metrics, health, systems, suggestions)
+- Exposes `window.AdminState` with lazy token getter and `window.adminFetch` globally
+
+### Parent Router Protection (src/routes/admin/index.js)
+
 ```javascript
 router.use(adminOnly);  // Protects ALL child routes
 router.use('/health', healthRouter);
 router.use('/metrics', metricsRouter);
+router.use('/ais', aisRouter);
 // ... all protected automatically
 ```
 

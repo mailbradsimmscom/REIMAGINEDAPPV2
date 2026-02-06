@@ -38,10 +38,11 @@
 │  Node.js Main   │  │  Python Sidecar │  │  Maintenance    │
 │  (Port 3000)    │  │  (Port 8000)    │  │  Agent (3001)   │
 │                 │  │                 │  │                 │
-│  • Chat API     │  │  • PDF Parsing  │  │  • Pipeline     │
+│  • Chat API     │  │  • LlamaParse   │  │  • Pipeline     │
 │  • Admin API    │  │  • Embeddings   │  │  • Task Mgmt    │
 │  • Supplies     │  │  • Vector Ops   │  │  • Dedup Review │
 │  • Trips        │  │  • Chat Process │  │  • WebSocket    │
+│                 │  │  • DIP Streaming│  │                 │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
          │                    │                    │
          └────────────────────┼────────────────────┘
@@ -88,6 +89,8 @@
 | GET | `/trips` | Trips tracking page |
 | GET | `/trips/detail` | Trip detail page |
 | GET | `/unified-mobile.html` | Unified mobile dashboard |
+| GET | `/document-ingest` | Admin document ingest page (v5) |
+| GET | `/funnel` | Pipeline funnel visualization |
 
 #### Health & Authentication
 
@@ -374,6 +377,30 @@ Base path: `/admin/api`
   "reason": "Reason for deletion"
 }
 ```
+
+#### Document Ingest (v5)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/admin/api/documents/:docId/upload-pdf` | Upload PDF to storage, create document row |
+| POST | `/admin/api/documents/:docId/dip` | Trigger DIP extraction |
+| POST | `/admin/api/documents/:docId/dip/run` | Start DIP with SSE streaming |
+| GET | `/admin/api/documents/dip/stream/:dipRunId` | SSE stream for DIP progress |
+
+#### Reference Data
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/system-management/ref/manufacturers` | List manufacturers |
+| GET | `/api/system-management/ref/product-types` | List product types |
+| GET | `/api/system-management/ref/categories` | List system categories |
+| GET | `/api/system-management/ref/subcategories` | List subsystem categories (filterable) |
+
+#### Funnel Statistics
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/funnel/stats` | Full pipeline funnel statistics |
 
 #### Suggestions (DIP)
 
@@ -730,6 +757,7 @@ Returns:
 {
   "status": "healthy",
   "tesseract_available": true,
+  "llamaparse_available": true,
   "version": "1.0.0",
   "timestamp": "2025-12-10T..."
 }
@@ -901,6 +929,37 @@ Returns:
   "processing_time_ms": 2500
 }
 ```
+
+### LlamaParse (v5)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/v1/llamaparse` | Parse PDF via LlamaParse cloud API |
+
+### Model Detection (v5)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/v1/detect-models` | Detect models in parsed document |
+
+### Vision Analysis (v5)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/v1/vision/analyze-pages` | Layout analysis for figures/tables |
+| POST | `/v1/vision/crop-figures` | Crop figures from page images |
+
+### DIP Extraction (v5 - SSE Streaming)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/v1/dip/run` | DIP extraction with streaming progress |
+
+### Document Indexing (v5)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/v1/index-document` | Index document with v5 chunk metadata |
 
 ---
 
@@ -1242,14 +1301,28 @@ Status values: `pending`, `keep_both`, `merge`, `delete_task1`, `delete_task2`, 
 
 ---
 
+## Model Configuration
+
+Environment variables controlling AI model selection:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OPENAI_MODEL` | `gpt-5.1-chat-latest` | Primary chat/completion model |
+| `OPENAI_SUMMARY_MODEL` | `gpt-4.1-mini` | Summarization model |
+| `ANTHROPIC_MODEL` | `claude-sonnet-4-20250514` | Anthropic model (where used) |
+| `VISION_MODEL` | `gpt-4o` | Vision analysis model |
+| `LLAMA_CLOUD_API_KEY` | — | LlamaParse API key (required for v5 ingest) |
+
+---
+
 ## Quick Reference: Endpoint Counts
 
 | Service | Public | Admin | Total |
 |---------|--------|-------|-------|
 | Node.js Main | ~40 | ~60 | ~100 |
-| Python Sidecar | 12 | 0 | 12 |
+| Python Sidecar | ~20 | 0 | ~20 |
 | Maintenance Agent | ~10 | ~50 | ~60 |
-| **Total** | **~62** | **~110** | **~172** |
+| **Total** | **~70** | **~110** | **~180** |
 
 ---
 

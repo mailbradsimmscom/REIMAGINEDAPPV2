@@ -1,56 +1,97 @@
-# Documents
+# Documents (v5 Ingestion Pipeline)
 
 ## Overview
 
-Documents are technical manuals (PDFs) that provide the knowledge base for AI chat. Documents are uploaded, chunked, and stored in Pinecone for semantic search.
+Documents are technical manuals (PDFs) that provide the knowledge base for AI chat. The v5 pipeline uses LlamaParse for PDF parsing, GPT-4.1-mini for model detection, LlamaParse layout data for vision/figure extraction, and Anthropic Claude for DIP extraction. Documents are chunked with rich model-aware metadata and stored in Pinecone for semantic search.
 
 **Who uses it:** Administrators
-**Access:** Upload (`/public/upload.html`), Library (`/public/documents.html`)
+**Access:** Document Ingest (`/public/document-ingest.html`), Legacy Upload (`/public/upload.html`)
 
 ---
 
 ## User Flow
 
-### Uploading a Document
+### Ingesting a Document (v5 Pipeline)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  1. Navigate to Upload page (/public/upload.html)               │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  2. Select PDF + Enter Metadata                                 │
-│     ├── manufacturer_norm (required)                            │
-│     ├── model_norm (required)                                   │
-│     └── System lookup validates equipment exists                │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  3. Submit → createIngestJob() called                           │
-│     ├── Generate doc_id from SHA256 hash                        │
-│     ├── Look up system by manufacturer/model                    │
-│     ├── Create job record (status: queued)                      │
-│     └── Upload file to Supabase Storage                         │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  4. Background Processing                                       │
-│     ├── Parse PDF (Python sidecar)                              │
-│     ├── Extract text + tables                                   │
-│     ├── Chunk into sections                                     │
-│     ├── Generate embeddings (text-embedding-3-large)            │
-│     ├── Upsert to Pinecone                                      │
-│     └── DIP extraction (structured data)                        │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  5. Document ready for search                                   │
-│     └── Status: ready                                           │
-└─────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------+
+|  1. Navigate to Document Ingest page                              |
+|     (/public/document-ingest.html)                                |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  2. Upload PDF to Supabase Storage                                |
+|     +-- POST /admin/api/documents/upload-storage                  |
+|     +-- Generate doc_id from SHA256 hash of file content          |
+|     +-- Store at documents/manuals/{doc_id}/{filename}.pdf        |
+|     +-- Create initial document row in DB                         |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  3. Parse PDF via LlamaParse (cloud API)                          |
+|     +-- POST /v1/llamaparse (Python sidecar)                     |
+|     +-- extract_layout=True for figure/table bounding boxes       |
+|     +-- Returns full Markdown of entire document                  |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  4. Model Detection (automatic)                                   |
+|     +-- POST /v1/detect-models (Python sidecar)                   |
+|     +-- GPT-4.1-mini analyzes full parsed Markdown                |
+|     +-- Returns: primary_models[], referenced_products[],         |
+|     |   is_multi_model                                            |
+|     +-- Canonical model registry normalizes model names           |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  5. Model Selection (BLOCKING - user interaction required)        |
+|     +-- If multi-model manual, pipeline PAUSES                    |
+|     +-- User selects which primary model(s) are on their boat     |
+|     +-- User confirms/deselects referenced products               |
+|     +-- POST /admin/api/documents (confirms selection)            |
+|     +-- Creates system, instances, document_systems links         |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  6. Vision Analysis (automatic)                                   |
+|     +-- POST /admin/api/documents/:docId/vision                   |
+|     +-- Uses LlamaParse layout data to detect figures/tables      |
+|     +-- Crops figures/diagrams from PDF pages                     |
+|     +-- Uploads cropped images to Supabase Storage                |
+|     +-- Upserts asset records to doc_assets table                 |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  7. Indexing + DIP (concurrent via Promise.allSettled)             |
+|                                                                   |
+|     INDEXING (Chunking + Embedding):                              |
+|     +-- POST /admin/api/documents/:docId/index                    |
+|     +-- High-recall chunking: ~80-250 chunks per 70-page manual   |
+|     +-- Chunks tagged with applies_to_models[], search_blob       |
+|     +-- Embed with text-embedding-3-large (3072 dimensions)       |
+|     +-- Upsert to Pinecone (namespace: REIMAGINEDDOCS)            |
+|     +-- Colloquial keyword extraction (post-index)                |
+|                                                                   |
+|     DIP EXTRACTION (concurrent with indexing):                    |
+|     +-- POST /admin/api/documents/:docId/dip/run (start)          |
+|     +-- GET /admin/api/documents/dip/stream/:runId (SSE stream)   |
+|     +-- 5 categories, 2-at-a-time parallelism                     |
+|     +-- Anthropic Claude with prompt caching                      |
+|     +-- Writes directly to production tables (no staging)         |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  8. Document ready for search                                     |
+|     +-- Status: completed                                         |
+|     +-- Searchable in Pinecone with model-aware filtering         |
++-------------------------------------------------------------------+
 ```
 
 ---
@@ -59,309 +100,169 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 
 | Term | Definition |
 |------|------------|
-| **Document** | Uploaded PDF file |
-| **doc_id** | SHA256 hash of file content (deterministic) |
-| **Chunk** | Section of document (~500-1000 tokens) |
+| **Document** | Uploaded PDF file (technical manual) |
+| **doc_id** | SHA256 hash of file content (deterministic, deduplicates uploads) |
+| **Chunk** | Section of document with v5 metadata (applies_to_models, search_blob, etc.) |
 | **Embedding** | 3072-dimensional vector (text-embedding-3-large) |
-| **DIP** | Document Intelligence Processing - extracts structured data into 4 staging tables |
-| **Staging Tables** | DIP output tables with approval workflow (pending → approved) |
-| **asset_uid** | Equipment this document belongs to |
+| **DIP** | Document Intelligence Processing - extracts structured data into 5 production tables |
+| **LlamaParse** | Cloud PDF parsing API (replaces pdfplumber/OCR); returns Markdown + layout data |
+| **Model Detection** | GPT-4.1-mini analysis of parsed Markdown to identify primary_models and referenced_products |
+| **Model Selection** | Blocking UI step where user confirms which detected models are installed on their boat |
+| **Vision Pipeline** | Figure/table detection and cropping using LlamaParse layout data |
+| **Canonical Model Registry** | ref_canonical_models + ref_model_synonyms tables with normalize_model_key() function |
+| **models_covered** | Array of all primary models the document covers (stored on documents row) |
+| **selected_models** | Subset of models_covered that the user has installed on their boat |
+| **asset_uid** | Equipment this document belongs to (FK to systems) |
 | **Namespace** | Pinecone partition: `REIMAGINEDDOCS` |
+| **search_blob** | Concatenated searchable text field on each chunk for high-recall retrieval |
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  Upload UI (upload.html)                                        │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  Node.js Backend                                                │
-│  ├── document.service.js (orchestration)                        │
-│  ├── document.repository.js (Supabase)                          │
-│  └── dip.ingest.service.js (DIP → staging tables)               │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-         ┌────────────────────┼────────────────────┐
-         ↓                    ↓                    ↓
-┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│  Supabase       │  │  Python Sidecar │  │  Pinecone       │
-│  Storage        │  │                 │  │                 │
-│                 │  │  parser.py      │  │  vectors with   │
-│  manuals/       │  │  pinecone_      │  │  metadata:      │
-│  {docId}/       │  │  client.py      │  │  - doc_id       │
-│  {filename}     │  │  dip_processor  │  │  - asset_uid    │
-│                 │  │  .py            │  │  - page         │
-└─────────────────┘  └─────────────────┘  └─────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  Supabase Staging Tables (DIP Output)                           │
-│  ├── staging_spec_suggestions   (specifications)                │
-│  ├── staging_playbook_hints     (procedures)                    │
-│  ├── staging_intent_router      (Q&A pairs)                     │
-│  └── staging_golden_tests       (test cases)                    │
-└─────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------+
+|  Document Ingest UI (document-ingest.html)                        |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  Node.js Backend                                                  |
+|  +-- document-ingest.route.js  (v5 orchestration routes)          |
+|  +-- document-ingest.service.js (system creation, model lookup)   |
+|  +-- vision-pipeline.service.js (Stage 6-7 orchestration)         |
+|  +-- v5-index.service.js       (chunking + Pinecone upsert)       |
+|  +-- v5-colloquial.service.js  (colloquial keyword extraction)    |
+|  +-- v5-dip.service.js         (DIP extraction orchestration)     |
+|  +-- dip-stream.service.js     (SSE streaming for DIP progress)   |
+|  +-- document.service.js       (legacy upload, storage, jobs)     |
++-------------------------------------------------------------------+
+                              |
+         +--------------------+--------------------+
+         v                    v                    v
++-----------------+  +-----------------+  +-----------------+
+|  Supabase       |  |  Python Sidecar |  |  Pinecone       |
+|  Storage        |  |  (FastAPI)      |  |                 |
+|                 |  |                 |  |  vectors with   |
+|  manuals/       |  |  /v1/llamaparse |  |  v5 metadata:   |
+|  {docId}/       |  |  /v1/detect-    |  |  - doc_id       |
+|  {filename}     |  |    models       |  |  - asset_uid    |
+|                 |  |  /v1/vision/    |  |  - applies_to_  |
+|                 |  |    analyze-pages|  |    models[]     |
+|                 |  |  /v1/vision/    |  |  - search_blob  |
+|                 |  |    crop-figures |  |  - is_universal  |
+|                 |  |  /v1/dip/run    |  |  - page         |
+|                 |  |  /v1/index-     |  |                 |
+|                 |  |    document     |  |                 |
++-----------------+  +-----------------+  +-----------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  Supabase Production Tables (DIP Output - 5 categories)           |
+|  +-- spec_suggestions      (specifications)                       |
+|  +-- playbook_hints        (procedures / maintenance)             |
+|  +-- intent_router         (Q&A pairs for chat routing)           |
+|  +-- golden_tests          (test cases for validation)            |
+|  +-- troubleshooting       (troubleshooting guides) [NEW in v5]   |
++-------------------------------------------------------------------+
 ```
 
 ---
 
 ## Key Functions
 
-### Document Service (document.service.js)
+### Document Ingest Route (document-ingest.route.js)
 
-**generateDocId** - Deterministic ID from file content:
+**POST /admin/api/documents/upload-storage** - Upload PDF to Supabase Storage before parsing:
 ```javascript
-// src/services/document.service.js:64-66
-generateDocId(fileBuffer) {
-  return createHash('sha256').update(fileBuffer).digest('hex');
-}
+// src/routes/admin/document-ingest.route.js
+// 1. Stream PDF via Busboy (100MB limit)
+// 2. Generate doc_id from SHA256 hash of file content
+// 3. Upload to Supabase Storage at manuals/{docId}/{filename}
+// 4. Create initial document row (will be updated with full metadata later)
+// Returns: { doc_id, storage_path, filename, file_size }
 ```
 
-**uploadFile** - Upload to Supabase Storage:
+**POST /admin/api/documents** - Confirm document with model selection and create systems:
 ```javascript
-// src/services/document.service.js:69-127
-async uploadFile(fileBuffer, fileName, docId) {
-  const filePath = `manuals/${docId}/${fileName}`;
-
-  const supabaseStorage = await this.getSupabaseStorage();
-  const { data, error } = await supabaseStorage.storage
-    .from('documents')
-    .upload(filePath, fileBuffer, {
-      contentType: 'application/pdf',
-      upsert: false
-    });
-
-  if (error) {
-    this.requestLogger.error('Supabase upload error', {
-      error: error.message,
-      code: error.code,
-      docId,
-      fileName
-    });
-    throw error;
-  }
-
-  return data.path;
-}
+// src/routes/admin/document-ingest.route.js
+// Document-First Architecture:
+// 1. Validate inputs (installed_primary required)
+// 2. Look up reference table IDs (manufacturer, product_type, system, subsystem)
+// 3. Create document record FIRST (other tables have FK to doc_id)
+// 4. Create/find system for primary model
+// 5. Create instance(s) (supports multiple serial numbers)
+// 6. Create document_systems link (is_primary: true)
+// 7. Save referenced systems to document_referenced_systems
+// 8. Save detection results (debug data)
 ```
 
-**createIngestJob** - Main entry point for document upload:
+### Vision Pipeline Service (vision-pipeline.service.js)
+
+**runVisionPipeline** - Orchestrates figure/table extraction:
 ```javascript
-// src/services/document.service.js:206-400
-async createIngestJob(fileBuffer, metadata, options = {}) {
-  // 1. Generate doc_id if not provided
-  const finalDocId = doc_id || this.generateDocId(fileBuffer);
-
-  // 2. System metadata lookup - REQUIRED
-  if (manufacturerNorm && modelNorm) {
-    systemMetadata = await lookupSystemByManufacturerAndModel(manufacturerNorm, modelNorm);
-
-    // Validate system exists
-    const validationResult = systemMetadataSchema.safeParse(systemMetadata);
-    if (!validationResult.success) {
-      throw new Error('Invalid system metadata response from database');
-    }
-  } else {
-    throw new Error('Manufacturer and model are required for document upload');
-  }
-
-  // 3. Create job record
-  const jobData = {
-    doc_id: finalDocId,
-    job_type: 'DIP',
-    status: 'queued',
-    params: {
-      ocr_enabled,
-      dry_run,
-      parser_version: '1.0.0',
-      embed_model: 'text-embedding-3-large',
-      namespace: 'REIMAGINEDDOCS'
-    },
-    counters: {
-      pages_total: 0,
-      pages_ocr: 0,
-      tables: 0,
-      chunks: 0,
-      chunks_processed: 0,
-      upserted: 0,
-      skipped_duplicates: 0
-    }
-  };
-
-  const job = await documentRepository.createJob(jobData);
-
-  // 4. Upload file (synchronous)
-  const storagePath = await this.uploadFile(fileBuffer, metadata.fileName, finalDocId);
-
-  // 5. Verify file exists with retry (20 retries × 3s = 1 minute)
-  await this.verifyFileInStorage(storagePath, job.job_id);
-
-  // 6. Process job asynchronously (fire and forget)
-  this.processJob(job.job_id).catch(error => {
-    this.requestLogger.error('Background job processing failed', { jobId: job.job_id });
-  });
-
-  return { job_id: job.job_id, status: 'processing', doc_id: finalDocId };
-}
+// src/services/vision-pipeline.service.js
+// 1. Fetch document to get models_covered
+// 2. Call sidecar /v1/vision/analyze-pages (Stage 6)
+//    - Uses LlamaParse layout data to detect figures/tables
+// 3. Call sidecar /v1/vision/crop-figures (Stage 7)
+//    - Crops detected regions from PDF pages
+//    - Uploads cropped images to Supabase Storage
+// 4. Upsert assets to doc_assets table
+// Returns: { pages_analyzed, figures_cropped, tables_cropped, assets_saved, manifest_path }
 ```
 
-### PDF Parser (parser.py)
+### v5 Index Service (v5-index.service.js)
 
-**Configuration constants:**
-```python
-# python-sidecar/app/parser.py:24-28
-OCR_DPI = 300
-OCR_MIN_CONF = 0.35
-TEXT_MIN_LEN = 20
-TEXT_MIN_ALNUM = 10
+**runV5Indexing** - Chunk document and store in Pinecone with model tags:
+```javascript
+// src/services/v5-index.service.js
+// 1. Fetch document to get models_covered and filename
+// 2. Call sidecar /v1/index-document with:
+//    - doc_id, models_covered, selected_models, referenced_selections
+// 3. High-recall chunking: ~80-250 chunks per 70-page manual
+// 4. Each chunk gets v5 metadata:
+//    - applies_to_models[], referenced_systems[], is_universal, search_blob
+// 5. Embed with text-embedding-3-large, upsert to Pinecone
+// Returns: { chunks_created, vectors_upserted, total_tokens, statistics }
 ```
 
-**PDFParser class:**
-```python
-# python-sidecar/app/parser.py:31-127
-class PDFParser:
-    def __init__(self):
-        self.tesseract_available = self._check_tesseract()
+### v5 DIP Service (v5-dip.service.js)
 
-    async def parse_pdf(self, content: bytes, extract_tables: bool = True, ocr_enabled: bool = True) -> ParseResponse:
-        """Parse PDF content and extract text, tables, and metadata"""
-
-        with pdfplumber.open(io.BytesIO(content)) as pdf:
-            pages_total = len(pdf.pages)
-            elements = []
-            tables = []
-
-            for page_num, page in enumerate(pdf.pages, 1):
-                # Check if page has text layer
-                has_text_layer = bool(page.chars)
-
-                if has_text_layer:
-                    # Extract text elements
-                    text_elements = self._extract_text_elements(page, page_num)
-                    elements.extend(text_elements)
-
-                    # If text extraction failed, fall back to OCR
-                    if not text_elements and ocr_enabled:
-                        ocr_elements = await self._extract_ocr_elements(page, page_num)
-                        elements.extend(ocr_elements)
-
-                    # Extract tables if requested
-                    if extract_tables:
-                        page_tables = self._extract_tables(page, page_num)
-                        tables.extend(page_tables)
-                else:
-                    # No text layer, use OCR if enabled
-                    if ocr_enabled and self.tesseract_available:
-                        ocr_elements = await self._extract_ocr_elements(page, page_num)
-                        elements.extend(ocr_elements)
-
-            return ParseResponse(
-                success=True,
-                pages_total=pages_total,
-                elements=elements,
-                tables=tables,
-                metadata={"parser": "pdfplumber", "ocr_enabled": ocr_enabled}
-            )
+**runDipExtraction** - Extract structured data from document:
+```javascript
+// src/services/v5-dip.service.js
+// 5 DIP modes: specs, troubleshooting, procedures, golden_rules, intent_router
+// 1. Fetch document to get models_covered
+// 2. Call sidecar /v1/dip/run with all params
+// 3. Sidecar runs 2-at-a-time parallelism using Anthropic Claude
+// 4. Prompt caching reduces cost for repeated document context
+// 5. Writes directly to production tables (no staging/approval)
+// Returns: { modes_completed, modes_failed, results, total_extracted, total_inserted }
 ```
 
-**OCR extraction:**
-```python
-# python-sidecar/app/parser.py:224-266
-async def _extract_ocr_elements(self, page, page_num: int) -> List[PageElement]:
-    """Extract text using OCR with confidence checking"""
+### DIP Stream Service (dip-stream.service.js)
 
-    # Convert page to image at higher DPI
-    page_image = page.to_image(resolution=300)
-    image = page_image.original
-
-    # Perform OCR with Tesseract
-    ocr_text = pytesseract.image_to_string(image, lang="eng", config="--psm 6")
-    ocr_text = (ocr_text or "").strip()
-
-    if not ocr_text:
-        logger.warning(f"OCR produced empty text on page {page_num}")
-        return []
-
-    element = PageElement(
-        page=page_num,
-        element_type='ocr',
-        content=ocr_text,
-        has_text_layer=False,
-        ocr_used=True,
-        confidence=0.8
-    )
-    return [element]
+**Two-step SSE streaming for DIP progress:**
+```javascript
+// src/services/dip-stream.service.js
+// Step 1: storeDipRunParams() -> returns dip_run_id
+//   - Stores params in in-memory Map with 10-minute TTL
+// Step 2: streamDipExtraction(runId, res, signal) -> SSE stream
+//   - Proxies SSE from Python sidecar /v1/dip/run
+//   - 30-minute timeout for long-running extractions
+//   - Handles client disconnect via AbortController
+//   - Events: mode_start, mode_complete, mode_failed, run_complete, run_failed
 ```
 
-### Pinecone Client (pinecone_client.py)
+### v5 Colloquial Service (v5-colloquial.service.js)
 
-**generate_embedding:**
-```python
-# python-sidecar/app/pinecone_client.py:26-57
-def generate_embedding(self, text: str, metadata: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Generate embedding for text using OpenAI"""
-    response = self.openai_client.embeddings.create(
-        model="text-embedding-3-large",
-        input=text,
-        encoding_format="float"
-    )
-
-    embedding = response.data[0].embedding
-    embedding_id = str(uuid.uuid4())
-
-    return {
-        "success": True,
-        "embedding_id": embedding_id,
-        "vector": embedding,
-        "metadata": metadata or {},
-        "processing_time": processing_time
-    }
-```
-
-**process_document_chunks:**
-```python
-# python-sidecar/app/pinecone_client.py:245-296
-def process_document_chunks(self, chunks: List[Dict[str, Any]], doc_metadata: Dict[str, Any]) -> Dict[str, Any]:
-    """Process document chunks and store in Pinecone"""
-    vectors = []
-
-    for i, chunk in enumerate(chunks):
-        # Clean metadata - remove null values for Pinecone compatibility
-        clean_doc_metadata = {k: v for k, v in doc_metadata.items() if v is not None}
-
-        # Generate embedding for chunk text
-        embedding_result = self.generate_embedding(
-            text=chunk["content"],
-            metadata={
-                **clean_doc_metadata,
-                "chunk_index": i,
-                "chunk_type": chunk.get("type", "text"),
-                "page": chunk.get("page", 0),
-                "chunk_id": chunk.get("id", str(uuid.uuid4())),
-                "content": chunk["content"]
-            }
-        )
-
-        if embedding_result["success"]:
-            vectors.append({
-                "id": embedding_result["embedding_id"],
-                "vector": embedding_result["vector"],
-                "metadata": embedding_result["metadata"]
-            })
-
-    # Upsert all vectors to Pinecone
-    upsert_result = self.upsert_vectors(vectors)
-
-    return {
-        "success": upsert_result["success"],
-        "chunks_processed": len(chunks),
-        "vectors_upserted": len(vectors),
-        "namespace": self.namespace
-    }
+**runV5ColloquialKeywords** - Extract colloquial keywords post-indexing:
+```javascript
+// src/services/v5-colloquial.service.js
+// Runs AFTER v5 indexing (depends on Pinecone content)
+// Updates systems.colloquial_keywords for the installed system
+// Non-fatal: document is still searchable if this fails
 ```
 
 ---
@@ -371,28 +272,50 @@ def process_document_chunks(self, chunks: List[Dict[str, Any]], doc_metadata: Di
 | Purpose | Path |
 |---------|------|
 | **Frontend** | |
-| Upload page | `src/public/upload.html` |
+| Document ingest page (v5) | `src/public/document-ingest.html` |
+| Legacy upload page | `src/public/upload.html` |
 | Document library | `src/public/documents.html` |
-| **Node.js** | |
-| Document routes | `src/routes/document/` |
-| Document service | `src/services/document.service.js` |
-| Deletion service | `src/services/document-deletion.service.js` |
-| Document text | `src/services/document-text.service.js` |
-| DIP orchestration | `src/services/dip.service.js` |
+| **Node.js Routes** | |
+| v5 ingest routes | `src/routes/admin/document-ingest.route.js` |
+| Legacy document routes | `src/routes/document/` |
+| **Node.js Services** | |
+| Document ingest service | `src/services/document-ingest.service.js` |
+| Vision pipeline | `src/services/vision-pipeline.service.js` |
+| v5 indexing (chunk + embed) | `src/services/v5-index.service.js` |
+| v5 colloquial keywords | `src/services/v5-colloquial.service.js` |
+| v5 DIP extraction | `src/services/v5-dip.service.js` |
+| DIP streaming (SSE) | `src/services/dip-stream.service.js` |
+| Legacy document service | `src/services/document.service.js` |
+| Document deletion | `src/services/document-deletion.service.js` |
 | DIP ingest to DB | `src/services/dip.ingest.service.js` |
 | Anthropic extraction | `src/services/anthropic.extraction.service.js` |
-| **Python** | |
-| PDF parser | `python-sidecar/app/parser.py` |
-| Pinecone client | `python-sidecar/app/pinecone_client.py` |
-| DIP processor | `python-sidecar/app/dip_processor.py` |
+| **Python Sidecar** | |
+| Main app (all endpoints) | `python-sidecar/app/main.py` |
+| Endpoints include: | `/v1/llamaparse`, `/v1/detect-models`, `/v1/vision/analyze-pages`, `/v1/vision/crop-figures`, `/v1/dip/run`, `/v1/index-document` |
 
 ---
 
 ## API Endpoints
 
+### v5 Ingest Endpoints (document-ingest.route.js)
+
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/document/upload` | Upload PDF |
+| POST | `/admin/api/documents/upload-storage` | Upload PDF to Supabase Storage, get doc_id + storage_path |
+| POST | `/admin/api/documents` | Confirm document with model selection, create systems/instances |
+| POST | `/admin/api/documents/:docId/vision` | Run vision pipeline (analyze pages, crop figures) |
+| GET | `/admin/api/documents/:docId/assets` | Get all extracted assets for a document |
+| GET | `/admin/api/documents/:docId/assets/summary` | Get asset count summary |
+| POST | `/admin/api/documents/:docId/index` | v5 index: chunk + embed + optional DIP + colloquial |
+| POST | `/admin/api/documents/:docId/dip` | v5 DIP extraction (non-streaming) |
+| POST | `/admin/api/documents/:docId/dip/run` | Start DIP streaming run, returns dip_run_id |
+| GET | `/admin/api/documents/dip/stream/:runId` | SSE stream for DIP progress |
+
+### Legacy Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/document/ingest` | Legacy upload endpoint |
 | GET | `/document/list` | List documents |
 | GET | `/document/:id` | Get document details |
 | DELETE | `/document/:id` | Delete document |
@@ -407,18 +330,26 @@ def process_document_chunks(self, chunks: List[Dict[str, Any]], doc_metadata: Di
 
 | Column | Type | Description |
 |--------|------|-------------|
-| doc_id | text | **Primary key** (SHA256 hash) |
+| doc_id | text | **Primary key** (SHA256 hash of file content) |
 | manufacturer | text | Raw manufacturer name |
 | manufacturer_norm | text | Normalized for matching |
 | model | text | Raw model number |
 | model_norm | text | Normalized for matching |
-| asset_uid | text | FK to systems |
+| asset_uid | text | FK to systems (primary installed model) |
 | system_norm | text | System category |
 | subsystem_norm | text | Subsystem category |
 | storage_path | text | Supabase Storage path |
 | language | text | Document language (default: 'en') |
 | last_ingest_version | text | Parser version |
 | last_job_id | uuid | FK to jobs |
+| **models_covered** | text[] | **[v5]** All primary models detected in the manual |
+| **is_multi_model** | boolean | **[v5]** Whether manual covers multiple models |
+| **is_oem_manual** | boolean | **[v5]** Whether this is an OEM manual |
+| **oem_for_asset_uid** | text | **[v5]** FK to systems if OEM manual |
+| **vision_processed** | boolean | **[v5]** Whether vision pipeline has run |
+| **vision_processed_at** | timestamp | **[v5]** When vision pipeline completed |
+| **page_count** | integer | **[v5]** Total pages in the PDF |
+| **figure_count** | integer | **[v5]** Figures/tables extracted by vision |
 | created_at | timestamp | Upload time |
 | updated_at | timestamp | Last update |
 
@@ -431,17 +362,76 @@ Document processing job tracking.
 | job_id | uuid | Primary key |
 | doc_id | text | FK to documents |
 | job_type | text | 'DIP' |
-| status | text | queued/uploading/verifying/processing/complete/error |
+| status | text | Legacy status field |
+| **status_v2** | text | **[v5]** 14-stage status (see Pipeline Detail below) |
 | params | jsonb | Job parameters |
 | counters | jsonb | Processing counters |
+| **models_detected** | text[] | **[v5]** Models found during detection stage |
+| **selected_models** | text[] | **[v5]** Models user confirmed as installed |
+| **is_multi_model** | boolean | **[v5]** Whether manual covers multiple models |
 | created_at | timestamp | Job creation |
 | updated_at | timestamp | Last update |
 
-### DIP Staging Tables
+### doc_assets [NEW in v5]
 
-DIP (Document Intelligence Processing) extracts structured data from documents into 4 staging tables. Data enters with `status: 'pending'` for review before approval.
+Figures, tables, and diagrams extracted by the vision pipeline.
 
-#### staging_spec_suggestions
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| doc_id | text | FK to documents |
+| asset_type | text | 'figure', 'table', 'diagram', etc. |
+| page_number | integer | Source page in PDF |
+| storage_path | text | Supabase Storage path to cropped image |
+| caption | text | Extracted or generated caption |
+| bounding_box | jsonb | Coordinates on the source page |
+| metadata | jsonb | Additional extraction metadata |
+| created_at | timestamp | Asset creation time |
+
+### document_referenced_systems [NEW in v5]
+
+Junction table linking documents to referenced products (non-primary models mentioned in the manual).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| doc_id | text | FK to documents |
+| model_norm | text | Normalized model name of referenced product |
+| manufacturer_norm | text | Normalized manufacturer (if known) |
+| asset_uid | text | FK to systems (if matched) |
+| created_at | timestamp | Link creation time |
+
+### Canonical Model Registry [NEW in v5]
+
+#### ref_canonical_models
+
+Canonical/normalized model entries for deduplication and matching.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| manufacturer_norm | text | Normalized manufacturer |
+| model_norm | text | Canonical model name |
+| product_type | text | Product type category |
+| metadata | jsonb | Additional model info |
+
+#### ref_model_synonyms
+
+Maps alternate model names/spellings to canonical models.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| synonym | text | Alternate name/spelling |
+| canonical_model_id | uuid | FK to ref_canonical_models |
+
+**normalize_model_key()** - Database function that normalizes model strings for consistent matching across detection, selection, and indexing stages.
+
+### DIP Production Tables
+
+DIP (Document Intelligence Processing) extracts structured data from documents into 5 production tables. In v5, data writes **directly to production** -- there is no staging/approval workflow.
+
+#### spec_suggestions
 
 Extracted equipment specifications and parameters.
 
@@ -459,9 +449,8 @@ Extracted equipment specifications and parameters.
 | units | text | Raw units |
 | normalized_units | text | Standardized units |
 | category | text | Spec category |
-| status | text | pending/approved/rejected |
 
-#### staging_playbook_hints
+#### playbook_hints
 
 Extracted procedures and maintenance steps.
 
@@ -477,9 +466,8 @@ Extracted procedures and maintenance steps.
 | expected_outcome | text | What should happen |
 | preconditions | jsonb | Required conditions |
 | error_codes | jsonb | Related error codes |
-| status | text | pending/approved/rejected |
 
-#### staging_intent_router
+#### intent_router
 
 Extracted Q&A pairs for chat routing.
 
@@ -494,9 +482,8 @@ Extracted Q&A pairs for chat routing.
 | question_variations | jsonb | Alternative phrasings |
 | answer | text | Expected answer |
 | question_type | text | Category of question |
-| status | text | pending/approved/rejected |
 
-#### staging_golden_tests
+#### golden_tests
 
 Extracted test cases for validation.
 
@@ -511,27 +498,93 @@ Extracted test cases for validation.
 | expected | text | Expected response |
 | test_method | text | How to verify |
 | failure_indication | text | What failure looks like |
-| status | text | pending/approved/rejected |
+
+#### troubleshooting [NEW in v5]
+
+Extracted troubleshooting guides -- symptom/cause/fix triads.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| doc_id | text | FK to documents |
+| manufacturer_norm | text | Normalized manufacturer |
+| model_norm | text | Normalized model |
+| asset_uid | text | FK to systems |
+| symptom | text | Problem description |
+| cause | text | Root cause |
+| fix | text | Resolution steps |
+| severity | text | Severity level |
 
 ---
 
 ## Processing Pipeline Detail
 
-### Job Status Flow
+### v5 Pipeline Stages (14 stages)
 
 ```
-queued → uploading → verifying → upload_complete → processing → complete
-                                                       ↓
-                                                    error
+uploading -> verifying -> parsing -> model_detection -> model_selection
+                                                             |
+                          (pipeline pauses for user input)   |
+                                                             v
+              vision_analysis -> figure_cropping -> chunking -> embedding
+                                                       |
+                                                       v
+                               indexing --------+---> colloquial -> storing -> completed
+                                                |
+                               dip_extraction --+
+                               (runs concurrently via Promise.allSettled)
 ```
+
+| Stage | Description | Service/Endpoint |
+|-------|-------------|------------------|
+| `uploading` | PDF uploaded to Supabase Storage | `upload-storage` route |
+| `verifying` | File existence verified in Storage | document.service.js |
+| `parsing` | PDF parsed via LlamaParse cloud API | `/v1/llamaparse` |
+| `model_detection` | GPT-4.1-mini analyzes Markdown for models | `/v1/detect-models` |
+| `model_selection` | **BLOCKING** - user selects installed models in UI | Frontend UI step |
+| `vision_analysis` | LlamaParse layout data used to detect figures/tables | `/v1/vision/analyze-pages` |
+| `figure_cropping` | Detected figures cropped from PDF pages | `/v1/vision/crop-figures` |
+| `chunking` | Document split into ~80-250 high-recall chunks | `/v1/index-document` |
+| `embedding` | Chunks embedded with text-embedding-3-large | `/v1/index-document` |
+| `indexing` | Vectors upserted to Pinecone with v5 metadata | `/v1/index-document` |
+| `colloquial` | Colloquial keywords extracted for system | v5-colloquial.service.js |
+| `dip_extraction` | 5-category DIP with 2-at-a-time parallelism | `/v1/dip/run` (SSE) |
+| `storing` | Final metadata updates to documents table | document repository |
+| `completed` | Document ready for search | -- |
+
+### v5 Chunk Metadata
+
+Each chunk stored in Pinecone carries these v5 metadata fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `doc_id` | string | Document identifier |
+| `asset_uid` | string | Primary system FK |
+| `applies_to_models` | string[] | Which models this chunk applies to |
+| `referenced_systems` | string[] | Non-primary products mentioned |
+| `is_universal` | boolean | True if chunk applies to all models in the manual |
+| `search_blob` | string | Concatenated searchable text for high-recall |
+| `page` | number | Source page number |
+| `chunk_index` | number | Order within document |
+| `chunk_type` | string | 'text', 'table', 'figure_caption', etc. |
 
 ### Storage Path Convention
 
 ```
 documents (bucket)
-└── manuals/
-    └── {doc_id}/              # SHA256 hash
-        └── {original_filename}.pdf
++-- manuals/
+    +-- {doc_id}/                  # SHA256 hash
+        +-- {original_filename}.pdf
+        +-- DIP/                   # DIP extraction outputs
+        |   +-- {doc_id}_spec_suggestions_an.json
+        |   +-- {doc_id}_playbook_hints_an.json
+        |   +-- {doc_id}_intent_router_an.json
+        |   +-- {doc_id}_golden_rules_an.json
+        |   +-- {doc_id}_troubleshooting_an.json
+        +-- vision/                # Vision pipeline outputs
+            +-- manifest.json
+            +-- figures/           # Cropped figure images
+            +-- tables/            # Cropped table images
 ```
 
 ### Embedding Configuration
@@ -542,6 +595,27 @@ documents (bucket)
 | Dimensions | 3072 |
 | Namespace | `REIMAGINEDDOCS` |
 | Index | `reimaginedsv` (from PINECONE_INDEX) |
+
+### DIP Extraction Configuration
+
+| Setting | Value |
+|---------|-------|
+| LLM | Anthropic Claude (with prompt caching) |
+| Categories | 5: specs, troubleshooting, procedures, golden_rules, intent_router |
+| Parallelism | 2 modes at a time |
+| Streaming | SSE via `/v1/dip/run` |
+| Output | Direct to production tables (no staging) |
+| Timeout | 30 minutes per streaming run |
+
+### High-Recall Chunking Strategy
+
+v5 uses a high-recall chunking approach:
+
+- **~80-250 chunks per 70-page manual** (significantly more than v4)
+- **Query-time filtering** replaces skip-heavy ingestion-time filtering
+- Each chunk tagged with `applies_to_models[]` for model-specific retrieval
+- `is_universal` flag marks chunks that apply to all models in a multi-model manual
+- `search_blob` provides a concatenated searchable field for broad matching
 
 ### System Flag Updates
 
@@ -554,12 +628,6 @@ After successful Pinecone vector upsert, the linked system's manual flags are au
   Manual_Local_Copy: true // "Has local uploaded copy" flag
 }
 ```
-
-**Why two flags:**
-- `manual` - Legacy flag, indicates system has a manual (may be URL or local)
-- `Manual_Local_Copy` - Indicates a local PDF has been uploaded and processed
-
-Both flags are set to `true` on successful upload. The Pipeline Funnel uses `Manual_Local_Copy` to detect data integrity issues (systems flagged but missing documents, or documents without flags).
 
 ---
 
@@ -595,10 +663,15 @@ See [Batch Scripts](../30-backend/batch-scripts.md)
 | Misconception | Reality |
 |---------------|---------|
 | "Documents stored in Pinecone" | **No.** Pinecone has vectors only. PDFs in Supabase Storage. |
-| "One API call uploads and processes" | **No.** Upload is fast, processing is background. |
+| "One API call uploads and processes" | **No.** Upload is step 1, then parsing, detection, selection, vision, indexing, DIP are separate stages. |
+| "DIP goes through staging/approval" | **No (v5).** DIP writes directly to production tables. The staging workflow was removed. |
 | "Can edit uploaded PDFs" | **No.** Delete and re-upload to change. |
 | "doc_id is UUID" | **No.** SHA256 hash of file content. |
-| "Can upload without system" | **No.** System must exist first. |
+| "Claude Vision analyzes figures" | **No (v5).** LlamaParse layout data is used for figure detection and cropping. |
+| "pdfplumber/OCR parses PDFs" | **No (v5).** LlamaParse cloud API with extract_layout=True replaces pdfplumber/Tesseract OCR. |
+| "Model detection is manual" | **No.** GPT-4.1-mini automatically detects primary_models and referenced_products from parsed Markdown. |
+| "All chunks are equal" | **No (v5).** Chunks carry applies_to_models[], is_universal, search_blob for model-aware retrieval. |
+| "DIP has 4 categories" | **No (v5).** DIP now has 5 categories: spec_suggestions, playbook_hints, intent_router, golden_tests, and troubleshooting (new). |
 
 ---
 

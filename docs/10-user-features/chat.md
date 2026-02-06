@@ -61,7 +61,15 @@ The AI Chat system is the primary way users interact with BoatOS. Users ask ques
                                                         ▼
                                                 ┌─────────────────┐
                                                 │   OpenAI        │
-                                                │   (GPT-4)       │
+                                                │(gpt-5.1-chat-  │
+                                                │     latest)     │
+                                                └─────────────────┘
+                                                        │
+                                                        ▼
+                                                ┌─────────────────┐
+                                                │   doc_assets    │
+                                                │  (figures/      │
+                                                │   tables)       │
                                                 └─────────────────┘
 ```
 
@@ -180,18 +188,25 @@ This is the exact sequence. Each step matters for understanding where bugs can o
 19. **POST to Python sidecar** `/chat/process`
 
 #### Python Sidecar Steps (chat_workflow_sequential.py)
-20. **Classify query** - what type of question is this?
+20. **Classify query** - what type of question is this? (uses `gpt-4.1-mini`)
     - maintenance, troubleshooting, specs, general, etc.
 21. **Search Pinecone** for relevant document chunks
     - Uses equipment context to filter/boost results
+    - Now includes **model-scoped filtering** via `applies_to_models[]` metadata
     - Returns chunks with relevance scores
+21b. **Search doc_assets** for relevant figures/tables
+    - 2-stage retrieval: deterministic shortlist (K=12), then LLM selector (N=3)
+    - Returns matching figures, diagrams, and tables from technical manuals
+21c. **Retrieve DIP context** via `production_dip_retriever.py`
+    - Queries 5 tables: `spec_suggestions`, `playbook_hints`, `intent_router`, `golden_tests`, `troubleshooting`
+    - Returns structured technical data (specs, procedures, troubleshooting guides)
 22. **Build prompt** with:
     - System prompt (marine expert persona)
     - Equipment context
     - Relevant document chunks
     - Conversation history/summary
     - User query
-23. **Call OpenAI** (GPT-4) for completion
+23. **Call OpenAI** (`gpt-5.1-chat-latest`) for completion
 24. **Extract sources** from chunks used
 25. **Build response** with timing metrics
 26. **Return to Node.js**:
@@ -200,6 +215,7 @@ This is the exact sequence. Each step matters for understanding where bugs can o
       response,           // AI answer text
       sources,            // Document sources used
       classification,     // Query type
+      doc_assets,         // Relevant figures/tables from doc_assets
       processing_time_ms, // Python timing
       detailed_metrics    // Step-by-step Python timing
     }
@@ -475,10 +491,10 @@ Average response times from real user query benchmarks:
 #### Python Steps
 | Step | Avg Time | Description |
 |------|----------|-------------|
-| Classification | 3,283ms | LLM classifies query intent |
+| Classification | 3,283ms | gpt-4.1-mini classifies query intent |
 | Pinecone | 1,186ms | Vector search for relevant chunks |
 | Chunk Ranking | 375ms | Cohere rerank-v3.5 (was 3-6s with LLM) |
-| Synthesis | 6,701ms | OpenAI generates response |
+| Synthesis | 6,701ms | gpt-5.1-chat-latest generates response |
 | Perplexity | 6,447ms | Web search (parallel with synthesis) |
 
 ### Parallelization (Dec 2024)
@@ -541,7 +557,7 @@ These are the exact prompts sent to AI models. Changes here directly affect chat
 ### A1: Equipment Extraction Prompt (Node.js → OpenAI)
 
 **Used in:** Step 11 (Path B) - `src/services/equipment-extraction.service.js`
-**Model:** `gpt-4o-mini` (OPENAI_SUMMARY_MODEL)
+**Model:** `gpt-4.1-mini` (OPENAI_SUMMARY_MODEL)
 **Purpose:** Parse user query to extract equipment names
 
 ```
@@ -584,7 +600,7 @@ Now extract from: "{query}"
 ### A2: Equipment Relationship Inference Prompt (Node.js → OpenAI)
 
 **Used in:** Step 11 (Path A) - `src/services/equipment-relationship-inference.service.js`
-**Model:** `gpt-4o-mini` via `oaiJson()`
+**Model:** `gpt-4.1-mini` via `oaiJson()`
 **Purpose:** Determine if user is referring to previously mentioned equipment
 
 ```
@@ -649,7 +665,7 @@ Respond with valid JSON only:
 ### A3: Query Classification Prompt (Python → OpenAI)
 
 **Used in:** Step 20 - `python-sidecar/app/chat/config/system_prompts.py`
-**Model:** `gpt-4o-mini` (OPENAI_SUMMARY_MODEL)
+**Model:** `gpt-4.1-mini` (OPENAI_SUMMARY_MODEL)
 **Purpose:** Classify query intent and determine what data to retrieve
 
 ```
@@ -690,7 +706,7 @@ Respond with valid JSON only:
 ### A4: Response Synthesis Prompt (Python → OpenAI/Anthropic)
 
 **Used in:** Step 22-23 - `python-sidecar/app/chat/config/system_prompts.py`
-**Model:** `gpt-4o` (OPENAI_MODEL) or Claude (if CHAT_MODEL=ANTHROPIC)
+**Model:** `gpt-5.1-chat-latest` (OPENAI_MODEL) or Claude (if CHAT_MODEL=ANTHROPIC)
 **Purpose:** Generate the final response to the user
 
 ```

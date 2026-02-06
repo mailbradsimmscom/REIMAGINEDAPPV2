@@ -106,6 +106,43 @@ This creates a dated folder at `scripts/migrations/actual/<YYYY-MM-DD>_tables/` 
 
 ---
 
+### Rule #4: Keep /docs Updated
+
+The `/docs` directory is the official documentation for this codebase. It must stay current with code changes.
+
+**When to update docs:**
+
+| Change Type | Action Required |
+|-------------|-----------------|
+| New route/endpoint | Run `npm run docs:all`, update `20-admin-tools/` or `10-user-features/` |
+| New user feature | Add/update file in `docs/10-user-features/` |
+| New admin tool | Add/update file in `docs/20-admin-tools/` |
+| API changes | Update `docs/API_REFERENCE.md` |
+| New env variable | Update `docs/VARIABLE_REFERENCE.md` |
+| Architecture change | Update `docs/architecture-diagram.md` |
+| Backend/script changes | Update `docs/30-backend/` |
+
+**Commands:**
+```bash
+# Regenerate auto-generated docs (routes, deps, OpenAPI)
+npm run docs:all
+
+# Preview docs locally
+npm run docs
+```
+
+**Doc structure:**
+- `00-foundations/` — Core concepts, CI, environments
+- `05-operations/` — Dashboard, logging, monitoring
+- `10-user-features/` — End-user feature docs (chat, maintenance, weather, etc.)
+- `20-admin-tools/` — Admin feature docs (documents, systems, pinecone)
+- `30-backend/` — Backend docs (sidecar, scripts, agents)
+- `auto/` — Auto-generated (do not edit manually)
+
+**Why:** Documentation is how future sessions (and humans) understand the system. Outdated docs cause confusion and wrong assumptions.
+
+---
+
 ## Additional Rules (.cursorrules)
 
 ## Architecture Overview

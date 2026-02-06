@@ -106,6 +106,12 @@ These are the core identifiers used throughout the system.
 | `pages_total` | Integer | Total pages in document |
 | `chunk_count` | Integer | Number of chunks created |
 | `table_count` | Integer | Tables extracted from document |
+| `models_covered` | text[] | Models this document covers (e.g. ["4JH45","4JH57"]) |
+| `is_multi_model` | boolean | Document covers multiple product models |
+| `is_oem_manual` | boolean | Document is for OEM component |
+| `vision_processed` | boolean | Vision/layout analysis completed |
+| `page_count` | integer | Total pages in document |
+| `figure_count` | integer | Extracted figures/tables count |
 
 ### Chunk
 
@@ -136,6 +142,15 @@ These are the core identifiers used throughout the system.
 | `keywords` | Array | Extracted keywords |
 | `linked_asset_uid` | String | Linked equipment system |
 
+### Chunk Metadata (v5)
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `applies_to_models` | text[] | Models this chunk applies to |
+| `referenced_systems` | text[] | Other systems mentioned in chunk |
+| `is_universal` | boolean | Applies to all models in manual |
+| `search_blob` | text | Vocabulary-aware text for matching |
+
 ### Job (Processing)
 
 | Variable | Type | Description |
@@ -148,6 +163,10 @@ These are the core identifiers used throughout the system.
 | `counters` | JSONB | Progress tracking counters |
 | `error` | JSONB | Error details if failed |
 | `dip_success` | Boolean | Document Intelligence Packet success |
+| `models_detected` | text[] | Models detected in document |
+| `selected_models` | text[] | User-selected models |
+| `is_multi_model` | boolean | Multi-model document flag |
+| `status_v2` | text | 14-stage pipeline status |
 | `started_at` | Timestamp | When processing started |
 | `completed_at` | Timestamp | When processing completed |
 
@@ -169,6 +188,15 @@ These are the core identifiers used throughout the system.
 | `model_norm` | String | Normalized model (for search) |
 | `canonical_model_id` | String | Standardized model identifier |
 | `subsystem_normalized` | String | Normalized subsystem category |
+| `manufacturer_id` | UUID | FK to ref_manufacturers |
+| `product_type_id` | UUID | FK to ref_product_types |
+| `system_category_id` | UUID | FK to ref_system_categories |
+| `subsystem_category_id` | UUID | FK to ref_subsystem_categories |
+| `oem_manufacturer_id` | UUID | FK to ref_manufacturers (OEM) |
+| `oem_model` | text | OEM model identifier |
+| `serial_number` | text | Serial number (single-instance) |
+| `model_synonyms` | text[] | Model name variants |
+| `colloquial_keywords` | text[] | Common names from doc extraction |
 
 ### Instance
 
@@ -179,6 +207,43 @@ These are the core identifiers used throughout the system.
 | `serial_number` | String | Physical serial number |
 | `location` | String | Location on boat |
 | `instance_index` | Integer | Instance number (e.g., "pump #2") |
+
+---
+
+## 4b. Reference Table Variables (v5)
+
+### ref_manufacturers
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `id` | UUID | Manufacturer identifier |
+| `name` | text | Canonical name (e.g. "Yanmar") |
+| `synonyms` | text[] | Alternative names |
+| `is_oem` | boolean | Primarily an OEM supplier |
+
+### ref_product_types
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `id` | UUID | Product type identifier |
+| `name` | text | Canonical type (e.g. "Engine") |
+| `synonyms` | text[] | Alternative names |
+
+### ref_system_categories
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `id` | UUID | Category identifier |
+| `name` | text | Category (e.g. "Propulsion") |
+| `synonyms` | text[] | Alternative names |
+
+### centroids
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `id` | UUID | Centroid identifier |
+| `name` | text | Operational grouping name |
+| `synonyms` | text[] | Query matching aliases |
 
 ---
 
@@ -374,6 +439,10 @@ These are the core identifiers used throughout the system.
 | `chunk_index` | Integer | Chunk position |
 | `content` | String | Chunk text content |
 | `chunk_type` | String | Content type |
+| `applies_to_models` | text[] | Models this vector applies to |
+| `referenced_systems` | text[] | Other systems mentioned |
+| `is_universal` | boolean | Universal content flag |
+| `search_blob` | text | Vocabulary-aware search text |
 
 ### Namespaces
 
@@ -410,12 +479,14 @@ These are the core identifiers used throughout the system.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OPENAI_MODEL` | `gpt-4o` | Default OpenAI model |
-| `OPENAI_SUMMARY_MODEL` | `gpt-4o-mini` | Model for summaries |
+| `OPENAI_MODEL` | `gpt-5.1-chat-latest` | Default OpenAI model |
+| `OPENAI_SUMMARY_MODEL` | `gpt-4.1-mini` | Model for summaries/detection |
 | `ANTHROPIC_MODEL` | `claude-3-5-sonnet-latest` | Default Anthropic model |
 | `ANTHROPIC_MAX_TOKENS` | `8000` | Max tokens for Anthropic |
 | `ANTHROPIC_TEMPERATURE` | `0` | Temperature setting |
 | `CHAT_MODEL` | `ANTHROPIC` | Chat provider selection |
+| `LLAMA_CLOUD_API_KEY` | - | LlamaParse cloud API key |
+| `VISION_MODEL` | `gpt-4o` | Vision analysis model |
 
 ### Pinecone Configuration
 
@@ -674,6 +745,7 @@ These are the core identifiers used throughout the system.
 | `spec_suggestions` | `spec` | Specifications and parameters |
 | `playbook_hints` | `procedure` | Procedures and operational guides |
 | `golden_tests` | `troubleshooting` | Troubleshooting information |
+| `troubleshooting` | `troubleshooting` | Symptom -> cause -> resolution (NEW in v5) |
 | `intent_router` | `routing` | Q&A pairs for intent routing |
 
 ### Embedding
