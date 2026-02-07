@@ -260,6 +260,20 @@
             gap: var(--spacing-xs);
         }
 
+        .document-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-sm);
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .stat-item {
+            color: var(--text-secondary);
+            cursor: help;
+        }
+
         .document-status {
             padding: var(--spacing-xs) var(--spacing-sm);
             border-radius: var(--border-radius-small);
@@ -558,11 +572,9 @@
         <div class="filter-bar">
             <input type="text" class="search-input" id="searchInput" placeholder="Search documents...">
             <select class="filter-select" id="statusFilter">
-                <option value="">All Status</option>
-                <option value="completed">Completed</option>
-                <option value="processing">Processing</option>
-                <option value="pending">Pending</option>
-                <option value="failed">Failed</option>
+                <option value="">All Documents</option>
+                <option value="with-stats">With Stats</option>
+                <option value="without-stats">Without Stats</option>
             </select>
             <select class="filter-select" id="manufacturerFilter">
                 <option value="">All Manufacturers</option>
@@ -580,16 +592,16 @@
                 <div class="stat-label">Total Documents</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="completedDocs">0</div>
-                <div class="stat-label">Completed</div>
+                <div class="stat-value" id="totalVectors">0</div>
+                <div class="stat-label">Total Vectors</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="processingDocs">0</div>
-                <div class="stat-label">Processing</div>
+                <div class="stat-value" id="totalDip">0</div>
+                <div class="stat-label">DIP Items</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="failedDocs">0</div>
-                <div class="stat-label">Failed</div>
+                <div class="stat-value" id="withStats">0</div>
+                <div class="stat-label">With Stats</div>
             </div>
         </div>
 
@@ -806,22 +818,28 @@
                     const result = await response.json();
 
                     // Format documents for display
-                    this.documents = result.data.documents.map(doc => ({
-                        id: doc.id,
-                        title: doc.title || 'Untitled Document',
-                        filename: doc.filename || 'Unknown File',
-                        manufacturer: doc.manufacturer_norm || 'Unknown',
-                        model: doc.model_norm || 'Unknown',
-                        size: this.formatFileSize(doc.size),
-                        status: doc.status || 'pending',
-                        statusDisplay: this.getStatusDisplay(doc.status),
-                        uploadedAt: this.formatDate(doc.created_at),
-                        chunks: doc.chunk_count || 0,
-                        docType: doc.doc_type || 'Manual',
-                        language: doc.language || 'en',
-                        pages: doc.page_count || 0,
-                        assetUid: doc.asset_uid || null
-                    }));
+                    this.documents = result.data.documents.map(doc => {
+                        const stats = doc.ingest_stats || {};
+                        return {
+                            id: doc.id,
+                            filename: doc.filename || 'Unknown File',
+                            manufacturer: doc.manufacturer || 'Unknown',
+                            model: doc.model || 'Unknown',
+                            size: this.formatFileSize(doc.size),
+                            uploadedAt: this.formatDate(doc.created_at),
+                            // Stats from ingest_stats JSON
+                            hasStats: !!doc.ingest_stats,
+                            vectors: stats.indexing?.vectors_upserted ?? null,
+                            chunks: stats.indexing?.chunks_created ?? null,
+                            figures: stats.vision?.figures_cropped ?? null,
+                            tables: stats.vision?.tables_cropped ?? null,
+                            pagesAnalyzed: stats.vision?.pages_analyzed ?? null,
+                            dipTotal: stats.dip?.total_inserted ?? null,
+                            dipModes: stats.dip?.modes_completed?.length ?? null,
+                            systemsCreated: stats.systems?.systems_created ?? null,
+                            referencedSystems: stats.systems?.referenced_systems_saved ?? null
+                        };
+                    });
 
                     // Update manufacturer filter options
                     this.updateManufacturerFilter();
@@ -862,14 +880,17 @@
                 this.filteredDocuments = this.documents.filter(doc => {
                     // Search filter
                     if (this.searchTerm) {
-                        const searchableText = `${doc.title} ${doc.filename} ${doc.manufacturer} ${doc.model}`.toLowerCase();
+                        const searchableText = `${doc.filename} ${doc.manufacturer} ${doc.model}`.toLowerCase();
                         if (!searchableText.includes(this.searchTerm)) {
                             return false;
                         }
                     }
 
-                    // Status filter
-                    if (this.statusFilter && doc.status !== this.statusFilter) {
+                    // Stats filter
+                    if (this.statusFilter === 'with-stats' && !doc.hasStats) {
+                        return false;
+                    }
+                    if (this.statusFilter === 'without-stats' && doc.hasStats) {
                         return false;
                     }
 
@@ -888,15 +909,15 @@
             updateStats() {
                 const stats = {
                     total: this.documents.length,
-                    completed: this.documents.filter(d => d.status === 'completed').length,
-                    processing: this.documents.filter(d => d.status === 'processing').length,
-                    failed: this.documents.filter(d => d.status === 'failed').length
+                    vectors: this.documents.reduce((sum, d) => sum + (d.vectors || 0), 0),
+                    dip: this.documents.reduce((sum, d) => sum + (d.dipTotal || 0), 0),
+                    withStats: this.documents.filter(d => d.hasStats).length
                 };
 
                 document.getElementById('totalDocs').textContent = stats.total;
-                document.getElementById('completedDocs').textContent = stats.completed;
-                document.getElementById('processingDocs').textContent = stats.processing;
-                document.getElementById('failedDocs').textContent = stats.failed;
+                document.getElementById('totalVectors').textContent = stats.vectors.toLocaleString();
+                document.getElementById('totalDip').textContent = stats.dip.toLocaleString();
+                document.getElementById('withStats').textContent = stats.withStats;
             }
 
             updateDocumentCount() {
@@ -927,23 +948,24 @@
                     return;
                 }
 
-                const documentsHtml = this.filteredDocuments.map(doc => `
+                const documentsHtml = this.filteredDocuments.map(doc => {
+                    const stat = (val) => val !== null ? val : '—';
+                    return `
                     <div class="document-item" data-id="${doc.id}">
                         <div class="document-header">
                             <div class="document-info">
                                 <div class="document-title">${doc.manufacturer} ${doc.model}</div>
-                                <div class="document-subtitle">${doc.title}</div>
                                 <div class="document-meta">
                                     <div class="document-meta-item">📄 ${doc.filename}</div>
                                     <div class="document-meta-item">💾 ${doc.size}</div>
-                                    <div class="document-meta-item">📅 ${doc.uploadedAt}</div>
-                                    ${doc.chunks > 0 ? `<div class="document-meta-item">🧩 ${doc.chunks} chunks</div>` : ''}
-                                    ${doc.pages > 0 ? `<div class="document-meta-item">📖 ${doc.pages} pages</div>` : ''}
-                                    ${doc.assetUid ? `<div class="document-meta-item">🔑 ${doc.assetUid}</div>` : ''}
                                 </div>
-                            </div>
-                            <div class="document-status ${doc.status}">
-                                ${doc.statusDisplay}
+                                <div class="document-stats">
+                                    <span class="stat-item" title="Vectors">🧩 ${stat(doc.vectors)}</span>
+                                    <span class="stat-item" title="Figures">🖼️ ${stat(doc.figures)}</span>
+                                    <span class="stat-item" title="Tables">📊 ${stat(doc.tables)}</span>
+                                    <span class="stat-item" title="DIP Items">💡 ${stat(doc.dipTotal)}</span>
+                                    <span class="stat-item" title="Referenced Systems">🔗 ${stat(doc.referencedSystems)}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="document-actions">
@@ -955,7 +977,8 @@
                             </button>
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
 
                 content.innerHTML = `
                     <div class="document-grid">

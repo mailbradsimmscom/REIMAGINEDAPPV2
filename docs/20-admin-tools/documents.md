@@ -5,7 +5,7 @@
 Documents are technical manuals (PDFs) that provide the knowledge base for AI chat. The v5 pipeline uses LlamaParse for PDF parsing, GPT-4.1-mini for model detection, LlamaParse layout data for vision/figure extraction, and Anthropic Claude for DIP extraction. Documents are chunked with rich model-aware metadata and stored in Pinecone for semantic search.
 
 **Who uses it:** Administrators
-**Access:** Document Ingest (`/public/document-ingest.html`), Legacy Upload (`/public/upload.html`)
+**Access:** Document Ingest (`/ingest`)
 
 ---
 
@@ -81,7 +81,7 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 |     DIP EXTRACTION (concurrent with indexing):                    |
 |     +-- POST /admin/api/documents/:docId/dip/run (start)          |
 |     +-- GET /admin/api/documents/dip/stream/:runId (SSE stream)   |
-|     +-- 5 categories, 2-at-a-time parallelism                     |
+|     +-- 5 categories, all-parallel after specs warmup              |
 |     +-- Anthropic Claude with prompt caching                      |
 |     +-- Writes directly to production tables (no staging)         |
 +-------------------------------------------------------------------+
@@ -235,7 +235,7 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 // 5 DIP modes: specs, troubleshooting, procedures, golden_rules, intent_router
 // 1. Fetch document to get models_covered
 // 2. Call sidecar /v1/dip/run with all params
-// 3. Sidecar runs 2-at-a-time parallelism using Anthropic Claude
+// 3. Sidecar runs specs warmup then all remaining modes in parallel using Anthropic Claude
 // 4. Prompt caching reduces cost for repeated document context
 // 5. Writes directly to production tables (no staging/approval)
 // Returns: { modes_completed, modes_failed, results, total_extracted, total_inserted }
@@ -262,6 +262,7 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 // src/services/v5-colloquial.service.js
 // Runs AFTER v5 indexing (depends on Pinecone content)
 // Updates systems.colloquial_keywords for the installed system
+// Also sets systems.Manual_Local_Copy = true
 // Non-fatal: document is still searchable if this fails
 ```
 
@@ -272,8 +273,7 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 | Purpose | Path |
 |---------|------|
 | **Frontend** | |
-| Document ingest page (v5) | `src/public/document-ingest.html` |
-| Legacy upload page | `src/public/upload.html` |
+| Document ingest page (v5) | `src/public/document-ingest.html` (served at `/ingest`) |
 | Document library | `src/public/documents.html` |
 | **Node.js Routes** | |
 | v5 ingest routes | `src/routes/admin/document-ingest.route.js` |
@@ -310,6 +310,9 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 | POST | `/admin/api/documents/:docId/dip` | v5 DIP extraction (non-streaming) |
 | POST | `/admin/api/documents/:docId/dip/run` | Start DIP streaming run, returns dip_run_id |
 | GET | `/admin/api/documents/dip/stream/:runId` | SSE stream for DIP progress |
+| POST | `/admin/api/documents/:docId/timing` | Save ingest timing payload (Phase B) |
+| GET | `/admin/api/documents/:docId/timing` | Get all timing runs for a document |
+| GET | `/admin/api/documents/:docId/timing/:runId` | Get specific timing run |
 
 ### Legacy Endpoints
 
@@ -548,7 +551,7 @@ uploading -> verifying -> parsing -> model_detection -> model_selection
 | `embedding` | Chunks embedded with text-embedding-3-large | `/v1/index-document` |
 | `indexing` | Vectors upserted to Pinecone with v5 metadata | `/v1/index-document` |
 | `colloquial` | Colloquial keywords extracted for system | v5-colloquial.service.js |
-| `dip_extraction` | 5-category DIP with 2-at-a-time parallelism | `/v1/dip/run` (SSE) |
+| `dip_extraction` | 5-category DIP: specs warmup then 4-way parallel | `/v1/dip/run` (SSE) |
 | `storing` | Final metadata updates to documents table | document repository |
 | `completed` | Document ready for search | -- |
 
@@ -601,8 +604,8 @@ documents (bucket)
 | Setting | Value |
 |---------|-------|
 | LLM | Anthropic Claude (with prompt caching) |
-| Categories | 5: specs, troubleshooting, procedures, golden_rules, intent_router |
-| Parallelism | 2 modes at a time |
+| Categories | 5: specs (warmup), troubleshooting, procedures, golden_rules, intent_router |
+| Parallelism | Specs first (cache warmup), then all 4 remaining in parallel |
 | Streaming | SSE via `/v1/dip/run` |
 | Output | Direct to production tables (no staging) |
 | Timeout | 30 minutes per streaming run |

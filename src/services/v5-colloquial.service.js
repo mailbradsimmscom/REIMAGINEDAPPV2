@@ -59,6 +59,9 @@ export async function runV5ColloquialKeywords({
 
     await documentRepository.updateSystemColloquialKeywords(assetUid, result.keywords);
 
+    // Ensure Manual_Local_Copy is set on the system
+    await documentRepository.updateSystemManualFlag(assetUid, true);
+
     return {
       success: true,
       keywords_saved: true,

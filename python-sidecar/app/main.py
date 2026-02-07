@@ -1816,7 +1816,7 @@ async def _dip_run_stream_generator(request: DIPRunRequest):
     client = anthropic.AsyncAnthropic(api_key=anthropic_key)
 
     # Emit run_started
-    yield f"event: run_started\ndata: {json.dumps({'doc_id': doc_id, 'modes': modes, 'parallelism': 2, 'cache_control': 'ephemeral', 'warmup_mode': 'intent_router'})}\n\n"
+    yield f"event: run_started\ndata: {json.dumps({'doc_id': doc_id, 'modes': modes, 'parallelism': len(modes) - 1, 'cache_control': 'ephemeral', 'warmup_mode': 'specs'})}\n\n"
 
     try:
         # Fetch document content
@@ -1857,7 +1857,7 @@ Extract information that is relevant to the selected models and referenced syste
         ]
 
         # Organize modes: warmup first, then others
-        warmup_mode = 'intent_router' if 'intent_router' in modes else modes[0]
+        warmup_mode = 'specs' if 'specs' in modes else modes[0]
         other_modes = [m for m in modes if m != warmup_mode]
 
         results = []
@@ -1902,9 +1902,9 @@ Extract information that is relevant to the selected models and referenced syste
             yield f"event: mode_failed\ndata: {json.dumps({'mode': warmup_mode, 'error_code': warmup_result.error_code, 'error': warmup_result.error})}\n\n"
             yield f"event: warmup_failed_continuing\ndata: {json.dumps({'error_code': warmup_result.error_code, 'error': warmup_result.error, 'retries_attempted': MAX_RETRIES, 'caching_still_attempted': True})}\n\n"
 
-        # Wave 1 & 2: Run remaining modes in parallel batches of 2
-        for i in range(0, len(other_modes), 2):
-            batch = other_modes[i:i+2]
+        # Run all remaining modes in parallel (single wave)
+        for i in range(0, len(other_modes), len(other_modes) or 1):
+            batch = other_modes[i:i+len(other_modes)]
 
             # Emit mode_started for batch
             for mode in batch:
@@ -2056,7 +2056,7 @@ Extract information that is relevant to the selected models. If content applies 
     ]
 
     # Run modes: warmup first, then parallel
-    warmup_mode = 'intent_router' if 'intent_router' in request.modes else request.modes[0]
+    warmup_mode = 'specs' if 'specs' in request.modes else request.modes[0]
     other_modes = [m for m in request.modes if m != warmup_mode]
 
     # Warmup
@@ -2078,9 +2078,9 @@ Extract information that is relevant to the selected models. If content applies 
     else:
         modes_failed.append(warmup_mode)
 
-    # Parallel execution of remaining modes
-    for i in range(0, len(other_modes), 2):
-        batch = other_modes[i:i+2]
+    # Parallel execution of all remaining modes (single wave)
+    for i in range(0, len(other_modes), len(other_modes) or 1):
+        batch = other_modes[i:i+len(other_modes)]
         tasks = [
             _run_dip_mode_with_cache(
                 mode=mode,

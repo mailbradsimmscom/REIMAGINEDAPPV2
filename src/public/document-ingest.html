@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Ingest</title>
+    <title>Document Ingest v2</title>
     <style>
         :root {
             --primary: #007AFF;
@@ -84,29 +84,203 @@
 
         #fileInput { display: none; }
 
-        /* Progress */
-        .progress-container { display: none; }
-        .progress-container.visible { display: block; }
+        /* Timing Bar */
+        .timing-bar-container {
+            display: none;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        .timing-bar-container.visible { display: block; }
 
-        .progress-bar {
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
+        .timing-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 12px;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.3s;
-            width: 0%;
+        .timing-total-label {
+            font-size: 16px;
+            font-weight: 600;
         }
 
-        .progress-status {
-            font-size: 14px;
+        .timing-paused-label {
+            font-size: 13px;
+            color: var(--warning);
+            animation: pulse-opacity 1.5s ease-in-out infinite;
+        }
+
+        .timing-bar {
+            height: 28px;
+            background: var(--bg);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .timing-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            transition: flex 0.5s ease, background-color 0.3s ease;
+            min-width: 20px;
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .timing-segment.pending {
+            background: var(--border);
             color: var(--text-secondary);
         }
+
+        .timing-segment.active {
+            background: var(--primary);
+            animation: segment-pulse 1.5s ease-in-out infinite;
+        }
+
+        .timing-segment.complete {
+            background: var(--success);
+        }
+
+        .timing-segment.error {
+            background: var(--error);
+        }
+
+        .timing-bar-labels {
+            display: flex;
+            margin-top: 6px;
+        }
+
+        .timing-bar-label-item {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            flex: 1;
+            transition: flex 0.5s ease;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .timing-bar-label-item.complete { color: var(--success); }
+        .timing-bar-label-item.error { color: var(--error); }
+        .timing-bar-label-item.active { color: var(--primary); font-weight: 600; }
+
+        @keyframes segment-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Micro-Steps */
+        .micro-steps-container {
+            display: none;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        .micro-steps-container.visible { display: block; }
+
+        .micro-steps-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            user-select: none;
+        }
+
+        .micro-steps-toggle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: transform 0.2s;
+        }
+
+        .micro-steps-detail {
+            margin-top: 12px;
+        }
+        .micro-steps-detail.collapsed { display: none; }
+
+        .micro-step-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 14px;
+        }
+        .micro-step-row:last-child { border-bottom: none; }
+
+        .micro-step-icon { width: 20px; text-align: center; font-size: 14px; }
+        .micro-step-label { font-weight: 500; min-width: 80px; }
+        .micro-step-status { flex: 1; color: var(--text-secondary); font-size: 13px; }
+        .micro-step-duration { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+
+        .micro-step-row.complete .micro-step-icon { color: var(--success); }
+        .micro-step-row.active .micro-step-icon { color: var(--primary); }
+        .micro-step-row.error .micro-step-icon { color: var(--error); }
+        .micro-step-row.skipped { opacity: 0.5; }
+        .micro-step-row.skipped .micro-step-label { text-decoration: line-through; }
+
+        .dip-sub-steps {
+            margin-left: 30px;
+            margin-top: 4px;
+            padding: 8px 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .dip-sub-step-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+        }
+        .dip-sub-step-row.active { color: var(--primary); }
+        .dip-sub-step-row.complete { color: var(--success); }
+        .dip-sub-step-row.error { color: var(--error); }
+
+        .dip-sub-step-row.active .dip-sub-step-icon::after {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--primary);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .dip-sub-step-row.active .dip-sub-step-icon { font-size: 0; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Collapsible Model Section */
+        .models-section.collapsed {
+            padding: 12px 24px;
+        }
+        .models-collapsed-summary {
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .models-collapsed-summary:hover { color: var(--primary); }
 
         /* Models Section */
         .models-section { display: none; }
@@ -524,6 +698,14 @@
             margin-top: 4px;
         }
 
+        /* Summary Stats Grid */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
         .warnings-list {
             max-height: 200px;
             overflow-y: auto;
@@ -547,12 +729,53 @@
             .action-buttons { flex-direction: column; }
             .btn { width: 100%; }
             .vision-stats { grid-template-columns: repeat(2, 1fr); }
+            .summary-stats { grid-template-columns: repeat(2, 1fr); }
+
+            /* Timing bar: compact mode */
+            .timing-bar-container { padding: 12px 16px; }
+            .timing-bar-labels { display: none; }
+            .timing-segment { font-size: 0; } /* hide text, show blocks only */
+            .timing-mobile-label {
+                display: block;
+                font-size: 13px;
+                color: var(--text-secondary);
+                margin-top: 8px;
+                text-align: center;
+            }
+
+            /* Micro-steps: tighter */
+            .micro-steps-container { padding: 12px 16px; }
+            .micro-step-label { min-width: 60px; font-size: 13px; }
+        }
+
+        @media (min-width: 601px) {
+            .timing-mobile-label { display: none; }
         }
     </style>
 </head>
 <body>
     <h1>Document Ingest</h1>
     <p class="subtitle">Upload a manual to detect and configure equipment</p>
+
+    <!-- Timing Bar (persistent, appears on file select) -->
+    <div class="timing-bar-container" id="timingBarContainer">
+        <div class="timing-bar-header">
+            <span class="timing-total-label">Total: <span id="timingTotalTime">0s</span></span>
+            <span id="timingPausedLabel" class="timing-paused-label" style="display: none;">Paused — configuring</span>
+        </div>
+        <div class="timing-bar" id="timingBar"></div>
+        <div class="timing-bar-labels" id="timingBarLabels"></div>
+        <div class="timing-mobile-label" id="timingMobileLabel"></div>
+    </div>
+
+    <!-- Micro-Steps (expandable detail per phase) -->
+    <div class="micro-steps-container" id="microStepsContainer">
+        <div class="micro-steps-header" id="microStepsHeader">
+            <span id="microStepsTitle">Processing Details</span>
+            <span class="micro-steps-toggle" id="microStepsToggle">▼</span>
+        </div>
+        <div class="micro-steps-detail" id="microStepsDetail"></div>
+    </div>
 
     <!-- Step 1: Upload -->
     <div class="card" id="uploadCard">
@@ -563,13 +786,6 @@
             <div class="upload-hint">Supports PDF manuals up to 100MB</div>
         </div>
         <input type="file" id="fileInput" accept=".pdf">
-
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-status" id="progressStatus">Uploading...</div>
-        </div>
     </div>
 
     <!-- Step 2: Model Selection -->
@@ -709,14 +925,10 @@
                     <div class="step-status" id="step-dip-status">Waiting...</div>
                 </div>
             </div>
-            <!-- Per-mode DIP progress panel (hidden until DIP starts) -->
+            <!-- Per-mode DIP progress panel (rows created dynamically from SSE) -->
             <div id="dip-modes-panel" style="display: none; margin-left: 48px; margin-top: 8px; padding: 12px; background: var(--surface); border-radius: 8px; font-size: 13px;">
                 <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">DIP Progress (warm-up + 2 at a time)</div>
-                <div id="dip-mode-specs" class="dip-mode-row"><span class="dip-mode-icon">⏳</span> Specifications</div>
-                <div id="dip-mode-troubleshooting" class="dip-mode-row"><span class="dip-mode-icon">⏳</span> Troubleshooting</div>
-                <div id="dip-mode-procedures" class="dip-mode-row"><span class="dip-mode-icon">⏳</span> Procedures</div>
-                <div id="dip-mode-golden_rules" class="dip-mode-row"><span class="dip-mode-icon">⏳</span> Golden Rules</div>
-                <div id="dip-mode-intent_router" class="dip-mode-row"><span class="dip-mode-icon">⏳</span> Q&A Intent Router</div>
+                <div id="dip-modes-list"></div>
                 <div id="dip-cache-info" style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);"></div>
             </div>
             <div class="pipeline-step" id="step-complete">
@@ -733,10 +945,10 @@
 
     <!-- Step 4: Success -->
     <div class="card" id="successCard" style="display: none;">
-        <div class="status-message success">
+        <div class="status-message success" id="successBanner">
             <strong>Success!</strong> Document processed and diagrams extracted.
         </div>
-        <div id="successDetails"></div>
+        <div id="summaryStats"></div>
         <div id="visionResults" style="margin-top: 16px;"></div>
         <div id="dipResults" style="margin-top: 16px;"></div>
         <div class="action-buttons">
@@ -762,6 +974,389 @@
         let selectedModels = new Map();
         let instanceCounter = 0;
         let allSystems = []; // cached systems for autocomplete
+
+        // =====================
+        // Timing State
+        // =====================
+        const MODE_LABELS = {
+            specs: 'Specifications',
+            troubleshooting: 'Troubleshooting',
+            procedures: 'Procedures',
+            golden_rules: 'Golden Rules',
+            intent_router: 'Q&A Intent Router'
+        };
+
+        // Bar segments: Phase 1 always shown, Phase 2 added on confirm
+        const PHASE1_SEGMENTS = ['upload', 'parse'];
+        const PHASE2_SEGMENTS = ['document', 'vision', 'indexing', 'dip'];
+        const SEGMENT_LABELS = {
+            upload: 'Upload', parse: 'Parse', document: 'Document',
+            vision: 'Vision', indexing: 'Indexing', dip: 'DIP'
+        };
+
+        // Micro-step phases (includes Detect which is NOT in bar)
+        const MICRO_PHASES = ['upload', 'parse', 'detect', 'document', 'vision', 'indexing', 'dip'];
+
+        let stepTimings = {}; // { stepName: { startedAt, endedAt, durationMs, status } }
+        let timerStartedAt = null;
+        let timerPausedAt = null;
+        let timerResumedAt = null;
+        let totalPausedMs = 0;
+        let elapsedTimerInterval = null;
+        let visibleBarSegments = []; // current segments in the bar
+        let allStepsComplete = false;
+        let dipModeTimings = {}; // { mode: { startedAt, endedAt, durationMs, status } }
+
+        // Phase B: Timing persistence
+        const genRunId = () => self.crypto?.randomUUID?.()
+            || (Date.now().toString(36) + '-' + Math.random().toString(36).slice(2));
+        let ingestRunId = null; // generated at file select
+        let timingPersisted = false;
+
+        function formatDuration(ms) {
+            if (ms < 1000) return `${Math.round(ms)}ms`;
+            if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
+            const mins = Math.floor(ms / 60000);
+            const secs = Math.floor((ms % 60000) / 1000);
+            return `${mins}m ${secs}s`;
+        }
+
+        function formatDurationShort(ms) {
+            if (ms < 1000) return `${Math.round(ms)}ms`;
+            return `${(ms / 1000).toFixed(1)}s`;
+        }
+
+        function getElapsedMs() {
+            if (!timerStartedAt) return 0;
+            let elapsed;
+            if (timerPausedAt && !timerResumedAt) {
+                // Currently paused
+                elapsed = timerPausedAt - timerStartedAt - totalPausedMs;
+            } else {
+                elapsed = Date.now() - timerStartedAt - totalPausedMs;
+            }
+            return Math.max(0, elapsed);
+        }
+
+        function startElapsedTimer() {
+            if (elapsedTimerInterval) clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = setInterval(() => {
+                if (!allStepsComplete) {
+                    document.getElementById('timingTotalTime').textContent = formatDuration(getElapsedMs());
+                    updateActiveSegmentLabels();
+                }
+            }, 100);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        // ---- Timing Bar Rendering ----
+
+        function showTimingBar(segments) {
+            visibleBarSegments = segments;
+            const bar = document.getElementById('timingBar');
+            const labels = document.getElementById('timingBarLabels');
+            bar.innerHTML = '';
+            labels.innerHTML = '';
+
+            segments.forEach(seg => {
+                const div = document.createElement('div');
+                div.className = 'timing-segment pending';
+                div.id = `seg-${seg}`;
+                div.textContent = SEGMENT_LABELS[seg];
+                bar.appendChild(div);
+
+                const lbl = document.createElement('div');
+                lbl.className = 'timing-bar-label-item';
+                lbl.id = `seg-label-${seg}`;
+                lbl.textContent = SEGMENT_LABELS[seg];
+                labels.appendChild(lbl);
+            });
+
+            document.getElementById('timingBarContainer').classList.add('visible');
+            updateMobileLabel();
+        }
+
+        function addBarSegments(newSegments) {
+            const bar = document.getElementById('timingBar');
+            const labels = document.getElementById('timingBarLabels');
+
+            newSegments.forEach(seg => {
+                if (visibleBarSegments.includes(seg)) return;
+                visibleBarSegments.push(seg);
+
+                const div = document.createElement('div');
+                div.className = 'timing-segment pending';
+                div.id = `seg-${seg}`;
+                div.textContent = SEGMENT_LABELS[seg];
+                bar.appendChild(div);
+
+                const lbl = document.createElement('div');
+                lbl.className = 'timing-bar-label-item';
+                lbl.id = `seg-label-${seg}`;
+                lbl.textContent = SEGMENT_LABELS[seg];
+                labels.appendChild(lbl);
+            });
+            updateMobileLabel();
+        }
+
+        function updateSegment(seg, status, durationMs) {
+            const el = document.getElementById(`seg-${seg}`);
+            const lbl = document.getElementById(`seg-label-${seg}`);
+            if (!el) return;
+
+            el.className = `timing-segment ${status}`;
+            if (lbl) {
+                lbl.className = `timing-bar-label-item ${status}`;
+                if (status === 'complete' || status === 'error') {
+                    lbl.textContent = `${SEGMENT_LABELS[seg]} (${formatDurationShort(durationMs || 0)})`;
+                }
+            }
+        }
+
+        function updateActiveSegmentLabels() {
+            // Update labels for active segments with live elapsed
+            visibleBarSegments.forEach(seg => {
+                const timing = stepTimings[seg];
+                if (timing && timing.startedAt && !timing.endedAt) {
+                    const lbl = document.getElementById(`seg-label-${seg}`);
+                    if (lbl) {
+                        const elapsed = Date.now() - timing.startedAt;
+                        lbl.textContent = `${SEGMENT_LABELS[seg]} (${formatDurationShort(elapsed)})`;
+                    }
+                }
+            });
+        }
+
+        function resizeBarProportional() {
+            const totalMs = visibleBarSegments.reduce((sum, seg) => {
+                return sum + (stepTimings[seg]?.durationMs || 0);
+            }, 0);
+            if (totalMs === 0) return;
+
+            visibleBarSegments.forEach(seg => {
+                const el = document.getElementById(`seg-${seg}`);
+                const lbl = document.getElementById(`seg-label-${seg}`);
+                const ms = stepTimings[seg]?.durationMs || 0;
+                const ratio = ms / totalMs;
+                if (el) el.style.flex = `${ratio}`;
+                if (lbl) lbl.style.flex = `${ratio}`;
+            });
+        }
+
+        function updateMobileLabel() {
+            const label = document.getElementById('timingMobileLabel');
+            if (!label) return;
+
+            const activeSegs = visibleBarSegments.filter(seg => {
+                const t = stepTimings[seg];
+                return t && t.startedAt && !t.endedAt;
+            });
+
+            if (allStepsComplete) {
+                label.textContent = `All ${visibleBarSegments.length} steps complete`;
+            } else if (activeSegs.length > 1) {
+                const indices = activeSegs.map(s => visibleBarSegments.indexOf(s) + 1);
+                label.textContent = `Steps ${indices[0]}-${indices[indices.length-1]} of ${visibleBarSegments.length}`;
+            } else if (activeSegs.length === 1) {
+                const idx = visibleBarSegments.indexOf(activeSegs[0]) + 1;
+                label.textContent = `Step ${idx} of ${visibleBarSegments.length}`;
+            } else {
+                const completedCount = visibleBarSegments.filter(s => stepTimings[s]?.endedAt).length;
+                if (completedCount > 0) {
+                    label.textContent = `${completedCount} of ${visibleBarSegments.length} complete`;
+                }
+            }
+        }
+
+        // ---- Timing Step Tracking ----
+
+        function startStep(name) {
+            stepTimings[name] = { startedAt: Date.now(), endedAt: null, durationMs: null, status: 'active' };
+            if (visibleBarSegments.includes(name)) {
+                updateSegment(name, 'active');
+            }
+            updateMicroStep(name, 'active');
+            updateMobileLabel();
+        }
+
+        function endStep(name, status, metadata) {
+            const timing = stepTimings[name];
+            if (!timing) return;
+            timing.endedAt = Date.now();
+            timing.durationMs = timing.endedAt - timing.startedAt;
+            timing.status = status;
+            timing.metadata = metadata;
+
+            if (visibleBarSegments.includes(name)) {
+                updateSegment(name, status, timing.durationMs);
+            }
+            updateMobileLabel();
+        }
+
+        function checkAllComplete() {
+            const allDone = visibleBarSegments.every(seg => {
+                const t = stepTimings[seg];
+                return t && t.endedAt;
+            });
+            if (allDone && !allStepsComplete) {
+                allStepsComplete = true;
+                stopElapsedTimer();
+                document.getElementById('timingTotalTime').textContent = formatDuration(getElapsedMs());
+                resizeBarProportional();
+                updateMobileLabel();
+                collapseMicroSteps();
+            }
+        }
+
+        // ---- Micro-Steps ----
+
+        function showMicroSteps() {
+            document.getElementById('microStepsContainer').classList.add('visible');
+        }
+
+        function addMicroStepRow(name, label) {
+            const detail = document.getElementById('microStepsDetail');
+            if (document.getElementById(`micro-${name}`)) return; // already exists
+
+            const row = document.createElement('div');
+            row.className = 'micro-step-row';
+            row.id = `micro-${name}`;
+            row.innerHTML = `
+                <span class="micro-step-icon">⏳</span>
+                <span class="micro-step-label">${label}</span>
+                <span class="micro-step-status" id="micro-${name}-status">Waiting...</span>
+                <span class="micro-step-duration" id="micro-${name}-duration"></span>
+            `;
+            detail.appendChild(row);
+        }
+
+        function updateMicroStep(name, status, statusText, durationMs) {
+            const row = document.getElementById(`micro-${name}`);
+            if (!row) return;
+
+            row.className = `micro-step-row ${status}`;
+            const icon = row.querySelector('.micro-step-icon');
+            const statusEl = document.getElementById(`micro-${name}-status`);
+            const durEl = document.getElementById(`micro-${name}-duration`);
+
+            if (status === 'active') {
+                icon.textContent = '⏳';
+            } else if (status === 'complete') {
+                icon.textContent = '✓';
+            } else if (status === 'error') {
+                icon.textContent = '✗';
+            } else if (status === 'skipped') {
+                icon.textContent = '⊘';
+            }
+
+            if (statusText) statusEl.textContent = statusText;
+            if (durationMs != null) durEl.textContent = formatDurationShort(durationMs);
+        }
+
+        function initMicroSteps(phases) {
+            const detail = document.getElementById('microStepsDetail');
+            detail.innerHTML = '';
+            const labels = {
+                upload: 'Upload', parse: 'Parse', detect: 'Detect',
+                document: 'Document', vision: 'Vision', indexing: 'Indexing', dip: 'DIP'
+            };
+            phases.forEach(name => addMicroStepRow(name, labels[name]));
+        }
+
+        function collapseMicroSteps() {
+            const completedCount = MICRO_PHASES.filter(p => stepTimings[p]?.status === 'complete').length;
+            const totalMs = getElapsedMs();
+            document.getElementById('microStepsTitle').textContent =
+                `${completedCount} phases completed in ${formatDuration(totalMs)}`;
+            document.getElementById('microStepsDetail').classList.add('collapsed');
+            document.getElementById('microStepsToggle').textContent = '▶';
+        }
+
+        // Toggle micro-steps expand/collapse
+        document.getElementById('microStepsHeader')?.addEventListener('click', () => {
+            const detail = document.getElementById('microStepsDetail');
+            const toggle = document.getElementById('microStepsToggle');
+            detail.classList.toggle('collapsed');
+            toggle.textContent = detail.classList.contains('collapsed') ? '▶' : '▼';
+        });
+
+        // ---- Phase B: Timing Persistence ----
+
+        function buildTimingPayload() {
+            const steps = [];
+
+            // Main steps
+            for (const name of MICRO_PHASES) {
+                const t = stepTimings[name];
+                if (!t || !t.startedAt) continue;
+                steps.push({
+                    step: name,
+                    started_at: t.startedAt,
+                    ended_at: t.endedAt,
+                    duration_ms: t.durationMs,
+                    status: t.status || 'complete',
+                    metadata: t.metadata || null
+                });
+            }
+
+            // DIP per-mode steps
+            for (const [mode, t] of Object.entries(dipModeTimings)) {
+                if (!t.startedAt) continue;
+                steps.push({
+                    step: `dip_${mode}`,
+                    started_at: t.startedAt,
+                    ended_at: t.endedAt,
+                    duration_ms: t.durationMs,
+                    status: t.endedAt ? 'complete' : 'running',
+                    metadata: null
+                });
+            }
+
+            return {
+                ingest_run_id: ingestRunId,
+                steps
+            };
+        }
+
+        async function persistTiming() {
+            if (timingPersisted || !ingestRunId || !storageResult?.doc_id) return;
+            timingPersisted = true;
+
+            const payload = buildTimingPayload();
+            if (payload.steps.length === 0) return;
+
+            try {
+                const docId = storageResult.doc_id;
+                await window.adminFetch(`/admin/api/documents/${encodeURIComponent(docId)}/timing`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                // Timing persisted successfully
+            } catch (err) {
+                // Best-effort — timing persistence failure is non-critical
+            }
+        }
+
+        function sendBeaconTiming() {
+            if (timingPersisted || !ingestRunId || !storageResult?.doc_id) return;
+
+            const payload = buildTimingPayload();
+            if (payload.steps.length === 0) return;
+
+            const docId = storageResult.doc_id;
+            const token = window.getAdminToken?.() || localStorage.getItem('x-admin-token') || '';
+            const url = `/admin/api/documents/${encodeURIComponent(docId)}/timing`;
+            const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+
+            // sendBeacon doesn't support custom headers, so pass token in query
+            navigator.sendBeacon(`${url}?token=${encodeURIComponent(token)}`, blob);
+        }
 
         // Reference data from backend (populated after model detection)
         let referenceData = {
@@ -793,9 +1388,6 @@
         // Elements
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressStatus = document.getElementById('progressStatus');
         const modelsSection = document.getElementById('modelsSection');
         const confirmBtn = document.getElementById('confirmBtn');
 
@@ -831,46 +1423,77 @@
 
             currentFile = file;
             uploadZone.classList.add('disabled');
-            progressContainer.classList.add('visible');
-            updateProgress(10, 'Uploading to storage...');
+
+            // Initialize timing
+            stepTimings = {};
+            dipModeTimings = {};
+            allStepsComplete = false;
+            totalPausedMs = 0;
+            timerPausedAt = null;
+            timerResumedAt = null;
+            timerStartedAt = Date.now();
+            ingestRunId = genRunId();
+            timingPersisted = false;
+
+            // Show timing bar with Phase 1 segments
+            showTimingBar(PHASE1_SEGMENTS);
+            showMicroSteps();
+            initMicroSteps(['upload', 'parse', 'detect']);
+            startElapsedTimer();
 
             try {
-                // Step 1: Upload to storage first (to get doc_id)
-                updateProgress(15, 'Uploading to storage...');
+                // Step 1: Upload to storage
+                startStep('upload');
+                updateMicroStep('upload', 'active', 'Uploading to storage...');
 
                 const storageRes = await callUploadStorage(file);
                 if (!storageRes.success) {
                     throw new Error(storageRes.error?.message || 'Failed to upload to storage');
                 }
                 storageResult = storageRes.data;
-                console.log('Storage upload complete:', storageResult);
+                endStep('upload', 'complete');
+                updateMicroStep('upload', 'complete', 'Uploaded', stepTimings.upload.durationMs);
 
-                // Step 2: Parse with LlamaParse (pass doc_id to store raw JSON)
-                updateProgress(30, 'Parsing document with LlamaParse...');
+                // Step 2: Parse with LlamaParse
+                startStep('parse');
+                updateMicroStep('parse', 'active', 'Parsing with LlamaParse...');
 
                 const parseRes = await callLlamaParse(file, storageResult.doc_id);
                 if (!parseRes.success) {
                     throw new Error(parseRes.error || 'Failed to parse document');
                 }
                 parseResult = parseRes;
-                console.log('LlamaParse complete, json_stored:', parseRes.llamaparse_path ? 'yes' : 'no');
+                endStep('parse', 'complete');
+                updateMicroStep('parse', 'complete', 'Parsed', stepTimings.parse.durationMs);
 
-                updateProgress(60, 'Detecting equipment models...');
+                // Step 3: Detect models (micro-step only, not in bar)
+                startStep('detect');
+                updateMicroStep('detect', 'active', 'Detecting models...');
 
-                // Step 2: Run model detection
                 detectionResult = await callModelDetection(parseResult.text, file.name);
-
                 if (!detectionResult.success) {
                     throw new Error(detectionResult.error || 'Failed to detect models');
                 }
+                endStep('detect', 'complete');
+                updateMicroStep('detect', 'complete', 'Detected', stepTimings.detect.durationMs);
 
-                updateProgress(100, 'Detection complete!');
+                // Pause timer for model selection
+                timerPausedAt = Date.now();
+                document.getElementById('timingPausedLabel').style.display = '';
 
                 // Show results
-                setTimeout(() => showModelSelection(file, parseResult, detectionResult), 500);
+                setTimeout(() => showModelSelection(file, parseResult, detectionResult), 300);
 
             } catch (error) {
                 console.error('Error:', error);
+                // Mark active step as error
+                for (const name of ['upload', 'parse', 'detect']) {
+                    if (stepTimings[name]?.startedAt && !stepTimings[name]?.endedAt) {
+                        endStep(name, 'error');
+                        updateMicroStep(name, 'error', error.message);
+                    }
+                }
+                stopElapsedTimer();
                 showError(error.message);
             }
         }
@@ -940,10 +1563,7 @@
             return result;
         }
 
-        function updateProgress(percent, status) {
-            progressFill.style.width = percent + '%';
-            progressStatus.textContent = status;
-        }
+        // updateProgress removed - replaced by timing bar
 
         // Error code mapping for user-friendly messages
         const ERROR_MESSAGES = {
@@ -1007,7 +1627,6 @@
         }
 
         function showError(message, details = null) {
-            progressContainer.classList.remove('visible');
             uploadZone.classList.remove('disabled');
 
             const friendlyMessage = parseErrorMessage(message);
@@ -1466,23 +2085,89 @@
                 activeEventSource.close();
                 activeEventSource = null;
             }
+            // Best-effort timing persistence on page unload
+            sendBeaconTiming();
         });
 
-        // Helper to update DIP mode row UI
+        // Dynamic DIP mode row creation (create-or-update)
         function updateModeRow(mode, status, detail = '') {
-            const row = document.getElementById(`dip-mode-${mode}`);
-            if (!row) return;
+            const container = document.getElementById('dip-modes-list');
+            if (!container) return;
+
+            let row = document.getElementById(`dip-mode-${mode}`);
+            const label = MODE_LABELS[mode] || mode;
+
+            if (!row) {
+                // Create new row dynamically
+                row = document.createElement('div');
+                row.id = `dip-mode-${mode}`;
+                row.className = 'dip-mode-row';
+                row.innerHTML = `<span class="dip-mode-icon">⏳</span> <span class="dip-mode-label-text">${label}</span> <span class="dip-mode-detail" style="color: var(--text-secondary); font-size: 12px;"></span>`;
+                container.appendChild(row);
+            }
+
             row.className = `dip-mode-row ${status}`;
             const icon = row.querySelector('.dip-mode-icon');
+
             if (status === 'active') {
                 icon.textContent = '';
+                dipModeTimings[mode] = { startedAt: Date.now(), endedAt: null };
+                // Also update DIP sub-step in micro-steps
+                addDipSubStep(mode, 'active');
             } else if (status === 'complete') {
                 icon.textContent = '✓';
+                if (dipModeTimings[mode]) {
+                    dipModeTimings[mode].endedAt = Date.now();
+                    dipModeTimings[mode].durationMs = dipModeTimings[mode].endedAt - dipModeTimings[mode].startedAt;
+                }
+                addDipSubStep(mode, 'complete', detail);
             } else if (status === 'error') {
                 icon.textContent = '✗';
+                if (dipModeTimings[mode]) {
+                    dipModeTimings[mode].endedAt = Date.now();
+                    dipModeTimings[mode].durationMs = dipModeTimings[mode].endedAt - dipModeTimings[mode].startedAt;
+                }
+                addDipSubStep(mode, 'error', detail);
             }
+
             if (detail) {
-                row.innerHTML = `<span class="dip-mode-icon">${icon.textContent}</span> ${row.textContent.split(' ')[0]} <span style="color: var(--text-secondary); font-size: 12px;">${detail}</span>`;
+                const detailEl = row.querySelector('.dip-mode-detail');
+                if (detailEl) detailEl.textContent = detail;
+            }
+        }
+
+        // Add/update DIP sub-step in micro-steps section
+        function addDipSubStep(mode, status, detail) {
+            let subSteps = document.getElementById('micro-dip-substeps');
+            if (!subSteps) {
+                // Create the DIP sub-steps container after the DIP micro-step row
+                const dipRow = document.getElementById('micro-dip');
+                if (!dipRow) return;
+                subSteps = document.createElement('div');
+                subSteps.className = 'dip-sub-steps';
+                subSteps.id = 'micro-dip-substeps';
+                dipRow.parentNode.insertBefore(subSteps, dipRow.nextSibling);
+            }
+
+            const label = MODE_LABELS[mode] || mode;
+            let row = document.getElementById(`dip-sub-${mode}`);
+            if (!row) {
+                row = document.createElement('div');
+                row.className = 'dip-sub-step-row';
+                row.id = `dip-sub-${mode}`;
+                row.innerHTML = `<span class="dip-sub-step-icon" style="width:16px;text-align:center;">⏳</span> <span>${label}</span> <span class="dip-sub-detail" style="margin-left:auto;font-size:12px;color:var(--text-secondary);"></span>`;
+                subSteps.appendChild(row);
+            }
+
+            row.className = `dip-sub-step-row ${status}`;
+            const icon = row.querySelector('.dip-sub-step-icon');
+            if (status === 'active') icon.textContent = '';
+            else if (status === 'complete') icon.textContent = '✓';
+            else if (status === 'error') icon.textContent = '✗';
+
+            if (detail) {
+                const detailEl = row.querySelector('.dip-sub-detail');
+                if (detailEl) detailEl.textContent = detail;
             }
         }
 
@@ -1779,8 +2464,34 @@
                 return;
             }
 
+            // Resume timer from pause
+            if (timerPausedAt) {
+                totalPausedMs += Date.now() - timerPausedAt;
+                timerResumedAt = Date.now();
+                timerPausedAt = null;
+                document.getElementById('timingPausedLabel').style.display = 'none';
+            }
+
+            // Determine which Phase 2 segments to add
+            const docId = storageResult?.doc_id;
+            const willRunParallel = docId && selected_models.length > 0;
+            const phase2Segs = willRunParallel
+                ? ['document', 'vision', 'indexing', 'dip']
+                : ['document'];
+            addBarSegments(phase2Segs);
+
+            // Add Phase 2 micro-step rows
+            const phase2MicroPhases = willRunParallel
+                ? ['document', 'vision', 'indexing', 'dip']
+                : ['document'];
+            phase2MicroPhases.forEach(p => {
+                addMicroStepRow(p, { document: 'Document', vision: 'Vision', indexing: 'Indexing', dip: 'DIP' }[p]);
+            });
+
+            // Collapse model selection
+            collapseModelSection(systems, selected_models, referenced_selections);
+
             // Show processing card
-            modelsSection.style.display = 'none';
             document.getElementById('processingCard').style.display = 'block';
 
             let docResult = null;
@@ -1790,7 +2501,9 @@
                 // ========================================
                 // Step 1: Create document record
                 // ========================================
+                startStep('document');
                 updateStep('document', 'active', 'Creating document record...');
+                updateMicroStep('document', 'active', 'Creating record...');
 
                 const docResponse = await window.adminFetch('/admin/api/documents', {
                     method: 'POST',
@@ -1817,64 +2530,123 @@
                 }
 
                 docResult = await docResponse.json();
+                endStep('document', 'complete', { systems_created: docResult.data?.systems_created || 0 });
                 updateStep('document', 'complete', `Document created, ${docResult.data?.systems_created || 0} systems`);
+                updateMicroStep('document', 'complete', `Created, ${docResult.data?.systems_created || 0} systems`, stepTimings.document.durationMs);
 
                 // ========================================
                 // Step 2-4: Run Vision + Indexing + DIP in PARALLEL
                 // ========================================
                 let indexingResult = null;
                 let dipResult = null;
-                const parallelStartTime = Date.now();
 
-                const docId = storageResult?.doc_id;
                 const storagePath = storageResult?.storage_path;
                 const installedAssetUid = docResult?.data?.installed_system?.asset_uid || null;
 
                 if (!docId) {
-                    updateStep('vision', 'complete', 'Skipped (no doc_id)', '⊘');
-                    updateStep('indexing', 'complete', 'Skipped (no doc_id)', '⊘');
-                    updateStep('dip', 'complete', 'Skipped (no doc_id)', '⊘');
+                    // Skipped — segments were never added to bar
+                    updateMicroStep('vision', 'skipped', 'Skipped (no doc_id)');
+                    updateMicroStep('indexing', 'skipped', 'Skipped (no doc_id)');
+                    updateMicroStep('dip', 'skipped', 'Skipped (no doc_id)');
+                    stepTimings.vision = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
+                    stepTimings.indexing = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
+                    stepTimings.dip = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
                 } else if (selected_models.length === 0) {
-                    updateStep('vision', 'complete', 'Skipped (no models selected)', '⊘');
-                    updateStep('indexing', 'complete', 'Skipped (no models selected)', '⊘');
-                    updateStep('dip', 'complete', 'Skipped (no models selected)', '⊘');
+                    updateMicroStep('vision', 'skipped', 'Skipped (no models)');
+                    updateMicroStep('indexing', 'skipped', 'Skipped (no models)');
+                    updateMicroStep('dip', 'skipped', 'Skipped (no models)');
+                    stepTimings.vision = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
+                    stepTimings.indexing = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
+                    stepTimings.dip = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
                 } else {
                     // Start ALL THREE tasks simultaneously
+                    startStep('vision');
+                    startStep('indexing');
+                    startStep('dip');
                     updateStep('vision', 'active', 'Analyzing pages for diagrams...');
                     updateStep('indexing', 'active', 'Chunking and indexing content...');
                     updateStep('dip', 'active', 'Starting DIP extraction...');
+                    updateMicroStep('vision', 'active', 'Analyzing pages...');
+                    updateMicroStep('indexing', 'active', 'Chunking & indexing...');
+                    updateMicroStep('dip', 'active', 'Starting extraction...');
 
-                    const visionPromise = storagePath
+                    // Each promise ends its own timing immediately on resolve/reject
+                    const visionPromise = (storagePath
                         ? runVision({ docId, storagePath, selected_models, referenced_selections })
-                        : Promise.resolve({ success: false, error: 'No storage path', skipped: true });
+                        : Promise.resolve({ success: false, error: 'No storage path', skipped: true })
+                    ).then(result => {
+                        if (result.skipped) {
+                            endStep('vision', 'complete');
+                            updateStep('vision', 'complete', 'Skipped (no storage path)', '⊘');
+                            updateMicroStep('vision', 'skipped', 'Skipped (no storage path)');
+                        } else if (result.success) {
+                            endStep('vision', 'complete', result.data);
+                            updateMicroStep('vision', 'complete',
+                                `${result.data?.assets_saved || 0} assets extracted`,
+                                stepTimings.vision.durationMs);
+                        } else {
+                            endStep('vision', 'error');
+                            updateMicroStep('vision', 'error', result.error);
+                        }
+                        return result;
+                    }).catch(err => {
+                        endStep('vision', 'error');
+                        updateMicroStep('vision', 'error', err.message);
+                        return { success: false, error: err.message };
+                    });
 
                     const indexingPromise = runIndexing({
                         docId,
                         selected_models,
                         referenced_selections,
                         installedAssetUid
+                    }).then(result => {
+                        if (result.success) {
+                            endStep('indexing', 'complete', result.data);
+                            updateMicroStep('indexing', 'complete',
+                                `${result.data?.chunks_created || 0} chunks, ${result.data?.vectors_upserted || 0} vectors`,
+                                stepTimings.indexing.durationMs);
+                        } else {
+                            endStep('indexing', 'error');
+                            updateMicroStep('indexing', 'error', result.error);
+                        }
+                        return result;
+                    }).catch(err => {
+                        endStep('indexing', 'error');
+                        updateMicroStep('indexing', 'error', err.message);
+                        return { success: false, error: err.message };
                     });
 
                     const dipPromise = runDipStreaming({
                         docId,
                         selected_models,
                         referenced_selections
+                    }).then(result => {
+                        if (result.success || result.modes_completed?.length > 0) {
+                            endStep('dip', result.success ? 'complete' : 'error', result);
+                            updateMicroStep('dip', result.success ? 'complete' : 'error',
+                                `${result.total_inserted || 0} items (${(result.modes_completed || []).length} modes)`,
+                                stepTimings.dip.durationMs);
+                        } else {
+                            endStep('dip', 'error');
+                            updateMicroStep('dip', 'error', result.error || 'Failed');
+                        }
+                        return result;
+                    }).catch(err => {
+                        endStep('dip', 'error');
+                        updateMicroStep('dip', 'error', err.message);
+                        return { success: false, error: err.message };
                     });
 
-                    // Wait for ALL THREE to complete (regardless of individual success/failure)
+                    // Wait for ALL THREE to complete
                     const [visionSettled, indexingSettled, dipSettled] = await Promise.allSettled([
                         visionPromise, indexingPromise, dipPromise
                     ]);
 
-                    // Extract results
+                    // Extract results (timing already recorded in .then() above)
                     visionResult = visionSettled.status === 'fulfilled'
                         ? visionSettled.value
                         : { success: false, error: visionSettled.reason?.message || 'Unknown error' };
-
-                    // Handle skipped vision (no storage path)
-                    if (visionResult.skipped) {
-                        updateStep('vision', 'complete', 'Skipped (no storage path)', '⊘');
-                    }
 
                     indexingResult = indexingSettled.status === 'fulfilled'
                         ? indexingSettled.value
@@ -1884,18 +2656,15 @@
                         ? dipSettled.value
                         : { success: false, error: dipSettled.reason?.message || 'Unknown error' };
 
-                    // Log parallel timing
-                    const parallelDuration = Date.now() - parallelStartTime;
-                    console.log(`Parallel execution completed in ${parallelDuration}ms`, {
-                        vision_ms: visionResult.duration_ms,
-                        indexing_ms: indexingResult.duration_ms,
-                        dip_ms: dipResult.duration_ms,
-                        total_parallel_ms: parallelDuration
+                    console.log('Parallel execution completed', {
+                        vision_ms: stepTimings.vision?.durationMs,
+                        indexing_ms: stepTimings.indexing?.durationMs,
+                        dip_ms: stepTimings.dip?.durationMs
                     });
                 }
 
                 // ========================================
-                // Step 5: Complete
+                // Complete
                 // ========================================
                 const visionOk = visionResult?.success !== false || visionResult?.skipped;
                 const indexingOk = indexingResult?.success !== false;
@@ -1908,7 +2677,13 @@
                     updateStep('complete', 'complete', 'Complete');
                 }
 
-                // Store for retry functionality (extended to support per-task retry)
+                // Mark all complete for timing bar
+                checkAllComplete();
+
+                // Persist timing to DB (Phase B)
+                persistTiming();
+
+                // Store for retry functionality
                 window.lastIngestState = {
                     docId: storageResult?.doc_id,
                     storagePath: storageResult?.storage_path,
@@ -1923,25 +2698,70 @@
                     dipFailed: !dipOk
                 };
 
-                // Embed dipResult into indexingResult for backwards compatibility with showSuccessScreen
+                // Embed dipResult into indexingResult for showSuccessScreen
                 if (indexingResult && dipResult) {
                     if (!indexingResult.data) indexingResult.data = {};
                     indexingResult.data.dip = dipResult;
                 }
+
+                // Save ingest stats to documents table (non-blocking)
+                if (docId) {
+                    const ingestStats = {
+                        indexing: {
+                            chunks_created: indexingResult?.data?.chunks_created || 0,
+                            vectors_upserted: indexingResult?.data?.vectors_upserted || 0
+                        },
+                        vision: {
+                            pages_analyzed: visionResult?.data?.pages_analyzed || visionResult?.pages_analyzed || 0,
+                            figures_cropped: visionResult?.data?.figures_cropped || visionResult?.figures_cropped || 0,
+                            tables_cropped: visionResult?.data?.tables_cropped || visionResult?.tables_cropped || 0,
+                            assets_saved: visionResult?.data?.assets_saved || visionResult?.assets_saved || 0
+                        },
+                        dip: {
+                            total_inserted: dipResult?.total_inserted || 0,
+                            modes_completed: dipResult?.modes_completed || [],
+                            modes_failed: dipResult?.modes_failed || []
+                        },
+                        systems: {
+                            systems_created: docResult?.data?.systems_created || 0,
+                            instances_created: docResult?.data?.instances_created || 0,
+                            referenced_systems_saved: docResult?.data?.referenced_systems_saved || 0
+                        },
+                        ingested_at: new Date().toISOString()
+                    };
+
+                    // Fire and forget - don't block success screen
+                    window.adminFetch(`/admin/api/upload/documents/${docId}/ingest-stats`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ingest_stats: ingestStats })
+                    }).then(res => {
+                        if (res.ok) console.log('Ingest stats saved');
+                        else console.warn('Failed to save ingest stats');
+                    }).catch(err => console.warn('Failed to save ingest stats:', err));
+                }
+
                 // Wait a moment then show success
                 setTimeout(() => showSuccessScreen(docResult, visionResult, indexingResult, selected_models, referenced_selections), 800);
 
             } catch (error) {
                 console.error('Error:', error);
+                stopElapsedTimer();
+
                 // Update current step to error
                 const steps = ['document', 'vision', 'indexing', 'dip', 'complete'];
                 for (const step of steps) {
                     const el = document.getElementById(`step-${step}`);
-                    if (el.classList.contains('active')) {
+                    if (el && el.classList.contains('active')) {
                         updateStep(step, 'error', error.message);
+                        endStep(step, 'error');
+                        updateMicroStep(step, 'error', error.message);
                         break;
                     }
                 }
+
+                // Persist partial timing on error
+                persistTiming();
 
                 // Add retry button
                 document.getElementById('processingDetails').innerHTML = `
@@ -1955,29 +2775,90 @@
             }
         }
 
+        // Collapse model section after confirm
+        function collapseModelSection(systems, selectedModelNames, referencedSelections) {
+            const section = modelsSection;
+            const totalModels = selectedModelNames.length + referencedSelections.length;
+            const summaryText = totalModels > 0
+                ? `${selectedModelNames.length} primary, ${referencedSelections.length} referenced selected`
+                : 'No models selected (document only)';
+
+            // Store inner content, replace with summary
+            section.dataset.originalContent = section.innerHTML;
+            section.classList.add('collapsed');
+            section.innerHTML = `
+                <div class="models-collapsed-summary" onclick="expandModelSection()">
+                    Equipment: ${summaryText} ▸
+                </div>
+            `;
+        }
+
+        function expandModelSection() {
+            const section = modelsSection;
+            if (section.dataset.originalContent) {
+                section.innerHTML = section.dataset.originalContent;
+                section.classList.remove('collapsed');
+            }
+        }
+
         function showSuccessScreen(docResult, visionResult, indexingResult, selectedModels, referencedSelections) {
             document.getElementById('processingCard').style.display = 'none';
             document.getElementById('successCard').style.display = 'block';
 
-            // Build success details
-            const data = docResult?.data || {};
-            let detailsHtml = `<p><strong>Document:</strong> ${currentFile.name}</p>`;
+            // Build richer summary stats
+            const docData = docResult?.data || {};
+            const vData = visionResult?.data || {};
+            const iData = indexingResult?.data || {};
+            const dipData = iData.dip || {};
+            const totalTime = getElapsedMs();
 
-            if (data.installed_system) {
-                detailsHtml += `<p><strong>Installed System:</strong> ${data.installed_system.model_norm}</p>`;
-            } else if (data.systems_created > 0) {
-                detailsHtml += `<p><strong>Systems created:</strong> ${data.systems_created}</p>`;
+            // Check for errors
+            const hasErrors = (visionResult?.success === false && !visionResult?.skipped)
+                || indexingResult?.success === false
+                || (dipData.success === false && dipData.modes_completed?.length === 0);
+
+            if (hasErrors) {
+                document.getElementById('successBanner').innerHTML =
+                    '<strong>Completed with errors.</strong> Some steps failed — see details below.';
+                document.getElementById('successBanner').className = 'status-message error';
             }
 
-            if (data.instances_created > 0) {
-                detailsHtml += `<p><strong>Instances created:</strong> ${data.instances_created}</p>`;
-            }
+            const stats = [
+                { label: 'Document', value: currentFile.name, isText: true },
+                { label: 'Doc ID', value: (storageResult?.doc_id || '-').substring(0, 8) + '...' },
+                { label: 'Systems', value: docData.systems_created || 0 },
+                { label: 'Instances', value: docData.instances_created || 0 },
+                { label: 'Referenced', value: docData.referenced_systems_saved || 0 },
+                { label: 'Chunks', value: iData.chunks_created || 0 },
+                { label: 'Vectors', value: iData.vectors_upserted || 0 },
+                { label: 'Colloquial', value: iData.colloquial?.keywords_count || 0 },
+                { label: 'Pages Analyzed', value: vData.pages_analyzed || 0 },
+                { label: 'Figures', value: vData.figures_cropped || 0 },
+                { label: 'Tables', value: vData.tables_cropped || 0 },
+                { label: 'Filtered', value: (vData.warnings || []).filter(w => w.code === 'PAGE_SKIPPED_NOT_RELEVANT').length },
+                { label: 'DIP Items', value: dipData.total_inserted || 0 },
+                { label: 'DIP Modes', value: (dipData.modes_completed || []).length },
+                { label: 'DIP Failed', value: (dipData.modes_failed || []).length },
+                { label: 'Total Time', value: formatDuration(totalTime) }
+            ];
 
-            if (data.referenced_systems_saved > 0) {
-                detailsHtml += `<p><strong>Referenced systems:</strong> ${data.referenced_systems_saved}</p>`;
-            }
+            let statsHtml = '<div class="summary-stats">';
+            stats.forEach(s => {
+                if (s.isText) {
+                    statsHtml += `<div class="stat-box" style="grid-column: span 2;">
+                        <div style="font-size: 14px; font-weight: 600; word-break: break-all;">${s.value}</div>
+                        <div class="stat-label">${s.label}</div>
+                    </div>`;
+                } else {
+                    statsHtml += `<div class="stat-box">
+                        <div class="stat-value">${s.value}</div>
+                        <div class="stat-label">${s.label}</div>
+                    </div>`;
+                }
+            });
+            statsHtml += '</div>';
 
-            document.getElementById('successDetails').innerHTML = detailsHtml;
+            document.getElementById('summaryStats').innerHTML = statsHtml;
 
             // Build vision results
             let visionHtml = '';
@@ -2049,7 +2930,6 @@
 
             // Build DIP extraction results
             let dipHtml = '';
-            const dipData = indexingResult?.data?.dip;
             if (dipData?.success || dipData?.modes_completed?.length > 0) {
                 const modesCompleted = dipData.modes_completed || [];
                 const modesFailed = dipData.modes_failed || [];

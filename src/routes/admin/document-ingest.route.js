@@ -20,6 +20,7 @@ import { storeDipRunParams, streamDipExtraction } from '../../services/dip-strea
 import { VisionPipelineRequestSchema } from '../../schemas/document.schema.js';
 import { logger } from '../../utils/logger.js';
 import { getSupabaseStorageClient, getSupabaseClient } from '../../repositories/supabaseClient.js';
+import { saveTimingPayload, getTimingForDocument, getTimingForRun } from '../../services/ingest-timing.service.js';
 
 const router = express.Router();
 const log = logger.createRequestLogger();
@@ -952,6 +953,84 @@ router.get('/dip/stream/:runId', async (req, res) => {
 
   // Stream from sidecar
   await streamDipExtraction(runId, res, abortController.signal);
+});
+
+// ============================================
+// Timing Persistence (Phase B)
+// ============================================
+
+// POST /:docId/timing — Save timing payload (bulk insert)
+router.post('/:docId/timing', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const { ingest_run_id, steps } = req.body;
+
+    if (!ingest_run_id) {
+      return res.status(400).json({ success: false, error: { message: 'ingest_run_id is required' } });
+    }
+    if (!steps || !Array.isArray(steps) || steps.length === 0) {
+      return res.status(400).json({ success: false, error: { message: 'steps array is required' } });
+    }
+
+    const result = await saveTimingPayload(ingest_run_id, docId, steps);
+
+    return res.status(201).json({
+      success: true,
+      data: result,
+      requestId: res.locals.requestId
+    });
+  } catch (err) {
+    log.error('Failed to save ingest timing', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+// GET /:docId/timing — Retrieve all timing runs for a document
+router.get('/:docId/timing', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const runs = await getTimingForDocument(docId);
+
+    return res.json({
+      success: true,
+      data: { runs, count: runs.length },
+      requestId: res.locals.requestId
+    });
+  } catch (err) {
+    log.error('Failed to get ingest timing', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+// GET /:docId/timing/:ingestRunId — Retrieve one specific timing run
+router.get('/:docId/timing/:ingestRunId', async (req, res) => {
+  try {
+    const { docId, ingestRunId } = req.params;
+    const steps = await getTimingForRun(docId, ingestRunId);
+
+    return res.json({
+      success: true,
+      data: { ingest_run_id: ingestRunId, doc_id: docId, steps, count: steps.length },
+      requestId: res.locals.requestId
+    });
+  } catch (err) {
+    log.error('Failed to get ingest timing run', {
+      error: err.message, docId: req.params.docId, ingestRunId: req.params.ingestRunId
+    });
+    return res.status(500).json({
+      success: false,
+      error: { message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
 });
 
 export default router;

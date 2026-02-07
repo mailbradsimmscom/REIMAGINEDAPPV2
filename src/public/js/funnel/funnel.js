@@ -458,8 +458,258 @@ function renderIssues(issues) {
   `;
 }
 
-// Make toggleBreakdown available globally
-window.toggleBreakdown = toggleBreakdown;
+// ============================================================================
+// Ingest Timing Visualization
+// ============================================================================
 
-// Load on page ready
-document.addEventListener('DOMContentLoaded', loadFunnel);
+const STEP_LABELS = {
+  upload: 'Upload',
+  parse: 'Parse',
+  detect: 'Detect',
+  document: 'Document',
+  vision: 'Vision',
+  indexing: 'Indexing',
+  dip_specs: 'DIP Specs',
+  dip_troubleshooting: 'DIP Troubleshooting',
+  dip_procedures: 'DIP Procedures',
+  dip_golden_rules: 'DIP Golden Rules',
+  dip_intent_router: 'DIP Intent Router'
+};
+
+// Map step names to CSS segment classes
+function getSegmentClass(stepName) {
+  if (stepName.startsWith('dip_')) return 'seg-dip';
+  return `seg-${stepName}`;
+}
+
+// Map step names to dot colors for the detail rows
+const STEP_COLORS = {
+  upload: '#4a90d9',
+  parse: '#38ef7d',
+  detect: '#a8edea',
+  document: '#764ba2',
+  vision: '#4facfe',
+  indexing: '#f5a623',
+  dip_specs: '#fa709a',
+  dip_troubleshooting: '#fa709a',
+  dip_procedures: '#fa709a',
+  dip_golden_rules: '#fa709a',
+  dip_intent_router: '#fa709a'
+};
+
+function formatDurationMs(ms) {
+  if (ms == null) return '--';
+  if (ms < 1000) return `${ms}ms`;
+  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
+  const mins = Math.floor(ms / 60000);
+  const secs = ((ms % 60000) / 1000).toFixed(0);
+  return `${mins}m ${secs}s`;
+}
+
+function renderTimingLegend() {
+  const items = [
+    { label: 'Upload', cls: 'seg-upload' },
+    { label: 'Parse', cls: 'seg-parse' },
+    { label: 'Document', cls: 'seg-document' },
+    { label: 'Vision', cls: 'seg-vision' },
+    { label: 'Indexing', cls: 'seg-indexing' },
+    { label: 'DIP', cls: 'seg-dip' }
+  ];
+  return `
+    <div class="timing-legend">
+      ${items.map(i => `
+        <div class="timing-legend-item">
+          <div class="timing-legend-dot timing-seg ${i.cls}" style="width:8px;height:8px;border-radius:50%;"></div>
+          ${i.label}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderTimingBar(steps, totalMs) {
+  if (!totalMs || totalMs === 0) return '';
+  return `
+    <div class="timing-stacked-bar">
+      ${steps.map(s => {
+        const pct = totalMs > 0 ? ((s.duration_ms || 0) / totalMs * 100) : 0;
+        if (pct < 0.5) return '';
+        return `<div class="timing-seg ${getSegmentClass(s.step_name)}" style="flex:${s.duration_ms || 0}" title="${STEP_LABELS[s.step_name] || s.step_name}: ${formatDurationMs(s.duration_ms)}"></div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// Keys to skip in metadata display (noise or redundant)
+const META_SKIP = new Set(['doc_id', 'manifest_path', 'processing_time']);
+
+function formatMetaVal(val) {
+  if (val === true) return 'yes';
+  if (val === false) return 'no';
+  if (val === null || val === undefined) return '--';
+  if (typeof val === 'number') {
+    if (Number.isInteger(val)) return val.toLocaleString();
+    return val.toFixed(1);
+  }
+  if (Array.isArray(val)) return val.length === 0 ? 'none' : val.join(', ');
+  return String(val);
+}
+
+function renderMetaBlock(meta) {
+  if (!meta || typeof meta !== 'object' || Object.keys(meta).length === 0) return '';
+
+  let html = '<div class="timing-step-meta">';
+
+  for (const [key, val] of Object.entries(meta)) {
+    if (META_SKIP.has(key)) continue;
+
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      // Nested object → section header + items
+      const label = key.replace(/_/g, ' ');
+      html += `<div class="timing-meta-section">${label}</div>`;
+      for (const [k2, v2] of Object.entries(val)) {
+        if (META_SKIP.has(k2)) continue;
+        if (v2 && typeof v2 === 'object' && !Array.isArray(v2)) continue; // skip 2+ deep
+        const label2 = k2.replace(/_/g, ' ');
+        html += `<div class="timing-meta-item"><span class="timing-meta-key">${label2}</span><span class="timing-meta-val">${formatMetaVal(v2)}</span></div>`;
+      }
+    } else {
+      const label = key.replace(/_/g, ' ');
+      html += `<div class="timing-meta-item"><span class="timing-meta-key">${label}</span><span class="timing-meta-val">${formatMetaVal(val)}</span></div>`;
+    }
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function renderStepRow(s, extraClass) {
+  const cls = extraClass ? ` ${extraClass}` : '';
+  return `
+    <div class="timing-step-row${cls}">
+      <div class="timing-step-dot" style="background:${STEP_COLORS[s.step_name] || '#888'}"></div>
+      <div class="timing-step-name">${STEP_LABELS[s.step_name] || s.step_name}</div>
+      <div class="timing-step-duration">${formatDurationMs(s.duration_ms)}</div>
+      <span class="timing-step-status ${s.status || 'complete'}">${s.status || 'complete'}</span>
+    </div>
+    ${renderMetaBlock(s.metadata)}
+  `;
+}
+
+function renderTimingStepRows(steps, runId) {
+  const mainSteps = steps.filter(s => !s.step_name.startsWith('dip_'));
+  const dipSteps = steps.filter(s => s.step_name.startsWith('dip_'));
+  const dipTotalMs = dipSteps.reduce((sum, s) => sum + (s.duration_ms || 0), 0);
+
+  let html = '';
+
+  // Render main steps
+  for (const s of mainSteps) {
+    html += renderStepRow(s, '');
+  }
+
+  // Render DIP parent + sub-steps
+  if (dipSteps.length > 0) {
+    html += `
+      <div class="timing-step-row dip-parent">
+        <div class="timing-step-dot" style="background:${STEP_COLORS.dip_specs}"></div>
+        <div class="timing-step-name">DIP Extraction (${dipSteps.length} modes)</div>
+        <div class="timing-step-duration">${formatDurationMs(dipTotalMs)}</div>
+        <span class="timing-step-status complete">${dipSteps.every(s => s.status === 'complete') ? 'complete' : 'partial'}</span>
+      </div>
+    `;
+    for (const s of dipSteps) {
+      html += renderStepRow(s, 'timing-dip-sub');
+    }
+  }
+
+  return `<div class="timing-run-detail" id="timing-detail-${runId}">${html}</div>`;
+}
+
+function renderTimingRun(run, index) {
+  const date = new Date(run.created_at);
+  const dateStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  const timeStr = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  const docShort = run.system_name || (run.doc_id ? run.doc_id.substring(0, 12) + '...' : 'unknown');
+  const safeId = `run-${index}`;
+  // First run expanded, rest collapsed
+  const collapsed = index > 0;
+
+  return `
+    <div class="timing-run${collapsed ? ' is-collapsed' : ''}">
+      <div class="timing-run-header" onclick="toggleTimingDetail('timing-body-${safeId}')">
+        <div class="timing-run-left">
+          <div class="timing-run-date">${dateStr} ${timeStr}</div>
+          <div class="timing-run-doc" title="${run.system_name || run.doc_id}">${docShort}</div>
+        </div>
+        <div class="timing-run-right">
+          <span class="timing-run-steps-count">${run.step_count} steps</span>
+          <span class="timing-run-total">${formatDurationMs(run.total_duration_ms)}</span>
+          <span class="timing-run-chevron">▼</span>
+        </div>
+      </div>
+      <div class="timing-run-body${collapsed ? ' collapsed' : ''}" id="timing-body-${safeId}">
+        ${renderTimingBar(run.steps, run.total_duration_ms)}
+        ${renderTimingStepRows(run.steps, safeId)}
+      </div>
+    </div>
+  `;
+}
+
+function renderIngestTiming(runs) {
+  if (!runs || runs.length === 0) {
+    return `
+      <div class="timing-section">
+        <h3>Ingest Timing History</h3>
+        <div class="timing-empty">No ingest timing data yet. Run an ingest through the v2 page to populate.</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="timing-section">
+      <h3>Ingest Timing History (${runs.length} run${runs.length !== 1 ? 's' : ''})</h3>
+      ${renderTimingLegend()}
+      ${runs.map((run, i) => renderTimingRun(run, i)).join('')}
+    </div>
+  `;
+}
+
+function toggleTimingDetail(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('collapsed');
+  // Toggle chevron rotation on parent .timing-run
+  const run = el.closest('.timing-run');
+  if (run) run.classList.toggle('is-collapsed');
+}
+
+async function loadIngestTiming() {
+  const container = document.getElementById('timingContainer');
+  if (!container) return;
+
+  try {
+    const response = await fetch('/api/funnel/stats/ingest-timing');
+    const result = await response.json();
+
+    if (!result.success) {
+      container.innerHTML = '';
+      return;
+    }
+
+    container.innerHTML = renderIngestTiming(result.data.runs);
+  } catch (_) {
+    // Non-critical — silently skip if timing fetch fails
+    container.innerHTML = '';
+  }
+}
+
+// Make functions available globally
+window.toggleBreakdown = toggleBreakdown;
+window.toggleTimingDetail = toggleTimingDetail;
+
+// Load on page ready — funnel + timing in parallel
+document.addEventListener('DOMContentLoaded', () => {
+  loadFunnel();
+  loadIngestTiming();
+});

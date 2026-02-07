@@ -16,7 +16,7 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       min-height: 100vh;
       color: #fff;
-      padding: 24px;
+      padding: 24px 24px 120px;
     }
 
     .header {
@@ -548,6 +548,284 @@
       color: #fff;
     }
 
+    /* Ingest Timing Section */
+    .timing-section {
+      margin-top: 32px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .timing-section h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .timing-empty {
+      text-align: center;
+      padding: 24px;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+    }
+
+    .timing-run {
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .timing-run:last-child {
+      margin-bottom: 0;
+    }
+
+    .timing-run-header {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .timing-run-header:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .timing-run-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .timing-run-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+    }
+
+    .timing-run-doc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      font-family: monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 220px;
+    }
+
+    .timing-run-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .timing-run-total {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: monospace;
+      color: #fff;
+    }
+
+    .timing-run-chevron {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      transition: transform 0.2s;
+      margin-left: 4px;
+    }
+
+    .timing-run.is-collapsed .timing-run-chevron {
+      transform: rotate(-90deg);
+    }
+
+    .timing-run-steps-count {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Stacked timing bar */
+    .timing-stacked-bar {
+      display: flex;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 0 16px 0;
+    }
+
+    .timing-seg {
+      height: 100%;
+      min-width: 2px;
+      transition: flex 0.3s ease;
+    }
+
+    .timing-seg.seg-upload     { background: #4a90d9; }
+    .timing-seg.seg-parse      { background: #38ef7d; }
+    .timing-seg.seg-detect     { background: #a8edea; }
+    .timing-seg.seg-document   { background: #764ba2; }
+    .timing-seg.seg-vision     { background: #4facfe; }
+    .timing-seg.seg-indexing   { background: #f5a623; }
+    .timing-seg.seg-dip        { background: #fa709a; }
+
+    /* Collapsible run body (bar + steps) */
+    .timing-run-body {
+      display: block;
+    }
+
+    .timing-run-body.collapsed {
+      display: none;
+    }
+
+    /* Step detail rows */
+    .timing-run-detail {
+      padding: 0 16px 12px;
+    }
+
+    .timing-step-row {
+      display: flex;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .timing-step-row:last-child {
+      border-bottom: none;
+    }
+
+    .timing-step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .timing-step-name {
+      flex: 1;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* DIP parent row */
+    .timing-step-row.dip-parent {
+      border-bottom: none;
+      padding-bottom: 2px;
+    }
+
+    .timing-step-row.dip-parent .timing-step-name {
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* DIP sub-step rows */
+    .timing-dip-sub {
+      padding-left: 18px;
+    }
+
+    .timing-dip-sub .timing-step-dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .timing-dip-sub .timing-step-name {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .timing-dip-sub .timing-step-duration {
+      font-size: 11px;
+    }
+
+    .timing-dip-sub .timing-step-status {
+      font-size: 9px;
+    }
+
+    /* Step metadata */
+    .timing-step-meta {
+      padding: 4px 0 6px 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 2px 16px;
+    }
+
+    .timing-meta-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      padding: 1px 0;
+    }
+
+    .timing-meta-key {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .timing-meta-val {
+      color: rgba(255,255,255,0.6);
+      font-family: monospace;
+      text-align: right;
+    }
+
+    .timing-meta-section {
+      grid-column: 1 / -1;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 3px;
+      padding-top: 3px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .timing-step-duration {
+      font-family: monospace;
+      color: #fff;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+
+    .timing-step-status {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 8px;
+    }
+
+    .timing-step-status.complete { background: rgba(56, 239, 125, 0.2); color: #38ef7d; }
+    .timing-step-status.error    { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+    .timing-step-status.skipped  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+    .timing-step-status.running  { background: rgba(74, 144, 217, 0.2); color: #4a90d9; }
+    .timing-step-status.pending  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+
+    /* Timing legend */
+    .timing-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
+    .timing-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .timing-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
     /* Responsive */
     @media (max-width: 800px) {
       .branches-container {
@@ -556,6 +834,20 @@
 
       .funnel-container {
         max-width: 100%;
+      }
+
+      .timing-run-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+      }
+
+      .timing-run-doc {
+        max-width: 140px;
+      }
+
+      .timing-legend {
+        gap: 8px;
       }
     }
   </style>
@@ -578,11 +870,12 @@
       </div>
     </div>
     <div id="issuesContainer"></div>
+    <div id="timingContainer"></div>
   </div>
 
   <button class="refresh-btn" onclick="loadFunnel()">Refresh</button>
 
-  <script src="/js/funnel/funnel.js?v=3"></script>
+  <script src="/js/funnel/funnel.js?v=8"></script>
 
   <!-- Mobile Navigation Component -->
   <script src="/public/js/mobile-nav.js"></script>

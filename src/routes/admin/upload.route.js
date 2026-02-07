@@ -23,7 +23,7 @@ router.get('/documents',
       // Step 1: Query documents table for basic info
       const { data: documents, error } = await supabase
         .from('documents')
-        .select('doc_id, manufacturer_norm, model_norm, created_at, last_ingested_at')
+        .select('doc_id, manufacturer_norm, model_norm, created_at, last_ingested_at, ingest_stats')
         .order('last_ingested_at', { ascending: false });
 
       if (error) {
@@ -60,7 +60,9 @@ router.get('/documents',
                      manufacturer: doc.manufacturer_norm || 'Unknown',
                      model: doc.model_norm || 'Unknown',
                      filename: filename,
-                     size: fileSize
+                     size: fileSize,
+                     created_at: doc.created_at,
+                     ingest_stats: doc.ingest_stats || null
                    };
           } catch (storageErr) {
             logger.error('Failed to get storage info for document', { 
@@ -72,7 +74,9 @@ router.get('/documents',
                      manufacturer: doc.manufacturer_norm || 'Unknown',
                      model: doc.model_norm || 'Unknown',
                      filename: 'Error loading filename',
-                     size: 0
+                     size: 0,
+                     created_at: doc.created_at,
+                     ingest_stats: doc.ingest_stats || null
                    };
           }
         })
@@ -106,5 +110,57 @@ router.all('/documents', (req, res) => {
     }
   });
 });
+
+// PATCH /admin/upload/documents/:docId/ingest-stats - Save ingest stats for a document
+router.patch('/documents/:docId/ingest-stats',
+  async (req, res, next) => {
+    try {
+      const { docId } = req.params;
+      const { ingest_stats } = req.body;
+
+      if (!docId) {
+        return res.status(400).json({
+          success: false,
+          error: { code: 'MISSING_DOC_ID', message: 'docId is required' }
+        });
+      }
+
+      if (!ingest_stats || typeof ingest_stats !== 'object') {
+        return res.status(400).json({
+          success: false,
+          error: { code: 'INVALID_STATS', message: 'ingest_stats object is required' }
+        });
+      }
+
+      const supabase = await getSupabaseClient();
+
+      const { data, error } = await supabase
+        .from('documents')
+        .update({
+          ingest_stats,
+          updated_at: new Date().toISOString()
+        })
+        .eq('doc_id', docId)
+        .select('doc_id, ingest_stats')
+        .single();
+
+      if (error) {
+        logger.error('Failed to save ingest stats', { error: error.message, docId });
+        throw error;
+      }
+
+      logger.info('Ingest stats saved', { docId });
+
+      return res.json({
+        success: true,
+        data: { doc_id: data.doc_id, ingest_stats: data.ingest_stats }
+      });
+
+    } catch (error) {
+      logger.error('Save ingest stats error', { error: error.message });
+      return next(error);
+    }
+  }
+);
 
 export default router;

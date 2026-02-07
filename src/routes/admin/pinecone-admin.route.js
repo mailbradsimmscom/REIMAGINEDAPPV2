@@ -41,7 +41,7 @@ router.get('/models', async (req, res, next) => {
               query: 'test',
               topK: 10000,
               namespace: PINECONE_NAMESPACE,
-              filter: { model: system.model_norm },
+              filter: { primary_models: system.model_norm },
               includeMetadata: false,
               includeValues: false
             })
@@ -109,7 +109,7 @@ router.post('/chunks', async (req, res, next) => {
         query: 'test',
         topK: 10000,
         namespace: PINECONE_NAMESPACE,
-        filter: { model },
+        filter: { primary_models: model },
         includeMetadata: true,
         includeValues: false
       })

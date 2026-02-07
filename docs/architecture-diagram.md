@@ -289,7 +289,7 @@ Maintenance UI / Todo List
 ## Data Flow Summary (v5)
 
 ### 1. Document Upload
-- Admin navigates to document-ingest.html
+- Admin navigates to /ingest (document-ingest.html)
 - Selects system from dropdown (with v5 reference table lookups)
 - Uploads PDF → stored in Supabase Storage `/manuals/{doc_id}/`
 

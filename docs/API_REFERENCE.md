@@ -84,7 +84,7 @@
 |--------|------|-------------|
 | GET | `/` | Public chat interface |
 | GET | `/landing` | Landing page |
-| GET | `/upload` | Document upload page |
+| GET | `/ingest` | Document ingest page (v5 pipeline) |
 | GET | `/supplies` | Supplies management page |
 | GET | `/trips` | Trips tracking page |
 | GET | `/trips/detail` | Trip detail page |

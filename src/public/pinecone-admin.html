@@ -463,23 +463,27 @@
                     <div class="tree-metadata" id="metadata-${chunk.id}">
                         <div class="metadata-row">
                             <span class="metadata-label">Chunk ID:</span>
-                            <span class="metadata-value">${chunk.metadata.chunk_id || 'N/A'}</span>
+                            <span class="metadata-value">${chunk.metadata.chunk_id || chunk.id}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Manufacturer:</span>
-                            <span class="metadata-value">${chunk.metadata.manufacturer || 'N/A'}</span>
+                            <span class="metadata-label">Primary Models:</span>
+                            <span class="metadata-value">${chunk.metadata.primary_models ? (Array.isArray(chunk.metadata.primary_models) ? chunk.metadata.primary_models.join(', ') : chunk.metadata.primary_models) : 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Model:</span>
-                            <span class="metadata-value">${chunk.metadata.model || 'N/A'}</span>
+                            <span class="metadata-label">Referenced Systems:</span>
+                            <span class="metadata-value">${chunk.metadata.referenced_systems ? (Array.isArray(chunk.metadata.referenced_systems) ? chunk.metadata.referenced_systems.join(', ') : chunk.metadata.referenced_systems) : 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Char Count:</span>
-                            <span class="metadata-value">${chunk.metadata.char_count || 'N/A'}</span>
+                            <span class="metadata-label">Document ID:</span>
+                            <span class="metadata-value">${chunk.metadata.doc_id || chunk.metadata.document_id || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Token Count:</span>
-                            <span class="metadata-value">${chunk.metadata.token_count || 'N/A'}</span>
+                            <span class="metadata-label">Filename:</span>
+                            <span class="metadata-value">${chunk.metadata.filename || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">File Type:</span>
+                            <span class="metadata-value">${chunk.metadata.file_type || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
                             <span class="metadata-label">Chunk Index:</span>
@@ -490,24 +494,16 @@
                             <span class="metadata-value">${chunk.metadata.chunk_strategy_version || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Content Snippet:</span>
-                            <span class="metadata-value">${chunk.metadata.content_snippet || 'N/A'}</span>
+                            <span class="metadata-label">Char Count:</span>
+                            <span class="metadata-value">${chunk.metadata.char_count || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Document ID:</span>
-                            <span class="metadata-value">${chunk.metadata.document_id || chunk.metadata.doc_id || 'N/A'}</span>
+                            <span class="metadata-label">Token Count:</span>
+                            <span class="metadata-value">${chunk.metadata.token_count || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Linked Asset UID:</span>
-                            <span class="metadata-value">${chunk.metadata.linked_asset_uid || 'N/A'}</span>
-                        </div>
-                        <div class="metadata-row">
-                            <span class="metadata-label">Previous Chunk ID:</span>
-                            <span class="metadata-value">${chunk.metadata.previous_chunk_id || 'N/A'}</span>
-                        </div>
-                        <div class="metadata-row">
-                            <span class="metadata-label">Revision Date:</span>
-                            <span class="metadata-value">${chunk.metadata.revision_date || 'N/A'}</span>
+                            <span class="metadata-label">Section Title:</span>
+                            <span class="metadata-value">${chunk.metadata.section_title || 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
                             <span class="metadata-label">Section Hierarchy:</span>
@@ -518,8 +514,40 @@
                             <span class="metadata-value">${chunk.metadata.section_level !== undefined ? chunk.metadata.section_level : 'N/A'}</span>
                         </div>
                         <div class="metadata-row">
-                            <span class="metadata-label">Section Title:</span>
-                            <span class="metadata-value">${chunk.metadata.section_title || 'N/A'}</span>
+                            <span class="metadata-label">Content Snippet:</span>
+                            <span class="metadata-value">${chunk.metadata.content_snippet || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Is Universal:</span>
+                            <span class="metadata-value">${chunk.metadata.is_universal !== undefined ? chunk.metadata.is_universal : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Has Tables:</span>
+                            <span class="metadata-value">${chunk.metadata.has_tables !== undefined ? chunk.metadata.has_tables : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Has Lists:</span>
+                            <span class="metadata-value">${chunk.metadata.has_lists !== undefined ? chunk.metadata.has_lists : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Has Code:</span>
+                            <span class="metadata-value">${chunk.metadata.has_code !== undefined ? chunk.metadata.has_code : 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Previous Chunk:</span>
+                            <span class="metadata-value">${chunk.metadata.previous_chunk_id || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Next Chunk:</span>
+                            <span class="metadata-value">${chunk.metadata.next_chunk_id || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Created At:</span>
+                            <span class="metadata-value">${chunk.metadata.created_at || 'N/A'}</span>
+                        </div>
+                        <div class="metadata-row">
+                            <span class="metadata-label">Upload Date:</span>
+                            <span class="metadata-value">${chunk.metadata.upload_date || 'N/A'}</span>
                         </div>
                         ${chunk.metadata.text ? `
                             <div class="metadata-row" style="flex-direction: column; align-items: flex-start;">
