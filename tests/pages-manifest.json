@@ -285,11 +285,6 @@
       "type": "static"
     },
     {
-      "file": "src/public/upload.html",
-      "url": "/public/upload.html",
-      "type": "static"
-    },
-    {
       "file": "src/public/victron-mobile.html",
       "url": "/public/victron-mobile.html",
       "type": "static"

@@ -1,10 +1,23 @@
 import { test, expect } from '@playwright/test';
 
+// Inject admin token into localStorage before page loads
+async function injectAdminToken(page) {
+  const token = process.env.ADMIN_TOKEN;
+  if (token) {
+    await page.addInitScript((t) => {
+      localStorage.setItem('adminToken', t);
+    }, token);
+  }
+}
+
 test.describe('Admin Dashboard', () => {
   test.beforeEach(async ({ page }) => {
+    // Inject admin token before navigation
+    await injectAdminToken(page);
+
     // Navigate to admin dashboard
     await page.goto('/admin');
-    
+
     // Wait for page to load
     await page.waitForLoadState('networkidle');
   });
@@ -42,6 +55,7 @@ test.describe('Admin Dashboard', () => {
 
 test.describe('Document Upload', () => {
   test.beforeEach(async ({ page }) => {
+    await injectAdminToken(page);
     await page.goto('/admin');
     await page.waitForLoadState('networkidle');
 
@@ -98,6 +112,7 @@ test.describe('Document Upload', () => {
 
 test.describe('Navigation', () => {
   test('all navigation links work', async ({ page }) => {
+    await injectAdminToken(page);
     await page.goto('/admin');
     await page.waitForLoadState('networkidle');
     
