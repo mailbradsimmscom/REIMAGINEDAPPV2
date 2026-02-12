@@ -1,5 +1,6 @@
 import express from 'express';
 import { logger } from '../../utils/logger.js';
+import { sidecarFetch } from '../../utils/sidecar-fetch.js';
 import { adminGate } from '../../middleware/admin.js';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 
@@ -34,7 +35,7 @@ router.get('/models', async (req, res, next) => {
     const modelsWithCounts = await Promise.all(
       systems.map(async (system) => {
         try {
-          const response = await fetch(`${PYTHON_SIDECAR_URL}/v1/pinecone/search`, {
+          const response = await sidecarFetch('/v1/pinecone/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -102,7 +103,7 @@ router.post('/chunks', async (req, res, next) => {
     const { getEnv } = await import('../../config/env.js');
     const { PYTHON_SIDECAR_URL = 'http://localhost:8000', PINECONE_NAMESPACE = 'REIMAGINEDDOCS' } = getEnv();
 
-    const response = await fetch(`${PYTHON_SIDECAR_URL}/v1/pinecone/search`, {
+    const response = await sidecarFetch('/v1/pinecone/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -154,7 +155,7 @@ router.delete('/chunks', async (req, res, next) => {
     const { getEnv } = await import('../../config/env.js');
     const { PYTHON_SIDECAR_URL = 'http://localhost:8000', PINECONE_NAMESPACE = 'REIMAGINEDDOCS' } = getEnv();
 
-    const response = await fetch(`${PYTHON_SIDECAR_URL}/v1/pinecone/delete`, {
+    const response = await sidecarFetch('/v1/pinecone/delete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -464,6 +464,108 @@ class DocumentRepository {
       throw error;
     }
   }
+
+  // v5 Ingest Runner Job Methods
+  async getActiveIngestJobForDoc(docId) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('doc_id', docId)
+        .eq('job_type', 'v5_ingest')
+        .in('status_v2', ['queued', 'vision_running', 'vision_completed', 'vision_warning', 'indexing_running', 'indexing_completed', 'dip_running'])
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to get active ingest job', { error: error.message, docId });
+      throw error;
+    }
+  }
+
+  async getLatestIngestJobForDoc(docId) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('doc_id', docId)
+        .eq('job_type', 'v5_ingest')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to get latest ingest job', { error: error.message, docId });
+      throw error;
+    }
+  }
+
+  async updateJobHeartbeat(jobId) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .update({
+          last_heartbeat: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('job_id', jobId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update job heartbeat', { error: error.message, jobId });
+      throw error;
+    }
+  }
+
+  async updateJobIngestState(jobId, { statusV2, counters, error: jobError }) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const updateData = {
+        updated_at: new Date().toISOString(),
+        last_heartbeat: new Date().toISOString()
+      };
+
+      if (statusV2) updateData.status_v2 = statusV2;
+      if (counters) updateData.counters = counters;
+      if (jobError) updateData.error = jobError;
+
+      // Set timestamps based on status
+      if (statusV2 === 'queued') {
+        updateData.status = 'queued';
+      } else if (['vision_running', 'indexing_running', 'dip_running'].includes(statusV2)) {
+        updateData.status = 'running';
+        if (!updateData.started_at) updateData.started_at = new Date().toISOString();
+      } else if (['completed', 'failed', 'indexing_failed'].includes(statusV2)) {
+        updateData.status = statusV2 === 'completed' ? 'completed' : 'failed';
+        updateData.completed_at = new Date().toISOString();
+      }
+
+      const { data, error } = await supabase
+        .from('jobs')
+        .update(updateData)
+        .eq('job_id', jobId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      this.requestLogger.info('Job ingest state updated', { jobId, statusV2 });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to update job ingest state', { error: error.message, jobId });
+      throw error;
+    }
+  }
 }
 
 export default new DocumentRepository();

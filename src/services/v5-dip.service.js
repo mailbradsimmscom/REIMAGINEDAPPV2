@@ -1,5 +1,5 @@
-import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 import documentRepository from '../repositories/document.repository.js';
 
 /**
@@ -13,12 +13,6 @@ import documentRepository from '../repositories/document.repository.js';
 
 const log = logger.createRequestLogger();
 
-/**
- * Get the Python sidecar URL
- */
-function getSidecarUrl() {
-  return getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
-}
 
 /**
  * Run v5 DIP extraction for a document
@@ -39,7 +33,6 @@ export async function runDipExtraction({
   forceRerun = false
 }) {
   const startTime = Date.now();
-  const sidecarUrl = getSidecarUrl();
 
   log.info('Starting v5 DIP extraction', {
     docId,
@@ -108,24 +101,18 @@ export async function runDipExtraction({
     };
 
     // DIP extraction can take 5-30+ minutes for large documents
-    // Use AbortController with 30-minute timeout to prevent indefinite hangs
     const DIP_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), DIP_TIMEOUT_MS);
 
     let response;
     try {
-      response = await fetch(`${sidecarUrl}/v1/dip/run`, {
+      response = await sidecarFetch('/v1/dip/run', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
-        signal: controller.signal
+        timeout: DIP_TIMEOUT_MS
       });
     } catch (err) {
-      clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
+      if (err.code === 'SIDECAR_TIMEOUT') {
         log.error('DIP extraction timed out', { docId, timeoutMs: DIP_TIMEOUT_MS });
         return {
           success: false,
@@ -137,7 +124,6 @@ export async function runDipExtraction({
       }
       throw err;
     }
-    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();

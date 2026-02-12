@@ -1,5 +1,5 @@
-import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 import docAssetsRepository from '../repositories/doc-assets.repository.js';
 import documentRepository from '../repositories/document.repository.js';
 
@@ -13,13 +13,6 @@ import documentRepository from '../repositories/document.repository.js';
  */
 
 const log = logger.createRequestLogger();
-
-/**
- * Get the Python sidecar URL
- */
-function getSidecarUrl() {
-  return getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
-}
 
 /**
  * Run the full vision pipeline for a document
@@ -38,11 +31,11 @@ export async function runVisionPipeline({
   storagePath,
   selectedModels,
   referencedSelections = [],
+  aliasMap = {},
   pages = '1-10',
   context = ''
 }) {
   const startTime = Date.now();
-  const sidecarUrl = getSidecarUrl();
   const warnings = [];
 
   log.info('Starting vision pipeline', {
@@ -104,16 +97,18 @@ export async function runVisionPipeline({
       models_covered: modelsCovered,
       selected_models: selectedModels,
       referenced_selections: referencedSelections,
+      alias_map: aliasMap,
       pages,
       context
     };
 
     log.info('Calling vision analyze-pages', { docId, pages });
 
-    const response = await fetch(`${sidecarUrl}/v1/vision/analyze-pages`, {
+    const response = await sidecarFetch('/v1/vision/analyze-pages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(analyzeRequest)
+      body: JSON.stringify(analyzeRequest),
+      timeout: 10 * 60 * 1000 // 10 min
     });
 
     if (!response.ok) {
@@ -187,19 +182,12 @@ export async function runVisionPipeline({
       analysisPaths: analyzeResponse.analysis_paths?.length || 0
     });
 
-    // 10-minute timeout for crop-figures (search_blob generation can take 5+ minutes)
-    const CROP_TIMEOUT_MS = 10 * 60 * 1000;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), CROP_TIMEOUT_MS);
-
-    const response = await fetch(`${sidecarUrl}/v1/vision/crop-figures`, {
+    const response = await sidecarFetch('/v1/vision/crop-figures', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(cropRequest),
-      signal: controller.signal
+      timeout: 10 * 60 * 1000 // 10 min — search_blob generation can take 5+ min
     });
-
-    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();

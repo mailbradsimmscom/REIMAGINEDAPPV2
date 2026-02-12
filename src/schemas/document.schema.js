@@ -322,10 +322,11 @@ export const VisionCropRequestSchema = z.object({
 });
 
 // Vision pipeline request (combined Stage 6+7)
+// selected_models optional — if absent, server derives from DB (Phase D)
 export const VisionPipelineRequestSchema = z.object({
   doc_id: z.string(),
   storage_path: z.string(),
-  selected_models: z.array(z.string()).min(1),
+  selected_models: z.array(z.string()).optional(),
   referenced_selections: z.array(z.string()).default([]),
   pages: z.string().default('1-10'),
   context: z.string().default('')

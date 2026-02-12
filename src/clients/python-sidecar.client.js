@@ -3,6 +3,7 @@
 
 import { logger as defaultLogger } from '../utils/logger.js';
 import * as envConfig from '../config/env.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 
 // ============================================
 // FACTORY PATTERN - For Dependency Injection
@@ -16,14 +17,11 @@ import * as envConfig from '../config/env.js';
  * @returns {Object} Client object with processChatWorkflow and checkChatHealth functions
  *
  * @example
- * // In tests:
- * const mockFetch = async () => new Response(JSON.stringify({ response: 'test' }));
- * const client = createPythonSidecarClient({ fetchFn: mockFetch });
+ * const client = createPythonSidecarClient();
  */
 export function createPythonSidecarClient({
   envConfigDep = envConfig,
-  logger = defaultLogger,
-  fetchFn = fetch  // Allow injecting fetch for testing
+  logger = defaultLogger
 } = {}) {
 
   const requestLogger = logger.createRequestLogger();
@@ -50,9 +48,8 @@ export function createPythonSidecarClient({
   }) {
     const env = envConfigDep.getEnv();
 
-  const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
-  const baseEndpoint = `${sidecarUrl}/v1/chat/process`;
-  const endpoint = stream ? `${baseEndpoint}?stream=true` : baseEndpoint;
+  const basePath = '/v1/chat/process';
+  const endpoint = stream ? `${basePath}?stream=true` : basePath;
   const timeoutMs = parseInt(env.PYTHON_CHAT_TIMEOUT_MS || '30000'); // 30s default
   const retryAttempts = parseInt(env.PYTHON_CHAT_RETRY_ATTEMPTS || '2');
 
@@ -79,33 +76,24 @@ export function createPythonSidecarClient({
    * @yields {Object} - Parsed SSE events {event, data}
    */
   async function* streamPythonSidecarCall(endpoint, requestBody, timeoutMs) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
     try {
-      const response = await fetchFn(endpoint, {
+      const response = await sidecarFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
-        signal: controller.signal
+        timeout: timeoutMs
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Python sidecar API error: ${response.status} - ${errorText}`);
       }
 
-      // Parse SSE stream
-      const reader = response.body.getReader();
+      // Parse SSE stream from Node.js Readable (IncomingMessage)
       const decoder = new TextDecoder();
       let buffer = '';
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
+      for await (const value of response.body) {
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop(); // Keep incomplete line in buffer
@@ -126,7 +114,6 @@ export function createPythonSidecarClient({
         }
       }
     } catch (error) {
-      clearTimeout(timeoutId);
       requestLogger.error('Python sidecar stream failed', { endpoint, error: error.message });
       throw error;
     }
@@ -145,19 +132,12 @@ export function createPythonSidecarClient({
 
   for (let attempt = 1; attempt <= retryAttempts; attempt++) {
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-      const response = await fetchFn(endpoint, {
+      const response = await sidecarFetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
-        signal: controller.signal
+        timeout: timeoutMs
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -179,10 +159,10 @@ export function createPythonSidecarClient({
     } catch (error) {
       lastError = error;
 
-      // Don't retry on timeout errors or connection refused (service down)
-      if (error.name === 'AbortError' ||
-          error.message.includes('ECONNREFUSED') ||
-          error.message.includes('fetch failed')) {
+      // Don't retry on timeout or connection refused (service down)
+      if (error.code === 'SIDECAR_TIMEOUT' ||
+          error.code === 'ECONNREFUSED' ||
+          error.message.includes('connection refused')) {
         requestLogger.error('Python sidecar unreachable or timed out', {
           attempt,
           endpoint,
@@ -218,14 +198,9 @@ export function createPythonSidecarClient({
    * @returns {Promise<Object>} - Health status
    */
   async function checkChatHealth() {
-    const env = envConfigDep.getEnv();
-    const sidecarUrl = env.PYTHON_SIDECAR_URL || 'http://localhost:8000';
-    const endpoint = `${sidecarUrl}/v1/chat/health`;
-
     try {
-      const response = await fetchFn(endpoint, {
-        method: 'GET',
-        signal: AbortSignal.timeout(5000) // 5s timeout
+      const response = await sidecarFetch('/v1/chat/health', {
+        timeout: 5000 // 5s timeout
       });
 
       if (!response.ok) {

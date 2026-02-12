@@ -86,7 +86,7 @@ export async function lookupReferenceIds({ manufacturer, product_type, system_ca
  * Find existing system or create new one
  * Does NOT create instance or document_systems link
  */
-export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, docId }) {
+export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, docId, description, modelSynonyms, userDisplayName }) {
   const supabase = await getSupabaseClient();
   // L1 normalize model key before lookup and write
   const normalizedModel = normalizeModelKey(modelNorm);
@@ -101,6 +101,7 @@ export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, 
       .single();
 
     if (existingSystem && !lookupError) {
+      // Find path: do NOT update existing systems — avoids overwriting user-curated data
       log.info('Reusing existing system', { assetUid: existingSystem.asset_uid, model: normalizedModel });
       return {
         success: true,
@@ -111,7 +112,7 @@ export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, 
       };
     }
 
-    // Create new system
+    // Create new system — use detection description if provided, else fall back to modelNorm
     const systemRecord = {
       manufacturer_id: refIds.manufacturerId,
       manufacturer_norm: manufacturerNorm,
@@ -121,10 +122,18 @@ export async function findOrCreateSystem({ manufacturerNorm, modelNorm, refIds, 
       subsystem_category_id: refIds.subsystemCategoryId,
       system_norm: refIds.systemNorm,
       subsystem_norm: refIds.subsystemNorm,
-      description: modelNorm,
+      description: description || modelNorm,
       source: 'document',
       detected_from_doc_id: docId
     };
+
+    // v2 detection fields
+    if (modelSynonyms && modelSynonyms.length > 0) {
+      systemRecord.model_synonyms = modelSynonyms;
+    }
+    if (userDisplayName) {
+      systemRecord.user_display_name = userDisplayName;
+    }
 
     const systemResult = await createSystem(systemRecord);
 
@@ -265,13 +274,17 @@ export async function saveReferencedSystems({
   const saved = [];
 
   // Normalize referencedSelections to an array of model strings
+  // Handles both old format (strings) and new format (strings = original display_name)
   const userSelections = new Set(
-    (referencedSelections || []).map(r => typeof r === 'string' ? r : r.model).filter(Boolean)
+    (referencedSelections || []).map(r => typeof r === 'string' ? r : (r.model || r.display_name)).filter(Boolean)
   );
 
-  // Get ALL detected refs from referencedProducts
+  // Detect v2 shape: referenced_products have display_name instead of model
+  const isV2Shape = (referencedProducts || []).some(rp => typeof rp === 'object' && rp.display_name);
+
+  // Get ALL detected refs — handle both v1 ({model}) and v2 ({display_name}) shapes
   const allDetectedRefs = (referencedProducts || [])
-    .map(rp => typeof rp === 'string' ? rp : rp.model)
+    .map(rp => typeof rp === 'string' ? rp : (rp.display_name || rp.model))
     .filter(Boolean);
 
   // If no detected refs, nothing to save
@@ -282,20 +295,49 @@ export async function saveReferencedSystems({
   // Save ALL detected refs, marking user_selected appropriately
   for (const refModel of allDetectedRefs) {
     const refData = (referencedProducts || []).find(rp =>
-      (typeof rp === 'string' ? rp : rp.model) === refModel
+      (typeof rp === 'string' ? rp : (rp.display_name || rp.model)) === refModel
     );
 
     const isUserSelected = userSelections.has(refModel);
+    const canonicalModel = normalizeModelKey(refModel);
+
+    // FK safety: ensure ref_canonical_models row exists before upsert
+    try {
+      await supabase
+        .from('ref_canonical_models')
+        .upsert([{
+          canonical_model: canonicalModel,
+          canonical_norm: canonicalModel
+        }], { onConflict: 'canonical_model' });
+    } catch (fkError) {
+      log.warn('Failed to ensure ref_canonical_models row', { canonicalModel, error: fkError.message });
+    }
 
     const record = {
       doc_id: docId,
-      canonical_model: normalizeModelKey(refModel),
+      canonical_model: canonicalModel,
       source: 'detected',
-      raw_model: typeof refData === 'object' ? refData.model : refModel,
+      raw_model: typeof refData === 'object' ? (refData.display_name || refData.model) : refModel,
       raw_manufacturer: typeof refData === 'object' ? refData.manufacturer : null,
       evidence: `Referenced in ${filename}`,
       user_selected: isUserSelected
     };
+
+    // v2 fields — only set if refData has them (avoids overwriting with null on v1 payloads)
+    if (typeof refData === 'object') {
+      if (refData.description) {
+        record.description = refData.description;
+      }
+      if (refData.aliases && refData.aliases.length > 0) {
+        record.aliases = refData.aliases;
+      }
+      if (refData.type) {
+        record.product_type = refData.type;
+      }
+      if (refData.user_display_name) {
+        record.user_display_name = refData.user_display_name;
+      }
+    }
 
     try {
       const { error: refError } = await supabase
@@ -364,14 +406,18 @@ export async function upsertDocumentRecord({
   primaryAssetUid,
   modelsDetected,
   referencedModels,
-  storagePath
+  storagePath,
+  familyAliases,
+  brandFamily
 }) {
   const supabase = await getSupabaseClient();
 
   try {
-    // models_covered = primary models only (NOT referenced systems), L1 normalized + deduped
+    // models_covered = primary model display names + family aliases (merged, deduped, filtered >= 3 chars)
+    // Stored as ORIGINAL forms for Vision substring matching
+    const rawModels = [...(modelsDetected || []), ...(familyAliases || [])];
     const modelsCovered = [...new Set(
-      (modelsDetected || []).filter(Boolean).map(m => normalizeModelKey(m))
+      rawModels.filter(m => m && m.length >= 3)
     )];
 
     const normalizedPrimary = normalizeModelKey(primaryModelNorm || modelsDetected?.[0] || '');
@@ -388,6 +434,14 @@ export async function upsertDocumentRecord({
     // Only include storage_path if provided, to avoid overwriting existing value with null
     if (storagePath) {
       docRecord.storage_path = storagePath;
+    }
+
+    // v2 detection fields (only set if provided, avoids overwriting with null on re-upsert)
+    if (familyAliases) {
+      docRecord.family_aliases = familyAliases.filter(a => a && a.length >= 3);
+    }
+    if (brandFamily) {
+      docRecord.brand_family = brandFamily;
     }
 
     const { data: docData, error: docError } = await supabase

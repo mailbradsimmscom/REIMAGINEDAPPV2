@@ -1,5 +1,5 @@
 import { logger } from '../utils/logger.js';
-import { joinUrl } from '../utils/url.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 import { ENV } from '../config/env.js';
 
 class PineconeRepository {
@@ -38,8 +38,7 @@ class PineconeRepository {
   // Get index statistics
   async getIndexStats() {
     try {
-      const sidecarUrl = await this.getSidecarUrl();
-      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/stats'));
+      const response = await sidecarFetch('/v1/pinecone/stats');
       
       if (!response.ok) {
         throw new Error(`Failed to get Pinecone stats: ${response.status}`);
@@ -62,9 +61,8 @@ class PineconeRepository {
   // Search vectors with metadata filtering
   async searchVectors(query, options = {}) {
     try {
-      const sidecarUrl = await this.getSidecarUrl();
       const namespace = await this.getNamespace();
-      
+
       const {
         topK = 10,
         filter = {},
@@ -81,11 +79,9 @@ class PineconeRepository {
         includeValues
       };
 
-      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/search'), {
+      const response = await sidecarFetch('/v1/pinecone/search', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(searchPayload)
       });
 
@@ -115,15 +111,12 @@ class PineconeRepository {
   // Get vector by ID
   async getVectorById(vectorId, namespace = null) {
     try {
-      const sidecarUrl = await this.getSidecarUrl();
       const defaultNamespace = await this.getNamespace();
       const targetNamespace = namespace || defaultNamespace;
-      
-      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/fetch'), {
+
+      const response = await sidecarFetch('/v1/pinecone/fetch', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ids: [vectorId],
           namespace: targetNamespace
@@ -152,15 +145,12 @@ class PineconeRepository {
   // Delete vectors by ID
   async deleteVectors(vectorIds, namespace = null) {
     try {
-      const sidecarUrl = await this.getSidecarUrl();
       const defaultNamespace = await this.getNamespace();
       const targetNamespace = namespace || defaultNamespace;
-      
-      const response = await fetch(joinUrl(sidecarUrl, '/v1/pinecone/delete'), {
+
+      const response = await sidecarFetch('/v1/pinecone/delete', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ids: vectorIds,
           namespace: targetNamespace

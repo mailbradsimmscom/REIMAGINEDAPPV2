@@ -1,12 +1,14 @@
 import { createHash } from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
+import FormData from 'form-data';
 import { getSupabaseClient, getSupabaseStorageClient } from '../repositories/supabaseClient.js';
 import documentRepository from '../repositories/document.repository.js';
 import jobsRepository from '../repositories/jobs.repository.js';
 import { lookupSystemByManufacturerAndModel } from '../repositories/systems.repository.js';
 import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 import { isSupabaseConfigured, isSidecarConfigured } from '../services/guards/index.js';
 import { systemMetadataSchema } from '../schemas/uploadDocument.schema.js';
 import { ingestDipOutputsToDb } from './dip.ingest.service.js';
@@ -835,21 +837,21 @@ class DocumentService {
       // Step 1: Parse the PDF to get markdown
       this.requestLogger.info('Parsing PDF for model detection', { docId, fileName });
 
-      const formData = new FormData();
-      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-      formData.append('file', blob, fileName);
-      formData.append('extract_tables', 'true');
-      formData.append('ocr_enabled', 'true');
+      const form = new FormData();
+      form.append('file', fileBuffer, { filename: fileName, contentType: 'application/pdf' });
+      form.append('extract_tables', 'true');
+      form.append('ocr_enabled', 'true');
 
       // Call LlamaParse to get markdown (also stores raw JSON to Storage)
       // Pass doc_id as query param (Form fields don't work reliably with file uploads in FastAPI)
-      const llamaparseUrl = docId
-        ? `${sidecarUrl}/v1/llamaparse?doc_id=${encodeURIComponent(docId)}`
-        : `${sidecarUrl}/v1/llamaparse`;
-      const parseResponse = await fetch(llamaparseUrl, {
+      const llamaparsePath = docId
+        ? `/v1/llamaparse?doc_id=${encodeURIComponent(docId)}`
+        : `/v1/llamaparse`;
+      const parseResponse = await sidecarFetch(llamaparsePath, {
         method: 'POST',
-        body: formData,
-        signal: AbortSignal.timeout(300000) // 5 minute timeout for parsing
+        headers: form.getHeaders(),
+        body: form.getBuffer(),
+        timeout: 15 * 60 * 1000 // 15 min — 30MB/211-page PDF took ~11 min on LlamaParse cloud
       });
 
       if (!parseResponse.ok) {
@@ -870,7 +872,7 @@ class DocumentService {
       });
 
       // Step 2: Call detect-models with the parsed markdown
-      const detectResponse = await fetch(`${sidecarUrl}/v1/detect-models`, {
+      const detectResponse = await sidecarFetch('/v1/detect-models', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -878,7 +880,7 @@ class DocumentService {
           doc_id: docId,
           filename: fileName
         }),
-        signal: AbortSignal.timeout(120000) // 2 minute timeout
+        timeout: 15 * 60 * 1000 // 15 min — large docs (200+ pages) use map-reduce LLM calls
       });
 
       if (!detectResponse.ok) {
@@ -919,11 +921,10 @@ class DocumentService {
       // Check sidecar availability before calling
       this.checkSidecarAvailability();
 
-      const formData = new FormData();
+      const form = new FormData();
 
       // Add file
-      const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-      formData.append('file', blob, fileName);
+      form.append('file', fileBuffer, { filename: fileName, contentType: 'application/pdf' });
 
       // Add metadata
       const metadata = {
@@ -942,47 +943,34 @@ class DocumentService {
         document_asset_uid: document.asset_uid
       });
 
-      formData.append('doc_metadata', JSON.stringify(metadata));
+      form.append('doc_metadata', JSON.stringify(metadata));
 
       // Add processing options
-      formData.append('extract_tables', 'true');
-      formData.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
+      form.append('extract_tables', 'true');
+      form.append('ocr_enabled', job.params.ocr_enabled ? 'true' : 'false');
 
       // Step 4: Chunking
       await documentRepository.updateJobStatusV2(job.job_id, 'chunking');
 
-      // Call Python sidecar with 20-minute timeout
-      const { getEnv } = await import('../config/env.js');
-      const sidecarUrl = getEnv().PYTHON_SIDECAR_URL;
-
-      // Set 20-minute timeout for document processing
-      const abortController = new AbortController();
-      const timeoutId = setTimeout(() => abortController.abort(), 1200000); // 20 minutes
-
       let response;
       try {
-        response = await fetch(`${sidecarUrl}/v1/process-document`, {
+        response = await sidecarFetch('/v1/process-document', {
           method: 'POST',
-          body: formData,
-          signal: abortController.signal
+          headers: form.getHeaders(),
+          body: form.getBuffer(),
+          timeout: 20 * 60 * 1000 // 20 min
         });
-        clearTimeout(timeoutId);
       } catch (fetchError) {
-        clearTimeout(timeoutId);
-
         // Log detailed error information
         this.requestLogger.error('Fetch to Python sidecar failed', {
           jobId: job.job_id,
-          url: `${sidecarUrl}/v1/process-document`,
-          errorName: fetchError.name,
+          path: '/v1/process-document',
           errorMessage: fetchError.message,
-          errorCause: fetchError.cause?.message || fetchError.cause,
           errorCode: fetchError.code,
-          isTimeout: fetchError.name === 'AbortError'
+          isTimeout: fetchError.code === 'SIDECAR_TIMEOUT'
         });
 
-        // Provide helpful error message
-        if (fetchError.name === 'AbortError') {
+        if (fetchError.code === 'SIDECAR_TIMEOUT') {
           throw new Error(`Python sidecar timeout: Processing took longer than 20 minutes`);
         } else {
           throw new Error(`Python sidecar connection failed: ${fetchError.message}`);

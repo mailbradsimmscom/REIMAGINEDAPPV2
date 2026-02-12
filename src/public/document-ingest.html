@@ -1391,6 +1391,96 @@
         const modelsSection = document.getElementById('modelsSection');
         const confirmBtn = document.getElementById('confirmBtn');
 
+        // Check for active background ingest to resume
+        (async function checkForResumeIngest() {
+            const savedState = loadIngestState();
+            if (savedState && savedState.doc_id && savedState.job_id) {
+                console.log('Found saved ingest state, checking status...', savedState);
+
+                // Poll to see if job is still running
+                const status = await pollIngestStatus(savedState.doc_id);
+                if (status && status.has_job) {
+                    const isRunning = ['queued', 'vision_running', 'vision_completed', 'vision_warning',
+                        'indexing_running', 'indexing_completed', 'dip_running'].includes(status.status_v2);
+
+                    if (isRunning && !status.is_stale) {
+                        // Job is still running - show resume banner
+                        showResumeBanner(savedState.doc_id, savedState.job_id, status);
+                    } else if (status.status_v2 === 'completed' || status.status_v2 === 'failed' || status.status_v2 === 'indexing_failed') {
+                        // Job finished while we were away - clear state
+                        clearIngestState();
+                        console.log('Previous job completed/failed, cleared state');
+                    }
+                } else {
+                    // No job found, clear stale state
+                    clearIngestState();
+                }
+            }
+        })();
+
+        function showResumeBanner(docId, jobId, status) {
+            // Create resume banner if it doesn't exist
+            let banner = document.getElementById('resumeBanner');
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'resumeBanner';
+                banner.style.cssText = `
+                    background: #007AFF; color: white; padding: 12px 16px;
+                    border-radius: 8px; margin: 16px; display: flex;
+                    justify-content: space-between; align-items: center;
+                `;
+                banner.innerHTML = `
+                    <span>A document ingest is in progress (${status.status_v2})</span>
+                    <div>
+                        <button id="resumeBtn" style="background: white; color: #007AFF; border: none;
+                            padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 8px;">
+                            Resume
+                        </button>
+                        <button id="dismissResumeBtn" style="background: transparent; color: white; border: 1px solid white;
+                            padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                            Dismiss
+                        </button>
+                    </div>
+                `;
+                document.body.insertBefore(banner, document.body.firstChild);
+
+                document.getElementById('resumeBtn').addEventListener('click', () => {
+                    banner.remove();
+                    resumeBackgroundIngest(docId, jobId);
+                });
+
+                document.getElementById('dismissResumeBtn').addEventListener('click', () => {
+                    banner.remove();
+                    clearIngestState();
+                });
+            }
+        }
+
+        function resumeBackgroundIngest(docId, jobId) {
+            console.log('Resuming background ingest', { docId, jobId });
+
+            // Hide upload zone, show processing UI
+            uploadZone.style.display = 'none';
+            modelsSection.style.display = 'none';
+
+            // Show processing card
+            document.getElementById('processingCard').style.display = 'block';
+
+            // Initialize timing bar segments for Phase 2
+            addBarSegments(['document', 'vision', 'indexing', 'dip']);
+            addMicroStepRow('document', 'Document');
+            addMicroStepRow('vision', 'Vision');
+            addMicroStepRow('indexing', 'Indexing');
+            addMicroStepRow('dip', 'DIP');
+
+            // Mark document as complete (already done)
+            updateStep('document', 'complete', 'Document created (resumed)');
+            updateMicroStep('document', 'complete', 'Created (resumed)');
+
+            // Start polling
+            startBackgroundPolling(docId, jobId);
+        }
+
         // Upload handlers
         uploadZone.addEventListener('click', () => fileInput.click());
         uploadZone.addEventListener('dragover', (e) => {
@@ -1526,7 +1616,8 @@
 
             const response = await fetch(url, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                signal: AbortSignal.timeout(900000) // 15 min — 30MB/211-page PDF took ~11 min on LlamaParse cloud
             });
 
             if (!response.ok) {
@@ -1545,7 +1636,8 @@
                     markdown: markdown,
                     doc_id: 'temp-' + Date.now(),
                     filename: filename
-                })
+                }),
+                signal: AbortSignal.timeout(900000) // 15 min — large docs (200+ pages) use map-reduce LLM calls
             });
 
             if (!response.ok) {
@@ -1670,11 +1762,24 @@
             // Validate categories after preselection (updates visual state)
             setTimeout(() => validateCategories(), 50);
 
-            // Primary models
+            // Primary models — v2: primary_family.members[] | v1 fallback: primary_models[]
             const primaryContainer = document.getElementById('primaryModels');
             primaryContainer.innerHTML = '';
 
-            if (detection.primary_models && detection.primary_models.length > 0) {
+            const members = detection.primary_family?.members || [];
+            if (members.length > 0) {
+                // v2: Show family header + member items with descriptions
+                const familyHeader = document.createElement('div');
+                familyHeader.style.cssText = 'margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);';
+                familyHeader.innerHTML = `<strong>${detection.primary_family.family_name}</strong>` +
+                    (detection.primary_family.description ? ` &mdash; ${detection.primary_family.description}` : '');
+                primaryContainer.appendChild(familyHeader);
+
+                members.forEach((member, i) => {
+                    primaryContainer.appendChild(createModelItem(member.display_name, 'primary', i, member.description));
+                });
+            } else if (detection.primary_models && detection.primary_models.length > 0) {
+                // v1 fallback
                 detection.primary_models.forEach((model, i) => {
                     primaryContainer.appendChild(createModelItem(model, 'primary', i));
                 });
@@ -1691,8 +1796,10 @@
                 const refContainer = document.getElementById('referencedContent');
                 refContainer.innerHTML = '';
                 detection.referenced_products.forEach((prod, i) => {
-                    const name = typeof prod === 'string' ? prod : prod.model;
-                    refContainer.appendChild(createModelItem(name, 'referenced', i));
+                    // v2: { display_name, description } | v1: string or { model }
+                    const name = typeof prod === 'string' ? prod : (prod.display_name || prod.model);
+                    const desc = (typeof prod === 'object') ? prod.description : undefined;
+                    refContainer.appendChild(createModelItem(name, 'referenced', i, desc));
                 });
                 // Auto-open so user sees detected refs
                 refContainer.classList.add('open');
@@ -1707,7 +1814,7 @@
             }
         }
 
-        function createModelItem(modelName, type, index) {
+        function createModelItem(modelName, type, index, description) {
             const id = `${type}-${index}`;
             const wrapper = document.createElement('div');
 
@@ -1741,6 +1848,14 @@
             meta.textContent = `${detectionResult.manufacturer || ''} ${detectionResult.product_category || ''}`.trim();
 
             info.appendChild(nameInput);
+
+            if (description) {
+                const descEl = document.createElement('div');
+                descEl.style.cssText = 'font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.3;';
+                descEl.textContent = description;
+                info.appendChild(descEl);
+            }
+
             info.appendChild(meta);
 
             const badge = document.createElement('span');
@@ -1785,6 +1900,16 @@
 
             // Persist the edit into detectionResult so we POST the corrected name.
             if (type === 'primary') {
+                // v2: primary_family.members[]
+                const member = detectionResult?.primary_family?.members?.[index];
+                if (member) {
+                    if (!member._original_name) member._original_name = member.display_name;
+                    member.display_name = newName;
+                    // Track original LLM name when user edits the display name
+                    member.user_display_name = (newName !== member._original_name)
+                        ? member._original_name : undefined;
+                }
+                // v1 fallback
                 if (Array.isArray(detectionResult?.primary_models)) {
                     detectionResult.primary_models[index] = newName;
                 }
@@ -1794,7 +1919,11 @@
                     if (typeof rp === 'string') {
                         detectionResult.referenced_products[index] = newName;
                     } else if (rp && typeof rp === 'object') {
+                        if (!rp._original_name) rp._original_name = rp.display_name || rp.model;
+                        rp.display_name = newName;
                         rp.model = newName;
+                        rp.user_display_name = (newName !== rp._original_name)
+                            ? rp._original_name : undefined;
                     }
                 }
             }
@@ -2090,7 +2219,7 @@
         });
 
         // Dynamic DIP mode row creation (create-or-update)
-        function updateModeRow(mode, status, detail = '') {
+        function updateModeRow(mode, status, detail = '', serverDurationMs = null) {
             const container = document.getElementById('dip-modes-list');
             if (!container) return;
 
@@ -2118,14 +2247,15 @@
                 icon.textContent = '✓';
                 if (dipModeTimings[mode]) {
                     dipModeTimings[mode].endedAt = Date.now();
-                    dipModeTimings[mode].durationMs = dipModeTimings[mode].endedAt - dipModeTimings[mode].startedAt;
+                    // Use server-provided duration if available, otherwise fall back to wall clock
+                    dipModeTimings[mode].durationMs = serverDurationMs || (dipModeTimings[mode].endedAt - dipModeTimings[mode].startedAt);
                 }
                 addDipSubStep(mode, 'complete', detail);
             } else if (status === 'error') {
                 icon.textContent = '✗';
                 if (dipModeTimings[mode]) {
                     dipModeTimings[mode].endedAt = Date.now();
-                    dipModeTimings[mode].durationMs = dipModeTimings[mode].endedAt - dipModeTimings[mode].startedAt;
+                    dipModeTimings[mode].durationMs = serverDurationMs || (dipModeTimings[mode].endedAt - dipModeTimings[mode].startedAt);
                 }
                 addDipSubStep(mode, 'error', detail);
             }
@@ -2171,18 +2301,179 @@
             }
         }
 
+        // ============================================
+        // Background Ingest Polling
+        // ============================================
+        let pollingInterval = null;
+        const POLL_INTERVAL_MS = 5000; // 5 seconds
+        const INGEST_STORAGE_KEY = 'boatos_active_ingest';
+
+        function saveIngestState(state) {
+            localStorage.setItem(INGEST_STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function loadIngestState() {
+            try {
+                const stored = localStorage.getItem(INGEST_STORAGE_KEY);
+                return stored ? JSON.parse(stored) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function clearIngestState() {
+            localStorage.removeItem(INGEST_STORAGE_KEY);
+        }
+
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        /**
+         * Poll ingest status and update UI
+         */
+        async function pollIngestStatus(docId) {
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/ingest-status`);
+                if (!response.ok) {
+                    console.error('Poll failed:', response.status);
+                    return null;
+                }
+                const result = await response.json();
+                return result.data;
+            } catch (err) {
+                console.error('Poll error:', err);
+                return null;
+            }
+        }
+
+        /**
+         * Update UI based on polled status
+         */
+        function updateUIFromStatus(status) {
+            if (!status || !status.has_job) return;
+
+            const statusV2 = status.status_v2;
+            const counters = status.counters || {};
+
+            // Update Vision
+            if (statusV2 === 'vision_running') {
+                updateStep('vision', 'active', 'Analyzing pages...');
+                updateMicroStep('vision', 'active', 'Analyzing pages...');
+            } else if (statusV2 === 'vision_completed') {
+                const v = counters.vision || {};
+                updateStep('vision', 'complete', `${v.assets_saved || 0} assets extracted`);
+                updateMicroStep('vision', 'complete', `${v.assets_saved || 0} assets`, v.duration_ms);
+            } else if (statusV2 === 'vision_warning') {
+                const v = counters.vision || {};
+                updateStep('vision', 'complete', `${v.assets_saved || 0} assets (warning)`, '⚠');
+                updateMicroStep('vision', 'complete', `${v.assets_saved || 0} assets`, v.duration_ms);
+            }
+
+            // Update Indexing
+            if (statusV2 === 'indexing_running') {
+                updateStep('indexing', 'active', 'Chunking and indexing...');
+                updateMicroStep('indexing', 'active', 'Chunking & indexing...');
+            } else if (statusV2 === 'indexing_completed' || (statusV2.startsWith('dip') || statusV2 === 'completed')) {
+                const i = counters.indexing || {};
+                if (i.chunks_created !== undefined) {
+                    updateStep('indexing', 'complete', `${i.chunks_created} chunks, ${i.vectors_upserted} vectors`);
+                    updateMicroStep('indexing', 'complete', `${i.chunks_created} chunks`, i.duration_ms);
+                }
+            } else if (statusV2 === 'indexing_failed') {
+                const errMsg = counters.indexing?.error || status.error?.message || 'Failed';
+                updateStep('indexing', 'error', errMsg);
+                updateMicroStep('indexing', 'error', errMsg);
+            }
+
+            // Update DIP
+            if (statusV2 === 'dip_running') {
+                const d = counters.dip || {};
+                const completed = d.modes_completed?.length || 0;
+                const total = 5; // specs, troubleshooting, procedures, golden_rules, intent_router
+                const progressText = completed > 0
+                    ? `Extracting... (${completed}/${total} modes)`
+                    : 'Extracting structured data...';
+                updateStep('dip', 'active', progressText);
+                updateMicroStep('dip', 'active', `${completed}/${total} modes, ${d.total_inserted || 0} items`);
+            } else if (statusV2 === 'dip_partial') {
+                const d = counters.dip || {};
+                const failedCount = d.modes_failed?.length || 0;
+                updateStep('dip', 'complete', `${d.total_inserted || 0} items (${failedCount} modes failed)`, '⚠');
+                updateMicroStep('dip', 'complete', `${d.total_inserted || 0} items`, d.duration_ms);
+            } else if (statusV2 === 'completed') {
+                const d = counters.dip || {};
+                if (d.skipped) {
+                    updateStep('dip', 'complete', 'Skipped', '⊘');
+                    updateMicroStep('dip', 'skipped', 'Skipped');
+                } else {
+                    const modesOk = d.modes_completed?.length || 0;
+                    updateStep('dip', 'complete', `${d.total_inserted || 0} items (${modesOk} modes)`);
+                    updateMicroStep('dip', 'complete', `${d.total_inserted || 0} items`, d.duration_ms);
+                }
+            }
+
+            // Terminal states
+            if (statusV2 === 'completed') {
+                stopPolling();
+                clearIngestState();
+                const d = counters.dip || {};
+                const hasWarnings = d.modes_failed?.length > 0 || counters.vision?.warning;
+                if (hasWarnings) {
+                    updateStep('complete', 'complete', 'Completed with warnings', '⚠');
+                } else {
+                    updateStep('complete', 'complete', 'Complete');
+                }
+                checkAllComplete();
+            } else if (statusV2 === 'failed' || statusV2 === 'indexing_failed') {
+                stopPolling();
+                clearIngestState();
+                const errMsg = status.error?.message || 'Pipeline failed';
+                updateStep('complete', 'complete', `Failed: ${errMsg}`, '✗');
+                checkAllComplete();
+            }
+
+            // Stale job warning
+            if (status.is_stale) {
+                console.warn('Job appears stale (no heartbeat in 5+ min)');
+            }
+
+            return status;
+        }
+
+        /**
+         * Start polling for background ingest status
+         */
+        function startBackgroundPolling(docId, jobId) {
+            // Save state for resume
+            saveIngestState({ doc_id: docId, job_id: jobId, started_at: Date.now() });
+
+            // Initial poll
+            pollIngestStatus(docId).then(updateUIFromStatus);
+
+            // Set up interval
+            pollingInterval = setInterval(async () => {
+                const status = await pollIngestStatus(docId);
+                if (status) {
+                    updateUIFromStatus(status);
+                }
+            }, POLL_INTERVAL_MS);
+        }
+
         /**
          * Run indexing pipeline (Pinecone + colloquial)
          * Returns: { success, data, error }
          */
-        async function runIndexing({ docId, selected_models, referenced_selections, installedAssetUid }) {
+        async function runIndexing({ docId, installedAssetUid }) {
             const startTime = Date.now();
             try {
+                // Phase D: server derives selected_models/referenced_selections from DB
                 const response = await window.adminFetch(`/admin/api/documents/${docId}/index`, {
                     method: 'POST',
                     body: JSON.stringify({
-                        selected_models,
-                        referenced_selections,
                         asset_uid: installedAssetUid,
                         skip_dip: true
                     })
@@ -2221,13 +2512,13 @@
          * Run DIP streaming extraction
          * Returns: { success, modes_completed, modes_failed, total_inserted, error }
          */
-        async function runDipStreaming({ docId, selected_models, referenced_selections }) {
+        async function runDipStreaming({ docId }) {
             const startTime = Date.now();
             try {
-                // Step 1: Start DIP run
+                // Step 1: Start DIP run — server derives model arrays from DB (Phase D)
                 const startResponse = await window.adminFetch(`/admin/api/documents/${docId}/dip/run`, {
                     method: 'POST',
-                    body: JSON.stringify({ selected_models, referenced_selections })
+                    body: JSON.stringify({})
                 });
 
                 if (!startResponse.ok) {
@@ -2274,7 +2565,7 @@
                         } else if (data.cache_creation_input_tokens > 0) {
                             statusText += ` (cache created: ${data.cache_creation_input_tokens})`;
                         }
-                        updateModeRow(data.mode, 'complete', statusText);
+                        updateModeRow(data.mode, 'complete', statusText, data.duration_ms);
                     });
 
                     eventSource.addEventListener('mode_failed', (e) => {
@@ -2379,15 +2670,14 @@
          * Run vision pipeline (analyze pages + crop figures + generate search_blobs)
          * Returns: { success, data, error }
          */
-        async function runVision({ docId, storagePath, selected_models, referenced_selections }) {
+        async function runVision({ docId, storagePath }) {
             const startTime = Date.now();
             try {
+                // Phase D: server derives selected_models/referenced_selections from DB
                 const response = await window.adminFetch(`/admin/api/documents/${docId}/vision`, {
                     method: 'POST',
                     body: JSON.stringify({
                         storage_path: storagePath,
-                        selected_models,
-                        referenced_selections,
                         pages: '1-100'
                     })
                 });
@@ -2430,12 +2720,16 @@
             for (const [modelId, data] of selectedModels) {
                 if (data.type === 'primary') {
                     selected_models.push(data.model);
+                    // Look up v2 member data for description/aliases/user_display_name
+                    const memberIndex = parseInt(modelId.split('-')[1]);
+                    const member = detectionResult?.primary_family?.members?.[memberIndex];
+
                     // PRIMARY: Create system entries with instance details
                     for (const instance of data.instances) {
                         const serial = document.getElementById(`serial-${instance.id}`)?.value || '';
                         const location = document.getElementById(`location-${instance.id}`)?.value || '';
 
-                        systems.push({
+                        const systemEntry = {
                             model_norm: data.model,
                             manufacturer_norm: detectionResult.manufacturer || '',
                             product_category: detectionResult.product_category || '',
@@ -2443,11 +2737,25 @@
                             location: location || null,
                             is_primary: true,
                             source: 'document'
-                        });
+                        };
+
+                        // v2 fields from detection member
+                        if (member) {
+                            if (member.description) systemEntry.description = member.description;
+                            if (member.aliases?.length > 0) systemEntry.aliases = member.aliases;
+                            if (member.user_display_name) systemEntry.user_display_name = member.user_display_name;
+                        }
+
+                        systems.push(systemEntry);
                     }
                 } else {
-                    // REF: Just the model name, no instances
-                    referenced_selections.push(data.model);
+                    // REF: Use original display_name for backend matching (not user-edited name)
+                    const refIndex = parseInt(modelId.split('-')[1]);
+                    const refProd = detectionResult?.referenced_products?.[refIndex];
+                    const originalName = (typeof refProd === 'object')
+                        ? (refProd._original_name || refProd.display_name || refProd.model)
+                        : (refProd || data.model);
+                    referenced_selections.push(originalName);
                 }
             }
 
@@ -2515,11 +2823,18 @@
                         product_type: productType,
                         system_category: systemCategory,
                         subsystem_category: subsystemCategory,
-                        models_detected: detectionResult.primary_models,
+                        models_detected: detectionResult.primary_family?.members?.map(m => m.display_name)
+                            || detectionResult.primary_models || [],
                         referenced_products: detectionResult.referenced_products,
                         systems: systems,
                         referenced_selections: referenced_selections,
-                        storage_path: storageResult?.storage_path || null
+                        storage_path: storageResult?.storage_path || null,
+                        // v2 detection fields
+                        family_aliases: detectionResult.primary_family?.family_aliases || [],
+                        primary_family_name: detectionResult.primary_family?.family_name || null,
+                        // Background runner fields
+                        start_background_run: true,
+                        selected_models: selected_models
                     })
                 });
 
@@ -2535,8 +2850,40 @@
                 updateMicroStep('document', 'complete', `Created, ${docResult.data?.systems_created || 0} systems`, stepTimings.document.durationMs);
 
                 // ========================================
-                // Step 2-4: Run Vision + Indexing + DIP in PARALLEL
+                // Step 2-4: Background Runner OR Parallel Execution
                 // ========================================
+                const ingestRun = docResult.data?.ingest_run;
+
+                // Check if background job was started
+                if (ingestRun?.started && ingestRun.job_id) {
+                    console.log('Background ingest job started', { jobId: ingestRun.job_id, status: ingestRun.status_v2 });
+
+                    // Start UI in active state
+                    startStep('vision');
+                    startStep('indexing');
+                    startStep('dip');
+                    updateStep('vision', 'active', 'Processing in background...');
+                    updateStep('indexing', 'active', 'Queued...');
+                    updateStep('dip', 'active', 'Queued...');
+                    updateMicroStep('vision', 'active', 'Background processing...');
+                    updateMicroStep('indexing', 'active', 'Queued...');
+                    updateMicroStep('dip', 'active', 'Queued...');
+
+                    // Start polling - this will update UI and handle completion
+                    startBackgroundPolling(docId, ingestRun.job_id);
+
+                    // Store state for potential page reload
+                    window.lastIngestState = {
+                        docId: storageResult?.doc_id,
+                        jobId: ingestRun.job_id,
+                        backgroundMode: true
+                    };
+
+                    // Return early - polling handles the rest
+                    return;
+                }
+
+                // Fallback: No background job, use existing parallel execution
                 let indexingResult = null;
                 let dipResult = null;
 
@@ -2559,7 +2906,7 @@
                     stepTimings.indexing = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
                     stepTimings.dip = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
                 } else {
-                    // Start ALL THREE tasks simultaneously
+                    // Start ALL THREE tasks simultaneously (legacy parallel mode)
                     startStep('vision');
                     startStep('indexing');
                     startStep('dip');
@@ -2572,7 +2919,7 @@
 
                     // Each promise ends its own timing immediately on resolve/reject
                     const visionPromise = (storagePath
-                        ? runVision({ docId, storagePath, selected_models, referenced_selections })
+                        ? runVision({ docId, storagePath })
                         : Promise.resolve({ success: false, error: 'No storage path', skipped: true })
                     ).then(result => {
                         if (result.skipped) {
@@ -2597,8 +2944,6 @@
 
                     const indexingPromise = runIndexing({
                         docId,
-                        selected_models,
-                        referenced_selections,
                         installedAssetUid
                     }).then(result => {
                         if (result.success) {
@@ -2618,9 +2963,7 @@
                     });
 
                     const dipPromise = runDipStreaming({
-                        docId,
-                        selected_models,
-                        referenced_selections
+                        docId
                     }).then(result => {
                         if (result.success || result.modes_completed?.length > 0) {
                             endStep('dip', result.success ? 'complete' : 'error', result);

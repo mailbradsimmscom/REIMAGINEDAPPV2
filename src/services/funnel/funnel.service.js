@@ -65,38 +65,38 @@ async function getDataIssues() {
   const supabase = await getSupabaseClient();
   const issues = [];
 
-  // Get systems with Manual_Local_Copy=true
+  // Get systems with manual=true
   const { data: flaggedSystems } = await supabase
     .from('systems')
     .select('asset_uid, manufacturer_norm, model_norm')
-    .eq('Manual_Local_Copy', true);
+    .eq('manual', true);
 
   // Get document asset_uids
   const { data: docs } = await supabase.from('documents').select('asset_uid');
-  const docAssetUids = new Set(docs.map(d => d.asset_uid));
+  const docAssetUids = new Set((docs || []).map(d => d.asset_uid));
 
   // Systems with flag but no document
-  const orphanedFlag = flaggedSystems.filter(s => !docAssetUids.has(s.asset_uid));
+  const orphanedFlag = (flaggedSystems || []).filter(s => !docAssetUids.has(s.asset_uid));
   orphanedFlag.forEach(s => {
     issues.push({
       type: 'flag_no_doc',
-      message: `${s.manufacturer_norm} / ${s.model_norm} has Manual_Local_Copy=true but no document`,
+      message: `${s.manufacturer_norm} / ${s.model_norm} has manual=true but no document`,
       asset_uid: s.asset_uid
     });
   });
 
   // Systems with documents but no flag
-  const uniqueDocUids = [...new Set(docs.map(d => d.asset_uid))];
+  const uniqueDocUids = [...new Set((docs || []).map(d => d.asset_uid))];
   const { data: systemsForDocs } = await supabase
     .from('systems')
-    .select('asset_uid, manufacturer_norm, model_norm, Manual_Local_Copy')
-    .in('asset_uid', uniqueDocUids);
+    .select('asset_uid, manufacturer_norm, model_norm, manual')
+    .in('asset_uid', uniqueDocUids.length > 0 ? uniqueDocUids : ['__none__']);
 
-  const missingFlag = systemsForDocs.filter(s => s.Manual_Local_Copy !== true);
+  const missingFlag = (systemsForDocs || []).filter(s => s.manual !== true);
   missingFlag.forEach(s => {
     issues.push({
       type: 'doc_no_flag',
-      message: `${s.manufacturer_norm} / ${s.model_norm} has document but Manual_Local_Copy != true`,
+      message: `${s.manufacturer_norm} / ${s.model_norm} has document but manual != true`,
       asset_uid: s.asset_uid
     });
   });

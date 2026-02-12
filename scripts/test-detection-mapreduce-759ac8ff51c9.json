@@ -1,0 +1,126 @@
+{
+  "doc_id": "759ac8ff51c98c10358e2c0604c1ca73cf975023949d6e122f9af6e8cb32f061",
+  "filename": "Schenker_Watermaker_ZEN_150_48V_Touch_Manual_ENGLISH_2024-1.pdf",
+  "approach": "map-reduce",
+  "chunk_size": 50000,
+  "overlap": 2000,
+  "markdown_total_chars": 73212,
+  "num_chunks": 2,
+  "model": "gpt-4.1-mini",
+  "map_findings_count": 6,
+  "map_findings": [
+    {
+      "model": "ZEN 150",
+      "manufacturer": "Schenker",
+      "type": "Watermaker",
+      "description": "A 48 V DC reverse osmosis watermaker system designed for marine use, producing fresh water from seawater with energy recovery system.",
+      "context": "Main subject of the manual, referenced throughout the document including packaging contents, technical data, and installation instructions.",
+      "chunk": 1
+    },
+    {
+      "model": "SW4021",
+      "manufacturer": "Not explicitly stated (likely a membrane manufacturer)",
+      "type": "Reverse Osmosis Membrane",
+      "description": "Type SW4021 reverse osmosis membranes used inside the watermaker to separate salt from seawater to produce fresh water.",
+      "context": "Listed as the specific membrane model installed inside the watermaker group.",
+      "chunk": 1
+    },
+    {
+      "model": "150Z48.T.2024",
+      "manufacturer": "Schenker",
+      "type": "Document/Manual Code",
+      "description": "Code identifying the specific manual for the ZEN 150 touch screen 48 V DC watermaker system.",
+      "context": "Referenced as the document code throughout the manual.",
+      "chunk": 1
+    },
+    {
+      "model": "ZEN 100",
+      "manufacturer": "Schenker",
+      "type": "Remote Control Panel",
+      "description": "Remote control panel model used for operating Schenker watermakers, including the ZEN 150.",
+      "context": "Referenced in the remote control panel section and shown in a figure.",
+      "chunk": 1
+    },
+    {
+      "model": "ZEN 150",
+      "manufacturer": "Schenker",
+      "type": "Watermaker System",
+      "description": "A 48V DC watermaker system with remote control panel and integrated computer box for marine fresh water production.",
+      "context": "Main subject of the manual, referenced throughout installation, operation, and maintenance sections.",
+      "chunk": 2
+    },
+    {
+      "model": "ZEN 100",
+      "manufacturer": "Schenker",
+      "type": "Watermaker System",
+      "description": "A watermaker system model referenced in the manual, likely a smaller or different variant of the ZEN series.",
+      "context": "Referenced on the remote control panel display example.",
+      "chunk": 2
+    }
+  ],
+  "unique_models_found": 4,
+  "map_tokens_in": 18212,
+  "map_tokens_out": 494,
+  "reduce_tokens_in": 2419,
+  "reduce_tokens_out": 469,
+  "total_tokens_in": 20631,
+  "total_tokens_out": 963,
+  "total_cost": 0.0097932,
+  "total_time": 22.160633087158203,
+  "result": {
+    "manufacturer": "Schenker",
+    "product_type": "Watermaker",
+    "system_category": "Hull/Plumbing",
+    "subsystem_category": "Watermaker",
+    "is_multi_model": true,
+    "primary_family": {
+      "family_name": "Schenker ZEN Series",
+      "family_aliases": [
+        "ZEN Series"
+      ],
+      "description": "Schenker marine reverse osmosis watermaker systems with energy recovery and remote control options",
+      "members": [
+        {
+          "display_name": "ZEN 100",
+          "aliases": [
+            "ZEN 100"
+          ],
+          "type": "Remote Control Panel",
+          "manufacturer": "Schenker",
+          "description": "Remote control panel model for Schenker watermaker systems, smaller or variant of the ZEN series"
+        },
+        {
+          "display_name": "ZEN 150",
+          "aliases": [
+            "ZEN 150"
+          ],
+          "type": "Watermaker",
+          "manufacturer": "Schenker",
+          "description": "48 V DC reverse osmosis watermaker system with energy recovery for marine use"
+        }
+      ]
+    },
+    "referenced_products": [
+      {
+        "display_name": "SW4021",
+        "aliases": [
+          "SW4021"
+        ],
+        "type": "Reverse Osmosis Membrane",
+        "manufacturer": "Unknown",
+        "description": "Reverse osmosis membrane used inside the watermaker to separate salt from seawater"
+      },
+      {
+        "display_name": "150Z48.T.2024",
+        "aliases": [
+          "150Z48.T.2024"
+        ],
+        "type": "Document/Manual Code",
+        "manufacturer": "Schenker",
+        "description": "Code identifying the specific manual for the ZEN 150 touch screen 48 V DC watermaker system"
+      }
+    ],
+    "confidence": "high",
+    "evidence": "The ZEN 100 and ZEN 150 are both Schenker watermaker-related models referenced multiple times and form a product family. SW4021 is a membrane component referenced as part of the system. The manual code 150Z48.T.2024 is a document identifier. Clustering is not applicable beyond family grouping for ZEN models."
+  }
+}

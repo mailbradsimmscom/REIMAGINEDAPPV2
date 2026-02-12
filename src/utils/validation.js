@@ -148,7 +148,10 @@ export function sanitizeSystemData(data) {
 
     // Source tracking (v5)
     source: data.source || 'manual_entry',
-    detected_from_doc_id: data.detected_from_doc_id || null
+    detected_from_doc_id: data.detected_from_doc_id || null,
+
+    // User display name (v2 detection)
+    user_display_name: sanitizeText(data.user_display_name)
   };
 
   // Handle model_synonyms array (comma-separated string → array)

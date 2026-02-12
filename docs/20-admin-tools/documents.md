@@ -92,7 +92,112 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 |     +-- Status: completed                                         |
 |     +-- Searchable in Pinecone with model-aware filtering         |
 +-------------------------------------------------------------------+
+
+### Background Processing Mode (v5.1)
+
+The confirm step can start a **background job** that runs Vision, Indexing, and DIP on the server even if the browser disconnects:
+
 ```
++-------------------------------------------------------------------+
+|  5. Model Selection + Background Job Start                        |
+|     +-- POST /admin/api/documents (with start_background_run=true)|
+|     +-- Creates job with job_type='v5_ingest'                     |
+|     +-- Returns immediately with { job_id, doc_id, status_v2 }    |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  6-7. Background Runner (server-side, browser-independent)        |
+|     +-- Vision → Indexing → DIP (sequential)                      |
+|     +-- Updates jobs.status_v2 at each stage transition           |
+|     +-- Updates jobs.counters with per-stage metrics              |
+|     +-- Heartbeat every 30s (jobs.last_heartbeat)                 |
+|     +-- Browser can disconnect; job keeps running                 |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  8. Frontend Polling                                              |
+|     +-- GET /admin/api/documents/:docId/ingest-status (every 5s)  |
+|     +-- UI updates based on status_v2 and counters                |
+|     +-- On page reload: resume banner if job is running           |
+|     +-- localStorage stores { doc_id, job_id } for resume         |
++-------------------------------------------------------------------+
+```
+
+**Status Flow (status_v2):**
+```
+queued → vision_running → vision_completed/vision_warning
+       → indexing_running → indexing_completed/indexing_failed
+       → dip_running → dip_partial → completed/failed
+```
+
+**Key Benefits:**
+- Close browser mid-ingest without losing progress
+- Reopen page to see current status or completed result
+- Manual /vision, /index, /dip endpoints rejected if background job is active
+
+### Heartbeat & Staleness Detection
+
+The background runner updates `jobs.last_heartbeat` every 30 seconds. The `/ingest-status` endpoint checks this to detect stale jobs:
+
+- **Stale threshold:** 5 minutes without heartbeat update
+- **Response includes:** `is_stale: true` if job appears hung
+- **Use case:** UI can warn user or offer manual intervention
+
+### Counters Schema
+
+The `jobs.counters` JSONB field tracks per-stage metrics:
+
+```json
+{
+  "vision": {
+    "pages_analyzed": 24,
+    "figures_cropped": 8,
+    "tables_cropped": 4,
+    "assets_saved": 12,
+    "duration_ms": 120000,
+    "warning": null
+  },
+  "indexing": {
+    "chunks_created": 180,
+    "chunks_skipped": 0,
+    "vectors_upserted": 180,
+    "total_tokens": 45000,
+    "duration_ms": 90000
+  },
+  "dip": {
+    "modes_completed": ["specs", "troubleshooting", "procedures"],
+    "modes_failed": [{"mode": "golden_rules", "error": "timeout"}],
+    "modes_pending": [],
+    "total_inserted": 145,
+    "cache_tokens": {"creation": 50000, "read": 120000},
+    "duration_ms": 300000
+  },
+  "error": null
+}
+```
+
+### Manual Endpoint Behavior
+
+When a background `v5_ingest` job is active for a document, manual calls to these endpoints return **409 Conflict**:
+
+- `POST /admin/api/documents/:docId/vision`
+- `POST /admin/api/documents/:docId/index`
+- `POST /admin/api/documents/:docId/dip`
+- `POST /admin/api/documents/:docId/dip/run`
+
+Response includes `job_id` and `status_v2` of the active job so the UI can redirect to status polling.
+
+### Resume on Page Reload
+
+The frontend stores `{ doc_id, job_id, started_at }` in localStorage. On page load:
+
+1. Check localStorage for saved state
+2. Poll `/ingest-status` to verify job exists and is running
+3. If running and not stale: show resume banner
+4. If completed/failed: clear localStorage, show result
+5. User can click "Resume" to watch progress or "Dismiss" to start fresh
 
 ---
 
@@ -253,6 +358,37 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 //   - 30-minute timeout for long-running extractions
 //   - Handles client disconnect via AbortController
 //   - Events: mode_start, mode_complete, mode_failed, run_complete, run_failed
+// Step 3 (v5.1): runDipWithCallback(params, onProgress) -> for background runner
+//   - Consumes SSE events internally, calls onProgress callback
+//   - Returns: { success, modes_completed, modes_failed, total_inserted }
+```
+
+### v5 Ingest Runner Service (v5-ingest-runner.service.js) [v5.1]
+
+**Background orchestration for Vision → Indexing → DIP:**
+```javascript
+// src/services/v5-ingest-runner.service.js
+
+// startIngestRun({ docId, storagePath, selectedModels, ... })
+// 1. Check for existing active job (reject if found)
+// 2. Create job record with job_type='v5_ingest', status_v2='queued'
+// 3. Start background execution via setImmediate()
+// 4. Return immediately with { job_id, doc_id, status_v2 }
+
+// Background pipeline (runs in setImmediate):
+// 1. Start heartbeat interval (30s)
+// 2. Vision stage: status_v2='vision_running' → 'vision_completed'/'vision_warning'
+//    - Non-fatal: continues even if vision fails
+// 3. Indexing stage: status_v2='indexing_running' → 'indexing_completed'
+//    - Fatal: stops pipeline if indexing fails ('indexing_failed')
+// 4. DIP stage: status_v2='dip_running' → 'dip_partial'/'completed'
+//    - Uses runDipWithCallback() to consume SSE
+//    - Partial success OK (some modes can fail)
+// 5. Update final status and dip_success flag
+
+// getIngestStatus(docId)
+// - Returns latest v5_ingest job for document
+// - Includes staleness check (is_stale: true if >5 min since heartbeat)
 ```
 
 ### v5 Colloquial Service (v5-colloquial.service.js)
@@ -285,6 +421,7 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 | v5 colloquial keywords | `src/services/v5-colloquial.service.js` |
 | v5 DIP extraction | `src/services/v5-dip.service.js` |
 | DIP streaming (SSE) | `src/services/dip-stream.service.js` |
+| **Background ingest runner** | `src/services/v5-ingest-runner.service.js` |
 | Legacy document service | `src/services/document.service.js` |
 | Document deletion | `src/services/document-deletion.service.js` |
 | DIP ingest to DB | `src/services/dip.ingest.service.js` |
@@ -313,6 +450,119 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 | POST | `/admin/api/documents/:docId/timing` | Save ingest timing payload (Phase B) |
 | GET | `/admin/api/documents/:docId/timing` | Get all timing runs for a document |
 | GET | `/admin/api/documents/:docId/timing/:runId` | Get specific timing run |
+
+### Background Ingest Endpoints (v5.1)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/admin/api/documents/ingest/active` | List all active v5_ingest jobs |
+| GET | `/admin/api/documents/:docId/ingest-status` | Get current ingest job status for a document |
+| GET | `/admin/api/documents/:docId/ingest-history` | Get history of ingest jobs for a document |
+| POST | `/admin/api/documents/:docId/ingest-retry` | Retry a failed ingest (creates new job) |
+
+#### GET /admin/api/documents/ingest/active
+
+Returns all currently running `v5_ingest` jobs across all documents. Useful for admin dashboard or when localStorage is empty.
+
+```json
+{
+  "success": true,
+  "data": {
+    "jobs": [
+      {
+        "job_id": "uuid",
+        "doc_id": "abc123...",
+        "status_v2": "indexing_running",
+        "status": "running",
+        "counters": {...},
+        "created_at": "2024-01-15T10:00:00Z",
+        "started_at": "2024-01-15T10:00:05Z",
+        "last_heartbeat": "2024-01-15T10:05:00Z",
+        "is_stale": false
+      }
+    ],
+    "count": 1
+  }
+}
+```
+
+#### GET /admin/api/documents/:docId/ingest-status
+
+Returns the latest `v5_ingest` job for the specified document. Primary endpoint for UI polling.
+
+```json
+{
+  "success": true,
+  "data": {
+    "doc_id": "abc123...",
+    "has_job": true,
+    "job_id": "uuid",
+    "status_v2": "dip_running",
+    "status": "running",
+    "counters": {
+      "vision": { "pages_analyzed": 24, "assets_saved": 8, "duration_ms": 120000 },
+      "indexing": { "chunks_created": 180, "vectors_upserted": 180, "duration_ms": 90000 },
+      "dip": { "modes_completed": ["specs"], "modes_pending": ["procedures"], "total_inserted": 45 }
+    },
+    "error": null,
+    "is_stale": false,
+    "created_at": "2024-01-15T10:00:00Z",
+    "started_at": "2024-01-15T10:00:05Z",
+    "completed_at": null,
+    "last_heartbeat": "2024-01-15T10:05:00Z"
+  }
+}
+```
+
+If no job exists: `{ "has_job": false, "message": "No ingest job found for this document" }`
+
+#### GET /admin/api/documents/:docId/ingest-history
+
+Returns past `v5_ingest` jobs for a document, ordered by `created_at` descending.
+
+Query params: `?limit=10` (default 10)
+
+```json
+{
+  "success": true,
+  "data": {
+    "doc_id": "abc123...",
+    "jobs": [
+      { "job_id": "uuid1", "status_v2": "completed", "created_at": "...", "completed_at": "..." },
+      { "job_id": "uuid2", "status_v2": "failed", "error": {...}, "created_at": "..." }
+    ],
+    "count": 2
+  }
+}
+```
+
+#### POST /admin/api/documents/:docId/ingest-retry
+
+Creates a new `v5_ingest` job for a document, rerunning Vision → Indexing → DIP. Fails if a job is already active.
+
+```json
+// Success
+{
+  "success": true,
+  "data": {
+    "job_id": "new-uuid",
+    "doc_id": "abc123...",
+    "status_v2": "queued",
+    "message": "Retry job started"
+  }
+}
+
+// Error: job already running
+{
+  "success": false,
+  "error": {
+    "code": "ACTIVE_JOB_EXISTS",
+    "message": "A job is already running for this document",
+    "job_id": "existing-uuid",
+    "status_v2": "indexing_running"
+  }
+}
+```
 
 ### Legacy Endpoints
 
@@ -364,16 +614,33 @@ Document processing job tracking.
 |--------|------|-------------|
 | job_id | uuid | Primary key |
 | doc_id | text | FK to documents |
-| job_type | text | 'DIP' |
+| job_type | text | 'DIP', 'v5_ingest', etc. |
 | status | text | Legacy status field |
-| **status_v2** | text | **[v5]** 14-stage status (see Pipeline Detail below) |
+| **status_v2** | text | **[v5]** Stage status (see values below) |
 | params | jsonb | Job parameters |
-| counters | jsonb | Processing counters |
+| counters | jsonb | Processing counters (vision, indexing, dip metrics) |
+| error | jsonb | Error details if failed |
+| **last_heartbeat** | timestamp | **[v5.1]** Updated every 30s by background runner |
 | **models_detected** | text[] | **[v5]** Models found during detection stage |
 | **selected_models** | text[] | **[v5]** Models user confirmed as installed |
 | **is_multi_model** | boolean | **[v5]** Whether manual covers multiple models |
 | created_at | timestamp | Job creation |
+| started_at | timestamp | When processing started |
+| completed_at | timestamp | When processing completed |
 | updated_at | timestamp | Last update |
+
+**status_v2 values for v5_ingest jobs:**
+- `queued` - Job created, waiting to start
+- `vision_running` - Vision pipeline executing
+- `vision_completed` - Vision succeeded
+- `vision_warning` - Vision completed with warnings
+- `indexing_running` - Chunking and embedding in progress
+- `indexing_completed` - Indexing succeeded
+- `indexing_failed` - Indexing failed (pipeline stops)
+- `dip_running` - DIP extraction in progress
+- `dip_partial` - DIP completed with some modes failed
+- `completed` - All stages completed
+- `failed` - Pipeline failed
 
 ### doc_assets [NEW in v5]
 

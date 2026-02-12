@@ -223,6 +223,64 @@ class ModelDetectionResponse(BaseModel):
         return self.primary_models
 
 
+# ============================================================================
+# Model Detection V2 Models (Map-Reduce approach)
+# ============================================================================
+
+class ModelDetectionV2Request(BaseModel):
+    """Request for map-reduce model detection"""
+    markdown: str = Field(..., description="Full parsed markdown content from LlamaParse")
+    doc_id: str = Field(..., description="Document UUID")
+    filename: str = Field(..., description="Original filename for context")
+    reference_data: Optional[ReferenceData] = Field(None, description="Reference table data for categorization")
+    chunk_size: int = Field(default=50000, description="Characters per chunk")
+    overlap: int = Field(default=2000, description="Overlap between chunks")
+
+
+class DetectedModelMember(BaseModel):
+    """A member of the primary product family"""
+    display_name: str = Field(..., description="Model name as detected (original form)")
+    aliases: List[str] = Field(default_factory=list, description="Name variants")
+    type: Optional[str] = Field(None, description="Product type")
+    manufacturer: Optional[str] = Field(None, description="Manufacturer name")
+    description: str = Field(default="", description="One-line description")
+
+
+class PrimaryFamily(BaseModel):
+    """The primary product family the document is about"""
+    family_name: str = Field(..., description="Family name (e.g., 'Yanmar JH-CR Series')")
+    family_aliases: List[str] = Field(default_factory=list, description="Series-level aliases")
+    description: str = Field(default="", description="Family description")
+    members: List[DetectedModelMember] = Field(default_factory=list, description="Individual models in the family")
+
+
+class DetectedReferencedProduct(BaseModel):
+    """A product referenced in the document but not the primary subject"""
+    display_name: str = Field(..., description="Model name as detected (original form)")
+    aliases: List[str] = Field(default_factory=list, description="Name variants")
+    type: Optional[str] = Field(None, description="Product type")
+    manufacturer: Optional[str] = Field(None, description="Manufacturer name")
+    description: str = Field(default="", description="One-line description")
+
+
+class ModelDetectionV2Response(BaseModel):
+    """Response from map-reduce model detection"""
+    success: bool
+    manufacturer: Optional[str] = Field(None, description="Detected manufacturer name")
+    product_type: Optional[str] = Field(None, description="Product type")
+    system_category: Optional[str] = Field(None, description="System category")
+    subsystem_category: Optional[str] = Field(None, description="Subsystem category")
+    primary_family: Optional[PrimaryFamily] = Field(None, description="Primary product family")
+    referenced_products: List[DetectedReferencedProduct] = Field(default_factory=list, description="Referenced products")
+    is_multi_model: bool = Field(default=False, description="True if manual covers multiple models")
+    confidence: str = Field(default="low", description="Confidence level: high, medium, low")
+    evidence: str = Field(default="", description="Classification reasoning")
+    processing_time: float = Field(default=0.0)
+    map_findings_count: int = Field(default=0, description="Total findings from MAP phase")
+    chunk_count: int = Field(default=0, description="Number of chunks processed")
+    error: Optional[str] = None
+
+
 class LlamaParseResponse(BaseModel):
     """Response from LlamaParse document parsing"""
     success: bool
@@ -253,6 +311,7 @@ class VisionAnalyzeRequest(BaseModel):
     models_covered: List[str] = Field(default_factory=list, description="All models covered by document (informational)")
     selected_models: List[str] = Field(..., description="User-approved primary models (tag universe)")
     referenced_selections: List[str] = Field(default_factory=list, description="User's selected referenced systems (e.g., VC20, SD605)")
+    alias_map: Dict[str, List[str]] = Field(default_factory=dict, description="Alias→canonical mapping for normalization (keys=original, values=[canonical])")
     pages: str = Field(default="1-10", description="Page range to analyze (e.g., '1-10' or '1,5,10')")
     context: str = Field(default="", description="Document context for Vision prompt")
 
@@ -319,6 +378,7 @@ class IndexDocumentRequest(BaseModel):
     models_covered: List[str] = Field(..., description="All primary models the manual covers (from documents table)")
     selected_models: List[str] = Field(..., description="User's installed primary model(s)")
     referenced_selections: List[str] = Field(default_factory=list, description="User's selected referenced systems (accessories)")
+    alias_map: Dict[str, List[str]] = Field(default_factory=dict, description="Alias→canonical mapping for normalization (keys=original, values=[canonical])")
     filename: str = Field(default="document.pdf", description="Original filename for metadata")
     force_reindex: bool = Field(default=False, description="If true, delete existing chunks before indexing")
 
@@ -347,6 +407,7 @@ class DIPRunRequest(BaseModel):
     models_covered: List[str] = Field(..., description="All primary models the manual covers")
     selected_models: List[str] = Field(..., description="User's installed primary model(s)")
     referenced_selections: List[str] = Field(default_factory=list, description="User's selected referenced systems")
+    alias_map: Dict[str, List[str]] = Field(default_factory=dict, description="Alias→canonical mapping for normalization (keys=original, values=[canonical])")
     exclude_models: List[str] = Field(default_factory=list, description="Pre-computed exclude list (optional, will compute if empty)")
     modes: List[str] = Field(
         default_factory=lambda: ["specs", "troubleshooting", "procedures", "golden_rules", "intent_router"],

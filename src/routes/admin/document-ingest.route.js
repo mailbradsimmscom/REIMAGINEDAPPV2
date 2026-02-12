@@ -17,6 +17,9 @@ import { runV5Indexing } from '../../services/v5-index.service.js';
 import { runV5ColloquialKeywords } from '../../services/v5-colloquial.service.js';
 import { runDipExtraction } from '../../services/v5-dip.service.js';
 import { storeDipRunParams, streamDipExtraction } from '../../services/dip-stream.service.js';
+import { buildPipelineModelParams } from '../../services/alias-map.service.js';
+import { startIngestRun, getIngestStatus } from '../../services/v5-ingest-runner.service.js';
+import documentRepository from '../../repositories/document.repository.js';
 import { VisionPipelineRequestSchema } from '../../schemas/document.schema.js';
 import { logger } from '../../utils/logger.js';
 import { getSupabaseStorageClient, getSupabaseClient } from '../../repositories/supabaseClient.js';
@@ -51,7 +54,13 @@ router.post('/', async (req, res) => {
       installed_primary,
       referenced_selections,
       storage_path, // From upload-storage endpoint
-      systems // LEGACY: For backwards compatibility
+      systems, // LEGACY: For backwards compatibility
+      // v2 detection fields (Phase B)
+      family_aliases,
+      primary_family_name,
+      // Background runner fields
+      start_background_run = false, // Set true to start Vision/Indexing/DIP in background
+      selected_models: selectedModelsParam // User's selected primary models for indexing
     } = req.body;
 
     log.info('Document ingest request', {
@@ -116,7 +125,9 @@ router.post('/', async (req, res) => {
       primaryAssetUid: null, // Will update after system creation
       modelsDetected: models_detected,
       referencedModels: refsToSave,
-      storagePath: storage_path
+      storagePath: storage_path,
+      familyAliases: family_aliases,
+      brandFamily: primary_family_name
     });
 
     if (!docResult.success) {
@@ -136,12 +147,15 @@ router.post('/', async (req, res) => {
     if (primaryToCreate) {
       const manufacturerNorm = primaryToCreate.manufacturer_norm || manufacturer;
 
-      // Find or create the system
+      // Find or create the system — pass v2 detection fields if available
       const systemResult = await findOrCreateSystem({
         manufacturerNorm,
         modelNorm: primaryModelNorm,
         refIds,
-        docId
+        docId,
+        description: primaryToCreate.description || null,
+        modelSynonyms: primaryToCreate.aliases || null,
+        userDisplayName: primaryToCreate.user_display_name || null
       });
 
       if (!systemResult.success) {
@@ -206,7 +220,9 @@ router.post('/', async (req, res) => {
         primaryAssetUid,
         modelsDetected: models_detected,
         referencedModels: refsToSave,
-        storagePath: storage_path
+        storagePath: storage_path,
+        familyAliases: family_aliases,
+        brandFamily: primary_family_name
       });
     }
 
@@ -240,6 +256,39 @@ router.post('/', async (req, res) => {
     });
 
     // ========================================================================
+    // Start background runner (if requested)
+    // ========================================================================
+    let ingestRunResult = null;
+
+    if (start_background_run) {
+      // Derive selected_models from systems array if not provided
+      const selectedModels = selectedModelsParam ||
+        (systems || []).filter(s => s.is_primary).map(s => s.model_norm);
+
+      if (selectedModels.length > 0) {
+        log.info('Starting background ingest run', { docId, selectedModels });
+
+        ingestRunResult = await startIngestRun({
+          docId,
+          storagePath: storage_path,
+          selectedModels,
+          referencedSelections: refsToSave,
+          installedAssetUid: primaryAssetUid
+        });
+
+        if (!ingestRunResult.success) {
+          log.warn('Background ingest start failed', {
+            docId,
+            error: ingestRunResult.error,
+            existingJobId: ingestRunResult.existing_job_id
+          });
+        }
+      } else {
+        log.info('Skipping background run - no selected models', { docId });
+      }
+    }
+
+    // ========================================================================
     // Build response
     // ========================================================================
     const response = {
@@ -257,6 +306,17 @@ router.post('/', async (req, res) => {
         document_links_created: primaryAssetUid ? 1 : 0
       }
     };
+
+    // Add background run info if started
+    if (ingestRunResult) {
+      response.data.ingest_run = {
+        started: ingestRunResult.success,
+        job_id: ingestRunResult.job_id || null,
+        status_v2: ingestRunResult.status_v2 || null,
+        error: ingestRunResult.error || null,
+        existing_job_id: ingestRunResult.existing_job_id || null
+      };
+    }
 
     if (referencedResult.warnings?.length > 0) {
       response.warnings = referencedResult.warnings.map(w => ({
@@ -295,6 +355,21 @@ router.post('/', async (req, res) => {
 router.post('/:docId/vision', async (req, res) => {
   try {
     const { docId } = req.params;
+
+    // Check for active background job - reject manual call if one exists
+    const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
+    if (activeJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_JOB_EXISTS',
+          message: 'A background ingest job is running for this document. Use /ingest-status to monitor progress.',
+          job_id: activeJob.job_id,
+          status_v2: activeJob.status_v2
+        }
+      });
+    }
+
     const validation = VisionPipelineRequestSchema.safeParse({
       doc_id: docId,
       ...req.body
@@ -313,19 +388,38 @@ router.post('/:docId/vision', async (req, res) => {
 
     const { storage_path, selected_models, referenced_selections, pages, context } = validation.data;
 
+    // Phase D: derive from DB if not provided by frontend
+    // Phase E: always fetch dbParams for alias_map
+    const dbParams = await buildPipelineModelParams(docId);
+    let selectedModels = selected_models;
+    let referencedSelections = referenced_selections;
+    if (!selectedModels || selectedModels.length === 0) {
+      selectedModels = dbParams.selected_models;
+      referencedSelections = dbParams.referenced_selections;
+      log.info('Vision: derived model arrays from DB', { docId, selectedModels, referencedSelections });
+    }
+
+    if (!selectedModels || selectedModels.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'VALIDATION_ERROR', message: 'No models found for this document' }
+      });
+    }
+
     log.info('Vision pipeline request', {
       docId,
       storagePath: storage_path,
-      selectedModels: selected_models,
-      referencedSelections: referenced_selections,
+      selectedModels,
+      referencedSelections,
       pages
     });
 
     const result = await runVisionPipeline({
       docId,
       storagePath: storage_path,
-      selectedModels: selected_models,
-      referencedSelections: referenced_selections,
+      selectedModels,
+      referencedSelections,
+      aliasMap: dbParams.alias_map,
       pages,
       context
     });
@@ -583,6 +677,55 @@ router.post('/upload-storage', async (req, res) => {
 });
 
 /**
+ * GET /admin/api/documents/ingest/active
+ * List all active v5_ingest jobs across all documents
+ *
+ * IMPORTANT: This route must be defined BEFORE /:docId routes
+ * Returns array of active jobs with doc_id, job_id, status_v2, etc.
+ */
+router.get('/ingest/active', async (req, res) => {
+  try {
+    const supabase = await getSupabaseClient();
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('job_id, doc_id, status_v2, status, counters, created_at, started_at, last_heartbeat')
+      .eq('job_type', 'v5_ingest')
+      .in('status_v2', ['queued', 'vision_running', 'vision_completed', 'vision_warning',
+        'indexing_running', 'indexing_completed', 'dip_running'])
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    // Add staleness check
+    const now = Date.now();
+    const staleThreshold = 5 * 60 * 1000;
+    const jobs = (data || []).map(job => ({
+      ...job,
+      is_stale: job.last_heartbeat
+        ? (now - new Date(job.last_heartbeat).getTime()) > staleThreshold
+        : true
+    }));
+
+    return res.json({
+      success: true,
+      data: {
+        jobs,
+        count: jobs.length
+      },
+      requestId: res.locals.requestId
+    });
+
+  } catch (err) {
+    log.error('Failed to get active ingest jobs', { error: err.message });
+    return res.status(500).json({
+      success: false,
+      error: { code: 'LIST_ERROR', message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
  * POST /admin/api/documents/:docId/index
  * v5 Index: Chunk document and store in Pinecone with model tags
  *
@@ -595,21 +738,46 @@ router.post('/upload-storage', async (req, res) => {
 router.post('/:docId/index', async (req, res) => {
   try {
     const { docId } = req.params;
+
+    // Check for active background job - reject manual call if one exists
+    const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
+    if (activeJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_JOB_EXISTS',
+          message: 'A background ingest job is running for this document. Use /ingest-status to monitor progress.',
+          job_id: activeJob.job_id,
+          status_v2: activeJob.status_v2
+        }
+      });
+    }
+
     const {
-      selected_models: selectedModels,
-      referenced_selections: referencedSelections = [],
+      selected_models: selectedModelsRaw,
+      referenced_selections: referencedSelectionsRaw = [],
       force_reindex: forceReindex = false,
       asset_uid: assetUid = null,
       skip_dip: skipDip = false
     } = req.body;
 
-    // Validate required fields
+    // Phase D: derive from DB if not provided by frontend
+    // Phase E: always fetch dbParams for alias_map
+    const dbParams = await buildPipelineModelParams(docId);
+    let selectedModels = selectedModelsRaw;
+    let referencedSelections = referencedSelectionsRaw;
+    if (!selectedModels || selectedModels.length === 0) {
+      selectedModels = dbParams.selected_models;
+      referencedSelections = dbParams.referenced_selections;
+      log.info('Index: derived model arrays from DB', { docId, selectedModels, referencedSelections });
+    }
+
     if (!selectedModels || selectedModels.length === 0) {
       return res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'selected_models is required and cannot be empty'
+          message: 'No models found for this document'
         }
       });
     }
@@ -625,6 +793,7 @@ router.post('/:docId/index', async (req, res) => {
       docId,
       selectedModels,
       referencedSelections,
+      aliasMap: dbParams.alias_map,
       forceReindex
     });
 
@@ -745,6 +914,21 @@ router.post('/:docId/index', async (req, res) => {
 router.post('/:docId/dip', async (req, res) => {
   try {
     const { docId } = req.params;
+
+    // Check for active background job - reject manual call if one exists
+    const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
+    if (activeJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_JOB_EXISTS',
+          message: 'A background ingest job is running for this document. Use /ingest-status to monitor progress.',
+          job_id: activeJob.job_id,
+          status_v2: activeJob.status_v2
+        }
+      });
+    }
+
     const {
       selected_models: selectedModels,
       referenced_selections: referencedSelections = [],
@@ -848,44 +1032,56 @@ router.post('/:docId/dip', async (req, res) => {
 router.post('/:docId/dip/run', async (req, res) => {
   try {
     const { docId } = req.params;
+
+    // Check for active background job - reject manual call if one exists
+    const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
+    if (activeJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_JOB_EXISTS',
+          message: 'A background ingest job is running for this document. Use /ingest-status to monitor progress.',
+          job_id: activeJob.job_id,
+          status_v2: activeJob.status_v2
+        }
+      });
+    }
+
     const {
-      selected_models: selectedModels,
-      referenced_selections: referencedSelections = [],
+      selected_models: selectedModelsRaw,
+      referenced_selections: referencedSelectionsRaw = [],
       modes = ['specs', 'troubleshooting', 'procedures', 'golden_rules', 'intent_router'],
       force_rerun: forceRerun = false
     } = req.body;
 
-    // Validate required fields
+    // Phase D: derive from DB — also fetches models_covered (replaces separate query)
+    const dbParams = await buildPipelineModelParams(docId);
+    const selectedModels = (selectedModelsRaw && selectedModelsRaw.length > 0)
+      ? selectedModelsRaw : dbParams.selected_models;
+    const referencedSelections = (selectedModelsRaw && selectedModelsRaw.length > 0)
+      ? referencedSelectionsRaw : dbParams.referenced_selections;
+
     if (!selectedModels || selectedModels.length === 0) {
       return res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'selected_models is required and cannot be empty'
+          message: 'No models found for this document'
         }
       });
     }
 
-    // Fetch document to get models_covered
-    const supabase = await getSupabaseClient();
-    const { data: document, error: docError } = await supabase
-      .from('documents')
-      .select('models_covered')
-      .eq('doc_id', docId)
-      .single();
-
-    if (docError || !document) {
-      log.error('Document not found for DIP stream', { docId, error: docError?.message });
+    if (dbParams.models_covered.length === 0) {
       return res.status(404).json({
         success: false,
         error: {
           code: 'DOCUMENT_NOT_FOUND',
-          message: `Document ${docId} not found`
+          message: `Document ${docId} not found or missing models_covered`
         }
       });
     }
 
-    const modelsCovered = document.models_covered;
+    const modelsCovered = dbParams.models_covered;
     if (!modelsCovered || modelsCovered.length === 0) {
       return res.status(400).json({
         success: false,
@@ -901,6 +1097,7 @@ router.post('/:docId/dip/run', async (req, res) => {
       docId,
       selectedModels,
       referencedSelections,
+      aliasMap: dbParams.alias_map,
       modelsCovered,
       modes,
       forceRerun
@@ -1028,6 +1225,184 @@ router.get('/:docId/timing/:ingestRunId', async (req, res) => {
     return res.status(500).json({
       success: false,
       error: { message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+// ============================================
+// Background Ingest Status Endpoints
+// ============================================
+
+/**
+ * GET /admin/api/documents/:docId/ingest-status
+ * Get the current status of a background ingest job for a document
+ *
+ * Returns:
+ * - job_id: UUID of the job
+ * - status_v2: Current stage (queued, vision_running, indexing_completed, etc.)
+ * - counters: Per-stage metrics (vision, indexing, dip)
+ * - error: Error details if failed
+ * - is_stale: True if job hasn't updated heartbeat in >5 min
+ */
+router.get('/:docId/ingest-status', async (req, res) => {
+  try {
+    const { docId } = req.params;
+
+    const status = await getIngestStatus(docId);
+
+    if (!status) {
+      return res.json({
+        success: true,
+        data: {
+          doc_id: docId,
+          has_job: false,
+          message: 'No ingest job found for this document'
+        },
+        requestId: res.locals.requestId
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        doc_id: docId,
+        has_job: true,
+        ...status
+      },
+      requestId: res.locals.requestId
+    });
+
+  } catch (err) {
+    log.error('Failed to get ingest status', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { code: 'STATUS_ERROR', message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * POST /admin/api/documents/:docId/ingest-retry
+ * Retry a failed ingest by creating a new job
+ *
+ * Creates a new job row (preserves history) and reruns all stages.
+ */
+router.post('/:docId/ingest-retry', async (req, res) => {
+  try {
+    const { docId } = req.params;
+
+    // Check for active job - can't retry if one is already running
+    const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
+    if (activeJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_JOB_EXISTS',
+          message: 'A job is already running for this document',
+          job_id: activeJob.job_id,
+          status_v2: activeJob.status_v2
+        }
+      });
+    }
+
+    // Get document info for retry
+    const document = await documentRepository.getDocument(docId);
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'DOCUMENT_NOT_FOUND', message: 'Document not found' }
+      });
+    }
+
+    // Get model params
+    const dbParams = await buildPipelineModelParams(docId);
+    if (!dbParams.selected_models || dbParams.selected_models.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'NO_MODELS', message: 'No models found for this document' }
+      });
+    }
+
+    log.info('Starting ingest retry', { docId });
+
+    const result = await startIngestRun({
+      docId,
+      storagePath: document.storage_path,
+      selectedModels: dbParams.selected_models,
+      referencedSelections: dbParams.referenced_selections || []
+    });
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        error: {
+          code: result.error,
+          message: result.message,
+          existing_job_id: result.existing_job_id
+        }
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        job_id: result.job_id,
+        doc_id: result.doc_id,
+        status_v2: result.status_v2,
+        message: 'Retry job started'
+      },
+      requestId: res.locals.requestId
+    });
+
+  } catch (err) {
+    log.error('Ingest retry failed', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { code: 'RETRY_ERROR', message: err.message },
+      requestId: res.locals.requestId
+    });
+  }
+});
+
+/**
+ * GET /admin/api/documents/:docId/ingest-history
+ * Get history of ingest jobs for a document
+ *
+ * Returns array of past jobs ordered by created_at desc
+ */
+router.get('/:docId/ingest-history', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const supabase = await getSupabaseClient();
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('job_id, doc_id, status_v2, status, counters, error, created_at, started_at, completed_at')
+      .eq('doc_id', docId)
+      .eq('job_type', 'v5_ingest')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+
+    return res.json({
+      success: true,
+      data: {
+        doc_id: docId,
+        jobs: data || [],
+        count: (data || []).length
+      },
+      requestId: res.locals.requestId
+    });
+
+  } catch (err) {
+    log.error('Failed to get ingest history', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { code: 'HISTORY_ERROR', message: err.message },
       requestId: res.locals.requestId
     });
   }

@@ -1,0 +1,658 @@
+{
+  "doc_id": "1a178ba54c77a95553a48a362166b3f09c0b24e6e0b634ba8a942d87e5b02df5",
+  "filename": "0AJHC-EN001F-Sep.2025-0_JH-CR_OPM_20250917-unlocked.pdf",
+  "approach": "map-reduce",
+  "chunk_size": 50000,
+  "overlap": 2000,
+  "markdown_total_chars": 226345,
+  "num_chunks": 5,
+  "model": "gpt-4.1-mini",
+  "map_findings_count": 59,
+  "map_findings": [
+    {
+      "model": "3JH40",
+      "manufacturer": "Yanmar",
+      "type": "Engine",
+      "description": "3-cylinder naturally aspirated marine diesel engine in the JH series",
+      "context": "Main subject, listed in model specifications and product overview",
+      "chunk": 1
+    },
+    {
+      "model": "4JH45",
+      "manufacturer": "Yanmar",
+      "type": "Engine",
+      "description": "4-cylinder naturally aspirated marine diesel engine in the JH series",
+      "context": "Main subject, listed in model specifications and product overview",
+      "chunk": 1
+    },
+    {
+      "model": "4JH57",
+      "manufacturer": "Yanmar",
+      "type": "Engine",
+      "description": "4-cylinder naturally aspirated marine diesel engine in the JH series",
+      "context": "Main subject, listed in model specifications and product overview",
+      "chunk": 1
+    },
+    {
+      "model": "4JH80",
+      "manufacturer": "Yanmar",
+      "type": "Engine",
+      "description": "4-cylinder turbocharged marine diesel engine with air cooler in the JH series",
+      "context": "Main subject, listed in model specifications and product overview",
+      "chunk": 1
+    },
+    {
+      "model": "4JH110",
+      "manufacturer": "Yanmar",
+      "type": "Engine",
+      "description": "4-cylinder turbocharged marine diesel engine with air cooler in the JH series",
+      "context": "Main subject, listed in model specifications and product overview",
+      "chunk": 1
+    },
+    {
+      "model": "KM4A1",
+      "manufacturer": "Yanmar",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with 4JH45/4JH57 engines to transmit power from engine to propeller",
+      "context": "Referenced in product overview figure showing engine components",
+      "chunk": 1
+    },
+    {
+      "model": "VC10",
+      "manufacturer": "Yanmar",
+      "type": "Vessel Control System",
+      "description": "Electronic control system designed to operate the 3/4JH common rail series engines and drive system",
+      "context": "Main subject in control equipment section describing control system components",
+      "chunk": 1
+    },
+    {
+      "model": "VC20",
+      "manufacturer": "Yanmar",
+      "type": "Vessel Control System",
+      "description": "Advanced electronic control system for 3/4JH common rail series engines with integrated control and diagnostic functions",
+      "context": "Main subject in control equipment section describing control system components",
+      "chunk": 1
+    },
+    {
+      "model": "VC30",
+      "manufacturer": "Yanmar",
+      "type": "Vessel Control System",
+      "description": "Fully electronic control system for 3/4JH common rail series engines with enhanced control and diagnostic capabilities",
+      "context": "Main subject in control equipment section describing control system components",
+      "chunk": 1
+    },
+    {
+      "model": "B25",
+      "manufacturer": "Yanmar",
+      "type": "Instrument Panel",
+      "description": "Optional instrument panel type used for engine monitoring and control",
+      "context": "Referenced in control equipment section describing instrument panel options",
+      "chunk": 1
+    },
+    {
+      "model": "C35",
+      "manufacturer": "Yanmar",
+      "type": "Instrument Panel",
+      "description": "Optional instrument panel type with electric gauge and needle for engine monitoring",
+      "context": "Referenced in control equipment section describing instrument panel options",
+      "chunk": 1
+    },
+    {
+      "model": "F3-180",
+      "manufacturer": "Yanmar",
+      "type": "Fuel Level Gauge",
+      "description": "Type of fuel level gauge selectable in instrument panel settings",
+      "context": "Referenced in display setting options for fuel tank level gauge",
+      "chunk": 1
+    },
+    {
+      "model": "F240-3",
+      "manufacturer": "Yanmar",
+      "type": "Fuel Level Gauge",
+      "description": "Type of fuel level gauge selectable in instrument panel settings",
+      "context": "Referenced in display setting options for fuel tank level gauge",
+      "chunk": 1
+    },
+    {
+      "model": "F70-3",
+      "manufacturer": "Yanmar",
+      "type": "Fuel Level Gauge",
+      "description": "Type of fuel level gauge selectable in instrument panel settings",
+      "context": "Referenced in display setting options for fuel tank level gauge",
+      "chunk": 1
+    },
+    {
+      "model": "VC30",
+      "manufacturer": "YANMAR",
+      "type": "Vessel Control System",
+      "description": "YANMAR's original fully electronic vessel control system designed to operate the 3/4JH common rail series and drive system with integrated control and diagnostic functions.",
+      "context": "Main subject, described as the control system for the engine and marine gear.",
+      "chunk": 2
+    },
+    {
+      "model": "3/4JH",
+      "manufacturer": "YANMAR",
+      "type": "Engine Series",
+      "description": "Common rail marine diesel engine series designed to be operated with the VC30 vessel control system.",
+      "context": "Referenced as the engine series compatible with the VC30 system.",
+      "chunk": 2
+    },
+    {
+      "model": "KM35P",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "KM35A",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "KM35A2",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "KM4A1",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity.",
+      "context": "Listed in marine gear oil specifications and shown in marine gear oil cooler diagram.",
+      "chunk": 2
+    },
+    {
+      "model": "KM4A2",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "KMH4A",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity; supports trolling function.",
+      "context": "Listed in marine gear oil specifications and referenced in marine gear oil cooler diagram and trolling operation instructions.",
+      "chunk": 2
+    },
+    {
+      "model": "KMH50V-2",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "ZF30M",
+      "manufacturer": "ZF",
+      "type": "Marine Gear",
+      "description": "Marine gear model requiring ATF (Automatic Transmission Fluid) for lubrication.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "ZF25A",
+      "manufacturer": "ZF",
+      "type": "Marine Gear",
+      "description": "Marine gear model requiring ATF (Automatic Transmission Fluid) for lubrication; noted to not have a drain cock on the marine gear cooler.",
+      "context": "Listed in marine gear oil specifications and referenced in marine gear cooler description.",
+      "chunk": 2
+    },
+    {
+      "model": "ZF25",
+      "manufacturer": "ZF",
+      "type": "Marine Gear",
+      "description": "Marine gear model requiring ATF (Automatic Transmission Fluid) for lubrication.",
+      "context": "Listed in marine gear oil specifications for oil compatibility.",
+      "chunk": 2
+    },
+    {
+      "model": "SD60",
+      "manufacturer": "YANMAR",
+      "type": "Saildrive",
+      "description": "Saildrive unit referenced for checking and filling sail drive oil.",
+      "context": "Referenced in instructions for checking and adding sail drive oil.",
+      "chunk": 2
+    },
+    {
+      "model": "VC10",
+      "manufacturer": "YANMAR",
+      "type": "Vessel Control System",
+      "description": "YANMAR vessel control system used for engine operation with multi-station control head and display functions.",
+      "context": "Referenced in engine operation section describing control head operation and system functions.",
+      "chunk": 2
+    },
+    {
+      "model": "4JH45",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine model referenced in diagrams and oil level checking procedures.",
+      "context": "Referenced in oil level checking and coolant system diagrams.",
+      "chunk": 2
+    },
+    {
+      "model": "4JH57",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine model referenced in diagrams and oil level checking procedures.",
+      "context": "Referenced in oil level checking and coolant system diagrams.",
+      "chunk": 2
+    },
+    {
+      "model": "4JH80",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine model referenced in coolant system diagrams.",
+      "context": "Referenced in coolant system diagrams.",
+      "chunk": 2
+    },
+    {
+      "model": "4JH110",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine model referenced in marine gear oil checking procedures and coolant system diagrams.",
+      "context": "Referenced in marine gear oil checking and coolant system diagrams.",
+      "chunk": 2
+    },
+    {
+      "model": "3JH40",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine model referenced in coolant system components list.",
+      "context": "Referenced in coolant system components list.",
+      "chunk": 2
+    },
+    {
+      "model": "VC20",
+      "manufacturer": "Yanmar",
+      "type": "Vessel Control System",
+      "description": "A vessel control system that manages engine start/stop, throttle, and other engine control functions via a digital display and control head.",
+      "context": "Main subject in engine operation section, described in detail with operation steps and display functions.",
+      "chunk": 3
+    },
+    {
+      "model": "VC30",
+      "manufacturer": "Yanmar",
+      "type": "Vessel Control System",
+      "description": "An advanced vessel control system similar to VC20, providing engine start/stop and monitoring functions with a digital display and control head.",
+      "context": "Referenced in engine operation section with detailed operation instructions and display features.",
+      "chunk": 3
+    },
+    {
+      "model": "3JH40",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine Compression-Ignition (CI) engine certified by EPA and ARB, less than 37 kW",
+      "context": "Listed in emission-related parts inspection and maintenance section",
+      "chunk": 4
+    },
+    {
+      "model": "4JH45",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine Compression-Ignition (CI) engine certified by EPA and ARB, less than 37 kW",
+      "context": "Listed in emission-related parts inspection and maintenance section",
+      "chunk": 4
+    },
+    {
+      "model": "4JH57",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine greater than 37 kW, certified as EPA CI marine engine",
+      "context": "Listed in emission-related parts inspection and maintenance section and shown in figure",
+      "chunk": 4
+    },
+    {
+      "model": "4JH80",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine greater than 37 kW, certified as EPA CI marine engine",
+      "context": "Listed in emission-related parts inspection and maintenance section",
+      "chunk": 4
+    },
+    {
+      "model": "4JH110",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine greater than 37 kW, certified as EPA CI marine engine",
+      "context": "Shown in belt tension adjustment figure",
+      "chunk": 4
+    },
+    {
+      "model": "KMH4A",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear model used with the engine, includes oil filter and remote control cable adjustment",
+      "context": "Referenced in marine gear oil maintenance, remote control cable adjustment, and propeller shaft alignment",
+      "chunk": 4
+    },
+    {
+      "model": "KM4A1",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear Oil Cooler",
+      "description": "Marine gear oil cooler used in the cooling system",
+      "context": "Referenced in figure showing coolant and marine gear oil cooler",
+      "chunk": 4
+    },
+    {
+      "model": "3JH40",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "1.642 liter marine diesel engine with 29.4 kW power output, compliant with 2025 EPA marine emission standards",
+      "context": "Main subject, listed in specifications and emission control labels",
+      "chunk": 5
+    },
+    {
+      "model": "4JH45",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "2.190 liter marine diesel engine with 33.1 kW power output, compliant with 2025 EPA marine emission standards",
+      "context": "Main subject, listed in specifications and emission control labels",
+      "chunk": 5
+    },
+    {
+      "model": "4JH57",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine compliant with 2025 EPA marine emission standards",
+      "context": "Main subject, listed in specifications and emission control labels",
+      "chunk": 5
+    },
+    {
+      "model": "4JH80",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine compliant with 2025 EPA marine emission standards",
+      "context": "Main subject, listed in specifications and emission control labels",
+      "chunk": 5
+    },
+    {
+      "model": "4JH110",
+      "manufacturer": "YANMAR",
+      "type": "Engine",
+      "description": "Marine diesel engine compliant with 2025 EPA marine emission standards",
+      "context": "Main subject, listed in specifications and emission control labels",
+      "chunk": 5
+    },
+    {
+      "model": "SD60-4",
+      "manufacturer": "YANMAR",
+      "type": "Saildrive",
+      "description": "Saildrive unit designed for 4JH80 engine, used to connect engine to propeller shaft",
+      "context": "Listed in marine gear or sail drive specifications",
+      "chunk": 5
+    },
+    {
+      "model": "SD60-5",
+      "manufacturer": "YANMAR",
+      "type": "Saildrive",
+      "description": "Saildrive unit compatible with 3JH40 engine",
+      "context": "Referenced in system diagrams for 3JH40 engine",
+      "chunk": 5
+    },
+    {
+      "model": "KM4A1",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with 4JH45 and 4JH57 engines",
+      "context": "Referenced in system diagrams and marine gear oil cooler diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "KM35P",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit compatible with 3JH40 engine",
+      "context": "Referenced in system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "KM35A",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit compatible with 3JH40 engine",
+      "context": "Referenced in system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "KM35A2",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit compatible with 14JH45/4JH57 engines",
+      "context": "Referenced in system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "ZF25",
+      "manufacturer": "ZF",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with various JH series engines",
+      "context": "Referenced in marine gear specifications and system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "ZF25A",
+      "manufacturer": "ZF",
+      "type": "Marine Gear",
+      "description": "Marine gear unit variant without drain cock on marine gear cooler",
+      "context": "Referenced in marine gear specifications and system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "ZF30M",
+      "manufacturer": "ZF",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with 4JH45, 4JH57, 4JH80, and 4JH110 engines",
+      "context": "Referenced in marine gear specifications and system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "KM4A2",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with 4JH80/4JH110 engines with air or water cooled turbocharger",
+      "context": "Referenced in system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "KMH4A",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with 4JH80/4JH110 engines with air cooled turbocharger",
+      "context": "Referenced in system diagrams",
+      "chunk": 5
+    },
+    {
+      "model": "KMH50V-2",
+      "manufacturer": "YANMAR",
+      "type": "Marine Gear",
+      "description": "Marine gear unit used with 4JH80/4JH110 engines with water cooled turbocharger",
+      "context": "Referenced in system diagrams",
+      "chunk": 5
+    }
+  ],
+  "unique_models_found": 27,
+  "map_tokens_in": 60042,
+  "map_tokens_out": 4081,
+  "reduce_tokens_in": 3891,
+  "reduce_tokens_out": 1346,
+  "total_tokens_in": 63933,
+  "total_tokens_out": 5427,
+  "total_cost": 0.0342564,
+  "total_time": 78.33679580688477,
+  "result": {
+    "manufacturer": "Yanmar",
+    "product_type": "Engine",
+    "system_category": "Propulsion",
+    "subsystem_category": "Engines",
+    "is_multi_model": true,
+    "primary_family": {
+      "family_name": "Yanmar JH-CR Series",
+      "family_aliases": [
+        "3/4JH",
+        "JH Series",
+        "JH-CR",
+        "3/4JH common rail"
+      ],
+      "description": "Common rail marine diesel engine series designed to be operated with the VC30 vessel control system.",
+      "members": [
+        {
+          "display_name": "3JH40",
+          "aliases": [
+            "3JH40"
+          ],
+          "type": "Engine",
+          "manufacturer": "Yanmar",
+          "description": "1.642 liter marine diesel engine with 29.4 kW power output, compliant with 2025 EPA marine emission standards"
+        },
+        {
+          "display_name": "4JH45",
+          "aliases": [
+            "4JH45"
+          ],
+          "type": "Engine",
+          "manufacturer": "Yanmar",
+          "description": "2.190 liter marine diesel engine with 33.1 kW power output, compliant with 2025 EPA marine emission standards"
+        },
+        {
+          "display_name": "4JH57",
+          "aliases": [
+            "4JH57"
+          ],
+          "type": "Engine",
+          "manufacturer": "Yanmar",
+          "description": "Marine diesel engine model referenced in diagrams and oil level checking procedures."
+        },
+        {
+          "display_name": "4JH80",
+          "aliases": [
+            "4JH80"
+          ],
+          "type": "Engine",
+          "manufacturer": "Yanmar",
+          "description": "4-cylinder turbocharged marine diesel engine with air cooler in the JH series"
+        },
+        {
+          "display_name": "4JH110",
+          "aliases": [
+            "4JH110"
+          ],
+          "type": "Engine",
+          "manufacturer": "Yanmar",
+          "description": "Marine diesel engine model referenced in marine gear oil checking procedures and coolant system diagrams."
+        }
+      ]
+    },
+    "referenced_products": [
+      {
+        "display_name": "KM4A",
+        "aliases": [
+          "KM4A1",
+          "KM4A2"
+        ],
+        "type": "Marine Gear",
+        "manufacturer": "Yanmar",
+        "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity."
+      },
+      {
+        "display_name": "KM35A",
+        "aliases": [
+          "KM35A",
+          "KM35A2",
+          "KM35P"
+        ],
+        "type": "Marine Gear",
+        "manufacturer": "Yanmar",
+        "description": "Marine gear models used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity."
+      },
+      {
+        "display_name": "KMH4A",
+        "aliases": [
+          "KMH4A"
+        ],
+        "type": "Marine Gear",
+        "manufacturer": "Yanmar",
+        "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity; supports trolling function."
+      },
+      {
+        "display_name": "KMH50V-2",
+        "aliases": [
+          "KMH50V-2"
+        ],
+        "type": "Marine Gear",
+        "manufacturer": "Yanmar",
+        "description": "Marine gear model used with the engine, requiring specific oil meeting API CD or higher and SAE #20 or #30 viscosity."
+      },
+      {
+        "display_name": "SD60",
+        "aliases": [
+          "SD60",
+          "SD60-4",
+          "SD60-5"
+        ],
+        "type": "Saildrive",
+        "manufacturer": "Yanmar",
+        "description": "Saildrive unit connecting engine to propeller shaft for sailboat installations."
+      },
+      {
+        "display_name": "VC10",
+        "aliases": [
+          "VC10"
+        ],
+        "type": "Vessel Control System",
+        "manufacturer": "Yanmar",
+        "description": "YANMAR vessel control system used for engine operation with multi-station control head and display functions."
+      },
+      {
+        "display_name": "VC20",
+        "aliases": [
+          "VC20"
+        ],
+        "type": "Vessel Control System",
+        "manufacturer": "Yanmar",
+        "description": "Vessel control system managing engine start/stop, throttle, and other engine control functions via digital display and control head."
+      },
+      {
+        "display_name": "VC30",
+        "aliases": [
+          "VC30"
+        ],
+        "type": "Vessel Control System",
+        "manufacturer": "Yanmar",
+        "description": "YANMAR's original fully electronic vessel control system designed to operate the 3/4JH common rail series and drive system with integrated control and diagnostic functions."
+      },
+      {
+        "display_name": "ZF25",
+        "aliases": [
+          "ZF25",
+          "ZF25A"
+        ],
+        "type": "Marine Gear",
+        "manufacturer": "ZF",
+        "description": "Marine gear models requiring ATF (Automatic Transmission Fluid) for lubrication."
+      },
+      {
+        "display_name": "ZF30M",
+        "aliases": [
+          "ZF30M"
+        ],
+        "type": "Marine Gear",
+        "manufacturer": "ZF",
+        "description": "Marine gear model requiring ATF (Automatic Transmission Fluid) for lubrication."
+      }
+    ],
+    "confidence": "high",
+    "evidence": "The primary models 3JH40, 4JH45, 4JH57, 4JH80, and 4JH110 are all marine diesel engines from Yanmar's JH-CR common rail series, referenced together and compatible with the VC30 control system. Variants of marine gears KM4A, KM35A, and others are clustered by model family due to oil specification and usage context. Saildrive SD60 variants are clustered as sub-versions of the same saildrive product. Vessel control systems VC10, VC20, and VC30 are distinct products with separate capabilities and are kept separate. ZF marine gears are referenced but distinct from Yanmar gears and clustered by model family. Instrument panels and fuel gauges are referenced but not clustered as primary or referenced products due to limited technical integration content."
+  }
+}

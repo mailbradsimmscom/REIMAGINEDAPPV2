@@ -746,6 +746,23 @@
                     </label>
                 </div>
 
+                <!-- System deletion status (informational, no toggle) -->
+                <div class="deletion-section" id="systemDeletionSection" style="display: none;">
+                    <h4>💀 System Deletion</h4>
+                    <div id="systemDeletionStatus" style="padding: 8px 12px; border-radius: 6px; font-size: 14px; margin-bottom: 8px;"></div>
+                    <div id="systemDeletionCounts" style="font-size: 13px; color: var(--text-secondary); padding-left: 12px;"></div>
+                </div>
+
+                <!-- Additional counts (informational) -->
+                <div class="deletion-section">
+                    <h4>📊 Additional Data</h4>
+                    <div style="font-size: 13px; color: var(--text-secondary); padding-left: 12px;">
+                        <div>Ingest Timing Records: <span id="ingestTimingCount">0</span></div>
+                        <div>Staging Troubleshooting: <span id="stagingTroubleshootingCount">0</span></div>
+                        <div>Production Troubleshooting: <span id="prodTroubleshootingCount">0</span></div>
+                    </div>
+                </div>
+
                 <!-- Reason -->
                 <div class="deletion-section">
                     <label>Deletion Reason (optional):</label>
@@ -1030,6 +1047,42 @@
                     document.getElementById('prodProceduresCount').textContent = `(${preview.counts.production_procedures})`;
                     document.getElementById('prodQaCount').textContent = `(${preview.counts.production_qa})`;
                     document.getElementById('prodGoldenCount').textContent = `(${preview.counts.production_golden})`;
+
+                    // Additional counts
+                    document.getElementById('ingestTimingCount').textContent = preview.counts.ingest_timing || 0;
+                    document.getElementById('stagingTroubleshootingCount').textContent = preview.counts.staging_troubleshooting || 0;
+                    document.getElementById('prodTroubleshootingCount').textContent = preview.counts.production_troubleshooting || 0;
+
+                    // System deletion status
+                    const sysDeletionSection = document.getElementById('systemDeletionSection');
+                    const sysDeletionStatus = document.getElementById('systemDeletionStatus');
+                    const sysDeletionCounts = document.getElementById('systemDeletionCounts');
+
+                    if (preview.asset_uid) {
+                        sysDeletionSection.style.display = 'block';
+                        if (preview.shouldDeleteSystem) {
+                            sysDeletionStatus.style.background = '#FFF3CD';
+                            sysDeletionStatus.style.border = '1px solid #FFD93D';
+                            sysDeletionStatus.innerHTML = '⚠️ <strong>System will be deleted</strong> — this is the only document linked to this system';
+                            const counts = preview.counts;
+                            sysDeletionCounts.innerHTML = `
+                                Cascade will also delete:<br>
+                                &nbsp;&nbsp;• Instances: ${counts.instances || 0}<br>
+                                &nbsp;&nbsp;• Maintenance Queue: ${counts.maintenance_tasks_queue || 0}<br>
+                                &nbsp;&nbsp;• Staging System Relationships: ${counts.staging_system_relationships || 0}<br>
+                                &nbsp;&nbsp;• Troubleshooting: ${counts.troubleshooting || 0}<br>
+                                &nbsp;&nbsp;• Staging Troubleshooting: ${counts.staging_troubleshooting || 0}<br>
+                                &nbsp;&nbsp;• Plus cascaded: centroid_members, boatos_tasks, system_hours, system_maintenance, system_photos, system_relationships, pipeline_status, maintenance_tasks_index, task_completions
+                            `;
+                        } else {
+                            sysDeletionStatus.style.background = '#D4EDDA';
+                            sysDeletionStatus.style.border = '1px solid #28A745';
+                            sysDeletionStatus.innerHTML = `✅ <strong>System will be kept</strong> — ${preview.documentSystemsCount} document(s) linked to this system`;
+                            sysDeletionCounts.innerHTML = '';
+                        }
+                    } else {
+                        sysDeletionSection.style.display = 'none';
+                    }
 
                     // Show modal
                     document.getElementById('deletionModal').style.display = 'block';

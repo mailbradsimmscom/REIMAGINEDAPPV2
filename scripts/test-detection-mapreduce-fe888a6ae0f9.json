@@ -1,0 +1,136 @@
+{
+  "doc_id": "fe888a6ae0f92c5d0e53816b967cdaca5c1496788a2456245618b4cce38fbfc3",
+  "filename": "6834-007-ML-RBS-web.pdf",
+  "approach": "map-reduce",
+  "chunk_size": 50000,
+  "overlap": 2000,
+  "markdown_total_chars": 3950,
+  "num_chunks": 1,
+  "model": "gpt-4.1-mini",
+  "map_findings_count": 6,
+  "map_findings": [
+    {
+      "model": "7700 12V",
+      "manufacturer": "Blue Sea Systems",
+      "type": "Remote Battery Switch",
+      "description": "500A magnetic latching switch providing high amperage switching under load, manually or from remote location",
+      "context": "Main subject, listed in product description",
+      "chunk": 1
+    },
+    {
+      "model": "ML-RBS",
+      "manufacturer": "Blue Sea Systems",
+      "type": "Magnetic Latching Remote Battery Switch",
+      "description": "Bi-stable remote battery switch with ignition protection and high amperage ratings",
+      "context": "Main subject, product name and specifications",
+      "chunk": 1
+    },
+    {
+      "model": "7713 12V",
+      "manufacturer": "Blue Sea Systems",
+      "type": "Remote Battery Switch",
+      "description": "Remote enabled magnetic latching remote battery switch with high amperage ratings",
+      "context": "Main subject, product description",
+      "chunk": 1
+    },
+    {
+      "model": "9160",
+      "manufacturer": "Blue Sea Systems",
+      "type": "Paralleling Link Bus",
+      "description": "Tin-plated copper bus for paralleling ML-Remote Battery Switches and Automatic Charging Relays",
+      "context": "Referenced in related products section",
+      "chunk": 1
+    },
+    {
+      "model": "2145",
+      "manufacturer": "Blue Sea Systems",
+      "type": "Remote Control Contura Switch",
+      "description": "Remote control switch with magnetic latching bi-stable coil function and LED lighting",
+      "context": "Referenced in remote control switch specifications",
+      "chunk": 1
+    },
+    {
+      "model": "2155",
+      "manufacturer": "Blue Sea Systems",
+      "type": "Remote Control Contura Switch",
+      "description": "Remote control switch with magnetic latching auto-releasing coil function and LED lighting",
+      "context": "Referenced in remote control switch specifications",
+      "chunk": 1
+    }
+  ],
+  "unique_models_found": 6,
+  "map_tokens_in": 1768,
+  "map_tokens_out": 410,
+  "reduce_tokens_in": 2428,
+  "reduce_tokens_out": 551,
+  "total_tokens_in": 4196,
+  "total_tokens_out": 961,
+  "total_cost": 0.003216,
+  "total_time": 15.170352935791016,
+  "result": {
+    "manufacturer": "Blue Sea Systems",
+    "product_type": "Remote Battery Switch",
+    "system_category": "Electrical (DC)",
+    "subsystem_category": "Battery Switch",
+    "is_multi_model": true,
+    "primary_family": {
+      "family_name": "Blue Sea Systems ML-RBS Series",
+      "family_aliases": [
+        "ML-RBS",
+        "Magnetic Latching Remote Battery Switch"
+      ],
+      "description": "Magnetic latching remote battery switches with high amperage ratings and ignition protection",
+      "members": [
+        {
+          "display_name": "7700 12V",
+          "aliases": [
+            "7700 12V"
+          ],
+          "type": "Remote Battery Switch",
+          "manufacturer": "Blue Sea Systems",
+          "description": "500A magnetic latching switch providing high amperage switching under load, manually or from remote location"
+        },
+        {
+          "display_name": "7713 12V",
+          "aliases": [
+            "7713 12V"
+          ],
+          "type": "Remote Battery Switch",
+          "manufacturer": "Blue Sea Systems",
+          "description": "Remote enabled magnetic latching remote battery switch with high amperage ratings"
+        }
+      ]
+    },
+    "referenced_products": [
+      {
+        "display_name": "2145",
+        "aliases": [
+          "2145"
+        ],
+        "type": "Remote Control Contura Switch",
+        "manufacturer": "Blue Sea Systems",
+        "description": "Remote control switch with magnetic latching bi-stable coil function and LED lighting"
+      },
+      {
+        "display_name": "2155",
+        "aliases": [
+          "2155"
+        ],
+        "type": "Remote Control Contura Switch",
+        "manufacturer": "Blue Sea Systems",
+        "description": "Remote control switch with magnetic latching auto-releasing coil function and LED lighting"
+      },
+      {
+        "display_name": "9160",
+        "aliases": [
+          "9160"
+        ],
+        "type": "Paralleling Link Bus",
+        "manufacturer": "Blue Sea Systems",
+        "description": "Tin-plated copper bus for paralleling ML-Remote Battery Switches and Automatic Charging Relays"
+      }
+    ],
+    "confidence": "high",
+    "evidence": "The primary models 7700 12V and 7713 12V are both magnetic latching remote battery switches from Blue Sea Systems, matching the ML-RBS product line. The 2145 and 2155 are related remote control switches referenced in specifications, and 9160 is a related paralleling bus product. Clustering was applied only to the primary battery switches as they share the same product line and function."
+  }
+}

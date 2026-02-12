@@ -91,37 +91,62 @@ These have `ON DELETE SET NULL` — rows stay, `asset_uid` becomes null:
 | `troubleshooting` | `asset_uid`, `related_system_uid` | DELETE WHERE asset_uid = X OR related_system_uid = X |
 | `staging_troubleshooting` | `asset_uid`, `related_system_uid` | DELETE WHERE asset_uid = X OR related_system_uid = X |
 | `maintenance_tasks_queue` | `asset_uid` | DELETE WHERE asset_uid = X |
-| `staging_system_relationships` | `source_system_uid`, `target_system_uid` | DELETE WHERE source = X OR target = X |
+| `staging_system_relationships` | `source_system_uid`, `target_system_uid` | DELETE WHERE source_system_uid = X OR target_system_uid = X |
 | `documents.oem_for_asset_uid` | `oem_for_asset_uid → systems(asset_uid)` | UPDATE SET NULL on other docs |
 | `maintenance_agent_memory` | `asset_uid` | **Already handled** (FK fixed) |
 
-**No FK but has `doc_id` column — delete explicitly:**
+**Has FK but NO CASCADE — blocks `documents` deletion:**
 
-| Table | Note |
-|-------|------|
-| `ingest_timing` | New table (2026-02-06), no FK to documents yet |
+| Table | FK | Action needed |
+|-------|-----|---------------|
+| `ingest_timing` | `doc_id → documents(doc_id)` NO CASCADE | DELETE WHERE doc_id = X |
 
 ---
 
 ## 4. Deletion Order
 
-Given `doc_id`, look up `asset_uid` from `document_systems`.
+Given `doc_id`:
+- **asset_uid source:** Use `documents.asset_uid` first. Fall back to `document_systems` (by doc_id) only if `documents.asset_uid` is null.
+- **If asset_uid is null:** Set `shouldDeleteSystem = false` and skip steps 7–14.
 
 ```
 Step  Table / Target                   Why this order
 ────  ──────────────────────────────   ─────────────────────────────────────
- 0    Gather info                      Get asset_uid, preview counts
+ 0    Gather info                      Get asset_uid (from documents.asset_uid,
+                                       fallback document_systems). Preview counts.
+                                       docCount = COUNT(DISTINCT doc_id)
+                                       FROM document_systems WHERE asset_uid = X.
+                                       shouldDeleteSystem = (docCount === 1)
+                                       (docCount === 0 → false; no link to verify)
+                                       (asset_uid is null → false; skip system steps)
  1    Pinecone vectors                 External — orphans invisible, do first
  2    Supabase storage                 External — archive manuals/{docId}/*
  3    document_chunks                  NO CASCADE — blocks doc deletion
- 4    ingest_timing                    No FK — explicit delete
+ 4    ingest_timing                    NO CASCADE — blocks doc deletion
  5    documents.last_job_id            SET NULL — clears FK to jobs
  6    jobs                             Now safe with FK cleared
+
+      ── Steps 7–11 only if shouldDeleteSystem ──
+
  7    troubleshooting                  NO CASCADE — blocks system deletion
+                                       DELETE WHERE asset_uid = X
+                                       OR related_system_uid = X
  8    staging_troubleshooting          NO CASCADE — blocks system deletion
+                                       DELETE WHERE asset_uid = X
+                                       OR related_system_uid = X
  9    maintenance_tasks_queue          NO CASCADE — blocks system deletion
+                                       First: UPDATE SET canonical_task_id = NULL,
+                                       duplicate_of = NULL WHERE asset_uid = X
+                                       (clears self-referencing FKs).
+                                       Then: DELETE WHERE asset_uid = X
 10    staging_system_relationships     NO CASCADE — blocks system deletion
-11    documents.oem_for_asset_uid      SET NULL on OTHER docs referencing this system
+                                       DELETE WHERE source_system_uid = X
+                                       OR target_system_uid = X
+11    documents.oem_for_asset_uid      SET NULL on OTHER docs WHERE
+                                       oem_for_asset_uid = X
+
+      ── Resume unconditionally ──
+
 12    Audit record                     INSERT into document_deletions before destroy
 13    documents row                    CASCADE handles: doc_assets,
                                        document_referenced_systems, document_systems,
@@ -129,6 +154,9 @@ Step  Table / Target                   Why this order
                                        golden_tests, staging_spec_suggestions,
                                        staging_playbook_hints, staging_intent_router,
                                        staging_golden_tests
+
+      ── Step 14 only if shouldDeleteSystem ──
+
 14    systems row                      CASCADE handles: instances, centroid_members,
                                        boatos_tasks, system_hours_history,
                                        system_maintenance, system_photos,
@@ -140,58 +168,43 @@ Step  Table / Target                   Why this order
 
 ---
 
-## 5. Service Layer
+## 5. Service Layer — IMPLEMENTED
 
 **File:** `src/services/document-deletion.service.js`
 **Class:** `DocumentDeletionService`
+**Status:** ✅ All steps implemented (2026-02-07)
 
 ### 5.1 `getDeletionPreview(docId)`
 
-**Currently counts:** chunks, jobs, staging DIP (4 tables), production DIP (4 tables), Pinecone, storage, system flags.
+**Counts (all implemented):** chunks, jobs, ingest_timing, staging DIP (5 tables incl. troubleshooting), production DIP (5 tables incl. troubleshooting), Pinecone, storage, system flags, shouldDeleteSystem, documentSystemsCount.
 
-**Add counts for:**
-- `ingest_timing` WHERE doc_id = X
-- `troubleshooting` WHERE asset_uid = X OR related_system_uid = X
-- `staging_troubleshooting` WHERE asset_uid = X OR related_system_uid = X
-- `maintenance_tasks_queue` WHERE asset_uid = X
-- `staging_system_relationships` WHERE source = X OR target = X
-- `instances` WHERE asset_uid = X
-
-**Storage:** Expand `getStorageInfo()` to list all paths under `manuals/{docId}/` recursively (`text/`, `vision/`, `llamaparse_raw.json`).
+**When shouldDeleteSystem is true, also counts:** troubleshooting, staging_troubleshooting, maintenance_tasks_queue, staging_system_relationships, instances.
 
 ### 5.2 `deleteDocument(docId, options, deletedBy, reason)`
 
-**Currently handles:** Steps 1–6, explicit DIP delete (redundant but safe since CASCADE covers it), system flag updates, audit, documents row.
+**Handles all steps:**
 
-**Missing — must add:**
+| Step | What | Status |
+|------|------|--------|
+| 0 | `shouldDeleteSystem` check via `document_systems` count | ✅ |
+| 3 | Storage archive | ✅ (existing) |
+| 4 | Delete `document_chunks` | ✅ (existing) |
+| 4b | Delete `ingest_timing` WHERE doc_id | ✅ |
+| 5 | Clear `last_job_id`, delete `jobs` | ✅ (existing) |
+| 6 | Delete Pinecone vectors | ✅ (existing) |
+| 7 | Delete staging DIP + `staging_troubleshooting` | ✅ |
+| 8 | Delete production DIP + `troubleshooting` | ✅ |
+| 9 | `maintenance_tasks_queue` — null self-refs then delete | ✅ (conditional on shouldDeleteSystem) |
+| 10 | `staging_system_relationships` — delete | ✅ (conditional on shouldDeleteSystem) |
+| 11 | `documents.oem_for_asset_uid` — SET NULL on other docs | ✅ (conditional on shouldDeleteSystem) |
+| 12 | System flag updates (colloquial, manual) | ✅ (only when NOT deleting system) |
+| 13 | Save audit record | ✅ (existing, enhanced with system deletion info) |
+| 14 | Delete documents row | ✅ (existing) |
+| 15 | Delete systems row (CASCADE) | ✅ (conditional on shouldDeleteSystem) |
 
-| Step | What | Code needed |
-|------|------|-------------|
-| 4 | `ingest_timing` | `supabase.from('ingest_timing').delete().eq('doc_id', docId)` |
-| 7 | `troubleshooting` | `.delete().or('asset_uid.eq.X,related_system_uid.eq.X')` |
-| 8 | `staging_troubleshooting` | Same pattern |
-| 9 | `maintenance_tasks_queue` | `.delete().eq('asset_uid', assetUid)` |
-| 10 | `staging_system_relationships` | `.delete().or('source_system_uid.eq.X,target_system_uid.eq.X')` |
-| 11 | `documents.oem_for_asset_uid` | `.update({ oem_for_asset_uid: null }).eq('oem_for_asset_uid', assetUid)` |
-| 14 | `systems` row | `.delete().eq('asset_uid', assetUid)` — cascades instances + 9 other tables |
+### 5.3 `countDipEntries()` / `deleteDipEntries()`
 
-**Remove (now redundant):**
-- System flag updates (colloquial_keywords, manual) — the system row is being deleted entirely
-- Explicit DIP deletes — CASCADE from documents handles them (keep if you want audit counts)
-
-### 5.3 `archiveStorage()`
-
-**Current:** Top-level list of `manuals/{docId}/`; moves PDFs and `DIP/` only.
-
-**Change to:**
-
-1. Add helper: `listStorageRecursive(supabase, prefix)` — list all objects under `manuals/{docId}/` (handle `text/`, `vision/analysis/`, `vision/assets/`, `llamaparse_raw.json`).
-2. Collect all file paths.
-3. For each path: `move(sourcePath, destPath)` or `remove(paths)` for hard delete.
-
-### 5.4 `countDipEntries()` / `deleteDipEntries()`
-
-**Add:** `troubleshooting` and `staging_troubleshooting` to both count and delete methods.
+**Includes:** specs, procedures, qa, golden, troubleshooting (staging_troubleshooting or troubleshooting based on env).
 
 ---
 
@@ -214,15 +227,18 @@ Step  Table / Target                   Why this order
 | **User tasks linked to system** | `user_tasks.asset_uid` SET NULL — tasks stay, lose system link. Show count in preview. |
 | **Troubleshooting references another system** | `related_system_uid` on troubleshooting rows. Deleting WHERE related_system_uid = X removes troubleshooting entries that reference this system from OTHER systems. Preview should show this count separately. |
 | **documents.oem_for_asset_uid** | Other documents that list this system as their OEM. NULL it out, don't block. |
+| **asset_uid is null** | Document has no linked system. Set `shouldDeleteSystem = false`, skip steps 7–14. Only delete document-level data (steps 1–6, 12–13). |
+| **docCount === 0** | No `document_systems` rows for this asset_uid (orphaned system or data inconsistency). Treat as `shouldDeleteSystem = false` — don't delete a system we can't verify ownership of. |
 
 ---
 
-## 8. No Changes Needed
+## 8. Implementation Notes
 
-- **Route** — Handles `docId` and passes options through.
-- **Frontend** — Uses existing options; new steps are internal to service.
+- **Route** — No changes needed. Handles `docId` and passes options through. New steps are internal to the service.
+- **Frontend** — Updated to display new preview counts (ingest_timing, troubleshooting, system deletion status).
 - **Pinecone** — Already handled via sidecar.
-- **Audit** — `document_deletions` insert already exists.
+- **Audit** — Enhanced with `should_delete_system`, `system_deletion_counts`, `system_deleted`, `system_asset_uid` fields.
+- **System deletion** — Automatic when `documents_table` option is true and this is the only document linked to the system. No new UI toggles.
 
 ---
 
@@ -230,7 +246,7 @@ Step  Table / Target                   Why this order
 
 | File | Changes |
 |------|---------|
-| `src/services/document-deletion.service.js` | Add steps 4, 7–11, 14; fix storage recursion; add preview counts |
-| `src/routes/admin/document-deletion.route.js` | Optional: extend schema for new toggle options |
-| `src/public/documents.html` | Optional: extend UI for new preview counts |
-| `docs/20-admin-tools/document-deletion-code-map.md` | This map |
+| `src/services/document-deletion.service.js` | ✅ Added steps 4b, 7-11, 14-15; added troubleshooting to DIP count/delete; added shouldDeleteSystem logic; added preview counts |
+| `src/routes/admin/document-deletion.route.js` | No changes needed |
+| `src/public/documents.html` | ✅ Added system deletion status display, ingest_timing/troubleshooting counts |
+| `docs/20-admin-tools/document-deletion-code-map.md` | ✅ Updated to reflect implementation |

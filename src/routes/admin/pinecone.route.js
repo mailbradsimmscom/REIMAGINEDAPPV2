@@ -1,5 +1,6 @@
 import express from 'express';
 import { logger } from '../../utils/logger.js';
+import { sidecarFetch } from '../../utils/sidecar-fetch.js';
 import { adminGate } from '../../middleware/admin.js';
 import { validate } from '../../middleware/validate.js';
 import { validateResponse } from '../../middleware/validateResponse.js';
@@ -33,7 +34,7 @@ router.get('/',
     // Check sidecar health
     let sidecarHealth = { status: 'unknown', error: null };
     try {
-      const healthResponse = await fetch(`${PYTHON_SIDECAR_URL}/health`);
+      const healthResponse = await sidecarFetch('/health');
       if (healthResponse.ok) {
         const healthData = await healthResponse.json();
         sidecarHealth = { 
@@ -49,7 +50,7 @@ router.get('/',
     }
     
     // First check health
-    const healthResponse = await fetch(`${PYTHON_SIDECAR_URL}/health`);
+    const healthResponse = await sidecarFetch('/health');
     if (!healthResponse.ok) {
       throw new Error(`Sidecar health check failed: ${healthResponse.status}`);
     }
@@ -57,7 +58,7 @@ router.get('/',
     const healthData = await healthResponse.json();
     
     // Then get Pinecone stats
-    const statsResponse = await fetch(`${PYTHON_SIDECAR_URL}/v1/pinecone/stats`);
+    const statsResponse = await sidecarFetch('/v1/pinecone/stats');
     let statsData = null;
     
     if (statsResponse.ok) {

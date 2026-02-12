@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 
 const requestLogger = logger.createModuleLogger('colloquial-extraction');
 
@@ -47,38 +48,19 @@ Return a JSON array of  10-20 colloquial terms:`;
  */
 async function fetchPineconeChunks(manufacturer, model) {
   try {
-    const env = getEnv();
-
-    // Set 2-minute timeout for Pinecone search
-    const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 120000); // 2 minutes
-
-    let response;
-    try {
-      response = await fetch(`${env.PYTHON_SIDECAR_URL}/v1/pinecone/search`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          query: `${manufacturer} ${model}`,
-          topK: 15,
-          filter: {
-            manufacturer: manufacturer,
-            model: model
-          }
-        }),
-        signal: abortController.signal
-      });
-      clearTimeout(timeoutId);
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-
-      if (fetchError.name === 'AbortError') {
-        throw new Error(`Pinecone search timeout: Search took longer than 2 minutes`);
-      }
-      throw fetchError;
-    }
+    const response = await sidecarFetch('/v1/pinecone/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `${manufacturer} ${model}`,
+        topK: 15,
+        filter: {
+          manufacturer: manufacturer,
+          model: model
+        }
+      }),
+      timeout: 2 * 60 * 1000 // 2 min
+    });
 
     const data = await response.json();
 
@@ -117,12 +99,6 @@ async function fetchPineconeChunksV5({ docId, selectedModels }) {
   if (safeSelected.length === 0) throw new Error('selectedModels is required and cannot be empty');
 
   try {
-    const env = getEnv();
-
-    // Set 2-minute timeout for Pinecone search
-    const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 120000); // 2 minutes
-
     const filter = {
       doc_id: { $eq: docId },
       $or: [
@@ -131,28 +107,18 @@ async function fetchPineconeChunksV5({ docId, selectedModels }) {
       ]
     };
 
-    let response;
-    try {
-      // Query text doesn't matter much as long as we constrain by filter;
-      // we just want representative chunks for LLM to extract colloquial terms.
-      response = await fetch(`${env.PYTHON_SIDECAR_URL}/v1/pinecone/search`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `${safeSelected[0]} manual`,
-          topK: 25,
-          filter
-        }),
-        signal: abortController.signal
-      });
-      clearTimeout(timeoutId);
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-      if (fetchError.name === 'AbortError') {
-        throw new Error('Pinecone search timeout: Search took longer than 2 minutes');
-      }
-      throw fetchError;
-    }
+    // Query text doesn't matter much as long as we constrain by filter;
+    // we just want representative chunks for LLM to extract colloquial terms.
+    const response = await sidecarFetch('/v1/pinecone/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `${safeSelected[0]} manual`,
+        topK: 25,
+        filter
+      }),
+      timeout: 2 * 60 * 1000 // 2 min
+    });
 
     const data = await response.json();
     if (!data.success || !data.matches) {

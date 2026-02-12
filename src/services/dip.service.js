@@ -5,6 +5,7 @@
 
 import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 
 class DIPService {
   constructor() {
@@ -96,11 +97,9 @@ class DIPService {
       };
 
       // Call DIP packet endpoint
-      const response = await fetch(`${sidecarUrl}/v1/runDocIntelligencePacket`, {
+      const response = await sidecarFetch('/v1/runDocIntelligencePacket', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
       });
 
@@ -143,7 +142,7 @@ class DIPService {
         return false;
       }
 
-      const response = await fetch(`${sidecarUrl}/health`);
+      const response = await sidecarFetch('/health');
       return response.ok;
     } catch (error) {
       this.requestLogger.warn('DIP availability check failed', { error: error.message });

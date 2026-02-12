@@ -30,6 +30,8 @@ from .models import (
     EmbeddingRequest, EmbeddingResponse, PineconeUpsertRequest, PineconeUpsertResponse,
     DIPRequest, DIPResponse, DIPPacketRequest, DIPPacketResponse, DIPGenerateRequest,
     ModelDetectionRequest, ModelDetectionResponse, ReferencedProduct, LlamaParseResponse,
+    ModelDetectionV2Request, ModelDetectionV2Response,
+    PrimaryFamily, DetectedModelMember, DetectedReferencedProduct,
     VisionAnalyzeRequest, VisionAnalyzeResponse, VisionAnalysisPath,
     VisionCropRequest, VisionCropResponse, VisionAsset,
     DIPRunRequest, DIPRunResponse, DIPModeResult,
@@ -629,6 +631,416 @@ Document content:
     except Exception as e:
         logger.error(f"Model detection failed: {e}")
         return ModelDetectionResponse(
+            success=False,
+            processing_time=time.time() - start_time,
+            error=str(e)
+        )
+
+
+# ============================================================================
+# Model Detection V2 — Map-Reduce approach
+# ============================================================================
+
+def _chunk_text(text: str, chunk_size: int = 50000, overlap: int = 2000) -> list:
+    """Split text into overlapping chunks."""
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        chunk = text[start:end]
+        chunks.append({
+            'text': chunk,
+            'start': start,
+            'end': min(end, len(text)),
+            'index': len(chunks)
+        })
+        start = end - overlap
+    return chunks
+
+
+def _map_phase(chunks: list, filename: str, model: str, openai_client) -> tuple:
+    """MAP: Extract models/products from each chunk."""
+
+    system_prompt = """You are an expert at identifying product models and equipment in technical manuals for marine vessels.
+
+Given a section of a technical manual, extract EVERY specific product model you find.
+
+A "product model" is a specific purchasable/installable system with a model number — like an engine (4JH57), a saildrive (SD60), a marine gear (KM4A1), or a vessel control system (VC20).
+
+For each product model found, provide:
+- model: The exact model number as written (e.g., "4JH57", "SD60", "Zeus 3S 16")
+- manufacturer: The manufacturer if identifiable (e.g., "Yanmar", "B&G", "ZF")
+- type: What kind of product (e.g., "Engine", "Saildrive", "Marine Gear", "Chartplotter")
+- description: One sentence describing what this product is and does
+- context: How it appears in this section — main subject, referenced in a diagram, in a specs table, in a compatibility list, etc.
+
+IMPORTANT:
+- Extract EVERY specific product model, not just the main product
+- Include models from compatibility tables, wiring diagrams, specifications, installation instructions
+- Do NOT include part numbers (e.g., "129670-07202", "177524-02903") — only product MODEL numbers
+- Do NOT include document/figure reference numbers (e.g., "037639-00E00", "122768-00X00")
+- Do NOT include tools (e.g., "Puller A")
+- Do NOT include consumables (oil, coolant, sealant brands)
+- Do NOT include firmware/software version numbers
+- Do NOT include series names or generic family references (e.g., "JH Series", "3/4JH common rail series") — only specific model numbers
+- Return ONLY valid JSON
+
+Return JSON:
+{
+  "models_found": [
+    {"model": "4JH57", "manufacturer": "Yanmar", "type": "Engine", "description": "57HP 4-cylinder marine diesel engine", "context": "Main subject, listed in model specifications"},
+    {"model": "SD60", "manufacturer": "Yanmar", "type": "Saildrive", "description": "Saildrive unit that connects engine to propeller for sailboat installations", "context": "Referenced in installation diagram and oil capacity table"}
+  ]
+}
+
+If no product models found in this section, return: {"models_found": []}"""
+
+    user_template = """This is chunk {chunk_num} of {total_chunks} from a technical manual.
+Filename: {filename}
+
+Content:
+{text}"""
+
+    total_tokens_in = 0
+    total_tokens_out = 0
+    all_findings = []
+
+    for chunk in chunks:
+        user_prompt = user_template.format(
+            chunk_num=chunk['index'] + 1,
+            total_chunks=len(chunks),
+            filename=filename,
+            text=chunk['text']
+        )
+
+        # Retry once on failure
+        last_error = None
+        for attempt in range(2):
+            try:
+                response = openai_client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0,
+                    seed=42,
+                    max_tokens=2000,
+                    response_format={"type": "json_object"}
+                )
+
+                usage = response.usage
+                total_tokens_in += usage.prompt_tokens
+                total_tokens_out += usage.completion_tokens
+
+                result = json.loads(response.choices[0].message.content)
+                models_found = result.get('models_found', [])
+
+                for m in models_found:
+                    m['chunk'] = chunk['index'] + 1
+
+                all_findings.extend(models_found)
+                logger.debug(f"MAP chunk {chunk['index']+1}/{len(chunks)}: {len(models_found)} models found")
+                last_error = None
+                break  # Success, no retry needed
+
+            except Exception as e:
+                last_error = e
+                if attempt == 0:
+                    logger.warning(f"MAP chunk {chunk['index']+1} failed (attempt 1), retrying: {e}")
+                else:
+                    logger.error(f"MAP chunk {chunk['index']+1} failed (attempt 2), aborting: {e}")
+
+        if last_error:
+            raise last_error  # Abort entire detection
+
+    return all_findings, total_tokens_in, total_tokens_out
+
+
+def _reduce_phase(findings: list, filename: str, ref_data, model: str, openai_client) -> tuple:
+    """REDUCE: Classify all findings into primary family + referenced products."""
+
+    # Deduplicate findings by model name
+    model_map = {}
+    for f in findings:
+        key = f.get('model', '').strip().upper()
+        if not key:
+            continue
+        if key not in model_map:
+            model_map[key] = {
+                'model': f.get('model', '').strip(),
+                'manufacturer': f.get('manufacturer', ''),
+                'type': f.get('type', ''),
+                'description': f.get('description', ''),
+                'contexts': [],
+                'chunks': []
+            }
+        ctx = f.get('context', '')
+        if ctx and ctx not in model_map[key]['contexts']:
+            model_map[key]['contexts'].append(ctx)
+        chunk = f.get('chunk', 0)
+        if chunk and chunk not in model_map[key]['chunks']:
+            model_map[key]['chunks'].append(chunk)
+        desc = f.get('description', '')
+        if desc and len(desc) > len(model_map[key].get('description', '')):
+            model_map[key]['description'] = desc
+
+    # Build findings summary for reduce prompt
+    findings_text = []
+    for key, info in sorted(model_map.items()):
+        chunks_str = ', '.join(str(c) for c in sorted(info['chunks']))
+        contexts_str = '; '.join(info['contexts'][:3])
+        desc = info.get('description', '')
+        findings_text.append(
+            f"- {info['model']} (mfr: {info['manufacturer']}, type: {info['type']}, "
+            f"desc: \"{desc}\", "
+            f"found in chunks: {chunks_str}, context: {contexts_str})"
+        )
+
+    ref_section = ""
+    if ref_data:
+        ref_section = f"""
+KNOWN VALUES (select from these when possible, or suggest new if no match):
+
+MANUFACTURERS: {', '.join(ref_data.manufacturers) if ref_data.manufacturers else 'None provided'}
+
+PRODUCT TYPES: {', '.join(ref_data.product_types) if ref_data.product_types else 'None provided'}
+
+SYSTEM CATEGORIES: {', '.join(ref_data.system_categories) if ref_data.system_categories else 'None provided'}
+
+SUBSYSTEM CATEGORIES (grouped by system):
+{chr(10).join([f"  - {s['name']} (under {s['system_name']})" for s in ref_data.subsystem_categories]) if ref_data.subsystem_categories else 'None provided'}
+"""
+
+    system_prompt = f"""You are an expert at classifying products found in technical manuals for marine vessels.
+
+You will receive a list of models/products extracted from different sections of a technical manual,
+along with the filename, description, and context about where each was found.
+
+Your job:
+
+1. GROUP primary models into a FAMILY when they are related (same product line, same manufacturer).
+   - The family has a "family_name" (e.g., "Yanmar JH-CR Series") and "family_aliases" — any
+     series-level names found in the document (e.g., "3/4JH", "JH Series", "JH-CR").
+   - Each individual model is listed as a "member" with its own display_name, aliases, description.
+   - Series/family names like "3/4JH" or "JH Series" go into family_aliases, NOT as separate products.
+   - If there is only one primary model, still use the family structure (family with one member).
+
+2. LIST each referenced product as a FLAT entry with display_name and aliases.
+   - Do NOT use family_name/members nesting for referenced products. Only primary_family uses that structure.
+   - Each referenced product is one flat object with keys: display_name, aliases, type, manufacturer, description.
+
+   CLUSTERING RULES — only cluster when names differ by a minor suffix/revision:
+   - CLUSTER: "SD60-4" and "SD60-5" → display_name "SD60", aliases ["SD60", "SD60-4", "SD60-5"]
+   - CLUSTER: "KM4A1" and "KM4A2" → display_name "KM4A", aliases ["KM4A1", "KM4A2"]
+   - CLUSTER: "Halo20" and "Halo20+" → display_name "Halo20", aliases ["Halo20", "Halo20+"]
+
+   NEVER cluster products that are fundamentally different — even if same manufacturer/category:
+   - H5000, Hercules, Triton Edge → 3 SEPARATE entries (different sailing processors)
+   - Halo20 and Halo24 → 2 SEPARATE entries (different radar units)
+   - VC10, VC20, VC30 → 3 SEPARATE entries (different control systems)
+   - ZF25 and ZF30M → 2 SEPARATE entries (different gearboxes)
+   - FLIR M232 and FLIR M300 → 2 SEPARATE entries (different cameras)
+   - AXIS P1244, IP CAM-1, IRIS S460 → 3 SEPARATE entries (different cameras)
+   - GFS, PWE, CMCF, GFSF → 4 SEPARATE entries (different weather models)
+
+   Rule: if the names share a common base and differ only by a number suffix, revision letter, or "+" → cluster.
+   Otherwise → separate entries.
+
+3. CLASSIFY referenced products:
+   - REFERENCED products appear in compatibility tables, wiring diagrams, installation instructions.
+   - They have meaningful technical content about how they integrate with the primary product.
+   - Products appearing in multiple chunks with real content ARE referenced.
+   - Do NOT include products only mentioned once in passing.
+
+4. IDENTIFY for the manual overall:
+   - MANUFACTURER, PRODUCT TYPE, SYSTEM CATEGORY, SUBSYSTEM CATEGORY
+{ref_section}
+Return ONLY valid JSON:
+{{
+  "manufacturer": "Yanmar",
+  "product_type": "Engine",
+  "system_category": "Propulsion",
+  "subsystem_category": "Engines",
+  "is_multi_model": true,
+  "primary_family": {{
+    "family_name": "Yanmar JH-CR Series",
+    "family_aliases": ["3/4JH", "JH Series", "JH-CR", "3/4JH common rail"],
+    "description": "Common-rail marine diesel engine series for sailboats and small craft",
+    "members": [
+      {{
+        "display_name": "3JH40",
+        "aliases": ["3JH40"],
+        "type": "Engine",
+        "manufacturer": "Yanmar",
+        "description": "40HP 3-cylinder marine diesel engine"
+      }},
+      {{
+        "display_name": "4JH57",
+        "aliases": ["4JH57"],
+        "type": "Engine",
+        "manufacturer": "Yanmar",
+        "description": "57HP 4-cylinder marine diesel engine"
+      }}
+    ]
+  }},
+  "referenced_products": [
+    {{
+      "display_name": "SD60",
+      "aliases": ["SD60", "SD60-4", "SD60-5"],
+      "type": "Saildrive",
+      "manufacturer": "Yanmar",
+      "description": "Saildrive unit connecting engine to propeller for sailboat installations"
+    }},
+    {{
+      "display_name": "KM4A",
+      "aliases": ["KM4A1", "KM4A2"],
+      "type": "Marine Gear",
+      "manufacturer": "Yanmar",
+      "description": "Marine reduction gear for engine-to-shaft connection"
+    }}
+  ],
+  "confidence": "high",
+  "evidence": "Brief explanation of classification reasoning"
+}}"""
+
+    user_prompt = f"""Classify and cluster the following models extracted from a technical manual.
+
+Filename: {filename}
+Total chunks analyzed: {len(set(f.get('chunk', 0) for f in findings))}
+
+Models/products found across the document:
+{chr(10).join(findings_text)}
+
+Group primary models into a family, cluster referenced product variants, and classify."""
+
+    response = openai_client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ],
+        temperature=0,
+        seed=42,
+        max_tokens=4000,
+        response_format={"type": "json_object"}
+    )
+
+    usage = response.usage
+    result = json.loads(response.choices[0].message.content)
+    return result, usage.prompt_tokens, usage.completion_tokens
+
+
+@app.post("/v1/detect-models-v2", response_model=ModelDetectionV2Response)
+async def detect_models_v2(request: ModelDetectionV2Request):
+    """
+    Detect models using map-reduce approach.
+    Splits document into chunks, extracts models from each (MAP),
+    then classifies and clusters all findings (REDUCE).
+    """
+    start_time = time.time()
+
+    try:
+        logger.info(f"[v2] Detecting models for doc_id={request.doc_id}, filename={request.filename}")
+        logger.info(f"[v2] Markdown: {len(request.markdown):,} chars, chunk_size={request.chunk_size}, overlap={request.overlap}")
+
+        from openai import OpenAI
+        openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        model = os.getenv('MODEL_DETECTION_MODEL', 'gpt-4.1-mini')
+
+        # Chunk the document
+        chunks = _chunk_text(request.markdown, request.chunk_size, request.overlap)
+        logger.info(f"[v2] {len(chunks)} chunks")
+
+        # MAP phase
+        map_start = time.time()
+        findings, map_tokens_in, map_tokens_out = _map_phase(chunks, request.filename, model, openai_client)
+        map_elapsed = time.time() - map_start
+        logger.info(f"[v2] MAP complete: {len(findings)} findings in {map_elapsed:.1f}s ({map_tokens_in:,} tok in, {map_tokens_out:,} tok out)")
+
+        if not findings:
+            logger.warning(f"[v2] No models found in any chunk")
+            return ModelDetectionV2Response(
+                success=True,
+                primary_family=PrimaryFamily(family_name="Unknown", members=[]),
+                processing_time=time.time() - start_time,
+                map_findings_count=0,
+                chunk_count=len(chunks)
+            )
+
+        # REDUCE phase
+        reduce_start = time.time()
+        result, reduce_tokens_in, reduce_tokens_out = _reduce_phase(
+            findings, request.filename, request.reference_data, model, openai_client
+        )
+        reduce_elapsed = time.time() - reduce_start
+        logger.info(f"[v2] REDUCE complete in {reduce_elapsed:.1f}s ({reduce_tokens_in:,} tok in, {reduce_tokens_out:,} tok out)")
+
+        total_tokens_in = map_tokens_in + reduce_tokens_in
+        total_tokens_out = map_tokens_out + reduce_tokens_out
+        total_cost = (total_tokens_in * 0.40 + total_tokens_out * 1.60) / 1_000_000
+        processing_time = time.time() - start_time
+        logger.info(f"[v2] Total: {processing_time:.1f}s, {total_tokens_in:,} tok in, {total_tokens_out:,} tok out, ~${total_cost:.4f}")
+
+        # Build response from REDUCE result
+        family_data = result.get('primary_family', {})
+        primary_family = PrimaryFamily(
+            family_name=family_data.get('family_name', 'Unknown'),
+            family_aliases=family_data.get('family_aliases', []),
+            description=family_data.get('description', ''),
+            members=[
+                DetectedModelMember(
+                    display_name=m.get('display_name', ''),
+                    aliases=m.get('aliases', []),
+                    type=m.get('type'),
+                    manufacturer=m.get('manufacturer'),
+                    description=m.get('description', '')
+                )
+                for m in family_data.get('members', [])
+            ]
+        )
+
+        referenced_products = [
+            DetectedReferencedProduct(
+                display_name=rp.get('display_name', ''),
+                aliases=rp.get('aliases', []),
+                type=rp.get('type'),
+                manufacturer=rp.get('manufacturer'),
+                description=rp.get('description', '')
+            )
+            for rp in result.get('referenced_products', [])
+        ]
+
+        members_count = len(primary_family.members)
+        refs_count = len(referenced_products)
+        logger.info(f"[v2] Result: family='{primary_family.family_name}', {members_count} members, {refs_count} referenced, confidence={result.get('confidence', 'unknown')}")
+
+        return ModelDetectionV2Response(
+            success=True,
+            manufacturer=result.get('manufacturer'),
+            product_type=result.get('product_type'),
+            system_category=result.get('system_category'),
+            subsystem_category=result.get('subsystem_category'),
+            primary_family=primary_family,
+            referenced_products=referenced_products,
+            is_multi_model=result.get('is_multi_model', members_count > 1),
+            confidence=result.get('confidence', 'low'),
+            evidence=result.get('evidence', ''),
+            processing_time=processing_time,
+            map_findings_count=len(findings),
+            chunk_count=len(chunks)
+        )
+
+    except json.JSONDecodeError as e:
+        logger.error(f"[v2] Failed to parse LLM response: {e}")
+        return ModelDetectionV2Response(
+            success=False,
+            processing_time=time.time() - start_time,
+            error=f"Failed to parse LLM response: {str(e)}"
+        )
+    except Exception as e:
+        logger.error(f"[v2] Model detection failed: {e}", exc_info=True)
+        return ModelDetectionV2Response(
             success=False,
             processing_time=time.time() - start_time,
             error=str(e)
@@ -1398,8 +1810,9 @@ async def _run_dip_mode_with_cache(
     doc_id: str,
     selected_models: list,
     referenced_selections: list,
-    supabase_url: str,
-    supabase_key: str
+    alias_map: dict = None,
+    supabase_url: str = "",
+    supabase_key: str = ""
 ) -> DIPModeResult:
     """Run a single DIP mode with prompt caching and retry logic."""
     start_time = time.time()
@@ -1515,6 +1928,7 @@ async def _run_dip_mode_with_cache(
                     data=extracted_data,
                     selected_models=selected_models,
                     referenced_selections=referenced_selections,
+                    alias_map=alias_map or {},
                     supabase_url=supabase_url,
                     supabase_key=supabase_key
                 )
@@ -1603,6 +2017,7 @@ async def _insert_dip_results(
     data: list,
     selected_models: list,
     referenced_selections: list,
+    alias_map: dict,
     supabase_url: str,
     supabase_key: str
 ) -> tuple[int, int]:
@@ -1615,6 +2030,7 @@ async def _insert_dip_results(
     - Decision #7: referenced_systems = item.referenced_systems ∩ referenced_selections
     - Decision #9: Skip invalid items; fail mode if 0 valid from N>0
     - Decision #11: If "all" in applies_to_models, normalize to ["all"]
+    - Phase E: Resolve aliases via alias_map, normalize both sides, store normalized
     """
     table_name = DIP_MODE_TABLE_MAP.get(mode)
     if not table_name:
@@ -1628,24 +2044,57 @@ async def _insert_dip_results(
         "Prefer": "return=minimal"
     }
 
-    # Helper: normalize applies_to_models per Decision #11 + intersect with selected_models
+    # Phase E: Build normalized allowed sets for comparison
+    normalized_allowed = {normalize_model_key(m) for m in selected_models}
+    normalized_ref_allowed = {normalize_model_key(r) for r in referenced_selections}
+
+    # Helper: resolve aliases via alias_map, normalize both sides, store normalized
     def normalize_applies_to_models(raw_models):
         if not raw_models or not isinstance(raw_models, list):
             return []
         # If "all" is present, normalize to ["all"] exclusively (Decision #11)
         if "all" in raw_models:
             return ["all"]
-        # Intersect with selected_models to prevent LLM from inventing keys
-        allowed_set = set(selected_models)
-        filtered = [m for m in raw_models if m in allowed_set]
-        return filtered if filtered else []
+        # Phase E: resolve aliases → canonical, then normalize, then filter against normalized allowed_set
+        resolved = []
+        for m in raw_models:
+            # Try alias_map first (keys=original forms, values=[canonical])
+            if m in alias_map:
+                resolved.extend(alias_map[m])
+            else:
+                resolved.append(m)
+        # Normalize all resolved values and filter against normalized allowed_set
+        filtered = []
+        seen = set()
+        for m in resolved:
+            norm = normalize_model_key(m)
+            if norm in normalized_allowed and norm not in seen:
+                seen.add(norm)
+                filtered.append(norm)
+        if not filtered:
+            # Log unmapped values for debugging
+            logger.warning(f"DIP {mode}: no models matched allowed_set after alias resolution. "
+                          f"raw={raw_models}, resolved={resolved}, allowed={list(normalized_allowed)}")
+        return filtered
 
-    # Helper: intersect referenced_systems with allowed selections per Decision #7
+    # Helper: resolve + normalize referenced_systems per Decision #7
     def filter_referenced_systems(raw_systems):
         if not raw_systems or not isinstance(raw_systems, list):
             return []
-        allowed_set = set(referenced_selections)
-        return [s for s in raw_systems if s in allowed_set]
+        resolved = []
+        for s in raw_systems:
+            if s in alias_map:
+                resolved.extend(alias_map[s])
+            else:
+                resolved.append(s)
+        filtered = []
+        seen = set()
+        for s in resolved:
+            norm = normalize_model_key(s)
+            if norm in normalized_ref_allowed and norm not in seen:
+                seen.add(norm)
+                filtered.append(norm)
+        return filtered
 
     # Required fields per table (Decision #9)
     REQUIRED_FIELDS = {
@@ -1825,9 +2274,9 @@ async def _dip_run_stream_generator(request: DIPRunRequest):
             yield f"event: run_failed\ndata: {json.dumps({'error_code': 'DOCUMENT_NOT_FOUND', 'error': 'Failed to fetch document content'})}\n\n"
             return
 
-        # Delete existing data if force_rerun
-        if request.force_rerun:
-            await _delete_existing_dip_data(doc_id, modes, supabase_url, supabase_key)
+        # Always delete existing non-approved data before inserting to prevent duplicate rows
+        # (Decision #4: _delete_existing_dip_data preserves rows where status='approved')
+        await _delete_existing_dip_data(doc_id, modes, supabase_url, supabase_key)
 
         # Build context section with exclude_models for precision
         exclude_models = request.exclude_models or []
@@ -1879,6 +2328,7 @@ Extract information that is relevant to the selected models and referenced syste
             doc_id=doc_id,
             selected_models=request.selected_models,
             referenced_selections=request.referenced_selections,
+            alias_map=request.alias_map,
             supabase_url=supabase_url,
             supabase_key=supabase_key
         )
@@ -1920,6 +2370,7 @@ Extract information that is relevant to the selected models and referenced syste
                     doc_id=doc_id,
                     selected_models=request.selected_models,
                     referenced_selections=request.referenced_selections,
+                    alias_map=request.alias_map,
                     supabase_url=supabase_url,
                     supabase_key=supabase_key
                 )
@@ -2033,9 +2484,9 @@ async def run_dip_extraction(request: DIPRunRequest):
             error_code="DOCUMENT_NOT_FOUND"
         )
 
-    # Delete existing if force_rerun
-    if request.force_rerun:
-        await _delete_existing_dip_data(request.doc_id, request.modes, supabase_url, supabase_key)
+    # Always delete existing non-approved data before inserting to prevent duplicate rows
+    # (Decision #4: _delete_existing_dip_data preserves rows where status='approved')
+    await _delete_existing_dip_data(request.doc_id, request.modes, supabase_url, supabase_key)
 
     # Initialize client and build cached prefix
     client = anthropic.AsyncAnthropic(api_key=anthropic_key)
@@ -2067,6 +2518,8 @@ Extract information that is relevant to the selected models. If content applies 
         model=anthropic_model,
         doc_id=request.doc_id,
         selected_models=request.selected_models,
+        referenced_selections=request.referenced_selections,
+        alias_map=request.alias_map,
         supabase_url=supabase_url,
         supabase_key=supabase_key
     )
@@ -2089,6 +2542,8 @@ Extract information that is relevant to the selected models. If content applies 
                 model=anthropic_model,
                 doc_id=request.doc_id,
                 selected_models=request.selected_models,
+                referenced_selections=request.referenced_selections,
+                alias_map=request.alias_map,
                 supabase_url=supabase_url,
                 supabase_key=supabase_key
             )
@@ -2451,6 +2906,46 @@ async def index_document(request: IndexDocumentRequest):
         logger.info(f"Created {document_chunks.total_chunks} chunks, "
                     f"{document_chunks.total_tokens} tokens, "
                     f"{document_chunks.chunks_skipped} skipped")
+
+        # Phase E: Normalize primary_models and referenced_systems via alias_map
+        index_alias_map = request.alias_map or {}
+        if index_alias_map:
+            for chunk in document_chunks.chunks:
+                # Resolve and normalize primary_models
+                raw_primary = chunk.metadata.primary_models
+                resolved = []
+                for m in raw_primary:
+                    if m in index_alias_map:
+                        resolved.extend(index_alias_map[m])
+                    else:
+                        resolved.append(m)
+                seen = set()
+                normalized = []
+                for m in resolved:
+                    norm = normalize_model_key(m)
+                    if norm and norm not in seen:
+                        seen.add(norm)
+                        normalized.append(norm)
+                chunk.metadata.primary_models = normalized
+
+                # Resolve and normalize referenced_systems
+                raw_refs = chunk.metadata.referenced_systems
+                resolved_refs = []
+                for r in raw_refs:
+                    if r in index_alias_map:
+                        resolved_refs.extend(index_alias_map[r])
+                    else:
+                        resolved_refs.append(r)
+                seen_refs = set()
+                norm_refs = []
+                for r in resolved_refs:
+                    norm = normalize_model_key(r)
+                    if norm and norm not in seen_refs:
+                        seen_refs.add(norm)
+                        norm_refs.append(norm)
+                chunk.metadata.referenced_systems = norm_refs
+
+            logger.info(f"Phase E: Normalized chunk metadata via alias_map ({len(index_alias_map)} entries)")
 
     except Exception as e:
         logger.error(f"Failed to chunk document: {e}")
@@ -2982,15 +3477,17 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
             }
 
     def should_keep_for_user(model_info, user_models, user_referenced):
-        """Decide if figure is relevant to user's selection."""
-        # Note: unknown_attribution skip removed per Decision A - no-model pages
-        # with diagrams are now kept as doc-universal
+        """Decide if figure is relevant to user's selection.
+        Phase E: applies_to_models and referenced_systems are now normalized,
+        so compare using normalized user_models/user_referenced."""
         if model_info['is_universal']:
             return True, "universal"
+        # Phase E: compare normalized forms
         for um in user_models:
-            if um in model_info['applies_to_models']:
+            if normalize_model_key(um) in model_info['applies_to_models']:
                 return True, f"matches primary ({um})"
-        matching_refs = set(user_referenced or []) & set(model_info['referenced_systems'])
+        norm_user_refs = {normalize_model_key(r) for r in (user_referenced or [])}
+        matching_refs = norm_user_refs & set(model_info['referenced_systems'])
         if matching_refs:
             return True, f"matches referenced ({list(matching_refs)})"
         return False, f"not relevant (page has {model_info['applies_to_models']})"
@@ -3272,6 +3769,65 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
         all_models = request.models_covered
         user_models = request.selected_models
         user_referenced = request.referenced_selections or []
+        vision_alias_map = request.alias_map or {}
+
+        # Phase E: Build normalized allowed sets for Vision normalization
+        normalized_selected = {normalize_model_key(m) for m in user_models}
+        normalized_all_models = {normalize_model_key(m) for m in all_models}
+        normalized_ref = {normalize_model_key(r) for r in user_referenced}
+
+        def normalize_model_info(info):
+            """Phase E: Resolve aliases and normalize applies_to_models + referenced_systems."""
+            raw_applies = info.get('applies_to_models', [])
+            raw_refs = info.get('referenced_systems', [])
+
+            # Resolve and normalize applies_to_models
+            resolved_applies = []
+            for m in raw_applies:
+                if m in vision_alias_map:
+                    resolved_applies.extend(vision_alias_map[m])
+                else:
+                    resolved_applies.append(m)
+            norm_applies = []
+            seen = set()
+            for m in resolved_applies:
+                norm = normalize_model_key(m)
+                if norm in normalized_all_models and norm not in seen:
+                    seen.add(norm)
+                    norm_applies.append(norm)
+            if not norm_applies and raw_applies:
+                logger.error(f"Vision: no models matched after alias resolution. "
+                            f"raw={raw_applies}, resolved={resolved_applies}, "
+                            f"alias_map_keys={list(vision_alias_map.keys())}")
+                # No silent fallback — pass through raw values normalized directly
+                # so alias_map gaps surface in testing rather than hiding as universal
+                for m in raw_applies:
+                    norm = normalize_model_key(m)
+                    if norm and norm not in seen:
+                        seen.add(norm)
+                        norm_applies.append(norm)
+
+            # Resolve and normalize referenced_systems, filter against user selections
+            resolved_refs = []
+            for r in raw_refs:
+                if r in vision_alias_map:
+                    resolved_refs.extend(vision_alias_map[r])
+                else:
+                    resolved_refs.append(r)
+            norm_refs = []
+            seen_refs = set()
+            for r in resolved_refs:
+                norm = normalize_model_key(r)
+                if norm in normalized_ref and norm not in seen_refs:
+                    seen_refs.add(norm)
+                    norm_refs.append(norm)
+
+            info['applies_to_models'] = norm_applies
+            info['referenced_systems'] = norm_refs
+            # Update is_universal based on normalized values
+            if not info.get('is_universal'):
+                info['is_universal'] = (set(norm_applies) == {normalize_model_key(m) for m in all_models})
+            return info
 
         for page_data in pages_data:
             page_num = page_data.get('page', 0)
@@ -3285,6 +3841,9 @@ async def analyze_pages_with_vision(request: VisionAnalyzeRequest):
 
                 # Analyze page for model applicability
                 model_info = analyze_page_for_models(page_data, all_models, user_referenced, user_models)
+
+                # Phase E: Normalize model_info via alias_map before storage
+                model_info = normalize_model_info(model_info)
 
                 # Find figures and tables in layout
                 # Sort by y then x to match reading order (items array order)
@@ -3750,82 +4309,6 @@ def _parse_vision_response(response_text: str) -> dict:
         return {"parse_error": str(e), "raw_response": response_text, "figures": [], "tables": []}
 
 
-async def _canonicalize_analysis(analysis: dict, selected_models: list, page_num: int, warnings: list) -> dict:
-    """Canonicalize model tags in analysis result."""
-
-    async def process_element(element: dict, element_type: str, idx: int):
-        """Process applies_to_models and referenced_systems for an element."""
-        raw_applies = element.get('applies_to_models', [])
-
-        # Handle "all" sentinel or empty/missing
-        if not raw_applies or raw_applies == ['all'] or raw_applies == 'all':
-            element['applies_to_models'] = selected_models.copy()
-            element['is_universal'] = True
-            if raw_applies != ['all']:
-                warnings.append({
-                    'page_number': page_num,
-                    'element_type': element_type,
-                    'element_index': idx,
-                    'issue': 'unknown_attribution',
-                    'code': 'DEFAULTED_TO_UNIVERSAL'
-                })
-        else:
-            # Canonicalize each model
-            canonical_applies = []
-            for model in raw_applies:
-                canonical = await canonicalize_model(model)
-                # Only include if in selected_models
-                if canonical in selected_models:
-                    canonical_applies.append(canonical)
-                elif normalize_model_key(model) in [normalize_model_key(s) for s in selected_models]:
-                    # Find the matching selected model
-                    for s in selected_models:
-                        if normalize_model_key(model) == normalize_model_key(s):
-                            canonical_applies.append(s)
-                            break
-
-            if not canonical_applies:
-                # None matched - default to universal
-                element['applies_to_models'] = selected_models.copy()
-                element['is_universal'] = True
-                warnings.append({
-                    'page_number': page_num,
-                    'element_type': element_type,
-                    'element_index': idx,
-                    'issue': 'no_valid_models',
-                    'raw_models': raw_applies,
-                    'code': 'DEFAULTED_TO_UNIVERSAL'
-                })
-            else:
-                element['applies_to_models'] = canonical_applies
-                element['is_universal'] = (set(canonical_applies) == set(selected_models))
-
-        # Canonicalize referenced_systems
-        raw_refs = element.get('referenced_systems', [])
-        if raw_refs:
-            canonical_refs = []
-            for ref in raw_refs:
-                if ref:
-                    canonical = await canonicalize_model(ref)
-                    if canonical and canonical not in canonical_refs:
-                        canonical_refs.append(canonical)
-            element['referenced_systems'] = canonical_refs
-        else:
-            element['referenced_systems'] = []
-
-        return element
-
-    # Process figures
-    for idx, fig in enumerate(analysis.get('figures', [])):
-        analysis['figures'][idx] = await process_element(fig, 'figure', idx)
-
-    # Process tables
-    for idx, tbl in enumerate(analysis.get('tables', [])):
-        analysis['tables'][idx] = await process_element(tbl, 'table', idx)
-
-    return analysis
-
-
 def _sort_elements_by_bbox(elements: list) -> list:
     """Sort elements by bbox: top-to-bottom, then left-to-right."""
     def sort_key(e):
@@ -4127,8 +4610,9 @@ def _filter_and_refine_analysis(
                 })
 
             # Ensure required arrays are present for downstream consumers
+            # Phase E: default to normalized selected_models
             if 'applies_to_models' not in el or not el.get('applies_to_models'):
-                el['applies_to_models'] = selected_models.copy()
+                el['applies_to_models'] = [normalize_model_key(m) for m in selected_models]
                 el['is_universal'] = True
                 warnings.append({
                     'page_number': page_num,

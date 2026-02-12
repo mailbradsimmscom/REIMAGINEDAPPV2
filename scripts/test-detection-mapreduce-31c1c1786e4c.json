@@ -1,0 +1,94 @@
+{
+  "doc_id": "31c1c1786e4c7a98ac38079bce69232fe7b1600faaef4442dab3447f0582448e",
+  "filename": "145775-48VDC-SINGLE-ZONE-INTELLIKEN-GRILL-1-1.pdf",
+  "approach": "map-reduce",
+  "chunk_size": 50000,
+  "overlap": 2000,
+  "markdown_total_chars": 33372,
+  "num_chunks": 1,
+  "model": "gpt-4.1-mini",
+  "map_findings_count": 3,
+  "map_findings": [
+    {
+      "model": "B70770",
+      "manufacturer": "Kenyon International",
+      "type": "Built-in Grill",
+      "description": "SilKEN\u00ae Built-in Grill with IntelliKEN Touch\u2122 operating at 48V DC and 1300 watts output",
+      "context": "Listed in product specifications section",
+      "chunk": 1
+    },
+    {
+      "model": "B70772",
+      "manufacturer": "Kenyon International",
+      "type": "Portable Grill",
+      "description": "SilKEN\u00ae Portable Grill with IntelliKEN Touch\u2122 operating at 48V DC and 1300 watts output",
+      "context": "Listed in product specifications section",
+      "chunk": 1
+    },
+    {
+      "model": "B96000",
+      "manufacturer": "Kenyon International",
+      "type": "Griddle accessory",
+      "description": "Optional griddle accessory for use with Kenyon grills",
+      "context": "Referenced in usage instructions for placing on the element with drip tray installed",
+      "chunk": 1
+    }
+  ],
+  "unique_models_found": 3,
+  "map_tokens_in": 8331,
+  "map_tokens_out": 216,
+  "reduce_tokens_in": 2274,
+  "reduce_tokens_out": 382,
+  "total_tokens_in": 10605,
+  "total_tokens_out": 598,
+  "total_cost": 0.0051988,
+  "total_time": 13.491198062896729,
+  "result": {
+    "manufacturer": "Kenyon International",
+    "product_type": "Built-in Grill",
+    "system_category": "Interior/Comfort",
+    "subsystem_category": "Galley",
+    "is_multi_model": true,
+    "primary_family": {
+      "family_name": "Kenyon SilKEN IntelliKEN Grill Series",
+      "family_aliases": [
+        "SilKEN",
+        "IntelliKEN Touch"
+      ],
+      "description": "48V DC powered grills with IntelliKEN Touch control technology for marine galley use",
+      "members": [
+        {
+          "display_name": "B70770",
+          "aliases": [
+            "B70770"
+          ],
+          "type": "Built-in Grill",
+          "manufacturer": "Kenyon International",
+          "description": "SilKEN\u00ae Built-in Grill with IntelliKEN Touch\u2122 operating at 48V DC and 1300 watts output"
+        },
+        {
+          "display_name": "B70772",
+          "aliases": [
+            "B70772"
+          ],
+          "type": "Portable Grill",
+          "manufacturer": "Kenyon International",
+          "description": "SilKEN\u00ae Portable Grill with IntelliKEN Touch\u2122 operating at 48V DC and 1300 watts output"
+        }
+      ]
+    },
+    "referenced_products": [
+      {
+        "display_name": "B96000",
+        "aliases": [
+          "B96000"
+        ],
+        "type": "Griddle Accessory",
+        "manufacturer": "Kenyon International",
+        "description": "Optional griddle accessory for use with Kenyon grills"
+      }
+    ],
+    "confidence": "high",
+    "evidence": "Models B70770 and B70772 share the SilKEN IntelliKEN branding and similar power specs, indicating a product family of grills. B96000 is an accessory referenced for use with these grills, thus classified as a referenced product."
+  }
+}

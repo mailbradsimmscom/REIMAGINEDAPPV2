@@ -5,6 +5,7 @@ import { promises as fs } from 'node:fs';
 import { extname, join } from 'node:path';
 import { logger } from './utils/logger.js';
 import { getEnv } from './config/env.js';
+import { sidecarFetch } from './utils/sidecar-fetch.js';
 // Note: errorHandler and notFoundHandler are wired in src/index.js after routes are mounted
 import adminRouter from './routes/admin/index.js';
 import suppliesRouter from './routes/supplies/index.js';
@@ -126,39 +127,55 @@ app.use('/js', express.static(join(process.cwd(), 'src/public/js'), {
 app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
 // Python sidecar proxy routes (for document-ingest.html)
-app.post('/python/v1/llamaparse', async (req, res) => {
-  try {
-    const sidecarUrl = getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
+// LlamaParse proxy — large PDFs take 5-15 min on LlamaParse cloud.
+// Uses sidecarFetch (node:http) to avoid undici's 5-min headersTimeout.
+const LLAMAPARSE_TIMEOUT_MS = 15 * 60 * 1000; // 15 min — 30MB/211-page PDF took ~11 min
 
+app.post('/python/v1/llamaparse', async (req, res) => {
+  // Extend incoming request/response timeouts (Node 18+ defaults to 5 min)
+  req.setTimeout(LLAMAPARSE_TIMEOUT_MS + 60000);
+  res.setTimeout(LLAMAPARSE_TIMEOUT_MS + 60000);
+
+  let bodySize = 0;
+  try {
     // Collect the raw body for multipart forwarding
     const chunks = [];
     for await (const chunk of req) {
       chunks.push(chunk);
     }
     const body = Buffer.concat(chunks);
+    bodySize = body.length;
+
+    logger.info('LlamaParse proxy: forwarding to sidecar', { bodySize });
 
     // Forward query params (e.g., doc_id) to Python sidecar
     const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
-    const targetUrl = `${sidecarUrl}/v1/llamaparse${queryString}`;
 
-    const response = await fetch(targetUrl, {
+    const proxyResponse = await sidecarFetch(`/v1/llamaparse${queryString}`, {
       method: 'POST',
-      body: body,
-      headers: { 'Content-Type': req.headers['content-type'] }
+      headers: {
+        'Content-Type': req.headers['content-type'],
+      },
+      body,
+      timeout: LLAMAPARSE_TIMEOUT_MS
     });
 
-    const data = await response.json();
-    res.status(response.status).json(data);
+    const data = await proxyResponse.json();
+    res.status(proxyResponse.status).json(data);
+
   } catch (error) {
-    logger.error('LlamaParse proxy error', { error: error.message });
-    res.status(500).json({ success: false, error: error.message });
+    logger.error('LlamaParse proxy error', { error: error.message, bodySize });
+    res.status(504).json({ success: false, error: error.message });
   }
 });
 
 app.post('/python/v1/detect-models', express.json({ limit: '50mb' }), async (req, res) => {
-  try {
-    const sidecarUrl = getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
+  // Route to v2 map-reduce endpoint — large docs (200+ pages) can take 5-10 min
+  const DETECT_TIMEOUT_MS = 15 * 60 * 1000; // 15 min — aligned with frontend callModelDetection()
+  req.setTimeout(DETECT_TIMEOUT_MS + 60000);
+  res.setTimeout(DETECT_TIMEOUT_MS + 60000);
 
+  try {
     // Fetch reference tables to include in request
     const { getSupabaseClient } = await import('./repositories/supabaseClient.js');
     const supabase = await getSupabaseClient();
@@ -189,19 +206,21 @@ app.post('/python/v1/detect-models', express.json({ limit: '50mb' }), async (req
       }
     };
 
-    const response = await fetch(`${sidecarUrl}/v1/detect-models`, {
+    // Note: document.service.js:873 calls /v1/detect-models DIRECTLY — stays on v1
+    const sidecarResponse = await sidecarFetch('/v1/detect-models-v2', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(enrichedBody)
+      body: JSON.stringify(enrichedBody),
+      timeout: DETECT_TIMEOUT_MS
     });
 
-    const data = await response.json();
+    const data = await sidecarResponse.json();
     // Include reference_data in response for frontend dropdown population
     data.reference_data = enrichedBody.reference_data;
-    res.status(response.status).json(data);
+    res.status(sidecarResponse.status).json(data);
   } catch (error) {
     logger.error('Model detection proxy error', { error: error.message });
-    res.status(500).json({ success: false, error: error.message });
+    res.status(504).json({ success: false, error: error.message });
   }
 });
 

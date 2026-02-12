@@ -597,9 +597,21 @@ function renderStepRow(s, extraClass) {
 }
 
 function renderTimingStepRows(steps, runId) {
+  if (!steps || !Array.isArray(steps)) return '';
   const mainSteps = steps.filter(s => !s.step_name.startsWith('dip_'));
   const dipSteps = steps.filter(s => s.step_name.startsWith('dip_'));
-  const dipTotalMs = dipSteps.reduce((sum, s) => sum + (s.duration_ms || 0), 0);
+
+  // Calculate wall clock time for parallel DIP modes (max end - min start)
+  let dipTotalMs = 0;
+  if (dipSteps.length > 0) {
+    const startTimes = dipSteps.map(s => s.started_at ? new Date(s.started_at).getTime() : Infinity);
+    const endTimes = dipSteps.map(s => s.ended_at ? new Date(s.ended_at).getTime() : 0);
+    const minStart = Math.min(...startTimes);
+    const maxEnd = Math.max(...endTimes);
+    if (minStart !== Infinity && maxEnd !== 0) {
+      dipTotalMs = maxEnd - minStart;
+    }
+  }
 
   let html = '';
 

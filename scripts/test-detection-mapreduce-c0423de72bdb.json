@@ -1,0 +1,413 @@
+{
+  "doc_id": "c0423de72bdbb87d3bb3b517bc4f4ba189c02e21d5da4f815d0cac303848770f",
+  "filename": "en-us-Zeus3S-OM_EN_004_w.pdf",
+  "approach": "map-reduce",
+  "chunk_size": 50000,
+  "overlap": 2000,
+  "markdown_total_chars": 298029,
+  "num_chunks": 7,
+  "model": "gpt-4.1-mini",
+  "map_findings_count": 26,
+  "map_findings": [
+    {
+      "model": "Zeus 3S",
+      "manufacturer": "B&G / Navico Group",
+      "type": "Multifunction Display (MFD)",
+      "description": "A marine multifunction display unit for navigation, radar, sonar, and other marine electronics integration.",
+      "context": "Main subject of the manual, product name and operation manual title.",
+      "chunk": 1
+    },
+    {
+      "model": "H5000",
+      "manufacturer": "B&G",
+      "type": "Sailing Processor and Autopilot System",
+      "description": "An integrated sailing processor and autopilot system for sailboats.",
+      "context": "Referenced in integration section and system tools panel.",
+      "chunk": 1
+    },
+    {
+      "model": "Triton Edge",
+      "manufacturer": "B&G",
+      "type": "Sailing Processor",
+      "description": "A sailing processor used for sailboat navigation and autopilot integration.",
+      "context": "Referenced in sailing processor integration section.",
+      "chunk": 1
+    },
+    {
+      "model": "Hercules",
+      "manufacturer": "B&G",
+      "type": "Sailing Processor",
+      "description": "A sailing processor used for sailboat navigation and autopilot integration.",
+      "context": "Referenced in sailing processor integration section.",
+      "chunk": 1
+    },
+    {
+      "model": "Zeus 3S",
+      "manufacturer": "Simrad",
+      "type": "Multifunction Display (MFD)",
+      "description": "A marine multifunction display system used for navigation, radar, autopilot control, and weather data integration.",
+      "context": "Main subject of the operation manual and referenced throughout the section.",
+      "chunk": 3
+    },
+    {
+      "model": "Halo20+",
+      "manufacturer": "Simrad",
+      "type": "Radar",
+      "description": "A broadband radar system with power save mode and advanced target detection capabilities.",
+      "context": "Referenced in radar operational modes and power save feature description.",
+      "chunk": 3
+    },
+    {
+      "model": "Halo24",
+      "manufacturer": "Simrad",
+      "type": "Radar",
+      "description": "A broadband radar system similar to Halo20+ with power save mode and advanced target detection capabilities.",
+      "context": "Referenced in radar operational modes and power save feature description.",
+      "chunk": 3
+    },
+    {
+      "model": "Zeus 3S",
+      "manufacturer": "Simrad",
+      "type": "Radar System",
+      "description": "A marine radar system providing advanced radar imaging, target tracking, and collision avoidance features.",
+      "context": "Main subject of the operation manual and throughout the radar operation and settings sections.",
+      "chunk": 4
+    },
+    {
+      "model": "Halo20",
+      "manufacturer": "Simrad",
+      "type": "Radar System",
+      "description": "A broadband radar model with specific features such as power save mode limitations and no dual range support.",
+      "context": "Referenced in feature notes and compatibility for power save and dual range modes.",
+      "chunk": 4
+    },
+    {
+      "model": "Halo20+",
+      "manufacturer": "Simrad",
+      "type": "Radar System",
+      "description": "An enhanced version of the Halo20 radar with power save mode capability.",
+      "context": "Referenced in power save feature availability notes.",
+      "chunk": 4
+    },
+    {
+      "model": "Halo24",
+      "manufacturer": "Simrad",
+      "type": "Radar System",
+      "description": "A 24-inch broadband radar model supporting power save mode and sector blanking features.",
+      "context": "Referenced in power save feature availability and sector blanking support.",
+      "chunk": 4
+    },
+    {
+      "model": "Broadband 4G",
+      "manufacturer": "Simrad",
+      "type": "Radar System",
+      "description": "A broadband radar model supporting dual range mode and advanced radar features.",
+      "context": "Referenced in dual range mode capability and radar source menu.",
+      "chunk": 4
+    },
+    {
+      "model": "Zeus 3S",
+      "manufacturer": "Navico",
+      "type": "Multifunction Display (MFD)",
+      "description": "A marine multifunction display system providing radar, AIS, echosounder, ForwardScan sonar, weather, and other integrated navigation features.",
+      "context": "Main subject of the operation manual, referenced throughout the section.",
+      "chunk": 5
+    },
+    {
+      "model": "S3100",
+      "manufacturer": "Navico",
+      "type": "Sonar Module",
+      "description": "A dual channel sonar module that provides the MFD with support for ForwardScan transducers.",
+      "context": "Referenced in ForwardScan sonar support section.",
+      "chunk": 5
+    },
+    {
+      "model": "WM-4",
+      "manufacturer": "Navico",
+      "type": "Marine Satellite Weather/Audio Receiver",
+      "description": "A marine satellite receiver that provides SiriusXM marine weather and audio services when connected to the system.",
+      "context": "Referenced in the weather section for satellite weather receiver support.",
+      "chunk": 5
+    },
+    {
+      "model": "SonicHub 2",
+      "manufacturer": "Navico",
+      "type": "Audio Server",
+      "description": "An audio server device that manages multiple audio sources and zones on the vessel, controllable via the MFD.",
+      "context": "Referenced in the audio system setup and control section.",
+      "chunk": 5
+    },
+    {
+      "model": "Zeus 3S",
+      "manufacturer": "B&G",
+      "type": "Multi-Function Display (MFD)",
+      "description": "A marine multi-function display unit used for navigation, system integration, and control on vessels.",
+      "context": "Main subject of the manual, referenced throughout the section as the device being configured and controlled.",
+      "chunk": 6
+    },
+    {
+      "model": "AXIS P1244 A",
+      "manufacturer": "Axis Communications",
+      "type": "IP Camera",
+      "description": "Ethernet IP camera supporting H.264 video format with RTSP streaming for marine applications.",
+      "context": "Listed in the IP cameras supported for integration with the Zeus 3S system.",
+      "chunk": 6
+    },
+    {
+      "model": "IP CAM-1",
+      "manufacturer": "Unspecified",
+      "type": "IP Camera",
+      "description": "Generic model of an IP camera supported for integration with the Zeus 3S system.",
+      "context": "Listed in the IP cameras supported for integration with the Zeus 3S system.",
+      "chunk": 6
+    },
+    {
+      "model": "IRIS S460",
+      "manufacturer": "Unspecified",
+      "type": "IP Camera",
+      "description": "IP camera model supported for integration with the Zeus 3S system.",
+      "context": "Listed in the IP cameras supported for integration with the Zeus 3S system.",
+      "chunk": 6
+    },
+    {
+      "model": "FLIR M232",
+      "manufacturer": "FLIR",
+      "type": "Thermal IP Camera",
+      "description": "FLIR M-series thermal IP camera providing infrared and daylight video with pan, tilt, and zoom control.",
+      "context": "Listed as a supported FLIR camera model for video and control integration with the Zeus 3S system.",
+      "chunk": 6
+    },
+    {
+      "model": "FLIR M300 Series",
+      "manufacturer": "FLIR",
+      "type": "Thermal IP Camera",
+      "description": "Series of FLIR thermal IP cameras supporting video streaming and remote control via the Zeus 3S system.",
+      "context": "Listed as supported FLIR camera models for integration with the Zeus 3S system.",
+      "chunk": 6
+    },
+    {
+      "model": "Contact 6 Plus",
+      "manufacturer": "CZone",
+      "type": "Digital Switching Device",
+      "description": "A digital switching device compatible with CZone system for vessel power and lighting control.",
+      "context": "Listed in the Digital Switching Configurations dialog as a selectable device for control bar integration.",
+      "chunk": 6
+    },
+    {
+      "model": "SL-5SE",
+      "manufacturer": "Unspecified",
+      "type": "Remote Control Unit",
+      "description": "A compatible remote control unit that can connect to the Zeus 3S MFD via Wi-Fi for remote operation.",
+      "context": "Referenced in the remote controllers list as a connected Wi-Fi remote control device.",
+      "chunk": 6
+    },
+    {
+      "model": "PARK-754L3R",
+      "manufacturer": "B&G",
+      "type": "Mobile App",
+      "description": "B&G Sailing & Navigation mobile app for iOS and Android used to remotely control B&G devices including the Zeus 3S.",
+      "context": "Referenced as the mobile app used for remote control and synchronization with the Zeus 3S MFD.",
+      "chunk": 6
+    },
+    {
+      "model": "Zeus 3S",
+      "manufacturer": "B&G",
+      "type": "Multifunction Display (MFD)",
+      "description": "A marine multifunction display used for navigation, system control, and integration of third-party devices including lighting control.",
+      "context": "Main subject of the operation manual and referenced throughout the lighting control and integration sections.",
+      "chunk": 7
+    }
+  ],
+  "unique_models_found": 19,
+  "map_tokens_in": 73359,
+  "map_tokens_out": 1967,
+  "reduce_tokens_in": 3330,
+  "reduce_tokens_out": 1446,
+  "total_tokens_in": 76689,
+  "total_tokens_out": 3413,
+  "total_cost": 0.0361364,
+  "total_time": 59.580739974975586,
+  "result": {
+    "manufacturer": "B&G / Navico Group",
+    "product_type": "Multifunction Display (MFD)",
+    "system_category": "Navigation",
+    "subsystem_category": "Displays/MFDs",
+    "is_multi_model": false,
+    "primary_family": {
+      "family_name": "B&G Zeus 3S Series",
+      "family_aliases": [
+        "Zeus 3S"
+      ],
+      "description": "Marine multifunction display system providing integrated navigation features including radar, AIS, sonar, and weather.",
+      "members": [
+        {
+          "display_name": "Zeus 3S",
+          "aliases": [
+            "Zeus 3S"
+          ],
+          "type": "Multifunction Display (MFD)",
+          "manufacturer": "B&G / Navico Group",
+          "description": "A marine multifunction display system providing radar, AIS, echosounder, ForwardScan sonar, weather, and other integrated navigation features."
+        }
+      ]
+    },
+    "referenced_products": [
+      {
+        "display_name": "Halo20",
+        "aliases": [
+          "Halo20",
+          "Halo20+"
+        ],
+        "type": "Radar",
+        "manufacturer": "Simrad",
+        "description": "Broadband radar systems with power save mode and advanced target detection capabilities; Halo20+ adds enhanced features over Halo20."
+      },
+      {
+        "display_name": "Halo24",
+        "aliases": [
+          "Halo24"
+        ],
+        "type": "Radar",
+        "manufacturer": "Simrad",
+        "description": "Broadband radar system similar to Halo20+ with power save mode, advanced target detection, and sector blanking support."
+      },
+      {
+        "display_name": "Broadband 4G",
+        "aliases": [
+          "Broadband 4G"
+        ],
+        "type": "Radar System",
+        "manufacturer": "Simrad",
+        "description": "Broadband radar model supporting dual range mode and advanced radar features."
+      },
+      {
+        "display_name": "H5000",
+        "aliases": [
+          "H5000"
+        ],
+        "type": "Sailing Processor and Autopilot System",
+        "manufacturer": "B&G",
+        "description": "Integrated sailing processor and autopilot system for sailboats."
+      },
+      {
+        "display_name": "Hercules",
+        "aliases": [
+          "Hercules"
+        ],
+        "type": "Sailing Processor",
+        "manufacturer": "B&G",
+        "description": "Sailing processor used for sailboat navigation and autopilot integration."
+      },
+      {
+        "display_name": "Triton Edge",
+        "aliases": [
+          "Triton Edge"
+        ],
+        "type": "Sailing Processor",
+        "manufacturer": "B&G",
+        "description": "Sailing processor used for sailboat navigation and autopilot integration."
+      },
+      {
+        "display_name": "PARK-754L3R",
+        "aliases": [
+          "PARK-754L3R"
+        ],
+        "type": "Mobile App",
+        "manufacturer": "B&G",
+        "description": "B&G Sailing & Navigation mobile app for iOS and Android used to remotely control B&G devices including the Zeus 3S."
+      },
+      {
+        "display_name": "S3100",
+        "aliases": [
+          "S3100"
+        ],
+        "type": "Sonar Module",
+        "manufacturer": "Navico",
+        "description": "Dual channel sonar module providing support for ForwardScan transducers."
+      },
+      {
+        "display_name": "SonicHub 2",
+        "aliases": [
+          "SonicHub 2"
+        ],
+        "type": "Audio Server",
+        "manufacturer": "Navico",
+        "description": "Audio server managing multiple audio sources and zones on the vessel, controllable via the MFD."
+      },
+      {
+        "display_name": "WM-4",
+        "aliases": [
+          "WM-4"
+        ],
+        "type": "Marine Satellite Weather/Audio Receiver",
+        "manufacturer": "Navico",
+        "description": "Marine satellite receiver providing SiriusXM marine weather and audio services."
+      },
+      {
+        "display_name": "Contact 6 Plus",
+        "aliases": [
+          "Contact 6 Plus"
+        ],
+        "type": "Digital Switching Device",
+        "manufacturer": "CZone",
+        "description": "Digital switching device compatible with CZone system for vessel power and lighting control."
+      },
+      {
+        "display_name": "SL-5SE",
+        "aliases": [
+          "SL-5SE"
+        ],
+        "type": "Remote Control Unit",
+        "manufacturer": "Unspecified",
+        "description": "Compatible remote control unit connecting to Zeus 3S MFD via Wi-Fi for remote operation."
+      },
+      {
+        "display_name": "AXIS P1244",
+        "aliases": [
+          "AXIS P1244 A"
+        ],
+        "type": "IP Camera",
+        "manufacturer": "Axis Communications",
+        "description": "Ethernet IP camera supporting H.264 video format with RTSP streaming for marine applications."
+      },
+      {
+        "display_name": "FLIR M232",
+        "aliases": [
+          "FLIR M232"
+        ],
+        "type": "Thermal IP Camera",
+        "manufacturer": "FLIR",
+        "description": "FLIR M-series thermal IP camera providing infrared and daylight video with pan, tilt, and zoom control."
+      },
+      {
+        "display_name": "FLIR M300 Series",
+        "aliases": [
+          "FLIR M300 Series"
+        ],
+        "type": "Thermal IP Camera",
+        "manufacturer": "FLIR",
+        "description": "Series of FLIR thermal IP cameras supporting video streaming and remote control via the Zeus 3S system."
+      },
+      {
+        "display_name": "IP CAM-1",
+        "aliases": [
+          "IP CAM-1"
+        ],
+        "type": "IP Camera",
+        "manufacturer": "Unspecified",
+        "description": "Generic IP camera model supported for integration with the Zeus 3S system."
+      },
+      {
+        "display_name": "IRIS S460",
+        "aliases": [
+          "IRIS S460"
+        ],
+        "type": "IP Camera",
+        "manufacturer": "Unspecified",
+        "description": "IP camera model supported for integration with the Zeus 3S system."
+      }
+    ],
+    "confidence": "high",
+    "evidence": "The Zeus 3S is the main product of the manual and is a multifunction display by B&G/Navico. Related radar models from Simrad (Halo20, Halo20+, Halo24, Broadband 4G) are clustered by suffix and referenced as compatible radar systems. Sailing processors from B&G (H5000, Hercules, Triton Edge) are listed separately due to different model names. Cameras from FLIR and Axis are listed individually as they differ significantly. Other referenced products such as digital switching devices, sonar modules, audio servers, mobile apps, and remote controls are listed flat as they integrate with the primary product."
+  }
+}

@@ -1,5 +1,5 @@
-import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
+import { sidecarFetch } from '../utils/sidecar-fetch.js';
 import documentRepository from '../repositories/document.repository.js';
 
 /**
@@ -12,13 +12,6 @@ import documentRepository from '../repositories/document.repository.js';
  */
 
 const log = logger.createRequestLogger();
-
-/**
- * Get the Python sidecar URL
- */
-function getSidecarUrl() {
-  return getEnv().PYTHON_SIDECAR_URL || 'http://localhost:8000';
-}
 
 /**
  * Run v5 indexing for a document
@@ -34,10 +27,10 @@ export async function runV5Indexing({
   docId,
   selectedModels,
   referencedSelections = [],
+  aliasMap = {},
   forceReindex = false
 }) {
   const startTime = Date.now();
-  const sidecarUrl = getSidecarUrl();
 
   log.info('Starting v5 indexing', {
     docId,
@@ -105,16 +98,16 @@ export async function runV5Indexing({
       models_covered: modelsCovered,
       selected_models: selectedModels,
       referenced_selections: referencedSelections,
+      alias_map: aliasMap,
       filename: filename,
       force_reindex: forceReindex
     };
 
-    const response = await fetch(`${sidecarUrl}/v1/index-document`, {
+    const response = await sidecarFetch('/v1/index-document', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+      timeout: 10 * 60 * 1000 // 10 min — large docs take 5+ min
     });
 
     if (!response.ok) {
