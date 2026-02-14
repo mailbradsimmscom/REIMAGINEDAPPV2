@@ -141,4 +141,72 @@ export async function checkDocumentStatus(assetUid) {
   }
 }
 
-export default { createUserTask, hasExistingTask, checkDocumentStatus };
+/**
+ * Complete document ingest tasks matching a doc_id and optional task type.
+ * Finds tasks created_by='document_ingest', status='active', parses notes JSON
+ * to match doc_id. Completes all matching tasks.
+ *
+ * Note: user_tasks.notes is TEXT not JSONB — filter by indexed created_by + status first,
+ * then parse notes JSON in app code to match doc_id.
+ *
+ * @param {string} docId - Document ID to match
+ * @param {string} [taskType] - Optional type filter (e.g. 'detection_complete')
+ * @returns {Promise<number>} Number of tasks completed
+ */
+export async function completeDocumentIngestTask(docId, taskType = null) {
+  try {
+    const supabase = await checkSupabaseAvailability();
+
+    // Query active document_ingest tasks (both columns are indexed)
+    const { data: tasks, error } = await supabase
+      .from(TABLE)
+      .select('id, notes')
+      .eq('created_by', 'document_ingest')
+      .eq('status', 'active');
+
+    if (error) {
+      requestLogger.error('Failed to query document ingest tasks', { error: error.message, docId });
+      return 0;
+    }
+
+    if (!tasks || tasks.length === 0) return 0;
+
+    // Parse notes JSON and find matching tasks
+    const matchingIds = [];
+    for (const task of tasks) {
+      try {
+        const notes = JSON.parse(task.notes);
+        if (notes.doc_id === docId && (!taskType || notes.type === taskType)) {
+          matchingIds.push(task.id);
+        }
+      } catch {
+        // Skip tasks with invalid JSON notes
+      }
+    }
+
+    if (matchingIds.length === 0) return 0;
+
+    // Complete all matching tasks
+    const { error: updateError } = await supabase
+      .from(TABLE)
+      .update({
+        status: 'completed',
+        completed_at: new Date().toISOString()
+      })
+      .in('id', matchingIds);
+
+    if (updateError) {
+      requestLogger.error('Failed to complete document ingest tasks', { error: updateError.message, docId, count: matchingIds.length });
+      return 0;
+    }
+
+    requestLogger.info('Completed document ingest tasks', { docId, taskType, count: matchingIds.length });
+    return matchingIds.length;
+
+  } catch (err) {
+    requestLogger.warn('completeDocumentIngestTask failed', { error: err.message, docId });
+    return 0;
+  }
+}
+
+export default { createUserTask, hasExistingTask, checkDocumentStatus, completeDocumentIngestTask };

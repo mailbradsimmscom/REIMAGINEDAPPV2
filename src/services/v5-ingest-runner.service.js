@@ -4,6 +4,7 @@ import { runVisionPipeline } from './vision-pipeline.service.js';
 import { runV5Indexing } from './v5-index.service.js';
 import { buildPipelineModelParams } from './alias-map.service.js';
 import { runDipWithCallback } from './dip-stream.service.js';
+import { createUserTask } from '../repositories/user-tasks.repository.js';
 
 /**
  * v5 Ingest Runner Service
@@ -40,7 +41,8 @@ export async function startIngestRun({
   selectedModels,
   referencedSelections = [],
   installedAssetUid = null,
-  skipDip = false
+  skipDip = false,
+  filename = null
 }) {
   log.info('Starting ingest run', { docId, selectedModels, skipDip });
 
@@ -77,7 +79,8 @@ export async function startIngestRun({
       referenced_selections: referencedSelections,
       alias_map: dbParams.alias_map,
       installed_asset_uid: installedAssetUid,
-      skip_dip: skipDip
+      skip_dip: skipDip,
+      filename
     },
     counters: {},
     selected_models: selectedModels,
@@ -375,6 +378,27 @@ async function runIngestPipeline(jobId) {
 
     log.info('Ingest pipeline completed', { jobId, docId, counters });
 
+    // Create user todo for ingest completion
+    const filename = job.params.filename;
+    try {
+      await createUserTask({
+        description: `Ingestion complete: ${filename || docId.substring(0, 16)} — ${counters.indexing?.chunks_created || 0} chunks, ${counters.dip?.modes_completed?.length || 0} DIP modes`,
+        due_date: new Date().toISOString(),
+        created_by: 'document_ingest',
+        priority: 'normal',
+        notes: JSON.stringify({
+          type: 'ingest_complete',
+          doc_id: docId,
+          job_id: jobId,
+          chunks_created: counters.indexing?.chunks_created,
+          vectors_upserted: counters.indexing?.vectors_upserted,
+          dip_modes: counters.dip?.modes_completed?.length
+        })
+      });
+    } catch (todoErr) {
+      log.warn('Failed to create ingest complete todo', { jobId, docId, error: todoErr.message });
+    }
+
   } catch (err) {
     log.error('Ingest pipeline failed', { jobId, error: err.message, stack: err.stack });
 
@@ -389,6 +413,22 @@ async function runIngestPipeline(jobId) {
         statusV2: 'failed',
         counters,
         error: counters.error
+      });
+
+      // Create failure todo
+      const job = await documentRepository.getJob(jobId);
+      const filename = job?.params?.filename;
+      await createUserTask({
+        description: `Ingestion failed: ${filename || jobId.substring(0, 16)}`,
+        due_date: new Date().toISOString(),
+        created_by: 'document_ingest',
+        priority: 'high',
+        notes: JSON.stringify({
+          type: 'ingest_failed',
+          doc_id: job?.doc_id || jobId,
+          job_id: jobId,
+          error: err.message?.substring(0, 500)
+        })
       });
     } catch (updateErr) {
       log.error('Failed to update job as failed', { jobId, error: updateErr.message });

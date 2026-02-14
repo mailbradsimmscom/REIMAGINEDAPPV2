@@ -1,5 +1,5 @@
 // src/services/ingest-timing.service.js
-import { insertTimingRows, getTimingByDocId, getTimingByRunId, getRecentTimingRows, getSystemNamesForDocs } from '../repositories/ingest-timing.repository.js';
+import { insertTimingRows, getTimingByDocId, getTimingByRunId, getRecentTimingRows, getSystemNamesForDocs, getJobsForDocs } from '../repositories/ingest-timing.repository.js';
 import { logger } from '../utils/logger.js';
 
 const requestLogger = logger.createRequestLogger ? logger.createRequestLogger() : logger;
@@ -9,6 +9,75 @@ const VALID_STEPS = new Set([
     'dip_specs', 'dip_troubleshooting', 'dip_procedures',
     'dip_golden_rules', 'dip_intent_router'
 ]);
+
+// ── Job enrichment helpers ──────────────────────────────────────────────
+
+const FIVE_MINUTES_MS = 5 * 60 * 1000;
+const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Determine status for a synthesized step from its counter data.
+ * Rules: .error → 'error', .warning (no .error) → 'warning', else → 'complete'
+ */
+function determineStatus(counterData) {
+    if (!counterData) return 'complete';
+    if (counterData.error) return 'error';
+    if (counterData.warning && !counterData.error) return 'warning';
+    return 'complete';
+}
+
+/**
+ * Build a synthesized timing step from job counter data.
+ */
+function synthesizeStep(stepName, counterData, job) {
+    return {
+        step_name: stepName,
+        duration_ms: counterData.duration_ms || 0,
+        status: determineStatus(counterData),
+        started_at: null,
+        ended_at: null,
+        metadata: {
+            source: 'job_enrichment',
+            job_id: job.job_id,
+            job_type: job.job_type,
+            ...counterData
+        }
+    };
+}
+
+/**
+ * Find the best matching job for a doc_id by type, time proximity, and ordering.
+ * @param {Array} jobs - All jobs for this doc_id
+ * @param {string} jobType - 'v5_parse_detect' or 'v5_ingest'
+ * @param {string} uploadTimestamp - ISO timestamp of the upload timing row
+ * @param {Object} [previousJob] - For v5_ingest: must be created after this job
+ * @returns {Object|null} Best matching job or null
+ */
+function findMatchingJob(jobs, jobType, uploadTimestamp, previousJob) {
+    if (!jobs || jobs.length === 0) return null;
+
+    const uploadTime = new Date(uploadTimestamp).getTime();
+
+    const candidates = jobs
+        .filter(j => j.job_type === jobType)
+        .filter(j => {
+            const jobCreated = new Date(j.created_at).getTime();
+            if (jobType === 'v5_parse_detect') {
+                // Must be within 5 minutes of upload
+                return Math.abs(jobCreated - uploadTime) <= FIVE_MINUTES_MS;
+            }
+            if (jobType === 'v5_ingest' && previousJob) {
+                // Must be created after the parse-detect job
+                return jobCreated > new Date(previousJob.created_at).getTime();
+            }
+            return false;
+        });
+
+    if (candidates.length === 0) return null;
+
+    // Most recent first (jobs already ordered desc from repo)
+    return candidates[0];
+}
 
 /**
  * Validate and save timing payload.
@@ -124,22 +193,92 @@ export async function getRecentIngestTimingRuns(limit = 200) {
     // Compute totals and sort steps within each run
     const STEP_ORDER = [
         'upload', 'parse', 'detect', 'document', 'vision', 'indexing',
+        'dip',
         'dip_specs', 'dip_troubleshooting', 'dip_procedures',
         'dip_golden_rules', 'dip_intent_router'
     ];
 
-    const result = Object.values(runs).map(run => {
-        // Sort steps by canonical order
+    const runList = Object.values(runs);
+
+    // ── Enrich background-ingest runs with server-side job durations ─────
+    // Only enrich 1-step upload-only runs (background ingest flow).
+    // Old 11-step runs are never touched.
+    const backgroundRuns = runList.filter(
+        r => r.steps.length === 1 && r.steps[0].step_name === 'upload'
+    );
+
+    if (backgroundRuns.length > 0) {
+        const bgDocIds = [...new Set(backgroundRuns.map(r => r.doc_id))];
+        let jobsByDoc = {};
+        try {
+            jobsByDoc = await getJobsForDocs(bgDocIds);
+        } catch (err) {
+            requestLogger.warn('Job enrichment query failed, skipping', { error: err.message });
+        }
+
+        for (const run of backgroundRuns) {
+            const docJobs = jobsByDoc[run.doc_id];
+            if (!docJobs || docJobs.length === 0) continue;
+
+            const uploadTimestamp = run.created_at;
+
+            // Match parse-detect job (within 5 min of upload)
+            const pdJob = findMatchingJob(docJobs, 'v5_parse_detect', uploadTimestamp);
+            if (!pdJob || !pdJob.counters) continue;
+
+            // Synthesize parse + detect steps
+            const pdCounters = pdJob.counters;
+            if (pdCounters.parse && !pdCounters.parse.skipped) {
+                run.steps.push(synthesizeStep('parse', pdCounters.parse, pdJob));
+            }
+            if (pdCounters.detect && !pdCounters.detect.skipped) {
+                run.steps.push(synthesizeStep('detect', pdCounters.detect, pdJob));
+            }
+
+            // Match ingest job (created after parse-detect)
+            const ingJob = findMatchingJob(docJobs, 'v5_ingest', uploadTimestamp, pdJob);
+            if (ingJob && ingJob.counters) {
+                const ingCounters = ingJob.counters;
+
+                if (ingCounters.vision && !ingCounters.vision.skipped) {
+                    run.steps.push(synthesizeStep('vision', ingCounters.vision, ingJob));
+                }
+                if (ingCounters.indexing && !ingCounters.indexing.skipped) {
+                    run.steps.push(synthesizeStep('indexing', ingCounters.indexing, ingJob));
+                }
+                if (ingCounters.dip && !ingCounters.dip.skipped) {
+                    run.steps.push(synthesizeStep('dip', ingCounters.dip, ingJob));
+                }
+
+                // Compute review_pause: gap between parse-detect completion and ingest creation
+                if (pdJob.completed_at && ingJob.created_at) {
+                    const gapMs = new Date(ingJob.created_at).getTime() - new Date(pdJob.completed_at).getTime();
+                    if (gapMs > 0 && gapMs < TWENTY_FOUR_HOURS_MS) {
+                        run.review_pause = {
+                            duration_ms: gapMs,
+                            started_at: pdJob.completed_at,
+                            ended_at: ingJob.created_at
+                        };
+                    } else {
+                        run.review_pause = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sort steps, compute totals
+    const result = runList.map(run => {
         run.steps.sort((a, b) => {
             const ai = STEP_ORDER.indexOf(a.step_name);
             const bi = STEP_ORDER.indexOf(b.step_name);
             return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
         });
 
-        // Compute total duration (sum of all step durations)
         const totalMs = run.steps.reduce((sum, s) => sum + (s.duration_ms || 0), 0);
         run.total_duration_ms = totalMs;
         run.step_count = run.steps.length;
+        // review_pause is NOT included in total_duration_ms or step_count
 
         return run;
     });

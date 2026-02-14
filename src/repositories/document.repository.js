@@ -465,6 +465,87 @@ class DocumentRepository {
     }
   }
 
+  // v5 Parse-Detect Runner Job Methods
+  async getActiveParseDetectJobForDoc(docId) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('doc_id', docId)
+        .eq('job_type', 'v5_parse_detect')
+        .in('status_v2', ['queued', 'parsing', 'parse_complete', 'detecting'])
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to get active parse-detect job', { error: error.message, docId });
+      throw error;
+    }
+  }
+
+  async getLatestParseDetectJobForDoc(docId) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('doc_id', docId)
+        .eq('job_type', 'v5_parse_detect')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to get latest parse-detect job', { error: error.message, docId });
+      throw error;
+    }
+  }
+
+  async saveDetectionResult(docId, detectionResult) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .update({
+          detection_result: detectionResult,
+          updated_at: new Date().toISOString()
+        })
+        .eq('doc_id', docId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      this.requestLogger.info('Detection result saved', { docId });
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to save detection result', { error: error.message, docId });
+      throw error;
+    }
+  }
+
+  async getDetectionResult(docId) {
+    const supabase = await this.checkSupabaseAvailability();
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('doc_id, detection_result, filename, storage_path')
+        .eq('doc_id', docId)
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      this.requestLogger.error('Failed to get detection result', { error: error.message, docId });
+      throw error;
+    }
+  }
+
   // v5 Ingest Runner Job Methods
   async getActiveIngestJobForDoc(docId) {
     const supabase = await this.checkSupabaseAvailability();
@@ -541,13 +622,15 @@ class DocumentRepository {
       if (jobError) updateData.error = jobError;
 
       // Set timestamps based on status
+      // Covers both v5_ingest statuses (vision_running, indexing_running, dip_running)
+      // and v5_parse_detect statuses (parsing, parse_complete, detecting, detection_complete)
       if (statusV2 === 'queued') {
         updateData.status = 'queued';
-      } else if (['vision_running', 'indexing_running', 'dip_running'].includes(statusV2)) {
-        updateData.status = 'running';
+      } else if (['vision_running', 'indexing_running', 'dip_running', 'parsing', 'parse_complete', 'detecting'].includes(statusV2)) {
+        updateData.status = statusV2 === 'parsing' || statusV2 === 'parse_complete' || statusV2 === 'detecting' ? 'parsing' : 'running';
         if (!updateData.started_at) updateData.started_at = new Date().toISOString();
-      } else if (['completed', 'failed', 'indexing_failed'].includes(statusV2)) {
-        updateData.status = statusV2 === 'completed' ? 'completed' : 'failed';
+      } else if (['completed', 'detection_complete', 'failed', 'indexing_failed'].includes(statusV2)) {
+        updateData.status = (statusV2 === 'completed' || statusV2 === 'detection_complete') ? 'completed' : 'failed';
         updateData.completed_at = new Date().toISOString();
       }
 

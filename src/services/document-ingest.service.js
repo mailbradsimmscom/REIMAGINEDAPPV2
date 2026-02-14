@@ -540,6 +540,38 @@ export function validateInstalledPrimary(installedPrimary, systems) {
 }
 
 /**
+ * Fetch reference data for model detection (manufacturers, product_types, system/subsystem categories).
+ * Used by both the app.js detect-models proxy and the background parse-detect runner.
+ *
+ * @returns {Promise<Object>} { manufacturers[], product_types[], system_categories[], subsystem_categories[] }
+ */
+export async function fetchDetectionReferenceData() {
+  const supabase = await getSupabaseClient();
+
+  const [mfrs, types, systems, subsystems] = await Promise.all([
+    supabase.from('ref_manufacturers').select('name').order('name'),
+    supabase.from('ref_product_types').select('name').order('name'),
+    supabase.from('ref_system_categories').select('id, name').order('display_order'),
+    supabase.from('ref_subsystem_categories').select('id, name, system_id').order('display_order')
+  ]);
+
+  // Build subsystem list with parent system names
+  const systemMap = new Map(systems.data?.map(s => [s.id, s.name]) || []);
+  const subsystemList = (subsystems.data || []).map(sub => ({
+    name: sub.name,
+    system_id: sub.system_id,
+    system_name: systemMap.get(sub.system_id) || 'Unknown'
+  }));
+
+  return {
+    manufacturers: (mfrs.data || []).map(m => m.name),
+    product_types: (types.data || []).map(t => t.name),
+    system_categories: (systems.data || []).map(s => s.name),
+    subsystem_categories: subsystemList
+  };
+}
+
+/**
  * Generate document ID from content hash
  */
 export function generateDocId(content, filename) {

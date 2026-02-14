@@ -176,34 +176,14 @@ app.post('/python/v1/detect-models', express.json({ limit: '50mb' }), async (req
   res.setTimeout(DETECT_TIMEOUT_MS + 60000);
 
   try {
-    // Fetch reference tables to include in request
-    const { getSupabaseClient } = await import('./repositories/supabaseClient.js');
-    const supabase = await getSupabaseClient();
-
-    const [mfrs, types, systems, subsystems] = await Promise.all([
-      supabase.from('ref_manufacturers').select('name').order('name'),
-      supabase.from('ref_product_types').select('name').order('name'),
-      supabase.from('ref_system_categories').select('id, name').order('display_order'),
-      supabase.from('ref_subsystem_categories').select('id, name, system_id').order('display_order')
-    ]);
-
-    // Build subsystem list with parent system names
-    const systemMap = new Map(systems.data?.map(s => [s.id, s.name]) || []);
-    const subsystemList = (subsystems.data || []).map(sub => ({
-      name: sub.name,
-      system_id: sub.system_id,
-      system_name: systemMap.get(sub.system_id) || 'Unknown'
-    }));
+    // Fetch reference data using shared function (also used by background parse-detect runner)
+    const { fetchDetectionReferenceData } = await import('./services/document-ingest.service.js');
+    const reference_data = await fetchDetectionReferenceData();
 
     // Add reference_data to request body
     const enrichedBody = {
       ...req.body,
-      reference_data: {
-        manufacturers: (mfrs.data || []).map(m => m.name),
-        product_types: (types.data || []).map(t => t.name),
-        system_categories: (systems.data || []).map(s => s.name),
-        subsystem_categories: subsystemList
-      }
+      reference_data
     };
 
     // Note: document.service.js:873 calls /v1/detect-models DIRECTLY — stays on v1
@@ -216,7 +196,7 @@ app.post('/python/v1/detect-models', express.json({ limit: '50mb' }), async (req
 
     const data = await sidecarResponse.json();
     // Include reference_data in response for frontend dropdown population
-    data.reference_data = enrichedBody.reference_data;
+    data.reference_data = reference_data;
     res.status(sidecarResponse.status).json(data);
   } catch (error) {
     logger.error('Model detection proxy error', { error: error.message });

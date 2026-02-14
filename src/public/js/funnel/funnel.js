@@ -465,15 +465,17 @@ function renderIssues(issues) {
 const STEP_LABELS = {
   upload: 'Upload',
   parse: 'Parse',
-  detect: 'Detect',
+  detect: 'Model Detection',
   document: 'Document',
   vision: 'Vision',
   indexing: 'Indexing',
+  dip: 'DIP Extraction',
   dip_specs: 'DIP Specs',
   dip_troubleshooting: 'DIP Troubleshooting',
   dip_procedures: 'DIP Procedures',
   dip_golden_rules: 'DIP Golden Rules',
-  dip_intent_router: 'DIP Intent Router'
+  dip_intent_router: 'DIP Intent Router',
+  review_pause: 'User Review'
 };
 
 // Map step names to CSS segment classes
@@ -490,11 +492,13 @@ const STEP_COLORS = {
   document: '#764ba2',
   vision: '#4facfe',
   indexing: '#f5a623',
+  dip: '#fa709a',
   dip_specs: '#fa709a',
   dip_troubleshooting: '#fa709a',
   dip_procedures: '#fa709a',
   dip_golden_rules: '#fa709a',
-  dip_intent_router: '#fa709a'
+  dip_intent_router: '#fa709a',
+  review_pause: '#ccc'
 };
 
 function formatDurationMs(ms) {
@@ -510,6 +514,7 @@ function renderTimingLegend() {
   const items = [
     { label: 'Upload', cls: 'seg-upload' },
     { label: 'Parse', cls: 'seg-parse' },
+    { label: 'Detect', cls: 'seg-detect' },
     { label: 'Document', cls: 'seg-document' },
     { label: 'Vision', cls: 'seg-vision' },
     { label: 'Indexing', cls: 'seg-indexing' },
@@ -596,8 +601,9 @@ function renderStepRow(s, extraClass) {
   `;
 }
 
-function renderTimingStepRows(steps, runId) {
+function renderTimingStepRows(steps, runId, reviewPause) {
   if (!steps || !Array.isArray(steps)) return '';
+  // 'dip' (synthesized from background jobs) is a main step, not a dip_ sub-step
   const mainSteps = steps.filter(s => !s.step_name.startsWith('dip_'));
   const dipSteps = steps.filter(s => s.step_name.startsWith('dip_'));
 
@@ -615,12 +621,23 @@ function renderTimingStepRows(steps, runId) {
 
   let html = '';
 
-  // Render main steps
+  // Render main steps, inserting review_pause row after detect (before vision)
   for (const s of mainSteps) {
     html += renderStepRow(s, '');
+    // Insert review_pause row after detect step
+    if (s.step_name === 'detect' && reviewPause) {
+      html += `
+        <div class="timing-step-row review-pause">
+          <div class="timing-step-dot" style="background:${STEP_COLORS.review_pause}"></div>
+          <div class="timing-step-name" style="font-style:italic;color:rgba(255,255,255,0.45);">User Review</div>
+          <div class="timing-step-duration" style="color:rgba(255,255,255,0.5);">${formatDurationMs(reviewPause.duration_ms)}</div>
+          <span class="timing-step-status" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);">pause</span>
+        </div>
+      `;
+    }
   }
 
-  // Render DIP parent + sub-steps
+  // Render DIP parent + sub-steps (old-flow runs with dip_* rows)
   if (dipSteps.length > 0) {
     html += `
       <div class="timing-step-row dip-parent">
@@ -662,7 +679,7 @@ function renderTimingRun(run, index) {
       </div>
       <div class="timing-run-body${collapsed ? ' collapsed' : ''}" id="timing-body-${safeId}">
         ${renderTimingBar(run.steps, run.total_duration_ms)}
-        ${renderTimingStepRows(run.steps, safeId)}
+        ${renderTimingStepRows(run.steps, safeId, run.review_pause)}
       </div>
     </div>
   `;

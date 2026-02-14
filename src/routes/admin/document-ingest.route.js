@@ -16,7 +16,7 @@ import { runVisionPipeline, getDocumentAssets, getDocumentAssetSummary } from '.
 import { runV5Indexing } from '../../services/v5-index.service.js';
 import { runV5ColloquialKeywords } from '../../services/v5-colloquial.service.js';
 import { runDipExtraction } from '../../services/v5-dip.service.js';
-import { storeDipRunParams, streamDipExtraction } from '../../services/dip-stream.service.js';
+// storeDipRunParams, streamDipExtraction removed — dip/run + dip/stream endpoints removed
 import { buildPipelineModelParams } from '../../services/alias-map.service.js';
 import { startIngestRun, getIngestStatus } from '../../services/v5-ingest-runner.service.js';
 import documentRepository from '../../repositories/document.repository.js';
@@ -268,12 +268,16 @@ router.post('/', async (req, res) => {
       if (selectedModels.length > 0) {
         log.info('Starting background ingest run', { docId, selectedModels });
 
+        // Note: markdown_content may be null in review mode (user opened ?doc_id=xxx from todo).
+        // doc_id must be provided in review mode. filename comes from req.body — frontend sends
+        // storageResult.filename in review mode, currentFile.name in inline mode.
         ingestRunResult = await startIngestRun({
           docId,
           storagePath: storage_path,
           selectedModels,
           referencedSelections: refsToSave,
-          installedAssetUid: primaryAssetUid
+          installedAssetUid: primaryAssetUid,
+          filename
         });
 
         if (!ingestRunResult.success) {
@@ -286,6 +290,16 @@ router.post('/', async (req, res) => {
       } else {
         log.info('Skipping background run - no selected models', { docId });
       }
+    }
+
+    // ========================================================================
+    // Auto-complete detection_complete todo (prevents stale "Review model selection" todos)
+    // ========================================================================
+    try {
+      const { completeDocumentIngestTask } = await import('../../repositories/user-tasks.repository.js');
+      await completeDocumentIngestTask(docId, 'detection_complete');
+    } catch (todoErr) {
+      log.warn('Failed to auto-complete detection todo', { docId, error: todoErr.message });
     }
 
     // ========================================================================
@@ -343,6 +357,81 @@ router.post('/', async (req, res) => {
 });
 
 /**
+ * GET /admin/api/documents/:docId/detection-result
+ * Returns stored detection result + document metadata for the frontend review page.
+ * Used when user opens /ingest?doc_id=xxx from a todo link.
+ */
+router.get('/:docId/detection-result', async (req, res) => {
+  try {
+    const { docId } = req.params;
+
+    // Get document detection result
+    const doc = await documentRepository.getDetectionResult(docId);
+    if (!doc) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Document not found' }
+      });
+    }
+
+    // Get latest parse-detect job for counters
+    const job = await documentRepository.getLatestParseDetectJobForDoc(docId);
+
+    return res.json({
+      success: true,
+      data: {
+        doc_id: doc.doc_id,
+        filename: doc.filename,
+        storage_path: doc.storage_path,
+        detection_result: doc.detection_result,
+        parse_status: job?.status_v2 || null,
+        job_counters: job?.counters || null
+      }
+    });
+
+  } catch (err) {
+    log.error('Failed to get detection result', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { code: 'DETECTION_RESULT_ERROR', message: err.message }
+    });
+  }
+});
+
+/**
+ * GET /admin/api/documents/:docId/parse-detect-status
+ * Returns current status of the parse+detect background job.
+ * Used by frontend to poll during parse/detect or check if detection is ready.
+ */
+router.get('/:docId/parse-detect-status', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const { getParseDetectStatus } = await import('../../services/v5-parse-detect-runner.service.js');
+
+    const status = await getParseDetectStatus(docId);
+
+    if (!status) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'No parse-detect job found for this document' }
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: status
+    });
+
+  } catch (err) {
+    log.error('Failed to get parse-detect status', { error: err.message, docId: req.params.docId });
+    return res.status(500).json({
+      success: false,
+      error: { code: 'PARSE_DETECT_STATUS_ERROR', message: err.message }
+    });
+  }
+});
+
+/**
  * POST /admin/api/documents/:docId/vision
  * Run Vision Stage 6-7 on a document
  *
@@ -356,7 +445,21 @@ router.post('/:docId/vision', async (req, res) => {
   try {
     const { docId } = req.params;
 
-    // Check for active background job - reject manual call if one exists
+    // Check for active parse-detect job - reject if parse/detect is still running
+    const parseDetectJob = await documentRepository.getActiveParseDetectJobForDoc(docId);
+    if (parseDetectJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_PARSE_DETECT_JOB',
+          message: 'Parse/detect is still running for this document. Wait for detection to complete.',
+          job_id: parseDetectJob.job_id,
+          status_v2: parseDetectJob.status_v2
+        }
+      });
+    }
+
+    // Check for active background ingest job - reject manual call if one exists
     const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
     if (activeJob) {
       return res.status(409).json({
@@ -677,6 +780,182 @@ router.post('/upload-storage', async (req, res) => {
 });
 
 /**
+ * POST /admin/api/documents/upload-and-parse
+ * Upload PDF to storage + kick off background parse+detect.
+ * Returns immediately with job_id for polling.
+ *
+ * IMPORTANT: This route must be defined BEFORE /:docId routes.
+ */
+router.post('/upload-and-parse', async (req, res) => {
+  try {
+    const busboy = Busboy({
+      headers: req.headers,
+      limits: {
+        fileSize: 100 * 1024 * 1024, // 100MB limit
+        files: 1
+      }
+    });
+
+    let fileBuffer = null;
+    let fileName = null;
+    let hasError = false;
+
+    const busboyPromise = new Promise((resolve, reject) => {
+      busboy.on('file', (fieldname, file, info) => {
+        if (fieldname !== 'file') {
+          file.resume();
+          return;
+        }
+
+        fileName = info.filename;
+        const chunks = [];
+
+        file.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
+
+        file.on('end', () => {
+          fileBuffer = Buffer.concat(chunks);
+        });
+
+        file.on('error', (error) => {
+          hasError = true;
+          reject(error);
+        });
+      });
+
+      busboy.on('finish', () => {
+        resolve();
+      });
+
+      busboy.on('error', (error) => {
+        hasError = true;
+        reject(error);
+      });
+    });
+
+    req.pipe(busboy);
+    await busboyPromise;
+
+    if (hasError || !fileBuffer) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'UPLOAD_FAILED',
+          message: 'No file provided or upload failed',
+          context: 'upload_and_parse'
+        }
+      });
+    }
+
+    // Generate doc_id from file hash
+    const docId = createHash('sha256').update(fileBuffer).digest('hex');
+
+    // Check for active parse-detect job BEFORE uploading
+    const { startParseDetectRun } = await import('../../services/v5-parse-detect-runner.service.js');
+    const existingJob = await documentRepository.getActiveParseDetectJobForDoc(docId);
+    if (existingJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_JOB_EXISTS',
+          message: 'Parse/detect already running for this document',
+          existing_job_id: existingJob.job_id,
+          existing_doc_id: docId,
+          existing_status: existingJob.status_v2
+        }
+      });
+    }
+
+    // Upload to Supabase Storage
+    const filePath = `manuals/${docId}/${fileName}`;
+    log.info('Uploading PDF to storage (upload-and-parse)', { docId, fileName, filePath, fileSize: fileBuffer.length });
+
+    const supabase = await getSupabaseStorageClient();
+    const { data, error } = await supabase.storage
+      .from('documents')
+      .upload(filePath, fileBuffer, {
+        contentType: 'application/pdf',
+        upsert: true
+      });
+
+    if (error) {
+      log.error('Storage upload failed', { error: error.message, docId, filePath });
+      return res.status(500).json({
+        success: false,
+        error: {
+          code: 'STORAGE_UPLOAD_FAILED',
+          message: error.message,
+          context: 'supabase_storage'
+        }
+      });
+    }
+
+    const storagePath = data.path;
+    log.info('PDF uploaded to storage', { docId, storagePath });
+
+    // Create initial document row with doc_id, storage_path, and filename
+    const supabaseDb = await getSupabaseClient();
+    const { error: docError } = await supabaseDb
+      .from('documents')
+      .upsert([{
+        doc_id: docId,
+        storage_path: storagePath,
+        filename: fileName
+      }], { onConflict: 'doc_id' });
+
+    if (docError) {
+      log.error('Failed to create document row', { error: docError.message, docId });
+      log.warn('Continuing without document row - runner will handle', { docId });
+    }
+
+    // Kick off background parse+detect — no fileBuffer; runner downloads from storage
+    const runResult = await startParseDetectRun({
+      docId,
+      storagePath,
+      filename: fileName
+    });
+
+    if (!runResult.success) {
+      log.warn('Parse-detect run start failed', { docId, error: runResult.error });
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: runResult.error,
+          message: runResult.message,
+          existing_job_id: runResult.existing_job_id
+        }
+      });
+    }
+
+    // Free the file buffer
+    fileBuffer = null;
+
+    return res.json({
+      success: true,
+      data: {
+        doc_id: docId,
+        job_id: runResult.job_id,
+        status_v2: 'queued',
+        storage_path: storagePath,
+        filename: fileName
+      }
+    });
+
+  } catch (error) {
+    log.error('Upload-and-parse failed', { error: error.message, stack: error.stack });
+    return res.status(500).json({
+      success: false,
+      error: {
+        code: 'UPLOAD_AND_PARSE_ERROR',
+        message: error.message,
+        context: 'unexpected_error'
+      }
+    });
+  }
+});
+
+/**
  * GET /admin/api/documents/ingest/active
  * List all active v5_ingest jobs across all documents
  *
@@ -688,10 +967,11 @@ router.get('/ingest/active', async (req, res) => {
     const supabase = await getSupabaseClient();
     const { data, error } = await supabase
       .from('jobs')
-      .select('job_id, doc_id, status_v2, status, counters, created_at, started_at, last_heartbeat')
-      .eq('job_type', 'v5_ingest')
+      .select('job_id, doc_id, job_type, status_v2, status, counters, created_at, started_at, last_heartbeat')
+      .in('job_type', ['v5_ingest', 'v5_parse_detect'])
       .in('status_v2', ['queued', 'vision_running', 'vision_completed', 'vision_warning',
-        'indexing_running', 'indexing_completed', 'dip_running'])
+        'indexing_running', 'indexing_completed', 'dip_running',
+        'parsing', 'parse_complete', 'detecting'])
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -739,7 +1019,21 @@ router.post('/:docId/index', async (req, res) => {
   try {
     const { docId } = req.params;
 
-    // Check for active background job - reject manual call if one exists
+    // Check for active parse-detect job - reject if parse/detect is still running
+    const parseDetectJob = await documentRepository.getActiveParseDetectJobForDoc(docId);
+    if (parseDetectJob) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ACTIVE_PARSE_DETECT_JOB',
+          message: 'Parse/detect is still running for this document. Wait for detection to complete.',
+          job_id: parseDetectJob.job_id,
+          status_v2: parseDetectJob.status_v2
+        }
+      });
+    }
+
+    // Check for active background ingest job - reject manual call if one exists
     const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
     if (activeJob) {
       return res.status(409).json({
@@ -1018,139 +1312,8 @@ router.post('/:docId/dip', async (req, res) => {
   }
 });
 
-// ============================================================================
-// DIP Streaming Endpoints (Two-Step: POST start -> GET stream)
-// ============================================================================
-
-/**
- * POST /admin/api/documents/:docId/dip/run
- * Start a DIP streaming run - stores params and returns a dip_run_id
- *
- * Body: { selected_models, referenced_selections, modes, force_rerun }
- * Returns: { success: true, data: { dip_run_id } }
- */
-router.post('/:docId/dip/run', async (req, res) => {
-  try {
-    const { docId } = req.params;
-
-    // Check for active background job - reject manual call if one exists
-    const activeJob = await documentRepository.getActiveIngestJobForDoc(docId);
-    if (activeJob) {
-      return res.status(409).json({
-        success: false,
-        error: {
-          code: 'ACTIVE_JOB_EXISTS',
-          message: 'A background ingest job is running for this document. Use /ingest-status to monitor progress.',
-          job_id: activeJob.job_id,
-          status_v2: activeJob.status_v2
-        }
-      });
-    }
-
-    const {
-      selected_models: selectedModelsRaw,
-      referenced_selections: referencedSelectionsRaw = [],
-      modes = ['specs', 'troubleshooting', 'procedures', 'golden_rules', 'intent_router'],
-      force_rerun: forceRerun = false
-    } = req.body;
-
-    // Phase D: derive from DB — also fetches models_covered (replaces separate query)
-    const dbParams = await buildPipelineModelParams(docId);
-    const selectedModels = (selectedModelsRaw && selectedModelsRaw.length > 0)
-      ? selectedModelsRaw : dbParams.selected_models;
-    const referencedSelections = (selectedModelsRaw && selectedModelsRaw.length > 0)
-      ? referencedSelectionsRaw : dbParams.referenced_selections;
-
-    if (!selectedModels || selectedModels.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'No models found for this document'
-        }
-      });
-    }
-
-    if (dbParams.models_covered.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'DOCUMENT_NOT_FOUND',
-          message: `Document ${docId} not found or missing models_covered`
-        }
-      });
-    }
-
-    const modelsCovered = dbParams.models_covered;
-    if (!modelsCovered || modelsCovered.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'MODELS_COVERED_MISSING',
-          message: 'Document is missing models_covered; rerun model detection before DIP.'
-        }
-      });
-    }
-
-    // Store params and get run ID
-    const dipRunId = storeDipRunParams({
-      docId,
-      selectedModels,
-      referencedSelections,
-      aliasMap: dbParams.alias_map,
-      modelsCovered,
-      modes,
-      forceRerun
-    });
-
-    log.info('DIP streaming run created', { docId, dipRunId, modes });
-
-    return res.json({
-      success: true,
-      data: {
-        dip_run_id: dipRunId
-      }
-    });
-
-  } catch (error) {
-    log.error('DIP run start error', { error: error.message, stack: error.stack });
-    return res.status(500).json({
-      success: false,
-      error: {
-        code: 'DIP_RUN_START_ERROR',
-        message: error.message
-      }
-    });
-  }
-});
-
-/**
- * GET /admin/api/documents/dip/stream/:runId
- * Stream DIP extraction progress via SSE
- *
- * Returns: SSE event stream
- */
-router.get('/dip/stream/:runId', async (req, res) => {
-  const { runId } = req.params;
-
-  log.info('DIP stream requested', { runId });
-
-  // Set SSE headers
-  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('X-Accel-Buffering', 'no');
-
-  // Handle client disconnect
-  const abortController = new AbortController();
-  req.on('close', () => {
-    log.info('DIP stream client disconnected', { runId });
-    abortController.abort();
-  });
-
-  // Stream from sidecar
-  await streamDipExtraction(runId, res, abortController.signal);
-});
+// dip/run and dip/stream endpoints removed — DIP now runs via background v5-ingest-runner
+// using runDipWithCallback directly (no SSE infrastructure needed)
 
 // ============================================
 // Timing Persistence (Phase B)

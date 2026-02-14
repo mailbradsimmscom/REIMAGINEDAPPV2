@@ -159,4 +159,46 @@ export async function getSystemNamesForDocs(docIds) {
     return result;
 }
 
-export default { insertTimingRows, getTimingByDocId, getTimingByRunId, getRecentTimingRows, getSystemNamesForDocs };
+/**
+ * Get terminal-state jobs for a set of doc_ids (v5_parse_detect + v5_ingest).
+ * Returns { doc_id: [job, ...] } map — one query, no N+1.
+ * @param {string[]} docIds
+ * @returns {Object} Map of doc_id → array of job rows
+ */
+export async function getJobsForDocs(docIds) {
+    if (!docIds || docIds.length === 0) return {};
+
+    const supabase = await getSupabaseClient();
+    if (!supabase) return {};
+
+    // 90-day cutoff
+    const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+
+    const { data, error } = await supabase
+        .from('jobs')
+        .select('job_id, doc_id, job_type, status_v2, counters, created_at, started_at, completed_at')
+        .in('doc_id', docIds)
+        .in('job_type', ['v5_parse_detect', 'v5_ingest'])
+        .in('status_v2', ['detection_complete', 'completed', 'failed', 'indexing_failed', 'dip_partial'])
+        .gte('created_at', cutoff)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        requestLogger.error('Failed to query jobs for timing enrichment', {
+            error: error.message,
+            docIdCount: docIds.length
+        });
+        return {};
+    }
+
+    // Group by doc_id
+    const result = {};
+    for (const job of (data || [])) {
+        if (!result[job.doc_id]) result[job.doc_id] = [];
+        result[job.doc_id].push(job);
+    }
+
+    return result;
+}
+
+export default { insertTimingRows, getTimingByDocId, getTimingByRunId, getRecentTimingRows, getSystemNamesForDocs, getJobsForDocs };

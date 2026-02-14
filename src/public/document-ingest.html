@@ -1391,8 +1391,32 @@
         const modelsSection = document.getElementById('modelsSection');
         const confirmBtn = document.getElementById('confirmBtn');
 
+        // URL parameter support for review/summary/retry modes
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeDocId = urlParams.get('doc_id');
+        const resumeView = urlParams.get('view'); // 'summary' | 'retry' | null
+        let parseDetectPollingInterval = null;
+
         // Check for active background ingest to resume
+        // Wait for adminFetch (loaded via module script, which is deferred)
+        async function waitForAdminFetch(maxMs = 3000) {
+            const start = Date.now();
+            while (!window.adminFetch && Date.now() - start < maxMs) {
+                await new Promise(r => setTimeout(r, 50));
+            }
+            if (!window.adminFetch) throw new Error('adminFetch not available');
+        }
+
         (async function checkForResumeIngest() {
+            await waitForAdminFetch();
+
+            // URL params take precedence over localStorage
+            if (resumeDocId) {
+                clearIngestState(); // Clear stale localStorage from pre-rearchitecture jobs
+                await handleUrlParamMode(resumeDocId, resumeView);
+                return;
+            }
+
             const savedState = loadIngestState();
             if (savedState && savedState.doc_id && savedState.job_id) {
                 console.log('Found saved ingest state, checking status...', savedState);
@@ -1417,6 +1441,256 @@
                 }
             }
         })();
+
+        /**
+         * Handle URL parameter modes: review, summary, retry
+         * Called when page loads with ?doc_id=xxx
+         */
+        async function handleUrlParamMode(docId, view) {
+            stepTimings = {}; // Initialize stepTimings for review mode
+
+            if (view === 'summary') {
+                await showSummaryMode(docId);
+            } else if (view === 'retry') {
+                await showRetryMode(docId);
+            } else {
+                // Default: review mode — load detection results
+                await showReviewMode(docId);
+            }
+        }
+
+        /**
+         * Review mode: Load detection result from DB and show model selection
+         */
+        async function showReviewMode(docId) {
+            try {
+                // Fetch detection result
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/detection-result`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load detection result: ${response.status}`);
+                }
+                const result = await response.json();
+                const data = result.data;
+
+                if (data.detection_result) {
+                    // Detection complete — show model selection
+                    detectionResult = data.detection_result;
+                    if (data.detection_result.reference_data) {
+                        referenceData = data.detection_result.reference_data;
+                    }
+                    storageResult = {
+                        doc_id: docId,
+                        storage_path: data.storage_path,
+                        filename: data.filename
+                    };
+                    parseResult = {
+                        content_length: data.job_counters?.parse?.content_length || 0
+                    };
+
+                    const mockFile = { name: data.filename || 'document.pdf' };
+                    showModelSelection(mockFile, parseResult, detectionResult);
+                } else if (data.parse_status && !['detection_complete', 'failed'].includes(data.parse_status)) {
+                    // Still processing — show polling UI
+                    showParseDetectPolling(docId);
+                } else if (data.parse_status === 'failed') {
+                    showError(`Parse/detect failed. ${data.job_counters?.error?.message || 'Please try re-uploading.'}`);
+                } else {
+                    showError('No detection result found for this document. It may need to be re-uploaded.');
+                }
+            } catch (err) {
+                console.error('Review mode error:', err);
+                showError(err.message);
+            }
+        }
+
+        /**
+         * Show processingDetails as a standalone panel (hides upload card + pipeline steps)
+         */
+        function showProcessingDetailsPanel(html) {
+            document.getElementById('uploadCard').style.display = 'none';
+            const card = document.getElementById('processingCard');
+            card.style.display = '';
+            card.querySelector('.card-title').style.display = 'none';
+            card.querySelector('.pipeline-steps').style.display = 'none';
+            document.getElementById('processingDetails').innerHTML = html;
+            document.getElementById('processingDetails').style.display = '';
+        }
+
+        /**
+         * Summary mode: Show read-only ingest completion summary
+         */
+        async function showSummaryMode(docId) {
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/ingest-status`);
+                if (!response.ok) throw new Error(`Failed to load ingest status: ${response.status}`);
+                const result = await response.json();
+                const status = result.data;
+
+                const counters = status?.counters || {};
+                const summaryHtml = `
+                    <div style="max-width: 600px; margin: 40px auto; padding: 24px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border);">
+                        <h2 style="margin: 0 0 16px; font-size: 20px;">Ingestion Complete</h2>
+                        <div style="display: grid; gap: 12px;">
+                            <div><strong>Document:</strong> ${status?.doc_id?.substring(0, 16)}...</div>
+                            <div><strong>Status:</strong> ${status?.status_v2 || 'unknown'}</div>
+                            <div><strong>Chunks created:</strong> ${counters.indexing?.chunks_created || 0}</div>
+                            <div><strong>Vectors upserted:</strong> ${counters.indexing?.vectors_upserted || 0}</div>
+                            <div><strong>Vision assets:</strong> ${counters.vision?.assets_saved || 0}</div>
+                            <div><strong>DIP modes:</strong> ${counters.dip?.modes_completed?.length || 0} completed</div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <a href="/ingest" class="btn btn-secondary">Back to Ingest</a>
+                        </div>
+                    </div>`;
+
+                showProcessingDetailsPanel(summaryHtml);
+            } catch (err) {
+                console.error('Summary mode error:', err);
+                showError(err.message);
+            }
+        }
+
+        /**
+         * Retry mode: Determine failure stage and show appropriate retry options
+         */
+        async function showRetryMode(docId) {
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/detection-result`);
+                if (!response.ok) throw new Error(`Failed to load document: ${response.status}`);
+                const result = await response.json();
+                const data = result.data;
+
+                let retryHtml;
+                if (data.detection_result) {
+                    // Parse/detect succeeded, failure was during ingest — show retry ingest button
+                    retryHtml = `
+                        <div style="max-width: 600px; margin: 40px auto; padding: 24px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border);">
+                            <h2 style="margin: 0 0 16px; font-size: 20px; color: var(--warning);">Ingestion Failed</h2>
+                            <p>Parse and model detection completed successfully, but the ingestion pipeline failed.</p>
+                            <div style="margin-top: 20px; display: flex; gap: 12px;">
+                                <button class="btn btn-primary" onclick="retryIngest('${docId}')">Retry Ingestion</button>
+                                <a href="/ingest?doc_id=${docId}" class="btn btn-secondary">Review Models</a>
+                                <a href="/ingest" class="btn btn-secondary">Start Over</a>
+                            </div>
+                        </div>`;
+                } else {
+                    // Parse or detect failed — no detection result exists
+                    retryHtml = `
+                        <div style="max-width: 600px; margin: 40px auto; padding: 24px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border);">
+                            <h2 style="margin: 0 0 16px; font-size: 20px; color: var(--danger);">Parse/Detect Failed</h2>
+                            <p>The document could not be parsed or models could not be detected. Please re-upload the PDF.</p>
+                            <div style="margin-top: 20px;">
+                                <a href="/ingest" class="btn btn-primary">Re-upload Document</a>
+                            </div>
+                        </div>`;
+                }
+
+                showProcessingDetailsPanel(retryHtml);
+            } catch (err) {
+                console.error('Retry mode error:', err);
+                showError(err.message);
+            }
+        }
+
+        /**
+         * Retry ingest for a document (called from retry mode button)
+         */
+        async function retryIngest(docId) {
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/ingest-retry`, {
+                    method: 'POST'
+                });
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `Retry failed: ${response.status}`);
+                }
+                const result = await response.json();
+                if (result.data?.job_id) {
+                    // Redirect to review mode to show ingest progress
+                    window.location.href = `/ingest?doc_id=${docId}`;
+                }
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+        // Make retryIngest available globally for onclick
+        window.retryIngest = retryIngest;
+
+        /**
+         * Show parse-detect polling UI (when detection is still running)
+         */
+        function showParseDetectPolling(docId) {
+            document.getElementById('uploadCard').style.display = 'none';
+
+            const pollingHtml = `
+                <div style="max-width: 600px; margin: 40px auto; padding: 24px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border);">
+                    <h2 style="margin: 0 0 16px; font-size: 20px;">Parse & Detection Running</h2>
+                    <p id="parseDetectStatusText">Checking status...</p>
+                    <div id="parseDetectProgress" style="margin: 16px 0;">
+                        <div style="height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;">
+                            <div id="parseDetectProgressBar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.3s;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <a href="/ingest" class="btn btn-secondary">Navigate Away (you'll get a todo notification)</a>
+                    </div>
+                </div>`;
+
+            document.getElementById('processingDetails').innerHTML = pollingHtml;
+            document.getElementById('processingDetails').style.display = '';
+
+            // Start polling
+            pollParseDetectStatus(docId);
+            parseDetectPollingInterval = setInterval(() => pollParseDetectStatus(docId), 5000);
+        }
+
+        /**
+         * Poll parse-detect status and update UI
+         */
+        async function pollParseDetectStatus(docId) {
+            try {
+                const response = await window.adminFetch(`/admin/api/documents/${docId}/parse-detect-status`);
+                if (!response.ok) return;
+                const result = await response.json();
+                const status = result.data;
+
+                const statusText = document.getElementById('parseDetectStatusText');
+                const progressBar = document.getElementById('parseDetectProgressBar');
+
+                if (status.status_v2 === 'parsing') {
+                    statusText.textContent = 'Parsing document with LlamaParse...';
+                    progressBar.style.width = '25%';
+                } else if (status.status_v2 === 'detecting') {
+                    statusText.textContent = 'Detecting models...';
+                    progressBar.style.width = '60%';
+                } else if (status.status_v2 === 'detection_complete') {
+                    statusText.textContent = 'Detection complete! Loading results...';
+                    progressBar.style.width = '100%';
+                    if (parseDetectPollingInterval) {
+                        clearInterval(parseDetectPollingInterval);
+                        parseDetectPollingInterval = null;
+                    }
+                    // Load review mode
+                    setTimeout(() => showReviewMode(docId), 500);
+                } else if (status.status_v2 === 'failed') {
+                    statusText.textContent = `Failed: ${status.error?.message || 'Unknown error'}`;
+                    progressBar.style.width = '100%';
+                    progressBar.style.background = 'var(--danger)';
+                    if (parseDetectPollingInterval) {
+                        clearInterval(parseDetectPollingInterval);
+                        parseDetectPollingInterval = null;
+                    }
+                } else if (status.is_stale) {
+                    statusText.textContent = 'Job may have stopped. Try re-uploading or contact admin.';
+                    if (parseDetectPollingInterval) {
+                        clearInterval(parseDetectPollingInterval);
+                        parseDetectPollingInterval = null;
+                    }
+                }
+            } catch (err) {
+                console.warn('Parse-detect poll failed:', err.message);
+            }
+        }
 
         function showResumeBanner(docId, jobId, status) {
             // Create resume banner if it doesn't exist
@@ -1525,137 +1799,84 @@
             ingestRunId = genRunId();
             timingPersisted = false;
 
-            // Show timing bar with Phase 1 segments
-            showTimingBar(PHASE1_SEGMENTS);
+            // Show timing bar with upload segment only
+            showTimingBar(['upload']);
             showMicroSteps();
-            initMicroSteps(['upload', 'parse', 'detect']);
+            initMicroSteps(['upload']);
             startElapsedTimer();
 
             try {
-                // Step 1: Upload to storage
+                // Single step: Upload + kick off background parse+detect
                 startStep('upload');
-                updateMicroStep('upload', 'active', 'Uploading to storage...');
+                updateMicroStep('upload', 'active', 'Uploading...');
 
-                const storageRes = await callUploadStorage(file);
-                if (!storageRes.success) {
-                    throw new Error(storageRes.error?.message || 'Failed to upload to storage');
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await window.adminFetch('/admin/api/documents/upload-and-parse', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    if (err.error?.code === 'ACTIVE_JOB_EXISTS') {
+                        // Resume polling for existing job
+                        const docId = err.error.existing_doc_id;
+                        endStep('upload', 'complete');
+                        updateMicroStep('upload', 'complete', 'Already processing');
+                        stopElapsedTimer();
+                        showParseDetectPolling(docId);
+                        return;
+                    }
+                    throw new Error(err.error?.message || `Upload failed: ${response.status}`);
                 }
-                storageResult = storageRes.data;
+
+                const result = await response.json();
+                storageResult = {
+                    doc_id: result.data.doc_id,
+                    storage_path: result.data.storage_path,
+                    filename: result.data.filename
+                };
+
                 endStep('upload', 'complete');
                 updateMicroStep('upload', 'complete', 'Uploaded', stepTimings.upload.durationMs);
+                stopElapsedTimer();
 
-                // Step 2: Parse with LlamaParse
-                startStep('parse');
-                updateMicroStep('parse', 'active', 'Parsing with LlamaParse...');
+                // Show choice: wait for detection or navigate away
+                const choiceHtml = `
+                    <div style="max-width: 600px; margin: 40px auto; padding: 24px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border);">
+                        <h2 style="margin: 0 0 8px; font-size: 20px;">Uploaded!</h2>
+                        <p style="color: var(--text-secondary);">Parse & model detection are running in the background.</p>
+                        <div style="margin-top: 20px; display: flex; gap: 12px;">
+                            <button class="btn btn-primary" id="waitForDetectionBtn">Wait for Detection</button>
+                            <a href="/" class="btn btn-secondary">Navigate Away</a>
+                        </div>
+                        <p style="margin-top: 12px; font-size: 13px; color: var(--text-tertiary);">
+                            You'll receive a to-do notification when detection is complete.
+                        </p>
+                    </div>`;
 
-                const parseRes = await callLlamaParse(file, storageResult.doc_id);
-                if (!parseRes.success) {
-                    throw new Error(parseRes.error || 'Failed to parse document');
-                }
-                parseResult = parseRes;
-                endStep('parse', 'complete');
-                updateMicroStep('parse', 'complete', 'Parsed', stepTimings.parse.durationMs);
+                showProcessingDetailsPanel(choiceHtml);
 
-                // Step 3: Detect models (micro-step only, not in bar)
-                startStep('detect');
-                updateMicroStep('detect', 'active', 'Detecting models...');
-
-                detectionResult = await callModelDetection(parseResult.text, file.name);
-                if (!detectionResult.success) {
-                    throw new Error(detectionResult.error || 'Failed to detect models');
-                }
-                endStep('detect', 'complete');
-                updateMicroStep('detect', 'complete', 'Detected', stepTimings.detect.durationMs);
-
-                // Pause timer for model selection
-                timerPausedAt = Date.now();
-                document.getElementById('timingPausedLabel').style.display = '';
-
-                // Show results
-                setTimeout(() => showModelSelection(file, parseResult, detectionResult), 300);
+                document.getElementById('waitForDetectionBtn').addEventListener('click', () => {
+                    showParseDetectPolling(result.data.doc_id);
+                });
 
             } catch (error) {
                 console.error('Error:', error);
-                // Mark active step as error
-                for (const name of ['upload', 'parse', 'detect']) {
-                    if (stepTimings[name]?.startedAt && !stepTimings[name]?.endedAt) {
-                        endStep(name, 'error');
-                        updateMicroStep(name, 'error', error.message);
-                    }
+                if (stepTimings.upload?.startedAt && !stepTimings.upload?.endedAt) {
+                    endStep('upload', 'error');
+                    updateMicroStep('upload', 'error', error.message);
                 }
                 stopElapsedTimer();
                 showError(error.message);
+                uploadZone.classList.remove('disabled');
             }
         }
 
-        async function callUploadStorage(file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await window.adminFetch('/admin/api/documents/upload-storage', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                const text = await response.text();
-                throw new Error(`Storage upload failed: ${response.status} - ${text}`);
-            }
-
-            return await response.json();
-        }
-
-        async function callLlamaParse(file, docId) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            // Pass doc_id as query param so Python can store raw JSON to Storage
-            const url = docId
-                ? `/python/v1/llamaparse?doc_id=${encodeURIComponent(docId)}`
-                : '/python/v1/llamaparse';
-
-            const response = await fetch(url, {
-                method: 'POST',
-                body: formData,
-                signal: AbortSignal.timeout(900000) // 15 min — 30MB/211-page PDF took ~11 min on LlamaParse cloud
-            });
-
-            if (!response.ok) {
-                const text = await response.text();
-                throw new Error(`LlamaParse failed: ${response.status} - ${text}`);
-            }
-
-            return await response.json();
-        }
-
-        async function callModelDetection(markdown, filename) {
-            const response = await fetch('/python/v1/detect-models', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    markdown: markdown,
-                    doc_id: 'temp-' + Date.now(),
-                    filename: filename
-                }),
-                signal: AbortSignal.timeout(900000) // 15 min — large docs (200+ pages) use map-reduce LLM calls
-            });
-
-            if (!response.ok) {
-                const text = await response.text();
-                throw new Error(`Model detection failed: ${response.status} - ${text}`);
-            }
-
-            const result = await response.json();
-
-            // Capture reference data for dropdown population
-            if (result.reference_data) {
-                referenceData = result.reference_data;
-            }
-
-            return result;
-        }
-
-        // updateProgress removed - replaced by timing bar
+        // callUploadStorage, callLlamaParse, callModelDetection removed —
+        // replaced by POST /upload-and-parse which handles all three server-side
 
         // Error code mapping for user-friendly messages
         const ERROR_MESSAGES = {
@@ -2467,245 +2688,8 @@
          * Run indexing pipeline (Pinecone + colloquial)
          * Returns: { success, data, error }
          */
-        async function runIndexing({ docId, installedAssetUid }) {
-            const startTime = Date.now();
-            try {
-                // Phase D: server derives selected_models/referenced_selections from DB
-                const response = await window.adminFetch(`/admin/api/documents/${docId}/index`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        asset_uid: installedAssetUid,
-                        skip_dip: true
-                    })
-                });
-
-                if (!response.ok) {
-                    const err = await response.json().catch(() => ({}));
-                    const errorMsg = err.error?.message || `HTTP ${response.status}`;
-                    updateStep('indexing', 'error', `Failed: ${errorMsg}`);
-                    return { success: false, error: errorMsg, duration_ms: Date.now() - startTime };
-                }
-
-                const result = await response.json();
-                if (result.success) {
-                    const data = result.data || result;
-                    const colloq = data.colloquial;
-                    const colloqSummary = (colloq && colloq.success && colloq.keywords_saved)
-                        ? `, ${colloq.keywords_count || 0} colloquial terms`
-                        : '';
-                    updateStep('indexing', 'complete',
-                        `${data.chunks_created || 0} chunks, ${data.vectors_upserted || 0} vectors${colloqSummary}`);
-                    return { success: true, data, duration_ms: Date.now() - startTime };
-                } else {
-                    const errorMsg = result.error?.message || 'Unknown error';
-                    updateStep('indexing', 'error', errorMsg);
-                    return { success: false, error: errorMsg, duration_ms: Date.now() - startTime };
-                }
-            } catch (err) {
-                console.error('Indexing error:', err);
-                updateStep('indexing', 'error', `Error: ${err.message}`);
-                return { success: false, error: err.message, duration_ms: Date.now() - startTime };
-            }
-        }
-
-        /**
-         * Run DIP streaming extraction
-         * Returns: { success, modes_completed, modes_failed, total_inserted, error }
-         */
-        async function runDipStreaming({ docId }) {
-            const startTime = Date.now();
-            try {
-                // Step 1: Start DIP run — server derives model arrays from DB (Phase D)
-                const startResponse = await window.adminFetch(`/admin/api/documents/${docId}/dip/run`, {
-                    method: 'POST',
-                    body: JSON.stringify({})
-                });
-
-                if (!startResponse.ok) {
-                    const err = await startResponse.json().catch(() => ({}));
-                    throw new Error(err.error?.message || 'Failed to start DIP run');
-                }
-
-                const startResult = await startResponse.json();
-                const dipRunId = startResult.data?.dip_run_id;
-
-                if (!dipRunId) {
-                    throw new Error('No dip_run_id returned');
-                }
-
-                // Show DIP modes panel
-                document.getElementById('dip-modes-panel').style.display = 'block';
-
-                // Step 2: Stream progress via EventSource
-                const adminToken = window.getAdminToken();
-                const result = await new Promise((resolve, reject) => {
-                    const eventSource = new EventSource(`/admin/api/documents/dip/stream/${dipRunId}?token=${adminToken}`);
-                    activeEventSource = eventSource; // Track for cleanup
-
-                    let modesCompleted = [];
-                    let modesFailed = [];
-                    let totalInserted = 0;
-
-                    eventSource.addEventListener('run_started', (e) => {
-                        updateStep('dip', 'active', `Running (warm-up + 2 at a time)...`);
-                    });
-
-                    eventSource.addEventListener('mode_started', (e) => {
-                        const data = JSON.parse(e.data);
-                        updateModeRow(data.mode, 'active');
-                    });
-
-                    eventSource.addEventListener('mode_completed', (e) => {
-                        const data = JSON.parse(e.data);
-                        modesCompleted.push(data.mode);
-                        totalInserted += data.inserted || 0;
-                        let statusText = `${data.inserted || 0} items`;
-                        if (data.cache_read_input_tokens > 0) {
-                            statusText += ` (cache: ${data.cache_read_input_tokens})`;
-                        } else if (data.cache_creation_input_tokens > 0) {
-                            statusText += ` (cache created: ${data.cache_creation_input_tokens})`;
-                        }
-                        updateModeRow(data.mode, 'complete', statusText, data.duration_ms);
-                    });
-
-                    eventSource.addEventListener('mode_failed', (e) => {
-                        const data = JSON.parse(e.data);
-                        modesFailed.push(data.mode);
-                        updateModeRow(data.mode, 'error', data.error || 'Failed');
-                    });
-
-                    eventSource.addEventListener('run_cache_metrics', (e) => {
-                        const data = JSON.parse(e.data);
-                        const cacheInfo = document.getElementById('dip-cache-info');
-                        if (cacheInfo && (data.cache_creation_input_tokens || data.cache_read_input_tokens)) {
-                            cacheInfo.textContent = `Cache: ${data.cache_creation_input_tokens || 0} created, ${data.cache_read_input_tokens || 0} read`;
-                        }
-                    });
-
-                    eventSource.addEventListener('run_completed', (e) => {
-                        eventSource.close();
-                        activeEventSource = null;
-                        resolve({
-                            success: modesFailed.length === 0,
-                            modes_completed: modesCompleted,
-                            modes_failed: modesFailed,
-                            total_inserted: totalInserted,
-                            duration_ms: Date.now() - startTime
-                        });
-                    });
-
-                    eventSource.addEventListener('run_failed', (e) => {
-                        const data = JSON.parse(e.data);
-                        eventSource.close();
-                        activeEventSource = null;
-                        const err = new Error(data.error || 'DIP run failed');
-                        err.code = data.error_code;
-                        reject(err);
-                    });
-
-                    eventSource.onerror = (err) => {
-                        eventSource.close();
-                        activeEventSource = null;
-                        const error = new Error('DIP stream connection failed');
-                        error.code = 'CONNECTION_FAILED';
-                        reject(error);
-                    };
-
-                    // Timeout after 35 minutes
-                    setTimeout(() => {
-                        eventSource.close();
-                        activeEventSource = null;
-                        const err = new Error('DIP extraction timed out');
-                        err.code = 'CLIENT_TIMEOUT';
-                        reject(err);
-                    }, 35 * 60 * 1000);
-                });
-
-                // Update final status
-                if (result.success) {
-                    updateStep('dip', 'complete',
-                        `${result.total_inserted} items extracted (${result.modes_completed.length} modes)`);
-                } else if (result.modes_completed?.length > 0) {
-                    updateStep('dip', 'error',
-                        `Partial: ${result.total_inserted} items, ${result.modes_failed.length} modes failed`);
-                }
-
-                return result;
-
-            } catch (dipErr) {
-                console.error('DIP streaming error:', dipErr);
-
-                let errorMsg;
-                switch (dipErr.code) {
-                    case 'DIP_TIMEOUT':
-                        errorMsg = 'Timed out after 30 minutes. Try running with fewer modes.';
-                        break;
-                    case 'CLIENT_TIMEOUT':
-                        errorMsg = 'Client-side timeout. The server may still be processing.';
-                        break;
-                    case 'RUN_NOT_FOUND':
-                        errorMsg = 'DIP run expired. Please restart the process.';
-                        break;
-                    case 'CONNECTION_FAILED':
-                        errorMsg = 'Connection lost. Check your network and try again.';
-                        break;
-                    case 'SIDECAR_ERROR':
-                        errorMsg = `Server error: ${dipErr.message}`;
-                        break;
-                    default:
-                        errorMsg = dipErr.message || 'Unknown error';
-                }
-
-                updateStep('dip', 'error', errorMsg);
-                return {
-                    success: false,
-                    error: dipErr.message,
-                    error_code: dipErr.code,
-                    duration_ms: Date.now() - startTime
-                };
-            }
-        }
-
-        /**
-         * Run vision pipeline (analyze pages + crop figures + generate search_blobs)
-         * Returns: { success, data, error }
-         */
-        async function runVision({ docId, storagePath }) {
-            const startTime = Date.now();
-            try {
-                // Phase D: server derives selected_models/referenced_selections from DB
-                const response = await window.adminFetch(`/admin/api/documents/${docId}/vision`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        storage_path: storagePath,
-                        pages: '1-100'
-                    })
-                });
-
-                if (!response.ok) {
-                    const err = await response.json().catch(() => ({}));
-                    const errorMsg = err.error || `HTTP ${response.status}`;
-                    updateStep('vision', 'error', `Failed: ${errorMsg}`);
-                    return { success: false, error: errorMsg, duration_ms: Date.now() - startTime };
-                }
-
-                const result = await response.json();
-                if (result.success) {
-                    const data = result.data || result;
-                    const skipped = data.warnings?.filter(w => w.code === 'PAGE_SKIPPED_NOT_RELEVANT').length || 0;
-                    updateStep('vision', 'complete',
-                        `${data.assets_saved || 0} assets extracted, ${skipped} pages filtered`);
-                    return { success: true, data, duration_ms: Date.now() - startTime };
-                } else {
-                    updateStep('vision', 'error', result.error || 'Unknown error');
-                    return { success: false, error: result.error, duration_ms: Date.now() - startTime };
-                }
-            } catch (err) {
-                console.error('Vision error:', err);
-                updateStep('vision', 'error', `Error: ${err.message}`);
-                return { success: false, error: err.message, duration_ms: Date.now() - startTime };
-            }
-        }
+        // runIndexing, runDipStreaming, runVision removed —
+        // all three are now handled by the background v5-ingest-runner
 
         async function confirmSelection() {
             confirmBtn.disabled = true;
@@ -2813,12 +2797,14 @@
                 updateStep('document', 'active', 'Creating document record...');
                 updateMicroStep('document', 'active', 'Creating record...');
 
+                // Build payload — safe for both inline flow and review mode (?doc_id=xxx from todo)
+                // In review mode, currentFile and parseResult.text may be null
                 const docResponse = await window.adminFetch('/admin/api/documents', {
                     method: 'POST',
                     body: JSON.stringify({
                         doc_id: storageResult?.doc_id || null,
-                        filename: currentFile.name,
-                        markdown_content: parseResult.text,
+                        filename: storageResult?.filename || currentFile?.name,
+                        markdown_content: parseResult?.text ?? null,
                         manufacturer: manufacturer || detectionResult.manufacturer,
                         product_type: productType,
                         system_category: systemCategory,
@@ -2872,220 +2858,25 @@
                     // Start polling - this will update UI and handle completion
                     startBackgroundPolling(docId, ingestRun.job_id);
 
-                    // Store state for potential page reload
-                    window.lastIngestState = {
-                        docId: storageResult?.doc_id,
-                        jobId: ingestRun.job_id,
-                        backgroundMode: true
-                    };
-
                     // Return early - polling handles the rest
                     return;
                 }
 
-                // Fallback: No background job, use existing parallel execution
-                let indexingResult = null;
-                let dipResult = null;
+                // No background job started — zero models selected
+                if (!ingestRun?.started) {
+                    stopElapsedTimer();
+                    checkAllComplete();
+                    persistTiming();
 
-                const storagePath = storageResult?.storage_path;
-                const installedAssetUid = docResult?.data?.installed_system?.asset_uid || null;
-
-                if (!docId) {
-                    // Skipped — segments were never added to bar
-                    updateMicroStep('vision', 'skipped', 'Skipped (no doc_id)');
-                    updateMicroStep('indexing', 'skipped', 'Skipped (no doc_id)');
-                    updateMicroStep('dip', 'skipped', 'Skipped (no doc_id)');
-                    stepTimings.vision = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
-                    stepTimings.indexing = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
-                    stepTimings.dip = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
-                } else if (selected_models.length === 0) {
-                    updateMicroStep('vision', 'skipped', 'Skipped (no models)');
-                    updateMicroStep('indexing', 'skipped', 'Skipped (no models)');
-                    updateMicroStep('dip', 'skipped', 'Skipped (no models)');
-                    stepTimings.vision = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
-                    stepTimings.indexing = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
-                    stepTimings.dip = { startedAt: null, endedAt: null, durationMs: 0, status: 'skipped' };
-                } else {
-                    // Start ALL THREE tasks simultaneously (legacy parallel mode)
-                    startStep('vision');
-                    startStep('indexing');
-                    startStep('dip');
-                    updateStep('vision', 'active', 'Analyzing pages for diagrams...');
-                    updateStep('indexing', 'active', 'Chunking and indexing content...');
-                    updateStep('dip', 'active', 'Starting DIP extraction...');
-                    updateMicroStep('vision', 'active', 'Analyzing pages...');
-                    updateMicroStep('indexing', 'active', 'Chunking & indexing...');
-                    updateMicroStep('dip', 'active', 'Starting extraction...');
-
-                    // Each promise ends its own timing immediately on resolve/reject
-                    const visionPromise = (storagePath
-                        ? runVision({ docId, storagePath })
-                        : Promise.resolve({ success: false, error: 'No storage path', skipped: true })
-                    ).then(result => {
-                        if (result.skipped) {
-                            endStep('vision', 'complete');
-                            updateStep('vision', 'complete', 'Skipped (no storage path)', '⊘');
-                            updateMicroStep('vision', 'skipped', 'Skipped (no storage path)');
-                        } else if (result.success) {
-                            endStep('vision', 'complete', result.data);
-                            updateMicroStep('vision', 'complete',
-                                `${result.data?.assets_saved || 0} assets extracted`,
-                                stepTimings.vision.durationMs);
-                        } else {
-                            endStep('vision', 'error');
-                            updateMicroStep('vision', 'error', result.error);
-                        }
-                        return result;
-                    }).catch(err => {
-                        endStep('vision', 'error');
-                        updateMicroStep('vision', 'error', err.message);
-                        return { success: false, error: err.message };
-                    });
-
-                    const indexingPromise = runIndexing({
-                        docId,
-                        installedAssetUid
-                    }).then(result => {
-                        if (result.success) {
-                            endStep('indexing', 'complete', result.data);
-                            updateMicroStep('indexing', 'complete',
-                                `${result.data?.chunks_created || 0} chunks, ${result.data?.vectors_upserted || 0} vectors`,
-                                stepTimings.indexing.durationMs);
-                        } else {
-                            endStep('indexing', 'error');
-                            updateMicroStep('indexing', 'error', result.error);
-                        }
-                        return result;
-                    }).catch(err => {
-                        endStep('indexing', 'error');
-                        updateMicroStep('indexing', 'error', err.message);
-                        return { success: false, error: err.message };
-                    });
-
-                    const dipPromise = runDipStreaming({
-                        docId
-                    }).then(result => {
-                        if (result.success || result.modes_completed?.length > 0) {
-                            endStep('dip', result.success ? 'complete' : 'error', result);
-                            updateMicroStep('dip', result.success ? 'complete' : 'error',
-                                `${result.total_inserted || 0} items (${(result.modes_completed || []).length} modes)`,
-                                stepTimings.dip.durationMs);
-                        } else {
-                            endStep('dip', 'error');
-                            updateMicroStep('dip', 'error', result.error || 'Failed');
-                        }
-                        return result;
-                    }).catch(err => {
-                        endStep('dip', 'error');
-                        updateMicroStep('dip', 'error', err.message);
-                        return { success: false, error: err.message };
-                    });
-
-                    // Wait for ALL THREE to complete
-                    const [visionSettled, indexingSettled, dipSettled] = await Promise.allSettled([
-                        visionPromise, indexingPromise, dipPromise
-                    ]);
-
-                    // Extract results (timing already recorded in .then() above)
-                    visionResult = visionSettled.status === 'fulfilled'
-                        ? visionSettled.value
-                        : { success: false, error: visionSettled.reason?.message || 'Unknown error' };
-
-                    indexingResult = indexingSettled.status === 'fulfilled'
-                        ? indexingSettled.value
-                        : { success: false, error: indexingSettled.reason?.message || 'Unknown error' };
-
-                    dipResult = dipSettled.status === 'fulfilled'
-                        ? dipSettled.value
-                        : { success: false, error: dipSettled.reason?.message || 'Unknown error' };
-
-                    console.log('Parallel execution completed', {
-                        vision_ms: stepTimings.vision?.durationMs,
-                        indexing_ms: stepTimings.indexing?.durationMs,
-                        dip_ms: stepTimings.dip?.durationMs
-                    });
+                    document.getElementById('processingDetails').innerHTML = `
+                        <div class="status-message" style="max-width: 600px; margin: 20px auto; padding: 16px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border);">
+                            <strong>No models selected</strong> — document record created but nothing to ingest.
+                        </div>
+                        <div style="text-align: center; margin-top: 16px;">
+                            <a href="/ingest" class="btn btn-secondary">Back to Ingest</a>
+                        </div>`;
+                    return;
                 }
-
-                // ========================================
-                // Complete
-                // ========================================
-                const visionOk = visionResult?.success !== false || visionResult?.skipped;
-                const indexingOk = indexingResult?.success !== false;
-                const dipOk = dipResult?.success !== false;
-                const hasErrors = !visionOk || !indexingOk || !dipOk;
-
-                if (hasErrors) {
-                    updateStep('complete', 'complete', 'Completed with errors', '⚠');
-                } else {
-                    updateStep('complete', 'complete', 'Complete');
-                }
-
-                // Mark all complete for timing bar
-                checkAllComplete();
-
-                // Persist timing to DB (Phase B)
-                persistTiming();
-
-                // Store for retry functionality
-                window.lastIngestState = {
-                    docId: storageResult?.doc_id,
-                    storagePath: storageResult?.storage_path,
-                    selectedModels: selected_models,
-                    referencedSelections: referenced_selections,
-                    installedAssetUid,
-                    visionResult,
-                    indexingResult,
-                    dipResult,
-                    visionFailed: !visionOk,
-                    indexingFailed: !indexingOk,
-                    dipFailed: !dipOk
-                };
-
-                // Embed dipResult into indexingResult for showSuccessScreen
-                if (indexingResult && dipResult) {
-                    if (!indexingResult.data) indexingResult.data = {};
-                    indexingResult.data.dip = dipResult;
-                }
-
-                // Save ingest stats to documents table (non-blocking)
-                if (docId) {
-                    const ingestStats = {
-                        indexing: {
-                            chunks_created: indexingResult?.data?.chunks_created || 0,
-                            vectors_upserted: indexingResult?.data?.vectors_upserted || 0
-                        },
-                        vision: {
-                            pages_analyzed: visionResult?.data?.pages_analyzed || visionResult?.pages_analyzed || 0,
-                            figures_cropped: visionResult?.data?.figures_cropped || visionResult?.figures_cropped || 0,
-                            tables_cropped: visionResult?.data?.tables_cropped || visionResult?.tables_cropped || 0,
-                            assets_saved: visionResult?.data?.assets_saved || visionResult?.assets_saved || 0
-                        },
-                        dip: {
-                            total_inserted: dipResult?.total_inserted || 0,
-                            modes_completed: dipResult?.modes_completed || [],
-                            modes_failed: dipResult?.modes_failed || []
-                        },
-                        systems: {
-                            systems_created: docResult?.data?.systems_created || 0,
-                            instances_created: docResult?.data?.instances_created || 0,
-                            referenced_systems_saved: docResult?.data?.referenced_systems_saved || 0
-                        },
-                        ingested_at: new Date().toISOString()
-                    };
-
-                    // Fire and forget - don't block success screen
-                    window.adminFetch(`/admin/api/upload/documents/${docId}/ingest-stats`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ingest_stats: ingestStats })
-                    }).then(res => {
-                        if (res.ok) console.log('Ingest stats saved');
-                        else console.warn('Failed to save ingest stats');
-                    }).catch(err => console.warn('Failed to save ingest stats:', err));
-                }
-
-                // Wait a moment then show success
-                setTimeout(() => showSuccessScreen(docResult, visionResult, indexingResult, selected_models, referenced_selections), 800);
 
             } catch (error) {
                 console.error('Error:', error);

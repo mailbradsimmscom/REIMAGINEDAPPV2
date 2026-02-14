@@ -21,39 +21,38 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
                               |
                               v
 +-------------------------------------------------------------------+
-|  2. Upload PDF to Supabase Storage                                |
-|     +-- POST /admin/api/documents/upload-storage                  |
+|  2. Upload + Background Parse & Detect (v5.2)                     |
+|     +-- POST /admin/api/documents/upload-and-parse                |
 |     +-- Generate doc_id from SHA256 hash of file content          |
 |     +-- Store at documents/manuals/{doc_id}/{filename}.pdf        |
-|     +-- Create initial document row in DB                         |
+|     +-- Create initial document row (with filename)               |
+|     +-- Start background job (job_type='v5_parse_detect')         |
+|     +-- Returns immediately: { doc_id, job_id, status_v2 }       |
+|     +-- USER CAN NAVIGATE AWAY                                    |
 +-------------------------------------------------------------------+
                               |
                               v
 +-------------------------------------------------------------------+
-|  3. Parse PDF via LlamaParse (cloud API)                          |
-|     +-- POST /v1/llamaparse (Python sidecar)                     |
-|     +-- extract_layout=True for figure/table bounding boxes       |
-|     +-- Returns full Markdown of entire document                  |
+|  3. Background Parse + Detect (server-side, browser-independent)  |
+|     +-- Downloads PDF from Supabase Storage                       |
+|     +-- Parse via LlamaParse (status_v2='parsing')                |
+|     +-- Detect models via GPT-4.1-mini (status_v2='detecting')   |
+|     +-- Stores detection_result JSONB on documents table          |
+|     +-- Creates user todo: "Review model selection for {filename}"|
+|     +-- status_v2='detection_complete' when done                  |
+|     +-- Heartbeat every 30s (same as ingest runner)               |
 +-------------------------------------------------------------------+
                               |
                               v
 +-------------------------------------------------------------------+
-|  4. Model Detection (automatic)                                   |
-|     +-- POST /v1/detect-models (Python sidecar)                   |
-|     +-- GPT-4.1-mini analyzes full parsed Markdown                |
-|     +-- Returns: primary_models[], referenced_products[],         |
-|     |   is_multi_model                                            |
-|     +-- Canonical model registry normalizes model names           |
-+-------------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------------+
-|  5. Model Selection (BLOCKING - user interaction required)        |
-|     +-- If multi-model manual, pipeline PAUSES                    |
-|     +-- User selects which primary model(s) are on their boat     |
+|  4. Model Selection (via todo link or direct URL)                 |
+|     +-- User clicks todo → /ingest?doc_id=xxx                    |
+|     +-- Detection results loaded from documents.detection_result  |
+|     +-- User selects installed primary models                     |
 |     +-- User confirms/deselects referenced products               |
 |     +-- POST /admin/api/documents (confirms selection)            |
 |     +-- Creates system, instances, document_systems links         |
+|     +-- Auto-completes detection todo                             |
 +-------------------------------------------------------------------+
                               |
                               v
@@ -93,7 +92,47 @@ Documents are technical manuals (PDFs) that provide the knowledge base for AI ch
 |     +-- Searchable in Pinecone with model-aware filtering         |
 +-------------------------------------------------------------------+
 
-### Background Processing Mode (v5.1)
+### Background Parse+Detect Mode (v5.2)
+
+Upload starts a **background parse+detect job** that runs LlamaParse and model detection server-side. The user can navigate away immediately after upload:
+
+```
++-------------------------------------------------------------------+
+|  Upload + Background Parse & Detect                               |
+|     +-- POST /admin/api/documents/upload-and-parse                |
+|     +-- Creates job with job_type='v5_parse_detect'               |
+|     +-- Returns immediately with { doc_id, job_id, status_v2 }    |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  Background Runner (server-side, browser-independent)             |
+|     +-- Download PDF → LlamaParse → detect-models-v2              |
+|     +-- Updates jobs.status_v2 at each stage transition           |
+|     +-- Heartbeat every 30s (jobs.last_heartbeat)                 |
+|     +-- Stores detection_result on documents table                |
+|     +-- Creates user_tasks todo on completion or failure          |
++-------------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------------+
+|  User Returns via Todo or URL                                     |
+|     +-- /ingest?doc_id=xxx → review detected models               |
+|     +-- /ingest?doc_id=xxx&view=summary → see completed ingest    |
+|     +-- /ingest?doc_id=xxx&view=retry → retry failed ingest       |
++-------------------------------------------------------------------+
+```
+
+**status_v2 values for v5_parse_detect jobs:**
+```
+queued → parsing → parse_complete → detecting → detection_complete | failed
+```
+
+**User Todos:**
+- `detection_complete` → "Review model selection for {filename}" → links to `/ingest?doc_id=xxx`
+- `failed` → "Parse/detect failed for {filename}" → links to `/ingest?doc_id=xxx&view=retry`
+
+### Background Ingest Mode (v5.1)
 
 The confirm step can start a **background job** that runs Vision, Indexing, and DIP on the server even if the browser disconnects:
 
@@ -180,14 +219,15 @@ The `jobs.counters` JSONB field tracks per-stage metrics:
 
 ### Manual Endpoint Behavior
 
-When a background `v5_ingest` job is active for a document, manual calls to these endpoints return **409 Conflict**:
+When a background `v5_ingest` **or** `v5_parse_detect` job is active for a document, manual calls to these endpoints return **409 Conflict**:
 
 - `POST /admin/api/documents/:docId/vision`
 - `POST /admin/api/documents/:docId/index`
 - `POST /admin/api/documents/:docId/dip`
-- `POST /admin/api/documents/:docId/dip/run`
 
 Response includes `job_id` and `status_v2` of the active job so the UI can redirect to status polling.
+
+**Parse-detect guard (v5.2):** Vision and index endpoints additionally check for active `v5_parse_detect` jobs and return 409 with code `ACTIVE_PARSE_DETECT_JOB` if parse/detect is still running.
 
 ### Resume on Page Reload
 
@@ -239,7 +279,8 @@ The frontend stores `{ doc_id, job_id, started_at }` in localStorage. On page lo
 |  +-- v5-index.service.js       (chunking + Pinecone upsert)       |
 |  +-- v5-colloquial.service.js  (colloquial keyword extraction)    |
 |  +-- v5-dip.service.js         (DIP extraction orchestration)     |
-|  +-- dip-stream.service.js     (SSE streaming for DIP progress)   |
+|  +-- dip-stream.service.js     (callback-based DIP for runner)    |
+|  +-- v5-parse-detect-runner.js (background parse+detect runner)   |
 |  +-- document.service.js       (legacy upload, storage, jobs)     |
 +-------------------------------------------------------------------+
                               |
@@ -348,19 +389,42 @@ The frontend stores `{ doc_id, job_id, started_at }` in localStorage. On page lo
 
 ### DIP Stream Service (dip-stream.service.js)
 
-**Two-step SSE streaming for DIP progress:**
+**Callback-based DIP execution for background runner:**
 ```javascript
 // src/services/dip-stream.service.js
-// Step 1: storeDipRunParams() -> returns dip_run_id
-//   - Stores params in in-memory Map with 10-minute TTL
-// Step 2: streamDipExtraction(runId, res, signal) -> SSE stream
-//   - Proxies SSE from Python sidecar /v1/dip/run
-//   - 30-minute timeout for long-running extractions
-//   - Handles client disconnect via AbortController
-//   - Events: mode_start, mode_complete, mode_failed, run_complete, run_failed
-// Step 3 (v5.1): runDipWithCallback(params, onProgress) -> for background runner
-//   - Consumes SSE events internally, calls onProgress callback
+// runDipWithCallback(params, onProgress, signal) -> for background runner
+//   - Consumes SSE events from sidecar /v1/dip/run internally
+//   - Calls onProgress callback with events: mode_started, mode_completed,
+//     mode_failed, run_completed, run_failed
 //   - Returns: { success, modes_completed, modes_failed, total_inserted }
+//   - 30-minute timeout
+// Note: SSE infrastructure (storeDipRunParams, streamDipExtraction,
+//   pendingRuns Map) removed in v5.2. DIP now runs only via background runner.
+```
+
+### v5 Parse+Detect Runner Service (v5-parse-detect-runner.service.js) [v5.2]
+
+**Background orchestration for Parse → Detect → Todo:**
+```javascript
+// src/services/v5-parse-detect-runner.service.js
+
+// startParseDetectRun({ docId, storagePath, filename })
+// 1. Check for existing active parse-detect job (reject if found)
+// 2. Create job record with job_type='v5_parse_detect', status_v2='queued'
+// 3. Start background execution via setImmediate()
+// 4. Return immediately with { job_id, doc_id, status_v2 }
+
+// Background pipeline (runs in setImmediate):
+// 1. Start heartbeat interval (30s)
+// 2. Download PDF from Supabase Storage
+// 3. Parse stage: status_v2='parsing' → LlamaParse → 'parse_complete'
+// 4. Detect stage: status_v2='detecting' → detect-models-v2 → 'detection_complete'
+// 5. Store detection_result JSONB on documents table (with reference_data snapshot)
+// 6. Create user_tasks todo with actionUrl to /ingest?doc_id=xxx
+
+// getParseDetectStatus(docId)
+// - Returns latest v5_parse_detect job for document
+// - Includes staleness check (is_stale: true if >5 min since heartbeat)
 ```
 
 ### v5 Ingest Runner Service (v5-ingest-runner.service.js) [v5.1]
@@ -420,8 +484,9 @@ The frontend stores `{ doc_id, job_id, started_at }` in localStorage. On page lo
 | v5 indexing (chunk + embed) | `src/services/v5-index.service.js` |
 | v5 colloquial keywords | `src/services/v5-colloquial.service.js` |
 | v5 DIP extraction | `src/services/v5-dip.service.js` |
-| DIP streaming (SSE) | `src/services/dip-stream.service.js` |
+| DIP callback runner | `src/services/dip-stream.service.js` |
 | **Background ingest runner** | `src/services/v5-ingest-runner.service.js` |
+| **Background parse+detect runner** | `src/services/v5-parse-detect-runner.service.js` |
 | Legacy document service | `src/services/document.service.js` |
 | Document deletion | `src/services/document-deletion.service.js` |
 | DIP ingest to DB | `src/services/dip.ingest.service.js` |
@@ -438,15 +503,16 @@ The frontend stores `{ doc_id, job_id, started_at }` in localStorage. On page lo
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/admin/api/documents/upload-storage` | Upload PDF to Supabase Storage, get doc_id + storage_path |
+| POST | `/admin/api/documents/upload-and-parse` | **[v5.2]** Upload PDF, start background parse+detect, get doc_id + job_id |
+| POST | `/admin/api/documents/upload-storage` | Upload PDF to storage only (legacy — use upload-and-parse) |
 | POST | `/admin/api/documents` | Confirm document with model selection, create systems/instances |
+| GET | `/admin/api/documents/:docId/detection-result` | **[v5.2]** Get stored detection result + doc metadata |
+| GET | `/admin/api/documents/:docId/parse-detect-status` | **[v5.2]** Poll parse+detect job status |
 | POST | `/admin/api/documents/:docId/vision` | Run vision pipeline (analyze pages, crop figures) |
 | GET | `/admin/api/documents/:docId/assets` | Get all extracted assets for a document |
 | GET | `/admin/api/documents/:docId/assets/summary` | Get asset count summary |
 | POST | `/admin/api/documents/:docId/index` | v5 index: chunk + embed + optional DIP + colloquial |
 | POST | `/admin/api/documents/:docId/dip` | v5 DIP extraction (non-streaming) |
-| POST | `/admin/api/documents/:docId/dip/run` | Start DIP streaming run, returns dip_run_id |
-| GET | `/admin/api/documents/dip/stream/:runId` | SSE stream for DIP progress |
 | POST | `/admin/api/documents/:docId/timing` | Save ingest timing payload (Phase B) |
 | GET | `/admin/api/documents/:docId/timing` | Get all timing runs for a document |
 | GET | `/admin/api/documents/:docId/timing/:runId` | Get specific timing run |
@@ -462,7 +528,7 @@ The frontend stores `{ doc_id, job_id, started_at }` in localStorage. On page lo
 
 #### GET /admin/api/documents/ingest/active
 
-Returns all currently running `v5_ingest` jobs across all documents. Useful for admin dashboard or when localStorage is empty.
+Returns all currently running `v5_ingest` and `v5_parse_detect` jobs across all documents. Useful for admin dashboard or when localStorage is empty.
 
 ```json
 {
@@ -603,6 +669,8 @@ Creates a new `v5_ingest` job for a document, rerunning Vision → Indexing → 
 | **vision_processed_at** | timestamp | **[v5]** When vision pipeline completed |
 | **page_count** | integer | **[v5]** Total pages in the PDF |
 | **figure_count** | integer | **[v5]** Figures/tables extracted by vision |
+| **filename** | text | **[v5.2]** Original uploaded filename |
+| **detection_result** | jsonb | **[v5.2]** Stored model detection result (primary_models, referenced_products, reference_data snapshot) |
 | created_at | timestamp | Upload time |
 | updated_at | timestamp | Last update |
 
@@ -614,7 +682,7 @@ Document processing job tracking.
 |--------|------|-------------|
 | job_id | uuid | Primary key |
 | doc_id | text | FK to documents |
-| job_type | text | 'DIP', 'v5_ingest', etc. |
+| job_type | text | 'DIP', 'v5_ingest', 'v5_parse_detect', etc. |
 | status | text | Legacy status field |
 | **status_v2** | text | **[v5]** Stage status (see values below) |
 | params | jsonb | Job parameters |
@@ -641,6 +709,14 @@ Document processing job tracking.
 - `dip_partial` - DIP completed with some modes failed
 - `completed` - All stages completed
 - `failed` - Pipeline failed
+
+**status_v2 values for v5_parse_detect jobs:**
+- `queued` - Job created, waiting to start
+- `parsing` - LlamaParse running
+- `parse_complete` - Parse succeeded, detect next
+- `detecting` - Model detection running
+- `detection_complete` - Detection succeeded, user todo created
+- `failed` - Pipeline failed, failure todo created
 
 ### doc_assets [NEW in v5]
 
@@ -818,7 +894,7 @@ uploading -> verifying -> parsing -> model_detection -> model_selection
 | `embedding` | Chunks embedded with text-embedding-3-large | `/v1/index-document` |
 | `indexing` | Vectors upserted to Pinecone with v5 metadata | `/v1/index-document` |
 | `colloquial` | Colloquial keywords extracted for system | v5-colloquial.service.js |
-| `dip_extraction` | 5-category DIP: specs warmup then 4-way parallel | `/v1/dip/run` (SSE) |
+| `dip_extraction` | 5-category DIP: specs warmup then 4-way parallel | `/v1/dip/run` (callback) |
 | `storing` | Final metadata updates to documents table | document repository |
 | `completed` | Document ready for search | -- |
 

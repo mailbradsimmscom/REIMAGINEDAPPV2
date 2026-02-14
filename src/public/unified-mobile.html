@@ -475,17 +475,27 @@
                     return;
                 }
 
-                // Sort: overdue first, then by due date
+                // Sort: actionable items first, then recent, then old overdue
                 const now = new Date();
+                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 tasks.sort((a, b) => {
+                    const aIngest = a.metadata?.createdBy === 'document_ingest' ? 1 : 0;
+                    const bIngest = b.metadata?.createdBy === 'document_ingest' ? 1 : 0;
+
+                    // Document ingest todos always first
+                    if (aIngest !== bIngest) return bIngest - aIngest;
+
                     const aDate = a.dueDate ? new Date(a.dueDate) : null;
                     const bDate = b.dueDate ? new Date(b.dueDate) : null;
-                    const aOverdue = aDate && aDate < now;
-                    const bOverdue = bDate && bDate < now;
+                    const aDueToday = aDate && aDate >= todayStart;
+                    const bDueToday = bDate && bDate >= todayStart;
 
-                    if (aOverdue && !bOverdue) return -1;
-                    if (!aOverdue && bOverdue) return 1;
-                    if (aDate && bDate) return aDate - bDate;
+                    // Due today/upcoming before overdue
+                    if (aDueToday && !bDueToday) return -1;
+                    if (!aDueToday && bDueToday) return 1;
+
+                    // Within same group: most recent first
+                    if (aDate && bDate) return bDate - aDate;
                     return 0;
                 });
 

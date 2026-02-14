@@ -42,7 +42,7 @@
 │  • Admin API    │  │  • Embeddings   │  │  • Task Mgmt    │
 │  • Supplies     │  │  • Vector Ops   │  │  • Dedup Review │
 │  • Trips        │  │  • Chat Process │  │  • WebSocket    │
-│                 │  │  • DIP Streaming│  │                 │
+│                 │  │  • DIP Extract  │  │                 │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
          │                    │                    │
          └────────────────────┼────────────────────┘
@@ -382,10 +382,11 @@ Base path: `/admin/api`
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/admin/api/documents/:docId/upload-pdf` | Upload PDF to storage, create document row |
+| POST | `/admin/api/documents/upload-and-parse` | **[v5.2]** Upload PDF + start background parse+detect |
+| POST | `/admin/api/documents/upload-storage` | Upload PDF to storage only (legacy) |
+| GET | `/admin/api/documents/:docId/detection-result` | **[v5.2]** Get stored detection result |
+| GET | `/admin/api/documents/:docId/parse-detect-status` | **[v5.2]** Poll parse+detect job status |
 | POST | `/admin/api/documents/:docId/dip` | Trigger DIP extraction |
-| POST | `/admin/api/documents/:docId/dip/run` | Start DIP with SSE streaming |
-| GET | `/admin/api/documents/dip/stream/:dipRunId` | SSE stream for DIP progress |
 
 #### Reference Data
 
@@ -949,7 +950,7 @@ Returns:
 | POST | `/v1/vision/analyze-pages` | Layout analysis for figures/tables |
 | POST | `/v1/vision/crop-figures` | Crop figures from page images |
 
-### DIP Extraction (v5 - SSE Streaming)
+### DIP Extraction (v5)
 
 | Method | Path | Description |
 |--------|------|-------------|
