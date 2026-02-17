@@ -32,6 +32,7 @@ import testAnalysisRouter from './test-analysis.route.js';
 import documentIngestRouter from './document-ingest.route.js';
 import referenceDataRouter from './reference-data.route.js';
 import aisRouter from './ais.route.js';
+import emailProxyRouter from './email-proxy.route.js';
 
 const router = express.Router();
 
@@ -77,6 +78,7 @@ router.use('/test-analysis', testAnalysisRouter);
 router.use('/documents', documentIngestRouter);
 router.use('/reference-data', referenceDataRouter);
 router.use('/ais', aisRouter);
+router.use('/email-proxy', emailProxyRouter);
 
 // Place AFTER all routes mounted to see fall-throughs
 // If we reach this, nothing matched in /admin

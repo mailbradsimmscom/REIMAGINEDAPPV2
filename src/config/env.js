@@ -68,7 +68,10 @@ const EnvSchema = z.object({
   SUPABASE_DISABLED: z.string().optional(),
   OPENAI_DISABLED: z.string().optional(),
   // AIS Stream API for tracking friend vessels globally
-  AISSTREAM_API_KEY: z.string().optional()
+  AISSTREAM_API_KEY: z.string().optional(),
+  // Yahoo SMTP for email proxy
+  YAHOO_EMAIL: z.string().optional(),
+  YAHOO_PASSWORD: z.string().optional()
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {
