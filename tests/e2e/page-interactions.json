@@ -326,8 +326,8 @@
         { "action": "visible", "selector": ".actions-grid" }
       ]
     },
-    "/public/upload.html": {
-      "name": "Upload",
+    "/public/document-ingest.html": {
+      "name": "Document Ingest",
       "type": "static",
       "elements": ["body"],
       "dropdowns": [],
