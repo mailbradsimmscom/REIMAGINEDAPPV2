@@ -177,30 +177,74 @@
             margin-bottom: var(--spacing-lg);
         }
 
-        .credits-info {
+        .changes-card {
             background: var(--surface-color);
             border-radius: var(--border-radius);
-            padding: var(--spacing-md);
+            padding: var(--spacing-lg);
             margin-bottom: var(--spacing-lg);
             box-shadow: var(--shadow-light);
             border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .credits-info .label {
+        .changes-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .changes-empty {
             font-size: 14px;
             color: var(--text-secondary);
         }
 
-        .credits-info .value {
-            font-size: 15px;
-            font-weight: 600;
+        .change-item {
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .credits-low {
-            color: var(--warning-color);
+        .change-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .change-area-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .change-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .change-bullets li {
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: var(--spacing-xs) 0;
+        }
+
+        .change-bullets li:not(:last-child) {
+            border-bottom: 1px solid var(--background-color);
+        }
+
+        .change-bullets .bullet-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-right: var(--spacing-xs);
+        }
+
+        .change-bullets li:last-child .bullet-label {
+            color: var(--primary-color);
+        }
+
+        .change-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
         }
 
         .footer {
@@ -230,9 +274,9 @@
             <a href="weather-area-add.html" class="btn btn-primary">+ Add Location</a>
         </div>
 
-        <div id="credits-container" class="credits-info" style="display: none;">
-            <span class="label">Meteoblue Credits:</span>
-            <span id="credits-value" class="value">--</span>
+        <div id="changes-container" class="changes-card" style="display: none;">
+            <h3>Changes in Expert Forecast</h3>
+            <div id="changes-content"></div>
         </div>
 
         <div id="error-container" class="error-message" style="display: none;"></div>
@@ -306,26 +350,38 @@
             }
         }
 
-        async function loadCredits() {
+        async function loadChanges() {
             try {
-                const response = await fetch(`${API_BASE}/credits`);
+                const response = await fetch(`${API_BASE}/expert-forecast-changes`);
                 const result = await response.json();
 
-                if (result.success && result.data) {
-                    const container = document.getElementById('credits-container');
-                    const valueEl = document.getElementById('credits-value');
+                if (!result.success || !result.data || result.data.length === 0) return;
 
-                    const remaining = result.data.credits_remaining || 0;
-                    const threshold = result.data.low_credit_threshold || 100;
+                const container = document.getElementById('changes-container');
+                const content = document.getElementById('changes-content');
 
-                    valueEl.textContent = `${remaining.toFixed(0)} remaining`;
-                    if (remaining < threshold) {
-                        valueEl.classList.add('credits-low');
+                content.innerHTML = result.data.map(item => {
+                    const timeAgo = formatLastFetch(item.updated_at);
+                    let bulletsHtml = '';
+                    try {
+                        const bullets = JSON.parse(item.summary);
+                        bulletsHtml = `<ul class="change-bullets">${bullets.map(b =>
+                            `<li><span class="bullet-label">${escapeHtml(b.label)}:</span>${escapeHtml(b.text)}</li>`
+                        ).join('')}</ul>`;
+                    } catch {
+                        // Fallback for old plain-text summaries
+                        bulletsHtml = `<p style="font-size:13px;line-height:1.6">${escapeHtml(item.summary)}</p>`;
                     }
-                    container.style.display = 'flex';
-                }
+                    return `<div class="change-item">
+                        <div class="change-area-name">${escapeHtml(item.area_name)}</div>
+                        ${bulletsHtml}
+                        <div class="change-time">Updated ${timeAgo}</div>
+                    </div>`;
+                }).join('');
+
+                container.style.display = 'block';
             } catch (error) {
-                console.error('Failed to load credits:', error);
+                console.error('Failed to load expert forecast changes:', error);
             }
         }
 
@@ -380,7 +436,7 @@
 
         // Initialize
         loadAreas();
-        loadCredits();
+        loadChanges();
     </script>
 
     <!-- Mobile Navigation Components -->

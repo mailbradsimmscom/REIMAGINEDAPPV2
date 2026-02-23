@@ -356,6 +356,8 @@
 
         // State
         let allForecasts = [];
+        let areaData = null;
+        let expertForecasts = [];
         let selectedDay = null;
         let selectedTime = null;
         let showAiView = false;
@@ -404,10 +406,26 @@
                 const response = await fetch(`${API_BASE}/areas/${areaId}`);
                 const result = await response.json();
                 if (result.success) {
-                    document.getElementById('area-name').textContent = result.data.name;
+                    areaData = result.data;
+                    const dirLabel = areaData.sailing_direction ? ` → ${areaData.sailing_direction}` : '';
+                    document.getElementById('area-name').textContent = areaData.name + dirLabel;
                 }
             } catch (error) {
                 console.error('Failed to load area:', error);
+            }
+        }
+
+        // Load expert forecasts
+        async function loadExpertForecasts() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/expert-forecasts`);
+                const result = await response.json();
+                if (result.success) {
+                    expertForecasts = result.data || [];
+                }
+            } catch (error) {
+                // Silently fail - expert forecasts are optional
+                expertForecasts = [];
             }
         }
 
@@ -901,6 +919,9 @@
                         </div>
                     </div>
 
+                    <!-- Expert Forecast (if available) -->
+                    ${renderExpertInAiTab()}
+
                     <!-- AI Summary -->
                     <div style="margin: 16px 0; padding: 12px; background: rgba(255,255,255,0.1); border-radius: 8px;">
                         <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">🧠 AI Summary</div>
@@ -1168,6 +1189,57 @@
                     </div>
                     ` : ''}
                 </div>
+                ${renderExpertForecastCard()}
+            `;
+        }
+
+        // Render expert forecast section in AI tab
+        function renderExpertInAiTab() {
+            if (expertForecasts.length === 0) return '';
+
+            // Get today's expert forecast, or the closest future one
+            const today = new Date().toISOString().split('T')[0];
+            const latest = expertForecasts.find(f => f.forecast_date >= today) || expertForecasts[expertForecasts.length - 1];
+            if (!latest) return '';
+
+            const parts = [];
+            if (latest.synopsis) parts.push(`<div style="margin-bottom: 8px;"><div style="font-size: 11px; opacity: 0.7; text-transform: uppercase; margin-bottom: 2px;">Synopsis</div>${latest.synopsis}</div>`);
+            if (latest.outlook) parts.push(`<div style="margin-bottom: 8px;"><div style="font-size: 11px; opacity: 0.7; text-transform: uppercase; margin-bottom: 2px;">Outlook</div>${latest.outlook}</div>`);
+            if (latest.sailing_suggestion) parts.push(`<div style="margin-bottom: 8px;"><div style="font-size: 11px; opacity: 0.7; text-transform: uppercase; margin-bottom: 2px;">Sailing Suggestions</div>${latest.sailing_suggestion}</div>`);
+
+            if (parts.length === 0) return '';
+
+            return `
+                <div style="margin: 16px 0; padding: 12px; background: rgba(45,106,79,0.3); border-radius: 8px; border-left: 3px solid #40916c;">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">📧 Expert Forecast (${latest.region_name || 'Regional'})</div>
+                    <div style="font-size: 13px; line-height: 1.5;">${parts.join('')}</div>
+                </div>
+            `;
+        }
+
+        // Render expert forecast card for the selected day
+        function renderExpertForecastCard() {
+            if (!selectedDay || expertForecasts.length === 0) return '';
+
+            const expert = expertForecasts.find(f => f.forecast_date === selectedDay);
+            if (!expert) return '';
+
+            const sections = [];
+            if (expert.wind_forecast) sections.push(`<div style="margin-bottom: 12px;"><strong>Wind:</strong> ${expert.wind_forecast}</div>`);
+            if (expert.swell_forecast) sections.push(`<div style="margin-bottom: 12px;"><strong>Swell:</strong> ${expert.swell_forecast}</div>`);
+            if (expert.sailing_suggestion) sections.push(`<div style="margin-bottom: 12px;"><strong>Sailing:</strong> ${expert.sailing_suggestion}</div>`);
+            if (expert.precipitation) sections.push(`<div style="margin-bottom: 12px;"><strong>Precipitation:</strong> ${expert.precipitation}</div>`);
+
+            if (sections.length === 0) return '';
+
+            return `
+                <div class="weather-card" style="background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%); margin-top: 12px;">
+                    <div class="card-header">
+                        <span class="card-period">Expert Forecast</span>
+                        <span class="card-time">${expert.region_name || 'Regional'}</span>
+                    </div>
+                    ${sections.join('')}
+                </div>
             `;
         }
 
@@ -1272,6 +1344,7 @@
         // Initialize
         loadArea();
         loadForecasts();
+        loadExpertForecasts();
     </script>
 
     <!-- Mobile Navigation Components -->

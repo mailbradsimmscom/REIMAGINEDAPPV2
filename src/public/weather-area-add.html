@@ -185,6 +185,27 @@
             color: var(--text-secondary);
         }
 
+        .compass-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            background: var(--surface-color);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .compass-btn:hover {
+            background: var(--background-color);
+        }
+
+        .compass-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
         .footer p {
             margin: 0;
         }
@@ -233,6 +254,23 @@
                 <div class="form-group">
                     <label for="description">Description (optional)</label>
                     <input type="text" id="description" name="description" placeholder="e.g., Primary anchorage location">
+                </div>
+
+                <div class="form-group">
+                    <label>Sailing Direction (optional)</label>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--spacing-sm);">Which direction are you typically sailing toward from this location?</p>
+                    <div id="compass-picker" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-sm); max-width: 320px;">
+                        <button type="button" class="compass-btn" data-dir="NW">NW</button>
+                        <button type="button" class="compass-btn" data-dir="N">N</button>
+                        <button type="button" class="compass-btn" data-dir="NE">NE</button>
+                        <button type="button" class="compass-btn" data-dir="W">W</button>
+                        <button type="button" class="compass-btn compass-none active" data-dir="">None</button>
+                        <button type="button" class="compass-btn" data-dir="E">E</button>
+                        <button type="button" class="compass-btn" data-dir="SW">SW</button>
+                        <button type="button" class="compass-btn" data-dir="S">S</button>
+                        <button type="button" class="compass-btn" data-dir="SE">SE</button>
+                    </div>
+                    <input type="hidden" id="sailing_direction" name="sailing_direction" value="">
                 </div>
 
                 <div class="form-actions">
@@ -314,6 +352,15 @@
             }
         }
 
+        // Compass picker
+        document.querySelectorAll('.compass-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.compass-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('sailing_direction').value = btn.dataset.dir;
+            });
+        });
+
         // Load existing area for edit mode
         async function loadArea() {
             if (!isEditMode) return;
@@ -335,6 +382,14 @@
                 document.getElementById('longitude').value = area.longitude;
                 document.getElementById('description').value = area.description || '';
 
+                // Set sailing direction
+                if (area.sailing_direction) {
+                    document.getElementById('sailing_direction').value = area.sailing_direction;
+                    document.querySelectorAll('.compass-btn').forEach(b => b.classList.remove('active'));
+                    const dirBtn = document.querySelector(`.compass-btn[data-dir="${area.sailing_direction}"]`);
+                    if (dirBtn) dirBtn.classList.add('active');
+                }
+
                 placeMarker(area.latitude, area.longitude);
                 map.setView([area.latitude, area.longitude], 10);
 
@@ -355,11 +410,13 @@
             submitBtn.textContent = isEditMode ? 'Updating...' : 'Saving...';
             errorContainer.style.display = 'none';
 
+            const sailingDir = document.getElementById('sailing_direction').value;
             const data = {
                 name: document.getElementById('name').value.trim(),
                 latitude: parseFloat(document.getElementById('latitude').value),
                 longitude: parseFloat(document.getElementById('longitude').value),
-                description: document.getElementById('description').value.trim() || null
+                description: document.getElementById('description').value.trim() || null,
+                sailing_direction: sailingDir || null
             };
 
             try {
