@@ -105,3 +105,4 @@ Overall Grade: A (Excellent)
 ⚠️ Acceptable Technical Debt:
   - Route → Repository violations: 20 files documented above (fix on next touch)
   - Files >250 lines: 43 files (soft limit, acceptable for complex domain logic)
+  - Background runner duplication: v5-parse-detect-runner.service.js (435 lines) and v5-ingest-runner.service.js (485 lines) share ~50 lines of identical infrastructure (heartbeat setup/teardown, staleness check, job status formatting). Extract to job-runner-common.service.js on next touch.

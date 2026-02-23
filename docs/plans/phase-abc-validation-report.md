@@ -40,7 +40,7 @@
 
 ---
 
-## Phase C: Frontend UI — MOSTLY VALIDATED ⚠️
+## Phase C: Frontend UI — VALIDATED ✓
 
 | Requirement | Status | Evidence |
 |-------------|--------|----------|
@@ -51,23 +51,15 @@
 | New payload: models_detected from primary_family.members | ✓ | `document-ingest.html:2569` |
 | New payload: referenced_products with display_name, aliases, description | ✓ | `document-ingest.html:2571` — sends `detectionResult.referenced_products` |
 
-**referenced_selections — potential gap:**  
-The plan specifies that `referenced_selections` must use **original** display_name (never user-edited) so the backend can match against `referenced_products[].display_name` for the `user_selected` flag.
+**referenced_selections — RESOLVED:**
+The plan specified that `referenced_selections` must use **original** display_name (never user-edited) so the backend can match against `referenced_products[].display_name` for the `user_selected` flag. This gap has been fixed:
 
-Current behavior:
-- `onModelNameEdited` updates `rp.display_name` and `rp.model` to the edited value (`document-ingest.html:1831`)
-- `selectedModels` entry `data.model` is updated to the edited name (`document-ingest.html:1842`)
-- `referenced_selections.push(data.model)` sends the edited name (`document-ingest.html:2501`)
+- **Frontend:** `_original_name` is now stored on first edit, and `referenced_selections` sends the original display name (not the user-edited value).
+- **Backend:** `raw_model` is stored as the canonical reference (preserving the original detected name), while `user_display_name` is stored separately when the user has edited the name.
 
-If the user edits "SD60" → "Main Saildrive", the backend receives:
-- `referenced_products`: `[{ display_name: "Main Saildrive", ... }]` (mutated)
-- `referenced_selections`: `["Main Saildrive"]`
+This preserves the link to the original detected reference while allowing user-friendly display names.
 
-The backend matches `referenced_selections` to `referenced_products[].display_name`, so it will match. But the **intent** of the plan was to keep original display_name for matching and store user_display_name separately. With the current approach, the canonical ref becomes "Main Saildrive" (normalized) instead of "SD60", and the link to the original detected ref is lost.
-
-**Recommendation:** For strict plan compliance, use original display_name in `referenced_selections` and keep `referenced_products[].display_name` as original; store edited name in `user_display_name` only. This may require frontend changes: `referenced_selections.push(member._original_name ?? data.model)` and not mutating `rp.display_name` when building the payload.
-
-**Phase C: COMPLETE (visual / payload shape)** — `referenced_selections` semantics may need adjustment per plan.
+**Phase C: COMPLETE**
 
 ---
 
@@ -77,4 +69,4 @@ The backend matches `referenced_selections` to `referenced_products[].display_na
 |-------|--------|----------|
 | A | ✓ Complete | None |
 | B | ✓ Complete (code) | Re-dump schema to confirm 6 columns |
-| C | ✓ Complete (visual) | Consider referenced_selections using original display_name per plan |
+| C | ✓ Complete | None |

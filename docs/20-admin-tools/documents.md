@@ -977,6 +977,70 @@ After successful Pinecone vector upsert, the linked system's manual flags are au
 
 ---
 
+## Ingest Timing
+
+### Purpose
+
+Performance monitoring for the document ingestion pipeline. Captures step-by-step timing data to identify bottlenecks, detect regressions, and provide user feedback during ingestion.
+
+### What's Captured
+
+11 canonical steps tracked:
+
+- **Pipeline steps:** `upload`, `parse`, `detect`, `document`, `vision`, `indexing`
+- **DIP sub-modes:** `dip_specs`, `dip_troubleshooting`, `dip_procedures`, `dip_golden_rules`, `dip_intent_router`
+
+Each step records: `started_at`, `ended_at`, `duration_ms`, `status` (pending/running/complete/error/skipped), and optional `metadata`.
+
+### How It Works
+
+1. Frontend generates `ingest_run_id` (UUID) at file select time
+2. `startStep(name)` / `endStep(name, status)` track each phase client-side
+3. On completion, `POST /admin/api/documents/:docId/timing` persists all steps
+4. Falls back to `navigator.sendBeacon()` on page unload to avoid data loss
+
+### Background Job Enrichment
+
+For background pipeline runs (v5.1/v5.2), the service enriches frontend-only timing with server-side durations:
+
+- Matches `v5_parse_detect` and `v5_ingest` jobs by `doc_id` and time window (5 min for parse-detect, ordered after for ingest)
+- Synthesizes `parse`, `detect`, `vision`, `indexing`, and `dip` steps from `job.counters`
+- Computes `review_pause`: time between parse-detect completion and ingest start (how long the user took to confirm model selection)
+- Only enriches 1-step upload-only runs; old 11-step runs are left untouched
+
+### Analytics Access
+
+`GET /api/funnel/stats` returns recent ingest timing runs with:
+
+- Steps sorted by canonical order
+- Total duration per run
+- System name (manufacturer/model) for context
+- Review pause duration (when applicable)
+
+### Database Table
+
+`ingest_timing` with check constraints on `step_name` (11 values) and `status` (5 values). Indexed on `doc_id` and `ingest_run_id`.
+
+### API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/admin/api/documents/:docId/timing` | Save timing payload for an ingest run |
+| GET | `/admin/api/documents/:docId/timing` | Get all timing runs for a document |
+| GET | `/admin/api/documents/:docId/timing/:runId` | Get a specific timing run |
+| GET | `/api/funnel/stats` | Recent timing runs with enrichment and system names |
+
+### Files
+
+| Purpose | Path |
+|---------|------|
+| Frontend instrumentation | `src/public/document-ingest.html` |
+| Service (validation + enrichment) | `src/services/ingest-timing.service.js` |
+| Repository (DB access) | `src/repositories/ingest-timing.repository.js` |
+| Analytics route | `src/routes/funnel/stats.route.js` |
+
+---
+
 ## Batch Scripts
 
 For bulk operations, use scripts in `scripts/bulk/`:
