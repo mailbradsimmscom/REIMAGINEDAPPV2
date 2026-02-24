@@ -255,7 +255,9 @@
             box-shadow: var(--shadow-light);
             border: 1px solid var(--border-color);
             display: flex;
-            gap: var(--spacing-xl);
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--spacing-sm) var(--spacing-xl);
             font-size: 13px;
             color: var(--text-secondary);
         }
@@ -281,6 +283,28 @@
         .data-status .status-label {
             font-weight: 600;
             color: var(--text-primary);
+        }
+
+        .data-status .btn-check {
+            margin-left: auto;
+            padding: 4px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .data-status .btn-check:hover {
+            background: #0056b3;
+        }
+
+        .data-status .btn-check:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
         }
 
         .footer {
@@ -497,20 +521,58 @@
                     const ago = formatLastFetch(d.expertEmail.receivedAt);
                     const hrs = (Date.now() - new Date(d.expertEmail.receivedAt)) / 3600000;
                     const dotClass = hrs > 26 ? 'stale' : '';
-                    const dateStr = d.expertEmail.forecastDate || '';
                     items.push(`<div class="status-item">
                         <span class="status-dot ${dotClass}"></span>
                         <span><span class="status-label">Expert Forecast:</span> ${escapeHtml(d.expertEmail.subject)} (${ago})</span>
                     </div>`);
+                } else {
+                    items.push(`<div class="status-item">
+                        <span class="status-dot stale"></span>
+                        <span><span class="status-label">Expert Forecast:</span> No emails processed</span>
+                    </div>`);
                 }
 
-                if (items.length > 0) {
-                    el.innerHTML = items.join('');
-                    el.style.display = 'flex';
-                }
+                items.push(`<button class="btn-check" id="check-emails-btn" onclick="checkEmails()">Check Emails</button>`);
+
+                el.innerHTML = items.join('');
+                el.style.display = 'flex';
             } catch (error) {
                 console.error('Failed to load data status:', error);
             }
+        }
+
+        async function checkEmails() {
+            const btn = document.getElementById('check-emails-btn');
+            btn.disabled = true;
+            btn.textContent = 'Checking...';
+
+            try {
+                const response = await fetch(`${API_BASE}/forecast-email/check`, { method: 'POST' });
+                const result = await response.json();
+
+                if (!result.success) {
+                    btn.textContent = result.error || 'Failed';
+                } else {
+                    const d = result.data;
+                    const msg = d.emailsIngested > 0
+                        ? `${d.emailsIngested} new, ${d.emailsParsed} parsed`
+                        : 'No new emails';
+                    btn.textContent = msg;
+                    // Refresh status and changes if new emails were processed
+                    if (d.emailsParsed > 0) {
+                        loadDataStatus();
+                        loadChanges();
+                    }
+                }
+            } catch (error) {
+                btn.textContent = 'Error';
+            }
+
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Check Emails';
+            }, 3000);
         }
 
         // Initialize
