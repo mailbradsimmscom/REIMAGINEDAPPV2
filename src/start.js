@@ -8,6 +8,7 @@ import { telegramBotService } from './services/telegram-bot.service.js';
 import { dipTelegramBotService } from './services/dip-telegram-bot.service.js';
 import { anchorWatchAlertsService } from './services/anchor-watch-alerts.service.js';
 import { startWeatherCollector, stopWeatherCollector } from './services/trips/weather-collector.service.js';
+import { startEdEmailScheduler, stopEdEmailScheduler } from './services/ed-email-scheduler.service.js';
 
 function getPort() {
   const { PORT } = getEnv({ loose: true });
@@ -36,6 +37,13 @@ const server = app.listen(port, async () => {
     logger.warn('Weather collector failed to start', { error: error.message });
   }
 
+  // Ed email scheduler runs in ALL environments
+  try {
+    startEdEmailScheduler();
+  } catch (error) {
+    logger.warn('Ed email scheduler failed to start', { error: error.message });
+  }
+
   // Other services run in PRODUCTION ONLY (prevents polling conflicts locally)
   if (env.NODE_ENV === 'production') {
     try {
@@ -55,6 +63,7 @@ const server = app.listen(port, async () => {
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully');
   stopWeatherCollector();
+  stopEdEmailScheduler();
   const env = getEnv();
   if (env.NODE_ENV === 'production') {
     await telegramBotService.stop();
@@ -70,6 +79,7 @@ process.on('SIGTERM', async () => {
 process.on('SIGINT', async () => {
   logger.info('SIGINT received, shutting down gracefully');
   stopWeatherCollector();
+  stopEdEmailScheduler();
   const env = getEnv();
   if (env.NODE_ENV === 'production') {
     await telegramBotService.stop();
