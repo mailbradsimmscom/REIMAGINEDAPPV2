@@ -15,7 +15,7 @@ Weather provides marine-specific forecasts for saved locations using multiple we
 | NOAA | Stormglass/NOAA | 10/day | 10 days | US weather service |
 | ECMWF | Stormglass/ECMWF | 10/day | 10 days | European model |
 | MeteoFR | Stormglass/Météo France | 10/day | 10 days | French weather service |
-| Meteoblue | Meteoblue | Credits | 7 days | **Outlier** - wave data unreliable |
+| Expert | MWXC email forecast | Free | 5-6 days | Human meteorologist, 80th percentile of ranges |
 
 **Key Features:**
 1. **Multi-Source Comparison** - See all 6 sources side-by-side
@@ -73,10 +73,10 @@ Weather provides marine-specific forecasts for saved locations using multiple we
 | **Weather Area** | Named location with lat/lon for forecast fetching |
 | **Open-Meteo** | Free weather API (forecast + marine data) |
 | **Stormglass** | Premium API aggregating multiple models (10 calls/day free) |
-| **Meteoblue** | Paid API with credit system (**outlier** - unreliable wave data) |
+| **Expert** | Human meteorologist forecast parsed from daily MWXC emails |
 | **GFS/ICON** | Weather models (gfs_seamless, icon_global) |
 | **Marine Data** | Wave height, swell, period, direction |
-| **Consensus** | Average of 5 reliable sources (excludes Meteoblue) |
+| **Consensus** | Average of all 6 sources (including Expert when available) |
 | **Calculated Wave** | Combined wave height: √(Swell² + Wind Wave²) |
 | **Trip Weather** | Weather logged during active boat trips |
 
@@ -96,10 +96,10 @@ The main forecast view (`weather-area-view.html`) provides a card-based interfac
 
 ┌─────────────────────────────────────────────────────────────────┐
 │  Weather Card (main content)                                    │
-│  - Wind with 6-source grid                                      │
+│  - Wind with 6-source grid (includes Expert)                    │
 │  - Wave Height with 7-source grid (includes Calc)               │
-│  - Wave Period with 6-source grid                               │
-│  - Consensus line (5-source avg)                                │
+│  - Wave Period with 6-source grid (includes Expert)             │
+│  - Consensus line (all-source avg)                              │
 │  - Swell, Wind Wave, Rain                                       │
 │  - Current-swell relationship                                   │
 └─────────────────────────────────────────────────────────────────┘
@@ -126,27 +126,25 @@ Each metric shows a 6-column comparison grid:
 
 ```
 ┌────────┬────────┬────────┬────────┬────────┬────────┐
-│   OM   │   SG   │  NOAA  │  ECMWF │MeteoFR │ Mtblue │
-│  12kn  │  11kn  │  13kn  │  12kn  │  11kn  │   --   │
+│   OM   │   SG   │  NOAA  │  ECMWF │MeteoFR │ Expert │
+│  12kn  │  11kn  │  13kn  │  12kn  │  11kn  │  17kn  │
 └────────┴────────┴────────┴────────┴────────┴────────┘
-                                              ↑ Red (outlier)
 ```
 
 **Wave Height** has a 7th column: **Calc** (green)
 - Shows calculated combined wave: √(Swell² + Wind Wave²)
 - Physics-based - swell and wind waves don't simply add
 
-### Meteoblue Outlier
+### Expert Source Column
 
-Meteoblue wave data shows ~2x higher values than all other sources. Displayed in **red** to indicate unreliability. Example:
-
-| Source | Wave Height |
-|--------|-------------|
-| Open-Meteo Marine | 0.98m |
-| NOAA | 0.84m |
-| ECMWF | 1.05m |
-| Météo France | 1.29m |
-| **Meteoblue** | **2.25m** ❌ |
+The Expert column shows data from the parsed MWXC professional forecast email. Key behaviors:
+- **Same value for all time blocks** on a given day (expert forecasts are daily, not hourly)
+- **80th percentile** of the expert's range (e.g., 12-18 kn → 17 kn), rounded up
+- **Rounding:** Integers for wind (kn) and period (s), one decimal for waves (m)
+- **Unit conversion:** Expert seas/swell are in feet → converted to meters (÷ 3.281)
+- **Blank** when no expert forecast exists for that day (typically beyond 5-6 days out)
+- **Included in consensus** — expert values participate in all averaging calculations
+- **Data source:** `structured_data` jsonb column on `weather_expert_forecasts` table
 
 ### Current-Swell Relationship
 
@@ -245,7 +243,156 @@ POST /api/weather/ai-sailing-summary
 }
 ```
 
-**Model:** `gpt-4.1-mini` (lightweight, fast)
+**Model:** `config.openai.summaryModel` (env: `OPENAI_SUMMARY_MODEL`, default `gpt-4.1-mini`)
+
+---
+
+## Expert Forecast Email Pipeline
+
+Automatically ingests daily Caribbean sailing forecast emails from a professional forecaster, parses them into structured data, and maps relevant sections to saved weather areas.
+
+### Overview
+
+- **Source:** Daily emails (Mon-Sat) from `support@mwxc.com` via Gmail API
+- **Pipeline:** 2 LLM calls + code diffs (optimized from 11 sequential calls)
+- **Schedule:** Every 2 hours Mon-Sat 6am-8pm EST (`0 11,13,15,17,19,21,23,1 * * 1-6` UTC)
+- **Retention:** 10 days (configurable via `FORECAST_RETENTION_DAYS`)
+
+### Pipeline (4 Steps)
+
+| Step | Type | Model | Purpose |
+|------|------|-------|---------|
+| 1 | **LLM** | `config.openai.model` (gpt-5.1) | Extract raw text blocks from email (one-time) |
+| 1b | **Code** | None | GPS-match areas to extracted sections by lat/lon |
+| 2 | **Code** (regex) | None | Normalize shorthand → structured JSON (`forecast-shorthand-parser.js`) |
+| 2b | **Code** | None | Map areas to normalized sections by bounding boxes |
+| 3 | **LLM** | `config.openai.summaryModel` (gpt-4.1-mini) | Render structured JSON → prose for all areas (one call) |
+| 4 | **Code** | None | Diff structured data for change summaries (deterministic) |
+
+### Parse Status State Machine
+
+```
+queued → parsing → parsed | partial | failed
+```
+
+- `queued`: email ingested, waiting for parse
+- `parsing`: parse in progress (job lock held)
+- `parsed`: all steps completed
+- `partial`: Step 1 OK but Step 3 failed — structured data saved
+- `failed`: Step 1 failed
+
+### Fire-and-Forget
+
+`POST /forecast-email/check` returns immediately after Gmail ingestion. Parsing runs in background with job lock (prevents duplicate work). Frontend polls `GET /forecast-email/parse-progress` for status.
+
+### Structured JSON (Step 1 Output)
+
+Stored in `weather_forecast_emails.structured_forecast` (jsonb). This is the canonical format — diffs and re-rendering use this, not prose.
+
+```json
+{
+  "region_name": "E Caribbean",
+  "primary_date": "2026-02-24",
+  "synopsis": "faithful paraphrase",
+  "outlook": "faithful paraphrase",
+  "sections": [{
+    "section_id": "antigua-st-martin",
+    "lat_range": [17.0, 18.5],
+    "lon_range": [-63.0, -61.0],
+    "days": [{
+      "date": "2026-02-24",
+      "wind": { "dir": "ESE", "range_kt": [12, 18], "gust_kt": 22 },
+      "seas_ft": [4, 6],
+      "swell": [{ "dir": "ENE", "ft": [3, 5], "period_s": [8, 10] }],
+      "sailing_notes": { "W-NW": "advice", "N": "advice" }
+    }]
+  }]
+}
+```
+
+### Change Summaries (Step 4)
+
+Deterministic code diffs on structured numeric data. Wind direction bucketed to 8-point compass (only reports changes ≥1 bucket). Output format: `[{ "label": "Feb 24", "text": "Wind up 12-18kt → 15-20kt. Swell down 0.9-1.5m → 0.6-1.2m." }]`
+
+### API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/weather/areas/:id/expert-forecast?date=YYYY-MM-DD` | Expert forecast for area+date |
+| GET | `/api/weather/areas/:id/expert-forecasts` | All expert forecasts for area (10-day) |
+| POST | `/api/weather/forecast-email/check` | Trigger Gmail check (fire-and-forget) |
+| GET | `/api/weather/forecast-email/status` | Ingestion status |
+| GET | `/api/weather/forecast-email/parse-progress` | Parse progress (for polling) |
+| GET | `/api/weather/data-status` | Combined: last weather API fetch + last expert email |
+| GET | `/api/weather/expert-forecast-changes` | Per-area change summaries |
+
+### Database Tables
+
+**weather_forecast_emails** — raw ingested emails
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| gmail_message_id | text | Unique, for dedup |
+| sender_email | text | Email sender |
+| subject | text | Email subject |
+| received_at | timestamptz | When email was received |
+| raw_text | text | Full email body |
+| structured_forecast | jsonb | Step 1 structured JSON (canonical) |
+| email_hash | text | SHA-256 of raw_text |
+| forecast_date | date | Primary forecast date |
+| parse_status | text | queued/parsing/parsed/partial/failed |
+| parse_error | text | Error message if failed |
+| region_tag | text | Region from subject |
+| parsed_at | timestamptz | When parsing completed |
+
+**weather_expert_forecasts** — parsed excerpts per area per date
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| email_id | uuid | FK to weather_forecast_emails (CASCADE) |
+| area_id | uuid | FK to weather_areas |
+| forecast_date | date | Date this forecast covers |
+| region_name | text | Email section name |
+| synopsis | text | Prose synopsis |
+| outlook | text | Prose outlook |
+| wind_forecast | text | Prose wind |
+| swell_forecast | text | Prose swell |
+| sailing_suggestion | text | Prose sailing advice |
+| precipitation | text | Prose precipitation |
+| area_change_summary | text | JSON array of delta bullets |
+| structured_data | jsonb | Structured day data from regex parser (wind, seas, swell, etc.) |
+| llm_raw_response | text | Raw LLM response (debug) |
+
+**Unique constraint:** `(email_id, area_id, forecast_date)`
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GMAIL_CLIENT_ID` | — | Google OAuth client ID |
+| `GMAIL_CLIENT_SECRET` | — | Google OAuth client secret |
+| `GMAIL_REFRESH_TOKEN` | — | OAuth refresh token |
+| `FORECAST_SENDER_EMAIL` | `support@mwxc.com` | Email sender to filter |
+| `FORECAST_EMAIL_ENABLED` | `false` | Feature toggle |
+| `FORECAST_RETENTION_DAYS` | `10` | Days to keep emails |
+| `FORECAST_GMAIL_SEARCH_DAYS` | `4` | Gmail search window |
+| `OPENAI_SUMMARY_MODEL` | `gpt-4.1-mini` | Cheap model for rendering |
+
+### Files
+
+| Purpose | Path |
+|---------|------|
+| Parser service | `maintenance-agent/src/services/forecast-email-parser.service.js` |
+| Shorthand parser | `maintenance-agent/src/services/forecast-shorthand-parser.js` (regex, Step 2) |
+| Parser tests | `maintenance-agent/tests/forecast-shorthand-parser.test.js` |
+| Email service | `maintenance-agent/src/services/forecast-email.service.js` |
+| Repository | `maintenance-agent/src/repositories/forecast-email.repository.js` |
+| Gmail repository | `maintenance-agent/src/repositories/gmail.repository.js` |
+| Scheduler | `maintenance-agent/src/jobs/scheduler.job.js` |
+| Frontend (areas) | `src/public/weather-areas.html` |
+| Frontend (view) | `src/public/weather-area-view.html` |
 
 ---
 
@@ -307,7 +454,11 @@ STORMGLASS_API_KEY=your_key_here
 │  ├── weather-area.service.js  (area CRUD)                       │
 │  ├── weather-forecast.service.js (forecast queries)             │
 │  ├── weather-credits.service.js (Meteoblue credits)             │
+│  ├── forecast-email.service.js (expert email pipeline)          │
+│  ├── forecast-email-parser.service.js (2-step LLM parse)       │
 │  ├── weather.repository.js    (database)                        │
+│  ├── forecast-email.repository.js (email + forecast CRUD)       │
+│  ├── gmail.repository.js      (Gmail API via fetch)             │
 │  ├── stormglass.repository.js (Stormglass API)                  │
 │  ├── open-meteo.repository.js (Open-Meteo API)                  │
 │  └── meteoblue.repository.js  (Meteoblue API)                   │
@@ -330,6 +481,8 @@ STORMGLASS_API_KEY=your_key_here
 │  ├── weather_forecasts      (forecast data)                     │
 │  ├── weather_fetch_logs     (fetch history)                     │
 │  ├── weather_api_credits    (Meteoblue credits)                 │
+│  ├── weather_forecast_emails (ingested expert emails)           │
+│  ├── weather_expert_forecasts (parsed per-area forecasts)       │
 │  └── trip_weather           (weather during trips)              │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -555,6 +708,7 @@ async fetchForArea(areaId, options = {}) {
 | latitude | numeric | Coordinates |
 | longitude | numeric | Coordinates |
 | description | text | Optional notes |
+| sailing_direction | text | N/NE/E/SE/S/SW/W/NW (for expert forecast matching) |
 | is_active | boolean | Active flag |
 | deleted_at | timestamp | Soft delete |
 | created_at | timestamp | Creation time |

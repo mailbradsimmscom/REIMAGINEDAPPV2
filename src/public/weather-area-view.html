@@ -373,21 +373,50 @@
             { name: 'Night', label: '9pm', startHour: 21, endHour: 5 }
         ];
 
-        // Sources to show (Meteoblue marked as outlier - unreliable wave data)
+        // Sources to show (Expert replaces Meteoblue)
         const SOURCES = [
             { key: 'open_meteo', label: 'OM' },
             { key: 'sg', label: 'SG' },
             { key: 'noaa', label: 'NOAA' },
             { key: 'ecmwf', label: 'ECMWF' },
             { key: 'meteo', label: 'MeteoFR' },
-            { key: 'meteoblue', label: 'Mtblue', outlier: true }
+            { key: 'expert', label: 'Expert' }
         ];
 
         // Direction helpers
+        const COMPASS_TO_DEG = {
+            'N': 0, 'NNE': 22.5, 'NE': 45, 'ENE': 67.5,
+            'E': 90, 'ESE': 112.5, 'SE': 135, 'SSE': 157.5,
+            'S': 180, 'SSW': 202.5, 'SW': 225, 'WSW': 247.5,
+            'W': 270, 'WNW': 292.5, 'NW': 315, 'NNW': 337.5
+        };
+
+        function compassToDeg(dir) {
+            if (!dir) return null;
+            return COMPASS_TO_DEG[dir.toUpperCase()] ?? null;
+        }
+
         function degToCompass(deg) {
             if (deg === null || deg === undefined) return '--';
             const dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
             return dirs[Math.round(deg / 22.5) % 16];
+        }
+
+        // Expert data: compute 80th percentile from a [low, high] range
+        // Round up: integers for wind/period, 1 decimal for waves
+        function expert80(range, decimals) {
+            if (!range || !Array.isArray(range) || range.length < 2) return null;
+            const val = range[0] + 0.8 * (range[1] - range[0]);
+            if (decimals === 0) return Math.ceil(val);
+            return Math.ceil(val * 10) / 10; // round up to 0.1
+        }
+
+        // Get expert structured data for the selected day
+        function getExpertDataForDay(day) {
+            if (!day || expertForecasts.length === 0) return null;
+            const expert = expertForecasts.find(f => f.forecast_date === day);
+            if (!expert || !expert.structured_data) return null;
+            return expert.structured_data;
         }
 
         // Wind conversion (km/h to knots for Open-Meteo, Stormglass is already m/s)
@@ -546,7 +575,7 @@
 
         // Score a time block for sailing conditions
         // Returns 0-100 score (higher = better sailing)
-        function scoreTimeBlock(forecasts) {
+        function scoreTimeBlock(forecasts, day) {
             if (forecasts.length === 0) return null;
 
             const windBySource = getMetricBySource(forecasts, 'wind_speed_10m', toKnots);
@@ -558,21 +587,46 @@
             const currentDirBySource = getMetricBySource(forecasts, 'current_direction');
             const swellDirBySource = getMetricBySource(forecasts, 'swell_wave_direction');
 
-            // Get consensus values (excluding meteoblue for waves)
+            // Inject expert data for this day
+            const expertDay = getExpertDataForDay(day);
+            if (expertDay) {
+                const wind80 = expert80(expertDay.wind?.range_kt, 0);
+                if (wind80 !== null) windBySource['expert'] = wind80;
+
+                const seas80 = expert80(expertDay.seas_ft, 1);
+                if (seas80 !== null) waveBySource['expert'] = seas80 / 3.281;
+
+                if (expertDay.swell && expertDay.swell.length > 0) {
+                    const primarySwell = expertDay.swell[0];
+                    const swellHt = expert80(primarySwell.ft, 1);
+                    if (swellHt !== null) swellBySource['expert'] = swellHt / 3.281;
+
+                    const swellPer = expert80(primarySwell.period_s, 0);
+                    if (swellPer !== null) periodBySource['expert'] = swellPer;
+
+                    const swellDirDeg = compassToDeg(primarySwell.dir);
+                    if (swellDirDeg !== null) swellDirBySource['expert'] = swellDirDeg;
+                }
+
+                const windDirDeg = compassToDeg(expertDay.wind?.dir);
+                if (windDirDeg !== null) currentDirBySource['expert_wind_dir'] = windDirDeg; // for reference only
+            }
+
+            // Get consensus values (all sources including expert)
             const windVals = Object.values(windBySource);
             const windAvg = windVals.length > 0 ? windVals.reduce((a,b)=>a+b,0)/windVals.length : null;
 
-            const waveExcl = Object.entries(waveBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
-            const waveAvg = waveExcl.length > 0 ? waveExcl.reduce((a,b)=>a+b,0)/waveExcl.length : null;
+            const waveVals = Object.values(waveBySource);
+            const waveAvg = waveVals.length > 0 ? waveVals.reduce((a,b)=>a+b,0)/waveVals.length : null;
 
-            const periodExcl = Object.entries(periodBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
-            const periodAvg = periodExcl.length > 0 ? periodExcl.reduce((a,b)=>a+b,0)/periodExcl.length : null;
+            const periodVals = Object.values(periodBySource);
+            const periodAvg = periodVals.length > 0 ? periodVals.reduce((a,b)=>a+b,0)/periodVals.length : null;
 
-            const swellExcl = Object.entries(swellBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
-            const swellAvg = swellExcl.length > 0 ? swellExcl.reduce((a,b)=>a+b,0)/swellExcl.length : null;
+            const swellVals = Object.values(swellBySource);
+            const swellAvg = swellVals.length > 0 ? swellVals.reduce((a,b)=>a+b,0)/swellVals.length : null;
 
-            const windWaveExcl = Object.entries(windWaveBySource).filter(([k])=>k!=='meteoblue').map(([,v])=>v);
-            const windWaveAvg = windWaveExcl.length > 0 ? windWaveExcl.reduce((a,b)=>a+b,0)/windWaveExcl.length : null;
+            const windWaveVals = Object.values(windWaveBySource);
+            const windWaveAvg = windWaveVals.length > 0 ? windWaveVals.reduce((a,b)=>a+b,0)/windWaveVals.length : null;
 
             // Calculate combined wave height
             let calcWave = null;
@@ -659,7 +713,7 @@
                         return hour >= timeBlock.startHour && hour < timeBlock.endHour;
                     });
 
-                    const result = scoreTimeBlock(forecasts);
+                    const result = scoreTimeBlock(forecasts, day);
                     if (result) {
                         const date = new Date(day + 'T12:00:00Z');
                         scores.push({
@@ -1043,7 +1097,39 @@
             const currentSpeedBySource = getMetricBySource(forecasts, 'current_speed');
             const currentDirBySource = getMetricBySource(forecasts, 'current_direction');
 
-            // Calculate consensus (excluding meteoblue outlier for wave calcs)
+            // Inject expert structured data (same value for all time blocks on that day)
+            const expertDay = getExpertDataForDay(selectedDay);
+            if (expertDay) {
+                const wind80 = expert80(expertDay.wind?.range_kt, 0);
+                if (wind80 !== null) windBySource['expert'] = wind80;
+
+                if (expertDay.wind?.gust_kt) gustBySource['expert'] = expertDay.wind.gust_kt;
+
+                const windDirDeg = compassToDeg(expertDay.wind?.dir);
+                if (windDirDeg !== null) windDirBySource['expert'] = windDirDeg;
+
+                // seas_ft → meters (÷ 3.281), 80th percentile
+                const seas80 = expert80(expertDay.seas_ft, 1);
+                if (seas80 !== null) waveBySource['expert'] = seas80 / 3.281;
+
+                // swell height and period (use primary swell)
+                if (expertDay.swell && expertDay.swell.length > 0) {
+                    const primarySwell = expertDay.swell[0];
+                    const swellHt = expert80(primarySwell.ft, 1);
+                    if (swellHt !== null) swellBySource['expert'] = swellHt / 3.281;
+
+                    const swellPer = expert80(primarySwell.period_s, 0);
+                    if (swellPer !== null) {
+                        swellPeriodBySource['expert'] = swellPer;
+                        periodBySource['expert'] = swellPer; // use swell period as wave period
+                    }
+
+                    const swellDirDeg = compassToDeg(primarySwell.dir);
+                    if (swellDirDeg !== null) swellDirBySource['expert'] = swellDirDeg;
+                }
+            }
+
+            // Calculate consensus (all sources including expert)
             const windStats = calculateStats(Object.values(windBySource));
             const gustValues = Object.values(gustBySource);
             const maxGust = gustValues.length > 0 ? Math.max(...gustValues) : null;
@@ -1051,27 +1137,17 @@
             const waveStats = calculateStats(Object.values(waveBySource));
             const periodStats = calculateStats(Object.values(periodBySource));
 
-            // Consensus from first 5 sources only (excluding Meteoblue outlier)
-            const waveExclOutlier = Object.entries(waveBySource)
-                .filter(([k]) => k !== 'meteoblue')
-                .map(([, v]) => v);
-            const periodExclOutlier = Object.entries(periodBySource)
-                .filter(([k]) => k !== 'meteoblue')
-                .map(([, v]) => v);
-            const waveConsensus = calculateStats(waveExclOutlier);
-            const periodConsensus = calculateStats(periodExclOutlier);
+            // Consensus from all sources
+            const waveConsensus = calculateStats(Object.values(waveBySource));
+            const periodConsensus = calculateStats(Object.values(periodBySource));
 
-            // For swell and wind wave, exclude meteoblue
-            const swellExclOutlier = Object.entries(swellBySource)
-                .filter(([k]) => k !== 'meteoblue')
-                .map(([, v]) => v);
-            const windWaveExclOutlier = Object.entries(windWaveBySource)
-                .filter(([k]) => k !== 'meteoblue')
-                .map(([, v]) => v);
+            // Swell and wind wave stats
+            const swellValues = Object.values(swellBySource);
+            const windWaveValues = Object.values(windWaveBySource);
 
-            const swellStats = calculateStats(swellExclOutlier);
+            const swellStats = calculateStats(swellValues);
             const swellPeriodStats = calculateStats(Object.values(swellPeriodBySource));
-            const windWaveStats = calculateStats(windWaveExclOutlier);
+            const windWaveStats = calculateStats(windWaveValues);
             const rainStats = calculateStats(Object.values(rainBySource));
 
             // Calculate combined wave height: sqrt(swell^2 + wind_wave^2)
