@@ -6,6 +6,7 @@ import { getEnv } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
 let cronTask = null;
+let sending = false;
 
 // Build transporter lazily (env may not be ready at import time)
 let transporter = null;
@@ -70,6 +71,8 @@ function getNowEST() {
 }
 
 async function checkAndSend() {
+  if (sending) return;
+  sending = true;
   try {
     const supabase = await getSupabaseClient();
     if (!supabase) return;
@@ -131,6 +134,8 @@ async function checkAndSend() {
     logger.info('Ed email scheduler: email sent successfully', { to: toEmails });
   } catch (err) {
     logger.error('Ed email scheduler: send failed', { error: err.message });
+  } finally {
+    sending = false;
   }
 }
 
