@@ -320,55 +320,74 @@ export async function detectNewAnchorages(minHours = 4) {
     );
 
     if (existing) {
-      // Check if we should extend the duration
-      const existingDeparted = existing.departed_at ? new Date(existing.departed_at) : null;
-      const candidateDeparted = candidate.departed_at ? new Date(candidate.departed_at) : null;
       const candidateArrived = new Date(candidate.arrived_at);
+      const existingDeparted = existing.departed_at ? new Date(existing.departed_at) : null;
       const existingArrived = new Date(existing.arrived_at);
 
-      // Extend if: candidate has later departure, OR candidate has earlier arrival
-      const shouldExtendDeparture = candidateDeparted && (!existingDeparted || candidateDeparted > existingDeparted);
-      const shouldExtendArrival = candidateArrived < existingArrived;
-      // Also update if existing has departed_at but candidate is "still here" (null)
-      const isNowStillHere = candidate.departed_at === null && existing.departed_at !== null;
+      // If there's a 24+ hour gap between the existing anchorage and this candidate,
+      // treat it as a return visit — create a new record instead of extending.
+      // This handles: left an anchorage, went somewhere else, came back days/weeks later.
+      // Also catches stale records with departed_at = null (compare against arrived_at).
+      const GAP_THRESHOLD_MS = 24 * 60 * 60 * 1000;
+      const referenceTime = existingDeparted || existingArrived;
+      const gap = candidateArrived - referenceTime;
 
-      if (shouldExtendDeparture || shouldExtendArrival || isNowStillHere) {
-        const updates = {};
-
-        if (shouldExtendArrival) {
-          updates.arrived_at = candidate.arrived_at;
+      if (gap > GAP_THRESHOLD_MS) {
+        // Close out the stale record if it has no departed_at
+        if (!existingDeparted) {
+          await anchoragesRepository.update(existing.id, {
+            departed_at: existingArrived.toISOString(),
+            duration_hours: 0
+          });
+          requestLogger.info('Closed stale anchorage with no departed_at', {
+            id: existing.id,
+            location: existing.location_name
+          });
         }
-        if (shouldExtendDeparture || isNowStillHere) {
-          updates.departed_at = candidate.departed_at;
+        // Fall through to insert as new anchorage below
+      } else {
+        // Within 24 hours — check if we should extend the duration
+        const candidateDeparted = candidate.departed_at ? new Date(candidate.departed_at) : null;
+
+        const shouldExtendDeparture = candidateDeparted && (!existingDeparted || candidateDeparted > existingDeparted);
+        const shouldExtendArrival = candidateArrived < existingArrived;
+        const isNowStillHere = candidate.departed_at === null && existing.departed_at !== null;
+
+        if (shouldExtendDeparture || shouldExtendArrival || isNowStillHere) {
+          const updates = {};
+
+          if (shouldExtendArrival) {
+            updates.arrived_at = candidate.arrived_at;
+          }
+          if (shouldExtendDeparture || isNowStillHere) {
+            updates.departed_at = candidate.departed_at;
+          }
+
+          const finalArrived = new Date(updates.arrived_at || existing.arrived_at);
+          const finalDeparted = updates.departed_at ? new Date(updates.departed_at) : null;
+          updates.duration_hours = finalDeparted
+            ? Math.round((finalDeparted - finalArrived) / (1000 * 60 * 60))
+            : null;
+
+          await anchoragesRepository.update(existing.id, updates);
+          updated++;
+
+          requestLogger.info('Extended existing anchorage', {
+            id: existing.id,
+            location: existing.location_name,
+            extendedArrival: shouldExtendArrival,
+            extendedDeparture: shouldExtendDeparture || isNowStillHere,
+            newDuration: updates.duration_hours
+          });
+        } else {
+          requestLogger.debug('Anchorage already exists, no update needed', {
+            lat: candidate.latitude,
+            lon: candidate.longitude
+          });
         }
-
-        // Recalculate duration
-        const finalArrived = new Date(updates.arrived_at || existing.arrived_at);
-        const finalDeparted = updates.departed_at ? new Date(updates.departed_at) : null;
-        updates.duration_hours = finalDeparted
-          ? Math.round((finalDeparted - finalArrived) / (1000 * 60 * 60))
-          : null;
-
-        await anchoragesRepository.update(existing.id, updates);
-        updated++;
-
-        requestLogger.info('Extended existing anchorage', {
-          id: existing.id,
-          location: existing.location_name,
-          extendedArrival: shouldExtendArrival,
-          extendedDeparture: shouldExtendDeparture || isNowStillHere,
-          newDuration: updates.duration_hours
-        });
 
         continue;
       }
-
-      // Exists but no extension needed
-      requestLogger.debug('Anchorage already exists, no update needed', {
-        lat: candidate.latitude,
-        lon: candidate.longitude
-      });
-      continue;
     }
 
     // New anchorage - try to link to trips
