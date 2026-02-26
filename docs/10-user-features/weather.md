@@ -276,7 +276,7 @@ queued → parsing → parsed | partial | failed
 ```
 
 - `queued`: email ingested, waiting for parse
-- `parsing`: parse in progress (job lock held)
+- `parsing`: parse in progress (job lock held). Auto-recovered to `queued` if stuck >10 minutes
 - `parsed`: all steps completed
 - `partial`: Step 1 OK but Step 3 failed — structured data saved
 - `failed`: Step 1 failed
