@@ -484,6 +484,21 @@ export async function mergeExistingDuplicates() {
       );
 
       if (dist <= MERGE_THRESHOLD) {
+        // Only merge if the time gap between departure and next arrival is < 24 hours
+        // Sort the pair by arrived_at to determine which came first
+        const a = allAnchorages[i];
+        const b = allAnchorages[j];
+        const [earlier, later] = new Date(a.arrived_at) < new Date(b.arrived_at) ? [a, b] : [b, a];
+        const GAP_THRESHOLD_MS = 24 * 60 * 60 * 1000;
+
+        // If the earlier record has a departed_at, check the gap to the later arrival
+        if (earlier.departed_at) {
+          const gap = new Date(later.arrived_at) - new Date(earlier.departed_at);
+          if (gap > GAP_THRESHOLD_MS) {
+            continue; // Separate stays, don't merge
+          }
+        }
+
         group.push(allAnchorages[j]);
         used.add(allAnchorages[j].id);
       }
