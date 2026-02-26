@@ -166,25 +166,24 @@ class AnchoragesRepository {
     try {
       const supabase = await getSupabaseClient();
 
-      // Dynamic lookback: start from 2nd most recent anchorage's departed_at
-      // This ensures we re-scan recent activity without processing old data
-      const recentAnchorages = await this.getRecentAnchorages(2);
+      // Dynamic lookback: start from most recent anchorage's departed_at
+      // This keeps the GPS query small and fast
+      const recentAnchorages = await this.getRecentAnchorages(1);
       let startTime;
 
-      if (recentAnchorages.length >= 2 && recentAnchorages[1].departed_at) {
-        // Start from when we left the 2nd most recent anchorage
-        startTime = new Date(recentAnchorages[1].departed_at);
-        requestLogger.info('Using dynamic lookback from 2nd recent anchorage', {
-          anchorageId: recentAnchorages[1].id,
+      if (recentAnchorages.length >= 1 && recentAnchorages[0].departed_at) {
+        startTime = new Date(recentAnchorages[0].departed_at);
+        requestLogger.info('Using dynamic lookback from most recent anchorage', {
+          anchorageId: recentAnchorages[0].id,
           since: startTime.toISOString()
         });
       } else {
-        // Fallback to 90 days if we don't have enough history
+        // Fallback to 14 days if no recent departed anchorage
         startTime = new Date();
-        startTime.setDate(startTime.getDate() - 90);
-        requestLogger.info('Using 90-day fallback lookback', {
+        startTime.setDate(startTime.getDate() - 14);
+        requestLogger.info('Using 14-day fallback lookback', {
           since: startTime.toISOString(),
-          reason: recentAnchorages.length < 2 ? 'not enough anchorages' : 'no departed_at'
+          reason: recentAnchorages.length < 1 ? 'no anchorages' : 'no departed_at'
         });
       }
 
