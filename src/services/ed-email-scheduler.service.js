@@ -115,8 +115,8 @@ async function checkAndSend() {
     const emailContent = data.content.replace(/\{\{location\}\}/g, location);
     const fullContent = `Hello Ed,\nToday is ${today}\n\n${emailContent}`;
 
-    const toEmails = data.to_emails || 'edsimms12@gmail.com';
-    const ccEmails = data.cc_emails || 'mail@bradsimms.com, ryansimms@gmail.com';
+    const toEmails = getEnv().ED_EMAIL_TO || data.to_emails || 'edsimms12@gmail.com';
+    const ccEmails = 'mail@bradsimms.com, ryansimms@gmail.com';
 
     await getTransporter().sendMail({
       from: getEnv().YAHOO_EMAIL,
@@ -131,7 +131,7 @@ async function checkAndSend() {
       .update({ last_sent_at: new Date().toISOString() })
       .eq('id', 1);
 
-    logger.info('Ed email scheduler: email sent successfully', { to: toEmails });
+    logger.info('Ed email scheduler: email sent successfully', { to: toEmails, fromEnv: !!getEnv().ED_EMAIL_TO });
   } catch (err) {
     logger.error('Ed email scheduler: send failed', { error: err.message });
   } finally {

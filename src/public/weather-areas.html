@@ -184,6 +184,12 @@
             margin-bottom: var(--spacing-lg);
             box-shadow: var(--shadow-light);
             border: 1px solid var(--border-color);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .changes-flash {
+            border-color: #4CAF50;
+            box-shadow: 0 0 12px rgba(76, 175, 80, 0.4);
         }
 
         .changes-card h3 {
@@ -544,7 +550,7 @@
         async function checkEmails() {
             const btn = document.getElementById('check-emails-btn');
             btn.disabled = true;
-            btn.textContent = 'Checking...';
+            btn.textContent = 'Checking inbox...';
 
             try {
                 const response = await fetch(`${API_BASE}/forecast-email/check`, { method: 'POST' });
@@ -552,27 +558,39 @@
 
                 if (!result.success) {
                     btn.textContent = result.error || 'Failed';
-                } else {
-                    const d = result.data;
-                    const msg = d.emailsIngested > 0
-                        ? `${d.emailsIngested} new, ${d.emailsParsed} parsed`
-                        : 'No new emails';
-                    btn.textContent = msg;
-                    // Refresh status and changes if new emails were processed
-                    if (d.emailsParsed > 0) {
-                        loadDataStatus();
-                        loadChanges();
+                    setTimeout(() => { btn.disabled = false; btn.textContent = 'Check Emails'; }, 3000);
+                    return;
+                }
+
+                const d = result.data;
+                if (d.emailsFound === 0) {
+                    btn.textContent = 'No new emails';
+                    setTimeout(() => { btn.disabled = false; btn.textContent = 'Check Emails'; }, 3000);
+                    return;
+                }
+
+                const forecasts = d.totalForecastsWritten || 0;
+                btn.textContent = forecasts > 0
+                    ? `Updated ${forecasts} forecasts`
+                    : `${d.emailsFound} emails — no new data`;
+
+                // Refresh all page data
+                await Promise.all([loadAreas(), loadDataStatus(), loadChanges()]);
+
+                // Flash the changes card if there are new diffs
+                if (forecasts > 0) {
+                    const card = document.getElementById('changes-container');
+                    if (card) {
+                        card.classList.add('changes-flash');
+                        setTimeout(() => card.classList.remove('changes-flash'), 3000);
                     }
                 }
-            } catch (error) {
-                btn.textContent = 'Error';
-            }
 
-            // Reset button after 3 seconds
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.textContent = 'Check Emails';
-            }, 3000);
+                setTimeout(() => { btn.disabled = false; btn.textContent = 'Check Emails'; }, 4000);
+            } catch (error) {
+                btn.textContent = 'Error — check logs';
+                setTimeout(() => { btn.disabled = false; btn.textContent = 'Check Emails'; }, 3000);
+            }
         }
 
         // Initialize

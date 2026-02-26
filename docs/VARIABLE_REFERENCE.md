@@ -626,6 +626,28 @@ These are the core identifiers used throughout the system.
 | `OPENAI_MAX_CONCURRENT_CALLS` | `3` | Concurrent API calls |
 | `OPENAI_RATE_LIMIT_RPM` | `60` | Rate limit (requests/minute) |
 
+### Forecast Email Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GMAIL_CLIENT_ID` | - | Google OAuth client ID for Gmail API access |
+| `GMAIL_CLIENT_SECRET` | - | Google OAuth client secret |
+| `GMAIL_REFRESH_TOKEN` | - | Gmail OAuth refresh token (from `gmail-oauth-setup.mjs`) |
+| `FORECAST_SENDER_EMAIL` | `support@mwxc.com` | Email address of forecast sender to search for |
+| `FORECAST_EMAIL_ENABLED` | `false` | Enable forecast email ingestion (`'true'` to enable) |
+| `FORECAST_RETENTION_DAYS` | `10` | Days to retain forecast emails before cleanup |
+| `FORECAST_GMAIL_SEARCH_DAYS` | `4` | Gmail search window in days (`newer_than:Xd`) |
+
+### Forecast Email Parse Status State Machine
+
+| Status | Description |
+|--------|-------------|
+| `queued` | Email ingested, waiting for parse |
+| `parsing` | Parse in progress (job lock held) |
+| `parsed` | All steps completed successfully |
+| `partial` | Step 1 OK but Step 3 failed — structured data saved, prose missing |
+| `failed` | Step 1 failed |
+
 ### WebSocket Client
 
 | Variable | Type | Description |

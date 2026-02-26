@@ -69,9 +69,11 @@ const EnvSchema = z.object({
   OPENAI_DISABLED: z.string().optional(),
   // AIS Stream API for tracking friend vessels globally
   AISSTREAM_API_KEY: z.string().optional(),
-  // Yahoo SMTP for email proxy
+  // Yahoo SMTP for email proxy + Ed email scheduler
   YAHOO_EMAIL: z.string().optional(),
-  YAHOO_PASSWORD: z.string().optional()
+  YAHOO_PASSWORD: z.string().optional(),
+  // Ed email scheduler: primary recipient (overrides EDemail.to_emails when set; use locally to avoid sending to Ed)
+  ED_EMAIL_TO: z.string().optional(),
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

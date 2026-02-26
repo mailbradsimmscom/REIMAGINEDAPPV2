@@ -17,6 +17,12 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post('/send', async (req, res) => {
+  // TEMPORARY: Block proxy to test duplicate Ed email cause. Remove when done.
+  return res.status(403).json({
+    success: false,
+    error: 'Email proxy temporarily disabled for duplicate-email debugging',
+  });
+
   const { from, to, cc, subject, text } = req.body;
 
   if (!to || !subject || !text) {
