@@ -6,7 +6,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 **Who uses it:** Boat owners, crew
 **Access:** `/anchorages`
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-02-26
 
 ---
 
@@ -25,7 +25,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 ┌─────────────────────────────────────────────────────────────────┐
 │  2. Tap "Refresh New Anchorages"                                │
 │     └── POST /api/anchorages/detect                             │
-│     └── Dynamic lookback (starts from 2nd most recent anchorage)│
+│     └── Dynamic lookback (starts from most recent anchorage)   │
 │     └── Analyzes for stationary periods (4+ hours)              │
 │     └── 300m movement threshold (handles anchor swing)          │
 │     └── Merges overlapping candidates at same location          │
@@ -68,7 +68,23 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 ---
 
-## Recent Changes (2026-01-12)
+## Recent Changes (2026-02-26)
+
+### Return Visit Detection
+
+Fixed a bug where returning to a previously visited anchorage would not create a new record. The detection now handles two cases:
+
+1. **`findAtLocation` match with time gap:** If the candidate arrives 24+ hours after the existing record's `departed_at`, it's treated as a return visit and a new anchorage is inserted. The existing record is not modified.
+
+2. **`mergeExistingDuplicates` with time gap:** Duplicate merging now checks time gaps between records. Records within 300m are only merged if the earlier record's departure is within 24 hours of the later record's arrival. This prevents merging separate stays at the same location weeks apart.
+
+### Lookback Window
+
+Changed GPS lookback from 2nd most recent anchorage to most recent anchorage's `departed_at`. Fallback reduced from 90 to 14 days. This avoids Supabase query timeouts when scanning large volumes of GPS data.
+
+---
+
+## Changes (2026-01-12)
 
 ### Improved Detection Algorithm
 
@@ -77,14 +93,17 @@ Major improvements to anchorage detection:
 | Feature | Before | After |
 |---------|--------|-------|
 | Movement threshold | 55m (~0.0005°) | 300m (~0.0027°) - handles anchor swing |
-| Lookback period | Fixed 90 days | Dynamic - starts from 2nd most recent anchorage |
+| Lookback period | Fixed 90 days | Dynamic - starts from most recent anchorage |
 | Duplicate handling | Skip if exists | Update if duration extends, auto-merge duplicates |
 | Current anchorage | Always shows "departed" | Shows "Still here" if within 2 hours |
 | Candidate merging | None | Merges overlapping candidates at same location |
+| Return visits | Not detected | 24-hour gap = new record, not merge |
 
 **Why 300m threshold?** Boats at anchor swing with wind/tide changes. A 7:1 scope in deep water can result in 200m+ swing radius. The previous 55m threshold caused false "movement" detection.
 
-**Why dynamic lookback?** If your last anchorage was 9 days ago, we only need to scan 9 days of GPS data - not 90 days. Much faster.
+**Why dynamic lookback?** Only scans GPS data from the most recent anchorage's departure. Keeps queries fast and avoids timeouts.
+
+**Why 24-hour gap for merges?** Small moves within a marina or anchorage (under 300m) should be merged into a single stay. But if you left and came back days or weeks later, that's a separate visit and needs its own record.
 
 ---
 
