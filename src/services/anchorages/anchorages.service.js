@@ -320,12 +320,23 @@ export async function detectNewAnchorages(minHours = 4) {
     );
 
     if (existing) {
-      // Check if we should extend the duration
       const existingDeparted = existing.departed_at ? new Date(existing.departed_at) : null;
       const candidateDeparted = candidate.departed_at ? new Date(candidate.departed_at) : null;
       const candidateArrived = new Date(candidate.arrived_at);
       const existingArrived = new Date(existing.arrived_at);
 
+      // Return visit check: if candidate arrives 24+ hours after the existing
+      // record's departure, this is a separate stay — skip the match and insert new.
+      const GAP_THRESHOLD_MS = 24 * 60 * 60 * 1000;
+      if (existingDeparted && (candidateArrived - existingDeparted) > GAP_THRESHOLD_MS) {
+        requestLogger.info('Return visit detected, inserting new anchorage', {
+          existingId: existing.id,
+          existingDeparted: existing.departed_at,
+          candidateArrived: candidate.arrived_at
+        });
+        // Fall through to insert as new anchorage below
+      } else {
+      // Check if we should extend the duration
       // Extend if: candidate has later departure, OR candidate has earlier arrival
       const shouldExtendDeparture = candidateDeparted && (!existingDeparted || candidateDeparted > existingDeparted);
       const shouldExtendArrival = candidateArrived < existingArrived;
@@ -369,6 +380,7 @@ export async function detectNewAnchorages(minHours = 4) {
         lon: candidate.longitude
       });
       continue;
+      } // end else (not a return visit)
     }
 
     // New anchorage - try to link to trips
