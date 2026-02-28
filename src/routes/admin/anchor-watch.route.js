@@ -34,6 +34,36 @@ const UpdateRadiusBodySchema = z.object({
 // Apply unified response validation to all routes
 router.use(validateResponse(AnchorWatchEnvelopeSchema));
 
+// Request schema for safe-box
+const SafeBoxQuerySchema = z.object({
+  interval: z.string().regex(/^\d+$/).default('60')
+});
+
+// GET /admin/api/anchor-watch/safe-box
+router.get('/safe-box',
+  validate(SafeBoxQuerySchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const interval = parseInt(req.query.interval);
+      const result = await anchorWatchService.getSafeBox(interval);
+
+      return res.json({
+        success: true,
+        data: result,
+        requestId: res.locals.requestId
+      });
+    } catch (error) {
+      requestLogger.error('Error getting safe box', { error: error.message });
+      const status = error.message.includes('No active anchorage') ? 404 : 500;
+      return res.status(status).json({
+        success: false,
+        error: error.message,
+        requestId: res.locals.requestId
+      });
+    }
+  }
+);
+
 // GET /admin/api/anchor-watch/status
 router.get('/status', async (req, res, next) => {
   try {

@@ -1,4 +1,5 @@
 import { gpsRepository } from '../repositories/gps.repository.js';
+import { anchoragesRepository } from '../repositories/anchorages.repository.js';
 import { getSupabaseClient } from '../repositories/supabaseClient.js';
 import { logger } from '../utils/logger.js';
 import { getEnv } from '../config/env.js';
@@ -326,6 +327,140 @@ class AnchorWatchService {
       requestLogger.error('Error updating anchor watch radius', { error: error.message });
       throw error;
     }
+  }
+
+  /**
+   * Compute convex hull of 2D points using Andrew's monotone chain algorithm.
+   * @param {Array<{latitude: number, longitude: number}>} points
+   * @returns {Array<{latitude: number, longitude: number}>} Hull vertices in order
+   */
+  computeConvexHull(points) {
+    const pts = points.map(p => [p.longitude, p.latitude]);
+    pts.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+
+    const cross = (O, A, B) =>
+      (A[0] - O[0]) * (B[1] - O[1]) - (A[1] - O[1]) * (B[0] - O[0]);
+
+    // Build lower hull
+    const lower = [];
+    for (const p of pts) {
+      while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0)
+        lower.pop();
+      lower.push(p);
+    }
+
+    // Build upper hull
+    const upper = [];
+    for (let i = pts.length - 1; i >= 0; i--) {
+      const p = pts[i];
+      while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0)
+        upper.pop();
+      upper.push(p);
+    }
+
+    // Remove last point of each half because it's repeated
+    lower.pop();
+    upper.pop();
+
+    const hull = lower.concat(upper);
+    return hull.map(([lon, lat]) => ({ latitude: lat, longitude: lon }));
+  }
+
+  /**
+   * Get safe zone analysis for current anchorage.
+   * Filters outliers, computes convex hull of swing pattern + 5% buffer.
+   * @param {number} intervalSeconds - Downsample interval (default 60)
+   * @returns {Promise<Object>} { positions, safeZone, anchorage, totalPositions, downsampledPositions, outlierPositions }
+   */
+  async getSafeBox(intervalSeconds = 60) {
+    const supabase = await getSupabaseClient();
+
+    // Find current anchorage (departed_at is null)
+    const { data: anchorage, error } = await supabase
+      .from('anchorages')
+      .select('*')
+      .is('departed_at', null)
+      .order('arrived_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!anchorage) {
+      throw new Error('No active anchorage found (no record with departed_at = null)');
+    }
+
+    const startTime = new Date(anchorage.arrived_at);
+    const endTime = new Date();
+
+    const { positions, totalPositions } = await gpsRepository.getPositionsSummaryInRange(
+      startTime, endTime, intervalSeconds
+    );
+
+    if (positions.length === 0) {
+      throw new Error('No GPS positions found for current anchorage period');
+    }
+
+    // Step 1: Compute centroid of all downsampled positions
+    const centroidLat = positions.reduce((s, p) => s + p.latitude, 0) / positions.length;
+    const centroidLon = positions.reduce((s, p) => s + p.longitude, 0) / positions.length;
+
+    // Step 2: Compute distance of each position from centroid
+    const distances = positions.map(p =>
+      this.calculateDistance(p.latitude, p.longitude, centroidLat, centroidLon)
+    );
+
+    // Step 3: Filter outliers (> 2 standard deviations from mean distance)
+    const meanDist = distances.reduce((s, d) => s + d, 0) / distances.length;
+    const variance = distances.reduce((s, d) => s + (d - meanDist) ** 2, 0) / distances.length;
+    const stdDev = Math.sqrt(variance);
+    const cutoff = meanDist + 2 * stdDev;
+
+    const filteredPositions = [];
+    let outlierCount = 0;
+    for (let i = 0; i < positions.length; i++) {
+      if (distances[i] <= cutoff) {
+        filteredPositions.push(positions[i]);
+      } else {
+        outlierCount++;
+      }
+    }
+
+    // Step 4: Compute convex hull of filtered positions
+    const hull = this.computeConvexHull(filteredPositions);
+
+    // Step 5: Expand hull by 5% outward from centroid
+    const expandedHull = hull.map(pt => ({
+      latitude: centroidLat + (pt.latitude - centroidLat) * 1.05,
+      longitude: centroidLon + (pt.longitude - centroidLon) * 1.05
+    }));
+
+    // Compute max radius (furthest hull point from centroid) for info
+    let maxRadiusMeters = 0;
+    for (const pt of expandedHull) {
+      const d = this.calculateDistance(pt.latitude, pt.longitude, centroidLat, centroidLon);
+      if (d > maxRadiusMeters) maxRadiusMeters = d;
+    }
+
+    return {
+      positions: filteredPositions,
+      safeZone: {
+        hull: expandedHull,
+        centroidLat,
+        centroidLon,
+        maxRadiusMeters: Math.round(maxRadiusMeters * 10) / 10,
+        cutoffMeters: Math.round(cutoff * 10) / 10
+      },
+      anchorage: {
+        id: anchorage.id,
+        name: anchorage.name || anchorage.location_name,
+        arrived_at: anchorage.arrived_at,
+        latitude: anchorage.latitude,
+        longitude: anchorage.longitude
+      },
+      totalPositions,
+      downsampledPositions: filteredPositions.length,
+      outlierPositions: outlierCount
+    };
   }
 
   /**

@@ -85,6 +85,72 @@ class GpsRepository {
       throw error;
     }
   }
+  /**
+   * Get positions summary in a time range with bounding box and downsampling.
+   * Uses cursor-based pagination to handle large datasets efficiently.
+   * @param {Date} startTime - Start of time range
+   * @param {Date} endTime - End of time range
+   * @param {number} intervalSeconds - Downsample interval (default 60s)
+   * @returns {Promise<Object>} { positions, boundingBox, totalPositions }
+   */
+  async getPositionsSummaryInRange(startTime, endTime, intervalSeconds = 60) {
+    try {
+      const supabase = await getSupabaseClient();
+      const batchSize = 1000;
+      let lastTimestamp = startTime.toISOString();
+
+      // Bounding box tracking (computed from ALL positions)
+      let minLat = Infinity, maxLat = -Infinity;
+      let minLon = Infinity, maxLon = -Infinity;
+
+      // Downsampled positions
+      const positions = [];
+      let totalPositions = 0;
+      let lastSampledTime = 0;
+
+      while (true) {
+        const { data: batch, error } = await supabase
+          .from('gps_position')
+          .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
+          .gt('timestamp', lastTimestamp)
+          .lte('timestamp', endTime.toISOString())
+          .order('timestamp', { ascending: true })
+          .limit(batchSize);
+
+        if (error) throw error;
+        if (!batch || batch.length === 0) break;
+
+        for (const pos of batch) {
+          totalPositions++;
+
+          // Update bounding box from every position
+          if (pos.latitude < minLat) minLat = pos.latitude;
+          if (pos.latitude > maxLat) maxLat = pos.latitude;
+          if (pos.longitude < minLon) minLon = pos.longitude;
+          if (pos.longitude > maxLon) maxLon = pos.longitude;
+
+          // Downsample: keep one position per intervalSeconds
+          const posTime = new Date(pos.timestamp).getTime();
+          if (posTime - lastSampledTime >= intervalSeconds * 1000) {
+            positions.push(pos);
+            lastSampledTime = posTime;
+          }
+        }
+
+        lastTimestamp = batch[batch.length - 1].timestamp;
+        if (batch.length < batchSize) break;
+      }
+
+      const boundingBox = totalPositions > 0
+        ? { minLat, maxLat, minLon, maxLon }
+        : null;
+
+      return { positions, boundingBox, totalPositions };
+    } catch (error) {
+      requestLogger.error('Error fetching positions summary', { error: error.message });
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance

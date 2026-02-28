@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Anchor Safe Box Analysis</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 65vh;
+            min-height: 400px;
+            background: white;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .card {
+            background: white;
+            margin: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #F2F2F7;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #8E8E93;
+            font-size: 14px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(242, 242, 247, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 12px;
+            color: #8E8E93;
+            font-size: 14px;
+        }
+
+        .error-message {
+            background: #FF3B30;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px;
+            font-size: 14px;
+        }
+
+        /* Login Screen */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #F2F2F7;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-overlay.hidden {
+            display: none;
+        }
+
+        .login-box {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 320px;
+        }
+
+        .login-box h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .login-box p {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-bottom: 24px;
+        }
+
+        .pin-input {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            text-align: center;
+            border: 2px solid #E5E5EA;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            letter-spacing: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .pin-input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .login-error {
+            color: #FF3B30;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .login-error.visible {
+            display: block;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .button:active:not(:disabled) {
+            opacity: 0.8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button-primary {
+            background: #007AFF;
+            color: white;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #8E8E93;
+        }
+
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .wind-arrow-icon {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .anchor-centroid-icon {
+            background: transparent !important;
+            border: none !important;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Safe Box Analysis</h2>
+            <p>Enter PIN to continue</p>
+            <div id="loginError" class="login-error">Invalid PIN</div>
+            <input type="tel" id="pinInput" class="pin-input" maxlength="6" placeholder="••••" autocomplete="off">
+            <button id="loginBtn" class="button button-primary" onclick="submitPin()">Login</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <a href="/public/anchor-watch-admin.html" class="back-button">&larr;</a>
+        <h1>Safe Box Analysis</h1>
+    </div>
+
+    <!-- Map -->
+    <div class="map-container">
+        <div id="map"></div>
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading positions...</div>
+        </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="card">
+        <h2 class="card-title">Anchorage Info</h2>
+        <div id="infoContent">
+            <div style="text-align:center;padding:20px;color:#8E8E93;">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="card">
+        <h2 class="card-title">Legend</h2>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: #007AFF;"></div>
+                <span>Position trail (light=old, dark=recent)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: rgba(0,122,255,0.15); border: 2px dashed #007AFF;"></div>
+                <span>Safe zone hull (5% buffer)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: #34C759;"></div>
+                <span>Wind &lt;10 kt</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: #FF9500;"></div>
+                <span>Wind 10-20 kt</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: #FF3B30;"></div>
+                <span>Wind &gt;20 kt</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const API_BASE = '/admin/api/anchor-watch';
+
+        // Get token from URL parameter or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
+        if (urlToken) {
+            localStorage.setItem('adminToken', urlToken);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        let ADMIN_TOKEN = localStorage.getItem('adminToken') || '';
+
+        let map = null;
+
+        async function apiCall(endpoint) {
+            const response = await fetch(API_BASE + endpoint, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Admin-Token': ADMIN_TOKEN
+                }
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                const errMsg = typeof data.error === 'string' ? data.error
+                    : (data.error && data.error.message) ? data.error.message
+                    : 'API request failed';
+                throw new Error(errMsg);
+            }
+            return data;
+        }
+
+        function initMap(center, zoom) {
+            map = L.map('map', {
+                preferCanvas: true
+            }).setView(center, zoom);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        function getWindColor(speed) {
+            if (speed == null) return '#8E8E93';
+            if (speed < 10) return '#34C759';
+            if (speed <= 20) return '#FF9500';
+            return '#FF3B30';
+        }
+
+        function renderPositions(positions) {
+            if (!positions || positions.length === 0) return;
+
+            const total = positions.length;
+
+            for (let i = 0; i < total; i++) {
+                const pos = positions[i];
+                // Time gradient: 0 = oldest (light), 1 = newest (dark)
+                const t = total > 1 ? i / (total - 1) : 1;
+
+                // Interpolate from light blue (#A0C4FF) to dark blue (#003399)
+                const r = Math.round(160 - t * 160);
+                const g = Math.round(196 - t * 145);
+                const b = Math.round(255 - t * 102);
+                const color = `rgb(${r},${g},${b})`;
+
+                L.circleMarker([pos.latitude, pos.longitude], {
+                    radius: 2,
+                    fillColor: color,
+                    color: color,
+                    weight: 0,
+                    fillOpacity: 0.7
+                }).addTo(map);
+
+                // Wind arrows every ~30 positions
+                if (i % 30 === 0 && pos.true_wind_direction != null && pos.true_wind_speed != null) {
+                    const windColor = getWindColor(pos.true_wind_speed);
+                    const dir = pos.true_wind_direction;
+                    // Arrow points in wind direction (direction wind is coming FROM + 180 = direction it's going)
+                    const arrowRotation = dir;
+
+                    const arrowSvg = `
+                        <svg width="20" height="20" viewBox="0 0 20 20" style="transform: rotate(${arrowRotation}deg);">
+                            <line x1="10" y1="16" x2="10" y2="4" stroke="${windColor}" stroke-width="2"/>
+                            <polygon points="10,2 6,8 14,8" fill="${windColor}"/>
+                        </svg>
+                    `;
+
+                    L.marker([pos.latitude, pos.longitude], {
+                        icon: L.divIcon({
+                            html: arrowSvg,
+                            iconSize: [20, 20],
+                            className: 'wind-arrow-icon'
+                        }),
+                        interactive: false
+                    }).addTo(map);
+                }
+            }
+        }
+
+        function renderSafeZone(safeZone) {
+            // Draw convex hull polygon
+            const hullLatLngs = safeZone.hull.map(pt => [pt.latitude, pt.longitude]);
+
+            L.polygon(hullLatLngs, {
+                color: '#007AFF',
+                weight: 2,
+                dashArray: '8, 4',
+                fillColor: '#007AFF',
+                fillOpacity: 0.08
+            }).addTo(map);
+
+            // Anchor centroid marker
+            L.marker([safeZone.centroidLat, safeZone.centroidLon], {
+                icon: L.divIcon({
+                    html: '<span style="font-size:24px;">&#9875;</span>',
+                    iconSize: [30, 30],
+                    className: 'anchor-centroid-icon'
+                })
+            }).addTo(map);
+        }
+
+        function renderInfo(data) {
+            const arrivedDate = new Date(data.anchorage.arrived_at);
+            const daysAnchored = Math.round((Date.now() - arrivedDate.getTime()) / (1000 * 60 * 60 * 24) * 10) / 10;
+
+            document.getElementById('infoContent').innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">${data.anchorage.name || 'Unknown'}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Arrived</span>
+                    <span class="info-value">${arrivedDate.toLocaleDateString()} (${daysAnchored} days)</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Total GPS Positions</span>
+                    <span class="info-value">${data.totalPositions.toLocaleString()}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Plotted Points</span>
+                    <span class="info-value">${data.downsampledPositions.toLocaleString()}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Outliers Filtered</span>
+                    <span class="info-value">${data.outlierPositions || 0}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Max Swing Radius</span>
+                    <span class="info-value">${data.safeZone.maxRadiusMeters} m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Outlier Cutoff</span>
+                    <span class="info-value">${data.safeZone.cutoffMeters} m</span>
+                </div>
+            `;
+        }
+
+        async function loadSafeBox() {
+            try {
+                const result = await apiCall('/safe-box?interval=60');
+                const data = result.data;
+
+                document.getElementById('loadingOverlay').classList.add('hidden');
+
+                // Init map centered on centroid
+                initMap([data.safeZone.centroidLat, data.safeZone.centroidLon], 18);
+
+                // Render layers
+                renderPositions(data.positions);
+                renderSafeZone(data.safeZone);
+
+                // Fit map to hull polygon with padding
+                const hullLatLngs = data.safeZone.hull.map(pt => [pt.latitude, pt.longitude]);
+                const bounds = L.latLngBounds(hullLatLngs);
+                map.fitBounds(bounds, { padding: [50, 50] });
+
+                // Render info panel
+                renderInfo(data);
+
+            } catch (error) {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('infoContent').innerHTML =
+                    `<div class="error-message">${error.message}</div>`;
+            }
+        }
+
+        // --- Auth (same pattern as anchor-watch-admin.html) ---
+
+        async function submitPin() {
+            const pinInput = document.getElementById('pinInput');
+            const loginError = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
+
+            const pin = pinInput.value.trim();
+            if (!pin) {
+                loginError.textContent = 'Please enter PIN';
+                loginError.classList.add('visible');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Verifying...';
+            loginError.classList.remove('visible');
+
+            try {
+                const response = await fetch('/api/auth/pin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pin })
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Invalid PIN');
+                }
+
+                localStorage.setItem('adminToken', data.token);
+                ADMIN_TOKEN = data.token;
+
+                document.getElementById('loginOverlay').classList.add('hidden');
+                loadSafeBox();
+
+            } catch (error) {
+                loginError.textContent = error.message;
+                loginError.classList.add('visible');
+                pinInput.value = '';
+                pinInput.focus();
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!ADMIN_TOKEN) {
+                document.getElementById('loginOverlay').classList.remove('hidden');
+                document.getElementById('pinInput').addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') submitPin();
+                });
+                return;
+            }
+
+            document.getElementById('loginOverlay').classList.add('hidden');
+            loadSafeBox();
+        });
+    </script>
+</body>
+</html>
