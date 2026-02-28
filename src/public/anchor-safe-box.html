@@ -394,6 +394,19 @@
             return data;
         }
 
+        function formatCoordinate(lat, lon) {
+            function toDDM(value, isLat) {
+                const abs = Math.abs(value);
+                const degrees = Math.floor(abs);
+                const minutes = (abs - degrees) * 60;
+                const hemisphere = isLat
+                    ? (value >= 0 ? 'N' : 'S')
+                    : (value >= 0 ? 'E' : 'W');
+                return `${hemisphere} ${degrees}°${minutes.toFixed(3)}'`;
+            }
+            return `${toDDM(lat, true)}  ${toDDM(lon, false)}`;
+        }
+
         function initMap(center, zoom) {
             map = L.map('map', {
                 preferCanvas: true
@@ -517,7 +530,7 @@
                 anchorHtml = `
                 <div class="info-row" style="border-top:2px solid #FF9500;margin-top:8px;padding-top:12px;">
                     <span class="info-label" style="color:#FF9500;font-weight:600;">Inferred Anchor</span>
-                    <span class="info-value">${a.latitude.toFixed(6)}, ${a.longitude.toFixed(6)}</span>
+                    <span class="info-value">${formatCoordinate(a.latitude, a.longitude)}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Confidence Radius</span>
