@@ -303,6 +303,15 @@
         <h1>Safe Box Analysis</h1>
     </div>
 
+    <!-- Chain Scope Input -->
+    <div class="card" style="margin-bottom:0;display:flex;align-items:center;gap:12px;padding:12px 16px;">
+        <label for="scopeInput" style="font-size:14px;color:#8E8E93;white-space:nowrap;">Chain Scope</label>
+        <input type="number" id="scopeInput" value="45" min="5" max="200" step="1"
+               style="width:80px;padding:8px 10px;border:1px solid #E5E5EA;border-radius:8px;font-size:16px;text-align:center;font-variant-numeric:tabular-nums;">
+        <span style="font-size:14px;color:#8E8E93;">meters</span>
+        <button id="reloadBtn" onclick="reloadWithScope()" style="margin-left:auto;padding:8px 16px;border-radius:8px;border:none;background:#007AFF;color:white;font-size:14px;font-weight:600;cursor:pointer;">Update</button>
+    </div>
+
     <!-- Map -->
     <div class="map-container">
         <div id="map"></div>
@@ -331,6 +340,10 @@
             <div class="legend-item">
                 <div class="legend-swatch" style="background: rgba(0,122,255,0.15); border: 2px dashed #007AFF;"></div>
                 <span>Safe zone hull (5% buffer)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: #FF9500; border: 1.5px dashed #FF9500;"></div>
+                <span>Inferred anchor (confidence circle)</span>
             </div>
             <div class="legend-item">
                 <div class="legend-swatch" style="background: #34C759;"></div>
@@ -461,19 +474,69 @@
                 fillOpacity: 0.08
             }).addTo(map);
 
-            // Anchor centroid marker
-            L.marker([safeZone.centroidLat, safeZone.centroidLon], {
+            // Position centroid marker (gray, smaller)
+            L.circleMarker([safeZone.centroidLat, safeZone.centroidLon], {
+                radius: 5,
+                fillColor: '#8E8E93',
+                color: '#fff',
+                weight: 1,
+                fillOpacity: 0.8
+            }).addTo(map).bindTooltip('GPS Centroid', { direction: 'top', offset: [0, -8] });
+        }
+
+        function renderInferredAnchor(anchor) {
+            if (!anchor) return;
+
+            // Confidence circle (1 std dev)
+            L.circle([anchor.latitude, anchor.longitude], {
+                radius: anchor.confidenceRadiusMeters,
+                fillColor: '#FF9500',
+                fillOpacity: 0.12,
+                color: '#FF9500',
+                weight: 1.5,
+                dashArray: '4, 4'
+            }).addTo(map).bindTooltip(`Confidence: ${anchor.confidenceRadiusMeters}m`, { direction: 'top' });
+
+            // Anchor marker
+            L.marker([anchor.latitude, anchor.longitude], {
                 icon: L.divIcon({
-                    html: '<span style="font-size:24px;">&#9875;</span>',
+                    html: '<span style="font-size:26px;">&#9875;</span>',
                     iconSize: [30, 30],
                     className: 'anchor-centroid-icon'
                 })
-            }).addTo(map);
+            }).addTo(map).bindTooltip('Inferred Anchor', { direction: 'top', offset: [0, -16], permanent: true });
         }
 
         function renderInfo(data) {
             const arrivedDate = new Date(data.anchorage.arrived_at);
             const daysAnchored = Math.round((Date.now() - arrivedDate.getTime()) / (1000 * 60 * 60 * 24) * 10) / 10;
+
+            let anchorHtml = '';
+            if (data.inferredAnchor) {
+                const a = data.inferredAnchor;
+                anchorHtml = `
+                <div class="info-row" style="border-top:2px solid #FF9500;margin-top:8px;padding-top:12px;">
+                    <span class="info-label" style="color:#FF9500;font-weight:600;">Inferred Anchor</span>
+                    <span class="info-value">${a.latitude.toFixed(6)}, ${a.longitude.toFixed(6)}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Confidence Radius</span>
+                    <span class="info-value">${a.confidenceRadiusMeters} m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Estimates Used</span>
+                    <span class="info-value">${a.estimateCount.toLocaleString()}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Chain Scope</span>
+                    <span class="info-value">${a.chainScopeMeters} m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">GPS→Bow Offset</span>
+                    <span class="info-value">${a.gpsToBowMeters} m (50 ft)</span>
+                </div>
+                `;
+            }
 
             document.getElementById('infoContent').innerHTML = `
                 <div class="info-row">
@@ -500,19 +563,23 @@
                     <span class="info-label">Max Swing Radius</span>
                     <span class="info-value">${data.safeZone.maxRadiusMeters} m</span>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Outlier Cutoff</span>
-                    <span class="info-value">${data.safeZone.cutoffMeters} m</span>
-                </div>
+                ${anchorHtml}
             `;
         }
 
         async function loadSafeBox() {
+            const scope = document.getElementById('scopeInput').value;
             try {
-                const result = await apiCall('/safe-box?interval=60');
+                const result = await apiCall(`/safe-box?interval=60&scope=${scope}`);
                 const data = result.data;
 
                 document.getElementById('loadingOverlay').classList.add('hidden');
+
+                // Remove existing map and recreate
+                if (map) {
+                    map.remove();
+                    map = null;
+                }
 
                 // Init map centered on centroid
                 initMap([data.safeZone.centroidLat, data.safeZone.centroidLon], 18);
@@ -520,6 +587,7 @@
                 // Render layers
                 renderPositions(data.positions);
                 renderSafeZone(data.safeZone);
+                renderInferredAnchor(data.inferredAnchor);
 
                 // Fit map to hull polygon with padding
                 const hullLatLngs = data.safeZone.hull.map(pt => [pt.latitude, pt.longitude]);
@@ -529,11 +597,26 @@
                 // Render info panel
                 renderInfo(data);
 
+                // Update scope input to reflect what the API used
+                if (data.inferredAnchor) {
+                    document.getElementById('scopeInput').value = data.inferredAnchor.chainScopeMeters;
+                }
+
             } catch (error) {
                 document.getElementById('loadingOverlay').classList.add('hidden');
                 document.getElementById('infoContent').innerHTML =
                     `<div class="error-message">${error.message}</div>`;
             }
+        }
+
+        function reloadWithScope() {
+            const btn = document.getElementById('reloadBtn');
+            btn.textContent = 'Loading...';
+            btn.disabled = true;
+            loadSafeBox().finally(() => {
+                btn.textContent = 'Update';
+                btn.disabled = false;
+            });
         }
 
         // --- Auth (same pattern as anchor-watch-admin.html) ---

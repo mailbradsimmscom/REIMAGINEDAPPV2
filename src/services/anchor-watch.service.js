@@ -372,7 +372,7 @@ class AnchorWatchService {
    * @param {number} intervalSeconds - Downsample interval (default 60)
    * @returns {Promise<Object>} { positions, safeZone, anchorage, totalPositions, downsampledPositions, outlierPositions }
    */
-  async getSafeBox(intervalSeconds = 60) {
+  async getSafeBox(intervalSeconds = 60, chainScopeMeters = null) {
     const supabase = await getSupabaseClient();
 
     // Find current anchorage (departed_at is null)
@@ -441,6 +441,68 @@ class AnchorWatchService {
       if (d > maxRadiusMeters) maxRadiusMeters = d;
     }
 
+    // Step 6: Infer anchor position from chain geometry + wind direction
+    // For each position with valid wind + depth data:
+    //   - Boat weathervanes, bow into wind, GPS at stern
+    //   - Anchor is upwind of GPS by: GPS-to-bow (50ft/15.24m) + horizontal chain reach
+    //   - Horizontal reach = sqrt(scope² - depth²)
+    //   - Direction to anchor = true_wind_direction (where wind comes FROM)
+    const CHAIN_SCOPE_M = chainScopeMeters || 45;
+    const GPS_TO_BOW_M = 15.24; // 50 feet
+    const R_EARTH = 6371000;
+
+    const anchorEstimates = [];
+    for (const pos of filteredPositions) {
+      if (pos.true_wind_direction == null || pos.depth == null || pos.depth <= 0) continue;
+      if (pos.depth >= CHAIN_SCOPE_M) continue; // chain too short for depth
+
+      const horizontalReach = Math.sqrt(CHAIN_SCOPE_M * CHAIN_SCOPE_M - pos.depth * pos.depth);
+      const totalDistance = GPS_TO_BOW_M + horizontalReach;
+
+      // Bearing toward anchor = wind direction (where wind comes FROM)
+      const bearingRad = pos.true_wind_direction * Math.PI / 180;
+      const latRad = pos.latitude * Math.PI / 180;
+      const lonRad = pos.longitude * Math.PI / 180;
+      const angularDist = totalDistance / R_EARTH;
+
+      const anchorLat = Math.asin(
+        Math.sin(latRad) * Math.cos(angularDist) +
+        Math.cos(latRad) * Math.sin(angularDist) * Math.cos(bearingRad)
+      );
+      const anchorLon = lonRad + Math.atan2(
+        Math.sin(bearingRad) * Math.sin(angularDist) * Math.cos(latRad),
+        Math.cos(angularDist) - Math.sin(latRad) * Math.sin(anchorLat)
+      );
+
+      anchorEstimates.push({
+        latitude: anchorLat * 180 / Math.PI,
+        longitude: anchorLon * 180 / Math.PI
+      });
+    }
+
+    let inferredAnchor = null;
+    if (anchorEstimates.length > 10) {
+      const avgLat = anchorEstimates.reduce((s, e) => s + e.latitude, 0) / anchorEstimates.length;
+      const avgLon = anchorEstimates.reduce((s, e) => s + e.longitude, 0) / anchorEstimates.length;
+
+      // Confidence: standard deviation of estimates in meters
+      const estimateDistances = anchorEstimates.map(e =>
+        this.calculateDistance(e.latitude, e.longitude, avgLat, avgLon)
+      );
+      const meanEstDist = estimateDistances.reduce((s, d) => s + d, 0) / estimateDistances.length;
+      const estVariance = estimateDistances.reduce((s, d) => s + (d - meanEstDist) ** 2, 0) / estimateDistances.length;
+      const confidenceRadius = Math.sqrt(estVariance);
+
+      inferredAnchor = {
+        latitude: avgLat,
+        longitude: avgLon,
+        confidenceRadiusMeters: Math.round(confidenceRadius * 10) / 10,
+        estimateCount: anchorEstimates.length,
+        chainScopeMeters: CHAIN_SCOPE_M,
+        gpsToBowMeters: GPS_TO_BOW_M
+      };
+    }
+
     return {
       positions: filteredPositions,
       safeZone: {
@@ -450,6 +512,7 @@ class AnchorWatchService {
         maxRadiusMeters: Math.round(maxRadiusMeters * 10) / 10,
         cutoffMeters: Math.round(cutoff * 10) / 10
       },
+      inferredAnchor,
       anchorage: {
         id: anchorage.id,
         name: anchorage.name || anchorage.location_name,

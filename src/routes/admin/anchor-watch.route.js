@@ -36,7 +36,8 @@ router.use(validateResponse(AnchorWatchEnvelopeSchema));
 
 // Request schema for safe-box
 const SafeBoxQuerySchema = z.object({
-  interval: z.string().regex(/^\d+$/).default('60')
+  interval: z.string().regex(/^\d+$/).default('60'),
+  scope: z.string().regex(/^\d+(\.\d+)?$/).optional()
 });
 
 // GET /admin/api/anchor-watch/safe-box
@@ -45,7 +46,8 @@ router.get('/safe-box',
   async (req, res, next) => {
     try {
       const interval = parseInt(req.query.interval);
-      const result = await anchorWatchService.getSafeBox(interval);
+      const scope = req.query.scope ? parseFloat(req.query.scope) : null;
+      const result = await anchorWatchService.getSafeBox(interval, scope);
 
       return res.json({
         success: true,

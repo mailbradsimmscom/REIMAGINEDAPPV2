@@ -111,7 +111,7 @@ class GpsRepository {
       while (true) {
         const { data: batch, error } = await supabase
           .from('gps_position')
-          .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
+          .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction, depth')
           .gt('timestamp', lastTimestamp)
           .lte('timestamp', endTime.toISOString())
           .order('timestamp', { ascending: true })
