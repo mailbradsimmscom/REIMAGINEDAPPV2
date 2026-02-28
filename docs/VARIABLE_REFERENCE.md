@@ -621,6 +621,7 @@ These are the core identifiers used throughout the system.
 | `AGENT_RUN_INTERVAL_MINUTES` | `60` | Cron job frequency |
 | `AGENT_BATCH_SIZE` | `5` | Systems per processing batch |
 | `AGENT_CONFIDENCE_THRESHOLD` | `0.7` | Min confidence for approval |
+| `AGENT_SYSTEM_CHECK_ENABLED` | `true` | Set to `'false'` to disable the system-check cron (e.g. while debugging agent memory upsert issues) |
 | `APPROVAL_AUTO_APPROVE_CONFIDENCE` | `0.95` | Auto-approve threshold |
 | `APPROVAL_REVIEW_REQUIRED_CONFIDENCE` | `0.70` | Manual review threshold |
 | `OPENAI_MAX_CONCURRENT_CALLS` | `3` | Concurrent API calls |

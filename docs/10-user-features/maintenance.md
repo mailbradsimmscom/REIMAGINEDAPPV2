@@ -173,18 +173,25 @@ async upsertTask(taskId, embedding, metadata) {
 
 | Job | Schedule | Purpose |
 |-----|----------|---------|
-| `system-check` | Every N minutes | Check for unprocessed systems |
+| `system-check` | Every N minutes | Check for unprocessed systems (can be disabled) |
 | `daily-update` | 2:00 AM | Real-world data updates |
 | `weekly-recheck` | Sundays 3:00 AM | Re-check all systems |
-| `weather-fetch` | Every 4 hours | Fetch Open-Meteo forecasts |
+| `weather-fetch` | Daily 4am EST / 9am UTC | Fetch Open-Meteo forecasts |
+| `forecast-email-check` | Mon-Sat 8am-noon EST | Check Gmail for expert forecast emails |
 
 **Configuration:**
 ```javascript
 const systemCheckInterval = `*/${config.agent.runIntervalMinutes} * * * *`;
 const dailyUpdateSchedule = '0 2 * * *';
 const weeklyRecheckSchedule = '0 3 * * 0';
-const weatherFetchSchedule = '0 */4 * * *';
+const weatherFetchSchedule = '0 9 * * *';
+const forecastEmailSchedule = '0 13,14,15,16,17 * * 1-6';
 ```
+
+**Disabling system-check:**
+Set `AGENT_SYSTEM_CHECK_ENABLED=false` in the maintenance-agent `.env` and restart. This only disables the system-check cron — all other crons (weather-fetch, forecast-email-check, daily-update, weekly-recheck) continue running normally.
+
+**Known issue (fixed):** The `maintenance_agent_memory` upsert was missing `onConflict: 'asset_uid'`, causing duplicate key errors (`maintenance_agent_memory_asset_uid_unique`) on every cron tick for already-processed systems. Fixed in commit `b9d4504`.
 
 ---
 

@@ -6,7 +6,7 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 
 **Who uses it:** Boat owners at anchor
 **Access:** `/anchor-watch-admin.html`, `/position-monitor.html`
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-02-26
 
 ---
 
@@ -23,8 +23,14 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  2. Set Anchor Point                                            │
-│     ├── Click "Infer Anchor Position" (centroid of last 20 GPS) │
+│  2. Set Anchor Point (two methods)                              │
+│     ├── A) "Infer" - centroid of last 20 GPS positions          │
+│     │   └── Server-side: POST /admin/api/anchor-watch/infer     │
+│     ├── B) "Calculate" - from scope, depth, and bearing         │
+│     │   ├── Enter scope (chain/rode length in meters)           │
+│     │   ├── Enter depth (water depth in meters)                 │
+│     │   ├── Set bearing to anchor (compass or manual)           │
+│     │   └── Client-side: Pythagorean + spherical trig           │
 │     ├── Manually enter coordinates (supports 17.04.446 format)  │
 │     └── Drag anchor marker on map to fine-tune                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -63,7 +69,11 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 | **Swing Radius** | Maximum allowed drift (meters) |
 | **Current Position** | Latest GPS coordinates |
 | **Drift Distance** | Haversine distance from anchor point |
-| **Centroid** | Average of recent positions (for anchor calculation) |
+| **Centroid** | Average of recent positions (used by Infer method) |
+| **Scope** | Length of chain/rode deployed (meters) |
+| **Depth** | Water depth at anchor (meters) |
+| **Bearing** | Compass direction from boat to anchor (degrees) |
+| **Horizontal Distance** | Ground distance to anchor: `sqrt(scope² - depth²)` |
 | **Status** | `inactive`, `safe`, `warning`, `dragging`, `gps_lost` |
 
 ---
@@ -332,7 +342,7 @@ async getStatus() {
 }
 ```
 
-### Centroid Calculation (for Setting Anchor)
+### Centroid Calculation — Infer Method (server-side)
 
 ```javascript
 async calculateCentroid() {
@@ -350,6 +360,60 @@ async calculateCentroid() {
   };
 }
 ```
+
+### Anchor Position — Calculate Method (client-side)
+
+Computes where the anchor lies on the seabed using scope, depth, and bearing. Runs entirely in the browser — no backend endpoint.
+
+**Inputs:**
+- **Scope** — chain/rode length in meters
+- **Depth** — water depth in meters (must be less than scope)
+- **Bearing** — compass direction from boat to anchor (device compass or manual entry)
+
+**Step 1: Horizontal distance (Pythagorean theorem)**
+
+```javascript
+// The chain forms a hypotenuse; depth is the vertical leg
+const horizontalDistance = Math.sqrt(scope * scope - depth * depth);
+```
+
+**Step 2: Project anchor position from current GPS (spherical trig)**
+
+```javascript
+function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
+  const R = 6371000; // Earth radius in meters
+  const d = distanceMeters / R;
+  const brng = bearingDeg * Math.PI / 180;
+  const lat1Rad = lat1 * Math.PI / 180;
+  const lon1Rad = lon1 * Math.PI / 180;
+
+  const lat2Rad = Math.asin(
+    Math.sin(lat1Rad) * Math.cos(d) +
+    Math.cos(lat1Rad) * Math.sin(d) * Math.cos(brng)
+  );
+  const lon2Rad = lon1Rad + Math.atan2(
+    Math.sin(brng) * Math.sin(d) * Math.cos(lat1Rad),
+    Math.cos(d) - Math.sin(lat1Rad) * Math.sin(lat2Rad)
+  );
+
+  return {
+    latitude: lat2Rad * 180 / Math.PI,
+    longitude: lon2Rad * 180 / Math.PI
+  };
+}
+```
+
+**UI Panel:** Toggle panel with scope, depth, and compass bearing inputs. Compass can lock to device heading or accept manual entry.
+
+### Infer vs Calculate
+
+| Aspect | **Infer** | **Calculate** |
+|--------|-----------|---------------|
+| Data source | Historical GPS (last N positions) | Current GPS + nautical measurements |
+| Inputs | None (automatic) | Scope, depth, bearing |
+| Runs on | Server (`POST /infer`) | Client (browser only) |
+| Best for | Quick setup after drifting at anchor | Precise position from known rode/depth |
+| Accuracy | Good if boat has swung around anchor | Excellent if scope and depth are known |
 
 ---
 
