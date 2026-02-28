@@ -367,6 +367,80 @@ class AnchorWatchService {
   }
 
   /**
+   * Calculate horizontal reach of anchor chain using catenary formula.
+   * Accounts for chain sag under gravity — more accurate than straight-line.
+   *
+   * Chain hangs in a catenary from bow roller to where it meets the seabed,
+   * then lies flat on the bottom. Total horizontal = catenary arc + flat portion.
+   *
+   * @param {number} scope - Total chain deployed (meters)
+   * @param {number} h - Height from seabed to bow roller (depth + freeboard)
+   * @returns {number} Horizontal distance from bow roller to anchor (meters)
+   */
+  catenaryHorizontalReach(scope, h) {
+    // Newton's method to solve catenary equations:
+    //   s_air = a * sinh(x_cat / a)      — chain length in the air
+    //   h     = a * (cosh(x_cat / a) - 1) — height of catenary
+    // where a = catenary parameter, x_cat = horizontal span of hanging part
+
+    // From the identity cosh²-sinh²=1:
+    //   s_air² = h² + 2*a*h
+    //   so: a = (s_air² - h²) / (2*h)
+
+    // We don't know s_air directly, but scope = s_air + chain_on_bottom
+    // Start by assuming all chain is in the air (s_air = scope)
+    // Then iterate: compute a → compute x_cat → compute s_air → check
+
+    // If scope >> h, most chain is on bottom. Use iterative approach.
+    // Initial guess: s_air = h * 1.05 (slightly more than height)
+    let sAir = Math.max(h * 1.02, h + 0.5); // chain in air must be > h
+
+    // Cap s_air at scope (can't have more chain in air than total)
+    if (sAir > scope) sAir = scope;
+
+    // Iterate to find consistent s_air
+    for (let i = 0; i < 20; i++) {
+      const a = (sAir * sAir - h * h) / (2 * h);
+      if (a <= 0) {
+        // Degenerate case — fall back to straight line
+        return Math.sqrt(scope * scope - h * h);
+      }
+
+      // x_cat from h = a * (cosh(x/a) - 1) → x = a * acosh(h/a + 1)
+      const xCat = a * Math.acosh(h / a + 1);
+
+      // Actual chain in air from this a: s = a * sinh(x/a)
+      const sCalc = a * Math.sinh(xCat / a);
+
+      // Chain on bottom
+      const onBottom = scope - sCalc;
+
+      if (onBottom < 0) {
+        // All chain is in the air, increase s_air estimate
+        sAir = scope;
+        const aFull = (sAir * sAir - h * h) / (2 * h);
+        if (aFull <= 0) return Math.sqrt(scope * scope - h * h);
+        const xFull = aFull * Math.acosh(h / aFull + 1);
+        return xFull; // no chain on bottom
+      }
+
+      // Total horizontal reach = catenary span + flat chain on bottom
+      const totalReach = xCat + onBottom;
+
+      // Check convergence
+      if (Math.abs(sCalc - sAir) < 0.01) {
+        return totalReach;
+      }
+
+      // Update s_air toward computed value
+      sAir = sCalc;
+    }
+
+    // Fallback to straight line if iteration didn't converge
+    return Math.sqrt(scope * scope - h * h);
+  }
+
+  /**
    * Get safe zone analysis for current anchorage.
    * Filters outliers, computes convex hull of swing pattern + 5% buffer.
    * @param {number} intervalSeconds - Downsample interval (default 60)
@@ -442,21 +516,26 @@ class AnchorWatchService {
     }
 
     // Step 6: Infer anchor position from chain geometry + wind direction
-    // For each position with valid wind + depth data:
-    //   - Boat weathervanes, bow into wind, GPS at stern
-    //   - Anchor is upwind of GPS by: GPS-to-bow (50ft/15.24m) + horizontal chain reach
-    //   - Horizontal reach = sqrt(scope² - depth²)
-    //   - Direction to anchor = true_wind_direction (where wind comes FROM)
+    // Uses catenary formula for accurate horizontal reach calculation.
+    // Filters out low-wind positions where boat doesn't weathervane reliably.
     const CHAIN_SCOPE_M = chainScopeMeters || 45;
     const GPS_TO_BOW_M = 15.24; // 50 feet
+    const FREEBOARD_M = 1.7; // waterline to bow roller
+    const MIN_WIND_KT = 5; // skip low-wind positions
     const R_EARTH = 6371000;
 
     const anchorEstimates = [];
     for (const pos of filteredPositions) {
       if (pos.true_wind_direction == null || pos.depth == null || pos.depth <= 0) continue;
-      if (pos.depth >= CHAIN_SCOPE_M) continue; // chain too short for depth
+      if (pos.true_wind_speed == null || pos.true_wind_speed < MIN_WIND_KT) continue;
 
-      const horizontalReach = Math.sqrt(CHAIN_SCOPE_M * CHAIN_SCOPE_M - pos.depth * pos.depth);
+      // Total height from seabed to bow roller
+      const h = pos.depth + FREEBOARD_M;
+      if (h >= CHAIN_SCOPE_M) continue; // chain too short
+
+      // Catenary horizontal reach calculation
+      // Solve for catenary parameter 'a' and horizontal distance
+      const horizontalReach = this.catenaryHorizontalReach(CHAIN_SCOPE_M, h);
       const totalDistance = GPS_TO_BOW_M + horizontalReach;
 
       // Bearing toward anchor = wind direction (where wind comes FROM)
@@ -482,24 +561,31 @@ class AnchorWatchService {
 
     let inferredAnchor = null;
     if (anchorEstimates.length > 10) {
-      const avgLat = anchorEstimates.reduce((s, e) => s + e.latitude, 0) / anchorEstimates.length;
-      const avgLon = anchorEstimates.reduce((s, e) => s + e.longitude, 0) / anchorEstimates.length;
+      // Use median-based approach: find median lat/lon independently
+      // More resistant to outlier estimates than mean
+      const sortedLats = anchorEstimates.map(e => e.latitude).sort((a, b) => a - b);
+      const sortedLons = anchorEstimates.map(e => e.longitude).sort((a, b) => a - b);
+      const mid = Math.floor(sortedLats.length / 2);
+      const medianLat = sortedLats.length % 2 ? sortedLats[mid] : (sortedLats[mid - 1] + sortedLats[mid]) / 2;
+      const medianLon = sortedLons.length % 2 ? sortedLons[mid] : (sortedLons[mid - 1] + sortedLons[mid]) / 2;
 
-      // Confidence: standard deviation of estimates in meters
+      // Confidence: standard deviation of estimates from median in meters
       const estimateDistances = anchorEstimates.map(e =>
-        this.calculateDistance(e.latitude, e.longitude, avgLat, avgLon)
+        this.calculateDistance(e.latitude, e.longitude, medianLat, medianLon)
       );
       const meanEstDist = estimateDistances.reduce((s, d) => s + d, 0) / estimateDistances.length;
       const estVariance = estimateDistances.reduce((s, d) => s + (d - meanEstDist) ** 2, 0) / estimateDistances.length;
       const confidenceRadius = Math.sqrt(estVariance);
 
       inferredAnchor = {
-        latitude: avgLat,
-        longitude: avgLon,
+        latitude: medianLat,
+        longitude: medianLon,
         confidenceRadiusMeters: Math.round(confidenceRadius * 10) / 10,
         estimateCount: anchorEstimates.length,
         chainScopeMeters: CHAIN_SCOPE_M,
-        gpsToBowMeters: GPS_TO_BOW_M
+        gpsToBowMeters: GPS_TO_BOW_M,
+        freeboardMeters: FREEBOARD_M,
+        minWindKt: MIN_WIND_KT
       };
     }
 
