@@ -619,6 +619,53 @@
             text-align: center;
             padding: 8px;
         }
+
+        .smart-setup-info {
+            background: #E8F5E9;
+            border: 1px solid #A5D6A7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #2E7D32;
+        }
+
+        .smart-setup-info.warning {
+            background: #FFF3E0;
+            border-color: #FFB74D;
+            color: #E65100;
+        }
+
+        .smart-setup-info .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+        }
+
+        .smart-setup-info .info-label {
+            font-weight: 500;
+        }
+
+        .smart-setup-info .info-value {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .smart-setup-info .info-note {
+            margin-top: 6px;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .smart-setup-error {
+            background: #FFF3E0;
+            border: 1px solid #FFB74D;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #E65100;
+        }
     </style>
 </head>
 <body>
@@ -708,6 +755,7 @@
         };
         let refreshTimer = null;
         let isPreviewMode = false; // True when user has inferred position but not activated yet
+        let smartSetupResult = null; // Stores last Smart Setup API response
 
         // Helper function for API calls
         async function apiCall(endpoint, options = {}) {
@@ -946,16 +994,53 @@
                 const hasInferredPosition = anchorWatchState.anchor_lat && anchorWatchState.anchor_lon;
                 const calcPanelVisible = document.getElementById('calculatePanel')?.classList.contains('visible') || false;
 
+                const sliderMax = smartSetupResult
+                    ? Math.max(200, Math.ceil(smartSetupResult.swingCircle.safeRadiusMeters * 1.5 / 5) * 5)
+                    : 200;
+                const sliderValue = smartSetupResult
+                    ? Math.round(smartSetupResult.swingCircle.safeRadiusMeters / 5) * 5
+                    : 50;
+
+                let smartSetupInfoHtml = '';
+                if (smartSetupResult) {
+                    const sc = smartSetupResult.swingCircle;
+                    const ia = smartSetupResult.inferredAnchor;
+                    const warningClass = sc.arcCoverageDeg < 90 ? ' warning' : '';
+                    smartSetupInfoHtml = `
+                        <div class="smart-setup-info${warningClass}">
+                            <div class="info-row">
+                                <span class="info-label">Wind estimates used</span>
+                                <span class="info-value">${ia.estimateCount}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Confidence radius</span>
+                                <span class="info-value">${ia.confidenceRadiusMeters.toFixed(1)} m</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Arc coverage</span>
+                                <span class="info-value">${sc.arcCoverageDeg.toFixed(0)}°</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Safe radius</span>
+                                <span class="info-value">${sc.safeRadiusMeters.toFixed(1)} m</span>
+                            </div>
+                            ${sc.arcCoverageDeg < 90 ? '<div class="info-note">Limited arc coverage — wind has only come from a narrow range. Safe radius may increase as more directions are observed.</div>' : ''}
+                        </div>
+                    `;
+                }
+
                 controlsContent.innerHTML = `
                     <div class="controls-section">
                         <div class="button-row">
-                            <button id="inferBtn" class="button button-secondary" onclick="inferAnchorPosition()">
-                                Infer
+                            <button id="smartSetupBtn" class="button button-primary" onclick="smartSetup()">
+                                ${smartSetupResult ? 'Re-run Smart Setup' : 'Smart Setup'}
                             </button>
                             <button id="calculateBtn" class="button button-secondary" onclick="toggleCalculatePanel()">
                                 Calculate
                             </button>
                         </div>
+                        <div id="smartSetupError"></div>
+                        ${smartSetupInfoHtml}
                         <div id="calculatePanel" class="calculate-panel ${calcPanelVisible ? 'visible' : ''}">
                             <label>Scope (m)</label>
                             <input type="number" id="scopeInput" placeholder="Chain/rode length" step="0.1">
@@ -1004,10 +1089,10 @@
                         <div class="slider-container">
                             <div class="slider-label">
                                 <span>Radius</span>
-                                <span class="slider-value" id="radiusValue">50 m</span>
+                                <span class="slider-value" id="radiusValue">${sliderValue} m</span>
                             </div>
                             <input type="range" class="slider" id="radiusSlider"
-                                   min="10" max="200" value="50" step="5"
+                                   min="10" max="${sliderMax}" value="${sliderValue}" step="5"
                                    oninput="updateRadiusDisplay(this.value)">
                         </div>
                         <button id="activateBtn" class="button button-primary" ${hasInferredPosition ? '' : 'disabled'} onclick="activateAnchorWatch()">
@@ -1267,7 +1352,152 @@
             }
         }
 
-        // Infer anchor position
+        // Smart Setup - use physics-based anchor inference from safe-box API
+        async function smartSetup() {
+            const btn = document.getElementById('smartSetupBtn');
+            btn.disabled = true;
+            btn.textContent = 'Analyzing...';
+
+            // Clear any previous error
+            const errorDiv = document.getElementById('smartSetupError');
+            if (errorDiv) errorDiv.innerHTML = '';
+
+            try {
+                const result = await apiCall('/safe-box?interval=60');
+
+                if (!result.data.swingCircle) {
+                    // Not enough data
+                    if (errorDiv) {
+                        errorDiv.innerHTML = '<div class="smart-setup-error">Not enough wind-qualified positions for Smart Setup. Need at least 10 positions with wind > 5kt. Try Calculate instead.</div>';
+                    }
+                    btn.textContent = 'Smart Setup';
+                    btn.disabled = false;
+                    return;
+                }
+
+                const sc = result.data.swingCircle;
+
+                // Store result for info panel
+                smartSetupResult = {
+                    swingCircle: sc,
+                    inferredAnchor: result.data.inferredAnchor
+                };
+
+                // Set anchor position from swing circle center
+                anchorWatchState.anchor_lat = sc.centerLat;
+                anchorWatchState.anchor_lon = sc.centerLon;
+
+                // Enter preview mode
+                isPreviewMode = true;
+
+                const sliderMax = Math.max(200, Math.ceil(sc.safeRadiusMeters * 1.5 / 5) * 5);
+                const sliderValue = Math.round(sc.safeRadiusMeters / 5) * 5;
+
+                // Show on map
+                const anchorPos = [sc.centerLat, sc.centerLon];
+
+                if (!markers.anchor) {
+                    markers.anchor = L.marker(anchorPos, {
+                        icon: L.divIcon({
+                            html: '📍',
+                            iconSize: [30, 30],
+                            className: 'anchor-icon'
+                        }),
+                        draggable: true
+                    }).addTo(map);
+
+                    markers.anchor.on('dragend', function(e) {
+                        const newPos = e.target.getLatLng();
+                        anchorWatchState.anchor_lat = newPos.lat;
+                        anchorWatchState.anchor_lon = newPos.lng;
+
+                        if (markers.previewZone) {
+                            markers.previewZone.setLatLng([newPos.lat, newPos.lng]);
+                        }
+                        if (markers.radiusHandle) {
+                            const radius = parseInt(document.getElementById('radiusSlider').value);
+                            const handlePos = calculatePointAtDistance([newPos.lat, newPos.lng], radius, 45);
+                            markers.radiusHandle.setLatLng(handlePos);
+                        }
+
+                        updateInputsFromMarker(newPos.lat, newPos.lng);
+                    });
+                } else {
+                    markers.anchor.setLatLng(anchorPos);
+                    markers.anchor.setIcon(L.divIcon({
+                        html: '📍',
+                        iconSize: [30, 30],
+                        className: 'anchor-icon'
+                    }));
+                    if (markers.anchor.dragging) markers.anchor.dragging.enable();
+                }
+
+                // Remove existing preview elements
+                if (markers.previewZone) map.removeLayer(markers.previewZone);
+                if (markers.radiusHandle) map.removeLayer(markers.radiusHandle);
+
+                // Create preview circle at safe radius
+                markers.previewZone = L.circle(anchorPos, {
+                    radius: sliderValue,
+                    fillColor: '#007AFF',
+                    fillOpacity: 0.1,
+                    color: '#007AFF',
+                    weight: 2,
+                    dashArray: '5, 5'
+                }).addTo(map);
+
+                // Create draggable radius handle
+                const handlePos = calculatePointAtDistance(anchorPos, sliderValue, 45);
+                markers.radiusHandle = L.marker(handlePos, {
+                    icon: L.divIcon({
+                        html: '⚪',
+                        iconSize: [24, 24],
+                        className: 'radius-handle-icon'
+                    }),
+                    draggable: true
+                }).addTo(map);
+
+                markers.radiusHandle.on('drag', function(e) {
+                    const handleLatLng = e.target.getLatLng();
+                    const anchor = [anchorWatchState.anchor_lat, anchorWatchState.anchor_lon];
+
+                    const R = 6371000;
+                    const lat1 = anchor[0] * Math.PI / 180;
+                    const lat2 = handleLatLng.lat * Math.PI / 180;
+                    const deltaLat = (handleLatLng.lat - anchor[0]) * Math.PI / 180;
+                    const deltaLng = (handleLatLng.lng - anchor[1]) * Math.PI / 180;
+
+                    const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+                              Math.cos(lat1) * Math.cos(lat2) *
+                              Math.sin(deltaLng/2) * Math.sin(deltaLng/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    const distance = R * c;
+
+                    const currentMax = parseInt(document.getElementById('radiusSlider').max);
+                    const clampedRadius = Math.max(10, Math.min(currentMax, Math.round(distance / 5) * 5));
+
+                    markers.previewZone.setRadius(clampedRadius);
+                    document.getElementById('radiusSlider').value = clampedRadius;
+                    document.getElementById('radiusValue').textContent = clampedRadius + ' m';
+                });
+
+                map.setView(anchorPos, 17);
+
+                // Re-render controls (shows DDM inputs, info panel, pre-set slider)
+                renderControls({ active: false });
+
+            } catch (error) {
+                const errorDiv = document.getElementById('smartSetupError');
+                if (errorDiv) {
+                    errorDiv.innerHTML = `<div class="smart-setup-error">${error.message}</div>`;
+                }
+                btn.textContent = smartSetupResult ? 'Re-run Smart Setup' : 'Smart Setup';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Infer anchor position (legacy - kept but no longer wired to a button)
         async function inferAnchorPosition() {
             const btn = document.getElementById('inferBtn');
             btn.disabled = true;
@@ -1372,14 +1602,16 @@
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                     const distance = R * c;
 
-                    // Clamp to slider limits (10-200m)
-                    const clampedRadius = Math.max(10, Math.min(200, Math.round(distance / 5) * 5));
+                    // Clamp to slider limits
+                    const sliderEl = document.getElementById('radiusSlider');
+                    const maxRadius = parseInt(sliderEl.max);
+                    const clampedRadius = Math.max(10, Math.min(maxRadius, Math.round(distance / 5) * 5));
 
                     // Update preview circle
                     markers.previewZone.setRadius(clampedRadius);
 
                     // Update slider and display
-                    document.getElementById('radiusSlider').value = clampedRadius;
+                    sliderEl.value = clampedRadius;
                     document.getElementById('radiusValue').textContent = clampedRadius + ' m';
                 });
 
@@ -1469,6 +1701,7 @@
                     radius_meters: null
                 };
                 isPreviewMode = false;
+                smartSetupResult = null;
 
                 // Clean up preview elements if they exist
                 if (markers.previewZone) {
@@ -1837,10 +2070,12 @@
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                     const distance = R * c;
 
-                    const clampedRadius = Math.max(10, Math.min(200, Math.round(distance / 5) * 5));
+                    const calcSliderEl = document.getElementById('radiusSlider');
+                    const calcMaxRadius = parseInt(calcSliderEl.max);
+                    const clampedRadius = Math.max(10, Math.min(calcMaxRadius, Math.round(distance / 5) * 5));
 
                     markers.previewZone.setRadius(clampedRadius);
-                    document.getElementById('radiusSlider').value = clampedRadius;
+                    calcSliderEl.value = clampedRadius;
                     document.getElementById('radiusValue').textContent = clampedRadius + ' m';
                 });
 

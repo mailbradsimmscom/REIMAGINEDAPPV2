@@ -74,9 +74,7 @@ class AnchorWatchService {
    * @returns {string} 'safe', 'warning', or 'dragging'
    */
   determineStatus(distanceMeters, radiusMeters) {
-    const ratio = distanceMeters / radiusMeters;
-    if (ratio <= this.safeRatio) return 'safe';
-    if (ratio <= this.warningRatio) return 'warning';
+    if (distanceMeters <= radiusMeters) return 'safe';
     return 'dragging';
   }
 
