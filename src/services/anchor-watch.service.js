@@ -499,23 +499,7 @@ class AnchorWatchService {
       }
     }
 
-    // Step 4: Compute convex hull of filtered positions
-    const hull = this.computeConvexHull(filteredPositions);
-
-    // Step 5: Expand hull by 5% outward from centroid
-    const expandedHull = hull.map(pt => ({
-      latitude: centroidLat + (pt.latitude - centroidLat) * 1.05,
-      longitude: centroidLon + (pt.longitude - centroidLon) * 1.05
-    }));
-
-    // Compute max radius (furthest hull point from centroid) for info
-    let maxRadiusMeters = 0;
-    for (const pt of expandedHull) {
-      const d = this.calculateDistance(pt.latitude, pt.longitude, centroidLat, centroidLon);
-      if (d > maxRadiusMeters) maxRadiusMeters = d;
-    }
-
-    // Step 6: Infer anchor position from chain geometry + wind direction
+    // Step 4: Infer anchor position from chain geometry + wind direction
     // Uses catenary formula for accurate horizontal reach calculation.
     // Filters out low-wind positions where boat doesn't weathervane reliably.
     const CHAIN_SCOPE_M = chainScopeMeters || 45;
@@ -529,16 +513,12 @@ class AnchorWatchService {
       if (pos.true_wind_direction == null || pos.depth == null || pos.depth <= 0) continue;
       if (pos.true_wind_speed == null || pos.true_wind_speed < MIN_WIND_KT) continue;
 
-      // Total height from seabed to bow roller
       const h = pos.depth + FREEBOARD_M;
-      if (h >= CHAIN_SCOPE_M) continue; // chain too short
+      if (h >= CHAIN_SCOPE_M) continue;
 
-      // Catenary horizontal reach calculation
-      // Solve for catenary parameter 'a' and horizontal distance
       const horizontalReach = this.catenaryHorizontalReach(CHAIN_SCOPE_M, h);
       const totalDistance = GPS_TO_BOW_M + horizontalReach;
 
-      // Bearing toward anchor = wind direction (where wind comes FROM)
       const bearingRad = pos.true_wind_direction * Math.PI / 180;
       const latRad = pos.latitude * Math.PI / 180;
       const lonRad = pos.longitude * Math.PI / 180;
@@ -560,16 +540,17 @@ class AnchorWatchService {
     }
 
     let inferredAnchor = null;
+    let swingCircle = null;
+
     if (anchorEstimates.length > 10) {
-      // Use median-based approach: find median lat/lon independently
-      // More resistant to outlier estimates than mean
+      // Median for anchor position (resistant to outliers)
       const sortedLats = anchorEstimates.map(e => e.latitude).sort((a, b) => a - b);
       const sortedLons = anchorEstimates.map(e => e.longitude).sort((a, b) => a - b);
       const mid = Math.floor(sortedLats.length / 2);
       const medianLat = sortedLats.length % 2 ? sortedLats[mid] : (sortedLats[mid - 1] + sortedLats[mid]) / 2;
       const medianLon = sortedLons.length % 2 ? sortedLons[mid] : (sortedLons[mid - 1] + sortedLons[mid]) / 2;
 
-      // Confidence: standard deviation of estimates from median in meters
+      // Confidence radius
       const estimateDistances = anchorEstimates.map(e =>
         this.calculateDistance(e.latitude, e.longitude, medianLat, medianLon)
       );
@@ -587,17 +568,65 @@ class AnchorWatchService {
         freeboardMeters: FREEBOARD_M,
         minWindKt: MIN_WIND_KT
       };
+
+      // Step 5: Compute swing circle centered on inferred anchor
+      // Max observed distance from anchor to any GPS position + 5% buffer
+      let maxSwingMeters = 0;
+      const bearingsFromAnchor = [];
+
+      for (const pos of filteredPositions) {
+        const d = this.calculateDistance(pos.latitude, pos.longitude, medianLat, medianLon);
+        if (d > maxSwingMeters) maxSwingMeters = d;
+
+        // Bearing from anchor to GPS position (for arc coverage)
+        const dLon = (pos.longitude - medianLon) * Math.PI / 180;
+        const lat1 = medianLat * Math.PI / 180;
+        const lat2 = pos.latitude * Math.PI / 180;
+        const y = Math.sin(dLon) * Math.cos(lat2);
+        const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        const bearing = ((Math.atan2(y, x) * 180 / Math.PI) + 360) % 360;
+        bearingsFromAnchor.push(bearing);
+      }
+
+      const safeRadiusMeters = maxSwingMeters * 1.05;
+
+      // Arc coverage: find the angular range of observed positions
+      bearingsFromAnchor.sort((a, b) => a - b);
+      // Find the largest gap between consecutive bearings
+      let maxGap = 0;
+      let gapStart = 0;
+      for (let i = 1; i < bearingsFromAnchor.length; i++) {
+        const gap = bearingsFromAnchor[i] - bearingsFromAnchor[i - 1];
+        if (gap > maxGap) {
+          maxGap = gap;
+          gapStart = i;
+        }
+      }
+      // Check wrap-around gap
+      const wrapGap = (360 - bearingsFromAnchor[bearingsFromAnchor.length - 1]) + bearingsFromAnchor[0];
+      if (wrapGap > maxGap) {
+        maxGap = wrapGap;
+        gapStart = 0;
+      }
+      const arcCoverage = Math.round(360 - maxGap);
+      // Arc starts after the largest gap
+      const arcStartDeg = Math.round(bearingsFromAnchor[gapStart]);
+      const arcEndDeg = Math.round(bearingsFromAnchor[(gapStart - 1 + bearingsFromAnchor.length) % bearingsFromAnchor.length]);
+
+      swingCircle = {
+        centerLat: medianLat,
+        centerLon: medianLon,
+        maxSwingMeters: Math.round(maxSwingMeters * 10) / 10,
+        safeRadiusMeters: Math.round(safeRadiusMeters * 10) / 10,
+        arcCoverageDeg: arcCoverage,
+        arcStartDeg,
+        arcEndDeg
+      };
     }
 
     return {
       positions: filteredPositions,
-      safeZone: {
-        hull: expandedHull,
-        centroidLat,
-        centroidLon,
-        maxRadiusMeters: Math.round(maxRadiusMeters * 10) / 10,
-        cutoffMeters: Math.round(cutoff * 10) / 10
-      },
+      swingCircle,
       inferredAnchor,
       anchorage: {
         id: anchorage.id,

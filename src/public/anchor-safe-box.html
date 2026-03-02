@@ -338,12 +338,12 @@
                 <span>Position trail (light=old, dark=recent)</span>
             </div>
             <div class="legend-item">
-                <div class="legend-swatch" style="background: rgba(0,122,255,0.15); border: 2px dashed #007AFF;"></div>
-                <span>Safe zone hull (5% buffer)</span>
+                <div class="legend-swatch" style="background: rgba(0,122,255,0.1); border: 1.5px solid #007AFF;"></div>
+                <span>Max observed swing</span>
             </div>
             <div class="legend-item">
-                <div class="legend-swatch" style="background: #FF9500; border: 1.5px dashed #FF9500;"></div>
-                <span>Inferred anchor (confidence circle)</span>
+                <div class="legend-swatch" style="background: rgba(255,59,48,0.08); border: 2px dashed #FF3B30;"></div>
+                <span>Safe radius (+5% alarm boundary)</span>
             </div>
             <div class="legend-item">
                 <div class="legend-swatch" style="background: #34C759;"></div>
@@ -377,11 +377,13 @@
 
         let map = null;
 
-        async function apiCall(endpoint) {
+        async function apiCall(endpoint, options = {}) {
             const response = await fetch(API_BASE + endpoint, {
+                ...options,
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Token': ADMIN_TOKEN
+                    'X-Admin-Token': ADMIN_TOKEN,
+                    ...options.headers
                 }
             });
             const data = await response.json();
@@ -475,43 +477,30 @@
             }
         }
 
-        function renderSafeZone(safeZone) {
-            // Draw convex hull polygon
-            const hullLatLngs = safeZone.hull.map(pt => [pt.latitude, pt.longitude]);
+        function renderSwingCircle(swingCircle) {
+            if (!swingCircle) return;
 
-            L.polygon(hullLatLngs, {
-                color: '#007AFF',
+            // Safe radius circle (the alarm boundary)
+            L.circle([swingCircle.centerLat, swingCircle.centerLon], {
+                radius: swingCircle.safeRadiusMeters,
+                fillColor: '#FF3B30',
+                fillOpacity: 0.04,
+                color: '#FF3B30',
                 weight: 2,
-                dashArray: '8, 4',
+                dashArray: '8, 4'
+            }).addTo(map).bindTooltip(`Safe radius: ${swingCircle.safeRadiusMeters}m`, { direction: 'top' });
+
+            // Max observed swing (solid inner circle)
+            L.circle([swingCircle.centerLat, swingCircle.centerLon], {
+                radius: swingCircle.maxSwingMeters,
                 fillColor: '#007AFF',
-                fillOpacity: 0.08
+                fillOpacity: 0.06,
+                color: '#007AFF',
+                weight: 1.5
             }).addTo(map);
 
-            // Position centroid marker (gray, smaller)
-            L.circleMarker([safeZone.centroidLat, safeZone.centroidLon], {
-                radius: 5,
-                fillColor: '#8E8E93',
-                color: '#fff',
-                weight: 1,
-                fillOpacity: 0.8
-            }).addTo(map).bindTooltip('GPS Centroid', { direction: 'top', offset: [0, -8] });
-        }
-
-        function renderInferredAnchor(anchor) {
-            if (!anchor) return;
-
-            // Confidence circle (1 std dev)
-            L.circle([anchor.latitude, anchor.longitude], {
-                radius: anchor.confidenceRadiusMeters,
-                fillColor: '#FF9500',
-                fillOpacity: 0.12,
-                color: '#FF9500',
-                weight: 1.5,
-                dashArray: '4, 4'
-            }).addTo(map).bindTooltip(`Confidence: ${anchor.confidenceRadiusMeters}m`, { direction: 'top' });
-
             // Anchor marker
-            L.marker([anchor.latitude, anchor.longitude], {
+            L.marker([swingCircle.centerLat, swingCircle.centerLon], {
                 icon: L.divIcon({
                     html: '<span style="font-size:26px;">&#9875;</span>',
                     iconSize: [30, 30],
@@ -523,6 +512,25 @@
         function renderInfo(data) {
             const arrivedDate = new Date(data.anchorage.arrived_at);
             const daysAnchored = Math.round((Date.now() - arrivedDate.getTime()) / (1000 * 60 * 60 * 24) * 10) / 10;
+
+            let swingHtml = '';
+            if (data.swingCircle) {
+                const sc = data.swingCircle;
+                swingHtml = `
+                <div class="info-row" style="border-top:2px solid #FF3B30;margin-top:8px;padding-top:12px;">
+                    <span class="info-label" style="color:#FF3B30;font-weight:600;">Safe Radius (alarm)</span>
+                    <span class="info-value">${sc.safeRadiusMeters} m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Max Observed Swing</span>
+                    <span class="info-value">${sc.maxSwingMeters} m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Arc Coverage</span>
+                    <span class="info-value">${sc.arcCoverageDeg}° of 360° (${sc.arcStartDeg}°–${sc.arcEndDeg}°)</span>
+                </div>
+                `;
+            }
 
             let anchorHtml = '';
             if (data.inferredAnchor) {
@@ -539,14 +547,6 @@
                 <div class="info-row">
                     <span class="info-label">Estimates Used</span>
                     <span class="info-value">${a.estimateCount.toLocaleString()}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Chain Scope</span>
-                    <span class="info-value">${a.chainScopeMeters} m</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">GPS→Bow Offset</span>
-                    <span class="info-value">${a.gpsToBowMeters} m (50 ft)</span>
                 </div>
                 `;
             }
@@ -572,12 +572,51 @@
                     <span class="info-label">Outliers Filtered</span>
                     <span class="info-value">${data.outlierPositions || 0}</span>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Max Swing Radius</span>
-                    <span class="info-value">${data.safeZone.maxRadiusMeters} m</span>
-                </div>
+                ${swingHtml}
                 ${anchorHtml}
+                ${data.swingCircle ? `
+                <div style="margin-top:16px;">
+                    <button id="applyAlarmBtn" class="button button-primary" onclick="applyToAnchorWatch()">
+                        Apply to Anchor Watch
+                    </button>
+                </div>
+                ` : ''}
             `;
+        }
+
+        async function applyToAnchorWatch() {
+            const btn = document.getElementById('applyAlarmBtn');
+            btn.disabled = true;
+            btn.textContent = 'Activating...';
+
+            try {
+                // Fetch the latest data to get current swing circle
+                const scope = document.getElementById('scopeInput').value;
+                const result = await apiCall(`/safe-box?interval=60&scope=${scope}`);
+                const data = result.data;
+
+                if (!data.swingCircle) {
+                    throw new Error('No swing circle computed — need more data');
+                }
+
+                // Activate anchor watch with inferred anchor + safe radius
+                await apiCall('/activate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        latitude: data.swingCircle.centerLat,
+                        longitude: data.swingCircle.centerLon,
+                        radius_meters: data.swingCircle.safeRadiusMeters
+                    })
+                });
+
+                btn.textContent = 'Applied!';
+                btn.style.background = '#34C759';
+
+            } catch (error) {
+                btn.textContent = 'Failed: ' + error.message;
+                btn.style.background = '#FF3B30';
+            }
         }
 
         async function loadSafeBox() {
@@ -594,23 +633,26 @@
                     map = null;
                 }
 
-                // Init map centered on centroid
-                initMap([data.safeZone.centroidLat, data.safeZone.centroidLon], 18);
+                const center = data.swingCircle
+                    ? [data.swingCircle.centerLat, data.swingCircle.centerLon]
+                    : [data.anchorage.latitude, data.anchorage.longitude];
+
+                initMap(center, 18);
 
                 // Render layers
                 renderPositions(data.positions);
-                renderSafeZone(data.safeZone);
-                renderInferredAnchor(data.inferredAnchor);
+                renderSwingCircle(data.swingCircle);
 
-                // Fit map to hull polygon with padding
-                const hullLatLngs = data.safeZone.hull.map(pt => [pt.latitude, pt.longitude]);
-                const bounds = L.latLngBounds(hullLatLngs);
-                map.fitBounds(bounds, { padding: [50, 50] });
+                // Fit map to swing circle
+                if (data.swingCircle) {
+                    const circleCenter = L.latLng(data.swingCircle.centerLat, data.swingCircle.centerLon);
+                    const bounds = circleCenter.toBounds(data.swingCircle.safeRadiusMeters * 2.2);
+                    map.fitBounds(bounds, { padding: [30, 30] });
+                }
 
                 // Render info panel
                 renderInfo(data);
 
-                // Update scope input to reflect what the API used
                 if (data.inferredAnchor) {
                     document.getElementById('scopeInput').value = data.inferredAnchor.chainScopeMeters;
                 }
