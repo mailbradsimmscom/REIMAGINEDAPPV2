@@ -13,10 +13,8 @@ const moduleLogger = logger.createModuleLogger('anchor-watch-alerts');
 class AnchorWatchAlertsService {
   constructor() {
     this.lastKnownStatus = null;
-    this.lastAlertTime = null;
     this.monitoringInterval = null;
     this.checkIntervalMs = 20000; // Check every 20 seconds
-    this.minAlertIntervalMs = 60000; // Minimum 1 minute between alerts for same status
     this.periodicUpdateIntervalMs = 1800000; // 30 minutes periodic update
     this.lastPeriodicUpdate = null;
   }
@@ -30,8 +28,8 @@ class AnchorWatchAlertsService {
       return;
     }
 
-    if (!telegramService.isConfigured()) {
-      moduleLogger.warn('Telegram not configured, anchor watch alerts disabled');
+    if (!telegramService.isConfigured() && !twilioService.isConfigured()) {
+      moduleLogger.warn('Neither Telegram nor Twilio configured, anchor watch alerts disabled');
       return;
     }
 
@@ -76,7 +74,6 @@ class AnchorWatchAlertsService {
         // Reset state when inactive
         if (this.lastKnownStatus !== null) {
           this.lastKnownStatus = null;
-          this.lastAlertTime = null;
           this.lastPeriodicUpdate = null;
           moduleLogger.info('Anchor watch deactivated, alerts reset');
         }
@@ -90,27 +87,16 @@ class AnchorWatchAlertsService {
       const statusChanged = this.lastKnownStatus !== currentStatus;
 
       if (statusChanged) {
-        // Status changed - send alert
+        // Status changed (boundary crossed) - send alert
         await this.sendStatusChangeAlert(status);
         this.lastKnownStatus = currentStatus;
-        this.lastAlertTime = now;
-        this.lastPeriodicUpdate = now; // Reset periodic timer on status change
+        this.lastPeriodicUpdate = now;
 
-      } else if (currentStatus !== 'safe') {
-        // Status hasn't changed, but not safe - check for repeat alert
-        const timeSinceLastAlert = now - (this.lastAlertTime || 0);
-
-        if (timeSinceLastAlert > this.minAlertIntervalMs) {
-          // Send reminder for non-safe status
-          await this.sendStatusChangeAlert(status);
-          this.lastAlertTime = now;
-        }
-      } else {
-        // Status is safe and hasn't changed - check for periodic update
+      } else if (currentStatus === 'safe') {
+        // Still safe - check for periodic Telegram update
         const timeSinceLastUpdate = now - (this.lastPeriodicUpdate || 0);
 
         if (timeSinceLastUpdate > this.periodicUpdateIntervalMs) {
-          // Send periodic "all good" update
           await this.sendPeriodicUpdate(status);
           this.lastPeriodicUpdate = now;
         }
@@ -183,7 +169,6 @@ class AnchorWatchAlertsService {
     try {
       await telegramService.sendActivationConfirmation(config);
       this.lastKnownStatus = 'safe'; // Assume safe on activation
-      this.lastAlertTime = Date.now();
       this.lastPeriodicUpdate = Date.now();
 
       moduleLogger.info('Activation notification sent', {
@@ -205,7 +190,6 @@ class AnchorWatchAlertsService {
     try {
       await telegramService.sendDeactivationConfirmation();
       this.lastKnownStatus = null;
-      this.lastAlertTime = null;
       this.lastPeriodicUpdate = null;
 
       moduleLogger.info('Deactivation notification sent');
