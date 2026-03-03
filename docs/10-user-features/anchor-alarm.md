@@ -5,8 +5,8 @@
 The Anchor Alarm monitors boat position while at anchor and alerts if the boat drags. Runs on the main app with position monitoring via GPS, and can optionally run on a Raspberry Pi on the boat for always-on monitoring.
 
 **Who uses it:** Boat owners at anchor
-**Access:** `/anchor-watch-admin.html`, `/position-monitor.html`
-**Last Updated:** 2026-02-26
+**Access:** `/anchor-watch-admin.html`, `/anchor-safe-box.html`, `/position-monitor.html`
+**Last Updated:** 2026-03-02
 
 ---
 
@@ -24,22 +24,25 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  2. Set Anchor Point (two methods)                              │
-│     ├── A) "Infer" - centroid of last 20 GPS positions          │
-│     │   └── Server-side: POST /admin/api/anchor-watch/infer     │
+│     ├── A) "Smart Setup" - physics-based inference              │
+│     │   └── Calls GET /admin/api/anchor-watch/safe-box          │
+│     │   └── Infers anchor from wind direction + chain catenary  │
+│     │   └── Sets radius from max observed swing + 5%            │
 │     ├── B) "Calculate" - from scope, depth, and bearing         │
 │     │   ├── Enter scope (chain/rode length in meters)           │
 │     │   ├── Enter depth (water depth in meters)                 │
 │     │   ├── Set bearing to anchor (compass or manual)           │
 │     │   └── Client-side: Pythagorean + spherical trig           │
-│     ├── Manually enter coordinates (supports 17.04.446 format)  │
+│     ├── Manually enter coordinates (supports DDM format)        │
 │     └── Drag anchor marker on map to fine-tune                  │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  3. Set Swing Radius                                            │
-│     ├── Enter radius in meters                                  │
-│     └── Or drag radius handle on map                            │
+│     ├── Smart Setup pre-sets from observed data                 │
+│     ├── Adjust via slider or drag radius handle on map          │
+│     └── Slider max adjusts dynamically for large radii          │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -54,8 +57,8 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 │  5. Monitoring Active                                           │
 │     ├── getStatus() called periodically                         │
 │     ├── Distance calculated: current pos → anchor point         │
-│     ├── Status determined: safe / warning / dragging            │
-│     └── Alerts sent via Telegram and SMS (critical only)        │
+│     ├── Status determined: safe or dragging (binary)            │
+│     └── Alerts sent via Telegram and SMS (dragging only)        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -69,149 +72,79 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 | **Swing Radius** | Maximum allowed drift (meters) |
 | **Current Position** | Latest GPS coordinates |
 | **Drift Distance** | Haversine distance from anchor point |
-| **Centroid** | Average of recent positions (used by Infer method) |
+| **Safe Radius** | Max observed GPS-to-anchor distance + 5% (from Smart Setup) |
 | **Scope** | Length of chain/rode deployed (meters) |
 | **Depth** | Water depth at anchor (meters) |
 | **Bearing** | Compass direction from boat to anchor (degrees) |
 | **Horizontal Distance** | Ground distance to anchor: `sqrt(scope² - depth²)` |
-| **Status** | `inactive`, `safe`, `warning`, `dragging`, `gps_lost` |
+| **Status** | `inactive`, `safe`, `dragging`, `gps_lost` |
+| **Arc Coverage** | Degrees of wind direction observed — higher = more confidence |
 
 ---
 
-## Recent Changes (2026-01-17)
+## Smart Setup (2026-03-02)
 
-### Position Monitor Enhancements
+### How It Works
 
-The `/position-monitor.html` page now includes:
+Smart Setup uses physics-based inference to determine the anchor position and alarm radius from observed GPS data. One button replaces the old "Infer" method.
 
-#### Wind Data Display
-- **Wind Speed** card showing true wind speed in knots
-- **True Wind Direction** card showing wind direction in degrees
-- Both update every 5 seconds along with GPS position
+**The physics:**
+1. Boat on anchor chain swings in an arc centered on the anchor
+2. Each GPS position + wind direction → one estimate of anchor location (boat is downwind of anchor)
+3. Horizontal chain reach computed via catenary formula (not straight line)
+4. GPS antenna is at stern, so 50ft (15.24m) is added to reach the bow/chain attachment
+5. Freeboard (1.7m) added to depth for total height in catenary calc
+6. Low wind (<5kt) positions skipped — boat doesn't weathervane reliably
+7. Median of all estimates = anchor position (resistant to outliers)
+8. Max observed GPS-to-anchor distance + 5% = alarm radius
 
-#### Boundary Limits Feature
-Allows setting position boundaries for drift monitoring:
+**After clicking Smart Setup:**
+- Anchor marker appears at inferred position (draggable)
+- Preview circle shows the computed safe radius
+- Info panel displays: wind estimates used, confidence radius, arc coverage, safe radius
+- Slider pre-set to computed radius (dynamic max accommodates large radii)
+- Orange warning if arc coverage < 90° (limited wind directions observed)
+- Click "Activate Anchor Watch" to start monitoring
 
-1. **Fill Current** - Copies current GPS position to reference fields
-2. **Save** - Saves reference position (shows "Saved!" confirmation)
-3. **Boundary Limits** section displays saved reference coordinates
-4. **Less/More/Ignore** toggles for each coordinate:
-   - **Less**: Current position must be less than reference
-   - **More**: Current position must be more than reference
-   - **Ignore**: Coordinate is not checked
-5. **Status indicator** at top shows green (within limits) or red (outside limits)
+### Smart Setup vs Calculate
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  Position Monitor Layout                                         │
-├─────────────────────────────────────────────────────────────────┤
-│  [Status: Within Limits / Outside Limits / No Reference Set]    │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  CURRENT POSITION                                        │    │
-│  │  N 17°8.769'  /  W 61°45.942'                           │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  ┌───────────────────────┐  ┌───────────────────────┐          │
-│  │  WIND SPEED           │  │  TRUE WIND DIRECTION  │          │
-│  │  23.1 kt              │  │  86°                  │          │
-│  └───────────────────────┘  └───────────────────────┘          │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  REFERENCE POSITION                                      │    │
-│  │  [N/S] [deg] ° [min] '   [Fill Current] [Save]          │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  BOUNDARY LIMITS                                         │    │
-│  │  Lat  N 17°8.777'  [Less] [More] [Ignore]  ✓            │    │
-│  │  Lon  W 61°45.943' [Less] [More] [Ignore]  ✓            │    │
-│  │                              [Save]                      │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-```
+| Aspect | **Smart Setup** | **Calculate** |
+|--------|-----------------|---------------|
+| Data source | All GPS positions since arrival at anchorage | Current GPS + nautical measurements |
+| Inputs | None (automatic) | Scope, depth, bearing |
+| Runs on | Server (`GET /safe-box`) | Client (browser only) |
+| Sets radius | Yes (from observed swing) | No (manual slider) |
+| Best for | After settling at anchor (1+ hours of data) | Immediate setup after dropping anchor |
+| Accuracy | Excellent with diverse wind directions | Good if scope and depth are known |
+
+### Safe Box Analysis Page
+
+`/anchor-safe-box.html` provides detailed visualization of the anchor inference:
+- Leaflet map with position dots (time-gradient coloring)
+- Wind arrows color-coded by speed
+- Swing circle (red dashed = safe radius, blue solid = max observed)
+- Inferred anchor position with confidence radius
+- Adjustable chain scope input
+- "Apply to Anchor Watch" button
 
 ---
 
-## Previous Changes (2026-01-09)
+## Status Determination (2026-03-02)
 
-### 1. Map Centers on Current GPS When No Alarm Set
-
-Previously, opening the page with no alarm set showed a world view (0,0). Now:
+Status is binary — inside the radius is safe, outside is dragging:
 
 ```javascript
-// In initMap() - anchor-watch-admin.html
-async function initMap() {
-  const statusResult = await apiCall('/status');
-
-  if (statusResult.data.current_lat && statusResult.data.current_lon) {
-    // Use position from status (when alarm active)
-    initialCenter = [statusResult.data.current_lat, statusResult.data.current_lon];
-  } else {
-    // No alarm set - fetch GPS directly
-    const gpsResponse = await fetch('/api/gps/current');
-    const gpsResult = await gpsResponse.json();
-    if (gpsResult.success && gpsResult.data) {
-      initialCenter = [gpsResult.data.latitude, gpsResult.data.longitude];
-    }
-  }
+determineStatus(distanceMeters, radiusMeters) {
+  if (distanceMeters <= radiusMeters) return 'safe';
+  return 'dragging';
 }
 ```
 
-### 2. Coordinate Input Accepts B&G Format
-
-Users can now enter coordinates in degrees.minutes.decimal format directly from their chartplotter:
-
-```javascript
-// parseCoordinate() in anchor-watch-admin.html
-// Input: "17.04.446" (17° 04.446')
-// Output: 17.0741 (decimal degrees)
-
-function parseCoordinate(input) {
-  const str = input.toString().trim();
-  const isNegative = str.startsWith('-');
-  const absStr = isNegative ? str.substring(1) : str;
-
-  // Count dots to detect format
-  const dotCount = (absStr.match(/\./g) || []).length;
-
-  let result;
-  if (dotCount === 2) {
-    // Format: degrees.minutes.decimal (e.g., 17.04.446 = 17° 04.446')
-    const parts = absStr.split('.');
-    const degrees = parseInt(parts[0], 10);
-    const minutes = parseFloat(parts[1] + '.' + parts[2]);
-    result = degrees + (minutes / 60);
-  } else {
-    // Standard decimal format (e.g., 17.0741)
-    result = parseFloat(absStr);
-  }
-
-  return isNegative ? -result : result;
-}
-```
-
-**Examples:**
-- `17.04.446` → `17.0741°` (17° 04.446' N)
-- `-61.53.788` → `-61.8965°` (61° 53.788' W)
-
-### 3. SMS Alerts Only for Critical Status
-
-SMS via Twilio now only sends for truly critical alerts, not warnings:
-
-```javascript
-// anchor-watch-alerts.service.js
-// OLD: const isCritical = ['warning', 'dragging', 'gps_lost'].includes(status.status);
-// NEW:
-const isCritical = ['dragging', 'gps_lost'].includes(status.status);
-```
-
-| Status | Telegram | SMS (Twilio) |
-|--------|----------|--------------|
-| safe → warning | Yes | **No** |
-| warning → dragging | Yes | Yes |
-| GPS lost | Yes | Yes |
-| Periodic (30 min) | Yes | No |
+| Status | Condition | Telegram | SMS |
+|--------|-----------|----------|-----|
+| safe | distance <= radius | Only on return from dragging | No |
+| dragging | distance > radius | Yes | Yes |
+| gps_lost | No GPS data | Yes | Yes |
 
 ---
 
@@ -220,18 +153,19 @@ const isCritical = ['dragging', 'gps_lost'].includes(status.status);
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  UI (Browser)                                                   │
-│  ├── anchor-watch-admin.html (configure)                        │
-│  └── position-monitor.html (view)                               │
+│  ├── anchor-watch-admin.html (configure + monitor)              │
+│  ├── anchor-safe-box.html (detailed analysis visualization)     │
+│  └── position-monitor.html (simple position view)               │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Node.js Backend                                                │
-│  ├── anchor-watch.service.js (status calculation)               │
+│  ├── anchor-watch.service.js (status + safe-box inference)      │
 │  ├── anchor-watch-alerts.service.js (alert polling)             │
 │  ├── telegram.service.js (send Telegram alerts)                 │
 │  ├── twilio.service.js (send SMS for critical alerts)           │
-│  └── gps.repository.js (GPS data)                               │
+│  └── gps.repository.js (GPS data + batch summary)              │
 └─────────────────────────────────────────────────────────────────┘
                               │
          ┌────────────────────┼────────────────────┐
@@ -240,180 +174,12 @@ const isCritical = ['dragging', 'gps_lost'].includes(status.status);
 │  Supabase       │  │  GPS Source     │  │  Alerts         │
 │                 │  │                 │  │                 │
 │  anchor_watch_  │  │  Device GPS or  │  │  Telegram: all  │
-│  zones          │  │  Pi GPS         │  │  SMS: critical  │
-│  alerts         │  │                 │  │  only           │
+│  zones          │  │  Pi GPS         │  │  SMS: dragging  │
+│  alerts         │  │                 │  │  + gps_lost     │
 │  gps_position   │  │                 │  │                 │
+│  anchorages     │  │                 │  │                 │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 ```
-
----
-
-## Status Calculation (anchor-watch.service.js)
-
-### Configuration (from env)
-
-```javascript
-class AnchorWatchService {
-  constructor() {
-    this.safeRatio = parseFloat(env.ANCHOR_WATCH_SAFE_RATIO);       // 0.7
-    this.warningRatio = parseFloat(env.ANCHOR_WATCH_WARNING_RATIO); // 0.9
-    this.centroidSamples = parseInt(env.ANCHOR_WATCH_CENTROID_SAMPLES); // 20
-    this.staleThresholdSec = parseInt(env.ANCHOR_WATCH_STALE_THRESHOLD_SEC); // 300
-  }
-}
-```
-
-### Haversine Distance Calculation
-
-```javascript
-calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371000; // Earth radius in meters
-  const φ1 = lat1 * Math.PI / 180;
-  const φ2 = lat2 * Math.PI / 180;
-  const Δφ = (lat2 - lat1) * Math.PI / 180;
-  const Δλ = (lon2 - lon1) * Math.PI / 180;
-
-  const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ/2) * Math.sin(Δλ/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-  return R * c;  // Distance in meters
-}
-```
-
-### Status Determination
-
-```javascript
-determineStatus(distanceMeters, radiusMeters) {
-  const ratio = distanceMeters / radiusMeters;
-  if (ratio <= this.safeRatio) return 'safe';      // ≤70% of radius
-  if (ratio <= this.warningRatio) return 'warning'; // 70-90% of radius
-  return 'dragging';                                 // >90% of radius
-}
-```
-
-### Get Status (Main Function)
-
-```javascript
-async getStatus() {
-  // 1. Get active zone from database
-  const zone = await supabase.from('anchor_watch_zones')
-    .select('*').eq('is_active', true).single();
-
-  if (!zone) return { active: false, status: 'inactive' };
-
-  // 2. Get current GPS position
-  const currentPosition = await gpsRepository.getCurrentPosition();
-
-  if (!currentPosition) return { active: true, status: 'gps_lost' };
-
-  // 3. Check if GPS data is stale
-  const positionAge = (Date.now() - new Date(currentPosition.timestamp).getTime()) / 1000;
-  if (positionAge > this.staleThresholdSec) {
-    requestLogger.warn('GPS data is stale', { age_seconds: positionAge });
-  }
-
-  // 4. Calculate distance from anchor
-  const distance = this.calculateDistance(
-    currentPosition.latitude, currentPosition.longitude,
-    zone.center_lat, zone.center_lng
-  );
-
-  // 5. Determine status
-  const status = this.determineStatus(distance, zone.radius_meters);
-
-  // 6. Create alert if dragging
-  if (status === 'dragging') {
-    await this.createAlertIfNeeded(zone.zone_id, 'anchor_drag', currentPosition, distance);
-  }
-
-  return {
-    active: true,
-    anchor_lat: zone.center_lat,
-    anchor_lon: zone.center_lng,
-    radius_meters: zone.radius_meters,
-    current_lat: currentPosition.latitude,
-    current_lon: currentPosition.longitude,
-    distance_meters: Math.round(distance * 100) / 100,
-    status: status,
-    last_updated: currentPosition.timestamp
-  };
-}
-```
-
-### Centroid Calculation — Infer Method (server-side)
-
-```javascript
-async calculateCentroid() {
-  const positions = await gpsRepository.getRecentPositions(this.centroidSamples);
-
-  const sum = positions.reduce((acc, pos) => ({
-    lat: acc.lat + pos.latitude,
-    lon: acc.lon + pos.longitude
-  }), { lat: 0, lon: 0 });
-
-  return {
-    latitude: sum.lat / positions.length,
-    longitude: sum.lon / positions.length,
-    sample_size: positions.length
-  };
-}
-```
-
-### Anchor Position — Calculate Method (client-side)
-
-Computes where the anchor lies on the seabed using scope, depth, and bearing. Runs entirely in the browser — no backend endpoint.
-
-**Inputs:**
-- **Scope** — chain/rode length in meters
-- **Depth** — water depth in meters (must be less than scope)
-- **Bearing** — compass direction from boat to anchor (device compass or manual entry)
-
-**Step 1: Horizontal distance (Pythagorean theorem)**
-
-```javascript
-// The chain forms a hypotenuse; depth is the vertical leg
-const horizontalDistance = Math.sqrt(scope * scope - depth * depth);
-```
-
-**Step 2: Project anchor position from current GPS (spherical trig)**
-
-```javascript
-function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
-  const R = 6371000; // Earth radius in meters
-  const d = distanceMeters / R;
-  const brng = bearingDeg * Math.PI / 180;
-  const lat1Rad = lat1 * Math.PI / 180;
-  const lon1Rad = lon1 * Math.PI / 180;
-
-  const lat2Rad = Math.asin(
-    Math.sin(lat1Rad) * Math.cos(d) +
-    Math.cos(lat1Rad) * Math.sin(d) * Math.cos(brng)
-  );
-  const lon2Rad = lon1Rad + Math.atan2(
-    Math.sin(brng) * Math.sin(d) * Math.cos(lat1Rad),
-    Math.cos(d) - Math.sin(lat1Rad) * Math.sin(lat2Rad)
-  );
-
-  return {
-    latitude: lat2Rad * 180 / Math.PI,
-    longitude: lon2Rad * 180 / Math.PI
-  };
-}
-```
-
-**UI Panel:** Toggle panel with scope, depth, and compass bearing inputs. Compass can lock to device heading or accept manual entry.
-
-### Infer vs Calculate
-
-| Aspect | **Infer** | **Calculate** |
-|--------|-----------|---------------|
-| Data source | Historical GPS (last N positions) | Current GPS + nautical measurements |
-| Inputs | None (automatic) | Scope, depth, bearing |
-| Runs on | Server (`POST /infer`) | Client (browser only) |
-| Best for | Quick setup after drifting at anchor | Precise position from known rode/depth |
-| Accuracy | Good if boat has swung around anchor | Excellent if scope and depth are known |
 
 ---
 
@@ -423,6 +189,7 @@ function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
 |---------|------|
 | **Frontend** | |
 | Anchor watch admin | `src/public/anchor-watch-admin.html` |
+| Safe box analysis | `src/public/anchor-safe-box.html` |
 | Position monitor | `src/public/position-monitor.html` |
 | **Backend** | |
 | Main service | `src/services/anchor-watch.service.js` |
@@ -443,11 +210,42 @@ function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
 |--------|------|-------------|
 | GET | `/api/gps/current` | Get current GPS position (no auth required) |
 | GET | `/admin/api/anchor-watch/status` | Get watch status |
+| GET | `/admin/api/anchor-watch/safe-box` | Get physics-based anchor inference + swing circle |
 | POST | `/admin/api/anchor-watch/activate` | Start monitoring |
 | POST | `/admin/api/anchor-watch/deactivate` | Stop monitoring |
 | PUT | `/admin/api/anchor-watch/radius` | Change swing radius |
 | GET | `/admin/api/anchor-watch/positions` | Get positions with distances |
-| POST | `/admin/api/anchor-watch/infer` | Calculate centroid |
+| POST | `/admin/api/anchor-watch/infer` | Calculate centroid (legacy) |
+
+### Safe Box API Response Shape
+
+```
+GET /admin/api/anchor-watch/safe-box?interval=60
+
+data.swingCircle = {
+  centerLat, centerLon,        // Inferred anchor position
+  maxSwingMeters,              // Max observed GPS-to-anchor distance
+  safeRadiusMeters,            // maxSwingMeters + 5%
+  arcCoverageDeg,              // Wind direction coverage in degrees
+  arcStartDeg, arcEndDeg       // Arc boundaries
+}
+
+data.inferredAnchor = {
+  latitude, longitude,         // Anchor position (same as swingCircle center)
+  confidenceRadiusMeters,      // How tight the inference is
+  estimateCount,               // Number of wind-qualified estimates used
+  chainScopeMeters,            // Chain scope used (default 45m)
+  gpsToBowMeters,              // GPS-to-bow offset (15.24m / 50ft)
+  freeboardMeters,             // Freeboard height (1.7m)
+  minWindKt                    // Minimum wind threshold (5kt)
+}
+
+data.downsampledPositions      // GPS positions used (1 per minute)
+data.outlierPositions          // Count of outliers filtered (>2 std dev)
+data.totalPositions            // Total raw GPS positions in range
+
+// swingCircle is null when < 10 wind-qualified estimates
+```
 
 ---
 
@@ -480,29 +278,13 @@ function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
 | details | jsonb | SOG, COG, etc. |
 | created_at | timestamp | When created |
 
-### gps_position
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid | Primary key |
-| latitude | numeric | GPS latitude |
-| longitude | numeric | GPS longitude |
-| speed_over_ground | numeric | SOG (knots) |
-| course_over_ground | numeric | COG (degrees) |
-| true_wind_speed | numeric | Wind speed |
-| true_wind_direction | numeric | Wind direction |
-| timestamp | timestamp | Position time |
-| source | text | `device` / `pi` / `manual` |
-
 ---
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ANCHOR_WATCH_SAFE_RATIO` | `0.7` | Safe zone threshold (70% of radius) |
-| `ANCHOR_WATCH_WARNING_RATIO` | `0.9` | Warning zone threshold (90% of radius) |
-| `ANCHOR_WATCH_CENTROID_SAMPLES` | `20` | Positions for centroid calculation |
+| `ANCHOR_WATCH_CENTROID_SAMPLES` | `20` | Positions for centroid calculation (legacy infer) |
 | `ANCHOR_WATCH_STALE_THRESHOLD_SEC` | `300` | GPS stale after 5 min |
 | `TELEGRAM_BOT_TOKEN` | - | For Telegram alerts |
 | `TELEGRAM_CHAT_ID` | - | Telegram alert recipient |
@@ -511,57 +293,52 @@ function destinationPoint(lat1, lon1, bearingDeg, distanceMeters) {
 | `TWILIO_PHONE_NUMBER` | - | SMS sender number |
 | `ALERT_PHONE_NUMBER` | - | SMS recipient |
 
----
-
-## Status Zones (Visual)
-
-```
-                          Radius
-            ◄───────────────────────────►
-
-            ┌─────────────────────────────┐
-            │                             │
-            │       ┌───────────────┐     │  DRAGGING (>90%)
-            │       │               │     │  🔴 Red - SMS + Telegram
-            │       │   WARNING     │     │
-            │       │   (70-90%)    │     │  ⚠️ Orange - Telegram only
-            │       │   ┌───────┐   │     │
-            │       │   │ SAFE  │   │     │
-            │       │   │ (≤70%)│   │     │  ✅ Green
-            │       │   │   ⚓   │   │     │  Anchor Point
-            │       │   └───────┘   │     │
-            │       └───────────────┘     │
-            │                             │
-            └─────────────────────────────┘
-```
+**Deprecated** (still in env but no longer used by `determineStatus`):
+| `ANCHOR_WATCH_SAFE_RATIO` | `0.7` | Previously: safe zone threshold |
+| `ANCHOR_WATCH_WARNING_RATIO` | `0.9` | Previously: warning zone threshold |
 
 ---
 
 ## Alert Flow
 
 ```
-1. Status check determines 'dragging' or 'gps_lost'
+1. anchor-watch-alerts.service.js polls every 20 seconds
      │
      ▼
-2. anchor-watch-alerts.service.js detects status change
+2. Calls anchorWatchService.getStatus()
      │
-     ├── Polls every 20 seconds
-     ├── Checks if status changed from previous
-     │
-     ▼
-3. Send Telegram alert (all status changes)
-     │
-     ├── "⚠️ ANCHOR ALARM"
-     ├── "Status: DRAGGING"
-     ├── "Drift: 45m (limit: 30m)"
-     └── "Position: 17.0741° N, 61.8967° W"
+     ├── distance <= radius → 'safe'
+     └── distance > radius  → 'dragging'
      │
      ▼
-4. Send SMS if critical (dragging or gps_lost only)
+3. On status change:
+     ├── safe → dragging: Telegram + SMS
+     ├── dragging → safe: Telegram ("Anchor holding")
+     └── GPS lost: Telegram + SMS
      │
-     ├── Uses Twilio
-     └── ~$0.0075 per message
+     ▼
+4. Periodic "all good" update every 30 minutes (when safe)
 ```
+
+---
+
+## Boat Constants (for Smart Setup inference)
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| GPS_TO_BOW_M | 15.24 (50ft) | Distance from GPS antenna (stern) to bow roller |
+| FREEBOARD_M | 1.7 | Waterline to bow roller height |
+| MIN_WIND_KT | 5 | Skip positions with wind below this |
+| Default chain scope | 45m | Used internally by safe-box when no scope param |
+
+---
+
+## Position Monitor Enhancements (2026-01-17)
+
+The `/position-monitor.html` page includes:
+
+- **Wind Speed** and **True Wind Direction** cards (update every 5 seconds)
+- **Boundary Limits** — set position boundaries for drift monitoring with Less/More/Ignore toggles
 
 ---
 
@@ -580,14 +357,6 @@ if (env.NODE_ENV === 'production') {
 
 ---
 
-## Testing
-
-| Test File | What It Tests |
-|-----------|---------------|
-| `tests/integration/anchor-watch.test.js` | Anchor watch API |
-
----
-
 ## What We DON'T Do
 
 | Misconception | Reality |
@@ -595,9 +364,10 @@ if (env.NODE_ENV === 'production') {
 | "Requires Pi" | **No.** Works from main app with device GPS |
 | "Real-time GPS always on" | **No.** Polls at intervals |
 | "Runs locally" | **No.** Alert service only runs in production |
-| "Auto-sets anchor" | **No.** User must manually activate |
-| "Stores all positions" | **No.** Rolling window, older positions pruned |
+| "Auto-sets anchor" | **No.** User must click Smart Setup or Calculate |
+| "Chain scope needed for alarm" | **No.** Alarm radius is from observed swing, not theoretical |
 | "SMS for all alerts" | **No.** SMS only for dragging/gps_lost (critical) |
+| "Warning before dragging" | **No.** Status is binary: safe or dragging |
 
 ---
 
