@@ -52,7 +52,8 @@ Weather provides marine-specific forecasts for saved locations using multiple we
 │  3. Auto-Fetch Weather (background)                             │
 │     ├── Open-Meteo Forecast API (free)                          │
 │     ├── Open-Meteo Marine API (free)                            │
-│     └── Meteoblue Sea API (if credits available)                │
+│     ├── Stormglass API (10/day free, 4 models)                  │
+│     └── Expert email forecast (parsed automatically)            │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -276,10 +277,18 @@ queued → parsing → parsed | partial | failed
 ```
 
 - `queued`: email ingested, waiting for parse
-- `parsing`: parse in progress (job lock held). Auto-recovered to `queued` if stuck >10 minutes
+- `parsing`: parse in progress (job lock held)
 - `parsed`: all steps completed
 - `partial`: Step 1 OK but Step 3 failed — structured data saved
 - `failed`: Step 1 failed
+
+**Stale lock recovery:** Emails stuck in `parsing` for >10 minutes are auto-reset to `queued` at the start of every `checkAndIngest` call in `forecast-email.service.js`. This handles cases where the process crashed mid-parse.
+
+### Resilience
+
+**Unicode sanitization:** LLM output can contain unpaired surrogate escapes (e.g., `\ud83c`) that break `JSON.parse`. Both Step 1 (extract) and Step 3 (render) strip these before parsing.
+
+**Date resolution bug (fixed):** The shorthand parser resolves day names like "Sat01" relative to the primary forecast date. A bug caused "Sat01" on Feb 25 to resolve to Feb 1 instead of Mar 1. Fixed with future-bias: if resolved date is >1 day before primary date, bump forward a month. Applied to both start and end dates in `resolveDateRange()`. 4 unit tests added.
 
 ### Fire-and-Forget
 
@@ -365,7 +374,9 @@ Deterministic code diffs on structured numeric data. Wind direction bucketed to 
 | structured_data | jsonb | Structured day data from regex parser (wind, seas, swell, etc.) |
 | llm_raw_response | text | Raw LLM response (debug) |
 
-**Unique constraint:** `(email_id, area_id, forecast_date)`
+**Unique constraints:**
+- `(email_id, area_id, forecast_date)` — per-email uniqueness
+- `(area_id, forecast_date)` — operational constraint used by upsert. A new email replaces the old forecast for the same area+date. The `onConflict` must target this constraint, not the looser one.
 
 ### Environment Variables
 
