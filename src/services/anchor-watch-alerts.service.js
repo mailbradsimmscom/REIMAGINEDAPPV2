@@ -114,8 +114,10 @@ class AnchorWatchAlertsService {
    */
   async sendStatusChangeAlert(status) {
     try {
-      // Always send Telegram alert
-      await telegramService.sendAnchorWatchAlert(status, this.lastKnownStatus);
+      // Send Telegram alert if configured
+      if (telegramService.isConfigured()) {
+        await telegramService.sendAnchorWatchAlert(status, this.lastKnownStatus);
+      }
 
       // Send SMS only when actually outside area or GPS lost (not for warning)
       const isCritical = ['dragging', 'gps_lost'].includes(status.status);
@@ -151,9 +153,10 @@ class AnchorWatchAlertsService {
         `📏 ${distance}m from anchor (${radius}m radius)\n\n` +
         `⏰ Periodic update`;
 
-      await telegramService.sendMessage(message);
-
-      moduleLogger.info('Periodic update sent', { distance: status.distance_meters });
+      if (telegramService.isConfigured()) {
+        await telegramService.sendMessage(message);
+        moduleLogger.info('Periodic update sent', { distance: status.distance_meters });
+      }
 
     } catch (error) {
       moduleLogger.error('Failed to send periodic update', { error: error.message });
@@ -167,7 +170,9 @@ class AnchorWatchAlertsService {
    */
   async sendActivationNotification(config) {
     try {
-      await telegramService.sendActivationConfirmation(config);
+      if (telegramService.isConfigured()) {
+        await telegramService.sendActivationConfirmation(config);
+      }
       this.lastKnownStatus = 'safe'; // Assume safe on activation
       this.lastPeriodicUpdate = Date.now();
 
@@ -188,7 +193,9 @@ class AnchorWatchAlertsService {
    */
   async sendDeactivationNotification() {
     try {
-      await telegramService.sendDeactivationConfirmation();
+      if (telegramService.isConfigured()) {
+        await telegramService.sendDeactivationConfirmation();
+      }
       this.lastKnownStatus = null;
       this.lastPeriodicUpdate = null;
 
