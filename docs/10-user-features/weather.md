@@ -257,7 +257,7 @@ Automatically ingests daily Caribbean sailing forecast emails from a professiona
 - **Source:** Daily emails (Mon-Sat) from `support@mwxc.com` via Gmail API
 - **Pipeline:** 2 LLM calls + code diffs (optimized from 11 sequential calls)
 - **Schedule:** Every 2 hours Mon-Sat 6am-8pm EST (`0 11,13,15,17,19,21,23,1 * * 1-6` UTC)
-- **Retention:** 10 days (configurable via `FORECAST_RETENTION_DAYS`)
+- **Retention:** 6 emails (count-based, keeps full rolling week Mon-Sat)
 
 ### Pipeline (4 Steps)
 
@@ -323,6 +323,10 @@ Stored in `weather_forecast_emails.structured_forecast` (jsonb). This is the can
 
 Deterministic code diffs on structured numeric data. Wind direction bucketed to 8-point compass (only reports changes ≥1 bucket). Output format: `[{ "label": "Feb 24", "text": "Wind up 12-18kt → 15-20kt. Swell down 0.9-1.5m → 0.6-1.2m." }]`
 
+**Filtering:** Past dates (before today) are filtered out when summaries are read back via `getChangeSummaries()`. If all bullets for an area are past dates, that area is excluded entirely.
+
+**"Updated X ago" timestamp:** Uses the email's `received_at` (when the email arrived), not the forecast row's `created_at`.
+
 ### API Endpoints
 
 | Method | Path | Description |
@@ -375,8 +379,9 @@ Deterministic code diffs on structured numeric data. Wind direction bucketed to 
 | llm_raw_response | text | Raw LLM response (debug) |
 
 **Unique constraints:**
-- `(email_id, area_id, forecast_date)` — per-email uniqueness
-- `(area_id, forecast_date)` — operational constraint used by upsert. A new email replaces the old forecast for the same area+date. The `onConflict` must target this constraint, not the looser one.
+- `(email_id, area_id, forecast_date)` — upsert key. Only overwrites when reprocessing the same email. Different emails create separate rows, preserving history for change diffs.
+
+**Design principle:** Never overwrite. Always insert. Each email's forecasts are kept as separate rows. Read paths deduplicate by returning only the latest email's data.
 
 ### Environment Variables
 
@@ -387,7 +392,7 @@ Deterministic code diffs on structured numeric data. Wind direction bucketed to 
 | `GMAIL_REFRESH_TOKEN` | — | OAuth refresh token |
 | `FORECAST_SENDER_EMAIL` | `support@mwxc.com` | Email sender to filter |
 | `FORECAST_EMAIL_ENABLED` | `false` | Feature toggle |
-| `FORECAST_RETENTION_DAYS` | `10` | Days to keep emails |
+| ~~`FORECAST_RETENTION_DAYS`~~ | ~~`10`~~ | Removed — now count-based (keep 6 emails) |
 | `FORECAST_GMAIL_SEARCH_DAYS` | `4` | Gmail search window |
 | `OPENAI_SUMMARY_MODEL` | `gpt-4.1-mini` | Cheap model for rendering |
 
