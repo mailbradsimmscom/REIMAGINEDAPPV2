@@ -140,16 +140,15 @@ Each metric shows a 6-column comparison grid:
 
 The Expert column shows data from the parsed MWXC professional forecast email. Key behaviors:
 - **Same value for all time blocks** on a given day (expert forecasts are daily, not hourly)
-- **80th percentile** of the expert's range (e.g., 12-18 kn → 17 kn), rounded up
-- **Rounding:** Integers for wind (kn) and period (s), one decimal for waves (m)
-- **Unit conversion:** Expert seas/swell are in feet → converted to meters (÷ 3.281)
+- **High end** of the expert's range (e.g., 12-18 kn → 18 kn for wind)
+- **Unit conversion:** Expert seas/swell are in feet → converted to meters (÷ 3.281). Wind stored in knots (no conversion).
 - **Blank** when no expert forecast exists for that day (typically beyond 5-6 days out)
 - **Included in consensus** — expert values participate in all averaging calculations
-- **Data source:** `structured_data` jsonb column on `weather_expert_forecasts` table
+- **Data source:** `weather_forecasts` table with `data_source='expert'`, `model_name='expert'`
 
-### Current-Swell Relationship
+### Current-Swell Relationship (per-card display)
 
-Safety indicator showing how tidal current interacts with swell:
+Safety indicator on individual weather cards showing how tidal current interacts with swell:
 
 | Condition | Icon | Meaning |
 |-----------|------|---------|
@@ -157,11 +156,7 @@ Safety indicator showing how tidal current interacts with swell:
 | Crossing | ✓ | Current crosses swell at angle - moderate effect |
 | Following | ✓ | Current flows with swell - smooth conditions |
 
-**Calculation:**
-- Current direction = where water flows TO
-- Swell direction = where waves come FROM
-- Swell travels toward (swell_direction + 180°)
-- Angle difference determines relationship
+This is separate from the scoring system's Sea Direction and Current components, which use the area's `sailing_direction` as the reference angle and traditional sailing terminology (Reaching, Broad Reach, Beam, Close Hauled, Opposing).
 
 ---
 
@@ -187,14 +182,21 @@ The **🤖 AI** button shows a 10-day sailing conditions analysis.
 
 ### Scoring System
 
-Each time block (50 total over 10 days) gets a score 0-100:
+Each time block (50 total over 10 days) gets a score 0-100 across 5 components:
 
 | Factor | Weight | Scoring |
 |--------|--------|---------|
-| Wind | 25 pts | <15kn=25, 15-20kn=20, 20-25kn=10, >25kn=0 |
-| Waves | 25 pts | <1.0m=25, 1.0-1.3m=20, 1.3-1.5m=10, >1.5m=0 |
+| Wind | 25 pts | <20kn=25, 20-25kn=20, >25kn=0 |
+| Waves | 25 pts | <1.3m=25, 1.3-1.5m=20, 1.5-2.0m=10, >2.0m=0 |
 | Period | 25 pts | >8s=25, 6-8s=20, 4-6s=15, <4s=5 |
-| Current | 25 pts | Following=25, Crossing=20, Opposing=5 |
+| Sea Direction | 15 pts | Reaching=15, Broad Reach=13, Beam=10, Close Hauled=7, Opposing=5 |
+| Current | 10 pts | Following=10, None=5, Opposing=0 |
+
+**Sea Direction** uses the area's `sailing_direction` (compass) compared to swell travel direction. Uses traditional sailing terminology.
+
+**Current** uses the area's `sailing_direction` compared to ocean current direction. Three states: following (within 60°), none (60-120°), opposing (beyond 120°).
+
+**Score Cards** display per-day breakdown with colored dots for each component, showing actual values (e.g., "18kt", "1.7m", "Broad Reach").
 
 ### AI Endpoint
 
@@ -250,98 +252,121 @@ POST /api/weather/ai-sailing-summary
 
 ## Expert Forecast Email Pipeline
 
-Automatically ingests daily Caribbean sailing forecast emails from a professional forecaster, parses them into structured data, and maps relevant sections to saved weather areas.
+Automatically ingests daily Caribbean sailing forecast emails from a professional forecaster, structures them by corridor, extracts numeric data, and writes per-area forecast rows into `weather_forecasts`.
 
 ### Overview
 
 - **Source:** Daily emails (Mon-Sat) from `support@mwxc.com` via Gmail API
-- **Pipeline:** 2 LLM calls + code diffs (optimized from 11 sequential calls)
-- **Schedule:** Every 2 hours Mon-Sat 6am-8pm EST (`0 11,13,15,17,19,21,23,1 * * 1-6` UTC)
+- **Pipeline:** 6 steps, fully automated (2 LLM calls + 4 code steps)
+- **Schedule:** Hourly Mon-Sat 6am-noon AST (`0 10,11,12,13,14,15,16 * * 1-6` UTC)
 - **Retention:** 6 emails (count-based, keeps full rolling week Mon-Sat)
 
-### Pipeline (4 Steps)
+### Pipeline (6 Steps)
 
-| Step | Type | Model | Purpose |
-|------|------|-------|---------|
-| 1 | **LLM** | `config.openai.model` (gpt-5.1) | Extract raw text blocks from email (one-time) |
-| 1b | **Code** | None | GPS-match areas to extracted sections by lat/lon |
-| 2 | **Code** (regex) | None | Normalize shorthand → structured JSON (`forecast-shorthand-parser.js`) |
-| 2b | **Code** | None | Map areas to normalized sections by bounding boxes |
-| 3 | **LLM** | `config.openai.summaryModel` (gpt-4.1-mini) | Render structured JSON → prose for all areas (one call) |
-| 4 | **Code** | None | Diff structured data for change summaries (deterministic) |
+All steps chain automatically in `checkAndIngest()`. Steps 2 and 3 run in parallel.
 
-### Parse Status State Machine
+| Step | What | LLM? | Output |
+|------|------|------|--------|
+| 1 | **Ingest** — Gmail → raw email row | No | `raw_text`, `parse_status='ingested'` |
+| 2 | **LLM Structure** — raw → corridor-based structured text | gpt-4.1 | `structured_forecast`, `corridors` array |
+| 3 | **Stamp corridors_included** — query active area corridors, dedupe | No | `corridors_included` jsonb on email |
+| 4 | **Extract corridor_data** — per corridor, extract DATE blocks → JSON | gpt-4.1-mini | `corridor_data` jsonb on email |
+| 5 | **Fan-out** — corridor_data → per-area rows in weather_forecasts | No | rows with `data_source='expert'` |
+| 6 | **Display** — corridor display on weather-areas.html (frontend) | No | commentary + suggest + trends |
+
+### Pre-requisite: Area-to-Corridor Mapping
+
+When a weather area is created, an LLM call (gpt-4.1, temp 0) assigns it to the best corridor from the latest email's corridor list. Stored in `weather_areas.corridor`. Also has a backfill route for existing areas.
+
+### New Area Creation Flow
+
+When `POST /api/weather/areas` is called:
+1. Area created in DB
+2. Open-Meteo data fetched (fire-and-forget)
+3. Corridor assigned via LLM (fire-and-forget)
+4. After corridor assigned, existing `corridor_data` fanned out to new area
+
+### Structured Text Format (Step 2 Output)
+
+Stored in `weather_forecast_emails.structured_forecast` (text). Uses machine-parse tokens:
 
 ```
-queued → parsing → parsed | partial | failed
+SECTION: GENERAL COMMENTARY (Applies to All Corridors)
+[macro pattern, outlook, precip notes]
+
+CORRIDOR: Antigua–St Martin
+SUGGEST:
+[routing guidance, operational notes]
+DATE: Wednesday, March 4 – 5:00 AM
+WIND: ENE 16-26kt, gusts to 33kt
+SEAS: 5-8ft
+SWELL: ENE 7-10ft at 8-10s
+PRECIP: Isolated showers
+
+COMBINED SAILING CORRIDORS (Key)
+[list of all corridors]
 ```
 
-- `queued`: email ingested, waiting for parse
-- `parsing`: parse in progress (job lock held)
-- `parsed`: all steps completed
-- `partial`: Step 1 OK but Step 3 failed — structured data saved
-- `failed`: Step 1 failed
+**Critical:** `received_at` is always passed to the LLM for correct date resolution. Never rely on day-of-week alone.
 
-**Stale lock recovery:** Emails stuck in `parsing` for >10 minutes are auto-reset to `queued` at the start of every `checkAndIngest` call in `forecast-email.service.js`. This handles cases where the process crashed mid-parse.
+### Corridor Data JSON (Step 4 Output)
 
-### Resilience
-
-**Unicode sanitization:** LLM output can contain unpaired surrogate escapes (e.g., `\ud83c`) that break `JSON.parse`. Both Step 1 (extract) and Step 3 (render) strip these before parsing.
-
-**Date resolution bug (fixed):** The shorthand parser resolves day names like "Sat01" relative to the primary forecast date. A bug caused "Sat01" on Feb 25 to resolve to Feb 1 instead of Mar 1. Fixed with future-bias: if resolved date is >1 day before primary date, bump forward a month. Applied to both start and end dates in `resolveDateRange()`. 4 unit tests added.
-
-### Fire-and-Forget
-
-`POST /forecast-email/check` returns immediately after Gmail ingestion. Parsing runs in background with job lock (prevents duplicate work). Frontend polls `GET /forecast-email/parse-progress` for status.
-
-### Structured JSON (Step 1 Output)
-
-Stored in `weather_forecast_emails.structured_forecast` (jsonb). This is the canonical format — diffs and re-rendering use this, not prose.
+Stored in `weather_forecast_emails.corridor_data` (jsonb), keyed by corridor name:
 
 ```json
 {
-  "region_name": "E Caribbean",
-  "primary_date": "2026-02-24",
-  "synopsis": "faithful paraphrase",
-  "outlook": "faithful paraphrase",
-  "sections": [{
-    "section_id": "antigua-st-martin",
-    "lat_range": [17.0, 18.5],
-    "lon_range": [-63.0, -61.0],
-    "days": [{
-      "date": "2026-02-24",
-      "wind": { "dir": "ESE", "range_kt": [12, 18], "gust_kt": 22 },
-      "seas_ft": [4, 6],
-      "swell": [{ "dir": "ENE", "ft": [3, 5], "period_s": [8, 10] }],
-      "sailing_notes": { "W-NW": "advice", "N": "advice" }
-    }]
-  }]
+  "Antigua–St Martin": {
+    "dates": [
+      {
+        "date": "2026-03-04",
+        "wind": { "range_kt": [16, 26], "dir": "ENE", "gust_kt": 33 },
+        "seas_ft": 8,
+        "swell": [{ "ft": 10, "period_s": 8, "dir": "ENE" }],
+        "precip": "Isolated showers",
+        "wind_forecast": "raw WIND line text",
+        "swell_forecast": "raw SWELL line text"
+      }
+    ]
+  }
 }
 ```
 
-### Change Summaries (Step 4)
+**Extraction rules:** seas/swell height = HIGH end only, swell period = LOW end only, wind = full range [low, high].
 
-Deterministic code diffs on structured numeric data. Wind direction bucketed to 8-point compass (only reports changes ≥1 bucket). Output format: `[{ "label": "Feb 24", "text": "Wind up 12-18kt → 15-20kt. Swell down 0.9-1.5m → 0.6-1.2m." }]`
+### Expert Rows in weather_forecasts (Step 5)
 
-**Filtering:** Past dates (before today) are filtered out when summaries are read back via `getChangeSummaries()`. If all bullets for an area are past dates, that area is excluded entirely.
+- `data_source: 'expert'`, `model_name: 'expert'`
+- `forecast_time`: noon UTC per day (`YYYY-MM-DDT12:00:00Z`)
+- Wind in knots (high end of range), seas/swell converted to meters (ft ÷ 3.281)
+- Upsert on `(area_id, forecast_time, data_source, model_name)`
+- One row per area per date — areas sharing a corridor get duplicate data
 
-**"Updated X ago" timestamp:** Uses the email's `received_at` (when the email arrived), not the forecast row's `created_at`.
+### Corridor Display (Step 6, weather-areas.html)
+
+Shows between the data-status bar and areas list:
+1. **General Commentary** — macro weather pattern (once, applies to all)
+2. **Per-corridor sections** — SUGGEST text + trend comparison vs previous email
+3. **Trends** — plain English: "Wind increasing by ~3kt vs yesterday's forecast"
+4. Falls back to the two most recent available emails if today's hasn't arrived
 
 ### API Endpoints
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/weather/areas/:id/expert-forecast?date=YYYY-MM-DD` | Expert forecast for area+date |
-| GET | `/api/weather/areas/:id/expert-forecasts` | All expert forecasts for area (10-day) |
-| POST | `/api/weather/forecast-email/check` | Trigger Gmail check (fire-and-forget) |
-| GET | `/api/weather/forecast-email/status` | Ingestion status |
-| GET | `/api/weather/forecast-email/parse-progress` | Parse progress (for polling) |
+| POST | `/api/weather/forecast-email/check` | Trigger full pipeline (ingest → fan-out) |
+| POST | `/api/weather/forecast-email/parse` | Manual: run LLM structuring only |
+| POST | `/api/weather/forecast-email/extract-corridor-data` | Manual: run step 4 only |
+| POST | `/api/weather/forecast-email/fan-out-forecasts` | Manual: run step 5 only |
+| POST | `/api/weather/forecast-email/backfill-corridors-included` | One-off: stamp corridors_included |
+| POST | `/api/weather/areas/backfill-corridors` | One-off: assign corridors to all areas |
+| GET | `/api/weather/corridor-display` | Corridor display data for weather-areas.html |
 | GET | `/api/weather/data-status` | Combined: last weather API fetch + last expert email |
-| GET | `/api/weather/expert-forecast-changes` | Per-area change summaries |
+| GET | `/api/weather/forecast-email/status` | Ingestion status |
+| GET | `/api/weather/forecast-email/parse-progress` | Parse progress |
 
 ### Database Tables
 
-**weather_forecast_emails** — raw ingested emails
+**weather_forecast_emails** — ingested emails + pipeline data
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -351,37 +376,22 @@ Deterministic code diffs on structured numeric data. Wind direction bucketed to 
 | subject | text | Email subject |
 | received_at | timestamptz | When email was received |
 | raw_text | text | Full email body |
-| structured_forecast | jsonb | Step 1 structured JSON (canonical) |
-| email_hash | text | SHA-256 of raw_text |
-| forecast_date | date | Primary forecast date |
-| parse_status | text | queued/parsing/parsed/partial/failed |
+| structured_forecast | text | Step 2: LLM-structured corridor text |
+| corridors | jsonb | Array of all corridor names from structured text |
+| corridors_included | jsonb | Array of corridors we care about (from active areas) |
+| corridor_data | jsonb | Step 4: per-corridor numeric JSON |
+| parse_status | text | ingested/parsed/partial/failed |
 | parse_error | text | Error message if failed |
 | region_tag | text | Region from subject |
 | parsed_at | timestamptz | When parsing completed |
 
-**weather_expert_forecasts** — parsed excerpts per area per date
+**weather_areas.corridor** — text column, LLM-assigned corridor name (e.g., "Antigua–St Martin")
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid | Primary key |
-| email_id | uuid | FK to weather_forecast_emails (CASCADE) |
-| area_id | uuid | FK to weather_areas |
-| forecast_date | date | Date this forecast covers |
-| region_name | text | Email section name |
-| synopsis | text | Prose synopsis |
-| outlook | text | Prose outlook |
-| wind_forecast | text | Prose wind |
-| swell_forecast | text | Prose swell |
-| sailing_suggestion | text | Prose sailing advice |
-| precipitation | text | Prose precipitation |
-| area_change_summary | text | JSON array of delta bullets |
-| structured_data | jsonb | Structured day data from regex parser (wind, seas, swell, etc.) |
-| llm_raw_response | text | Raw LLM response (debug) |
+**weather_forecasts** — expert rows alongside API data (shared table)
+- `data_source = 'expert'`, `model_name = 'expert'`
+- Same schema as API forecast rows
 
-**Unique constraints:**
-- `(email_id, area_id, forecast_date)` — upsert key. Only overwrites when reprocessing the same email. Different emails create separate rows, preserving history for change diffs.
-
-**Design principle:** Never overwrite. Always insert. Each email's forecasts are kept as separate rows. Read paths deduplicate by returning only the latest email's data.
+**weather_expert_forecasts** — legacy table (old pipeline, still exists but no longer written to)
 
 ### Environment Variables
 
@@ -400,15 +410,16 @@ Deterministic code diffs on structured numeric data. Wind direction bucketed to 
 
 | Purpose | Path |
 |---------|------|
-| Parser service | `maintenance-agent/src/services/forecast-email-parser.service.js` |
-| Shorthand parser | `maintenance-agent/src/services/forecast-shorthand-parser.js` (regex, Step 2) |
-| Parser tests | `maintenance-agent/tests/forecast-shorthand-parser.test.js` |
-| Email service | `maintenance-agent/src/services/forecast-email.service.js` |
-| Repository | `maintenance-agent/src/repositories/forecast-email.repository.js` |
+| Email service (pipeline) | `maintenance-agent/src/services/forecast-email.service.js` |
+| Area service (corridor assign) | `maintenance-agent/src/services/weather-area.service.js` |
+| Email repository | `maintenance-agent/src/repositories/forecast-email.repository.js` |
+| Weather repository | `maintenance-agent/src/repositories/weather.repository.js` |
 | Gmail repository | `maintenance-agent/src/repositories/gmail.repository.js` |
+| Routes | `maintenance-agent/src/routes/weather.route.js` |
 | Scheduler | `maintenance-agent/src/jobs/scheduler.job.js` |
-| Frontend (areas) | `src/public/weather-areas.html` |
-| Frontend (view) | `src/public/weather-area-view.html` |
+| Test script (corridor display) | `maintenance-agent/scripts/test-corridor-display.mjs` |
+| Frontend (areas + corridor display) | `src/public/weather-areas.html` |
+| Frontend (view + scoring) | `src/public/weather-area-view.html` |
 
 ---
 
@@ -724,7 +735,8 @@ async fetchForArea(areaId, options = {}) {
 | latitude | numeric | Coordinates |
 | longitude | numeric | Coordinates |
 | description | text | Optional notes |
-| sailing_direction | text | N/NE/E/SE/S/SW/W/NW (for expert forecast matching) |
+| sailing_direction | text | N/NE/E/SE/S/SW/W/NW (for scoring sea direction) |
+| corridor | text | LLM-assigned corridor name (e.g., "Antigua–St Martin") |
 | is_active | boolean | Active flag |
 | deleted_at | timestamp | Soft delete |
 | created_at | timestamp | Creation time |
