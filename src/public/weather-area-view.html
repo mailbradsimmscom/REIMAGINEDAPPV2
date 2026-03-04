@@ -422,9 +422,12 @@
         // Wind conversion (km/h to knots for Open-Meteo, Stormglass is already m/s)
         function toKnots(value, source) {
             if (value === null || value === undefined) return null;
-            // Open-Meteo returns km/h, Stormglass returns m/s
+            // Open-Meteo returns km/h, Stormglass returns m/s, Expert already in knots
             if (source === 'open_meteo_forecast' || source === 'open_meteo_marine') {
                 return value * 0.539957; // km/h to knots
+            }
+            if (source === 'expert') {
+                return value; // already in knots
             }
             return value * 1.94384; // m/s to knots
         }
@@ -587,31 +590,6 @@
             const currentDirBySource = getMetricBySource(forecasts, 'current_direction');
             const swellDirBySource = getMetricBySource(forecasts, 'swell_wave_direction');
 
-            // Inject expert data for this day
-            const expertDay = getExpertDataForDay(day);
-            if (expertDay) {
-                const wind80 = expert80(expertDay.wind?.range_kt, 0);
-                if (wind80 !== null) windBySource['expert'] = wind80;
-
-                const seas80 = expert80(expertDay.seas_ft, 1);
-                if (seas80 !== null) waveBySource['expert'] = seas80 / 3.281;
-
-                if (expertDay.swell && expertDay.swell.length > 0) {
-                    const primarySwell = expertDay.swell[0];
-                    const swellHt = expert80(primarySwell.ft, 1);
-                    if (swellHt !== null) swellBySource['expert'] = swellHt / 3.281;
-
-                    const swellPer = expert80(primarySwell.period_s, 0);
-                    if (swellPer !== null) periodBySource['expert'] = swellPer;
-
-                    const swellDirDeg = compassToDeg(primarySwell.dir);
-                    if (swellDirDeg !== null) swellDirBySource['expert'] = swellDirDeg;
-                }
-
-                const windDirDeg = compassToDeg(expertDay.wind?.dir);
-                if (windDirDeg !== null) currentDirBySource['expert_wind_dir'] = windDirDeg; // for reference only
-            }
-
             // Get consensus values (all sources including expert)
             const windVals = Object.values(windBySource);
             const windAvg = windVals.length > 0 ? windVals.reduce((a,b)=>a+b,0)/windVals.length : null;
@@ -642,34 +620,54 @@
             const swellDirVals = Object.values(swellDirBySource);
             const swellDir = swellDirVals.length > 0 ? swellDirVals.reduce((a,b)=>a+b,0)/swellDirVals.length : null;
 
-            let currentRelation = 'neutral';
-            if (currentDir !== null && swellDir !== null) {
-                const swellTravelDir = (swellDir + 180) % 360;
-                let angleDiff = Math.abs(currentDir - swellTravelDir);
-                if (angleDiff > 180) angleDiff = 360 - angleDiff;
-                if (angleDiff <= 45) currentRelation = 'opposing';
-                else if (angleDiff >= 135) currentRelation = 'following';
-                else currentRelation = 'crossing';
+            // Sailing direction in degrees
+            const compassToDeg = { N:0, NNE:22.5, NE:45, ENE:67.5, E:90, ESE:112.5, SE:135, SSE:157.5, S:180, SSW:202.5, SW:225, WSW:247.5, W:270, WNW:292.5, NW:315, NNW:337.5 };
+            const sailingDir = areaData?.sailing_direction ? compassToDeg[areaData.sailing_direction] : null;
+
+            // Current direction relative to sailing direction
+            let currentRelation = 'None';
+            if (sailingDir !== null && sailingDir !== undefined && currentDir !== null) {
+                let currentAngle = Math.abs(sailingDir - currentDir);
+                if (currentAngle > 180) currentAngle = 360 - currentAngle;
+                if (currentAngle <= 60) currentRelation = 'Following';
+                else if (currentAngle >= 120) currentRelation = 'Opposing';
+                else currentRelation = 'None';
             }
 
-            // Score components (0-25 each, total 100)
+            // Sea direction relative to sailing direction (angle between swell travel and course)
+            let seaRelation = 'neutral';
+            if (sailingDir !== null && sailingDir !== undefined && swellDir !== null) {
+                const swellTravelDir = (swellDir + 180) % 360;
+                let seaAngle = Math.abs(sailingDir - swellTravelDir);
+                if (seaAngle > 180) seaAngle = 360 - seaAngle;
+                if (seaAngle <= 30) seaRelation = 'Reaching';
+                else if (seaAngle <= 60) seaRelation = 'Broad Reach';
+                else if (seaAngle <= 120) seaRelation = 'Beam';
+                else if (seaAngle <= 150) seaRelation = 'Close Hauled';
+                else seaRelation = 'Opposing';
+            }
+
+            // Score components (25+25+25+15+10 = 100)
+
+            // Wind (25 pts)
             let windScore = 25;
             if (windAvg !== null) {
-                if (windAvg < 15) windScore = 25;
-                else if (windAvg < 20) windScore = 20;
-                else if (windAvg < 25) windScore = 10;
+                if (windAvg < 20) windScore = 25;
+                else if (windAvg < 25) windScore = 20;
                 else windScore = 0;
             }
 
+            // Wave height (25 pts)
             let waveScore = 25;
             const waveToUse = calcWave !== null ? calcWave : waveAvg;
             if (waveToUse !== null) {
-                if (waveToUse < 1.0) waveScore = 25;
-                else if (waveToUse < 1.3) waveScore = 20;
-                else if (waveToUse < 1.5) waveScore = 10;
+                if (waveToUse < 1.3) waveScore = 25;
+                else if (waveToUse < 1.5) waveScore = 20;
+                else if (waveToUse < 2.0) waveScore = 10;
                 else waveScore = 0;
             }
 
+            // Period (25 pts)
             let periodScore = 25;
             if (periodAvg !== null) {
                 if (periodAvg > 8) periodScore = 25;
@@ -678,17 +676,28 @@
                 else periodScore = 5;
             }
 
-            let currentScore = 25;
-            if (currentRelation === 'opposing') currentScore = 5;
-            else if (currentRelation === 'crossing') currentScore = 20;
-            else if (currentRelation === 'following') currentScore = 25;
+            // Sea direction (15 pts)
+            let seaDirScore = 10; // neutral default
+            if (seaRelation === 'Reaching') seaDirScore = 15;
+            else if (seaRelation === 'Broad Reach') seaDirScore = 13;
+            else if (seaRelation === 'Beam') seaDirScore = 10;
+            else if (seaRelation === 'Close Hauled') seaDirScore = 7;
+            else if (seaRelation === 'Opposing') seaDirScore = 5;
+
+            // Current (10 pts)
+            let currentScore = 5; // neutral default
+            if (currentRelation === 'Following') currentScore = 10;
+            else if (currentRelation === 'None') currentScore = 5;
+            else if (currentRelation === 'Opposing') currentScore = 0;
 
             return {
-                score: windScore + waveScore + periodScore + currentScore,
+                score: windScore + waveScore + periodScore + seaDirScore + currentScore,
+                windScore, waveScore, periodScore, seaDirScore, currentScore,
                 wind: windAvg,
                 waveConsensus: waveAvg,
                 waveCalc: calcWave,
                 period: periodAvg,
+                seaRelation,
                 currentRelation,
                 currentSpeed: currentSpeed ? currentSpeed * 1.94384 : null // to knots
             };
@@ -866,19 +875,62 @@
                 return '#ef4444'; // red
             };
 
-            // Build 10-day score bar
+            // Build 10-day score cards with component breakdown
             const days = getUniqueDays();
+            const componentColor = (val, max) => {
+                const pct = max > 0 ? val / max : 0;
+                if (pct >= 0.9) return '#22c55e';
+                if (pct >= 0.7) return '#eab308';
+                if (pct >= 0.4) return '#f97316';
+                return '#ef4444';
+            };
             const dayScoreBars = days.map(day => {
                 const dayScores = scores.filter(s => s.day === day);
                 const avgScore = dayScores.length > 0
                     ? dayScores.reduce((a,b) => a + b.score, 0) / dayScores.length
                     : 0;
+                // Average each component across time blocks for this day
+                const avgWind = dayScores.length > 0 ? dayScores.reduce((a,b) => a + (b.windScore || 0), 0) / dayScores.length : 0;
+                const avgWave = dayScores.length > 0 ? dayScores.reduce((a,b) => a + (b.waveScore || 0), 0) / dayScores.length : 0;
+                const avgPeriod = dayScores.length > 0 ? dayScores.reduce((a,b) => a + (b.periodScore || 0), 0) / dayScores.length : 0;
+                const avgSeaDir = dayScores.length > 0 ? dayScores.reduce((a,b) => a + (b.seaDirScore || 0), 0) / dayScores.length : 0;
+                const avgCurrent = dayScores.length > 0 ? dayScores.reduce((a,b) => a + (b.currentScore || 0), 0) / dayScores.length : 0;
+                // Most common sea/current relation for this day
+                const modeOf = (arr) => { const counts = {}; arr.forEach(v => counts[v] = (counts[v]||0)+1); return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'neutral'; };
+                const seaLabel = modeOf(dayScores.map(s => s.seaRelation).filter(v => v !== 'neutral'));
+                const currentLabel = modeOf(dayScores.map(s => s.currentRelation));
+                // Average raw values for display
+                const rawWind = dayScores.filter(s => s.wind != null);
+                const windKt = rawWind.length > 0 ? Math.round(rawWind.reduce((a,b) => a + b.wind, 0) / rawWind.length) : '--';
+                const rawWave = dayScores.filter(s => (s.waveCalc ?? s.waveConsensus) != null);
+                const waveM = rawWave.length > 0 ? (rawWave.reduce((a,b) => a + (b.waveCalc ?? b.waveConsensus), 0) / rawWave.length).toFixed(1) : '--';
+                const rawPeriod = dayScores.filter(s => s.period != null);
+                const periodS = rawPeriod.length > 0 ? Math.round(rawPeriod.reduce((a,b) => a + b.period, 0) / rawPeriod.length) : '--';
+
                 const date = new Date(day + 'T12:00:00Z');
-                const dayLetter = date.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0);
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                 const dayNum = date.getUTCDate();
-                return `<div style="flex:1; text-align:center;">
-                    <div style="height:40px; background:${scoreColor(avgScore)}; border-radius:4px; margin:0 1px;"></div>
-                    <div style="font-size:9px; margin-top:2px; line-height:1.1;">${dayLetter}<br><span style="opacity:0.7;">${dayNum}</span></div>
+
+                const compRow = (label, val, max, detail) =>
+                    `<div style="display:flex; justify-content:space-between; align-items:center; padding:2px 0;">
+                        <span style="font-size:10px; color:#fff; opacity:0.9;">${label}</span>
+                        <span style="font-size:10px; font-weight:600; color:#fff; display:flex; align-items:center; gap:3px;"><span style="width:6px;height:6px;border-radius:50%;background:${componentColor(val, max)};display:inline-block;"></span>${detail}</span>
+                    </div>`;
+
+                return `<div style="flex:1; min-width:0; margin:0 2px;">
+                    <div style="background:${scoreColor(avgScore)}; border-radius:8px; padding:8px 6px;">
+                        <div style="text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#fff;">${dayName} ${dayNum}</div>
+                            <div style="font-size:22px; font-weight:700; color:#fff; margin:4px 0;">${Math.round(avgScore)}</div>
+                        </div>
+                        <div style="border-top:1px solid rgba(255,255,255,0.3); margin-top:6px; padding-top:6px;">
+                            ${compRow('Wind', avgWind, 25, windKt + 'kt')}
+                            ${compRow('Wave', avgWave, 25, waveM + 'm')}
+                            ${compRow('Period', avgPeriod, 25, periodS + 's')}
+                            ${compRow('Seas', avgSeaDir, 15, seaLabel)}
+                            ${compRow('Crnt', avgCurrent, 10, currentLabel)}
+                        </div>
+                    </div>
                 </div>`;
             }).join('');
 
@@ -925,14 +977,8 @@
                     <!-- Score Bar -->
                     <div style="margin: 16px 0;">
                         <div style="font-size: 12px; opacity: 0.8; margin-bottom: 4px;">Sailing Conditions by Day</div>
-                        <div style="display: flex; align-items: flex-end; height: 60px;">
+                        <div style="display: flex; align-items: flex-start; overflow-x: auto;">
                             ${dayScoreBars}
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.6; margin-top: 4px;">
-                            <span>🟢 Great</span>
-                            <span>🟡 Good</span>
-                            <span>🟠 Fair</span>
-                            <span>🔴 Poor</span>
                         </div>
                     </div>
 
@@ -953,7 +999,7 @@
                         ${worstWindows.map(w => `
                             <div style="background: rgba(239,68,68,0.2); padding: 8px; border-radius: 8px; margin-bottom: 4px; font-size: 13px;">
                                 <strong>${w.dayName} ${w.dayNum} ${w.timeLabel}</strong> - Score: ${w.score}/100<br>
-                                <span style="opacity:0.8;">Wind ${w.wind?.toFixed(0) || '--'}kn, Waves ${w.waveCalc?.toFixed(1) || w.waveConsensus?.toFixed(1) || '--'}m${w.currentRelation === 'opposing' ? ', opposing current ⚠️' : ''}</span>
+                                <span style="opacity:0.8;">Wind ${w.wind?.toFixed(0) || '--'}kn, Waves ${w.waveCalc?.toFixed(1) || w.waveConsensus?.toFixed(1) || '--'}m${w.currentRelation === 'Opposing' || w.currentRelation === 'Close Hauled' ? ', ' + w.currentRelation + ' ⚠️' : ''}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -1053,6 +1099,8 @@
                     else if (f.model_name === 'meteo') sourceKey = 'meteo';
                 } else if (f.data_source === 'meteoblue') {
                     sourceKey = 'meteoblue';
+                } else if (f.data_source === 'expert') {
+                    sourceKey = 'expert';
                 }
 
                 if (sourceKey && f[field] !== null && f[field] !== undefined) {
@@ -1096,38 +1144,6 @@
             const rainBySource = getMetricBySource(forecasts, 'precipitation');
             const currentSpeedBySource = getMetricBySource(forecasts, 'current_speed');
             const currentDirBySource = getMetricBySource(forecasts, 'current_direction');
-
-            // Inject expert structured data (same value for all time blocks on that day)
-            const expertDay = getExpertDataForDay(selectedDay);
-            if (expertDay) {
-                const wind80 = expert80(expertDay.wind?.range_kt, 0);
-                if (wind80 !== null) windBySource['expert'] = wind80;
-
-                if (expertDay.wind?.gust_kt) gustBySource['expert'] = expertDay.wind.gust_kt;
-
-                const windDirDeg = compassToDeg(expertDay.wind?.dir);
-                if (windDirDeg !== null) windDirBySource['expert'] = windDirDeg;
-
-                // seas_ft → meters (÷ 3.281), 80th percentile
-                const seas80 = expert80(expertDay.seas_ft, 1);
-                if (seas80 !== null) waveBySource['expert'] = seas80 / 3.281;
-
-                // swell height and period (use primary swell)
-                if (expertDay.swell && expertDay.swell.length > 0) {
-                    const primarySwell = expertDay.swell[0];
-                    const swellHt = expert80(primarySwell.ft, 1);
-                    if (swellHt !== null) swellBySource['expert'] = swellHt / 3.281;
-
-                    const swellPer = expert80(primarySwell.period_s, 0);
-                    if (swellPer !== null) {
-                        swellPeriodBySource['expert'] = swellPer;
-                        periodBySource['expert'] = swellPer; // use swell period as wave period
-                    }
-
-                    const swellDirDeg = compassToDeg(primarySwell.dir);
-                    if (swellDirDeg !== null) swellDirBySource['expert'] = swellDirDeg;
-                }
-            }
 
             // Calculate consensus (all sources including expert)
             const windStats = calculateStats(Object.values(windBySource));

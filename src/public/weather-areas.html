@@ -177,80 +177,66 @@
             margin-bottom: var(--spacing-lg);
         }
 
-        .changes-card {
+        .corridor-display {
             background: var(--surface-color);
             border-radius: var(--border-radius);
             padding: var(--spacing-lg);
             margin-bottom: var(--spacing-lg);
             box-shadow: var(--shadow-light);
             border: 1px solid var(--border-color);
-            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        .changes-flash {
-            border-color: #4CAF50;
-            box-shadow: 0 0 12px rgba(76, 175, 80, 0.4);
-        }
-
-        .changes-card h3 {
+        .corridor-display h3 {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: var(--spacing-md);
             color: var(--text-primary);
         }
 
-        .changes-empty {
+        .corridor-commentary {
             font-size: 14px;
-            color: var(--text-secondary);
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
         }
 
-        .change-item {
-            padding: var(--spacing-sm) 0;
-            border-bottom: 1px solid var(--border-color);
+        .corridor-section {
+            padding: var(--spacing-md) 0;
+            border-top: 1px solid var(--border-color);
         }
 
-        .change-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .change-area-name {
-            font-size: 14px;
+        .corridor-name {
+            font-size: 15px;
             font-weight: 600;
-            margin-bottom: var(--spacing-xs);
+            color: var(--secondary-color);
+            margin-bottom: var(--spacing-sm);
         }
 
-        .change-bullets {
+        .corridor-suggest {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .corridor-trends {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .change-bullets li {
+        .corridor-trends li {
             font-size: 13px;
-            color: var(--text-primary);
-            line-height: 1.5;
-            padding: var(--spacing-xs) 0;
-        }
-
-        .change-bullets li:not(:last-child) {
-            border-bottom: 1px solid var(--background-color);
-        }
-
-        .change-bullets .bullet-label {
-            font-weight: 600;
-            color: var(--secondary-color);
-            margin-right: var(--spacing-xs);
-        }
-
-        .change-bullets li:last-child .bullet-label {
-            color: var(--primary-color);
-        }
-
-        .change-time {
-            font-size: 12px;
             color: var(--text-secondary);
-            margin-top: var(--spacing-xs);
+            padding: 2px 0;
+        }
+
+        .corridor-trends li::before {
+            content: "\2022 ";
+            color: var(--primary-color);
         }
 
         .data-status {
@@ -342,10 +328,7 @@
 
         <div id="data-status" class="data-status" style="display: none;"></div>
 
-        <div id="changes-container" class="changes-card" style="display: none;">
-            <h3>Changes in Expert Forecast</h3>
-            <div id="changes-content"></div>
-        </div>
+        <div id="corridor-display" class="corridor-display" style="display: none;"></div>
 
         <div id="error-container" class="error-message" style="display: none;"></div>
 
@@ -418,38 +401,51 @@
             }
         }
 
-        async function loadChanges() {
+        async function loadCorridorDisplay() {
             try {
-                const response = await fetch(`${API_BASE}/expert-forecast-changes`);
+                const response = await fetch(`${API_BASE}/corridor-display`);
                 const result = await response.json();
 
-                if (!result.success || !result.data || result.data.length === 0) return;
+                if (!result.success || !result.data?.hasData) return;
 
-                const container = document.getElementById('changes-container');
-                const content = document.getElementById('changes-content');
+                const el = document.getElementById('corridor-display');
+                const d = result.data;
+                const parts = [];
 
-                content.innerHTML = result.data.map(item => {
-                    const timeAgo = formatLastFetch(item.updated_at);
-                    let bulletsHtml = '';
-                    try {
-                        const bullets = JSON.parse(item.summary);
-                        bulletsHtml = `<ul class="change-bullets">${bullets.map(b =>
-                            `<li><span class="bullet-label">${escapeHtml(b.label)}:</span>${escapeHtml(b.text)}</li>`
-                        ).join('')}</ul>`;
-                    } catch {
-                        // Fallback for old plain-text summaries
-                        bulletsHtml = `<p style="font-size:13px;line-height:1.6">${escapeHtml(item.summary)}</p>`;
+                // Header
+                const emailAge = formatLastFetch(d.emailDate);
+                parts.push(`<h3>Expert Forecast Overview <span style="font-weight:400;font-size:13px;color:var(--text-secondary)">(${emailAge})</span></h3>`);
+
+                // General commentary
+                if (d.commentary) {
+                    parts.push(`<div class="corridor-commentary">${escapeHtml(d.commentary)}</div>`);
+                }
+
+                // Per-corridor sections
+                for (const c of d.corridors) {
+                    let html = `<div class="corridor-section">`;
+                    html += `<div class="corridor-name">${escapeHtml(c.corridor)}</div>`;
+
+                    if (c.suggest) {
+                        html += `<div class="corridor-suggest">${escapeHtml(c.suggest)}</div>`;
                     }
-                    return `<div class="change-item">
-                        <div class="change-area-name">${escapeHtml(item.area_name)}</div>
-                        ${bulletsHtml}
-                        <div class="change-time">Updated ${timeAgo}</div>
-                    </div>`;
-                }).join('');
 
-                container.style.display = 'block';
+                    if (c.trends?.trends?.length > 0) {
+                        html += `<ul class="corridor-trends">`;
+                        for (const t of c.trends.trends) {
+                            html += `<li>${escapeHtml(t)}</li>`;
+                        }
+                        html += `</ul>`;
+                    }
+
+                    html += `</div>`;
+                    parts.push(html);
+                }
+
+                el.innerHTML = parts.join('');
+                el.style.display = 'block';
             } catch (error) {
-                console.error('Failed to load expert forecast changes:', error);
+                console.error('Failed to load corridor display:', error);
             }
         }
 
@@ -575,16 +571,7 @@
                     : `${d.emailsFound} emails — no new data`;
 
                 // Refresh all page data
-                await Promise.all([loadAreas(), loadDataStatus(), loadChanges()]);
-
-                // Flash the changes card if there are new diffs
-                if (forecasts > 0) {
-                    const card = document.getElementById('changes-container');
-                    if (card) {
-                        card.classList.add('changes-flash');
-                        setTimeout(() => card.classList.remove('changes-flash'), 3000);
-                    }
-                }
+                await Promise.all([loadAreas(), loadDataStatus(), loadCorridorDisplay()]);
 
                 setTimeout(() => { btn.disabled = false; btn.textContent = 'Check Emails'; }, 4000);
             } catch (error) {
@@ -595,7 +582,7 @@
 
         // Initialize
         loadAreas();
-        loadChanges();
+        loadCorridorDisplay();
         loadDataStatus();
     </script>
 
