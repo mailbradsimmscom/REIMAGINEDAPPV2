@@ -472,26 +472,44 @@ class AnchorWatchService {
       throw new Error('No GPS positions found for current anchorage period');
     }
 
-    // Step 1: Compute centroid of all downsampled positions
-    const centroidLat = positions.reduce((s, p) => s + p.latitude, 0) / positions.length;
-    const centroidLon = positions.reduce((s, p) => s + p.longitude, 0) / positions.length;
+    // Step 1: Compute median center of all downsampled positions (resistant to outliers)
+    const CHAIN_SCOPE_M = chainScopeMeters || 45;
+    const MAX_SWING_M = CHAIN_SCOPE_M + 20; // Physical cap: chain scope + 20m buffer
+    const sortedLatsAll = positions.map(p => p.latitude).sort((a, b) => a - b);
+    const sortedLonsAll = positions.map(p => p.longitude).sort((a, b) => a - b);
+    const midAll = Math.floor(sortedLatsAll.length / 2);
+    const medianCenterLat = sortedLatsAll.length % 2 ? sortedLatsAll[midAll] : (sortedLatsAll[midAll - 1] + sortedLatsAll[midAll]) / 2;
+    const medianCenterLon = sortedLonsAll.length % 2 ? sortedLonsAll[midAll] : (sortedLonsAll[midAll - 1] + sortedLonsAll[midAll]) / 2;
 
-    // Step 2: Compute distance of each position from centroid
+    // Step 2: Compute distance of each position from median center
     const distances = positions.map(p =>
-      this.calculateDistance(p.latitude, p.longitude, centroidLat, centroidLon)
+      this.calculateDistance(p.latitude, p.longitude, medianCenterLat, medianCenterLon)
     );
 
-    // Step 3: Filter outliers (> 2 standard deviations from mean distance)
-    const meanDist = distances.reduce((s, d) => s + d, 0) / distances.length;
-    const variance = distances.reduce((s, d) => s + (d - meanDist) ** 2, 0) / distances.length;
-    const stdDev = Math.sqrt(variance);
-    const cutoff = meanDist + 2 * stdDev;
-
-    const filteredPositions = [];
+    // Step 3a: Filter outliers — drop any point more than 60m from median center
+    const pass1Positions = [];
     let outlierCount = 0;
     for (let i = 0; i < positions.length; i++) {
-      if (distances[i] <= cutoff) {
-        filteredPositions.push(positions[i]);
+      if (distances[i] <= MAX_SWING_M) {
+        pass1Positions.push(positions[i]);
+      } else {
+        outlierCount++;
+      }
+    }
+
+    // Step 3b: Second pass — 2-sigma on clean data to catch moderate outliers
+    const pass1Distances = pass1Positions.map(p =>
+      this.calculateDistance(p.latitude, p.longitude, medianCenterLat, medianCenterLon)
+    );
+    const meanDist = pass1Distances.reduce((s, d) => s + d, 0) / pass1Distances.length;
+    const variance = pass1Distances.reduce((s, d) => s + (d - meanDist) ** 2, 0) / pass1Distances.length;
+    const stdDev = Math.sqrt(variance);
+    const sigmaCutoff = meanDist + 2 * stdDev;
+
+    const filteredPositions = [];
+    for (let i = 0; i < pass1Positions.length; i++) {
+      if (pass1Distances[i] <= sigmaCutoff) {
+        filteredPositions.push(pass1Positions[i]);
       } else {
         outlierCount++;
       }
@@ -500,7 +518,6 @@ class AnchorWatchService {
     // Step 4: Infer anchor position from chain geometry + wind direction
     // Uses catenary formula for accurate horizontal reach calculation.
     // Filters out low-wind positions where boat doesn't weathervane reliably.
-    const CHAIN_SCOPE_M = chainScopeMeters || 45;
     const GPS_TO_BOW_M = 15.24; // 50 feet
     const FREEBOARD_M = 1.7; // waterline to bow roller
     const MIN_WIND_KT = 5; // skip low-wind positions
