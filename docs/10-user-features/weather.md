@@ -182,21 +182,22 @@ The **🤖 AI** button shows a 10-day sailing conditions analysis.
 
 ### Scoring System
 
-Each time block (50 total over 10 days) gets a score 0-100 across 5 components:
+Each time block (50 total over 10 days) gets a score 0-100 across 4 components. All scoring is **linear** (no step functions) to ensure consistent averaging across time blocks.
 
 | Factor | Weight | Scoring |
 |--------|--------|---------|
-| Wind | 25 pts | <20kn=25, 20-25kn=20, >25kn=0 |
-| Waves | 25 pts | <1.3m=25, 1.3-1.5m=20, 1.5-2.0m=10, >2.0m=0 |
-| Period | 25 pts | >8s=25, 6-8s=20, 4-6s=15, <4s=5 |
+| Wind | 35 pts | ≤15kt=35, 15-25kt linear 35→0, >25kt=0 |
+| Wave+Period | 35 pts | Effective wave ≤1.5m=35, 1.5-2.5m linear 35→0, >2.5m=0 |
 | Sea Direction | 15 pts | Reaching=15, Broad Reach=13, Beam=10, Close Hauled=7, Opposing=5 |
-| Current | 10 pts | Following=10, None=5, Opposing=0 |
+| Current | 15 pts | Following=15, None=8, Opposing=0 |
+
+**Wave+Period** — Period is not scored independently. Instead, it modifies wave height via **effective wave**: `waveHeight × √(7 / period)`. A 7s period is neutral; shorter periods amplify wave height (steeper seas), longer periods dampen it (gentler swells). This reflects real sailing comfort — 1.5m at 8s is fine, 1.5m at 5s is steep and uncomfortable.
 
 **Sea Direction** uses the area's `sailing_direction` (compass) compared to swell travel direction. Uses traditional sailing terminology.
 
 **Current** uses the area's `sailing_direction` compared to ocean current direction. Three states: following (within 60°), none (60-120°), opposing (beyond 120°).
 
-**Score Cards** display per-day breakdown with colored dots for each component, showing actual values (e.g., "18kt", "1.7m", "Broad Reach").
+**Score Cards** display per-day breakdown with colored dots for each component, showing actual values (e.g., "18kt", "1.5m @6s", "Broad Reach").
 
 ### AI Endpoint
 

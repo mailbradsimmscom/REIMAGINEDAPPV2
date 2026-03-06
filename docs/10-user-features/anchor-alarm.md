@@ -241,7 +241,7 @@ data.inferredAnchor = {
 }
 
 data.downsampledPositions      // GPS positions used (1 per minute)
-data.outlierPositions          // Count of outliers filtered (>2 std dev)
+data.outlierPositions          // Count of outliers filtered (two-pass: physical cap + 2-sigma)
 data.totalPositions            // Total raw GPS positions in range
 
 // swingCircle is null when < 10 wind-qualified estimates
@@ -330,6 +330,16 @@ data.totalPositions            // Total raw GPS positions in range
 | FREEBOARD_M | 1.7 | Waterline to bow roller height |
 | MIN_WIND_KT | 5 | Skip positions with wind below this |
 | Default chain scope | 45m | Used internally by safe-box when no scope param |
+| MAX_SWING_M | scope + 20m | Physical cap for GPS outlier rejection |
+
+## GPS Outlier Filtering (Safe Box)
+
+Two-pass approach to remove bad GPS fixes:
+
+1. **Pass 1 — Physical cap**: Compute median center (resistant to outliers), drop any point more than `chain_scope + 20m` from it. This catches wild GPS jumps that are physically impossible.
+2. **Pass 2 — 2-sigma**: On the remaining clean data, compute mean distance + 2×stdDev from median center, drop points beyond that cutoff. This catches moderate outliers that survived pass 1.
+
+The physical cap adapts to the chain scope input from the UI (e.g., 45m scope → 65m cap).
 
 ---
 

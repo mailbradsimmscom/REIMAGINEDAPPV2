@@ -26,7 +26,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 │  2. Tap "Refresh New Anchorages"                                │
 │     └── POST /api/anchorages/detect                             │
 │     └── Dynamic lookback (starts from most recent anchorage)   │
-│     └── Analyzes for stationary periods (4+ hours)              │
+│     └── Analyzes for stationary periods (2+ hours)              │
 │     └── 300m movement threshold (handles anchor swing)          │
 │     └── Merges overlapping candidates at same location          │
 │     └── Updates existing anchorages if duration extends         │
@@ -423,7 +423,7 @@ Now includes auto-geocoded location names:
 
 ```javascript
 POST /api/anchorages/detect
-Body: { "minHours": 4 }
+Body: { "minHours": 2 }
 
 Response:
 {
