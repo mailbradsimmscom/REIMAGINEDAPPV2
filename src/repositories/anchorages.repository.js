@@ -159,10 +159,10 @@ class AnchoragesRepository {
    * Detect anchorages from GPS history using stationary period analysis
    * Finds periods where boat stayed in same location for minHours or more
    * Processes data in JavaScript - no database functions required
-   * @param {number} minHours - Minimum hours stationary to count as anchorage (default 4)
+   * @param {number} minHours - Minimum hours stationary to count as anchorage (default 2)
    * @returns {Promise<Array>} Detected anchorage candidates
    */
-  async detectFromGpsHistory(minHours = 4) {
+  async detectFromGpsHistory(minHours = 2) {
     try {
       const supabase = await getSupabaseClient();
 

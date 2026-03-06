@@ -63,7 +63,7 @@ class AnchoragesManager {
       const response = await fetch('/api/anchorages/detect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ minHours: 4 })
+        body: JSON.stringify({ minHours: 2 })
       });
       const result = await response.json();
 

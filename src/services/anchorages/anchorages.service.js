@@ -291,10 +291,10 @@ function mergeCandidates(candidates) {
  * - Merges overlapping candidates at same location
  * - Updates existing anchorages if new candidate extends duration
  * - Auto-merges existing duplicate records
- * @param {number} minHours - Minimum stationary hours (default 4)
+ * @param {number} minHours - Minimum stationary hours (default 2)
  * @returns {Promise<Object>} { detected: number, inserted: number, updated: number, merged: number, anchorages: Array }
  */
-export async function detectNewAnchorages(minHours = 4) {
+export async function detectNewAnchorages(minHours = 2) {
   requestLogger.info('Starting anchorage detection', { minHours });
 
   // Get candidates from GPS history

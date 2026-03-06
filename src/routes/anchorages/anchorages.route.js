@@ -106,7 +106,7 @@ router.post('/detect', async (req, res) => {
 
   try {
     const { minHours } = req.body;
-    const result = await anchoragesService.detectNewAnchorages(minHours || 4);
+    const result = await anchoragesService.detectNewAnchorages(minHours || 2);
 
     requestLogger.info('Anchorage detection complete', {
       detected: result.detected,
