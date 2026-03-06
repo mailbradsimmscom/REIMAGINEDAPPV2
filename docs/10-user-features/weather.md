@@ -349,6 +349,8 @@ Shows between the data-status bar and areas list:
 3. **Trends** — plain English: "Wind increasing by ~3kt vs yesterday's forecast"
 4. Falls back to the two most recent available emails if today's hasn't arrived
 
+**Fuzzy corridor matching:** Corridor names from `corridors_included` (LLM-assigned to areas) may differ slightly from corridor headers in the LLM-structured text (e.g., "St Martin" vs "St. Martin"). The service normalizes both sides — stripping periods, normalizing dashes, collapsing whitespace, lowercasing — before matching. This applies to both `_extractSuggest()` and `_extractCorridorSection()`.
+
 ### API Endpoints
 
 | Method | Path | Description |
