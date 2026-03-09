@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Areas Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5ea;
+        }
+
+        #map {
+            height: calc(100vh - 200px);
+            min-height: 400px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+        }
+
+        .error-message {
+            background: #FFE5E5;
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-lg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Weather Areas Map</h1>
+                <p>All monitored locations</p>
+            </div>
+            <a href="weather-areas.html" class="btn btn-secondary">Back to List</a>
+        </div>
+
+        <div id="error-container" class="error-message" style="display: none;"></div>
+
+        <div id="map"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+            ? 'http://localhost:3001/api/weather'
+            : 'https://boatos-maintenance.onrender.com/api/weather';
+
+        const DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+
+        const map = L.map('map').setView([18.0, -64.5], 8);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Track which marker is currently in move mode
+        let movingMarker = null;
+
+        function defaultPopup(area) {
+            return `<strong>${area.name}</strong><br>
+                ${area.latitude.toFixed(4)}, ${area.longitude.toFixed(4)}<br><br>
+                <button onclick="startMove('${area.id}')" style="padding:4px 12px; border-radius:6px; border:1px solid #C6C6C8; background:#F2F2F7; cursor:pointer; font-size:14px;">Move this marker</button>`;
+        }
+
+        function savePopup(area, lat, lng) {
+            const dirOptions = DIRECTIONS.map(d =>
+                `<option value="${d}" ${area.sailing_direction === d ? 'selected' : ''}>${d}</option>`
+            ).join('');
+
+            return `<strong>${area.name}</strong><br>
+                ${lat.toFixed(4)}, ${lng.toFixed(4)}<br><br>
+                <label style="font-size:13px; font-weight:500;">Sailing Direction</label><br>
+                <select id="save-dir" style="width:100%; padding:4px 8px; border-radius:6px; border:1px solid #C6C6C8; font-size:14px; margin:4px 0 8px;">
+                    ${dirOptions}
+                </select><br>
+                <div style="display:flex; gap:6px;">
+                    <button onclick="cancelMove('${area.id}')" style="flex:1; padding:4px 12px; border-radius:6px; border:1px solid #C6C6C8; background:#F2F2F7; cursor:pointer; font-size:14px;">Cancel</button>
+                    <button onclick="saveMove('${area.id}')" style="flex:1; padding:4px 12px; border-radius:6px; border:none; background:#007AFF; color:white; cursor:pointer; font-size:14px;">Save</button>
+                </div>`;
+        }
+
+        // Store area data and markers by id
+        const areaData = {};
+        const areaMarkers = {};
+
+        function startMove(areaId) {
+            const marker = areaMarkers[areaId];
+            const area = areaData[areaId];
+            if (!marker || !area) return;
+
+            // Store original position for cancel
+            area._origLat = area.latitude;
+            area._origLng = area.longitude;
+
+            movingMarker = areaId;
+            marker.dragging.enable();
+            marker.closePopup();
+
+            // When drag ends, show save popup
+            marker.once('dragend', () => {
+                const pos = marker.getLatLng();
+                marker.bindPopup(savePopup(area, pos.lat, pos.lng), { closeOnClick: false, autoClose: false });
+                marker.openPopup();
+            });
+        }
+
+        function cancelMove(areaId) {
+            const marker = areaMarkers[areaId];
+            const area = areaData[areaId];
+            if (!marker || !area) return;
+
+            marker.dragging.disable();
+            marker.setLatLng([area._origLat, area._origLng]);
+            marker.bindPopup(defaultPopup(area));
+            marker.closePopup();
+            movingMarker = null;
+        }
+
+        async function saveMove(areaId) {
+            const marker = areaMarkers[areaId];
+            const area = areaData[areaId];
+            if (!marker || !area) return;
+
+            const pos = marker.getLatLng();
+            const dir = document.getElementById('save-dir').value;
+
+            // Update button to show saving state
+            marker.bindPopup(`<strong>${area.name}</strong><br>Saving...`);
+            marker.openPopup();
+
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        latitude: pos.lat,
+                        longitude: pos.lng,
+                        sailing_direction: dir
+                    })
+                });
+                const result = await response.json();
+
+                if (!result.success) throw new Error(result.error || 'Save failed');
+
+                // Update local data
+                area.latitude = pos.lat;
+                area.longitude = pos.lng;
+                area.sailing_direction = dir;
+
+                marker.dragging.disable();
+                marker.bindPopup(defaultPopup(area));
+                marker.openPopup();
+                movingMarker = null;
+            } catch (err) {
+                marker.bindPopup(`<strong>${area.name}</strong><br><span style="color:#FF3B30;">Error: ${err.message}</span><br><br>
+                    <button onclick="cancelMove('${areaId}')" style="padding:4px 12px; border-radius:6px; border:1px solid #C6C6C8; background:#F2F2F7; cursor:pointer; font-size:14px;">OK</button>`);
+                marker.openPopup();
+            }
+        }
+
+        async function loadAreas() {
+            try {
+                const response = await fetch(`${API_BASE}/areas`);
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load areas');
+                }
+
+                const areas = result.data;
+
+                if (areas.length === 0) {
+                    document.getElementById('error-container').textContent = 'No weather areas found. Add locations first.';
+                    document.getElementById('error-container').style.display = 'block';
+                    return;
+                }
+
+                const markers = [];
+
+                areas.forEach(area => {
+                    areaData[area.id] = area;
+                    const marker = L.marker([area.latitude, area.longitude]).addTo(map);
+                    marker.bindPopup(defaultPopup(area));
+                    areaMarkers[area.id] = marker;
+                    markers.push(marker);
+                });
+
+                const group = L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.2));
+            } catch (err) {
+                document.getElementById('error-container').textContent = 'Error loading areas: ' + err.message;
+                document.getElementById('error-container').style.display = 'block';
+            }
+        }
+
+        loadAreas();
+    </script>
+
+    <script src="/public/js/mobile-hamburger.js"></script>
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>
