@@ -31,6 +31,17 @@ Weather provides marine-specific forecasts for saved locations using multiple we
 
 ## User Flow
 
+### Map View
+
+From the weather areas list, click **"See Locations"** to open `/weather-areas-map.html` — a Leaflet map showing all saved areas as markers. Markers can be moved:
+
+1. Click a marker → "Move this marker?" button appears
+2. Click the button → marker becomes draggable
+3. Drag to new position → popup shows sailing direction dropdown + Save/Cancel
+4. Save → PUTs updated lat/lng + sailing_direction via `PUT /api/weather/areas/:id`
+
+Intended for small adjustments (~50nm). Corridor assignment is not re-evaluated on move.
+
 ### Adding a Weather Area
 
 ```
@@ -681,6 +692,7 @@ async fetchForArea(areaId, options = {}) {
 | Start hook | `src/start.js:30` (startWeatherCollector) |
 | Weather areas page | `src/public/weather-areas.html` |
 | Add area page | `src/public/weather-area-add.html` |
+| Map view page | `src/public/weather-areas-map.html` |
 | View area page | `src/public/weather-area-view.html` |
 
 ### Maintenance Agent
