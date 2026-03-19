@@ -1,5 +1,12 @@
--- Migration 004: GPS summary functions for performance optimization
--- Replaces multi-round-trip batch fetching with single SQL calls
+-- Migration 004: GPS query performance optimization
+-- 1. Standalone timestamp index for fast range scans (was only compound with boat_id)
+-- 2. gps_positions_summary_in_range RPC — replaces 24 batch queries for safe-box
+-- 3. gps_hourly_summary RPC — replaces batch fetch + JS grouping for anchorage detection
+
+-- 3. Standalone timestamp index
+-- Existing index is (boat_id, timestamp DESC) which can't serve timestamp-only range queries.
+-- Single-boat system so boat_id prefix is wasted. This index drops boat-now from 5.5s to 1.8s.
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_gps_position_timestamp ON gps_position ("timestamp");
 
 -- 1. gps_positions_summary_in_range
 -- Used by safe-box (anchor-watch) to get downsampled GPS positions in a time range.
