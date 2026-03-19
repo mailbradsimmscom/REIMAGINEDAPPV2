@@ -158,7 +158,7 @@ class AnchoragesRepository {
   /**
    * Detect anchorages from GPS history using stationary period analysis
    * Finds periods where boat stayed in same location for minHours or more
-   * Processes data in JavaScript - no database functions required
+   * Uses Postgres RPC for hourly aggregation, JS for stationary period detection
    * @param {number} minHours - Minimum hours stationary to count as anchorage (default 2)
    * @returns {Promise<Array>} Detected anchorage candidates
    */
@@ -191,35 +191,26 @@ class AnchoragesRepository {
         since: startTime.toISOString()
       });
 
-      const allPositions = [];
-      let lastTimestamp = startTime.toISOString();
-      const batchSize = 1000; // Supabase max
+      const { data: hourlyData, error } = await supabase.rpc('gps_hourly_summary', {
+        p_start: startTime.toISOString()
+      });
 
-      while (true) {
-        const { data: batch, error } = await supabase
-          .from('gps_position')
-          .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
-          .gt('timestamp', lastTimestamp)
-          .order('timestamp', { ascending: true })
-          .limit(batchSize);
+      if (error) throw error;
 
-        if (error) throw error;
-        if (!batch || batch.length === 0) break;
+      requestLogger.info('GPS hourly summary fetched', { hourlyRows: hourlyData?.length || 0 });
 
-        allPositions.push(...batch);
-        lastTimestamp = batch[batch.length - 1].timestamp;
-
-        if (batch.length < batchSize) break;
-      }
-
-      requestLogger.info('GPS data fetched', { totalPositions: allPositions.length });
-
-      if (allPositions.length === 0) {
+      if (!hourlyData || hourlyData.length === 0) {
         return [];
       }
 
-      // Group positions by hour
-      const hourlyPositions = this.groupPositionsByHour(allPositions);
+      // Map RPC results to the shape findStationaryPeriods expects
+      const hourlyPositions = hourlyData.map(row => ({
+        hour: new Date(row.hour),
+        lat: row.avg_lat,
+        lon: row.avg_lon,
+        avgWindSpeed: row.avg_wind_speed || 0,
+        avgWindDir: row.avg_wind_dir || 0
+      }));
 
       // Find stationary periods
       const candidates = this.findStationaryPeriods(hourlyPositions, minHours);
