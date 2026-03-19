@@ -165,7 +165,7 @@ determineStatus(distanceMeters, radiusMeters) {
 │  ├── anchor-watch-alerts.service.js (alert polling)             │
 │  ├── telegram.service.js (send Telegram alerts)                 │
 │  ├── twilio.service.js (send SMS for critical alerts)           │
-│  └── gps.repository.js (GPS data + batch summary)              │
+│  └── gps.repository.js (GPS data via gps_positions_summary_in_range RPC) │
 └─────────────────────────────────────────────────────────────────┘
                               │
          ┌────────────────────┼────────────────────┐

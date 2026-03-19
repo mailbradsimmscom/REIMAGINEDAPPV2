@@ -109,39 +109,31 @@ Major improvements to anchorage detection:
 
 ## Earlier Changes (2026-01-09)
 
-### Detection Rewritten in JavaScript (No Database RPC)
+### Detection Uses Postgres RPC for GPS Aggregation (2026-03-19)
 
-Previously required `detect_anchorages_from_gps` PostgreSQL function. Now runs entirely in JavaScript:
+Previously used 24+ sequential Supabase batch queries + JavaScript grouping. Now uses a single `gps_hourly_summary()` Postgres RPC that does hourly aggregation (including circular wind direction averaging) in one query, returning ~60 rows instead of fetching ~23K raw GPS positions.
 
 ```javascript
 // anchorages.repository.js - detectFromGpsHistory()
 
-// 1. Fetch GPS with timestamp-based pagination (Supabase 1000 row limit)
-const allPositions = [];
-let lastTimestamp = ninetyDaysAgo.toISOString();
+// 1. Single RPC call replaces batch fetching + JS grouping
+const { data: hourlyData } = await supabase.rpc('gps_hourly_summary', {
+  p_start: startTime.toISOString()
+});
 
-while (true) {
-  const { data: batch } = await supabase
-    .from('gps_position')
-    .select('timestamp, latitude, longitude, true_wind_speed, true_wind_direction')
-    .gt('timestamp', lastTimestamp)
-    .order('timestamp', { ascending: true })
-    .limit(1000);  // Supabase max
+// 2. Map to same shape findStationaryPeriods expects
+const hourlyPositions = hourlyData.map(row => ({
+  hour: new Date(row.hour),
+  lat: row.avg_lat, lon: row.avg_lon,
+  avgWindSpeed: row.avg_wind_speed || 0,
+  avgWindDir: row.avg_wind_dir || 0
+}));
 
-  if (!batch || batch.length === 0) break;
-  allPositions.push(...batch);
-  lastTimestamp = batch[batch.length - 1].timestamp;
-  if (batch.length < 1000) break;
-}
-
-// 2. Group by hour
-const hourlyPositions = this.groupPositionsByHour(allPositions);
-
-// 3. Find stationary periods (movement < 0.0005° between hours)
+// 3. Find stationary periods (movement < 0.0027° between hours)
 const candidates = this.findStationaryPeriods(hourlyPositions, minHours);
 ```
 
-**Why timestamp pagination?** Supabase enforces 1000 row limit regardless of `.range()` calls. Using timestamp cursors correctly fetches all 400k+ GPS records.
+**Performance:** Detect went from hanging/timeout to ~4s completion.
 
 ### 2. Auto-Geocodes New Anchorages
 
@@ -535,7 +527,7 @@ Response:
 | "Real-time anchor tracking" | **No.** See [Anchor Alarm](./anchor-alarm.md) for that |
 | "Edit boat position" | **No.** Positions come from GPS history |
 | "Multiple anchors at once" | **No.** One anchor/mooring per stay |
-| "Requires database functions" | **No.** Detection now runs entirely in JavaScript |
+| "All JS, no DB functions" | **No.** Hourly aggregation uses `gps_hourly_summary()` Postgres RPC; stationary period detection is JS |
 
 ---
 

@@ -47,8 +47,8 @@ Charts showing data from `gps_position` table, downsampled to 10-minute interval
 
 | Data | Source | Frequency |
 |------|--------|-----------|
-| Position | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min |
-| Wind (historical) | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min |
+| Position | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min. Query selects only 6 columns with limit(5000) |
+| Wind (historical) | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min. Uses `idx_gps_position_timestamp` index |
 | Weather (current) | Open-Meteo API | On page load |
 | Place name | Nominatim API | On page load |
 
