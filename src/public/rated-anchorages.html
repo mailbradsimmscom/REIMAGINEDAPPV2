@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Rated Anchorages | BoatOS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .summary {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #8E8E93;
+        }
+
+        .list {
+            padding: 0 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rank-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s;
+        }
+
+        .rank-card:active {
+            background: #F2F2F7;
+        }
+
+        .rank-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #C7C7CC;
+            width: 32px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .rank-number.top { color: #FFD700; }
+
+        .rank-info {
+            flex: 1;
+            margin-left: 12px;
+            min-width: 0;
+        }
+
+        .rank-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rank-meta {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-top: 2px;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 6px;
+        }
+
+        .rank-badge.anchor { background: #007AFF20; color: #007AFF; }
+        .rank-badge.mooring { background: #FF950020; color: #FF9500; }
+        .rank-badge.marina { background: #5856D620; color: #5856D6; }
+
+        .rank-score {
+            font-size: 22px;
+            font-weight: 700;
+            color: #007AFF;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+
+        .rank-score .denominator {
+            font-size: 13px;
+            font-weight: 500;
+            color: #8E8E93;
+        }
+
+        .rank-arrow {
+            color: #C7C7CC;
+            font-size: 18px;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8E8E93;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/public/other-links.html" class="back-button">&larr;</a>
+        <h1>Rated Anchorages</h1>
+    </header>
+
+    <div id="summary" class="summary"></div>
+
+    <div id="list" class="list">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        (async function() {
+            const listEl = document.getElementById('list');
+            const summaryEl = document.getElementById('summary');
+
+            try {
+                const response = await fetch('/api/anchorages');
+                const result = await response.json();
+
+                if (!result.success) throw new Error(result.error || 'Failed to load');
+
+                const anchorages = result.data || [];
+
+                // Filter to only rated, compute overall, sort high to low
+                const rated = anchorages
+                    .map(a => {
+                        if (!a.ratings) return null;
+                        const values = Object.values(a.ratings).filter(v => typeof v === 'number');
+                        if (values.length === 0) return null;
+                        const overall = values.reduce((s, v) => s + v, 0) / values.length;
+                        return { ...a, overall, ratedCount: values.length };
+                    })
+                    .filter(Boolean)
+                    .sort((a, b) => b.overall - a.overall);
+
+                if (rated.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">&#9734;</div>
+                            <div class="empty-state-title">No Rated Anchorages</div>
+                            <div class="empty-state-text">
+                                Rate anchorages from the Anchorages page to see them ranked here.
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                summaryEl.textContent = `${rated.length} rated anchorage${rated.length === 1 ? '' : 's'}`;
+
+                const typeLabels = { anchor: 'Anchor', mooring: 'Mooring', marina: 'Marina' };
+
+                listEl.innerHTML = rated.map((a, i) => {
+                    const name = a.location_name || 'Unnamed';
+                    const type = a.anchorage_type || 'anchor';
+                    const date = a.arrived_at ? new Date(a.arrived_at).toLocaleDateString('en-US', {
+                        timeZone: 'America/Puerto_Rico',
+                        month: 'short',
+                        year: 'numeric'
+                    }) : '';
+
+                    return `
+                        <a href="/anchorages/rate?id=${a.id}" class="rank-card">
+                            <div class="rank-number ${i < 3 ? 'top' : ''}">${i + 1}</div>
+                            <div class="rank-info">
+                                <div class="rank-name">${escapeHtml(name)}</div>
+                                <div class="rank-meta">
+                                    <span class="rank-badge ${type}">${typeLabels[type] || 'Anchor'}</span>
+                                    ${date} &middot; ${a.ratedCount}/8 rated
+                                </div>
+                            </div>
+                            <div class="rank-score">${a.overall.toFixed(1)}<span class="denominator">/10</span></div>
+                            <div class="rank-arrow">&rsaquo;</div>
+                        </a>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading rated anchorages:', error);
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">&#9888;</div>
+                        <div class="empty-state-title">Error</div>
+                        <div class="empty-state-text">${error.message}</div>
+                    </div>
+                `;
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+            }
+        })();
+    </script>
+
+    <!-- Mobile Navigation Components -->
+    <script src="/public/js/mobile-hamburger.js"></script>
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>
