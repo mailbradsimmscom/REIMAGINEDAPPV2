@@ -6,7 +6,7 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 **Who uses it:** Boat owners, crew
 **Access:** `/anchorages`
-**Last Updated:** 2026-02-26
+**Last Updated:** 2026-03-23
 
 ---
 
@@ -68,19 +68,32 @@ Anchorage tracking allows users to maintain a history of where they've anchored 
 
 ---
 
-## Recent Changes (2026-02-26)
+## Recent Changes (2026-03-23)
 
-### Return Visit Detection
+### Return Visit Detection — Null `departed_at` Fix
 
-Fixed a bug where returning to a previously visited anchorage would not create a new record. The detection now handles two cases:
+Fixed a bug where an existing anchorage with `departed_at = null` ("still here") would absorb a return visit days later instead of creating a new record.
 
-1. **`findAtLocation` match with time gap:** If the candidate arrives 24+ hours after the existing record's `departed_at`, it's treated as a return visit and a new anchorage is inserted. The existing record is not modified.
+**Root cause:** The return visit check `if (existingDeparted && ...)` short-circuited to false when `existingDeparted` was null, causing the candidate to fall into the "extend duration" path and merge into the old record.
 
-2. **`mergeExistingDuplicates` with time gap:** Duplicate merging now checks time gaps between records. Records within 300m are only merged if the earlier record's departure is within 24 hours of the later record's arrival. This prevents merging separate stays at the same location weeks apart.
+**Fix:** The check now handles both cases:
+1. **Existing has `departed_at`:** candidate arrives 24+ hours after departure → return visit
+2. **Existing has no `departed_at`:** candidate arrives 24+ hours after existing's **arrival** → return visit (you can't still be "here" from 4 days ago)
 
-### Lookback Window
+```javascript
+const isReturnVisit =
+  (existingDeparted && (candidateArrived - existingDeparted) > GAP_THRESHOLD_MS) ||
+  (!existingDeparted && (candidateArrived - existingArrived) > GAP_THRESHOLD_MS);
+```
 
-Changed GPS lookback from 2nd most recent anchorage to most recent anchorage's `departed_at`. Fallback reduced from 90 to 14 days. This avoids Supabase query timeouts when scanning large volumes of GPS data.
+### Frontend — Reload on Updates (not just inserts)
+
+The anchorages page now reloads the list when existing records are updated (departed_at, duration changes), not only when new records are inserted. Message shows breakdown (e.g. "1 new, 2 updated").
+
+### Previous (2026-02-26)
+
+- **`mergeExistingDuplicates` with time gap:** Duplicate merging checks time gaps between records. Records within 300m are only merged if the earlier record's departure is within 24 hours of the later record's arrival.
+- **Lookback window:** Changed GPS lookback from 2nd most recent anchorage to most recent anchorage's `departed_at`. Fallback reduced from 90 to 14 days.
 
 ---
 
@@ -375,7 +388,9 @@ averageAngle(angles) {
 |---------|------|
 | **Frontend** | |
 | Page | `src/public/anchorages.html` |
+| Rating Page | `src/public/anchorage-rate.html` |
 | JS Manager | `src/public/js/anchorages/anchorages.js` |
+| Rating JS | `src/public/js/anchorages/anchorage-rate.js` |
 | **Backend** | |
 | Routes | `src/routes/anchorages/anchorages.route.js` |
 | Service | `src/services/anchorages/anchorages.service.js` |
@@ -394,7 +409,7 @@ averageAngle(angles) {
 | POST | `/api/anchorages/detect` | Detect and auto-geocode new anchorages |
 | POST | `/api/anchorages/populate-names` | Re-geocode anchorages without names |
 | POST | `/api/anchorages` | Create anchorage manually |
-| PATCH | `/api/anchorages/:id` | Update anchorage (name, type, scope, notes) |
+| PATCH | `/api/anchorages/:id` | Update anchorage (name, type, scope, notes, ratings) |
 | DELETE | `/api/anchorages/:id` | Delete anchorage |
 
 ### Response Format
@@ -485,6 +500,7 @@ Response:
 | arrival_trip_id | uuid | FK to trips (that brought us here) |
 | departure_trip_id | uuid | FK to trips (that took us away) |
 | notes | text | Optional notes |
+| ratings | jsonb | User ratings (8 factors, 1-10 scale) |
 | auto_detected | boolean | Was this auto-detected from GPS? |
 | created_at | timestamptz | Record creation |
 | updated_at | timestamptz | Last update |
@@ -516,6 +532,29 @@ Response:
 | 15.87164, -61.58654 | Terre-de-Haut, France | Terre-de-Haut, Guadeloupe |
 | 14.73022, -61.18191 | Le Carbet, France | Le Carbet, Martinique |
 | 17.07401, -61.8967 | Jolly Harbour, Antigua and Barbuda | (unchanged) |
+
+---
+
+## Anchorage Ratings
+
+Each anchorage can be rated on 8 factors (1-10 scale, where 1 is worst and 10 is best):
+
+| Key | Label | 1 = | 10 = |
+|-----|-------|-----|------|
+| `entry_complexity` | Complexity of Entry | Hard | Easy |
+| `water_clarity` | Water Clarity | Cloudy | Clear |
+| `swell` | Swell / Sea State | Unsettled | Settled |
+| `wind` | Wind / Breeze | Bad | Good |
+| `sleep` | Sleep Quality | Bad | Good |
+| `swim` | Swim Quality | Bad | Good |
+| `shore_landing` | Ease of Landing | Bad | Good |
+| `noise` | Noise Level | Loud | Quiet |
+
+**Overall score** = average of all rated factors (unrated factors excluded). Displayed as X.X/10.
+
+**Storage:** Single `ratings` JSONB column on the `anchorages` table. Example: `{"entry_complexity": 8, "water_clarity": 7, "swim": 10}`
+
+**Rating page:** `/anchorages/rate?id=<uuid>` — standalone page with tap-to-rate circular targets. Linked from the Rate button on each anchorage card. Overall score shown on card when ratings exist.
 
 ---
 

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Rate Anchorage | BoatOS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #F2F2F7;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+
+        .header {
+            background: white;
+            padding: max(env(safe-area-inset-top), 16px) 16px 16px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #007AFF;
+            font-size: 20px;
+            transition: background 0.2s;
+        }
+
+        .back-button:active {
+            background: #E5E5EA;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* Context bar */
+        .context-bar {
+            background: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .context-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .context-badge {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .context-badge.anchor { background: #007AFF20; color: #007AFF; }
+        .context-badge.mooring { background: #FF950020; color: #FF9500; }
+        .context-badge.marina { background: #5856D620; color: #5856D6; }
+
+        .context-date {
+            font-size: 13px;
+            color: #8E8E93;
+        }
+
+        /* Overall score */
+        .overall-card {
+            background: white;
+            margin: 16px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .overall-label {
+            font-size: 13px;
+            color: #8E8E93;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .overall-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: #007AFF;
+            line-height: 1;
+        }
+
+        .overall-score .denominator {
+            font-size: 20px;
+            font-weight: 500;
+            color: #8E8E93;
+        }
+
+        .overall-score.empty {
+            font-size: 20px;
+            color: #C7C7CC;
+            font-weight: 500;
+        }
+
+        /* Factor cards */
+        .factors-list {
+            padding: 0 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .factor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .factor-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .factor-hint {
+            font-size: 12px;
+            color: #8E8E93;
+        }
+
+        .factor-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #007AFF;
+            min-width: 20px;
+            text-align: right;
+        }
+
+        /* Rating dots */
+        .rating-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .rating-dot {
+            flex: 1;
+            aspect-ratio: 1;
+            max-width: 36px;
+            border-radius: 50%;
+            border: 2px solid #E5E5EA;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #C7C7CC;
+            cursor: pointer;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .rating-dot:active {
+            transform: scale(0.9);
+        }
+
+        .rating-dot.selected {
+            background: #007AFF;
+            border-color: #007AFF;
+            color: white;
+        }
+
+        .rating-dot.below {
+            background: #007AFF20;
+            border-color: #007AFF60;
+            color: #007AFF;
+        }
+
+        /* Scale labels */
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+        }
+
+        .scale-label {
+            font-size: 10px;
+            color: #C7C7CC;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Save button */
+        .save-area {
+            padding: 16px;
+            padding-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
+        }
+
+        .button-save {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            background: #007AFF;
+            color: white;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .button-save:active:not(:disabled) {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        .button-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: max(env(safe-area-inset-bottom), 20px);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #323232;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: #34C759; }
+        .toast.error { background: #FF3B30; }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8E8E93;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/anchorages" class="back-button">&larr;</a>
+        <h1>Rate Anchorage</h1>
+    </header>
+
+    <div id="contextBar" class="context-bar" style="display:none;"></div>
+
+    <div id="overallCard" class="overall-card">
+        <div class="overall-label">Overall Score</div>
+        <div id="overallScore" class="overall-score empty">Tap to rate</div>
+    </div>
+
+    <div id="factorsList" class="factors-list">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Loading...</div>
+        </div>
+    </div>
+
+    <div class="save-area">
+        <button id="saveBtn" class="button-save" disabled>Save Ratings</button>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="/js/anchorages/anchorage-rate.js"></script>
+</body>
+</html>

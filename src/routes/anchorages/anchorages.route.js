@@ -194,13 +194,48 @@ router.patch('/:id', async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { location_name, anchorage_type, scope_meters, notes } = req.body;
+    const { location_name, anchorage_type, scope_meters, notes, ratings } = req.body;
+
+    // Validate ratings if provided
+    const VALID_RATING_KEYS = [
+      'entry_complexity', 'water_clarity', 'swell', 'wind',
+      'sleep', 'swim', 'shore_landing', 'noise'
+    ];
+
+    if (ratings !== undefined) {
+      if (ratings !== null && (typeof ratings !== 'object' || Array.isArray(ratings))) {
+        return res.status(400).json({
+          success: false,
+          error: 'ratings must be a plain object or null',
+          requestId: res.locals.requestId
+        });
+      }
+      if (ratings !== null) {
+        for (const [key, val] of Object.entries(ratings)) {
+          if (!VALID_RATING_KEYS.includes(key)) {
+            return res.status(400).json({
+              success: false,
+              error: `Invalid rating key: ${key}`,
+              requestId: res.locals.requestId
+            });
+          }
+          if (val !== null && (!Number.isInteger(val) || val < 1 || val > 10)) {
+            return res.status(400).json({
+              success: false,
+              error: `Rating values must be integers 1-10 or null`,
+              requestId: res.locals.requestId
+            });
+          }
+        }
+      }
+    }
 
     const updates = {};
     if (location_name !== undefined) updates.location_name = location_name;
     if (anchorage_type !== undefined) updates.anchorage_type = anchorage_type;
     if (scope_meters !== undefined) updates.scope_meters = scope_meters;
     if (notes !== undefined) updates.notes = notes;
+    if (ratings !== undefined) updates.ratings = ratings;
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({

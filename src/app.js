@@ -340,6 +340,17 @@ app.get('/anchorages', async (req, res) => {
   }
 });
 
+// Anchorage rating page
+app.get('/anchorages/rate', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/anchorage-rate.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Anchorage rating page not found' });
+  }
+});
+
 // Pipeline funnel visualization page
 app.get('/funnel', async (req, res) => {
   try {

@@ -71,15 +71,18 @@ class AnchoragesManager {
         throw new Error(result.error || 'Detection failed');
       }
 
-      const { detected, inserted } = result.data;
+      const { detected, inserted, updated } = result.data;
 
-      if (inserted > 0) {
+      if (inserted > 0 || updated > 0) {
+        const parts = [];
+        if (inserted > 0) parts.push(`${inserted} new`);
+        if (updated > 0) parts.push(`${updated} updated`);
         this.detectionResult.innerHTML = `
           <div class="detection-result">
-            Found ${detected} candidates, added ${inserted} new anchorage${inserted > 1 ? 's' : ''}.
+            Found ${detected} candidates — ${parts.join(', ')}.
           </div>
         `;
-        this.showToast(`${inserted} new anchorage${inserted > 1 ? 's' : ''} added`, 'success');
+        this.showToast(parts.join(', '), 'success');
         await this.loadAnchorages();
       } else if (detected > 0) {
         this.detectionResult.innerHTML = `
@@ -297,9 +300,12 @@ class AnchoragesManager {
 
         <div class="field-group">
           <div class="field-label">Location Name</div>
-          <input type="text" class="input-field location-name-input"
-                 value="${this.escapeHtml(a.location_name || '')}"
-                 placeholder="Enter location name...">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" class="input-field location-name-input" style="flex:0 0 80%;"
+                   value="${this.escapeHtml(a.location_name || '')}"
+                   placeholder="Enter location name...">
+            <span style="white-space:nowrap;">${this.computeOverall(a.ratings) ? `<span style="font-size:11px;color:#8E8E93;font-weight:600;text-transform:uppercase;">Rating:</span> <span style="font-size:18px;font-weight:700;color:#007AFF;">${this.computeOverall(a.ratings)}/10</span>` : ''}</span>
+          </div>
         </div>
 
         <div class="field-group">
@@ -382,10 +388,23 @@ class AnchoragesManager {
 
         <div class="anchorage-footer">
           <button class="button button-primary button-small save-btn" data-id="${a.id}">Save</button>
+          <a href="/anchorages/rate?id=${a.id}" class="button button-secondary button-small" style="text-align:center;text-decoration:none;line-height:1.4;">Rate${this.computeOverall(a.ratings) ? ` (${this.computeOverall(a.ratings)})` : ''}</a>
           <button class="button button-danger button-small delete-btn" data-id="${a.id}">Delete</button>
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Compute overall rating from ratings object
+   * @param {Object|null} ratings - Ratings JSONB
+   * @returns {string|null} e.g. "7.2" or null if no ratings
+   */
+  computeOverall(ratings) {
+    if (!ratings) return null;
+    const values = Object.values(ratings).filter(v => typeof v === 'number');
+    if (values.length === 0) return null;
+    return (values.reduce((sum, v) => sum + v, 0) / values.length).toFixed(1);
   }
 
   /**
