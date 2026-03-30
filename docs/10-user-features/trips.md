@@ -81,6 +81,7 @@ Returns trip to `active` status and clears computed summary fields.
 │  ├── Start/stop/resume controls                                 │
 │  ├── Live stats display                                         │
 │  ├── Track map visualization                                    │
+│  ├── Paginated trip list (10 per page, "Load More" button)      │
 │  └── Telemetry sample table                                     │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -243,7 +244,7 @@ export async function recordSailEvent(tripId, sailConfig) {
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/trips` | List trips (filter by status) |
+| GET | `/api/trips` | List trips (filter by status, limit, offset) |
 | GET | `/api/trips/active` | Get active trip (if any) |
 | GET | `/api/trips/:id` | Get trip with all related data |
 | POST | `/api/trips/start` | Start new trip |

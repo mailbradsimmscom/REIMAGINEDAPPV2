@@ -221,6 +221,23 @@
         .section:last-child {
             padding-bottom: 100px;
         }
+
+        .hour-pill {
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            background: #E5E5EA;
+            color: #8E8E93;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .hour-pill.active {
+            background: #007AFF;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -244,6 +261,12 @@
     <script>
         // Load data on page load
         document.addEventListener('DOMContentLoaded', loadBoatStatus);
+
+        // Event delegation for hours picker
+        document.addEventListener('click', (e) => {
+            const pill = e.target.closest('.hour-pill');
+            if (pill) reloadHistory(parseInt(pill.dataset.hours));
+        });
 
         async function loadBoatStatus() {
             const contentDiv = document.getElementById('content');
@@ -316,7 +339,13 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-title">Last 5 Hours (${history.pointCount} readings)</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                        <div class="section-title" id="historyTitle" style="margin-bottom:0">Last ${history.hoursBack} Hours (${history.pointCount} readings)</div>
+                        <div style="display:flex;gap:6px;" id="hoursPicker">
+                            <button class="hour-pill${history.hoursBack === 5 ? ' active' : ''}" data-hours="5">5h</button>
+                            <button class="hour-pill${history.hoursBack === 12 ? ' active' : ''}" data-hours="12">12h</button>
+                        </div>
+                    </div>
 
                     <div class="chart-card">
                         <div class="chart-title">Wind Speed (knots)</div>
@@ -342,6 +371,35 @@
                     </div>
                 </div>
             `;
+        }
+
+        let windSpeedChart = null;
+        let windDirChart = null;
+
+        async function reloadHistory(hours) {
+            // Update pills
+            document.querySelectorAll('.hour-pill').forEach(p => p.classList.remove('active'));
+            document.querySelector(`.hour-pill[data-hours="${hours}"]`).classList.add('active');
+            document.getElementById('historyTitle').textContent = 'Loading...';
+
+            try {
+                const response = await fetch(`/api/boat-now?hours=${hours}`);
+                const result = await response.json();
+                if (result.success && result.data.hasData) {
+                    const { history } = result.data;
+                    document.getElementById('historyTitle').textContent =
+                        `Last ${history.hoursBack} Hours (${history.pointCount} readings)`;
+
+                    // Destroy existing charts
+                    if (windSpeedChart) { windSpeedChart.destroy(); windSpeedChart = null; }
+                    if (windDirChart) { windDirChart.destroy(); windDirChart = null; }
+
+                    initCharts(history.data);
+                }
+            } catch (error) {
+                console.error('Error reloading history:', error);
+                document.getElementById('historyTitle').textContent = 'Error loading data';
+            }
         }
 
         function initCharts(data) {
@@ -399,7 +457,7 @@
             };
 
             // Wind Speed Chart (dynamic Y-axis with average line)
-            new Chart(document.getElementById('windSpeedChart'), {
+            windSpeedChart = new Chart(document.getElementById('windSpeedChart'), {
                 type: 'line',
                 data: {
                     labels: timestamps,
@@ -450,7 +508,7 @@
             });
 
             // Wind Direction Chart (dynamic Y-axis with average line)
-            new Chart(document.getElementById('windDirectionChart'), {
+            windDirChart = new Chart(document.getElementById('windDirectionChart'), {
                 type: 'line',
                 data: {
                     labels: timestamps,

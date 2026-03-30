@@ -23,8 +23,10 @@
 - **Weather Description** - Human-readable conditions
 - **Position Coordinates** - Lat/lon with timestamp
 
-### Historical Charts (Last 5 Hours)
-Charts showing data from `gps_position` table, downsampled to 10-minute intervals (~30 points):
+### Historical Charts (Selectable: 5h or 12h)
+Charts showing data from `gps_position` table, downsampled server-side via `gps_positions_summary_in_range` RPC at 10-minute intervals (~30-70 points):
+
+**Time window selector:** Pill buttons (5h / 12h) above the charts section. Defaults to 5h. Switching reloads all charts with the new time window.
 
 1. **Wind Speed** - True wind speed over time (knots) with dynamic Y-axis
    - Orange dashed average line with "Avg: X.X kts" label
@@ -47,12 +49,12 @@ Charts showing data from `gps_position` table, downsampled to 10-minute interval
 
 | Data | Source | Frequency |
 |------|--------|-----------|
-| Position | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min. Query selects only 6 columns with limit(5000) |
-| Wind (historical) | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min. Uses `idx_gps_position_timestamp` index |
+| Position | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min via `gps_positions_summary_in_range` RPC |
+| Wind (historical) | `gps_position` table | ~10 sec from SignalK, downsampled to 10 min via RPC. Uses `idx_gps_position_timestamp` index |
 | Weather (current) | Open-Meteo API | On page load |
 | Place name | Nominatim API | On page load |
 
-**Note:** Raw GPS data is captured every ~10 seconds (~1,700 points over 5 hours). The service downsamples to 10-minute intervals (~30 points) to keep chart/map data manageable.
+**Note:** Raw GPS data is captured every ~10 seconds (~1,700 points over 5 hours). The service uses the `gps_positions_summary_in_range` Postgres RPC for server-side downsampling at 600-second (10-minute) intervals, returning ~30 points for 5h or ~70 points for 12h. This avoids the Supabase 1,000-row default limit that previously truncated the data.
 
 ---
 
@@ -62,6 +64,7 @@ Charts showing data from `gps_position` table, downsampled to 10-minute interval
 ┌─────────────────────────────────────────────────────────────────┐
 │  Frontend (boat-now.html)                                       │
 │  ├── Current conditions display                                 │
+│  ├── Time window selector (5h / 12h pills, default 5h)          │
 │  ├── 2 Chart.js line charts with annotation plugin (avg lines)  │
 │  ├── Leaflet map with position track + movement radius circle   │
 │  ├── Movement stats box (radius calculation)                    │
@@ -73,7 +76,7 @@ Charts showing data from `gps_position` table, downsampled to 10-minute interval
 │  GET /api/boat-now                                              │
 │  └── boat-now.service.js                                        │
 │      ├── gpsRepository.getCurrentPosition()                     │
-│      ├── gpsRepository.getPositionsInRange(5 hours)             │
+│      ├── gpsRepository.getPositionsSummaryInRange(N hours, 600s) │
 │      ├── reverseGeocode() from nominatim utility                │
 │      └── fetchCurrentWeather() from Open-Meteo                  │
 └─────────────────────────────────────────────────────────────────┘

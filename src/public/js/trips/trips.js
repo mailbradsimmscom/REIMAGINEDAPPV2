@@ -18,6 +18,9 @@ class TripsManager {
       asym_spinnaker: false,
       staysail: false
     };
+    this.tripOffset = 0;
+    this.tripLimit = 10;
+    this.allTripsLoaded = false;
 
     this.init();
   }
@@ -128,38 +131,74 @@ class TripsManager {
     }
   }
 
-  async loadTripHistory() {
+  async loadTripHistory(append = false) {
     try {
-      this.historyLoading.style.display = 'block';
-      this.tripList.style.display = 'none';
-      this.noTrips.style.display = 'none';
+      if (!append) {
+        this.tripOffset = 0;
+        this.allTripsLoaded = false;
+        this.historyLoading.style.display = 'block';
+        this.tripList.style.display = 'none';
+        this.noTrips.style.display = 'none';
+      }
 
-      const response = await fetch('/api/trips?limit=10');
+      const response = await fetch(`/api/trips?limit=${this.tripLimit}&offset=${this.tripOffset}`);
       const result = await response.json();
 
       this.historyLoading.style.display = 'none';
 
       if (result.success && result.data.length > 0) {
-        // Filter out active trip
         const completedTrips = result.data.filter(t => t.status === 'completed');
 
-        if (completedTrips.length > 0) {
-          this.renderTripList(completedTrips);
+        if (completedTrips.length > 0 || append) {
+          this.renderTripList(completedTrips, append);
           this.tripList.style.display = 'block';
 
-          // Check for resumable trip (most recent, within 30 min)
-          this.checkResumableTrip(completedTrips[0]);
+          if (!append) {
+            this.checkResumableTrip(completedTrips[0]);
+          }
+
+          // Check if there are more trips
+          if (result.data.length < this.tripLimit) {
+            this.allTripsLoaded = true;
+            this.removeLoadMoreBtn();
+          } else {
+            this.tripOffset += this.tripLimit;
+            this.showLoadMoreBtn();
+          }
         } else {
           this.noTrips.style.display = 'block';
         }
       } else {
-        this.noTrips.style.display = 'block';
+        if (!append) {
+          this.noTrips.style.display = 'block';
+        }
+        this.allTripsLoaded = true;
+        this.removeLoadMoreBtn();
       }
     } catch (error) {
       console.error('Failed to load trip history:', error);
       this.historyLoading.style.display = 'none';
-      this.noTrips.style.display = 'block';
+      if (!append) this.noTrips.style.display = 'block';
     }
+  }
+
+  showLoadMoreBtn() {
+    this.removeLoadMoreBtn();
+    const btn = document.createElement('button');
+    btn.id = 'loadMoreBtn';
+    btn.className = 'button button-secondary';
+    btn.textContent = 'Load More Trips';
+    btn.style.marginTop = '12px';
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      btn.textContent = 'Loading...';
+      this.loadTripHistory(true);
+    });
+    this.tripList.parentElement.appendChild(btn);
+  }
+
+  removeLoadMoreBtn() {
+    document.getElementById('loadMoreBtn')?.remove();
   }
 
   checkResumableTrip(trip) {
@@ -217,12 +256,12 @@ class TripsManager {
     }
   }
 
-  renderTripList(trips) {
+  renderTripList(trips, append = false) {
     // Store trips for later reference
-    this.tripsData = {};
+    if (!append) this.tripsData = {};
     trips.forEach(t => this.tripsData[t.id] = t);
 
-    this.tripList.innerHTML = trips.map(trip => `
+    const html = trips.map(trip => `
       <li class="trip-item" data-trip-id="${trip.id}">
         <div class="trip-info">
           <div class="trip-name">${this.escapeHtml(trip.title || 'Untitled Trip')}</div>
@@ -235,6 +274,12 @@ class TripsManager {
         <span class="trip-chevron">&#8250;</span>
       </li>
     `).join('');
+
+    if (append) {
+      this.tripList.insertAdjacentHTML('beforeend', html);
+    } else {
+      this.tripList.innerHTML = html;
+    }
 
     // Add click handlers
     this.tripList.querySelectorAll('.trip-item').forEach(item => {

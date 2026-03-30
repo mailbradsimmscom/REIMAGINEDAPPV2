@@ -146,27 +146,22 @@ export async function getBoatStatus(hoursBack = 5) {
     fetchCurrentWeather(latitude, longitude)
   ]);
 
-  // Get historical positions for charts (last N hours)
+  // Get historical positions for charts (last N hours) — use RPC for server-side downsampling
   const endTime = new Date();
   const startTime = new Date(endTime.getTime() - (hoursBack * 60 * 60 * 1000));
-  const historicalPositions = await gpsRepository.getPositionsInRange(startTime, endTime);
-
-  // Sort chronologically for charts
-  const sortedHistory = historicalPositions.sort((a, b) =>
+  const summaryResult = await gpsRepository.getPositionsSummaryInRange(startTime, endTime, 600);
+  const sortedHistory = (summaryResult.positions || []).sort((a, b) =>
     new Date(a.timestamp) - new Date(b.timestamp)
   );
 
-  // Downsample to 10-minute intervals (reduces ~1,700 points to ~30)
-  const downsampledHistory = downsampleByInterval(sortedHistory, 10);
-
-  // Format historical data for charts (using downsampled data)
+  // Format historical data for charts
   const chartData = {
-    timestamps: downsampledHistory.map(p => p.timestamp),
-    windSpeed: downsampledHistory.map(p => p.true_wind_speed),
-    windDirection: downsampledHistory.map(p => p.true_wind_direction),
-    latitude: downsampledHistory.map(p => p.latitude),
-    longitude: downsampledHistory.map(p => p.longitude),
-    sog: downsampledHistory.map(p => p.speed_over_ground)
+    timestamps: sortedHistory.map(p => p.timestamp),
+    windSpeed: sortedHistory.map(p => p.true_wind_speed),
+    windDirection: sortedHistory.map(p => p.true_wind_direction),
+    latitude: sortedHistory.map(p => p.latitude),
+    longitude: sortedHistory.map(p => p.longitude),
+    sog: sortedHistory.map(p => p.speed_over_ground)
   };
 
   return {
@@ -187,7 +182,7 @@ export async function getBoatStatus(hoursBack = 5) {
     },
     history: {
       hoursBack,
-      pointCount: downsampledHistory.length,
+      pointCount: sortedHistory.length,
       data: chartData
     }
   };
