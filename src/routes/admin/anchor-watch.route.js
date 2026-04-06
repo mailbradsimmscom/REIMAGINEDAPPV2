@@ -66,6 +66,26 @@ router.get('/safe-box',
   }
 );
 
+// GET /admin/api/anchor-watch/status-quick (lightweight, for home page button)
+router.get('/status-quick', async (req, res, next) => {
+  try {
+    const status = await anchorWatchService.getStatusQuick();
+
+    return res.json({
+      success: true,
+      data: status,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error getting quick anchor watch status', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to get anchor watch status',
+      requestId: res.locals.requestId
+    });
+  }
+});
+
 // GET /admin/api/anchor-watch/status
 router.get('/status', async (req, res, next) => {
   try {

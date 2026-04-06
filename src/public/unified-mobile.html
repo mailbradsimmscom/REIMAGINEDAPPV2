@@ -79,6 +79,16 @@
             transform: scale(0.98);
         }
 
+        .anchor-alarm-button.loading {
+            background: #8E8E93;
+            animation: pulse-loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-loading {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         .anchor-alarm-button.inactive {
             background: #8E8E93;
         }
@@ -372,9 +382,9 @@
                 <div class="action-card-title">Other</div>
             </a>
         </div>
-        <a href="/public/anchor-watch-admin.html" id="anchorAlarmBtn" class="anchor-alarm-button inactive">
+        <a href="/public/anchor-watch-admin.html" id="anchorAlarmBtn" class="anchor-alarm-button loading">
             <span id="anchorAlarmIcon">⚓</span>
-            <span id="anchorAlarmText">Anchor Alarm - Not Set</span>
+            <span id="anchorAlarmText">Anchor Alarm - Checking...</span>
         </a>
     </div>
 
@@ -649,7 +659,7 @@
             }
 
             try {
-                const response = await fetch('/admin/api/anchor-watch/status', {
+                const response = await fetch('/admin/api/anchor-watch/status-quick', {
                     headers: {
                         'x-admin-token': ADMIN_TOKEN
                     }
@@ -700,13 +710,16 @@
             }
         }
 
+        // Self-scheduling poll: waits for response before scheduling next check
+        async function pollAnchorAlarmStatus() {
+            await updateAnchorAlarmStatus();
+            setTimeout(pollAnchorAlarmStatus, 20000);
+        }
+
         // Load tasks when page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadUserTasks();
-            updateAnchorAlarmStatus();
-
-            // Update anchor alarm status every 20 seconds
-            setInterval(updateAnchorAlarmStatus, 20000);
+            pollAnchorAlarmStatus();
         });
     </script>
 

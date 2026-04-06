@@ -13,6 +13,32 @@ class AnchorWatchService {
     this.warningRatio = parseFloat(env.ANCHOR_WATCH_WARNING_RATIO);
     this.centroidSamples = parseInt(env.ANCHOR_WATCH_CENTROID_SAMPLES);
     this.staleThresholdSec = parseInt(env.ANCHOR_WATCH_STALE_THRESHOLD_SEC);
+    this._cachedZone = null; // { zone: Object|null, cachedAt: number }
+  }
+
+  /**
+   * Get active zone, using in-memory cache to avoid repeated Supabase queries.
+   * Cache is invalidated by activate(), deactivate(), and updateRadius().
+   * @returns {Promise<Object|null>} Active zone or null
+   */
+  async _getActiveZone() {
+    if (this._cachedZone !== null) {
+      return this._cachedZone.zone;
+    }
+
+    const supabase = await getSupabaseClient();
+    const { data: zone, error } = await supabase
+      .from('anchor_watch_zones')
+      .select('*')
+      .eq('is_active', true)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      throw error;
+    }
+
+    this._cachedZone = { zone: zone || null, cachedAt: Date.now() };
+    return this._cachedZone.zone;
   }
 
   /**
@@ -84,18 +110,8 @@ class AnchorWatchService {
    */
   async getStatus() {
     try {
-      const supabase = await getSupabaseClient();
-
-      // Get active zone
-      const { data: zone, error: zoneError } = await supabase
-        .from('anchor_watch_zones')
-        .select('*')
-        .eq('is_active', true)
-        .single();
-
-      if (zoneError && zoneError.code !== 'PGRST116') {
-        throw zoneError;
-      }
+      // Use cached zone to avoid repeated Supabase queries
+      const zone = await this._getActiveZone();
 
       if (!zone) {
         // No active anchor watch
@@ -166,6 +182,38 @@ class AnchorWatchService {
       requestLogger.error('Error getting anchor watch status', { error: error.message });
       throw error;
     }
+  }
+
+  /**
+   * Lightweight status check for the home page button.
+   * Uses cached zone + single GPS query. No alert creation.
+   * @returns {Promise<Object>} { active, status, distance_meters }
+   */
+  async getStatusQuick() {
+    const zone = await this._getActiveZone();
+
+    if (!zone) {
+      return { active: false, status: 'inactive', distance_meters: null };
+    }
+
+    const currentPosition = await gpsRepository.getCurrentPosition();
+
+    if (!currentPosition) {
+      return { active: true, status: 'gps_lost', distance_meters: null };
+    }
+
+    const distance = this.calculateDistance(
+      currentPosition.latitude,
+      currentPosition.longitude,
+      zone.center_lat,
+      zone.center_lng
+    );
+
+    return {
+      active: true,
+      status: this.determineStatus(distance, zone.radius_meters),
+      distance_meters: Math.round(distance * 100) / 100
+    };
   }
 
   /**
@@ -243,6 +291,7 @@ class AnchorWatchService {
    */
   async activate(latitude, longitude, radiusMeters) {
     try {
+      this._cachedZone = null;
       const supabase = await getSupabaseClient();
 
       // Deactivate any existing zones
@@ -282,6 +331,7 @@ class AnchorWatchService {
    */
   async deactivate() {
     try {
+      this._cachedZone = null;
       const supabase = await getSupabaseClient();
 
       const { error } = await supabase
@@ -308,6 +358,7 @@ class AnchorWatchService {
    */
   async updateRadius(radiusMeters) {
     try {
+      this._cachedZone = null;
       const supabase = await getSupabaseClient();
 
       const { data: zone, error } = await supabase
