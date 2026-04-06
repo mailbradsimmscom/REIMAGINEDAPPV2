@@ -6,7 +6,7 @@ The Anchor Alarm monitors boat position while at anchor and alerts if the boat d
 
 **Who uses it:** Boat owners at anchor
 **Access:** `/anchor-watch-admin.html`, `/anchor-safe-box.html`, `/position-monitor.html`
-**Last Updated:** 2026-03-02
+**Last Updated:** 2026-04-06
 
 ---
 
@@ -148,6 +148,26 @@ determineStatus(distanceMeters, radiusMeters) {
 
 ---
 
+## Home Page Status Button (2026-04-06)
+
+The main page (`unified-mobile.html`) shows an anchor alarm status button at the bottom. It uses a lightweight `/status-quick` endpoint that returns only `{ active, status, distance_meters }`.
+
+**Performance optimizations:**
+- **Zone caching:** The active zone is cached in-memory in the service (invalidated on activate/deactivate/updateRadius), so the endpoint makes only 1 Supabase query (GPS position) instead of 2
+- **Self-scheduling polling:** Uses `setTimeout` after each response completes (not `setInterval`), preventing request pileup on slow connections
+- **Loading state:** Button shows "Checking..." with pulse animation until first response arrives
+
+| Button State | Color | Condition |
+|-------------|-------|-----------|
+| Loading | Grey (pulsing) | First fetch in progress |
+| Not Set | Grey | No active zone |
+| Safe (Xm) | Green | Active, within radius |
+| Warning (Xm) | Orange | Active, approaching radius |
+| DRAGGING (Xm) | Red (pulsing) | Active, outside radius |
+| Error | Grey | API call failed |
+
+---
+
 ## Architecture
 
 ```
@@ -161,7 +181,8 @@ determineStatus(distanceMeters, radiusMeters) {
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Node.js Backend                                                │
-│  ├── anchor-watch.service.js (status + safe-box inference)      │
+│  ├── anchor-watch.service.js (status + safe-box inference,      │
+│  │   zone cached in-memory, invalidated on activate/deactivate) │
 │  ├── anchor-watch-alerts.service.js (alert polling)             │
 │  ├── telegram.service.js (send Telegram alerts)                 │
 │  ├── twilio.service.js (send SMS for critical alerts)           │
@@ -209,7 +230,8 @@ determineStatus(distanceMeters, radiusMeters) {
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/gps/current` | Get current GPS position (no auth required) |
-| GET | `/admin/api/anchor-watch/status` | Get watch status |
+| GET | `/admin/api/anchor-watch/status` | Get full watch status (anchor-watch page) |
+| GET | `/admin/api/anchor-watch/status-quick` | Lightweight status for home page button (cached zone, single GPS query) |
 | GET | `/admin/api/anchor-watch/safe-box` | Get physics-based anchor inference + swing circle |
 | POST | `/admin/api/anchor-watch/activate` | Start monitoring |
 | POST | `/admin/api/anchor-watch/deactivate` | Stop monitoring |
