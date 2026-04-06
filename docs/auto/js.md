@@ -65,496 +65,496 @@
 *   [allSuggestions][61]
 *   [closeResultsModal][62]
 *   [getAdminToken][63]
-*   [AnchoragesManager][64]
-    *   [loadAnchorages][65]
-    *   [detectNewAnchorages][66]
-    *   [saveAnchorage][67]
-        *   [Parameters][68]
-    *   [deleteAnchorage][69]
+*   [AnchorageRatingManager][64]
+    *   [getAnchorageId][65]
+    *   [loadAnchorage][66]
+    *   [renderContext][67]
+    *   [renderFactors][68]
+    *   [setRating][69]
         *   [Parameters][70]
-    *   [uploadPhoto][71]
-        *   [Parameters][72]
-    *   [fileToBase64][73]
+    *   [updateOverall][71]
+    *   [saveRatings][72]
+    *   [formatDate][73]
         *   [Parameters][74]
-    *   [renderAnchorages][75]
-    *   [renderCard][76]
-        *   [Parameters][77]
-    *   [formatDate][78]
-        *   [Parameters][79]
-    *   [escapeHtml][80]
-        *   [Parameters][81]
-    *   [showToast][82]
+    *   [escapeHtml][75]
+        *   [Parameters][76]
+    *   [showToast][77]
+        *   [Parameters][78]
+*   [AnchoragesManager][79]
+    *   [loadAnchorages][80]
+    *   [detectNewAnchorages][81]
+    *   [saveAnchorage][82]
         *   [Parameters][83]
-*   [stageColors][84]
-*   [formatNumber][85]
-    *   [Parameters][86]
-*   [renderStage][87]
-    *   [Parameters][88]
-*   [renderBreakdown][89]
-    *   [Parameters][90]
-*   [renderDipDetails][91]
-    *   [Parameters][92]
-*   [renderMaintenanceDetails][93]
-    *   [Parameters][94]
-*   [renderLiveTaskDetails][95]
-    *   [Parameters][96]
-*   [toggleBreakdown][97]
-    *   [Parameters][98]
-*   [renderSummaryCards][99]
-    *   [Parameters][100]
-*   [renderBranch][101]
-    *   [Parameters][102]
-*   [loadFunnel][103]
-*   [renderIssues][104]
+    *   [deleteAnchorage][84]
+        *   [Parameters][85]
+    *   [uploadPhoto][86]
+        *   [Parameters][87]
+    *   [fileToBase64][88]
+        *   [Parameters][89]
+    *   [renderAnchorages][90]
+    *   [renderCard][91]
+        *   [Parameters][92]
+    *   [computeOverall][93]
+        *   [Parameters][94]
+    *   [formatDate][95]
+        *   [Parameters][96]
+    *   [escapeHtml][97]
+        *   [Parameters][98]
+    *   [showToast][99]
+        *   [Parameters][100]
+*   [stageColors][101]
+*   [formatNumber][102]
+    *   [Parameters][103]
+*   [renderStage][104]
     *   [Parameters][105]
-*   [\_\_hamburgerMenuInitialized][106]
-*   [\_\_mobileNavInitialized][107]
-*   [API\_BASE][108]
-*   [API\_BASE][109]
-*   [SuppliesAI][110]
-    *   [analyzePhoto][111]
-        *   [Parameters][112]
-    *   [getSystemRecommendations][113]
-        *   [Parameters][114]
-    *   [showSystemRecommendationsModal][115]
-        *   [Parameters][116]
-    *   [closeSystemRecommendationsModal][117]
-    *   [loadAllSystems][118]
-    *   [renderAllSystems][119]
-    *   [filterSystems][120]
-        *   [Parameters][121]
-    *   [toggleSystemSelection][122]
-        *   [Parameters][123]
-    *   [acceptSelectedSystems][124]
-    *   [getSelectedSystems][125]
-    *   [showToast][126]
-        *   [Parameters][127]
-    *   [escapeHtml][128]
+*   [renderBreakdown][106]
+    *   [Parameters][107]
+*   [renderDipDetails][108]
+    *   [Parameters][109]
+*   [renderMaintenanceDetails][110]
+    *   [Parameters][111]
+*   [renderLiveTaskDetails][112]
+    *   [Parameters][113]
+*   [toggleBreakdown][114]
+    *   [Parameters][115]
+*   [renderSummaryCards][116]
+    *   [Parameters][117]
+*   [renderBranch][118]
+    *   [Parameters][119]
+*   [loadFunnel][120]
+*   [renderIssues][121]
+    *   [Parameters][122]
+*   [\_\_hamburgerMenuInitialized][123]
+*   [\_\_mobileNavInitialized][124]
+*   [API\_BASE][125]
+*   [API\_BASE][126]
+*   [SuppliesAI][127]
+    *   [analyzePhoto][128]
         *   [Parameters][129]
-*   [apiRequest][130]
-    *   [Parameters][131]
-*   [SuppliesAPI][132]
-    *   [list][133]
-        *   [Parameters][134]
-    *   [getById][135]
-        *   [Parameters][136]
-    *   [create][137]
+    *   [getSystemRecommendations][130]
+        *   [Parameters][131]
+    *   [showSystemRecommendationsModal][132]
+        *   [Parameters][133]
+    *   [closeSystemRecommendationsModal][134]
+    *   [loadAllSystems][135]
+    *   [renderAllSystems][136]
+    *   [filterSystems][137]
         *   [Parameters][138]
-    *   [update][139]
+    *   [toggleSystemSelection][139]
         *   [Parameters][140]
-    *   [delete][141]
-        *   [Parameters][142]
-    *   [search][143]
+    *   [acceptSelectedSystems][141]
+    *   [getSelectedSystems][142]
+    *   [showToast][143]
         *   [Parameters][144]
-    *   [getLowStock][145]
-    *   [getByCategory][146]
-        *   [Parameters][147]
-    *   [getBySystem][148]
-        *   [Parameters][149]
-    *   [getCategories][150]
+    *   [escapeHtml][145]
+        *   [Parameters][146]
+*   [apiRequest][147]
+    *   [Parameters][148]
+*   [SuppliesAPI][149]
+    *   [list][150]
         *   [Parameters][151]
-    *   [createCategory][152]
+    *   [getById][152]
         *   [Parameters][153]
-    *   [deleteCategory][154]
+    *   [create][154]
         *   [Parameters][155]
-    *   [getUnits][156]
-    *   [getLocations][157]
-    *   [getStats][158]
-*   [SuppliesAPI][159]
-    *   [list][160]
+    *   [update][156]
+        *   [Parameters][157]
+    *   [delete][158]
+        *   [Parameters][159]
+    *   [search][160]
         *   [Parameters][161]
-    *   [getById][162]
-        *   [Parameters][163]
-    *   [create][164]
-        *   [Parameters][165]
-    *   [update][166]
-        *   [Parameters][167]
-    *   [delete][168]
-        *   [Parameters][169]
-    *   [search][170]
-        *   [Parameters][171]
-    *   [getLowStock][172]
-    *   [getByCategory][173]
-        *   [Parameters][174]
-    *   [getBySystem][175]
-        *   [Parameters][176]
-    *   [getCategories][177]
+    *   [getLowStock][162]
+    *   [getByCategory][163]
+        *   [Parameters][164]
+    *   [getBySystem][165]
+        *   [Parameters][166]
+    *   [getCategories][167]
+        *   [Parameters][168]
+    *   [createCategory][169]
+        *   [Parameters][170]
+    *   [deleteCategory][171]
+        *   [Parameters][172]
+    *   [getUnits][173]
+    *   [getLocations][174]
+    *   [getStats][175]
+*   [SuppliesAPI][176]
+    *   [list][177]
         *   [Parameters][178]
-    *   [createCategory][179]
+    *   [getById][179]
         *   [Parameters][180]
-    *   [deleteCategory][181]
+    *   [create][181]
         *   [Parameters][182]
-    *   [getUnits][183]
-    *   [getLocations][184]
-    *   [getStats][185]
-*   [SuppliesAPI][186]
-    *   [list][187]
+    *   [update][183]
+        *   [Parameters][184]
+    *   [delete][185]
+        *   [Parameters][186]
+    *   [search][187]
         *   [Parameters][188]
-    *   [getById][189]
-        *   [Parameters][190]
-    *   [create][191]
-        *   [Parameters][192]
-    *   [update][193]
-        *   [Parameters][194]
-    *   [delete][195]
-        *   [Parameters][196]
-    *   [search][197]
-        *   [Parameters][198]
-    *   [getLowStock][199]
-    *   [getByCategory][200]
-        *   [Parameters][201]
-    *   [getBySystem][202]
-        *   [Parameters][203]
-    *   [getCategories][204]
+    *   [getLowStock][189]
+    *   [getByCategory][190]
+        *   [Parameters][191]
+    *   [getBySystem][192]
+        *   [Parameters][193]
+    *   [getCategories][194]
+        *   [Parameters][195]
+    *   [createCategory][196]
+        *   [Parameters][197]
+    *   [deleteCategory][198]
+        *   [Parameters][199]
+    *   [getUnits][200]
+    *   [getLocations][201]
+    *   [getStats][202]
+*   [SuppliesAPI][203]
+    *   [list][204]
         *   [Parameters][205]
-    *   [createCategory][206]
+    *   [getById][206]
         *   [Parameters][207]
-    *   [deleteCategory][208]
+    *   [create][208]
         *   [Parameters][209]
-    *   [getUnits][210]
-    *   [getLocations][211]
-    *   [getStats][212]
-*   [SuppliesAPI][213]
-    *   [list][214]
+    *   [update][210]
+        *   [Parameters][211]
+    *   [delete][212]
+        *   [Parameters][213]
+    *   [search][214]
         *   [Parameters][215]
-    *   [getById][216]
-        *   [Parameters][217]
-    *   [create][218]
-        *   [Parameters][219]
-    *   [update][220]
-        *   [Parameters][221]
-    *   [delete][222]
-        *   [Parameters][223]
-    *   [search][224]
-        *   [Parameters][225]
-    *   [getLowStock][226]
-    *   [getByCategory][227]
-        *   [Parameters][228]
-    *   [getBySystem][229]
-        *   [Parameters][230]
-    *   [getCategories][231]
+    *   [getLowStock][216]
+    *   [getByCategory][217]
+        *   [Parameters][218]
+    *   [getBySystem][219]
+        *   [Parameters][220]
+    *   [getCategories][221]
+        *   [Parameters][222]
+    *   [createCategory][223]
+        *   [Parameters][224]
+    *   [deleteCategory][225]
+        *   [Parameters][226]
+    *   [getUnits][227]
+    *   [getLocations][228]
+    *   [getStats][229]
+*   [SuppliesAPI][230]
+    *   [list][231]
         *   [Parameters][232]
-    *   [createCategory][233]
+    *   [getById][233]
         *   [Parameters][234]
-    *   [deleteCategory][235]
+    *   [create][235]
         *   [Parameters][236]
-    *   [getUnits][237]
-    *   [getLocations][238]
-    *   [getStats][239]
-*   [autoFillFromAI][240]
-    *   [Parameters][241]
-*   [openSystemRecommendations][242]
-*   [setAISuggestedSystems][243]
-    *   [Parameters][244]
-*   [SuppliesPhotos][245]
-    *   [getPendingPhotos][246]
-    *   [uploadPendingPhotos][247]
-        *   [Parameters][248]
-*   [TripDetail][249]
-    *   [generateColumnName][250]
+    *   [update][237]
+        *   [Parameters][238]
+    *   [delete][239]
+        *   [Parameters][240]
+    *   [search][241]
+        *   [Parameters][242]
+    *   [getLowStock][243]
+    *   [getByCategory][244]
+        *   [Parameters][245]
+    *   [getBySystem][246]
+        *   [Parameters][247]
+    *   [getCategories][248]
+        *   [Parameters][249]
+    *   [createCategory][250]
         *   [Parameters][251]
-    *   [formatValueWithUnit][252]
+    *   [deleteCategory][252]
         *   [Parameters][253]
-*   [TripEditor][254]
-*   [TripsManager][255]
-*   [AisRepository][256]
-    *   [getVessels][257]
-    *   [getFriends][258]
-    *   [isFriend][259]
-        *   [Parameters][260]
-    *   [addFriend][261]
-        *   [Parameters][262]
-    *   [removeFriend][263]
-        *   [Parameters][264]
-    *   [getVesselByMmsi][265]
-        *   [Parameters][266]
-    *   [updateFriendLastSeen][267]
+    *   [getUnits][254]
+    *   [getLocations][255]
+    *   [getStats][256]
+*   [autoFillFromAI][257]
+    *   [Parameters][258]
+*   [openSystemRecommendations][259]
+*   [setAISuggestedSystems][260]
+    *   [Parameters][261]
+*   [SuppliesPhotos][262]
+    *   [getPendingPhotos][263]
+    *   [uploadPendingPhotos][264]
+        *   [Parameters][265]
+*   [TripDetail][266]
+    *   [generateColumnName][267]
         *   [Parameters][268]
-*   [AnchoragesRepository][269]
-    *   [findAll][270]
-    *   [findById][271]
-        *   [Parameters][272]
-    *   [create][273]
-        *   [Parameters][274]
-    *   [update][275]
-        *   [Parameters][276]
-    *   [remove][277]
-        *   [Parameters][278]
-    *   [getRecentAnchorages][279]
-        *   [Parameters][280]
-    *   [detectFromGpsHistory][281]
-        *   [Parameters][282]
-    *   [groupPositionsByHour][283]
-        *   [Parameters][284]
-    *   [averageAngle][285]
-        *   [Parameters][286]
-    *   [findStationaryPeriods][287]
-        *   [Parameters][288]
-    *   [groupToCandidate][289]
-        *   [Parameters][290]
-    *   [findTripNearTime][291]
-        *   [Parameters][292]
-    *   [findAtLocation][293]
-        *   [Parameters][294]
-    *   [exists][295]
-        *   [Parameters][296]
-*   [AnthropicExtractionRepository][297]
-    *   [storeSpecSuggestions][298]
+    *   [formatValueWithUnit][269]
+        *   [Parameters][270]
+*   [TripEditor][271]
+*   [TripsManager][272]
+*   [AisRepository][273]
+    *   [getVessels][274]
+    *   [getFriends][275]
+    *   [isFriend][276]
+        *   [Parameters][277]
+    *   [addFriend][278]
+        *   [Parameters][279]
+    *   [removeFriend][280]
+        *   [Parameters][281]
+    *   [getVesselByMmsi][282]
+        *   [Parameters][283]
+    *   [updateFriendLastSeen][284]
+        *   [Parameters][285]
+*   [AnchoragesRepository][286]
+    *   [findAll][287]
+    *   [findById][288]
+        *   [Parameters][289]
+    *   [create][290]
+        *   [Parameters][291]
+    *   [update][292]
+        *   [Parameters][293]
+    *   [remove][294]
+        *   [Parameters][295]
+    *   [getRecentAnchorages][296]
+        *   [Parameters][297]
+    *   [detectFromGpsHistory][298]
         *   [Parameters][299]
-    *   [storeGoldenRules][300]
+    *   [groupPositionsByHour][300]
         *   [Parameters][301]
-    *   [storeIntentRouter][302]
+    *   [averageAngle][302]
         *   [Parameters][303]
-    *   [storePlaybookHints][304]
+    *   [findStationaryPeriods][304]
         *   [Parameters][305]
-    *   [readJsonFile][306]
+    *   [groupToCandidate][306]
         *   [Parameters][307]
-*   [DocAssetsRepository][308]
-    *   [upsertAsset][309]
-        *   [Parameters][310]
-    *   [upsertAssets][311]
-        *   [Parameters][312]
-    *   [getAssetsByDocId][313]
-        *   [Parameters][314]
-    *   [getAssetsByModel][315]
+    *   [findTripNearTime][308]
+        *   [Parameters][309]
+    *   [findAtLocation][310]
+        *   [Parameters][311]
+    *   [exists][312]
+        *   [Parameters][313]
+*   [AnthropicExtractionRepository][314]
+    *   [storeSpecSuggestions][315]
         *   [Parameters][316]
-    *   [getAssetsBySystem][317]
+    *   [storeGoldenRules][317]
         *   [Parameters][318]
-    *   [getAssetsByKind][319]
+    *   [storeIntentRouter][319]
         *   [Parameters][320]
-    *   [deleteAssetsByDocId][321]
+    *   [storePlaybookHints][321]
         *   [Parameters][322]
-    *   [countAssetsByDocId][323]
+    *   [readJsonFile][323]
         *   [Parameters][324]
-    *   [getAssetSummary][325]
-        *   [Parameters][326]
-*   [addSpecTag][327]
-    *   [Parameters][328]
-*   [getSupabaseClient][329]
-*   [getSupabaseClient][330]
-*   [getSupabaseClient][331]
-*   [getSupabaseClient][332]
-*   [getSupabaseClient][333]
-*   [getSupabaseClient][334]
-*   [getSupabaseClient][335]
-*   [getSupabaseClient][336]
-*   [getSupabaseClient][337]
-*   [getSupabaseClient][338]
-*   [getSupabaseClient][339]
-*   [getSupabaseClient][340]
-*   [getReviewedPairs][341]
-*   [isPairReviewed][342]
-    *   [Parameters][343]
-*   [saveReviewDecision][344]
+*   [DocAssetsRepository][325]
+    *   [upsertAsset][326]
+        *   [Parameters][327]
+    *   [upsertAssets][328]
+        *   [Parameters][329]
+    *   [getAssetsByDocId][330]
+        *   [Parameters][331]
+    *   [getAssetsByModel][332]
+        *   [Parameters][333]
+    *   [getAssetsBySystem][334]
+        *   [Parameters][335]
+    *   [getAssetsByKind][336]
+        *   [Parameters][337]
+    *   [deleteAssetsByDocId][338]
+        *   [Parameters][339]
+    *   [countAssetsByDocId][340]
+        *   [Parameters][341]
+    *   [getAssetSummary][342]
+        *   [Parameters][343]
+*   [addSpecTag][344]
     *   [Parameters][345]
-*   [markPairAsReviewed][346]
-    *   [Parameters][347]
-*   [saveDeletedTask][348]
-    *   [Parameters][349]
-*   [getReviewStats][350]
-*   [getDeletedTasks][351]
-*   [getDeletedTask][352]
-    *   [Parameters][353]
-*   [GpsRepository][354]
-    *   [getCurrentPosition][355]
-    *   [getRecentPositions][356]
-        *   [Parameters][357]
-    *   [getPositionsInRange][358]
-        *   [Parameters][359]
-*   [insertTimingRows][360]
-    *   [Parameters][361]
-*   [getTimingByDocId][362]
-    *   [Parameters][363]
-*   [getTimingByRunId][364]
-    *   [Parameters][365]
-*   [getRecentTimingRows][366]
-    *   [Parameters][367]
-*   [getSystemNamesForDocs][368]
-    *   [Parameters][369]
-*   [getAllIntentRoutes][370]
-    *   [Parameters][371]
-*   [getIntentRouteById][372]
-    *   [Parameters][373]
-*   [createIntentRoute][374]
-    *   [Parameters][375]
-*   [updateIntentRoute][376]
-    *   [Parameters][377]
-*   [deleteIntentRoute][378]
-    *   [Parameters][379]
-*   [findMatchingRoute][380]
-    *   [Parameters][381]
-*   [getIntentRouteStats][382]
-*   [getJobById][383]
+*   [getSupabaseClient][346]
+*   [getSupabaseClient][347]
+*   [getSupabaseClient][348]
+*   [getSupabaseClient][349]
+*   [getSupabaseClient][350]
+*   [getSupabaseClient][351]
+*   [getSupabaseClient][352]
+*   [getSupabaseClient][353]
+*   [getSupabaseClient][354]
+*   [getSupabaseClient][355]
+*   [getSupabaseClient][356]
+*   [getSupabaseClient][357]
+*   [getReviewedPairs][358]
+*   [isPairReviewed][359]
+    *   [Parameters][360]
+*   [saveReviewDecision][361]
+    *   [Parameters][362]
+*   [markPairAsReviewed][363]
+    *   [Parameters][364]
+*   [saveDeletedTask][365]
+    *   [Parameters][366]
+*   [getReviewStats][367]
+*   [getDeletedTasks][368]
+*   [getDeletedTask][369]
+    *   [Parameters][370]
+*   [GpsRepository][371]
+    *   [getCurrentPosition][372]
+    *   [getRecentPositions][373]
+        *   [Parameters][374]
+    *   [getPositionsInRange][375]
+        *   [Parameters][376]
+    *   [getPositionsSummaryInRange][377]
+        *   [Parameters][378]
+*   [insertTimingRows][379]
+    *   [Parameters][380]
+*   [getTimingByDocId][381]
+    *   [Parameters][382]
+*   [getTimingByRunId][383]
     *   [Parameters][384]
-*   [updateJobStatus][385]
+*   [getRecentTimingRows][385]
     *   [Parameters][386]
-*   [getJobsByStatus][387]
+*   [getSystemNamesForDocs][387]
     *   [Parameters][388]
-*   [createJob][389]
+*   [getJobsForDocs][389]
     *   [Parameters][390]
-*   [logger][391]
-*   [logger][392]
-*   [logger][393]
-*   [logger][394]
-*   [logger][395]
-*   [logger][396]
-*   [logger][397]
-*   [logger][398]
-*   [logger][399]
-*   [logger][400]
-*   [findFactMatchByQuery][401]
+*   [getAllIntentRoutes][391]
+    *   [Parameters][392]
+*   [getIntentRouteById][393]
+    *   [Parameters][394]
+*   [createIntentRoute][395]
+    *   [Parameters][396]
+*   [updateIntentRoute][397]
+    *   [Parameters][398]
+*   [deleteIntentRoute][399]
+    *   [Parameters][400]
+*   [findMatchingRoute][401]
     *   [Parameters][402]
-*   [findFactsByDocument][403]
-    *   [Parameters][404]
-*   [findFactsByType][405]
-    *   [Parameters][406]
-*   [getFactStatistics][407]
-*   [Pinecone][408]
-*   [listAllTasks][409]
-*   [getTaskById][410]
+*   [getIntentRouteStats][403]
+*   [getJobById][404]
+    *   [Parameters][405]
+*   [updateJobStatus][406]
+    *   [Parameters][407]
+*   [getJobsByStatus][408]
+    *   [Parameters][409]
+*   [createJob][410]
     *   [Parameters][411]
-*   [updateTaskMetadata][412]
-    *   [Parameters][413]
-*   [deleteTask][414]
-    *   [Parameters][415]
-*   [bulkUpdateTasks][416]
-    *   [Parameters][417]
-*   [getTaskStats][418]
-*   [createSupabaseClientFactory][419]
-    *   [Parameters][420]
-*   [setSupabaseClientFactory][421]
-    *   [Parameters][422]
-    *   [Examples][423]
-*   [resetSupabaseClient][424]
-*   [getSupabaseStorageClient][425]
-*   [checkSupabaseAvailability][426]
-*   [checkSupabaseAvailability][427]
-*   [listSupplies][428]
-    *   [Parameters][429]
-*   [listSupplies][430]
-    *   [Parameters][431]
-*   [getSupplyById][432]
-    *   [Parameters][433]
-*   [getSupplyById][434]
-    *   [Parameters][435]
-*   [createSupply][436]
-    *   [Parameters][437]
-*   [createSupply][438]
-    *   [Parameters][439]
-*   [updateSupply][440]
+*   [logger][412]
+*   [logger][413]
+*   [logger][414]
+*   [logger][415]
+*   [logger][416]
+*   [logger][417]
+*   [logger][418]
+*   [logger][419]
+*   [logger][420]
+*   [logger][421]
+*   [findFactMatchByQuery][422]
+    *   [Parameters][423]
+*   [findFactsByDocument][424]
+    *   [Parameters][425]
+*   [findFactsByType][426]
+    *   [Parameters][427]
+*   [getFactStatistics][428]
+*   [Pinecone][429]
+*   [listAllTasks][430]
+*   [getTaskById][431]
+    *   [Parameters][432]
+*   [updateTaskMetadata][433]
+    *   [Parameters][434]
+*   [deleteTask][435]
+    *   [Parameters][436]
+*   [bulkUpdateTasks][437]
+    *   [Parameters][438]
+*   [getTaskStats][439]
+*   [createSupabaseClientFactory][440]
     *   [Parameters][441]
-*   [updateSupply][442]
+*   [setSupabaseClientFactory][442]
     *   [Parameters][443]
-*   [deleteSupply][444]
-    *   [Parameters][445]
-*   [deleteSupply][446]
-    *   [Parameters][447]
-*   [searchSupplies][448]
-    *   [Parameters][449]
-*   [searchSupplies][450]
-    *   [Parameters][451]
-*   [getLowStockSupplies][452]
-    *   [Parameters][453]
-*   [getLowStockSupplies][454]
-    *   [Parameters][455]
-*   [getSuppliesByCategory][456]
-    *   [Parameters][457]
-*   [getSuppliesByCategory][458]
-    *   [Parameters][459]
-*   [getSuppliesBySystem][460]
-    *   [Parameters][461]
-*   [getSuppliesBySystem][462]
-    *   [Parameters][463]
-*   [getManufacturers][464]
-*   [getManufacturers][465]
-*   [getModelsByManufacturer][466]
-    *   [Parameters][467]
-*   [findSystemByManufacturerModel][468]
-    *   [Parameters][469]
-*   [getInstancesByAssetUid][470]
-    *   [Parameters][471]
-*   [createSystem][472]
-    *   [Parameters][473]
-*   [createSystem][474]
-    *   [Parameters][475]
-*   [updateSystem][476]
-    *   [Parameters][477]
-*   [updateSystem][478]
-    *   [Parameters][479]
-*   [deleteSystem][480]
-    *   [Parameters][481]
-*   [deleteSystem][482]
-    *   [Parameters][483]
-*   [createInstance][484]
-    *   [Parameters][485]
-*   [createInstance][486]
-    *   [Parameters][487]
-*   [updateInstance][488]
-    *   [Parameters][489]
-*   [updateInstance][490]
-    *   [Parameters][491]
-*   [archiveInstance][492]
-    *   [Parameters][493]
-*   [getNextInstanceIndex][494]
-    *   [Parameters][495]
-*   [getSystemsToFetch][496]
-*   [getRefManufacturers][497]
-*   [getRefProductTypes][498]
-*   [getRefSystemCategories][499]
-*   [getRefSubsystemCategories][500]
-    *   [Parameters][501]
-*   [lookupSystemByManufacturerAndModel][502]
-    *   [Parameters][503]
-*   [getSystemByUid][504]
-    *   [Parameters][505]
-*   [updateSpecKeywords][506]
-    *   [Parameters][507]
-*   [listMinimal][508]
-*   [resolveModelAliases][509]
+    *   [Examples][444]
+*   [resetSupabaseClient][445]
+*   [getSupabaseStorageClient][446]
+*   [checkSupabaseAvailability][447]
+*   [checkSupabaseAvailability][448]
+*   [listSupplies][449]
+    *   [Parameters][450]
+*   [listSupplies][451]
+    *   [Parameters][452]
+*   [getSupplyById][453]
+    *   [Parameters][454]
+*   [getSupplyById][455]
+    *   [Parameters][456]
+*   [createSupply][457]
+    *   [Parameters][458]
+*   [createSupply][459]
+    *   [Parameters][460]
+*   [updateSupply][461]
+    *   [Parameters][462]
+*   [updateSupply][463]
+    *   [Parameters][464]
+*   [deleteSupply][465]
+    *   [Parameters][466]
+*   [deleteSupply][467]
+    *   [Parameters][468]
+*   [searchSupplies][469]
+    *   [Parameters][470]
+*   [searchSupplies][471]
+    *   [Parameters][472]
+*   [getLowStockSupplies][473]
+    *   [Parameters][474]
+*   [getLowStockSupplies][475]
+    *   [Parameters][476]
+*   [getSuppliesByCategory][477]
+    *   [Parameters][478]
+*   [getSuppliesByCategory][479]
+    *   [Parameters][480]
+*   [getSuppliesBySystem][481]
+    *   [Parameters][482]
+*   [getSuppliesBySystem][483]
+    *   [Parameters][484]
+*   [getManufacturers][485]
+*   [getManufacturers][486]
+*   [getModelsByManufacturer][487]
+    *   [Parameters][488]
+*   [findSystemByManufacturerModel][489]
+    *   [Parameters][490]
+*   [getInstancesByAssetUid][491]
+    *   [Parameters][492]
+*   [createSystem][493]
+    *   [Parameters][494]
+*   [createSystem][495]
+    *   [Parameters][496]
+*   [updateSystem][497]
+    *   [Parameters][498]
+*   [updateSystem][499]
+    *   [Parameters][500]
+*   [deleteSystem][501]
+    *   [Parameters][502]
+*   [deleteSystem][503]
+    *   [Parameters][504]
+*   [createInstance][505]
+    *   [Parameters][506]
+*   [createInstance][507]
+    *   [Parameters][508]
+*   [updateInstance][509]
     *   [Parameters][510]
-*   [TelemetryRepository][511]
-    *   [getCurrentState][512]
-    *   [getCurrentStateByCategory][513]
-        *   [Parameters][514]
-    *   [getDevices][515]
-    *   [getAggregatedData][516]
-        *   [Parameters][517]
-    *   [getTankHistory][518]
-        *   [Parameters][519]
-*   [hasExistingTask][520]
-    *   [Parameters][521]
-*   [createUserTask][522]
-    *   [Parameters][523]
-*   [checkDocumentStatus][524]
-    *   [Parameters][525]
-*   [completeDocumentIngestTask][526]
-    *   [Parameters][527]
-*   [get][528]
-*   [get][529]
-*   [get][530]
-*   [get][531]
-*   [get][532]
-*   [get][533]
-*   [get][534]
-*   [get][535]
-*   [get][536]
-*   [get][537]
-*   [get][538]
-*   [get][539]
-*   [get][540]
-*   [get][541]
-*   [get][542]
-*   [get][543]
-*   [get][544]
-*   [get][545]
-*   [get][546]
-*   [get][547]
-*   [get][548]
+*   [updateInstance][511]
+    *   [Parameters][512]
+*   [archiveInstance][513]
+    *   [Parameters][514]
+*   [getNextInstanceIndex][515]
+    *   [Parameters][516]
+*   [getSystemsToFetch][517]
+*   [getRefManufacturers][518]
+*   [getRefProductTypes][519]
+*   [getRefSystemCategories][520]
+*   [getRefSubsystemCategories][521]
+    *   [Parameters][522]
+*   [lookupSystemByManufacturerAndModel][523]
+    *   [Parameters][524]
+*   [getSystemByUid][525]
+    *   [Parameters][526]
+*   [updateSpecKeywords][527]
+    *   [Parameters][528]
+*   [listMinimal][529]
+*   [resolveModelAliases][530]
+    *   [Parameters][531]
+*   [TelemetryRepository][532]
+    *   [getCurrentState][533]
+    *   [getCurrentStateByCategory][534]
+        *   [Parameters][535]
+    *   [getDevices][536]
+    *   [getAggregatedData][537]
+        *   [Parameters][538]
+    *   [getTankHistory][539]
+        *   [Parameters][540]
+*   [hasExistingTask][541]
+    *   [Parameters][542]
+*   [createUserTask][543]
+    *   [Parameters][544]
+*   [checkDocumentStatus][545]
+    *   [Parameters][546]
+*   [completeDocumentIngestTask][547]
+    *   [Parameters][548]
 *   [get][549]
 *   [get][550]
 *   [get][551]
 *   [get][552]
-    *   [Parameters][553]
+*   [get][553]
 *   [get][554]
 *   [get][555]
 *   [get][556]
@@ -575,7 +575,7 @@
 *   [get][571]
 *   [get][572]
 *   [get][573]
-*   [get][574]
+    *   [Parameters][574]
 *   [get][575]
 *   [get][576]
 *   [get][577]
@@ -595,29 +595,29 @@
 *   [get][591]
 *   [get][592]
 *   [get][593]
-*   [post][594]
-*   [post][595]
-*   [post][596]
-*   [post][597]
-*   [post][598]
-*   [post][599]
-*   [post][600]
-*   [post][601]
-*   [post][602]
-*   [post][603]
-*   [post][604]
-*   [post][605]
-*   [post][606]
-*   [post][607]
-*   [post][608]
-*   [post][609]
-*   [post][610]
-*   [post][611]
-*   [post][612]
-*   [post][613]
-*   [post][614]
-*   [post][615]
-*   [post][616]
+*   [get][594]
+*   [get][595]
+*   [get][596]
+*   [get][597]
+*   [get][598]
+*   [get][599]
+*   [get][600]
+*   [get][601]
+*   [get][602]
+*   [get][603]
+*   [get][604]
+*   [get][605]
+*   [get][606]
+*   [get][607]
+*   [get][608]
+*   [get][609]
+*   [get][610]
+*   [get][611]
+*   [get][612]
+*   [get][613]
+*   [get][614]
+*   [get][615]
+*   [get][616]
 *   [post][617]
 *   [post][618]
 *   [post][619]
@@ -638,946 +638,986 @@
 *   [post][634]
 *   [post][635]
 *   [post][636]
-*   [delete][637]
-*   [delete][638]
-*   [delete][639]
-*   [delete][640]
-*   [delete][641]
-*   [delete][642]
-*   [delete][643]
-*   [delete][644]
-*   [delete][645]
-*   [delete][646]
-*   [delete][647]
-*   [delete][648]
-*   [delete][649]
-*   [delete][650]
-*   [delete][651]
-*   [delete][652]
-*   [express][653]
-*   [express][654]
-*   [express][655]
-*   [express][656]
-*   [express][657]
-*   [express][658]
-*   [express][659]
-*   [express][660]
-*   [Router][661]
-*   [Router][662]
-*   [Router][663]
-*   [Router][664]
-*   [patch][665]
-*   [patch][666]
-*   [patch][667]
-*   [patch][668]
-*   [patch][669]
-*   [expressJson][670]
-*   [anchoragesRouter][671]
-*   [boatNowRouter][672]
-*   [seasonRecapRouter][673]
-*   [put][674]
-*   [put][675]
-*   [put][676]
-*   [put][677]
-*   [put][678]
-*   [put][679]
-*   [router][680]
-*   [tripsRouter][681]
-*   [SystemUid][682]
-*   [HashOrUuid][683]
-*   [z][684]
-*   [validateDIP][685]
-    *   [Parameters][686]
-*   [validateSuggestions][687]
-    *   [Parameters][688]
-*   [validateApplyRequest][689]
-    *   [Parameters][690]
-*   [validateRollbackRequest][691]
-    *   [Parameters][692]
-*   [createDefaultDIP][693]
-    *   [Parameters][694]
-*   [createDefaultSuggestions][695]
-    *   [Parameters][696]
-*   [SpecKeywordSchema][697]
-*   [AcceptSpecPayload][698]
-*   [ClassificationSchema][699]
-*   [uploadDocumentSchema][700]
-*   [flexibleUploadDocumentSchema][701]
-*   [documentUploadRequestSchema][702]
-*   [systemMetadataSchema][703]
-*   [documentCreationSchema][704]
-*   [computeConfidence][705]
-    *   [Parameters][706]
-*   [getEmbedding][707]
-    *   [Parameters][708]
-*   [itemToText][709]
-    *   [Parameters][710]
-*   [selectDiverseExamples][711]
-    *   [Parameters][712]
-*   [getSimilarDecisions][713]
-    *   [Parameters][714]
-*   [storeDecisionEmbedding][715]
-    *   [Parameters][716]
-*   [checkEmbeddingReadiness][717]
-*   [RunMetrics][718]
+*   [post][637]
+*   [post][638]
+*   [post][639]
+*   [post][640]
+*   [post][641]
+*   [post][642]
+*   [post][643]
+*   [post][644]
+*   [post][645]
+*   [post][646]
+*   [post][647]
+*   [post][648]
+*   [post][649]
+*   [post][650]
+*   [post][651]
+*   [post][652]
+*   [post][653]
+*   [post][654]
+*   [post][655]
+*   [post][656]
+*   [post][657]
+*   [post][658]
+*   [post][659]
+*   [delete][660]
+*   [delete][661]
+*   [delete][662]
+*   [delete][663]
+*   [delete][664]
+*   [delete][665]
+*   [delete][666]
+*   [delete][667]
+*   [delete][668]
+*   [delete][669]
+*   [delete][670]
+*   [delete][671]
+*   [delete][672]
+*   [delete][673]
+*   [delete][674]
+*   [delete][675]
+*   [express][676]
+*   [express][677]
+*   [express][678]
+*   [express][679]
+*   [express][680]
+*   [express][681]
+*   [express][682]
+*   [express][683]
+*   [Router][684]
+*   [Router][685]
+*   [Router][686]
+*   [Router][687]
+*   [patch][688]
+*   [patch][689]
+*   [patch][690]
+*   [patch][691]
+*   [patch][692]
+*   [expressJson][693]
+*   [anchoragesRouter][694]
+*   [boatNowRouter][695]
+*   [seasonRecapRouter][696]
+*   [put][697]
+*   [put][698]
+*   [put][699]
+*   [put][700]
+*   [put][701]
+*   [put][702]
+*   [router][703]
+*   [tripsRouter][704]
+*   [SystemUid][705]
+*   [HashOrUuid][706]
+*   [z][707]
+*   [validateDIP][708]
+    *   [Parameters][709]
+*   [validateSuggestions][710]
+    *   [Parameters][711]
+*   [validateApplyRequest][712]
+    *   [Parameters][713]
+*   [validateRollbackRequest][714]
+    *   [Parameters][715]
+*   [createDefaultDIP][716]
+    *   [Parameters][717]
+*   [createDefaultSuggestions][718]
     *   [Parameters][719]
-    *   [recordEvent][720]
-        *   [Parameters][721]
-    *   [getStats][722]
-    *   [saveCompleted][723]
-    *   [saveFailed][724]
-        *   [Parameters][725]
-    *   [generateReport][726]
-*   [acquireRunLock][727]
-    *   [Parameters][728]
-*   [clearStaleProcessingMarks][729]
-    *   [Parameters][730]
-*   [getRunHistory][731]
-    *   [Parameters][732]
-*   [getLastRun][733]
-    *   [Parameters][734]
-*   [DEFAULT\_LIMITS][735]
-*   [RunLimits][736]
+*   [SpecKeywordSchema][720]
+*   [AcceptSpecPayload][721]
+*   [ClassificationSchema][722]
+*   [uploadDocumentSchema][723]
+*   [flexibleUploadDocumentSchema][724]
+*   [documentUploadRequestSchema][725]
+*   [systemMetadataSchema][726]
+*   [documentCreationSchema][727]
+*   [computeConfidence][728]
+    *   [Parameters][729]
+*   [getEmbedding][730]
+    *   [Parameters][731]
+*   [itemToText][732]
+    *   [Parameters][733]
+*   [selectDiverseExamples][734]
+    *   [Parameters][735]
+*   [getSimilarDecisions][736]
     *   [Parameters][737]
-*   [REJECT\_KEYWORDS][738]
-*   [REJECT\_CATEGORIES][739]
-*   [getContentText][740]
-    *   [Parameters][741]
-*   [preFilter][742]
-    *   [Parameters][743]
-*   [getTableThresholds][744]
-    *   [Parameters][745]
-*   [applyPolicy][746]
-    *   [Parameters][747]
-*   [sleep][748]
-    *   [Parameters][749]
-*   [sleep][750]
+*   [storeDecisionEmbedding][738]
+    *   [Parameters][739]
+*   [checkEmbeddingReadiness][740]
+*   [RunMetrics][741]
+    *   [Parameters][742]
+    *   [recordEvent][743]
+        *   [Parameters][744]
+    *   [getStats][745]
+    *   [saveCompleted][746]
+    *   [saveFailed][747]
+        *   [Parameters][748]
+    *   [generateReport][749]
+*   [acquireRunLock][750]
     *   [Parameters][751]
-*   [sleep][752]
+*   [clearStaleProcessingMarks][752]
     *   [Parameters][753]
-*   [createRateLimiter][754]
+*   [getRunHistory][754]
     *   [Parameters][755]
-*   [getAgentConfig][756]
-*   [buildEvaluationPrompt][757]
-    *   [Parameters][758]
-*   [evaluateItem][759]
+*   [getLastRun][756]
+    *   [Parameters][757]
+*   [DEFAULT\_LIMITS][758]
+*   [RunLimits][759]
     *   [Parameters][760]
-*   [recordAgentDecision][761]
-    *   [Parameters][762]
-*   [updateItemStatus][763]
+*   [REJECT\_KEYWORDS][761]
+*   [REJECT\_CATEGORIES][762]
+*   [getContentText][763]
     *   [Parameters][764]
-*   [processItem][765]
+*   [preFilter][765]
     *   [Parameters][766]
-*   [getPendingItems][767]
+*   [getTableThresholds][767]
     *   [Parameters][768]
-*   [getAgentStats][769]
-*   [AisService][770]
-    *   [calculateDistanceNm][771]
-        *   [Parameters][772]
-    *   [getVesselsAroundUs][773]
-    *   [getFriendsWithPositions][774]
-    *   [addFriend][775]
-        *   [Parameters][776]
-    *   [removeFriend][777]
-        *   [Parameters][778]
-*   [buildPipelineModelParams][779]
-    *   [Parameters][780]
-*   [start][781]
-*   [stop][782]
-*   [checkStatus][783]
-*   [sendStatusChangeAlert][784]
+*   [applyPolicy][769]
+    *   [Parameters][770]
+*   [sleep][771]
+    *   [Parameters][772]
+*   [sleep][773]
+    *   [Parameters][774]
+*   [sleep][775]
+    *   [Parameters][776]
+*   [createRateLimiter][777]
+    *   [Parameters][778]
+*   [getAgentConfig][779]
+*   [buildEvaluationPrompt][780]
+    *   [Parameters][781]
+*   [evaluateItem][782]
+    *   [Parameters][783]
+*   [recordAgentDecision][784]
     *   [Parameters][785]
-*   [sendPeriodicUpdate][786]
+*   [updateItemStatus][786]
     *   [Parameters][787]
-*   [sendActivationNotification][788]
+*   [processItem][788]
     *   [Parameters][789]
-*   [sendDeactivationNotification][790]
-*   [isActive][791]
-*   [calculateDistance][792]
-    *   [Parameters][793]
-*   [calculateCentroid][794]
-*   [determineStatus][795]
-    *   [Parameters][796]
-*   [getStatus][797]
-*   [getPositionsWithDistance][798]
-    *   [Parameters][799]
-*   [activate][800]
-    *   [Parameters][801]
-*   [deactivate][802]
-*   [updateRadius][803]
-    *   [Parameters][804]
-*   [anchoragesRepository][805]
-*   [formatCoordinate][806]
-    *   [Parameters][807]
-*   [computeAnchorPosition][808]
-    *   [Parameters][809]
-*   [formatDuration][810]
-    *   [Parameters][811]
-*   [formatDuration][812]
-    *   [Parameters][813]
-*   [getCompassLabel][814]
-    *   [Parameters][815]
-*   [listAnchorages][816]
-*   [getAnchorage][817]
-    *   [Parameters][818]
-*   [updateAnchorage][819]
+*   [getPendingItems][790]
+    *   [Parameters][791]
+*   [getAgentStats][792]
+*   [AisService][793]
+    *   [calculateDistanceNm][794]
+        *   [Parameters][795]
+    *   [getVesselsAroundUs][796]
+    *   [getFriendsWithPositions][797]
+    *   [addFriend][798]
+        *   [Parameters][799]
+    *   [removeFriend][800]
+        *   [Parameters][801]
+*   [buildPipelineModelParams][802]
+    *   [Parameters][803]
+*   [start][804]
+*   [stop][805]
+*   [checkStatus][806]
+*   [sendStatusChangeAlert][807]
+    *   [Parameters][808]
+*   [sendPeriodicUpdate][809]
+    *   [Parameters][810]
+*   [sendActivationNotification][811]
+    *   [Parameters][812]
+*   [sendDeactivationNotification][813]
+*   [isActive][814]
+*   [\_getActiveZone][815]
+*   [calculateDistance][816]
+    *   [Parameters][817]
+*   [calculateCentroid][818]
+*   [determineStatus][819]
     *   [Parameters][820]
-*   [deleteAnchorage][821]
-    *   [Parameters][822]
-*   [distanceDegrees][823]
+*   [getStatus][821]
+*   [getStatusQuick][822]
+*   [getPositionsWithDistance][823]
     *   [Parameters][824]
-*   [mergeCandidates][825]
+*   [activate][825]
     *   [Parameters][826]
-*   [detectNewAnchorages][827]
-    *   [Parameters][828]
-*   [mergeExistingDuplicates][829]
-*   [populateLocationNames][830]
-*   [createAnchorage][831]
-    *   [Parameters][832]
-*   [AnthropicExtractionService][833]
-    *   [runAnthropicExtraction][834]
-        *   [Parameters][835]
-    *   [callPythonSidecarForExtraction][836]
-        *   [Parameters][837]
-    *   [storeExtractionResults][838]
-        *   [Parameters][839]
-*   [generateEnhancedAssistantResponse][840]
-    *   [Parameters][841]
-*   [extractPressureSpecs][842]
-    *   [Parameters][843]
-*   [generatePressureResponse][844]
-    *   [Parameters][845]
-*   [generateStandardResponse][846]
-    *   [Parameters][847]
-*   [generateStructuredContent][848]
+*   [deactivate][827]
+*   [updateRadius][828]
+    *   [Parameters][829]
+*   [computeConvexHull][830]
+    *   [Parameters][831]
+*   [catenaryHorizontalReach][832]
+    *   [Parameters][833]
+*   [getSafeBox][834]
+    *   [Parameters][835]
+*   [anchoragesRepository][836]
+*   [formatCoordinate][837]
+    *   [Parameters][838]
+*   [computeAnchorPosition][839]
+    *   [Parameters][840]
+*   [formatDuration][841]
+    *   [Parameters][842]
+*   [formatDuration][843]
+    *   [Parameters][844]
+*   [getCompassLabel][845]
+    *   [Parameters][846]
+*   [listAnchorages][847]
+*   [getAnchorage][848]
     *   [Parameters][849]
-*   [detectResponseStyle][850]
+*   [updateAnchorage][850]
     *   [Parameters][851]
-*   [gpsRepository][852]
-*   [fetchCurrentWeather][853]
-    *   [Parameters][854]
-*   [weatherCodeToDescription][855]
-    *   [Parameters][856]
-*   [degreesToCompass][857]
-    *   [Parameters][858]
-*   [downsampleByInterval][859]
-    *   [Parameters][860]
-*   [getBoatStatus][861]
-    *   [Parameters][862]
-*   [openaiClient][863]
-*   [getOpenAIClient][864]
-*   [getOpenAIClient][865]
-*   [buildSystemPrompt][866]
-    *   [Parameters][867]
-*   [buildSystemPrompt][868]
-    *   [Parameters][869]
-*   [processChatCompletion][870]
-    *   [Parameters][871]
-*   [createChatProxyService][872]
-    *   [Parameters][873]
-    *   [Examples][874]
-*   [extractKeywords][875]
+*   [deleteAnchorage][852]
+    *   [Parameters][853]
+*   [distanceDegrees][854]
+    *   [Parameters][855]
+*   [mergeCandidates][856]
+    *   [Parameters][857]
+*   [detectNewAnchorages][858]
+    *   [Parameters][859]
+*   [mergeExistingDuplicates][860]
+*   [populateLocationNames][861]
+*   [createAnchorage][862]
+    *   [Parameters][863]
+*   [AnthropicExtractionService][864]
+    *   [runAnthropicExtraction][865]
+        *   [Parameters][866]
+    *   [callPythonSidecarForExtraction][867]
+        *   [Parameters][868]
+    *   [storeExtractionResults][869]
+        *   [Parameters][870]
+*   [generateEnhancedAssistantResponse][871]
+    *   [Parameters][872]
+*   [extractPressureSpecs][873]
+    *   [Parameters][874]
+*   [generatePressureResponse][875]
     *   [Parameters][876]
-    *   [Examples][877]
-*   [fetchPineconeChunks][878]
-    *   [Parameters][879]
-*   [fetchPineconeChunksV5][880]
-    *   [Parameters][881]
-*   [extractTermsWithLLM][882]
-    *   [Parameters][883]
-*   [extractColloquialKeywords][884]
+*   [generateStandardResponse][877]
+    *   [Parameters][878]
+*   [generateStructuredContent][879]
+    *   [Parameters][880]
+*   [detectResponseStyle][881]
+    *   [Parameters][882]
+*   [gpsRepository][883]
+*   [fetchCurrentWeather][884]
     *   [Parameters][885]
-*   [extractColloquialKeywordsV5][886]
+*   [weatherCodeToDescription][886]
     *   [Parameters][887]
-*   [MEMORY\_WEIGHTS][888]
-*   [getWeightedConversationContext][889]
-    *   [Parameters][890]
-*   [groupMessagesIntoExchanges][891]
-    *   [Parameters][892]
-*   [generateWeightedContext][893]
-    *   [Parameters][894]
-*   [calculateExchangeWeight][895]
-    *   [Parameters][896]
-*   [createExchangeSummary][897]
-    *   [Parameters][898]
-*   [extractAccumulatedEquipment][899]
+*   [degreesToCompass][888]
+    *   [Parameters][889]
+*   [downsampleByInterval][890]
+    *   [Parameters][891]
+*   [getBoatStatus][892]
+    *   [Parameters][893]
+*   [getHistory][894]
+    *   [Parameters][895]
+*   [openaiClient][896]
+*   [getOpenAIClient][897]
+*   [getOpenAIClient][898]
+*   [buildSystemPrompt][899]
     *   [Parameters][900]
-*   [getEquipmentRelationshipContext][901]
+*   [buildSystemPrompt][901]
     *   [Parameters][902]
-*   [searchSpecSuggestions][903]
+*   [processChatCompletion][903]
     *   [Parameters][904]
-*   [searchSpecSuggestions][905]
+*   [createChatProxyService][905]
     *   [Parameters][906]
-*   [searchPlaybookHints][907]
-    *   [Parameters][908]
-*   [searchIntentRouter][909]
-    *   [Parameters][910]
-*   [searchGoldenTests][911]
+    *   [Examples][907]
+*   [extractKeywords][908]
+    *   [Parameters][909]
+    *   [Examples][910]
+*   [fetchPineconeChunks][911]
     *   [Parameters][912]
-*   [searchAllDIPTables][913]
+*   [fetchPineconeChunksV5][913]
     *   [Parameters][914]
-*   [log][915]
-*   [log][916]
-*   [log][917]
-*   [log][918]
-*   [log][919]
-*   [log][920]
-*   [log][921]
-*   [runDipWithCallback][922]
+*   [extractTermsWithLLM][915]
+    *   [Parameters][916]
+*   [extractColloquialKeywords][917]
+    *   [Parameters][918]
+*   [extractColloquialKeywordsV5][919]
+    *   [Parameters][920]
+*   [MEMORY\_WEIGHTS][921]
+*   [getWeightedConversationContext][922]
     *   [Parameters][923]
-*   [processSSEEvent][924]
+*   [groupMessagesIntoExchanges][924]
     *   [Parameters][925]
-*   [TelegramBot][926]
-*   [TelegramBot][927]
-*   [TelegramBot][928]
-*   [safeAnswerCallback][929]
-    *   [Parameters][930]
-*   [start][931]
-*   [stop][932]
-*   [setupCommandHandlers][933]
-*   [setupCallbackHandlers][934]
-*   [setupMessageHandlers][935]
-*   [setupErrorHandlers][936]
-*   [recordTelegramDecision][937]
-    *   [Parameters][938]
-*   [updateItemStatus][939]
-    *   [Parameters][940]
-*   [sendEscalation][941]
-    *   [Parameters][942]
-*   [cleanupOldEscalations][943]
-*   [escapeMarkdown][944]
+*   [generateWeightedContext][926]
+    *   [Parameters][927]
+*   [calculateExchangeWeight][928]
+    *   [Parameters][929]
+*   [createExchangeSummary][930]
+    *   [Parameters][931]
+*   [extractAccumulatedEquipment][932]
+    *   [Parameters][933]
+*   [getEquipmentRelationshipContext][934]
+    *   [Parameters][935]
+*   [searchSpecSuggestions][936]
+    *   [Parameters][937]
+*   [searchSpecSuggestions][938]
+    *   [Parameters][939]
+*   [searchPlaybookHints][940]
+    *   [Parameters][941]
+*   [searchIntentRouter][942]
+    *   [Parameters][943]
+*   [searchGoldenTests][944]
     *   [Parameters][945]
-*   [getSystemName][946]
+*   [searchAllDIPTables][946]
     *   [Parameters][947]
-*   [formatItemForDisplay][948]
-    *   [Parameters][949]
-*   [isActive][950]
-*   [getBot][951]
-*   [ingestDipOutputsToDb][952]
-    *   [Parameters][953]
-*   [ingestDipOutputsToDb][954]
-    *   [Parameters][955]
-*   [processSpecSuggestions][956]
-    *   [Parameters][957]
-*   [processPlaybookHints][958]
-    *   [Parameters][959]
-*   [processIntentRouter][960]
-    *   [Parameters][961]
-*   [processGoldenTests][962]
+*   [log][948]
+*   [log][949]
+*   [log][950]
+*   [log][951]
+*   [log][952]
+*   [log][953]
+*   [log][954]
+*   [runDipWithCallback][955]
+    *   [Parameters][956]
+*   [processSSEEvent][957]
+    *   [Parameters][958]
+*   [TelegramBot][959]
+*   [TelegramBot][960]
+*   [TelegramBot][961]
+*   [safeAnswerCallback][962]
     *   [Parameters][963]
-*   [fetchJsonFromStorage][964]
-    *   [Parameters][965]
-*   [runDIPPacket][966]
-    *   [Parameters][967]
-*   [runDIPPacket][968]
-    *   [Parameters][969]
-*   [checkDIPAvailability][970]
-*   [getDIPStats][971]
-    *   [Parameters][972]
-*   [DocumentDeletionService][973]
-    *   [getDeletionPreview][974]
-        *   [Parameters][975]
-    *   [deleteDocument][976]
-        *   [Parameters][977]
-    *   [archiveStorage][978]
-        *   [Parameters][979]
-    *   [deletePineconeVectors][980]
-        *   [Parameters][981]
-    *   [countDipEntries][982]
-        *   [Parameters][983]
-    *   [deleteDipEntries][984]
-        *   [Parameters][985]
-    *   [getStorageInfo][986]
-        *   [Parameters][987]
-    *   [getSystemInfo][988]
-        *   [Parameters][989]
-    *   [countPineconeVectors][990]
-        *   [Parameters][991]
-*   [parseDbError][992]
-    *   [Parameters][993]
-*   [lookupReferenceIds][994]
-    *   [Parameters][995]
-*   [findOrCreateSystem][996]
-    *   [Parameters][997]
-*   [createInstanceForSystem][998]
-    *   [Parameters][999]
-*   [createDocumentSystemLink][1000]
-    *   [Parameters][1001]
-*   [saveReferencedSystems][1002]
-    *   [Parameters][1003]
-*   [upsertDocumentRecord][1004]
+*   [start][964]
+*   [stop][965]
+*   [setupCommandHandlers][966]
+*   [setupCallbackHandlers][967]
+*   [setupMessageHandlers][968]
+*   [setupErrorHandlers][969]
+*   [recordTelegramDecision][970]
+    *   [Parameters][971]
+*   [updateItemStatus][972]
+    *   [Parameters][973]
+*   [sendEscalation][974]
+    *   [Parameters][975]
+*   [cleanupOldEscalations][976]
+*   [escapeMarkdown][977]
+    *   [Parameters][978]
+*   [getSystemName][979]
+    *   [Parameters][980]
+*   [formatItemForDisplay][981]
+    *   [Parameters][982]
+*   [isActive][983]
+*   [getBot][984]
+*   [ingestDipOutputsToDb][985]
+    *   [Parameters][986]
+*   [ingestDipOutputsToDb][987]
+    *   [Parameters][988]
+*   [processSpecSuggestions][989]
+    *   [Parameters][990]
+*   [processPlaybookHints][991]
+    *   [Parameters][992]
+*   [processIntentRouter][993]
+    *   [Parameters][994]
+*   [processGoldenTests][995]
+    *   [Parameters][996]
+*   [fetchJsonFromStorage][997]
+    *   [Parameters][998]
+*   [runDIPPacket][999]
+    *   [Parameters][1000]
+*   [runDIPPacket][1001]
+    *   [Parameters][1002]
+*   [checkDIPAvailability][1003]
+*   [getDIPStats][1004]
     *   [Parameters][1005]
-*   [saveDetectionResults][1006]
-    *   [Parameters][1007]
-*   [validateInstalledPrimary][1008]
-    *   [Parameters][1009]
-*   [fetchDetectionReferenceData][1010]
-*   [generateDocId][1011]
-    *   [Parameters][1012]
-*   [extractTextPreview][1013]
-    *   [Parameters][1014]
-*   [extractFromDatabase][1015]
-    *   [Parameters][1016]
-*   [extractFromStorage][1017]
-    *   [Parameters][1018]
-*   [getFromCache][1019]
-    *   [Parameters][1020]
-*   [setCache][1021]
-    *   [Parameters][1022]
-*   [getTextExtractionMetrics][1023]
-*   [clearTextCache][1024]
-*   [getCacheStats][1025]
-*   [createIngestJob][1026]
-    *   [Parameters][1027]
-*   [processJob][1028]
-    *   [Parameters][1029]
-*   [listJobs][1030]
-    *   [Parameters][1031]
-*   [getJobStatus][1032]
-    *   [Parameters][1033]
-*   [getDocument][1034]
-    *   [Parameters][1035]
-*   [listDocuments][1036]
-    *   [Parameters][1037]
-*   [detectModelsFromDocument][1038]
-    *   [Parameters][1039]
-*   [fs][1040]
-*   [fs][1041]
-*   [fs][1042]
-*   [fs][1043]
-*   [fs][1044]
-*   [fs][1045]
-*   [getLatestDeduplicationFile][1046]
-*   [findPairInLatestJSON][1047]
-    *   [Parameters][1048]
-*   [getCandidates][1049]
-*   [computeFeatures][1050]
+*   [DocumentDeletionService][1006]
+    *   [getDeletionPreview][1007]
+        *   [Parameters][1008]
+    *   [deleteDocument][1009]
+        *   [Parameters][1010]
+    *   [archiveStorage][1011]
+        *   [Parameters][1012]
+    *   [deletePineconeVectors][1013]
+        *   [Parameters][1014]
+    *   [countDipEntries][1015]
+        *   [Parameters][1016]
+    *   [deleteDipEntries][1017]
+        *   [Parameters][1018]
+    *   [getStorageInfo][1019]
+        *   [Parameters][1020]
+    *   [getSystemInfo][1021]
+        *   [Parameters][1022]
+    *   [countPineconeVectors][1023]
+        *   [Parameters][1024]
+*   [parseDbError][1025]
+    *   [Parameters][1026]
+*   [lookupReferenceIds][1027]
+    *   [Parameters][1028]
+*   [findOrCreateSystem][1029]
+    *   [Parameters][1030]
+*   [createInstanceForSystem][1031]
+    *   [Parameters][1032]
+*   [createDocumentSystemLink][1033]
+    *   [Parameters][1034]
+*   [saveReferencedSystems][1035]
+    *   [Parameters][1036]
+*   [upsertDocumentRecord][1037]
+    *   [Parameters][1038]
+*   [saveDetectionResults][1039]
+    *   [Parameters][1040]
+*   [validateInstalledPrimary][1041]
+    *   [Parameters][1042]
+*   [fetchDetectionReferenceData][1043]
+*   [generateDocId][1044]
+    *   [Parameters][1045]
+*   [extractTextPreview][1046]
+    *   [Parameters][1047]
+*   [extractFromDatabase][1048]
+    *   [Parameters][1049]
+*   [extractFromStorage][1050]
     *   [Parameters][1051]
-*   [computeFrequencyDiff][1052]
+*   [getFromCache][1052]
     *   [Parameters][1053]
-*   [submitDecision][1054]
+*   [setCache][1054]
     *   [Parameters][1055]
-*   [getStats][1056]
-*   [getStats][1057]
-*   [extractEquipmentName][1058]
-    *   [Parameters][1059]
-*   [validateEquipmentArray][1060]
-    *   [Parameters][1061]
-*   [inferEquipmentRelationships][1062]
-    *   [Parameters][1063]
-*   [analyzeEquipmentRelationships][1064]
-    *   [Parameters][1065]
-*   [extractEquipmentFromHistory][1066]
-    *   [Parameters][1067]
-*   [expandEquipmentContext][1068]
-    *   [Parameters][1069]
-*   [quickReferenceCheck][1070]
-    *   [Parameters][1071]
-*   [findFactMatch][1072]
-    *   [Parameters][1073]
-*   [getFactFirstResponse][1074]
-    *   [Parameters][1075]
-*   [shouldAttemptFactFirst][1076]
-    *   [Parameters][1077]
-*   [getCount][1078]
-    *   [Parameters][1079]
-*   [getSystemsWithDocuments][1080]
-*   [getDataIssues][1081]
-*   [getGroupedCounts][1082]
-    *   [Parameters][1083]
-*   [getPineconeStats][1084]
-*   [getAllRows][1085]
+*   [getTextExtractionMetrics][1056]
+*   [clearTextCache][1057]
+*   [getCacheStats][1058]
+*   [createIngestJob][1059]
+    *   [Parameters][1060]
+*   [processJob][1061]
+    *   [Parameters][1062]
+*   [listJobs][1063]
+    *   [Parameters][1064]
+*   [getJobStatus][1065]
+    *   [Parameters][1066]
+*   [getDocument][1067]
+    *   [Parameters][1068]
+*   [listDocuments][1069]
+    *   [Parameters][1070]
+*   [detectModelsFromDocument][1071]
+    *   [Parameters][1072]
+*   [fs][1073]
+*   [fs][1074]
+*   [fs][1075]
+*   [fs][1076]
+*   [fs][1077]
+*   [fs][1078]
+*   [getLatestDeduplicationFile][1079]
+*   [findPairInLatestJSON][1080]
+    *   [Parameters][1081]
+*   [getCandidates][1082]
+*   [computeFeatures][1083]
+    *   [Parameters][1084]
+*   [computeFrequencyDiff][1085]
     *   [Parameters][1086]
-*   [getDipStagingStats][1087]
-*   [getDipProductionStats][1088]
-*   [getLiveTaskStats][1089]
-*   [getMaintenanceAgentStats][1090]
-*   [getVectorizedSystemsCount][1091]
-*   [getFunnelStats][1092]
-*   [saveTimingPayload][1093]
+*   [submitDecision][1087]
+    *   [Parameters][1088]
+*   [getStats][1089]
+*   [getStats][1090]
+*   [extractEquipmentName][1091]
+    *   [Parameters][1092]
+*   [validateEquipmentArray][1093]
     *   [Parameters][1094]
-*   [getTimingForDocument][1095]
+*   [inferEquipmentRelationships][1095]
     *   [Parameters][1096]
-*   [getTimingForRun][1097]
+*   [analyzeEquipmentRelationships][1097]
     *   [Parameters][1098]
-*   [getRecentIngestTimingRuns][1099]
+*   [extractEquipmentFromHistory][1099]
     *   [Parameters][1100]
-*   [classifyUserIntent][1101]
+*   [expandEquipmentContext][1101]
     *   [Parameters][1102]
-*   [routeQuery][1103]
+*   [quickReferenceCheck][1103]
     *   [Parameters][1104]
-*   [OpenAI][1105]
-*   [generateKeywords][1106]
-    *   [Parameters][1107]
-*   [generateSynonyms][1108]
-    *   [Parameters][1109]
-*   [generateRefTableSynonyms][1110]
-    *   [Parameters][1111]
-*   [generateRefTableSynonyms][1112]
-    *   [Parameters][1113]
-*   [fetchRefTableSynonyms][1114]
-    *   [Parameters][1115]
-*   [postProcessSynonyms][1116]
-    *   [Parameters][1117]
-*   [stripAnsiCodes][1118]
+*   [findFactMatch][1105]
+    *   [Parameters][1106]
+*   [getFactFirstResponse][1107]
+    *   [Parameters][1108]
+*   [shouldAttemptFactFirst][1109]
+    *   [Parameters][1110]
+*   [getCount][1111]
+    *   [Parameters][1112]
+*   [getSystemsWithDocuments][1113]
+*   [getDataIssues][1114]
+*   [getGroupedCounts][1115]
+    *   [Parameters][1116]
+*   [getPineconeStats][1117]
+*   [getAllRows][1118]
     *   [Parameters][1119]
-*   [parseLogFile][1120]
-    *   [Parameters][1121]
-*   [mapTypeToLevel][1122]
-    *   [Parameters][1123]
-*   [parseLogTimestamp][1124]
-    *   [Parameters][1125]
-*   [calculateSinceTimestamp][1126]
+*   [getDipStagingStats][1120]
+*   [getDipProductionStats][1121]
+*   [getLiveTaskStats][1122]
+*   [getMaintenanceAgentStats][1123]
+*   [getVectorizedSystemsCount][1124]
+*   [getFunnelStats][1125]
+*   [determineStatus][1126]
     *   [Parameters][1127]
-*   [getLogs][1128]
+*   [synthesizeStep][1128]
     *   [Parameters][1129]
-*   [getLogMetadata][1130]
-*   [maintenanceTasksRepository][1131]
-*   [FREQUENCY\_CONVERSIONS][1132]
-*   [VALID\_CATEGORIES][1133]
-*   [VALID\_FREQUENCY\_BASES][1134]
-*   [VALID\_FREQUENCY\_TYPES][1135]
-*   [VALID\_REVIEW\_STATUSES][1136]
-*   [validateDescription][1137]
-    *   [Parameters][1138]
-*   [calculateFrequencyHours][1139]
-    *   [Parameters][1140]
-*   [formatTask][1141]
-    *   [Parameters][1142]
-*   [getAllTasks][1143]
-*   [getTask][1144]
-    *   [Parameters][1145]
-*   [updateTask][1146]
-    *   [Parameters][1147]
-*   [deleteTask][1148]
-    *   [Parameters][1149]
-*   [bulkUpdateStatus][1150]
-    *   [Parameters][1151]
-*   [SupabaseMemoryManager][1152]
-    *   [Parameters][1153]
-    *   [addMessage][1154]
-        *   [Parameters][1155]
-    *   [getMessages][1156]
-        *   [Parameters][1157]
-    *   [getFormattedHistory][1158]
-        *   [Parameters][1159]
-    *   [clearHistory][1160]
-    *   [getEquipmentContext][1161]
-    *   [updateEquipmentContext][1162]
-        *   [Parameters][1163]
-    *   [ensureThread][1164]
-    *   [incrementMessageCount][1165]
-    *   [getSummary][1166]
-    *   [updateSummary][1167]
-        *   [Parameters][1168]
-    *   [clearCache][1169]
-        *   [Parameters][1170]
-*   [pineconeClient][1171]
-*   [getPineconeClient][1172]
-*   [searchDocuments][1173]
-    *   [Parameters][1174]
-*   [searchDocuments][1175]
-    *   [Parameters][1176]
-*   [getDocumentChunks][1177]
-    *   [Parameters][1178]
-*   [retrieveWithSpecBias][1179]
-    *   [Parameters][1180]
-*   [normalizeQuery][1181]
-    *   [Parameters][1182]
-*   [callOpenAI][1183]
+*   [findMatchingJob][1130]
+    *   [Parameters][1131]
+*   [saveTimingPayload][1132]
+    *   [Parameters][1133]
+*   [getTimingForDocument][1134]
+    *   [Parameters][1135]
+*   [getTimingForRun][1136]
+    *   [Parameters][1137]
+*   [getRecentIngestTimingRuns][1138]
+    *   [Parameters][1139]
+*   [classifyUserIntent][1140]
+    *   [Parameters][1141]
+*   [routeQuery][1142]
+    *   [Parameters][1143]
+*   [OpenAI][1144]
+*   [generateKeywords][1145]
+    *   [Parameters][1146]
+*   [generateSynonyms][1147]
+    *   [Parameters][1148]
+*   [generateRefTableSynonyms][1149]
+    *   [Parameters][1150]
+*   [generateRefTableSynonyms][1151]
+    *   [Parameters][1152]
+*   [fetchRefTableSynonyms][1153]
+    *   [Parameters][1154]
+*   [postProcessSynonyms][1155]
+    *   [Parameters][1156]
+*   [stripAnsiCodes][1157]
+    *   [Parameters][1158]
+*   [parseLogFile][1159]
+    *   [Parameters][1160]
+*   [mapTypeToLevel][1161]
+    *   [Parameters][1162]
+*   [parseLogTimestamp][1163]
+    *   [Parameters][1164]
+*   [calculateSinceTimestamp][1165]
+    *   [Parameters][1166]
+*   [getLogs][1167]
+    *   [Parameters][1168]
+*   [getLogMetadata][1169]
+*   [maintenanceTasksRepository][1170]
+*   [FREQUENCY\_CONVERSIONS][1171]
+*   [VALID\_CATEGORIES][1172]
+*   [VALID\_FREQUENCY\_BASES][1173]
+*   [VALID\_FREQUENCY\_TYPES][1174]
+*   [VALID\_REVIEW\_STATUSES][1175]
+*   [validateDescription][1176]
+    *   [Parameters][1177]
+*   [calculateFrequencyHours][1178]
+    *   [Parameters][1179]
+*   [formatTask][1180]
+    *   [Parameters][1181]
+*   [getAllTasks][1182]
+*   [getTask][1183]
     *   [Parameters][1184]
-*   [formatTripsData][1185]
+*   [updateTask][1185]
     *   [Parameters][1186]
-*   [formatAnchoragesData][1187]
+*   [deleteTask][1187]
     *   [Parameters][1188]
-*   [getRecap][1189]
+*   [bulkUpdateStatus][1189]
     *   [Parameters][1190]
-*   [getAllRecaps][1191]
-*   [generateRecap][1192]
-    *   [Parameters][1193]
-*   [applySuggestions][1194]
-    *   [Parameters][1195]
-*   [readJson][1196]
-    *   [Parameters][1197]
-*   [writeJson][1198]
-    *   [Parameters][1199]
-*   [mergeJsonMapArray][1200]
-    *   [Parameters][1201]
-*   [mergeIntentHints][1202]
-    *   [Parameters][1203]
-*   [mergeMaintenanceLexicon][1204]
-    *   [Parameters][1205]
-*   [mergeUnits][1206]
-    *   [Parameters][1207]
-*   [writeGoldenTests][1208]
-    *   [Parameters][1209]
-*   [safeName][1210]
-    *   [Parameters][1211]
-*   [extractPatternsFromChunk][1212]
+*   [SupabaseMemoryManager][1191]
+    *   [Parameters][1192]
+    *   [addMessage][1193]
+        *   [Parameters][1194]
+    *   [getMessages][1195]
+        *   [Parameters][1196]
+    *   [getFormattedHistory][1197]
+        *   [Parameters][1198]
+    *   [clearHistory][1199]
+    *   [getEquipmentContext][1200]
+    *   [updateEquipmentContext][1201]
+        *   [Parameters][1202]
+    *   [ensureThread][1203]
+    *   [incrementMessageCount][1204]
+    *   [getSummary][1205]
+    *   [updateSummary][1206]
+        *   [Parameters][1207]
+    *   [clearCache][1208]
+        *   [Parameters][1209]
+*   [pineconeClient][1210]
+*   [getPineconeClient][1211]
+*   [searchDocuments][1212]
     *   [Parameters][1213]
-*   [buildIntentSuggestions][1214]
+*   [searchDocuments][1214]
     *   [Parameters][1215]
-*   [summarizeThread][1216]
+*   [getDocumentChunks][1216]
     *   [Parameters][1217]
-*   [generateThreadName][1218]
+*   [retrieveWithSpecBias][1218]
     *   [Parameters][1219]
-*   [generateThreadName][1220]
+*   [normalizeQuery][1220]
     *   [Parameters][1221]
-*   [generateSystemSummary][1222]
+*   [callOpenAI][1222]
     *   [Parameters][1223]
-*   [shouldSummarizeThread][1224]
+*   [formatTripsData][1224]
     *   [Parameters][1225]
-*   [getSummarizationMetadata][1226]
+*   [formatAnchoragesData][1226]
     *   [Parameters][1227]
-*   [analyzeSupplyPhoto][1228]
+*   [getRecap][1228]
     *   [Parameters][1229]
-*   [analyzeSupplyPhotoBase64][1230]
-    *   [Parameters][1231]
-*   [analyzeMultipleSupplyPhotos][1232]
-    *   [Parameters][1233]
-*   [suggestSystemsForSupply][1234]
-    *   [Parameters][1235]
-*   [uploadSupplyPhoto][1236]
-    *   [Parameters][1237]
-*   [deleteSupplyPhoto][1238]
-    *   [Parameters][1239]
-*   [uploadAnchoragePhoto][1240]
-    *   [Parameters][1241]
-*   [getManufacturersList][1242]
-*   [getManufacturersList][1243]
-*   [getModelsForManufacturer][1244]
-    *   [Parameters][1245]
-*   [searchSystem][1246]
-    *   [Parameters][1247]
-*   [getSystemWithInstances][1248]
-    *   [Parameters][1249]
-*   [deleteInstance][1250]
-    *   [Parameters][1251]
-*   [getRefManufacturersList][1252]
-*   [getRefProductTypesList][1253]
-*   [getRefSystemCategoriesList][1254]
-*   [getRefSubsystemCategoriesList][1255]
+*   [getAllRecaps][1230]
+*   [generateRecap][1231]
+    *   [Parameters][1232]
+*   [applySuggestions][1233]
+    *   [Parameters][1234]
+*   [readJson][1235]
+    *   [Parameters][1236]
+*   [writeJson][1237]
+    *   [Parameters][1238]
+*   [mergeJsonMapArray][1239]
+    *   [Parameters][1240]
+*   [mergeIntentHints][1241]
+    *   [Parameters][1242]
+*   [mergeMaintenanceLexicon][1243]
+    *   [Parameters][1244]
+*   [mergeUnits][1245]
+    *   [Parameters][1246]
+*   [writeGoldenTests][1247]
+    *   [Parameters][1248]
+*   [safeName][1249]
+    *   [Parameters][1250]
+*   [extractPatternsFromChunk][1251]
+    *   [Parameters][1252]
+*   [buildIntentSuggestions][1253]
+    *   [Parameters][1254]
+*   [summarizeThread][1255]
     *   [Parameters][1256]
-*   [start][1257]
-*   [stop][1258]
-*   [setupCommandHandlers][1259]
-*   [setupErrorHandlers][1260]
-*   [sendErrorMessage][1261]
+*   [generateThreadName][1257]
+    *   [Parameters][1258]
+*   [generateThreadName][1259]
+    *   [Parameters][1260]
+*   [generateSystemSummary][1261]
     *   [Parameters][1262]
-*   [isActive][1263]
-*   [getBot][1264]
-*   [isConfigured][1265]
-*   [sendMessage][1266]
-    *   [Parameters][1267]
-*   [sendAnchorWatchStatus][1268]
-    *   [Parameters][1269]
-*   [sendAnchorWatchAlert][1270]
-    *   [Parameters][1271]
-*   [sendRecentPositions][1272]
-    *   [Parameters][1273]
-*   [sendActivationConfirmation][1274]
-    *   [Parameters][1275]
-*   [sendDeactivationConfirmation][1276]
-*   [sendHelpMessage][1277]
-*   [getCurrentTelemetry][1278]
-*   [groupByCategory][1279]
+*   [shouldSummarizeThread][1263]
+    *   [Parameters][1264]
+*   [getSummarizationMetadata][1265]
+    *   [Parameters][1266]
+*   [analyzeSupplyPhoto][1267]
+    *   [Parameters][1268]
+*   [analyzeSupplyPhotoBase64][1269]
+    *   [Parameters][1270]
+*   [analyzeMultipleSupplyPhotos][1271]
+    *   [Parameters][1272]
+*   [suggestSystemsForSupply][1273]
+    *   [Parameters][1274]
+*   [uploadSupplyPhoto][1275]
+    *   [Parameters][1276]
+*   [deleteSupplyPhoto][1277]
+    *   [Parameters][1278]
+*   [uploadAnchoragePhoto][1279]
     *   [Parameters][1280]
-*   [extractSummary][1281]
-    *   [Parameters][1282]
-*   [getTankType][1283]
+*   [getManufacturersList][1281]
+*   [getManufacturersList][1282]
+*   [getModelsForManufacturer][1283]
     *   [Parameters][1284]
-*   [getLatestTimestamp][1285]
+*   [searchSystem][1285]
     *   [Parameters][1286]
-*   [getBatteryDetails][1287]
-*   [getSolarDetails][1288]
-*   [getTankDetails][1289]
-*   [getAnalysisForRun][1290]
-    *   [Parameters][1291]
-*   [hasAnalysisForRun][1292]
-    *   [Parameters][1293]
-*   [getRecentAnalysisRuns][1294]
+*   [getSystemWithInstances][1287]
+    *   [Parameters][1288]
+*   [deleteInstance][1289]
+    *   [Parameters][1290]
+*   [getRefManufacturersList][1291]
+*   [getRefProductTypesList][1292]
+*   [getRefSystemCategoriesList][1293]
+*   [getRefSubsystemCategoriesList][1294]
     *   [Parameters][1295]
-*   [shouldNameThread][1296]
-    *   [Parameters][1297]
-*   [generateFallbackThreadName][1298]
-    *   [Parameters][1299]
-*   [nameThread][1300]
+*   [start][1296]
+*   [stop][1297]
+*   [setupCommandHandlers][1298]
+*   [setupErrorHandlers][1299]
+*   [sendErrorMessage][1300]
     *   [Parameters][1301]
-*   [callOpenAISummary][1302]
-    *   [Parameters][1303]
-*   [callOpenAISummary][1304]
-    *   [Parameters][1305]
-*   [generateThreadSummary][1306]
-    *   [Parameters][1307]
-*   [generateQASummary][1308]
-    *   [Parameters][1309]
-*   [processQASummaryForMessage][1310]
-    *   [Parameters][1311]
-*   [checkAndGenerateQASummary][1312]
-    *   [Parameters][1313]
-*   [generateSummaryFromMessages][1314]
-    *   [Parameters][1315]
-*   [checkAndGenerateSummary][1316]
-    *   [Parameters][1317]
-*   [haversineDistance][1318]
+*   [isActive][1302]
+*   [getBot][1303]
+*   [isConfigured][1304]
+*   [sendMessage][1305]
+    *   [Parameters][1306]
+*   [sendAnchorWatchStatus][1307]
+    *   [Parameters][1308]
+*   [sendAnchorWatchAlert][1309]
+    *   [Parameters][1310]
+*   [sendRecentPositions][1311]
+    *   [Parameters][1312]
+*   [sendActivationConfirmation][1313]
+    *   [Parameters][1314]
+*   [sendDeactivationConfirmation][1315]
+*   [sendHelpMessage][1316]
+*   [getCurrentTelemetry][1317]
+*   [groupByCategory][1318]
     *   [Parameters][1319]
-*   [calculateTotalDistance][1320]
+*   [extractSummary][1320]
     *   [Parameters][1321]
-*   [average][1322]
+*   [getTankType][1322]
     *   [Parameters][1323]
-*   [simplifyTrack][1324]
+*   [getLatestTimestamp][1324]
     *   [Parameters][1325]
-*   [listTrips][1326]
-    *   [Parameters][1327]
-*   [getTrip][1328]
-    *   [Parameters][1329]
-*   [getActiveTrip][1330]
-*   [startTrip][1331]
-*   [stopTrip][1332]
-    *   [Parameters][1333]
-*   [resumeTrip][1334]
-    *   [Parameters][1335]
-*   [updateTrip][1336]
-    *   [Parameters][1337]
-*   [deleteTrip][1338]
-    *   [Parameters][1339]
-*   [getActiveTripStats][1340]
-    *   [Parameters][1341]
-*   [recordSailEvent][1342]
-    *   [Parameters][1343]
-*   [getSailEvents][1344]
-    *   [Parameters][1345]
-*   [getCurrentSailConfig][1346]
-    *   [Parameters][1347]
-*   [addComment][1348]
-    *   [Parameters][1349]
-*   [getComments][1350]
-    *   [Parameters][1351]
-*   [deleteComment][1352]
-    *   [Parameters][1353]
-*   [updateSailEvent][1354]
-    *   [Parameters][1355]
-*   [deleteSailEvent][1356]
-    *   [Parameters][1357]
-*   [updateComment][1358]
-    *   [Parameters][1359]
-*   [extractSignalKValues][1360]
-    *   [Parameters][1361]
-*   [filterLowVarianceColumns][1362]
-    *   [Parameters][1363]
-*   [getTelemetrySamples][1364]
-    *   [Parameters][1365]
-*   [generateTripTitle][1366]
-    *   [Parameters][1367]
-*   [regenerateTripTitles][1368]
-*   [fetchMarineWeather][1369]
-    *   [Parameters][1370]
-*   [fetchStandardWeather][1371]
-    *   [Parameters][1372]
-*   [collectWeatherForTrip][1373]
-    *   [Parameters][1374]
-*   [collectWeatherForActiveTrips][1375]
-*   [startWeatherCollector][1376]
-*   [stopWeatherCollector][1377]
-*   [triggerWeatherCollection][1378]
-*   [twilio][1379]
-*   [getClient][1380]
-*   [isConfigured][1381]
-*   [sendSMS][1382]
+*   [getBatteryDetails][1326]
+*   [getSolarDetails][1327]
+*   [getTankDetails][1328]
+*   [getAnalysisForRun][1329]
+    *   [Parameters][1330]
+*   [hasAnalysisForRun][1331]
+    *   [Parameters][1332]
+*   [getRecentAnalysisRuns][1333]
+    *   [Parameters][1334]
+*   [shouldNameThread][1335]
+    *   [Parameters][1336]
+*   [generateFallbackThreadName][1337]
+    *   [Parameters][1338]
+*   [nameThread][1339]
+    *   [Parameters][1340]
+*   [callOpenAISummary][1341]
+    *   [Parameters][1342]
+*   [callOpenAISummary][1343]
+    *   [Parameters][1344]
+*   [generateThreadSummary][1345]
+    *   [Parameters][1346]
+*   [generateQASummary][1347]
+    *   [Parameters][1348]
+*   [processQASummaryForMessage][1349]
+    *   [Parameters][1350]
+*   [checkAndGenerateQASummary][1351]
+    *   [Parameters][1352]
+*   [generateSummaryFromMessages][1353]
+    *   [Parameters][1354]
+*   [checkAndGenerateSummary][1355]
+    *   [Parameters][1356]
+*   [haversineDistance][1357]
+    *   [Parameters][1358]
+*   [calculateTotalDistance][1359]
+    *   [Parameters][1360]
+*   [average][1361]
+    *   [Parameters][1362]
+*   [simplifyTrack][1363]
+    *   [Parameters][1364]
+*   [listTrips][1365]
+    *   [Parameters][1366]
+*   [getTrip][1367]
+    *   [Parameters][1368]
+*   [getActiveTrip][1369]
+*   [startTrip][1370]
+    *   [Parameters][1371]
+*   [stopTrip][1372]
+    *   [Parameters][1373]
+*   [resumeTrip][1374]
+    *   [Parameters][1375]
+*   [updateTrip][1376]
+    *   [Parameters][1377]
+*   [deleteTrip][1378]
+    *   [Parameters][1379]
+*   [getActiveTripStats][1380]
+    *   [Parameters][1381]
+*   [recordSailEvent][1382]
     *   [Parameters][1383]
-*   [sendCriticalAlert][1384]
+*   [getSailEvents][1384]
     *   [Parameters][1385]
-*   [sendTestMessage][1386]
-*   [runV5ColloquialKeywords][1387]
-    *   [Parameters][1388]
-*   [runDipExtraction][1389]
-    *   [Parameters][1390]
-*   [runV5Indexing][1391]
-    *   [Parameters][1392]
-*   [startIngestRun][1393]
-    *   [Parameters][1394]
-*   [runIngestPipeline][1395]
-    *   [Parameters][1396]
-*   [getIngestStatus][1397]
-    *   [Parameters][1398]
-*   [startParseDetectRun][1399]
-    *   [Parameters][1400]
-*   [runParseDetectPipeline][1401]
-    *   [Parameters][1402]
-*   [getParseDetectStatus][1403]
-    *   [Parameters][1404]
-*   [createFailureTodo][1405]
-    *   [Parameters][1406]
-*   [refreshKnowledgeFactsView][1407]
-*   [refreshKnowledgeFactsViewSafe][1408]
-*   [getViewRefreshStats][1409]
-*   [checkViewHealth][1410]
-*   [runVisionPipeline][1411]
+*   [getCurrentSailConfig][1386]
+    *   [Parameters][1387]
+*   [addComment][1388]
+    *   [Parameters][1389]
+*   [getComments][1390]
+    *   [Parameters][1391]
+*   [deleteComment][1392]
+    *   [Parameters][1393]
+*   [updateSailEvent][1394]
+    *   [Parameters][1395]
+*   [deleteSailEvent][1396]
+    *   [Parameters][1397]
+*   [updateComment][1398]
+    *   [Parameters][1399]
+*   [extractSignalKValues][1400]
+    *   [Parameters][1401]
+*   [filterLowVarianceColumns][1402]
+    *   [Parameters][1403]
+*   [getTelemetrySamples][1404]
+    *   [Parameters][1405]
+*   [generateTripTitle][1406]
+    *   [Parameters][1407]
+*   [regenerateTripTitles][1408]
+*   [fetchMarineWeather][1409]
+    *   [Parameters][1410]
+*   [fetchStandardWeather][1411]
     *   [Parameters][1412]
-*   [getDocumentAssets][1413]
+*   [collectWeatherForTrip][1413]
     *   [Parameters][1414]
-*   [getDocumentAssetSummary][1415]
-    *   [Parameters][1416]
-*   [deleteDocumentAssets][1417]
-    *   [Parameters][1418]
-*   [ensureLexicons][1419]
-*   [ensureFile][1420]
-    *   [Parameters][1421]
-*   [defaultMaintenance][1422]
-*   [defaultUnits][1423]
-*   [env][1424]
-*   [step][1425]
-    *   [Parameters][1426]
-*   [state][1427]
+*   [collectWeatherForActiveTrips][1415]
+*   [startWeatherCollector][1416]
+*   [stopWeatherCollector][1417]
+*   [triggerWeatherCollection][1418]
+*   [twilio][1419]
+*   [getClient][1420]
+*   [isConfigured][1421]
+*   [sendSMS][1422]
+    *   [Parameters][1423]
+*   [sendCriticalAlert][1424]
+    *   [Parameters][1425]
+*   [sendTestMessage][1426]
+*   [runV5ColloquialKeywords][1427]
     *   [Parameters][1428]
-*   [transform][1429]
+*   [runDipExtraction][1429]
     *   [Parameters][1430]
-*   [apiCall][1431]
+*   [runV5Indexing][1431]
     *   [Parameters][1432]
-*   [timing][1433]
+*   [startIngestRun][1433]
     *   [Parameters][1434]
-*   [error][1435]
+*   [runIngestPipeline][1435]
     *   [Parameters][1436]
-*   [timed][1437]
+*   [getIngestStatus][1437]
     *   [Parameters][1438]
-*   [isFollowUpQuestion][1439]
+*   [startParseDetectRun][1439]
     *   [Parameters][1440]
-*   [containsAmbiguousPronoun][1441]
+*   [runParseDetectPipeline][1441]
     *   [Parameters][1442]
-*   [extractEquipmentTerms][1443]
+*   [getParseDetectStatus][1443]
     *   [Parameters][1444]
-*   [hasExistingSystemsContext][1445]
+*   [createFailureTodo][1445]
     *   [Parameters][1446]
-*   [getExistingSystemsContext][1447]
-    *   [Parameters][1448]
-*   [contextRewrite][1449]
-    *   [Parameters][1450]
-*   [withTimeout][1451]
+*   [refreshKnowledgeFactsView][1447]
+*   [refreshKnowledgeFactsViewSafe][1448]
+*   [getViewRefreshStats][1449]
+*   [checkViewHealth][1450]
+*   [runVisionPipeline][1451]
     *   [Parameters][1452]
-*   [formatFactAnswer][1453]
+*   [getDocumentAssets][1453]
     *   [Parameters][1454]
-*   [formatSpecAnswer][1455]
+*   [getDocumentAssetSummary][1455]
     *   [Parameters][1456]
-*   [formatIntentAnswer][1457]
+*   [deleteDocumentAssets][1457]
     *   [Parameters][1458]
-*   [formatGoldenTestAnswer][1459]
-    *   [Parameters][1460]
-*   [createFactResponse][1461]
-    *   [Parameters][1462]
-*   [formatMultipleFacts][1463]
-    *   [Parameters][1464]
-*   [FuzzyMatcher][1465]
+*   [ensureLexicons][1459]
+*   [ensureFile][1460]
+    *   [Parameters][1461]
+*   [defaultMaintenance][1462]
+*   [defaultUnits][1463]
+*   [env][1464]
+*   [step][1465]
     *   [Parameters][1466]
-    *   [levenshteinDistance][1467]
-        *   [Parameters][1468]
-    *   [findBestMatch][1469]
-        *   [Parameters][1470]
-    *   [findMultipleMatches][1471]
-        *   [Parameters][1472]
-    *   [isLikelyTypo][1473]
-        *   [Parameters][1474]
-*   [decideStyle][1475]
+*   [state][1467]
+    *   [Parameters][1468]
+*   [transform][1469]
+    *   [Parameters][1470]
+*   [apiCall][1471]
+    *   [Parameters][1472]
+*   [timing][1473]
+    *   [Parameters][1474]
+*   [error][1475]
     *   [Parameters][1476]
-*   [getStyleOpening][1477]
+*   [timed][1477]
     *   [Parameters][1478]
-*   [startTimer][1479]
+*   [isFollowUpQuestion][1479]
     *   [Parameters][1480]
-*   [endTimer][1481]
+*   [containsAmbiguousPronoun][1481]
     *   [Parameters][1482]
-*   [recordMetric][1483]
+*   [extractEquipmentTerms][1483]
     *   [Parameters][1484]
-*   [incrementCounter][1485]
+*   [hasExistingSystemsContext][1485]
     *   [Parameters][1486]
-*   [recordSuccess][1487]
+*   [getExistingSystemsContext][1487]
     *   [Parameters][1488]
-*   [getMetrics][1489]
-*   [getOperationSummary][1490]
-    *   [Parameters][1491]
-*   [getSuccessRate][1492]
-    *   [Parameters][1493]
-*   [reset][1494]
-*   [\_buildKey][1495]
+*   [contextRewrite][1489]
+    *   [Parameters][1490]
+*   [withTimeout][1491]
+    *   [Parameters][1492]
+*   [formatFactAnswer][1493]
+    *   [Parameters][1494]
+*   [formatSpecAnswer][1495]
     *   [Parameters][1496]
-*   [getDashboardMetrics][1497]
-*   [\_calculatePerformanceScore][1498]
-    *   [Parameters][1499]
-*   [getPerformanceMetrics][1500]
-    *   [Parameters][1501]
-*   [FRENCH\_CARIBBEAN\_TERRITORIES][1502]
-*   [reverseGeocode][1503]
+*   [formatIntentAnswer][1497]
+    *   [Parameters][1498]
+*   [formatGoldenTestAnswer][1499]
+    *   [Parameters][1500]
+*   [createFactResponse][1501]
+    *   [Parameters][1502]
+*   [formatMultipleFacts][1503]
     *   [Parameters][1504]
-    *   [Examples][1505]
-*   [delay][1506]
-    *   [Parameters][1507]
-*   [batchReverseGeocode][1508]
-    *   [Parameters][1509]
-    *   [Examples][1510]
-*   [normalizeModelKey][1511]
-    *   [Parameters][1512]
-*   [DEFAULT\_RETRY\_OPTIONS][1513]
-*   [withRetry][1514]
-    *   [Parameters][1515]
-*   [isRetryableError][1516]
-    *   [Parameters][1517]
-*   [createRetryWrapper][1518]
-    *   [Parameters][1519]
-*   [withOpenAIRetry][1520]
-*   [withSupabaseRetry][1521]
-*   [withTelegramRetry][1522]
-*   [sidecarFetch][1523]
+*   [FuzzyMatcher][1505]
+    *   [Parameters][1506]
+    *   [levenshteinDistance][1507]
+        *   [Parameters][1508]
+    *   [findBestMatch][1509]
+        *   [Parameters][1510]
+    *   [findMultipleMatches][1511]
+        *   [Parameters][1512]
+    *   [isLikelyTypo][1513]
+        *   [Parameters][1514]
+*   [decideStyle][1515]
+    *   [Parameters][1516]
+*   [getStyleOpening][1517]
+    *   [Parameters][1518]
+*   [startTimer][1519]
+    *   [Parameters][1520]
+*   [endTimer][1521]
+    *   [Parameters][1522]
+*   [recordMetric][1523]
     *   [Parameters][1524]
-*   [collectBody][1525]
+*   [incrementCounter][1525]
     *   [Parameters][1526]
-*   [wrapError][1527]
+*   [recordSuccess][1527]
     *   [Parameters][1528]
-*   [createSnapshot][1529]
-    *   [Parameters][1530]
-*   [rollbackTo][1531]
-    *   [Parameters][1532]
-*   [listSnapshots][1533]
-*   [deleteSnapshot][1534]
-    *   [Parameters][1535]
-*   [getSnapshotInfo][1536]
-    *   [Parameters][1537]
-*   [cleanupSnapshots][1538]
+*   [getMetrics][1529]
+*   [getOperationSummary][1530]
+    *   [Parameters][1531]
+*   [getSuccessRate][1532]
+    *   [Parameters][1533]
+*   [reset][1534]
+*   [\_buildKey][1535]
+    *   [Parameters][1536]
+*   [getDashboardMetrics][1537]
+*   [\_calculatePerformanceScore][1538]
     *   [Parameters][1539]
-*   [listFiles][1540]
+*   [getPerformanceMetrics][1540]
     *   [Parameters][1541]
-*   [loadMaintenanceLexicon][1542]
-*   [extractMaintenanceTerms][1543]
+*   [FRENCH\_CARIBBEAN\_TERRITORIES][1542]
+*   [reverseGeocode][1543]
     *   [Parameters][1544]
-*   [checkMaintenanceContent][1545]
-    *   [Parameters][1546]
-*   [filterSpecLike][1547]
-    *   [Parameters][1548]
-*   [loadUnitsLexicon][1549]
-*   [getUnitCategory][1550]
-    *   [Parameters][1551]
-*   [checkDisambiguation][1552]
-    *   [Parameters][1553]
-*   [normalizeUnitToken][1554]
+    *   [Examples][1545]
+*   [delay][1546]
+    *   [Parameters][1547]
+*   [batchReverseGeocode][1548]
+    *   [Parameters][1549]
+    *   [Examples][1550]
+*   [normalizeModelKey][1551]
+    *   [Parameters][1552]
+*   [DEFAULT\_RETRY\_OPTIONS][1553]
+*   [withRetry][1554]
     *   [Parameters][1555]
-*   [normalizeUnitsInText][1556]
+*   [isRetryableError][1556]
     *   [Parameters][1557]
-*   [getUnitCategories][1558]
-*   [getUnitsInCategory][1559]
-    *   [Parameters][1560]
-*   [isValidUrl][1561]
-    *   [Parameters][1562]
-*   [isValidUrl][1563]
+*   [createRetryWrapper][1558]
+    *   [Parameters][1559]
+*   [withOpenAIRetry][1560]
+*   [withSupabaseRetry][1561]
+*   [withTelegramRetry][1562]
+*   [sidecarFetch][1563]
     *   [Parameters][1564]
-*   [isValidJson][1565]
+*   [collectBody][1565]
     *   [Parameters][1566]
-*   [isRequired][1567]
+*   [wrapError][1567]
     *   [Parameters][1568]
-*   [sanitizeText][1569]
+*   [createSnapshot][1569]
     *   [Parameters][1570]
-*   [validateSystemData][1571]
+*   [rollbackTo][1571]
     *   [Parameters][1572]
-*   [validateInstanceData][1573]
-    *   [Parameters][1574]
-*   [sanitizeSystemData][1575]
-    *   [Parameters][1576]
+*   [listSnapshots][1573]
+*   [deleteSnapshot][1574]
+    *   [Parameters][1575]
+*   [getSnapshotInfo][1576]
+    *   [Parameters][1577]
+*   [cleanupSnapshots][1578]
+    *   [Parameters][1579]
+*   [listFiles][1580]
+    *   [Parameters][1581]
+*   [loadMaintenanceLexicon][1582]
+*   [extractMaintenanceTerms][1583]
+    *   [Parameters][1584]
+*   [checkMaintenanceContent][1585]
+    *   [Parameters][1586]
+*   [filterSpecLike][1587]
+    *   [Parameters][1588]
+*   [loadUnitsLexicon][1589]
+*   [getUnitCategory][1590]
+    *   [Parameters][1591]
+*   [checkDisambiguation][1592]
+    *   [Parameters][1593]
+*   [normalizeUnitToken][1594]
+    *   [Parameters][1595]
+*   [normalizeUnitsInText][1596]
+    *   [Parameters][1597]
+*   [getUnitCategories][1598]
+*   [getUnitsInCategory][1599]
+    *   [Parameters][1600]
+*   [isValidUrl][1601]
+    *   [Parameters][1602]
+*   [isValidUrl][1603]
+    *   [Parameters][1604]
+*   [isValidJson][1605]
+    *   [Parameters][1606]
+*   [isRequired][1607]
+    *   [Parameters][1608]
+*   [sanitizeText][1609]
+    *   [Parameters][1610]
+*   [validateSystemData][1611]
+    *   [Parameters][1612]
+*   [validateInstanceData][1613]
+    *   [Parameters][1614]
+*   [sanitizeSystemData][1615]
+    *   [Parameters][1616]
 
 ## oaiJson
 
@@ -1585,16 +1625,16 @@ Makes a structured JSON API call to OpenAI
 
 ### Parameters
 
-*   `params` **[Object][1577]** Configuration object
+*   `params` **[Object][1617]** Configuration object
 
-    *   `params.system` **[string][1578]** System prompt
-    *   `params.user` **[string][1578]** User prompt
-    *   `params.schema` **[Object][1577]** JSON schema for structured output
-    *   `params.model` **[string][1578]** OpenAI model to use
-    *   `params.maxOutputTokens` **[number][1579]** Maximum tokens to generate
-    *   `params.seed` **[number][1579]** Seed for deterministic output
+    *   `params.system` **[string][1618]** System prompt
+    *   `params.user` **[string][1618]** User prompt
+    *   `params.schema` **[Object][1617]** JSON schema for structured output
+    *   `params.model` **[string][1618]** OpenAI model to use
+    *   `params.maxOutputTokens` **[number][1619]** Maximum tokens to generate
+    *   `params.seed` **[number][1619]** Seed for deterministic output
 
-Returns **[Promise][1580]<[Object][1577]>** Parsed JSON response
+Returns **[Promise][1620]<[Object][1617]>** Parsed JSON response
 
 ## oaiText
 
@@ -1602,16 +1642,16 @@ Makes a natural language API call to OpenAI
 
 ### Parameters
 
-*   `params` **[Object][1577]** Configuration object
+*   `params` **[Object][1617]** Configuration object
 
-    *   `params.system` **[string][1578]** System prompt
-    *   `params.user` **[string][1578]** User prompt
-    *   `params.model` **[string][1578]** OpenAI model to use
-    *   `params.maxOutputTokens` **[number][1579]** Maximum tokens to generate
-    *   `params.seed` **[number][1579]** Seed for deterministic output
-    *   `params.style` **[string][1578]** Style preset for temperature control (optional, default `'brief'`)
+    *   `params.system` **[string][1618]** System prompt
+    *   `params.user` **[string][1618]** User prompt
+    *   `params.model` **[string][1618]** OpenAI model to use
+    *   `params.maxOutputTokens` **[number][1619]** Maximum tokens to generate
+    *   `params.seed` **[number][1619]** Seed for deterministic output
+    *   `params.style` **[string][1618]** Style preset for temperature control (optional, default `'brief'`)
 
-Returns **[Promise][1580]<[string][1578]>** Generated text response
+Returns **[Promise][1620]<[string][1618]>** Generated text response
 
 ## makeOpenAICall
 
@@ -1619,12 +1659,12 @@ Makes the actual OpenAI API call with retry logic
 
 ### Parameters
 
-*   `requestBody` **[Object][1577]** Request body for OpenAI API
-*   `openaiApiKey` **[string][1578]** API key
-*   `timeoutMs` **[number][1579]** Timeout in milliseconds
-*   `retryAttempts` **[number][1579]** Number of retry attempts
+*   `requestBody` **[Object][1617]** Request body for OpenAI API
+*   `openaiApiKey` **[string][1618]** API key
+*   `timeoutMs` **[number][1619]** Timeout in milliseconds
+*   `retryAttempts` **[number][1619]** Number of retry attempts
 
-Returns **[Promise][1580]<[Object][1577]>** OpenAI API response
+Returns **[Promise][1620]<[Object][1617]>** OpenAI API response
 
 ## oaiVision
 
@@ -1632,15 +1672,15 @@ Makes a vision API call to OpenAI (GPT-4V)
 
 ### Parameters
 
-*   `params` **[Object][1577]** Configuration object
+*   `params` **[Object][1617]** Configuration object
 
-    *   `params.system` **[string][1578]** System prompt
-    *   `params.user` **[string][1578]** User prompt
-    *   `params.imageUrl` **[string][1578]** URL to the image to analyze
-    *   `params.model` **[string][1578]** OpenAI model to use (default: gpt-4-vision-preview)
-    *   `params.maxOutputTokens` **[number][1579]** Maximum tokens to generate
+    *   `params.system` **[string][1618]** System prompt
+    *   `params.user` **[string][1618]** User prompt
+    *   `params.imageUrl` **[string][1618]** URL to the image to analyze
+    *   `params.model` **[string][1618]** OpenAI model to use (default: gpt-4-vision-preview)
+    *   `params.maxOutputTokens` **[number][1619]** Maximum tokens to generate
 
-Returns **[Promise][1580]<[string][1578]>** Generated text response
+Returns **[Promise][1620]<[string][1618]>** Generated text response
 
 ## oaiVisionMulti
 
@@ -1648,15 +1688,15 @@ Makes a vision API call to OpenAI with MULTIPLE images
 
 ### Parameters
 
-*   `params` **[Object][1577]** Configuration object
+*   `params` **[Object][1617]** Configuration object
 
-    *   `params.system` **[string][1578]** System prompt
-    *   `params.user` **[string][1578]** User prompt
-    *   `params.imageUrls` **[Array][1581]<[string][1578]>** Array of image URLs (base64 data URLs or http URLs)
-    *   `params.model` **[string][1578]** OpenAI model to use (default: from VISION\_MODEL env var)
-    *   `params.maxOutputTokens` **[number][1579]** Maximum tokens to generate
+    *   `params.system` **[string][1618]** System prompt
+    *   `params.user` **[string][1618]** User prompt
+    *   `params.imageUrls` **[Array][1621]<[string][1618]>** Array of image URLs (base64 data URLs or http URLs)
+    *   `params.model` **[string][1618]** OpenAI model to use (default: from VISION\_MODEL env var)
+    *   `params.maxOutputTokens` **[number][1619]** Maximum tokens to generate
 
-Returns **[Promise][1580]<[string][1578]>** Generated text response
+Returns **[Promise][1620]<[string][1618]>** Generated text response
 
 ## truncateContent
 
@@ -1664,10 +1704,10 @@ Truncates text content to specified length
 
 ### Parameters
 
-*   `text` **[string][1578]** Text to truncate
-*   `maxLength` **[number][1579]** Maximum length (optional, default `600`)
+*   `text` **[string][1618]** Text to truncate
+*   `maxLength` **[number][1619]** Maximum length (optional, default `600`)
 
-Returns **[string][1578]** Truncated text
+Returns **[string][1618]** Truncated text
 
 ## createPythonSidecarClient
 
@@ -1676,7 +1716,7 @@ Use this in tests to inject mocks.
 
 ### Parameters
 
-*   `deps` **[Object][1577]** Dependencies (all optional, defaults to real implementations) (optional, default `{}`)
+*   `deps` **[Object][1617]** Dependencies (all optional, defaults to real implementations) (optional, default `{}`)
 
     *   `deps.envConfigDep`   (optional, default `envConfig`)
     *   `deps.logger`   (optional, default `defaultLogger`)
@@ -1687,7 +1727,7 @@ Use this in tests to inject mocks.
 const client = createPythonSidecarClient();
 ```
 
-Returns **[Object][1577]** Client object with processChatWorkflow and checkChatHealth functions
+Returns **[Object][1617]** Client object with processChatWorkflow and checkChatHealth functions
 
 ## processChatWorkflow
 
@@ -1695,17 +1735,17 @@ Calls Python sidecar chat workflow endpoint
 
 ### Parameters
 
-*   `params` **[Object][1577]** Configuration object
+*   `params` **[Object][1617]** Configuration object
 
-    *   `params.query` **[string][1578]** User query
-    *   `params.systemsContext` **[Array][1581]<[Object][1577]>** Equipment context from memory/search (optional, default `[]`)
-    *   `params.threadId` **[string][1578]** Conversation thread ID (optional, default `null`)
-    *   `params.conversationSummary` **[string][1578]** Summary of conversation history (optional, default `null`)
-    *   `params.memoryContext` **[Object][1577]** Memory context (weighted equipment tracking) (optional, default `null`)
-    *   `params.stream` **[boolean][1582]** If true, returns async generator of SSE events (optional, default `false`)
+    *   `params.query` **[string][1618]** User query
+    *   `params.systemsContext` **[Array][1621]<[Object][1617]>** Equipment context from memory/search (optional, default `[]`)
+    *   `params.threadId` **[string][1618]** Conversation thread ID (optional, default `null`)
+    *   `params.conversationSummary` **[string][1618]** Summary of conversation history (optional, default `null`)
+    *   `params.memoryContext` **[Object][1617]** Memory context (weighted equipment tracking) (optional, default `null`)
+    *   `params.stream` **[boolean][1622]** If true, returns async generator of SSE events (optional, default `false`)
     *   `params.resolvedModelAliases`   (optional, default `[]`)
 
-Returns **([Promise][1580]<[Object][1577]> | AsyncGenerator)** Chat response or SSE event generator
+Returns **([Promise][1620]<[Object][1617]> | AsyncGenerator)** Chat response or SSE event generator
 
 ## streamPythonSidecarCall
 
@@ -1713,9 +1753,9 @@ Makes streaming Python sidecar API call, yields SSE events
 
 ### Parameters
 
-*   `endpoint` **[string][1578]** Full endpoint URL with ?stream=true
-*   `requestBody` **[Object][1577]** Request body
-*   `timeoutMs` **[number][1579]** Timeout in milliseconds
+*   `endpoint` **[string][1618]** Full endpoint URL with ?stream=true
+*   `requestBody` **[Object][1617]** Request body
+*   `timeoutMs` **[number][1619]** Timeout in milliseconds
 
 ## makePythonSidecarCall
 
@@ -1723,18 +1763,18 @@ Makes the actual Python sidecar API call with retry logic
 
 ### Parameters
 
-*   `endpoint` **[string][1578]** Full endpoint URL
-*   `requestBody` **[Object][1577]** Request body
-*   `timeoutMs` **[number][1579]** Timeout in milliseconds
-*   `retryAttempts` **[number][1579]** Number of retry attempts
+*   `endpoint` **[string][1618]** Full endpoint URL
+*   `requestBody` **[Object][1617]** Request body
+*   `timeoutMs` **[number][1619]** Timeout in milliseconds
+*   `retryAttempts` **[number][1619]** Number of retry attempts
 
-Returns **[Promise][1580]<[Object][1577]>** Python sidecar API response
+Returns **[Promise][1620]<[Object][1617]>** Python sidecar API response
 
 ## checkChatHealth
 
 Health check for Python sidecar chat endpoint
 
-Returns **[Promise][1580]<[Object][1577]>** Health status
+Returns **[Promise][1620]<[Object][1617]>** Health status
 
 ## resetEnvMemo
 
@@ -1750,7 +1790,7 @@ Keys explicitly set to undefined or null will be deleted.
 
 ### Parameters
 
-*   `overrides` **[Object][1577]** Key-value pairs to override
+*   `overrides` **[Object][1617]** Key-value pairs to override
 
 ### Examples
 
@@ -1760,7 +1800,7 @@ setTestEnv({ PYTHON_SIDECAR_URL: 'http://localhost:8001' }); // Only this key is
 setTestEnv({ SUPABASE_URL: undefined }); // Removes SUPABASE_URL if present
 ```
 
-Returns **[Object][1577]** The merged environment
+Returns **[Object][1617]** The merged environment
 
 ## getRoutes
 
@@ -1771,7 +1811,7 @@ Uses the same approach as printRoutes.js for consistency
 
 *   `app` **Express** Express application
 
-Returns **[Array][1581]** Array of route objects
+Returns **[Array][1621]** Array of route objects
 
 ## extractTextPreviewFromPdf
 
@@ -1803,9 +1843,9 @@ Middleware to handle method not allowed (405) responses
 
 ### Parameters
 
-*   `req` **[Object][1577]** Express request object
-*   `res` **[Object][1577]** Express response object
-*   `next` **[Function][1583]** Express next function
+*   `req` **[Object][1617]** Express request object
+*   `res` **[Object][1617]** Express response object
+*   `next` **[Function][1623]** Express next function
 
 ## securityHeaders
 
@@ -1835,7 +1875,7 @@ Load chat thread history for a session
 
 ### Parameters
 
-*   `sessionId` **[string][1578]** The session ID to load
+*   `sessionId` **[string][1618]** The session ID to load
 
 ## addBubble
 
@@ -1844,9 +1884,9 @@ Maps roles to the existing UI functions
 
 ### Parameters
 
-*   `role` **[string][1578]** 'user' or 'assistant'
-*   `content` **[string][1578]** Message content
-*   `metadata` **[object][1577]** Optional message metadata (optional, default `{}`)
+*   `role` **[string][1618]** 'user' or 'assistant'
+*   `content` **[string][1618]** Message content
+*   `metadata` **[object][1617]** Optional message metadata (optional, default `{}`)
 
 ## AUTH\_STORAGE\_KEY
 
@@ -1856,7 +1896,7 @@ Admin auth helper (simplest viable)
 *   PIN unlock once per browser (localStorage)
 *   All admin pages use adminFetch()
 
-Type: [string][1578]
+Type: [string][1618]
 
 ## ensureAdminToken
 
@@ -1892,7 +1932,7 @@ Fetches HTML partials and injects them into elements with data-include attribute
 Simple hash-based router
 Shows/hides sections based on URL hash
 
-Type: [string][1578]
+Type: [string][1618]
 
 ## init
 
@@ -1901,7 +1941,7 @@ Handles chunk management and viewing
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.router` &#x20;
     *   `$0.adminState` &#x20;
@@ -1913,7 +1953,7 @@ Handles system health, database status, and logs
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.router` &#x20;
     *   `$0.adminState` &#x20;
@@ -1925,7 +1965,7 @@ Handles Document Intelligence Packet generation and management
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.router` &#x20;
     *   `$0.adminState` &#x20;
@@ -1937,7 +1977,7 @@ Handles system health monitoring
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.router` &#x20;
     *   `$0.adminState` &#x20;
@@ -1949,7 +1989,7 @@ Handles system metrics and performance monitoring
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.router` &#x20;
     *   `$0.adminState` &#x20;
@@ -1969,6 +2009,69 @@ These functions are referenced in HTML and need to be available globally
 
 AIS page JavaScript
 Handles Around Us and Friends tabs
+
+## AnchorageRatingManager
+
+Anchorage Rating Manager
+Standalone page for rating anchorages on 8 factors (1-10 scale)
+
+### getAnchorageId
+
+Get anchorage ID from URL
+
+### loadAnchorage
+
+Load anchorage data + existing ratings
+
+### renderContext
+
+Render context bar with location name, type, date
+
+### renderFactors
+
+Render all factor cards
+
+### setRating
+
+Set a rating value and update UI
+
+#### Parameters
+
+*   `key` &#x20;
+*   `value` &#x20;
+
+### updateOverall
+
+Compute and display overall score
+
+### saveRatings
+
+Save ratings via PATCH
+
+### formatDate
+
+Format date for display (AST timezone)
+
+#### Parameters
+
+*   `isoString` &#x20;
+
+### escapeHtml
+
+Escape HTML
+
+#### Parameters
+
+*   `str` &#x20;
+
+### showToast
+
+Show toast notification
+
+#### Parameters
+
+*   `message` &#x20;
+*   `type`   (optional, default `''`)
 
 ## AnchoragesManager
 
@@ -2027,6 +2130,16 @@ Render single anchorage card
 #### Parameters
 
 *   `a` &#x20;
+
+### computeOverall
+
+Compute overall rating from ratings object
+
+#### Parameters
+
+*   `ratings` **([Object][1617] | null)** Ratings JSONB
+
+Returns **([string][1618] | null)** e.g. "7.2" or null if no ratings
 
 ### formatDate
 
@@ -2165,14 +2278,14 @@ Usage: Add <script src="/js/mobile-nav.js"></script> before </body>
 Supplies Admin Page
 Manages categories, units, and locations
 
-Type: [string][1578]
+Type: [string][1618]
 
 ## API\_BASE
 
 Supplies API Client
 Wrapper for all supplies-related API calls
 
-Type: [string][1578]
+Type: [string][1618]
 
 ## SuppliesAI
 
@@ -2275,7 +2388,7 @@ List supplies with filters and pagination
 
 #### Parameters
 
-*   `$0` **[Object][1577]**  (optional, default `{}`)
+*   `$0` **[Object][1617]**  (optional, default `{}`)
 
     *   `$0.limit`   (optional, default `50`)
     *   `$0.offset`   (optional, default `0`)
@@ -2325,7 +2438,7 @@ Search supplies
 #### Parameters
 
 *   `query` &#x20;
-*   `$1` **[Object][1577]**  (optional, default `{}`)
+*   `$1` **[Object][1617]**  (optional, default `{}`)
 
     *   `$1.limit`   (optional, default `20`)
     *   `$1.offset`   (optional, default `0`)
@@ -2356,7 +2469,7 @@ Get all categories (flat list)
 
 #### Parameters
 
-*   `withCounts` **[boolean][1582]** include item counts (for admin) (optional, default `false`)
+*   `withCounts` **[boolean][1622]** include item counts (for admin) (optional, default `false`)
 
 ### createCategory
 
@@ -2364,7 +2477,7 @@ Create a new category
 
 #### Parameters
 
-*   `name` **[string][1578]** category name
+*   `name` **[string][1618]** category name
 
 ### deleteCategory
 
@@ -2372,7 +2485,7 @@ Delete a category (only if no items use it)
 
 #### Parameters
 
-*   `id` **[string][1578]** category UUID
+*   `id` **[string][1618]** category UUID
 
 ### getUnits
 
@@ -2397,7 +2510,7 @@ List supplies with filters and pagination
 
 #### Parameters
 
-*   `$0` **[Object][1577]**  (optional, default `{}`)
+*   `$0` **[Object][1617]**  (optional, default `{}`)
 
     *   `$0.limit`   (optional, default `50`)
     *   `$0.offset`   (optional, default `0`)
@@ -2447,7 +2560,7 @@ Search supplies
 #### Parameters
 
 *   `query` &#x20;
-*   `$1` **[Object][1577]**  (optional, default `{}`)
+*   `$1` **[Object][1617]**  (optional, default `{}`)
 
     *   `$1.limit`   (optional, default `20`)
     *   `$1.offset`   (optional, default `0`)
@@ -2478,7 +2591,7 @@ Get all categories (flat list)
 
 #### Parameters
 
-*   `withCounts` **[boolean][1582]** include item counts (for admin) (optional, default `false`)
+*   `withCounts` **[boolean][1622]** include item counts (for admin) (optional, default `false`)
 
 ### createCategory
 
@@ -2486,7 +2599,7 @@ Create a new category
 
 #### Parameters
 
-*   `name` **[string][1578]** category name
+*   `name` **[string][1618]** category name
 
 ### deleteCategory
 
@@ -2494,7 +2607,7 @@ Delete a category (only if no items use it)
 
 #### Parameters
 
-*   `id` **[string][1578]** category UUID
+*   `id` **[string][1618]** category UUID
 
 ### getUnits
 
@@ -2519,7 +2632,7 @@ List supplies with filters and pagination
 
 #### Parameters
 
-*   `$0` **[Object][1577]**  (optional, default `{}`)
+*   `$0` **[Object][1617]**  (optional, default `{}`)
 
     *   `$0.limit`   (optional, default `50`)
     *   `$0.offset`   (optional, default `0`)
@@ -2569,7 +2682,7 @@ Search supplies
 #### Parameters
 
 *   `query` &#x20;
-*   `$1` **[Object][1577]**  (optional, default `{}`)
+*   `$1` **[Object][1617]**  (optional, default `{}`)
 
     *   `$1.limit`   (optional, default `20`)
     *   `$1.offset`   (optional, default `0`)
@@ -2600,7 +2713,7 @@ Get all categories (flat list)
 
 #### Parameters
 
-*   `withCounts` **[boolean][1582]** include item counts (for admin) (optional, default `false`)
+*   `withCounts` **[boolean][1622]** include item counts (for admin) (optional, default `false`)
 
 ### createCategory
 
@@ -2608,7 +2721,7 @@ Create a new category
 
 #### Parameters
 
-*   `name` **[string][1578]** category name
+*   `name` **[string][1618]** category name
 
 ### deleteCategory
 
@@ -2616,7 +2729,7 @@ Delete a category (only if no items use it)
 
 #### Parameters
 
-*   `id` **[string][1578]** category UUID
+*   `id` **[string][1618]** category UUID
 
 ### getUnits
 
@@ -2641,7 +2754,7 @@ List supplies with filters and pagination
 
 #### Parameters
 
-*   `$0` **[Object][1577]**  (optional, default `{}`)
+*   `$0` **[Object][1617]**  (optional, default `{}`)
 
     *   `$0.limit`   (optional, default `50`)
     *   `$0.offset`   (optional, default `0`)
@@ -2691,7 +2804,7 @@ Search supplies
 #### Parameters
 
 *   `query` &#x20;
-*   `$1` **[Object][1577]**  (optional, default `{}`)
+*   `$1` **[Object][1617]**  (optional, default `{}`)
 
     *   `$1.limit`   (optional, default `20`)
     *   `$1.offset`   (optional, default `0`)
@@ -2722,7 +2835,7 @@ Get all categories (flat list)
 
 #### Parameters
 
-*   `withCounts` **[boolean][1582]** include item counts (for admin) (optional, default `false`)
+*   `withCounts` **[boolean][1622]** include item counts (for admin) (optional, default `false`)
 
 ### createCategory
 
@@ -2730,7 +2843,7 @@ Create a new category
 
 #### Parameters
 
-*   `name` **[string][1578]** category name
+*   `name` **[string][1618]** category name
 
 ### deleteCategory
 
@@ -2738,7 +2851,7 @@ Delete a category (only if no items use it)
 
 #### Parameters
 
-*   `id` **[string][1578]** category UUID
+*   `id` **[string][1618]** category UUID
 
 ### getUnits
 
@@ -2787,7 +2900,7 @@ Upload pending photos after supply creation
 
 #### Parameters
 
-*   `supplyId` **[string][1578]** The newly created supply ID
+*   `supplyId` **[string][1618]** The newly created supply ID
 
 ## TripDetail
 
@@ -2832,13 +2945,13 @@ Repository for AIS vessel data
 
 Get all vessels from ais\_vessels table
 
-Returns **[Promise][1580]<[Array][1581]>** Array of vessels
+Returns **[Promise][1620]<[Array][1621]>** Array of vessels
 
 ### getFriends
 
 Get all friends from ais\_friends table
 
-Returns **[Promise][1580]<[Array][1581]>** Array of friends
+Returns **[Promise][1620]<[Array][1621]>** Array of friends
 
 ### isFriend
 
@@ -2846,9 +2959,9 @@ Check if a vessel is already a friend
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
+*   `mmsi` **[string][1618]** Vessel MMSI
 
-Returns **[Promise][1580]<[boolean][1582]>**&#x20;
+Returns **[Promise][1620]<[boolean][1622]>**&#x20;
 
 ### addFriend
 
@@ -2856,12 +2969,12 @@ Add a vessel as a friend
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
-*   `name` **[string][1578]** Vessel name
-*   `shipType` **([string][1578] | null)** Vessel type (optional, default `null`)
-*   `lastSeen` **([Object][1577] | null)** Optional last seen position {latitude, longitude} (optional, default `null`)
+*   `mmsi` **[string][1618]** Vessel MMSI
+*   `name` **[string][1618]** Vessel name
+*   `shipType` **([string][1618] | null)** Vessel type (optional, default `null`)
+*   `lastSeen` **([Object][1617] | null)** Optional last seen position {latitude, longitude} (optional, default `null`)
 
-Returns **[Promise][1580]<[Object][1577]>** Created friend record
+Returns **[Promise][1620]<[Object][1617]>** Created friend record
 
 ### removeFriend
 
@@ -2869,9 +2982,9 @@ Remove a vessel from friends
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
+*   `mmsi` **[string][1618]** Vessel MMSI
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ### getVesselByMmsi
 
@@ -2879,9 +2992,9 @@ Get a specific vessel by MMSI from ais\_vessels
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
+*   `mmsi` **[string][1618]** Vessel MMSI
 
-Returns **[Promise][1580]<([Object][1577] | null)>**&#x20;
+Returns **[Promise][1620]<([Object][1617] | null)>**&#x20;
 
 ### updateFriendLastSeen
 
@@ -2889,11 +3002,11 @@ Update last seen position for a friend
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
-*   `latitude` **[number][1579]** Last known latitude
-*   `longitude` **[number][1579]** Last known longitude
+*   `mmsi` **[string][1618]** Vessel MMSI
+*   `latitude` **[number][1619]** Last known latitude
+*   `longitude` **[number][1619]** Last known longitude
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## AnchoragesRepository
 
@@ -2903,7 +3016,7 @@ Repository for anchorage and mooring data
 
 Get all anchorages, most recent first
 
-Returns **[Promise][1580]<[Array][1581]>** Array of anchorages with trip data
+Returns **[Promise][1620]<[Array][1621]>** Array of anchorages with trip data
 
 ### findById
 
@@ -2911,9 +3024,9 @@ Find single anchorage by ID
 
 #### Parameters
 
-*   `id` **[string][1578]** Anchorage UUID
+*   `id` **[string][1618]** Anchorage UUID
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Anchorage or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Anchorage or null
 
 ### create
 
@@ -2921,9 +3034,9 @@ Insert new anchorage
 
 #### Parameters
 
-*   `anchorage` **[Object][1577]** Anchorage data
+*   `anchorage` **[Object][1617]** Anchorage data
 
-Returns **[Promise][1580]<[Object][1577]>** Created anchorage
+Returns **[Promise][1620]<[Object][1617]>** Created anchorage
 
 ### update
 
@@ -2931,10 +3044,10 @@ Update anchorage
 
 #### Parameters
 
-*   `id` **[string][1578]** Anchorage UUID
-*   `updates` **[Object][1577]** Fields to update
+*   `id` **[string][1618]** Anchorage UUID
+*   `updates` **[Object][1617]** Fields to update
 
-Returns **[Promise][1580]<[Object][1577]>** Updated anchorage
+Returns **[Promise][1620]<[Object][1617]>** Updated anchorage
 
 ### remove
 
@@ -2942,9 +3055,9 @@ Delete anchorage
 
 #### Parameters
 
-*   `id` **[string][1578]** Anchorage UUID
+*   `id` **[string][1618]** Anchorage UUID
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ### getRecentAnchorages
 
@@ -2953,21 +3066,21 @@ Used for dynamic lookback calculation
 
 #### Parameters
 
-*   `limit` **[number][1579]** Number of anchorages to retrieve (optional, default `2`)
+*   `limit` **[number][1619]** Number of anchorages to retrieve (optional, default `2`)
 
-Returns **[Promise][1580]<[Array][1581]>** Recent anchorages
+Returns **[Promise][1620]<[Array][1621]>** Recent anchorages
 
 ### detectFromGpsHistory
 
 Detect anchorages from GPS history using stationary period analysis
 Finds periods where boat stayed in same location for minHours or more
-Processes data in JavaScript - no database functions required
+Uses Postgres RPC for hourly aggregation, JS for stationary period detection
 
 #### Parameters
 
-*   `minHours` **[number][1579]** Minimum hours stationary to count as anchorage (default 4) (optional, default `4`)
+*   `minHours` **[number][1619]** Minimum hours stationary to count as anchorage (default 2) (optional, default `2`)
 
-Returns **[Promise][1580]<[Array][1581]>** Detected anchorage candidates
+Returns **[Promise][1620]<[Array][1621]>** Detected anchorage candidates
 
 ### groupPositionsByHour
 
@@ -2975,9 +3088,9 @@ Group GPS positions by hour and calculate averages
 
 #### Parameters
 
-*   `positions` **[Array][1581]** Raw GPS positions
+*   `positions` **[Array][1621]** Raw GPS positions
 
-Returns **[Array][1581]** Hourly averaged positions sorted by time
+Returns **[Array][1621]** Hourly averaged positions sorted by time
 
 ### averageAngle
 
@@ -2985,9 +3098,9 @@ Calculate average of angles (handles wraparound at 360°)
 
 #### Parameters
 
-*   `angles` **[Array][1581]** Array of angles in degrees
+*   `angles` **[Array][1621]** Array of angles in degrees
 
-Returns **[number][1579]** Average angle
+Returns **[number][1619]** Average angle
 
 ### findStationaryPeriods
 
@@ -2995,10 +3108,10 @@ Find stationary periods from hourly positions
 
 #### Parameters
 
-*   `hourlyPositions` **[Array][1581]** Hourly averaged positions
-*   `minHours` **[number][1579]** Minimum hours to qualify as anchorage
+*   `hourlyPositions` **[Array][1621]** Hourly averaged positions
+*   `minHours` **[number][1619]** Minimum hours to qualify as anchorage
 
-Returns **[Array][1581]** Anchorage candidates
+Returns **[Array][1621]** Anchorage candidates
 
 ### groupToCandidate
 
@@ -3006,9 +3119,9 @@ Convert a group of hourly positions to an anchorage candidate
 
 #### Parameters
 
-*   `group` **[Array][1581]** Group of consecutive stationary hours
+*   `group` **[Array][1621]** Group of consecutive stationary hours
 
-Returns **[Object][1577]** Anchorage candidate
+Returns **[Object][1617]** Anchorage candidate
 
 ### findTripNearTime
 
@@ -3017,11 +3130,11 @@ Used to link arrival/departure trips to anchorages
 
 #### Parameters
 
-*   `timestamp` **([Date][1584] | [string][1578])** Time to search around
-*   `windowMinutes` **[number][1579]** Search window in minutes (default 60) (optional, default `60`)
-*   `type` **[string][1578]** 'arrival' (trip ended near time) or 'departure' (trip started near time) (optional, default `'arrival'`)
+*   `timestamp` **([Date][1624] | [string][1618])** Time to search around
+*   `windowMinutes` **[number][1619]** Search window in minutes (default 60) (optional, default `60`)
+*   `type` **[string][1618]** 'arrival' (trip ended near time) or 'departure' (trip started near time) (optional, default `'arrival'`)
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Matching trip or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Matching trip or null
 
 ### findAtLocation
 
@@ -3030,10 +3143,10 @@ Used for extending duration of existing anchorages
 
 #### Parameters
 
-*   `latitude` **[number][1579]** Latitude
-*   `longitude` **[number][1579]** Longitude
+*   `latitude` **[number][1619]** Latitude
+*   `longitude` **[number][1619]** Longitude
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Existing anchorage or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Existing anchorage or null
 
 ### exists
 
@@ -3041,11 +3154,11 @@ Check if an anchorage already exists at this location/time
 
 #### Parameters
 
-*   `latitude` **[number][1579]** Latitude
-*   `longitude` **[number][1579]** Longitude
-*   `arrivedAt` **([Date][1584] | [string][1578])** Arrival time
+*   `latitude` **[number][1619]** Latitude
+*   `longitude` **[number][1619]** Longitude
+*   `arrivedAt` **([Date][1624] | [string][1618])** Arrival time
 
-Returns **[Promise][1580]<[boolean][1582]>** True if exists
+Returns **[Promise][1620]<[boolean][1622]>** True if exists
 
 ## AnthropicExtractionRepository
 
@@ -3058,10 +3171,10 @@ Store specifications JSON to Supabase Storage
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `specifications` **[Object][1577]** Specifications data
+*   `docId` **[string][1618]** Document ID
+*   `specifications` **[Object][1617]** Specifications data
 
-Returns **[Promise][1580]<[Object][1577]>** Storage result
+Returns **[Promise][1620]<[Object][1617]>** Storage result
 
 ### storeGoldenRules
 
@@ -3069,10 +3182,10 @@ Store golden rules JSON to Supabase Storage
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `goldenRules` **[Object][1577]** Golden rules data
+*   `docId` **[string][1618]** Document ID
+*   `goldenRules` **[Object][1617]** Golden rules data
 
-Returns **[Promise][1580]<[Object][1577]>** Storage result
+Returns **[Promise][1620]<[Object][1617]>** Storage result
 
 ### storeIntentRouter
 
@@ -3080,10 +3193,10 @@ Store intent router JSON to Supabase Storage
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `intentRouter` **[Object][1577]** Intent router data
+*   `docId` **[string][1618]** Document ID
+*   `intentRouter` **[Object][1617]** Intent router data
 
-Returns **[Promise][1580]<[Object][1577]>** Storage result
+Returns **[Promise][1620]<[Object][1617]>** Storage result
 
 ### storePlaybookHints
 
@@ -3091,10 +3204,10 @@ Store playbook hints JSON to Supabase Storage
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `playbookHints` **[Object][1577]** Playbook hints data
+*   `docId` **[string][1618]** Document ID
+*   `playbookHints` **[Object][1617]** Playbook hints data
 
-Returns **[Promise][1580]<[Object][1577]>** Storage result
+Returns **[Promise][1620]<[Object][1617]>** Storage result
 
 ### readJsonFile
 
@@ -3102,10 +3215,10 @@ Read JSON file from Supabase Storage
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `fileName` **[string][1578]** File name to read
+*   `docId` **[string][1618]** Document ID
+*   `fileName` **[string][1618]** File name to read
 
-Returns **[Promise][1580]<[Object][1577]>** JSON data
+Returns **[Promise][1620]<[Object][1617]>** JSON data
 
 ## DocAssetsRepository
 
@@ -3276,7 +3389,7 @@ Runs as background job every 15 minutes
 
 Get all reviewed task pairs
 
-Returns **[Promise][1580]<[Array][1581]>** Reviewed pairs with task IDs
+Returns **[Promise][1620]<[Array][1621]>** Reviewed pairs with task IDs
 
 ## isPairReviewed
 
@@ -3284,10 +3397,10 @@ Check if a pair has been reviewed (bidirectional check)
 
 ### Parameters
 
-*   `taskAId` **[string][1578]** First task ID
-*   `taskBId` **[string][1578]** Second task ID
+*   `taskAId` **[string][1618]** First task ID
+*   `taskBId` **[string][1618]** Second task ID
 
-Returns **[Promise][1580]<[boolean][1582]>** True if pair has been reviewed
+Returns **[Promise][1620]<[boolean][1622]>** True if pair has been reviewed
 
 ## saveReviewDecision
 
@@ -3295,9 +3408,9 @@ Save a review decision with all features
 
 ### Parameters
 
-*   `decisionData` **[Object][1577]** Decision data with features
+*   `decisionData` **[Object][1617]** Decision data with features
 
-Returns **[Promise][1580]<[Object][1577]>** Created decision record
+Returns **[Promise][1620]<[Object][1617]>** Created decision record
 
 ## markPairAsReviewed
 
@@ -3305,9 +3418,9 @@ Mark a task pair as reviewed (UPSERT - safe for duplicates)
 
 ### Parameters
 
-*   `pairData` **[Object][1577]** Pair data with task IDs and decision
+*   `pairData` **[Object][1617]** Pair data with task IDs and decision
 
-Returns **[Promise][1580]<[Object][1577]>** Created/updated reviewed pair record
+Returns **[Promise][1620]<[Object][1617]>** Created/updated reviewed pair record
 
 ## saveDeletedTask
 
@@ -3315,21 +3428,21 @@ Save a deleted task to audit trail (UPSERT - safe for duplicates)
 
 ### Parameters
 
-*   `taskData` **[Object][1577]** Deleted task data
+*   `taskData` **[Object][1617]** Deleted task data
 
-Returns **[Promise][1580]<[Object][1577]>** Created/updated deleted task record
+Returns **[Promise][1620]<[Object][1617]>** Created/updated deleted task record
 
 ## getReviewStats
 
 Get review statistics
 
-Returns **[Promise][1580]<[Array][1581]>** Review stats
+Returns **[Promise][1620]<[Array][1621]>** Review stats
 
 ## getDeletedTasks
 
 Get all deleted tasks
 
-Returns **[Promise][1580]<[Array][1581]>** List of deleted tasks
+Returns **[Promise][1620]<[Array][1621]>** List of deleted tasks
 
 ## getDeletedTask
 
@@ -3337,9 +3450,9 @@ Get deleted task by Pinecone ID
 
 ### Parameters
 
-*   `pineconeId` **[string][1578]** Task ID from Pinecone
+*   `pineconeId` **[string][1618]** Task ID from Pinecone
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Deleted task or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Deleted task or null
 
 ## GpsRepository
 
@@ -3349,7 +3462,7 @@ Repository for accessing GPS position data from RPi
 
 Get the most recent GPS position
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Latest position or null if none/error
+Returns **[Promise][1620]<([Object][1617] | null)>** Latest position or null if none/error
 
 ### getRecentPositions
 
@@ -3357,9 +3470,9 @@ Get recent GPS positions
 
 #### Parameters
 
-*   `limit` **[number][1579]** Number of positions to retrieve (optional, default `20`)
+*   `limit` **[number][1619]** Number of positions to retrieve (optional, default `20`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of positions
+Returns **[Promise][1620]<[Array][1621]>** Array of positions
 
 ### getPositionsInRange
 
@@ -3367,10 +3480,23 @@ Get positions within a time range
 
 #### Parameters
 
-*   `startTime` **[Date][1584]** Start of time range
-*   `endTime` **[Date][1584]** End of time range
+*   `startTime` **[Date][1624]** Start of time range
+*   `endTime` **[Date][1624]** End of time range
 
-Returns **[Promise][1580]<[Array][1581]>** Array of positions
+Returns **[Promise][1620]<[Array][1621]>** Array of positions
+
+### getPositionsSummaryInRange
+
+Get positions summary in a time range with bounding box and downsampling.
+Uses a single Postgres RPC call for performance.
+
+#### Parameters
+
+*   `startTime` **[Date][1624]** Start of time range
+*   `endTime` **[Date][1624]** End of time range
+*   `intervalSeconds` **[number][1619]** Downsample interval (default 60s) (optional, default `60`)
+
+Returns **[Promise][1620]<[Object][1617]>** { positions, boundingBox, totalPositions }
 
 ## insertTimingRows
 
@@ -3378,11 +3504,11 @@ Bulk insert timing rows for an ingest run (single transaction via Supabase).
 
 ### Parameters
 
-*   `ingestRunId` **[string][1578]** UUID grouping all rows for one ingest attempt
-*   `docId` **[string][1578]** Document ID (FK to documents.doc\_id)
-*   `steps` **[Array][1581]<[Object][1577]>** Array of step timing objects
+*   `ingestRunId` **[string][1618]** UUID grouping all rows for one ingest attempt
+*   `docId` **[string][1618]** Document ID (FK to documents.doc\_id)
+*   `steps` **[Array][1621]<[Object][1617]>** Array of step timing objects
 
-Returns **[Object][1577]** { inserted: number }
+Returns **[Object][1617]** { inserted: number }
 
 ## getTimingByDocId
 
@@ -3390,9 +3516,9 @@ Get all timing runs for a document.
 
 ### Parameters
 
-*   `docId` **[string][1578]**&#x20;
+*   `docId` **[string][1618]**&#x20;
 
-Returns **[Array][1581]** Array of timing rows grouped by ingest\_run\_id
+Returns **[Array][1621]** Array of timing rows grouped by ingest\_run\_id
 
 ## getTimingByRunId
 
@@ -3400,10 +3526,10 @@ Get timing for a specific ingest run.
 
 ### Parameters
 
-*   `docId` **[string][1578]**&#x20;
-*   `ingestRunId` **[string][1578]**&#x20;
+*   `docId` **[string][1618]**&#x20;
+*   `ingestRunId` **[string][1618]**&#x20;
 
-Returns **[Array][1581]** Timing rows for that run
+Returns **[Array][1621]** Timing rows for that run
 
 ## getRecentTimingRows
 
@@ -3411,9 +3537,9 @@ Get recent timing rows across all documents.
 
 ### Parameters
 
-*   `limit` **[number][1579]** Max number of rows to return (default 200) (optional, default `200`)
+*   `limit` **[number][1619]** Max number of rows to return (default 200) (optional, default `200`)
 
-Returns **[Array][1581]** Timing rows ordered by created\_at desc
+Returns **[Array][1621]** Timing rows ordered by created\_at desc
 
 ## getSystemNamesForDocs
 
@@ -3422,9 +3548,20 @@ Uses manufacturer\_norm and model\_norm directly from documents table.
 
 ### Parameters
 
-*   `docIds` **[Array][1581]<[string][1578]>**&#x20;
+*   `docIds` **[Array][1621]<[string][1618]>**&#x20;
 
-Returns **[Object][1577]** Map of doc\_id → { manufacturer, model, name }
+Returns **[Object][1617]** Map of doc\_id → { manufacturer, model, name }
+
+## getJobsForDocs
+
+Get terminal-state jobs for a set of doc\_ids (v5\_parse\_detect + v5\_ingest).
+Returns { doc\_id: \[job, ...] } map — one query, no N+1.
+
+### Parameters
+
+*   `docIds` **[Array][1621]<[string][1618]>**&#x20;
+
+Returns **[Object][1617]** Map of doc\_id → array of job rows
 
 ## getAllIntentRoutes
 
@@ -3487,9 +3624,9 @@ Fetch a job by its ID from the jobs table.
 
 ### Parameters
 
-*   `id` **[string][1578]** The job UUID
+*   `id` **[string][1618]** The job UUID
 
-Returns **[Promise][1580]<[Object][1577]>** The job row
+Returns **[Promise][1620]<[Object][1617]>** The job row
 
 ## updateJobStatus
 
@@ -3497,9 +3634,9 @@ Update a job's status by ID.
 
 ### Parameters
 
-*   `id` **[string][1578]** The job UUID
-*   `status` **[string][1578]** New status (queued|processing|completed|failed)
-*   `updates` **[Object][1577]** Additional fields to update (optional, default `{}`)
+*   `id` **[string][1618]** The job UUID
+*   `status` **[string][1618]** New status (queued|processing|completed|failed)
+*   `updates` **[Object][1617]** Additional fields to update (optional, default `{}`)
 
 ## getJobsByStatus
 
@@ -3507,11 +3644,11 @@ Get jobs by status
 
 ### Parameters
 
-*   `status` **[string][1578]** Job status to filter by
-*   `limit` **[number][1579]** Maximum number of jobs to return (optional, default `10`)
-*   `offset` **[number][1579]** Number of jobs to skip (optional, default `0`)
+*   `status` **[string][1618]** Job status to filter by
+*   `limit` **[number][1619]** Maximum number of jobs to return (optional, default `10`)
+*   `offset` **[number][1619]** Number of jobs to skip (optional, default `0`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of jobs
+Returns **[Promise][1620]<[Array][1621]>** Array of jobs
 
 ## createJob
 
@@ -3519,9 +3656,9 @@ Create a new job
 
 ### Parameters
 
-*   `jobData` **[Object][1577]** Job data to insert
+*   `jobData` **[Object][1617]** Job data to insert
 
-Returns **[Promise][1580]<[Object][1577]>** Created job
+Returns **[Promise][1620]<[Object][1617]>** Created job
 
 ## logger
 
@@ -3641,7 +3778,7 @@ to manage maintenance task vectors in the MAINTENANCE\_TASKS namespace.
 
 List all maintenance tasks with pagination
 
-Returns **[Promise][1580]<[Array][1581]>** Array of task records
+Returns **[Promise][1620]<[Array][1621]>** Array of task records
 
 ## getTaskById
 
@@ -3649,9 +3786,9 @@ Get a single task by ID
 
 ### Parameters
 
-*   `taskId` **[string][1578]** Task ID
+*   `taskId` **[string][1618]** Task ID
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Task record or null if not found
+Returns **[Promise][1620]<([Object][1617] | null)>** Task record or null if not found
 
 ## updateTaskMetadata
 
@@ -3659,10 +3796,10 @@ Update task metadata
 
 ### Parameters
 
-*   `taskId` **[string][1578]** Task ID
-*   `updates` **[Object][1577]** Metadata updates to apply
+*   `taskId` **[string][1618]** Task ID
+*   `updates` **[Object][1617]** Metadata updates to apply
 
-Returns **[Promise][1580]<[Object][1577]>** Updated record
+Returns **[Promise][1620]<[Object][1617]>** Updated record
 
 ## deleteTask
 
@@ -3670,9 +3807,9 @@ Delete a task
 
 ### Parameters
 
-*   `taskId` **[string][1578]** Task ID
+*   `taskId` **[string][1618]** Task ID
 
-Returns **[Promise][1580]<[boolean][1582]>** True if deleted
+Returns **[Promise][1620]<[boolean][1622]>** True if deleted
 
 ## bulkUpdateTasks
 
@@ -3680,16 +3817,16 @@ Bulk update task statuses
 
 ### Parameters
 
-*   `taskIds` **[Array][1581]<[string][1578]>** Array of task IDs
-*   `updates` **[Object][1577]** Updates to apply to all tasks (e.g., { review\_status: 'approved' })
+*   `taskIds` **[Array][1621]<[string][1618]>** Array of task IDs
+*   `updates` **[Object][1617]** Updates to apply to all tasks (e.g., { review\_status: 'approved' })
 
-Returns **[Promise][1580]<[Object][1577]>** Results with successful and failed arrays
+Returns **[Promise][1620]<[Object][1617]>** Results with successful and failed arrays
 
 ## getTaskStats
 
 Get task statistics (counts by review status)
 
-Returns **[Promise][1580]<[Object][1577]>** Statistics object
+Returns **[Promise][1620]<[Object][1617]>** Statistics object
 
 ## createSupabaseClientFactory
 
@@ -3698,7 +3835,7 @@ Used by tests to inject mock clients.
 
 ### Parameters
 
-*   `config` **{url: [string][1578], key: [string][1578]}**&#x20;
+*   `config` **{url: [string][1618], key: [string][1618]}**&#x20;
 
     *   `config.url` &#x20;
     *   `config.key` &#x20;
@@ -3736,15 +3873,15 @@ Call this in test teardown to ensure clean state.
 
 Check Supabase availability
 
-*   Throws **[Error][1585]** If Supabase not configured or client unavailable
+*   Throws **[Error][1625]** If Supabase not configured or client unavailable
 
 ## checkSupabaseAvailability
 
 Check if Supabase is available
 
-*   Throws **[Error][1585]** If Supabase is not configured or unavailable
+*   Throws **[Error][1625]** If Supabase is not configured or unavailable
 
-Returns **[Promise][1580]<[Object][1577]>** Supabase client
+Returns **[Promise][1620]<[Object][1617]>** Supabase client
 
 ## listSupplies
 
@@ -3752,17 +3889,17 @@ List supplies with pagination and filtering
 
 ### Parameters
 
-*   `options` **[Object][1577]** Query options (optional, default `{}`)
+*   `options` **[Object][1617]** Query options (optional, default `{}`)
 
-    *   `options.limit` **[number][1579]** Max records to return (default 50) (optional, default `50`)
-    *   `options.offset` **[number][1579]** Skip N records (default 0) (optional, default `0`)
-    *   `options.categoryId` **[string][1578]** Filter by category UUID
-    *   `options.location` **[string][1578]** Filter by location (partial match)
-    *   `options.systemAssetUid` **[string][1578]** Filter by system
-    *   `options.lowStock` **[boolean][1582]** Only show items at/below reorder threshold (optional, default `false`)
-    *   `options.itemType` **[string][1578]** Filter by item type (supply, tool, item)
-    *   `options.orderBy` **[string][1578]** Column to sort by (default 'item\_name') (optional, default `'item_name'`)
-    *   `options.ascending` **[boolean][1582]** Sort direction (default true) (optional, default `true`)
+    *   `options.limit` **[number][1619]** Max records to return (default 50) (optional, default `50`)
+    *   `options.offset` **[number][1619]** Skip N records (default 0) (optional, default `0`)
+    *   `options.categoryId` **[string][1618]** Filter by category UUID
+    *   `options.location` **[string][1618]** Filter by location (partial match)
+    *   `options.systemAssetUid` **[string][1618]** Filter by system
+    *   `options.lowStock` **[boolean][1622]** Only show items at/below reorder threshold (optional, default `false`)
+    *   `options.itemType` **[string][1618]** Filter by item type (supply, tool, item)
+    *   `options.orderBy` **[string][1618]** Column to sort by (default 'item\_name') (optional, default `'item_name'`)
+    *   `options.ascending` **[boolean][1622]** Sort direction (default true) (optional, default `true`)
 
 ## listSupplies
 
@@ -3778,7 +3915,7 @@ Get single supply by ID
 
 ### Parameters
 
-*   `id` **[string][1578]** Supply UUID
+*   `id` **[string][1618]** Supply UUID
 
 ## getSupplyById
 
@@ -3794,7 +3931,7 @@ Create new supply item
 
 ### Parameters
 
-*   `supply` **[Object][1577]** Supply data
+*   `supply` **[Object][1617]** Supply data
 
 ## createSupply
 
@@ -3810,8 +3947,8 @@ Update supply item
 
 ### Parameters
 
-*   `id` **[string][1578]** Supply UUID
-*   `updates` **[Object][1577]** Fields to update
+*   `id` **[string][1618]** Supply UUID
+*   `updates` **[Object][1617]** Fields to update
 
 ## updateSupply
 
@@ -3828,7 +3965,7 @@ Delete supply item
 
 ### Parameters
 
-*   `id` **[string][1578]** Supply UUID
+*   `id` **[string][1618]** Supply UUID
 
 ## deleteSupply
 
@@ -3844,8 +3981,8 @@ Full-text search supplies using search\_vector
 
 ### Parameters
 
-*   `query` **[string][1578]** Search query
-*   `options` **[Object][1577]** Search options (optional, default `{}`)
+*   `query` **[string][1618]** Search query
+*   `options` **[Object][1617]** Search options (optional, default `{}`)
 
     *   `options.limit`   (optional, default `20`)
     *   `options.offset`   (optional, default `0`)
@@ -3865,7 +4002,7 @@ Get supplies at or below reorder threshold
 
 ### Parameters
 
-*   `autoReorderOnly` **[boolean][1582]** Only return items with auto\_reorder\_enabled=true (optional, default `false`)
+*   `autoReorderOnly` **[boolean][1622]** Only return items with auto\_reorder\_enabled=true (optional, default `false`)
 
 ## getLowStockSupplies
 
@@ -3881,7 +4018,7 @@ Get supplies by category (including subcategories)
 
 ### Parameters
 
-*   `categoryId` **[string][1578]** Category UUID
+*   `categoryId` **[string][1618]** Category UUID
 
 ## getSuppliesByCategory
 
@@ -3897,7 +4034,7 @@ Get supplies by system
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset\_uid
+*   `assetUid` **[string][1618]** System asset\_uid
 
 ## getSuppliesBySystem
 
@@ -3918,7 +4055,7 @@ Follows cursor rules: ALL DB/storage/network I/O goes here.
 
 Get distinct manufacturers from systems table
 
-Returns **[Promise][1580]<[Array][1581]<[string][1578]>>** Array of manufacturer names
+Returns **[Promise][1620]<[Array][1621]<[string][1618]>>** Array of manufacturer names
 
 ## getModelsByManufacturer
 
@@ -3926,9 +4063,9 @@ Get models for a specific manufacturer
 
 ### Parameters
 
-*   `manufacturer` **[string][1578]** Manufacturer name
+*   `manufacturer` **[string][1618]** Manufacturer name
 
-Returns **[Promise][1580]<[Array][1581]<[string][1578]>>** Array of model names
+Returns **[Promise][1620]<[Array][1621]<[string][1618]>>** Array of model names
 
 ## findSystemByManufacturerModel
 
@@ -3936,10 +4073,10 @@ Search for system by manufacturer and model
 
 ### Parameters
 
-*   `manufacturer` **[string][1578]** Manufacturer name
-*   `model` **[string][1578]** Model name
+*   `manufacturer` **[string][1618]** Manufacturer name
+*   `model` **[string][1618]** Model name
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of system records
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of system records
 
 ## getInstancesByAssetUid
 
@@ -3947,19 +4084,9 @@ Get instances for a system
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
+*   `assetUid` **[string][1618]** System asset UID
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of instance records
-
-## createSystem
-
-Create a new system
-
-### Parameters
-
-*   `systemData` **[Object][1577]** System data to insert
-
-Returns **[Promise][1580]<[Object][1577]>** Created system record
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of instance records
 
 ## createSystem
 
@@ -3967,9 +4094,19 @@ Create a new system
 
 ### Parameters
 
-*   `systemData` **[Object][1577]** System data to create
+*   `systemData` **[Object][1617]** System data to insert
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error?, validationErrors? }
+Returns **[Promise][1620]<[Object][1617]>** Created system record
+
+## createSystem
+
+Create a new system
+
+### Parameters
+
+*   `systemData` **[Object][1617]** System data to create
+
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error?, validationErrors? }
 
 ## updateSystem
 
@@ -3977,10 +4114,10 @@ Update an existing system
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
-*   `systemData` **[Object][1577]** System data to update
+*   `assetUid` **[string][1618]** System asset UID
+*   `systemData` **[Object][1617]** System data to update
 
-Returns **[Promise][1580]<[Object][1577]>** Updated system record
+Returns **[Promise][1620]<[Object][1617]>** Updated system record
 
 ## updateSystem
 
@@ -3988,10 +4125,10 @@ Update an existing system
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
-*   `systemData` **[Object][1577]** System data to update
+*   `assetUid` **[string][1618]** System asset UID
+*   `systemData` **[Object][1617]** System data to update
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error?, validationErrors? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error?, validationErrors? }
 
 ## deleteSystem
 
@@ -3999,9 +4136,9 @@ Delete a system (hard delete)
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
+*   `assetUid` **[string][1618]** System asset UID
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## deleteSystem
 
@@ -4009,19 +4146,9 @@ Delete a system and archive its instances
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
+*   `assetUid` **[string][1618]** System asset UID
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
-
-## createInstance
-
-Create a new instance
-
-### Parameters
-
-*   `instanceData` **[Object][1577]** Instance data to insert
-
-Returns **[Promise][1580]<[Object][1577]>** Created instance record
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## createInstance
 
@@ -4029,10 +4156,20 @@ Create a new instance
 
 ### Parameters
 
-*   `instanceData` **[Object][1577]** Instance data to create
-*   `denormalizedFields` **[Object][1577]?** Optional denormalized fields (manufacturer\_norm, model\_norm, system\_norm, subsystem\_norm) (optional, default `{}`)
+*   `instanceData` **[Object][1617]** Instance data to insert
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error?, validationErrors? }
+Returns **[Promise][1620]<[Object][1617]>** Created instance record
+
+## createInstance
+
+Create a new instance
+
+### Parameters
+
+*   `instanceData` **[Object][1617]** Instance data to create
+*   `denormalizedFields` **[Object][1617]?** Optional denormalized fields (manufacturer\_norm, model\_norm, system\_norm, subsystem\_norm) (optional, default `{}`)
+
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error?, validationErrors? }
 
 ## updateInstance
 
@@ -4040,10 +4177,10 @@ Update an existing instance
 
 ### Parameters
 
-*   `instanceUid` **[string][1578]** Instance UID
-*   `instanceData` **[Object][1577]** Instance data to update
+*   `instanceUid` **[string][1618]** Instance UID
+*   `instanceData` **[Object][1617]** Instance data to update
 
-Returns **[Promise][1580]<[Object][1577]>** Updated instance record
+Returns **[Promise][1620]<[Object][1617]>** Updated instance record
 
 ## updateInstance
 
@@ -4051,10 +4188,10 @@ Update an existing instance
 
 ### Parameters
 
-*   `instanceUid` **[string][1578]** Instance UID
-*   `instanceData` **[Object][1577]** Instance data to update
+*   `instanceUid` **[string][1618]** Instance UID
+*   `instanceData` **[Object][1617]** Instance data to update
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## archiveInstance
 
@@ -4062,9 +4199,9 @@ Archive an instance (soft delete)
 
 ### Parameters
 
-*   `instanceUid` **[string][1578]** Instance UID to archive
+*   `instanceUid` **[string][1618]** Instance UID to archive
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## getNextInstanceIndex
 
@@ -4072,33 +4209,33 @@ Get next instance\_index for a system
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
+*   `assetUid` **[string][1618]** System asset UID
 
-Returns **[Promise][1580]<[number][1579]>** Next available instance\_index
+Returns **[Promise][1620]<[number][1619]>** Next available instance\_index
 
 ## getSystemsToFetch
 
 Get systems that need manuals (from systems\_to\_fetch view)
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of systems needing manuals
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of systems needing manuals
 
 ## getRefManufacturers
 
 Get all manufacturers from ref\_manufacturers table
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of manufacturer objects with id, name, synonyms
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of manufacturer objects with id, name, synonyms
 
 ## getRefProductTypes
 
 Get all product types from ref\_product\_types table
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of product type objects
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of product type objects
 
 ## getRefSystemCategories
 
 Get all system categories from ref\_system\_categories table
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of system category objects
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of system category objects
 
 ## getRefSubsystemCategories
 
@@ -4106,9 +4243,9 @@ Get subsystem categories, optionally filtered by parent category
 
 ### Parameters
 
-*   `categoryId` **([string][1578] | null)** Optional parent category ID to filter by (optional, default `null`)
+*   `categoryId` **([string][1618] | null)** Optional parent category ID to filter by (optional, default `null`)
 
-Returns **[Promise][1580]<[Array][1581]<[Object][1577]>>** Array of subsystem category objects
+Returns **[Promise][1620]<[Array][1621]<[Object][1617]>>** Array of subsystem category objects
 
 ## lookupSystemByManufacturerAndModel
 
@@ -4117,14 +4254,14 @@ Used during document upload to resolve asset\_uid and system metadata
 
 ### Parameters
 
-*   `manufacturerNorm` **[string][1578]** Normalized manufacturer name
-*   `modelNorm` **[string][1578]** Normalized model name
+*   `manufacturerNorm` **[string][1618]** Normalized manufacturer name
+*   `modelNorm` **[string][1618]** Normalized model name
 
 <!---->
 
-*   Throws **[Error][1585]** If system not found or database error
+*   Throws **[Error][1625]** If system not found or database error
 
-Returns **[Promise][1580]<[Object][1577]>** System metadata with asset\_uid, system\_norm, subsystem\_norm
+Returns **[Promise][1620]<[Object][1617]>** System metadata with asset\_uid, system\_norm, subsystem\_norm
 
 ## getSystemByUid
 
@@ -4154,9 +4291,9 @@ Returns an array of canonical\_model strings for any synonym\_norm matches.
 
 ### Parameters
 
-*   `normalizedModels` **[Array][1581]<[string][1578]>** Array of normalized model keys (from normalizeModelKey())
+*   `normalizedModels` **[Array][1621]<[string][1618]>** Array of normalized model keys (from normalizeModelKey())
 
-Returns **[Promise][1580]<[Array][1581]<[string][1578]>>** Canonical model strings that matched
+Returns **[Promise][1620]<[Array][1621]<[string][1618]>>** Canonical model strings that matched
 
 ## TelemetryRepository
 
@@ -4167,7 +4304,7 @@ Repository for accessing Victron telemetry data from Supabase
 Get current state of all telemetry metrics
 Joins with devices and metrics tables for full context
 
-Returns **[Promise][1580]<[Array][1581]>** Array of current telemetry readings
+Returns **[Promise][1620]<[Array][1621]>** Array of current telemetry readings
 
 ### getCurrentStateByCategory
 
@@ -4175,15 +4312,15 @@ Get current state for a specific device category
 
 #### Parameters
 
-*   `category` **[string][1578]** Device category (battery, tank, solarcharger, etc.)
+*   `category` **[string][1618]** Device category (battery, tank, solarcharger, etc.)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of current readings for that category
+Returns **[Promise][1620]<[Array][1621]>** Array of current readings for that category
 
 ### getDevices
 
 Get list of all telemetry devices
 
-Returns **[Promise][1580]<[Array][1581]>** Array of devices
+Returns **[Promise][1620]<[Array][1621]>** Array of devices
 
 ### getAggregatedData
 
@@ -4191,11 +4328,11 @@ Get aggregated data for a metric
 
 #### Parameters
 
-*   `metricId` **[string][1578]** UUID of the metric
-*   `resolution` **[string][1578]** '1m', '5m', or '1h' (optional, default `'5m'`)
-*   `hours` **[number][1579]** Number of hours of history to retrieve (optional, default `24`)
+*   `metricId` **[string][1618]** UUID of the metric
+*   `resolution` **[string][1618]** '1m', '5m', or '1h' (optional, default `'5m'`)
+*   `hours` **[number][1619]** Number of hours of history to retrieve (optional, default `24`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of aggregated readings
+Returns **[Promise][1620]<[Array][1621]>** Array of aggregated readings
 
 ### getTankHistory
 
@@ -4203,9 +4340,9 @@ Get tank history for sparklines
 
 #### Parameters
 
-*   `hours` **[number][1579]** Number of hours of history (optional, default `168`)
+*   `hours` **[number][1619]** Number of hours of history (optional, default `168`)
 
-Returns **[Promise][1580]<[Object][1577]>** Object keyed by device\_id with array of {bucket\_start, avg\_value}
+Returns **[Promise][1620]<[Object][1617]>** Object keyed by device\_id with array of {bucket\_start, avg\_value}
 
 ## hasExistingTask
 
@@ -4213,9 +4350,9 @@ Check if a similar task already exists (prevent duplicates)
 
 ### Parameters
 
-*   `equipmentName` **[string][1578]** Equipment name to search for
+*   `equipmentName` **[string][1618]** Equipment name to search for
 
-Returns **[Promise][1580]<[boolean][1582]>** true if similar task exists
+Returns **[Promise][1620]<[boolean][1622]>** true if similar task exists
 
 ## createUserTask
 
@@ -4223,21 +4360,21 @@ Create a user task
 
 ### Parameters
 
-*   `task` **[Object][1577]** Task data
+*   `task` **[Object][1617]** Task data
 
-    *   `task.description` **[string][1578]** Task description (required)
-    *   `task.asset_uid` **([string][1578] | null)** Related system asset\_uid (null for general)
-    *   `task.due_date` **[string][1578]** ISO date string for when due
-    *   `task.is_recurring` **[boolean][1582]** Whether task repeats (default: false)
-    *   `task.notes` **[string][1578]** Additional notes
-    *   `task.created_by` **[string][1578]** Source of task (e.g., 'chat\_suggestion')
-    *   `task.priority` **[string][1578]** Priority level ('low', 'normal', 'high')
+    *   `task.description` **[string][1618]** Task description (required)
+    *   `task.asset_uid` **([string][1618] | null)** Related system asset\_uid (null for general)
+    *   `task.due_date` **[string][1618]** ISO date string for when due
+    *   `task.is_recurring` **[boolean][1622]** Whether task repeats (default: false)
+    *   `task.notes` **[string][1618]** Additional notes
+    *   `task.created_by` **[string][1618]** Source of task (e.g., 'chat\_suggestion')
+    *   `task.priority` **[string][1618]** Priority level ('low', 'normal', 'high')
 
 <!---->
 
-*   Throws **[Error][1585]** If creation fails
+*   Throws **[Error][1625]** If creation fails
 
-Returns **[Promise][1580]<[Object][1577]>** Created task
+Returns **[Promise][1620]<[Object][1617]>** Created task
 
 ## checkDocumentStatus
 
@@ -4245,9 +4382,9 @@ Check if a document exists and is processed for an asset
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** Asset UID to check
+*   `assetUid` **[string][1618]** Asset UID to check
 
-Returns **[Promise][1580]<{hasDoc: [boolean][1582], isProcessed: [boolean][1582]}>**&#x20;
+Returns **[Promise][1620]<{hasDoc: [boolean][1622], isProcessed: [boolean][1622]}>**&#x20;
 
 ## completeDocumentIngestTask
 
@@ -4260,10 +4397,10 @@ then parse notes JSON in app code to match doc\_id.
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID to match
-*   `taskType` **[string][1578]?** Optional type filter (e.g. 'detection\_complete') (optional, default `null`)
+*   `docId` **[string][1618]** Document ID to match
+*   `taskType` **[string][1618]?** Optional type filter (e.g. 'detection\_complete') (optional, default `null`)
 
-Returns **[Promise][1580]<[number][1579]>** Number of tasks completed
+Returns **[Promise][1620]<[number][1619]>** Number of tasks completed
 
 ## get
 
@@ -4408,9 +4545,9 @@ Fetch analysis results for a test run.
 
 ### Parameters
 
-*   `runId` **[string][1578]** UUID of the test run
+*   `runId` **[string][1618]** UUID of the test run
 
-Returns **[Object][1577]** { success: true, data: { byFailureKey, summary } }
+Returns **[Object][1617]** { success: true, data: { byFailureKey, summary } }
 
 ## get
 
@@ -4459,6 +4596,11 @@ Get current boat status with weather and 5-hour history
 
 ## get
 
+GET /api/boat-now/history
+Get historical GPS data only (no weather/geocode) for time window switching
+
+## get
+
 GET /api/funnel/stats
 Returns the full funnel statistics
 
@@ -4471,6 +4613,13 @@ Returns recent ingest timing runs for visualization
 
 GET /api/gps/current
 Returns the most recent GPS position
+
+## get
+
+GET /api/gps/season-track
+Returns downsampled GPS track for the entire season.
+Queries gps\_position directly with row skipping for performance on large datasets.
+Query param: maxPoints (default 5000) — target number of points returned.
 
 ## get
 
@@ -5061,7 +5210,7 @@ Update a comment
 
 Express JSON middleware (simplified)
 
-Returns **[Function][1583]** Express middleware
+Returns **[Function][1623]** Express middleware
 
 ## anchoragesRouter
 
@@ -5140,7 +5289,7 @@ Validate a DIP object
 
 *   `obj` **any** Object to validate
 
-Returns **[Object][1577]** Validation result with success flag and data/error
+Returns **[Object][1617]** Validation result with success flag and data/error
 
 ## validateSuggestions
 
@@ -5150,7 +5299,7 @@ Validate a Suggestions object
 
 *   `obj` **any** Object to validate
 
-Returns **[Object][1577]** Validation result with success flag and data/error
+Returns **[Object][1617]** Validation result with success flag and data/error
 
 ## validateApplyRequest
 
@@ -5160,7 +5309,7 @@ Validate an Apply Request object
 
 *   `obj` **any** Object to validate
 
-Returns **[Object][1577]** Validation result with success flag and data/error
+Returns **[Object][1617]** Validation result with success flag and data/error
 
 ## validateRollbackRequest
 
@@ -5170,7 +5319,7 @@ Validate a Rollback Request object
 
 *   `obj` **any** Object to validate
 
-Returns **[Object][1577]** Validation result with success flag and data/error
+Returns **[Object][1617]** Validation result with success flag and data/error
 
 ## createDefaultDIP
 
@@ -5178,9 +5327,9 @@ Create a default DIP structure
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Object][1577]** Default DIP structure
+Returns **[Object][1617]** Default DIP structure
 
 ## createDefaultSuggestions
 
@@ -5188,9 +5337,9 @@ Create a default Suggestions structure
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Object][1577]** Default Suggestions structure
+Returns **[Object][1617]** Default Suggestions structure
 
 ## SpecKeywordSchema
 
@@ -5238,14 +5387,14 @@ Compute confidence and action based on margin + LLM agreement.
 
 ### Parameters
 
-*   `input` **[Object][1577]**&#x20;
+*   `input` **[Object][1617]**&#x20;
 
-    *   `input.llmDecision` **[string][1578]** 'approved' | 'rejected' | 'uncertain'
-    *   `input.simToApproved` **[number][1579]** Avg similarity to top-3 approved examples (0-1)
-    *   `input.simToRejected` **[number][1579]** Avg similarity to top-3 rejected examples (0-1)
-    *   `input.preFilterMatch` **[boolean][1582]** Did the pre-filter match (hard reject)?
+    *   `input.llmDecision` **[string][1618]** 'approved' | 'rejected' | 'uncertain'
+    *   `input.simToApproved` **[number][1619]** Avg similarity to top-3 approved examples (0-1)
+    *   `input.simToRejected` **[number][1619]** Avg similarity to top-3 rejected examples (0-1)
+    *   `input.preFilterMatch` **[boolean][1622]** Did the pre-filter match (hard reject)?
 
-Returns **{score: [number][1579], action: [string][1578], breakdown: [Object][1577]}**&#x20;
+Returns **{score: [number][1619], action: [string][1618], breakdown: [Object][1617]}**&#x20;
 
 ## getEmbedding
 
@@ -5253,9 +5402,9 @@ Get embedding from OpenAI
 
 ### Parameters
 
-*   `text` **[string][1578]** Text to embed
+*   `text` **[string][1618]** Text to embed
 
-Returns **[Promise][1580]<[Array][1581]<[number][1579]>>** 1536-dimensional embedding vector
+Returns **[Promise][1620]<[Array][1621]<[number][1619]>>** 1536-dimensional embedding vector
 
 ## itemToText
 
@@ -5263,10 +5412,10 @@ Convert item to embeddable text based on table type
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item to convert
-*   `sourceTable` **[string][1578]** The source table name
+*   `item` **[Object][1617]** The item to convert
+*   `sourceTable` **[string][1618]** The source table name
 
-Returns **[string][1578]** Text representation for embedding
+Returns **[string][1618]** Text representation for embedding
 
 ## selectDiverseExamples
 
@@ -5275,11 +5424,11 @@ Removes items that are too similar to already-selected items
 
 ### Parameters
 
-*   `candidates` **[Array][1581]** Sorted candidates (highest similarity first)
-*   `targetCount` **[number][1579]** Number of diverse examples to select
-*   `diversityThreshold` **[number][1579]** Skip items with similarity > this to selected items (default: 0.95) (optional, default `0.95`)
+*   `candidates` **[Array][1621]** Sorted candidates (highest similarity first)
+*   `targetCount` **[number][1619]** Number of diverse examples to select
+*   `diversityThreshold` **[number][1619]** Skip items with similarity > this to selected items (default: 0.95) (optional, default `0.95`)
 
-Returns **[Array][1581]** Diverse subset of candidates
+Returns **[Array][1621]** Diverse subset of candidates
 
 ## getSimilarDecisions
 
@@ -5287,16 +5436,16 @@ Find similar past decisions for few-shot examples
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item to find examples for
-*   `sourceTable` **[string][1578]** The source table name
-*   `options` **[Object][1577]** Options (optional, default `{}`)
+*   `item` **[Object][1617]** The item to find examples for
+*   `sourceTable` **[string][1618]** The source table name
+*   `options` **[Object][1617]** Options (optional, default `{}`)
 
-    *   `options.approvalCount` **[number][1579]** Number of approval examples (default: 4)
-    *   `options.rejectionCount` **[number][1579]** Number of rejection examples (default: 4)
-    *   `options.excludeWeakLabels` **[boolean][1582]** Exclude pre-filter decisions (default: true)
-    *   `options.minSimilarity` **[number][1579]** Minimum similarity threshold (default: 0.60)
+    *   `options.approvalCount` **[number][1619]** Number of approval examples (default: 4)
+    *   `options.rejectionCount` **[number][1619]** Number of rejection examples (default: 4)
+    *   `options.excludeWeakLabels` **[boolean][1622]** Exclude pre-filter decisions (default: true)
+    *   `options.minSimilarity` **[number][1619]** Minimum similarity threshold (default: 0.60)
 
-Returns **[Promise][1580]<{approvals: [Array][1581], rejections: [Array][1581]}>**&#x20;
+Returns **[Promise][1620]<{approvals: [Array][1621], rejections: [Array][1621]}>**&#x20;
 
 ## storeDecisionEmbedding
 
@@ -5304,15 +5453,15 @@ Store embedding for a new decision
 
 ### Parameters
 
-*   `decisionId` **[string][1578]** The decision ID
-*   `item` **[Object][1577]** The item that was decided on
-*   `sourceTable` **[string][1578]** The source table name
+*   `decisionId` **[string][1618]** The decision ID
+*   `item` **[Object][1617]** The item that was decided on
+*   `sourceTable` **[string][1618]** The source table name
 
 ## checkEmbeddingReadiness
 
 Check if we have enough embeddings for retrieval-based learning
 
-Returns **[Promise][1580]<{ready: [boolean][1582], count: [number][1579], minRequired: [number][1579]}>**&#x20;
+Returns **[Promise][1620]<{ready: [boolean][1622], count: [number][1619], minRequired: [number][1619]}>**&#x20;
 
 ## RunMetrics
 
@@ -5360,10 +5509,10 @@ Creates a new run record and checks for existing running batches
 
 ### Parameters
 
-*   `agentType` **[string][1578]** The agent type ('dip' or 'maintenance')
-*   `config` **[Object][1577]** Config to store with the run (optional, default `{}`)
+*   `agentType` **[string][1618]** The agent type ('dip' or 'maintenance')
+*   `config` **[Object][1617]** Config to store with the run (optional, default `{}`)
 
-Returns **[Promise][1580]<{runId: [string][1578], metrics: [RunMetrics][718]}>**&#x20;
+Returns **[Promise][1620]<{runId: [string][1618], metrics: [RunMetrics][741]}>**&#x20;
 
 ## clearStaleProcessingMarks
 
@@ -5372,7 +5521,7 @@ Items marked for processing by a failed run should be reset
 
 ### Parameters
 
-*   `agentType` **[string][1578]** The agent type
+*   `agentType` **[string][1618]** The agent type
 
 ## getRunHistory
 
@@ -5380,8 +5529,8 @@ Get recent run history
 
 ### Parameters
 
-*   `agentType` **[string][1578]** The agent type
-*   `limit` **[number][1579]** Number of runs to fetch (optional, default `10`)
+*   `agentType` **[string][1618]** The agent type
+*   `limit` **[number][1619]** Number of runs to fetch (optional, default `10`)
 
 ## getLastRun
 
@@ -5421,10 +5570,10 @@ This prevents false positives from matching on metadata fields like IDs
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item
-*   `sourceTable` **[string][1578]** The source table name
+*   `item` **[Object][1617]** The item
+*   `sourceTable` **[string][1618]** The source table name
 
-Returns **[string][1578]** Searchable content text
+Returns **[string][1618]** Searchable content text
 
 ## preFilter
 
@@ -5433,10 +5582,10 @@ Returns action and whether to skip LLM
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item to filter
-*   `sourceTable` **[string][1578]** The source table name
+*   `item` **[Object][1617]** The item to filter
+*   `sourceTable` **[string][1618]** The source table name
 
-Returns **{action: [string][1578], reason: [string][1578], skipLLM: [boolean][1582]}**&#x20;
+Returns **{action: [string][1618], reason: [string][1618], skipLLM: [boolean][1622]}**&#x20;
 
 ## getTableThresholds
 
@@ -5445,10 +5594,10 @@ Falls back to global thresholds if table-specific not defined
 
 ### Parameters
 
-*   `config` **[Object][1577]** Agent config from database
-*   `sourceTable` **[string][1578]** The source table name
+*   `config` **[Object][1617]** Agent config from database
+*   `sourceTable` **[string][1618]** The source table name
 
-Returns **{approve: [number][1579], reject: [number][1579], escalateBelow: [number][1579]}**&#x20;
+Returns **{approve: [number][1619], reject: [number][1619], escalateBelow: [number][1619]}**&#x20;
 
 ## applyPolicy
 
@@ -5469,13 +5618,13 @@ Policy engine decides whether to TRUST that judgment:
 
 ### Parameters
 
-*   `evaluation` **[Object][1577]** LLM evaluation result
-*   `item` **[Object][1577]** The original item
-*   `sourceTable` **[string][1578]** The source table name
-*   `runLimits` **[RunLimits][736]** Current run limits tracker
-*   `config` **[Object][1577]** Agent config from database
+*   `evaluation` **[Object][1617]** LLM evaluation result
+*   `item` **[Object][1617]** The original item
+*   `sourceTable` **[string][1618]** The source table name
+*   `runLimits` **[RunLimits][759]** Current run limits tracker
+*   `config` **[Object][1617]** Agent config from database
 
-Returns **{action: [string][1578], reason: [string][1578]}**&#x20;
+Returns **{action: [string][1618], reason: [string][1618]}**&#x20;
 
 ## sleep
 
@@ -5483,7 +5632,7 @@ Sleep for rate limiting
 
 ### Parameters
 
-*   `ms` **[number][1579]** Milliseconds to sleep
+*   `ms` **[number][1619]** Milliseconds to sleep
 
 ## sleep
 
@@ -5499,9 +5648,9 @@ Sleep for a specified duration
 
 ### Parameters
 
-*   `ms` **[number][1579]** Milliseconds to sleep
+*   `ms` **[number][1619]** Milliseconds to sleep
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## createRateLimiter
 
@@ -5510,9 +5659,9 @@ Ensures minimum delay between operations
 
 ### Parameters
 
-*   `rateLimitMs` **[number][1579]** Minimum ms between operations (optional, default `1000`)
+*   `rateLimitMs` **[number][1619]** Minimum ms between operations (optional, default `1000`)
 
-Returns **[Function][1583]** Function to call after each operation
+Returns **[Function][1623]** Function to call after each operation
 
 ## getAgentConfig
 
@@ -5524,10 +5673,10 @@ Build evaluation prompt with few-shot examples
 
 ### Parameters
 
-*   `item` **[Object][1577]** Item to evaluate
-*   `sourceTable` **[string][1578]** Source table name
-*   `config` **[Object][1577]** Agent config
-*   `dynamicExamples` **[Object][1577]** Dynamic examples from retrieval (optional) (optional, default `null`)
+*   `item` **[Object][1617]** Item to evaluate
+*   `sourceTable` **[string][1618]** Source table name
+*   `config` **[Object][1617]** Agent config
+*   `dynamicExamples` **[Object][1617]** Dynamic examples from retrieval (optional) (optional, default `null`)
 
 ## evaluateItem
 
@@ -5535,11 +5684,11 @@ Evaluate a single DIP item
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item to evaluate
-*   `sourceTable` **[string][1578]** The source table name
-*   `options` **[Object][1577]** Optional overrides (e.g., preFilterMatch) (optional, default `{}`)
+*   `item` **[Object][1617]** The item to evaluate
+*   `sourceTable` **[string][1618]** The source table name
+*   `options` **[Object][1617]** Optional overrides (e.g., preFilterMatch) (optional, default `{}`)
 
-Returns **[Object][1577]** { decision, confidence, reasoning, matchedCriteria, confidenceBreakdown }
+Returns **[Object][1617]** { decision, confidence, reasoning, matchedCriteria, confidenceBreakdown }
 
 ## recordAgentDecision
 
@@ -5573,10 +5722,10 @@ Uses v3.0 margin-based logic from computeConfidence:
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item to process
-*   `sourceTable` **[string][1578]** The source table name
+*   `item` **[Object][1617]** The item to process
+*   `sourceTable` **[string][1618]** The source table name
 
-Returns **[Object][1577]** { action, evaluation }
+Returns **[Object][1617]** { action, evaluation }
 
 ## getPendingItems
 
@@ -5584,9 +5733,9 @@ Get pending items for processing
 
 ### Parameters
 
-*   `limit` **[number][1579]** Maximum items to fetch (optional, default `10`)
+*   `limit` **[number][1619]** Maximum items to fetch (optional, default `10`)
 
-Returns **[Array][1581]** Array of { table, item } objects
+Returns **[Array][1621]** Array of { table, item } objects
 
 ## getAgentStats
 
@@ -5602,25 +5751,25 @@ Calculate distance between two points using Haversine formula
 
 #### Parameters
 
-*   `lat1` **[number][1579]** Latitude of point 1
-*   `lon1` **[number][1579]** Longitude of point 1
-*   `lat2` **[number][1579]** Latitude of point 2
-*   `lon2` **[number][1579]** Longitude of point 2
+*   `lat1` **[number][1619]** Latitude of point 1
+*   `lon1` **[number][1619]** Longitude of point 1
+*   `lat2` **[number][1619]** Latitude of point 2
+*   `lon2` **[number][1619]** Longitude of point 2
 
-Returns **[number][1579]** Distance in nautical miles
+Returns **[number][1619]** Distance in nautical miles
 
 ### getVesselsAroundUs
 
 Get vessels around us sorted by distance
 
-Returns **[Promise][1580]<[Object][1577]>** Vessels with distance and our position
+Returns **[Promise][1620]<[Object][1617]>** Vessels with distance and our position
 
 ### getFriendsWithPositions
 
 Get friends list with local position data if available
 Also updates last\_seen for friends currently in range
 
-Returns **[Promise][1580]<[Object][1577]>** Friends with position info
+Returns **[Promise][1620]<[Object][1617]>** Friends with position info
 
 ### addFriend
 
@@ -5628,11 +5777,11 @@ Add a vessel as a friend
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
-*   `name` **[string][1578]** Vessel name
-*   `shipType` **([string][1578] | null)** Vessel type (optional, default `null`)
+*   `mmsi` **[string][1618]** Vessel MMSI
+*   `name` **[string][1618]** Vessel name
+*   `shipType` **([string][1618] | null)** Vessel type (optional, default `null`)
 
-Returns **[Promise][1580]<[Object][1577]>** Created friend
+Returns **[Promise][1620]<[Object][1617]>** Created friend
 
 ### removeFriend
 
@@ -5640,9 +5789,9 @@ Remove a vessel from friends
 
 #### Parameters
 
-*   `mmsi` **[string][1578]** Vessel MMSI
+*   `mmsi` **[string][1618]** Vessel MMSI
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## buildPipelineModelParams
 
@@ -5650,9 +5799,9 @@ Build expanded model arrays and alias map from DB for a given document.
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Object][1577]** { selected\_models, referenced\_selections, alias\_map, models\_covered }
+Returns **[Object][1617]** { selected\_models, referenced\_selections, alias\_map, models\_covered }
 
 ## start
 
@@ -5666,7 +5815,7 @@ Stop monitoring
 
 Check current status and send alerts if needed
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendStatusChangeAlert
 
@@ -5674,9 +5823,9 @@ Send status change alert
 
 ### Parameters
 
-*   `status` **[Object][1577]** Current anchor watch status
+*   `status` **[Object][1617]** Current anchor watch status
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendPeriodicUpdate
 
@@ -5684,9 +5833,9 @@ Send periodic "all good" update
 
 ### Parameters
 
-*   `status` **[Object][1577]** Current anchor watch status
+*   `status` **[Object][1617]** Current anchor watch status
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendActivationNotification
 
@@ -5694,21 +5843,28 @@ Send activation notification
 
 ### Parameters
 
-*   `config` **[Object][1577]** Activation configuration
+*   `config` **[Object][1617]** Activation configuration
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendDeactivationNotification
 
 Send deactivation notification
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## isActive
 
 Check if monitoring is active
 
-Returns **[boolean][1582]**&#x20;
+Returns **[boolean][1622]**&#x20;
+
+## \_getActiveZone
+
+Get active zone, using in-memory cache to avoid repeated Supabase queries.
+Cache is invalidated by activate(), deactivate(), and updateRadius().
+
+Returns **[Promise][1620]<([Object][1617] | null)>** Active zone or null
 
 ## calculateDistance
 
@@ -5716,18 +5872,18 @@ Calculate distance between two points using Haversine formula
 
 ### Parameters
 
-*   `lat1` **[number][1579]** Latitude of point 1
-*   `lon1` **[number][1579]** Longitude of point 1
-*   `lat2` **[number][1579]** Latitude of point 2
-*   `lon2` **[number][1579]** Longitude of point 2
+*   `lat1` **[number][1619]** Latitude of point 1
+*   `lon1` **[number][1619]** Longitude of point 1
+*   `lat2` **[number][1619]** Latitude of point 2
+*   `lon2` **[number][1619]** Longitude of point 2
 
-Returns **[number][1579]** Distance in meters
+Returns **[number][1619]** Distance in meters
 
 ## calculateCentroid
 
 Calculate centroid of recent positions
 
-Returns **[Promise][1580]<[Object][1577]>** Centroid {latitude, longitude, sample\_size}
+Returns **[Promise][1620]<[Object][1617]>** Centroid {latitude, longitude, sample\_size}
 
 ## determineStatus
 
@@ -5735,16 +5891,23 @@ Determine anchor watch status based on distance
 
 ### Parameters
 
-*   `distanceMeters` **[number][1579]** Distance from anchor in meters
-*   `radiusMeters` **[number][1579]** Anchor zone radius in meters
+*   `distanceMeters` **[number][1619]** Distance from anchor in meters
+*   `radiusMeters` **[number][1619]** Anchor zone radius in meters
 
-Returns **[string][1578]** 'safe', 'warning', or 'dragging'
+Returns **[string][1618]** 'safe', 'warning', or 'dragging'
 
 ## getStatus
 
 Get current anchor watch status
 
-Returns **[Promise][1580]<[Object][1577]>** Current status with all calculated fields
+Returns **[Promise][1620]<[Object][1617]>** Current status with all calculated fields
+
+## getStatusQuick
+
+Lightweight status check for the home page button.
+Uses cached zone + single GPS query. No alert creation.
+
+Returns **[Promise][1620]<[Object][1617]>** { active, status, distance\_meters }
 
 ## getPositionsWithDistance
 
@@ -5752,9 +5915,9 @@ Get recent positions with distance from anchor calculated
 
 ### Parameters
 
-*   `limit` **[number][1579]** Number of positions to retrieve (optional, default `20`)
+*   `limit` **[number][1619]** Number of positions to retrieve (optional, default `20`)
 
-Returns **[Promise][1580]<[Object][1577]>** Positions with calculated distances
+Returns **[Promise][1620]<[Object][1617]>** Positions with calculated distances
 
 ## activate
 
@@ -5762,17 +5925,17 @@ Activate anchor watch with specified center and radius
 
 ### Parameters
 
-*   `latitude` **[number][1579]** Anchor latitude
-*   `longitude` **[number][1579]** Anchor longitude
-*   `radiusMeters` **[number][1579]** Watch radius in meters
+*   `latitude` **[number][1619]** Anchor latitude
+*   `longitude` **[number][1619]** Anchor longitude
+*   `radiusMeters` **[number][1619]** Watch radius in meters
 
-Returns **[Promise][1580]<[Object][1577]>** Created zone
+Returns **[Promise][1620]<[Object][1617]>** Created zone
 
 ## deactivate
 
 Deactivate anchor watch
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## updateRadius
 
@@ -5780,9 +5943,46 @@ Update anchor watch radius
 
 ### Parameters
 
-*   `radiusMeters` **[number][1579]** New radius in meters
+*   `radiusMeters` **[number][1619]** New radius in meters
 
-Returns **[Promise][1580]<[Object][1577]>** Updated zone
+Returns **[Promise][1620]<[Object][1617]>** Updated zone
+
+## computeConvexHull
+
+Compute convex hull of 2D points using Andrew's monotone chain algorithm.
+
+### Parameters
+
+*   `points` **[Array][1621]<{latitude: [number][1619], longitude: [number][1619]}>**&#x20;
+
+Returns **[Array][1621]<{latitude: [number][1619], longitude: [number][1619]}>** Hull vertices in order
+
+## catenaryHorizontalReach
+
+Calculate horizontal reach of anchor chain using catenary formula.
+Accounts for chain sag under gravity — more accurate than straight-line.
+
+Chain hangs in a catenary from bow roller to where it meets the seabed,
+then lies flat on the bottom. Total horizontal = catenary arc + flat portion.
+
+### Parameters
+
+*   `scope` **[number][1619]** Total chain deployed (meters)
+*   `h` **[number][1619]** Height from seabed to bow roller (depth + freeboard)
+
+Returns **[number][1619]** Horizontal distance from bow roller to anchor (meters)
+
+## getSafeBox
+
+Get safe zone analysis for current anchorage.
+Filters outliers, computes convex hull of swing pattern + 5% buffer.
+
+### Parameters
+
+*   `intervalSeconds` **[number][1619]** Downsample interval (default 60) (optional, default `60`)
+*   `chainScopeMeters`   (optional, default `null`)
+
+Returns **[Promise][1620]<[Object][1617]>** { positions, safeZone, anchorage, totalPositions, downsampledPositions, outlierPositions }
 
 ## anchoragesRepository
 
@@ -5797,10 +5997,10 @@ Format decimal degrees to nautical format (like B\&G display)
 
 ### Parameters
 
-*   `decimal` **[number][1579]** Decimal degrees
-*   `isLatitude` **[boolean][1582]** True for lat (N/S), false for lon (E/W)
+*   `decimal` **[number][1619]** Decimal degrees
+*   `isLatitude` **[boolean][1622]** True for lat (N/S), false for lon (E/W)
 
-Returns **[string][1578]** Formatted coordinate
+Returns **[string][1618]** Formatted coordinate
 
 ## computeAnchorPosition
 
@@ -5809,12 +6009,12 @@ Uses inverse haversine to find point at given distance and bearing
 
 ### Parameters
 
-*   `boatLat` **[number][1579]** Boat latitude (decimal degrees)
-*   `boatLon` **[number][1579]** Boat longitude (decimal degrees)
-*   `scopeMeters` **[number][1579]** Rode/chain length in meters
-*   `windDir` **[number][1579]** Wind direction in degrees (where wind comes FROM)
+*   `boatLat` **[number][1619]** Boat latitude (decimal degrees)
+*   `boatLon` **[number][1619]** Boat longitude (decimal degrees)
+*   `scopeMeters` **[number][1619]** Rode/chain length in meters
+*   `windDir` **[number][1619]** Wind direction in degrees (where wind comes FROM)
 
-Returns **[Object][1577]** { anchor\_lat, anchor\_lon }
+Returns **[Object][1617]** { anchor\_lat, anchor\_lon }
 
 ## formatDuration
 
@@ -5822,9 +6022,9 @@ Format duration hours into human-readable string
 
 ### Parameters
 
-*   `hours` **[number][1579]** Duration in hours
+*   `hours` **[number][1619]** Duration in hours
 
-Returns **[string][1578]** e.g., "1 day 13 hours", "5 hours"
+Returns **[string][1618]** e.g., "1 day 13 hours", "5 hours"
 
 ## formatDuration
 
@@ -5840,15 +6040,15 @@ Get compass label for wind direction
 
 ### Parameters
 
-*   `degrees` **[number][1579]** Wind direction in degrees
+*   `degrees` **[number][1619]** Wind direction in degrees
 
-Returns **[string][1578]** Compass label (N, NE, E, SE, S, SW, W, NW)
+Returns **[string][1618]** Compass label (N, NE, E, SE, S, SW, W, NW)
 
 ## listAnchorages
 
 List all anchorages with formatted fields
 
-Returns **[Promise][1580]<[Array][1581]>** Anchorages with computed display fields
+Returns **[Promise][1620]<[Array][1621]>** Anchorages with computed display fields
 
 ## getAnchorage
 
@@ -5856,9 +6056,9 @@ Get single anchorage by ID
 
 ### Parameters
 
-*   `id` **[string][1578]** Anchorage UUID
+*   `id` **[string][1618]** Anchorage UUID
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Anchorage with formatted fields
+Returns **[Promise][1620]<([Object][1617] | null)>** Anchorage with formatted fields
 
 ## updateAnchorage
 
@@ -5866,10 +6066,10 @@ Update anchorage - computes anchor position when scope is set
 
 ### Parameters
 
-*   `id` **[string][1578]** Anchorage UUID
-*   `updates` **[Object][1577]** Fields to update
+*   `id` **[string][1618]** Anchorage UUID
+*   `updates` **[Object][1617]** Fields to update
 
-Returns **[Promise][1580]<[Object][1577]>** Updated anchorage
+Returns **[Promise][1620]<[Object][1617]>** Updated anchorage
 
 ## deleteAnchorage
 
@@ -5877,9 +6077,9 @@ Delete anchorage
 
 ### Parameters
 
-*   `id` **[string][1578]** Anchorage UUID
+*   `id` **[string][1618]** Anchorage UUID
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## distanceDegrees
 
@@ -5887,12 +6087,12 @@ Calculate distance between two points in degrees (Euclidean)
 
 ### Parameters
 
-*   `lat1` **[number][1579]** Latitude 1
-*   `lon1` **[number][1579]** Longitude 1
-*   `lat2` **[number][1579]** Latitude 2
-*   `lon2` **[number][1579]** Longitude 2
+*   `lat1` **[number][1619]** Latitude 1
+*   `lon1` **[number][1619]** Longitude 1
+*   `lat2` **[number][1619]** Latitude 2
+*   `lon2` **[number][1619]** Longitude 2
 
-Returns **[number][1579]** Distance in degrees
+Returns **[number][1619]** Distance in degrees
 
 ## mergeCandidates
 
@@ -5901,9 +6101,9 @@ Groups candidates within 300m of each other, merges with earliest arrival and la
 
 ### Parameters
 
-*   `candidates` **[Array][1581]** Raw candidates from detection
+*   `candidates` **[Array][1621]** Raw candidates from detection
 
-Returns **[Array][1581]** Merged candidates
+Returns **[Array][1621]** Merged candidates
 
 ## detectNewAnchorages
 
@@ -5917,23 +6117,23 @@ Features:
 
 ### Parameters
 
-*   `minHours` **[number][1579]** Minimum stationary hours (default 4) (optional, default `4`)
+*   `minHours` **[number][1619]** Minimum stationary hours (default 2) (optional, default `2`)
 
-Returns **[Promise][1580]<[Object][1577]>** { detected: number, inserted: number, updated: number, merged: number, anchorages: Array }
+Returns **[Promise][1620]<[Object][1617]>** { detected: number, inserted: number, updated: number, merged: number, anchorages: Array }
 
 ## mergeExistingDuplicates
 
 Merge existing duplicate anchorage records at the same location
 Groups anchorages within 300m of each other, keeps earliest arrival with latest departure
 
-Returns **[Promise][1580]<[Object][1577]>** { merged: number, groups: Array }
+Returns **[Promise][1620]<[Object][1617]>** { merged: number, groups: Array }
 
 ## populateLocationNames
 
 Populate location names for anchorages that don't have one
 Uses reverse geocoding from OpenStreetMap
 
-Returns **[Promise][1580]<[Object][1577]>** { updated: number, anchorages: Array }
+Returns **[Promise][1620]<[Object][1617]>** { updated: number, anchorages: Array }
 
 ## createAnchorage
 
@@ -5941,9 +6141,9 @@ Create anchorage manually (not from GPS detection)
 
 ### Parameters
 
-*   `data` **[Object][1577]** Anchorage data
+*   `data` **[Object][1617]** Anchorage data
 
-Returns **[Promise][1580]<[Object][1577]>** Created anchorage
+Returns **[Promise][1620]<[Object][1617]>** Created anchorage
 
 ## AnthropicExtractionService
 
@@ -5956,11 +6156,11 @@ Run Anthropic extraction for all four data types
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `storagePath` **[string][1578]** Path to document in Supabase Storage
-*   `metadata` **[Object][1577]** Document metadata (optional, default `{}`)
+*   `docId` **[string][1618]** Document ID
+*   `storagePath` **[string][1618]** Path to document in Supabase Storage
+*   `metadata` **[Object][1617]** Document metadata (optional, default `{}`)
 
-Returns **[Promise][1580]<[Object][1577]>** Extraction results
+Returns **[Promise][1620]<[Object][1617]>** Extraction results
 
 ### callPythonSidecarForExtraction
 
@@ -5969,11 +6169,11 @@ Uses new cached extraction script for 67% cost savings (4 calls → 1 cached cal
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `storagePath` **[string][1578]** Path to document
-*   `metadata` **[Object][1577]** Document metadata
+*   `docId` **[string][1618]** Document ID
+*   `storagePath` **[string][1618]** Path to document
+*   `metadata` **[Object][1617]** Document metadata
 
-Returns **[Promise][1580]<[Object][1577]>** Extraction results
+Returns **[Promise][1620]<[Object][1617]>** Extraction results
 
 ### storeExtractionResults
 
@@ -5987,10 +6187,10 @@ This maintains proper separation of concerns and architectural cleanliness.
 
 #### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `extractionResults` **[Object][1577]** Results from extractions
+*   `docId` **[string][1618]** Document ID
+*   `extractionResults` **[Object][1617]** Results from extractions
 
-Returns **[Promise][1580]<[Object][1577]>** Storage results with object format
+Returns **[Promise][1620]<[Object][1617]>** Storage results with object format
 
 ## generateEnhancedAssistantResponse
 
@@ -5998,14 +6198,14 @@ Generate enhanced assistant response from Pinecone results
 
 ### Parameters
 
-*   `userQuery` **[string][1578]** Original user query
-*   `enhancedQuery` **[string][1578]** Enhanced query with context
-*   `systemsContext` **[Array][1581]** Systems context array
-*   `pineconeResults` **[Array][1581]** Pinecone search results
-*   `pineconeError` **([Error][1585] | null)** Any Pinecone error
-*   `recentMessages` **[Array][1581]** Recent conversation messages
+*   `userQuery` **[string][1618]** Original user query
+*   `enhancedQuery` **[string][1618]** Enhanced query with context
+*   `systemsContext` **[Array][1621]** Systems context array
+*   `pineconeResults` **[Array][1621]** Pinecone search results
+*   `pineconeError` **([Error][1625] | null)** Any Pinecone error
+*   `recentMessages` **[Array][1621]** Recent conversation messages
 
-Returns **[Promise][1580]<[Object][1577]>** Generated response with content and sources
+Returns **[Promise][1620]<[Object][1617]>** Generated response with content and sources
 
 ## extractPressureSpecs
 
@@ -6013,9 +6213,9 @@ Extract pressure specifications from Pinecone results
 
 ### Parameters
 
-*   `pineconeResults` **[Array][1581]** Pinecone search results
+*   `pineconeResults` **[Array][1621]** Pinecone search results
 
-Returns **[Array][1581]** Pressure specifications
+Returns **[Array][1621]** Pressure specifications
 
 ## generatePressureResponse
 
@@ -6023,9 +6223,9 @@ Generate pressure-specific response
 
 ### Parameters
 
-*   `pressureSpecs` **[Array][1581]** Pressure specifications
+*   `pressureSpecs` **[Array][1621]** Pressure specifications
 
-Returns **[string][1578]** Formatted pressure response
+Returns **[string][1618]** Formatted pressure response
 
 ## generateStandardResponse
 
@@ -6033,12 +6233,12 @@ Generate standard response from Pinecone results
 
 ### Parameters
 
-*   `userQuery` **[string][1578]** User query
-*   `systemsContext` **[Array][1581]** Systems context
-*   `pineconeResults` **[Array][1581]** Pinecone results
-*   `sources` **[Array][1581]** Sources array
+*   `userQuery` **[string][1618]** User query
+*   `systemsContext` **[Array][1621]** Systems context
+*   `pineconeResults` **[Array][1621]** Pinecone results
+*   `sources` **[Array][1621]** Sources array
 
-Returns **[Promise][1580]<[string][1578]>** Generated response
+Returns **[Promise][1620]<[string][1618]>** Generated response
 
 ## generateStructuredContent
 
@@ -6046,9 +6246,9 @@ Generate structured content from Pinecone result
 
 ### Parameters
 
-*   `result` **[Object][1577]** Pinecone result
+*   `result` **[Object][1617]** Pinecone result
 
-Returns **[string][1578]** Structured content
+Returns **[string][1618]** Structured content
 
 ## detectResponseStyle
 
@@ -6056,9 +6256,9 @@ Detect response style for the query
 
 ### Parameters
 
-*   `userQuery` **[string][1578]** User query
+*   `userQuery` **[string][1618]** User query
 
-Returns **([string][1578] | null)** Detected style
+Returns **([string][1618] | null)** Detected style
 
 ## gpsRepository
 
@@ -6071,10 +6271,10 @@ Fetch current weather from Open-Meteo APIs
 
 ### Parameters
 
-*   `lat` **[number][1579]** Latitude
-*   `lon` **[number][1579]** Longitude
+*   `lat` **[number][1619]** Latitude
+*   `lon` **[number][1619]** Longitude
 
-Returns **[Promise][1580]<[Object][1577]>** Current weather conditions
+Returns **[Promise][1620]<[Object][1617]>** Current weather conditions
 
 ## weatherCodeToDescription
 
@@ -6082,9 +6282,9 @@ Convert weather code to description
 
 ### Parameters
 
-*   `code` **[number][1579]** WMO weather code
+*   `code` **[number][1619]** WMO weather code
 
-Returns **[string][1578]** Human-readable description
+Returns **[string][1618]** Human-readable description
 
 ## degreesToCompass
 
@@ -6092,9 +6292,9 @@ Convert degrees to compass direction
 
 ### Parameters
 
-*   `degrees` **[number][1579]** Direction in degrees (0-360)
+*   `degrees` **[number][1619]** Direction in degrees (0-360)
 
-Returns **[string][1578]** Compass direction (N, NE, E, etc.)
+Returns **[string][1618]** Compass direction (N, NE, E, etc.)
 
 ## downsampleByInterval
 
@@ -6103,10 +6303,10 @@ Keeps data points that are at least intervalMinutes apart
 
 ### Parameters
 
-*   `data` **[Array][1581]** Array of position objects with timestamp
-*   `intervalMinutes` **[number][1579]** Minimum minutes between points (optional, default `10`)
+*   `data` **[Array][1621]** Array of position objects with timestamp
+*   `intervalMinutes` **[number][1619]** Minimum minutes between points (optional, default `10`)
 
-Returns **[Array][1581]** Downsampled data
+Returns **[Array][1621]** Downsampled data
 
 ## getBoatStatus
 
@@ -6114,9 +6314,20 @@ Get complete boat status - position, weather, and historical data
 
 ### Parameters
 
-*   `hoursBack` **[number][1579]** Hours of history to fetch (default 5) (optional, default `5`)
+*   `hoursBack` **[number][1619]** Hours of history to fetch (default 5) (optional, default `5`)
 
-Returns **[Promise][1580]<[Object][1577]>** Complete boat status
+Returns **[Promise][1620]<[Object][1617]>** Complete boat status
+
+## getHistory
+
+Get historical GPS data only (no weather, no geocode)
+Used by the frontend when switching time windows
+
+### Parameters
+
+*   `hoursBack` **[number][1619]** Hours of history to fetch (optional, default `5`)
+
+Returns **[Promise][1620]<[Object][1617]>** Historical data for charts
 
 ## openaiClient
 
@@ -6128,13 +6339,13 @@ Replaces: Python LangGraph workflow
 
 Get or create OpenAI client (singleton)
 
-Returns **[Promise][1580]<[OpenAI][1105]>**&#x20;
+Returns **[Promise][1620]<[OpenAI][1144]>**&#x20;
 
 ## getOpenAIClient
 
 Get or create OpenAI client (singleton)
 
-Returns **[Promise][1580]<[OpenAI][1105]>**&#x20;
+Returns **[Promise][1620]<[OpenAI][1144]>**&#x20;
 
 ## buildSystemPrompt
 
@@ -6142,7 +6353,7 @@ Build system prompt with all context
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
     *   `params.systemsContext`   (optional, default `[]`)
     *   `params.dipResults`   (optional, default `[]`)
@@ -6150,7 +6361,7 @@ Build system prompt with all context
     *   `params.conversationSummary`   (optional, default `null`)
     *   `params.equipmentInference`   (optional, default `null`)
 
-Returns **[string][1578]** System prompt
+Returns **[string][1618]** System prompt
 
 ## buildSystemPrompt
 
@@ -6158,9 +6369,9 @@ Build the system prompt for recap generation
 
 ### Parameters
 
-*   `style` **[string][1578]** 'boring' or 'exciting'
+*   `style` **[string][1618]** 'boring' or 'exciting'
 
-Returns **[string][1578]** System prompt
+Returns **[string][1618]** System prompt
 
 ## processChatCompletion
 
@@ -6168,17 +6379,17 @@ Process chat completion with full context
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.query` **[string][1578]** User query
-    *   `params.threadId` **[string][1578]** Thread ID for memory management
-    *   `params.systemsContext` **[Array][1581]** Equipment/systems context (optional, default `[]`)
-    *   `params.dipResults` **[Array][1581]** DIP table results (optional, default `[]`)
-    *   `params.documentChunks` **[Array][1581]** Pinecone document chunks (optional, default `[]`)
-    *   `params.conversationSummary` **[string][1578]** Conversation summary (optional) (optional, default `null`)
-    *   `params.equipmentInference` **[Object][1577]** Equipment relationship inference (optional) (optional, default `null`)
+    *   `params.query` **[string][1618]** User query
+    *   `params.threadId` **[string][1618]** Thread ID for memory management
+    *   `params.systemsContext` **[Array][1621]** Equipment/systems context (optional, default `[]`)
+    *   `params.dipResults` **[Array][1621]** DIP table results (optional, default `[]`)
+    *   `params.documentChunks` **[Array][1621]** Pinecone document chunks (optional, default `[]`)
+    *   `params.conversationSummary` **[string][1618]** Conversation summary (optional) (optional, default `null`)
+    *   `params.equipmentInference` **[Object][1617]** Equipment relationship inference (optional) (optional, default `null`)
 
-Returns **[Promise][1580]<[Object][1577]>** { response, usage }
+Returns **[Promise][1620]<[Object][1617]>** { response, usage }
 
 ## createChatProxyService
 
@@ -6187,7 +6398,7 @@ Use this in tests to inject mocks.
 
 ### Parameters
 
-*   `deps` **[Object][1577]** Dependencies (all optional, defaults to real implementations) (optional, default `{}`)
+*   `deps` **[Object][1617]** Dependencies (all optional, defaults to real implementations) (optional, default `{}`)
 
     *   `deps.systemsRepository`   (optional, default `systemsRepo`)
     *   `deps.chatRepository`   (optional, default `chatRepo`)
@@ -6210,7 +6421,7 @@ const service = createChatProxyService({ systemsRepository: mockSystemsRepo });
 const result = await service.processChatMessage({ query: 'test', threadId: '123' });
 ```
 
-Returns **[Object][1577]** Service object with processChatMessage function
+Returns **[Object][1617]** Service object with processChatMessage function
 
 ## extractKeywords
 
@@ -6219,7 +6430,7 @@ Used to improve equipment search accuracy.
 
 ### Parameters
 
-*   `query` **[string][1578]** The user's query
+*   `query` **[string][1618]** The user's query
 
 ### Examples
 
@@ -6228,7 +6439,7 @@ extractKeywords('tell me about my Yanmar engine')
 // Returns: 'yanmar engine'
 ```
 
-Returns **[string][1578]** Space-separated keywords
+Returns **[string][1618]** Space-separated keywords
 
 ## fetchPineconeChunks
 
@@ -6251,7 +6462,7 @@ This is intended to run AFTER indexing has upserted chunks to Pinecone with:
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.selectedModels` &#x20;
@@ -6270,10 +6481,10 @@ Main entry point: Extract colloquial keywords for equipment with retry logic
 
 ### Parameters
 
-*   `manufacturer` **[string][1578]** Equipment manufacturer
-*   `model` **[string][1578]** Equipment model
+*   `manufacturer` **[string][1618]** Equipment manufacturer
+*   `model` **[string][1618]** Equipment model
 
-Returns **[Promise][1580]<[string][1578]>** Comma-separated colloquial keywords
+Returns **[Promise][1620]<[string][1618]>** Comma-separated colloquial keywords
 
 ## extractColloquialKeywordsV5
 
@@ -6284,7 +6495,7 @@ Runs AFTER indexing, because it depends on Pinecone content.
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.selectedModels` &#x20;
@@ -6302,10 +6513,10 @@ Get weighted conversation context for a thread
 
 ### Parameters
 
-*   `threadId` **[string][1578]** Thread ID to get context for
-*   `currentQuery` **[string][1578]** Current user query (optional, default `''`)
+*   `threadId` **[string][1618]** Thread ID to get context for
+*   `currentQuery` **[string][1618]** Current user query (optional, default `''`)
 
-Returns **[Object][1577]** Weighted conversation context
+Returns **[Object][1617]** Weighted conversation context
 
 ## groupMessagesIntoExchanges
 
@@ -6313,9 +6524,9 @@ Group chat messages into Q\&A exchange pairs
 
 ### Parameters
 
-*   `messages` **[Array][1581]** Raw chat messages
+*   `messages` **[Array][1621]** Raw chat messages
 
-Returns **[Array][1581]** Array of exchange objects
+Returns **[Array][1621]** Array of exchange objects
 
 ## generateWeightedContext
 
@@ -6323,9 +6534,9 @@ Generate weighted context summary from exchanges
 
 ### Parameters
 
-*   `exchanges` **[Array][1581]** Q\&A exchanges
+*   `exchanges` **[Array][1621]** Q\&A exchanges
 
-Returns **[Object][1577]** Weighted context with summary
+Returns **[Object][1617]** Weighted context with summary
 
 ## calculateExchangeWeight
 
@@ -6333,10 +6544,10 @@ Calculate memory weight for an exchange based on recency
 
 ### Parameters
 
-*   `index` **[number][1579]** Exchange index (0 = most recent)
-*   `total` **[number][1579]** Total exchanges
+*   `index` **[number][1619]** Exchange index (0 = most recent)
+*   `total` **[number][1619]** Total exchanges
 
-Returns **[number][1579]** Weight between 0.0 and 1.0
+Returns **[number][1619]** Weight between 0.0 and 1.0
 
 ## createExchangeSummary
 
@@ -6344,10 +6555,10 @@ Create weighted summary for a single exchange
 
 ### Parameters
 
-*   `exchange` **[Object][1577]** Q\&A exchange
-*   `weight` **[number][1579]** Memory weight
+*   `exchange` **[Object][1617]** Q\&A exchange
+*   `weight` **[number][1619]** Memory weight
 
-Returns **[string][1578]** Formatted summary
+Returns **[string][1618]** Formatted summary
 
 ## extractAccumulatedEquipment
 
@@ -6355,9 +6566,9 @@ Extract all equipment mentioned across exchanges
 
 ### Parameters
 
-*   `exchanges` **[Array][1581]** Q\&A exchanges
+*   `exchanges` **[Array][1621]** Q\&A exchanges
 
-Returns **[Array][1581]** Accumulated equipment with weights
+Returns **[Array][1621]** Accumulated equipment with weights
 
 ## getEquipmentRelationshipContext
 
@@ -6366,10 +6577,10 @@ Handles cases like GPS → V100 → Zeus connections
 
 ### Parameters
 
-*   `threadId` **[string][1578]** Thread ID
-*   `currentEquipment` **[Array][1581]** Equipment from current query (optional, default `[]`)
+*   `threadId` **[string][1618]** Thread ID
+*   `currentEquipment` **[Array][1621]** Equipment from current query (optional, default `[]`)
 
-Returns **[Array][1581]** Enhanced equipment context with relationships
+Returns **[Array][1621]** Enhanced equipment context with relationships
 
 ## searchSpecSuggestions
 
@@ -6389,10 +6600,10 @@ Search spec\_suggestions table
 
 ### Parameters
 
-*   `query` **[string][1578]** Search query (currently unused, returns all rows up to limit)
-*   `limit` **[number][1579]** Maximum number of results (optional, default `5`)
+*   `query` **[string][1618]** Search query (currently unused, returns all rows up to limit)
+*   `limit` **[number][1619]** Maximum number of results (optional, default `5`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of spec suggestion records
+Returns **[Promise][1620]<[Array][1621]>** Array of spec suggestion records
 
 ## searchPlaybookHints
 
@@ -6400,10 +6611,10 @@ Search playbook\_hints table
 
 ### Parameters
 
-*   `query` **[string][1578]** Search query (currently unused, returns all rows up to limit)
-*   `limit` **[number][1579]** Maximum number of results (optional, default `5`)
+*   `query` **[string][1618]** Search query (currently unused, returns all rows up to limit)
+*   `limit` **[number][1619]** Maximum number of results (optional, default `5`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of playbook hint records
+Returns **[Promise][1620]<[Array][1621]>** Array of playbook hint records
 
 ## searchIntentRouter
 
@@ -6411,10 +6622,10 @@ Search intent\_router table
 
 ### Parameters
 
-*   `query` **[string][1578]** Search query (currently unused, returns all rows up to limit)
-*   `limit` **[number][1579]** Maximum number of results (optional, default `5`)
+*   `query` **[string][1618]** Search query (currently unused, returns all rows up to limit)
+*   `limit` **[number][1619]** Maximum number of results (optional, default `5`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of intent router records
+Returns **[Promise][1620]<[Array][1621]>** Array of intent router records
 
 ## searchGoldenTests
 
@@ -6422,10 +6633,10 @@ Search golden\_tests table
 
 ### Parameters
 
-*   `query` **[string][1578]** Search query (currently unused, returns all rows up to limit)
-*   `limit` **[number][1579]** Maximum number of results (optional, default `5`)
+*   `query` **[string][1618]** Search query (currently unused, returns all rows up to limit)
+*   `limit` **[number][1619]** Maximum number of results (optional, default `5`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of golden test records
+Returns **[Promise][1620]<[Array][1621]>** Array of golden test records
 
 ## searchAllDIPTables
 
@@ -6433,10 +6644,10 @@ Search all DIP tables and return combined results
 
 ### Parameters
 
-*   `query` **[string][1578]** Search query
-*   `limit` **[number][1579]** Maximum number of results per table (optional, default `3`)
+*   `query` **[string][1618]** Search query
+*   `limit` **[number][1619]** Maximum number of results per table (optional, default `3`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of objects with { table, count, results }
+Returns **[Promise][1620]<[Array][1621]>** Array of objects with { table, count, results }
 
 ## log
 
@@ -6529,12 +6740,12 @@ Run DIP extraction with callback for progress updates (used by background runner
 
 ### Parameters
 
-*   `params` **[Object][1577]** DIP params (doc\_id, models\_covered, selected\_models, etc.)
-*   `onProgress` **[Function][1583]** Callback for progress updates: (event, data) => void
+*   `params` **[Object][1617]** DIP params (doc\_id, models\_covered, selected\_models, etc.)
+*   `onProgress` **[Function][1623]** Callback for progress updates: (event, data) => void
     Events: 'mode\_started', 'mode\_completed', 'mode\_failed', 'run\_completed', 'run\_failed'
 *   `signal` **AbortSignal?** Optional abort signal
 
-Returns **[Promise][1580]<[Object][1577]>** Final result with modes\_completed, modes\_failed, total\_inserted
+Returns **[Promise][1620]<[Object][1617]>** Final result with modes\_completed, modes\_failed, total\_inserted
 
 ## processSSEEvent
 
@@ -6603,10 +6814,10 @@ Also stores embedding for future retrieval-based learning
 
 ### Parameters
 
-*   `sourceTable` **[string][1578]** Source table name
-*   `sourceId` **[string][1578]** Item ID
-*   `decision` **[string][1578]** 'approved' or 'rejected'
-*   `reasoning` **[string][1578]** Reasoning for the decision (LLM reasoning for approvals, human reason for rejections)
+*   `sourceTable` **[string][1618]** Source table name
+*   `sourceId` **[string][1618]** Item ID
+*   `decision` **[string][1618]** 'approved' or 'rejected'
+*   `reasoning` **[string][1618]** Reasoning for the decision (LLM reasoning for approvals, human reason for rejections)
 
 ## updateItemStatus
 
@@ -6624,9 +6835,9 @@ Send an escalation message with approve/reject buttons
 
 ### Parameters
 
-*   `item` **[Object][1577]** The item to escalate
-*   `sourceTable` **[string][1578]** The source table name
-*   `evaluation` **[Object][1577]** The agent's evaluation
+*   `item` **[Object][1617]** The item to escalate
+*   `sourceTable` **[string][1618]** The source table name
+*   `evaluation` **[Object][1617]** The agent's evaluation
 
 ## cleanupOldEscalations
 
@@ -6672,7 +6883,7 @@ Handles normalization and insertion of spec\_suggestions, playbook\_hints, inten
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.paths`   (optional, default `null`)
@@ -6689,13 +6900,13 @@ Also handles golden\_rules/golden\_tests field name discrepancy.
 
 ### Parameters
 
-*   `params` **[Object][1577]** Parameters
+*   `params` **[Object][1617]** Parameters
 
-    *   `params.docId` **[string][1578]** Document ID
-    *   `params.paths` **[Object][1577]?** Optional storage paths (objects or strings) (optional, default `null`)
+    *   `params.docId` **[string][1618]** Document ID
+    *   `params.paths` **[Object][1617]?** Optional storage paths (objects or strings) (optional, default `null`)
     *   `params.systemMetadata`   (optional, default `null`)
 
-Returns **[Promise][1580]<[Object][1577]>** Summary of insertions
+Returns **[Promise][1620]<[Object][1617]>** Summary of insertions
 
 ## processSpecSuggestions
 
@@ -6751,12 +6962,12 @@ Fetch JSON data from Supabase Storage with retry logic for race conditions
 
 ### Parameters
 
-*   `supabase` **[Object][1577]** Supabase client
-*   `storagePath` **[string][1578]** Storage path to the JSON file
-*   `maxRetries` **[number][1579]** Maximum number of retries (default: 3) (optional, default `3`)
-*   `retryDelay` **[number][1579]** Delay between retries in ms (default: 2000) (optional, default `2000`)
+*   `supabase` **[Object][1617]** Supabase client
+*   `storagePath` **[string][1618]** Storage path to the JSON file
+*   `maxRetries` **[number][1619]** Maximum number of retries (default: 3) (optional, default `3`)
+*   `retryDelay` **[number][1619]** Delay between retries in ms (default: 2000) (optional, default `2000`)
 
-Returns **[Promise][1580]<[Object][1577]>** Parsed JSON data
+Returns **[Promise][1620]<[Object][1617]>** Parsed JSON data
 
 ## runDIPPacket
 
@@ -6764,14 +6975,14 @@ Generate DIP from document file
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 *   `filePath` &#x20;
 *   `outputDir` &#x20;
-*   `options` **[Object][1577]** Processing options (optional, default `{}`)
-*   `fileBuffer` **[Buffer][1586]** The PDF file buffer
-*   `fileName` **[string][1578]** File name
+*   `options` **[Object][1617]** Processing options (optional, default `{}`)
+*   `fileBuffer` **[Buffer][1626]** The PDF file buffer
+*   `fileName` **[string][1618]** File name
 
-Returns **[Object][1577]** DIP generation result
+Returns **[Object][1617]** DIP generation result
 
 ## runDIPPacket
 
@@ -6779,18 +6990,18 @@ Run complete DIP packet processing and save files
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `filePath` **[string][1578]** Path to the PDF file
-*   `outputDir` **[string][1578]** Output directory for DIP files
-*   `options` **[Object][1577]** Processing options (optional, default `{}`)
+*   `docId` **[string][1618]** Document ID
+*   `filePath` **[string][1618]** Path to the PDF file
+*   `outputDir` **[string][1618]** Output directory for DIP files
+*   `options` **[Object][1617]** Processing options (optional, default `{}`)
 
-Returns **[Object][1577]** DIP packet processing result
+Returns **[Object][1617]** DIP packet processing result
 
 ## checkDIPAvailability
 
 Check if DIP processing is available
 
-Returns **[boolean][1582]** True if DIP processing is available
+Returns **[boolean][1622]** True if DIP processing is available
 
 ## getDIPStats
 
@@ -6798,9 +7009,9 @@ Get DIP processing statistics
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Object][1577]** DIP statistics
+Returns **[Object][1617]** DIP statistics
 
 ## DocumentDeletionService
 
@@ -6908,7 +7119,7 @@ Look up reference table IDs for categories
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.manufacturer` &#x20;
     *   `$0.product_type` &#x20;
@@ -6922,7 +7133,7 @@ Does NOT create instance or document\_systems link
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.manufacturerNorm` &#x20;
     *   `$0.modelNorm` &#x20;
@@ -6938,7 +7149,7 @@ Create an instance for a system
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.assetUid` &#x20;
     *   `$0.serialNumber` &#x20;
@@ -6954,7 +7165,7 @@ Create document\_systems link
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.assetUid` &#x20;
@@ -6970,16 +7181,16 @@ exclude\_refs = detected\_refs (user\_selected=false)
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.referencedSelections` &#x20;
     *   `$0.referencedProducts` &#x20;
     *   `$0.filename` &#x20;
-*   `docId` **[string][1578]** Document ID
-*   `referencedSelections` **[Array][1581]<[string][1578]>** Models the user selected as installed
-*   `referencedProducts` **[Array][1581]** ALL models detected by model detection
-*   `filename` **[string][1578]** Document filename for evidence
+*   `docId` **[string][1618]** Document ID
+*   `referencedSelections` **[Array][1621]<[string][1618]>** Models the user selected as installed
+*   `referencedProducts` **[Array][1621]** ALL models detected by model detection
+*   `filename` **[string][1618]** Document filename for evidence
 
 ## upsertDocumentRecord
 
@@ -6987,7 +7198,7 @@ Create or update the document record
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.manufacturer` &#x20;
@@ -7005,7 +7216,7 @@ Save detection results for debugging (optional, non-blocking)
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.docId` &#x20;
     *   `$0.filename` &#x20;
@@ -7028,7 +7239,7 @@ Validate installed primary selection
 Fetch reference data for model detection (manufacturers, product\_types, system/subsystem categories).
 Used by both the app.js detect-models proxy and the background parse-detect runner.
 
-Returns **[Promise][1580]<[Object][1577]>** { manufacturers\[], product\_types\[], system\_categories\[], subsystem\_categories\[] }
+Returns **[Promise][1620]<[Object][1617]>** { manufacturers\[], product\_types\[], system\_categories\[], subsystem\_categories\[] }
 
 ## generateDocId
 
@@ -7046,13 +7257,13 @@ Priority: Cache → DB chunks → Storage → Empty fallback
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `options` **[Object][1577]** Extraction options (optional, default `{}`)
+*   `docId` **[string][1618]** Document ID
+*   `options` **[Object][1617]** Extraction options (optional, default `{}`)
 
-    *   `options.maxPages` **[number][1579]** Maximum pages to extract (default: 6)
-    *   `options.useCache` **[boolean][1582]** Whether to use cache (default: true)
+    *   `options.maxPages` **[number][1619]** Maximum pages to extract (default: 6)
+    *   `options.useCache` **[boolean][1622]** Whether to use cache (default: true)
 
-Returns **[Promise][1580]<[Object][1577]>** Text extraction result
+Returns **[Promise][1620]<[Object][1617]>** Text extraction result
 
 ## extractFromDatabase
 
@@ -7060,11 +7271,11 @@ Extract text from database chunks
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `maxPages` **[number][1579]** Maximum pages to extract
-*   `requestLogger` **[Object][1577]** Logger instance
+*   `docId` **[string][1618]** Document ID
+*   `maxPages` **[number][1619]** Maximum pages to extract
+*   `requestLogger` **[Object][1617]** Logger instance
 
-Returns **[Promise][1580]<[Object][1577]>** Extraction result
+Returns **[Promise][1620]<[Object][1617]>** Extraction result
 
 ## extractFromStorage
 
@@ -7072,11 +7283,11 @@ Extract text from storage files
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `maxPages` **[number][1579]** Maximum pages to extract
-*   `requestLogger` **[Object][1577]** Logger instance
+*   `docId` **[string][1618]** Document ID
+*   `maxPages` **[number][1619]** Maximum pages to extract
+*   `requestLogger` **[Object][1617]** Logger instance
 
-Returns **[Promise][1580]<[Object][1577]>** Extraction result
+Returns **[Promise][1620]<[Object][1617]>** Extraction result
 
 ## getFromCache
 
@@ -7084,9 +7295,9 @@ Get text from cache
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **([Object][1577] | null)** Cached result or null
+Returns **([Object][1617] | null)** Cached result or null
 
 ## setCache
 
@@ -7094,14 +7305,14 @@ Set text in cache
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `result` **[Object][1577]** Text extraction result
+*   `docId` **[string][1618]** Document ID
+*   `result` **[Object][1617]** Text extraction result
 
 ## getTextExtractionMetrics
 
 Get performance metrics
 
-Returns **[Object][1577]** Current metrics
+Returns **[Object][1617]** Current metrics
 
 ## clearTextCache
 
@@ -7111,7 +7322,7 @@ Clear cache
 
 Get cache statistics
 
-Returns **[Object][1577]** Cache stats
+Returns **[Object][1617]** Cache stats
 
 ## createIngestJob
 
@@ -7119,11 +7330,11 @@ Create an ingest job for document processing
 
 ### Parameters
 
-*   `fileBuffer` **[Buffer][1586]** The PDF file buffer
-*   `metadata` **[Object][1577]** Document metadata
+*   `fileBuffer` **[Buffer][1626]** The PDF file buffer
+*   `metadata` **[Object][1617]** Document metadata
 *   `options`   (optional, default `{}`)
 
-Returns **[Object][1577]** Created job
+Returns **[Object][1617]** Created job
 
 ## processJob
 
@@ -7131,9 +7342,9 @@ Process a job (DIP processing)
 
 ### Parameters
 
-*   `jobId` **[string][1578]** Job ID
+*   `jobId` **[string][1618]** Job ID
 
-Returns **[Object][1577]** Processing result
+Returns **[Object][1617]** Processing result
 
 ## listJobs
 
@@ -7141,11 +7352,11 @@ List jobs with pagination
 
 ### Parameters
 
-*   `limit` **[number][1579]** Number of jobs to return (optional, default `50`)
-*   `offset` **[number][1579]** Number of jobs to skip (optional, default `0`)
-*   `status` **[string][1578]** Filter by status (optional, default `null`)
+*   `limit` **[number][1619]** Number of jobs to return (optional, default `50`)
+*   `offset` **[number][1619]** Number of jobs to skip (optional, default `0`)
+*   `status` **[string][1618]** Filter by status (optional, default `null`)
 
-Returns **[Array][1581]** List of jobs
+Returns **[Array][1621]** List of jobs
 
 ## getJobStatus
 
@@ -7153,9 +7364,9 @@ Get job status
 
 ### Parameters
 
-*   `jobId` **[string][1578]** Job ID
+*   `jobId` **[string][1618]** Job ID
 
-Returns **[Object][1577]** Job status
+Returns **[Object][1617]** Job status
 
 ## getDocument
 
@@ -7163,9 +7374,9 @@ Get document by ID
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Object][1577]** Document
+Returns **[Object][1617]** Document
 
 ## listDocuments
 
@@ -7173,11 +7384,11 @@ List documents with pagination
 
 ### Parameters
 
-*   `limit` **[number][1579]** Number of documents to return (optional, default `50`)
-*   `offset` **[number][1579]** Number of documents to skip (optional, default `0`)
-*   `status` **[string][1578]** Filter by status (optional, default `null`)
+*   `limit` **[number][1619]** Number of documents to return (optional, default `50`)
+*   `offset` **[number][1619]** Number of documents to skip (optional, default `0`)
+*   `status` **[string][1618]** Filter by status (optional, default `null`)
 
-Returns **[Array][1581]** List of documents
+Returns **[Array][1621]** List of documents
 
 ## detectModelsFromDocument
 
@@ -7186,11 +7397,11 @@ Document-first architecture: parse PDF then detect models before user selects
 
 ### Parameters
 
-*   `fileBuffer` **[ArrayBuffer][1587]** PDF file content
-*   `docId` **[string][1578]** Document ID
-*   `fileName` **[string][1578]** Original filename
+*   `fileBuffer` **[ArrayBuffer][1627]** PDF file content
+*   `docId` **[string][1618]** Document ID
+*   `fileName` **[string][1618]** Original filename
 
-Returns **[Object][1577]** Detection result with primary\_models, referenced\_products, etc.
+Returns **[Object][1617]** Detection result with primary\_models, referenced\_products, etc.
 
 ## fs
 
@@ -7226,7 +7437,7 @@ Handles unit typos and provides canonical unit forms
 
 Get the latest deduplication results file from maintenance-agent
 
-Returns **([string][1578] | null)** File path or null if not found
+Returns **([string][1618] | null)** File path or null if not found
 
 ## findPairInLatestJSON
 
@@ -7234,16 +7445,16 @@ Find a specific pair in the latest JSON file (bidirectional)
 
 ### Parameters
 
-*   `taskAId` **[string][1578]** First task ID
-*   `taskBId` **[string][1578]** Second task ID
+*   `taskAId` **[string][1618]** First task ID
+*   `taskBId` **[string][1618]** Second task ID
 
-Returns **([Object][1577] | null)** Pair object or null
+Returns **([Object][1617] | null)** Pair object or null
 
 ## getCandidates
 
 Get duplicate candidates for human review
 
-Returns **[Promise][1580]<[Object][1577]>** Candidates with review stats
+Returns **[Promise][1620]<[Object][1617]>** Candidates with review stats
 
 ## computeFeatures
 
@@ -7251,9 +7462,9 @@ Compute features from a task pair for ML training
 
 ### Parameters
 
-*   `pair` **[Object][1577]** Task pair from deduplication results
+*   `pair` **[Object][1617]** Task pair from deduplication results
 
-Returns **[Object][1577]** Computed features
+Returns **[Object][1617]** Computed features
 
 ## computeFrequencyDiff
 
@@ -7261,10 +7472,10 @@ Compute frequency difference percentage
 
 ### Parameters
 
-*   `hoursA` **([number][1579] | null)** First task frequency hours
-*   `hoursB` **([number][1579] | null)** Second task frequency hours
+*   `hoursA` **([number][1619] | null)** First task frequency hours
+*   `hoursB` **([number][1619] | null)** Second task frequency hours
 
-Returns **([number][1579] | null)** Percentage difference or null
+Returns **([number][1619] | null)** Percentage difference or null
 
 ## submitDecision
 
@@ -7272,21 +7483,21 @@ Submit a human decision on a duplicate pair
 
 ### Parameters
 
-*   `decisionData` **[Object][1577]** Decision data from frontend
+*   `decisionData` **[Object][1617]** Decision data from frontend
 
-Returns **[Promise][1580]<[Object][1577]>** Result with action taken
+Returns **[Promise][1620]<[Object][1617]>** Result with action taken
 
 ## getStats
 
 Get review statistics for dashboard
 
-Returns **[Promise][1580]<[Object][1577]>** Aggregated stats
+Returns **[Promise][1620]<[Object][1617]>** Aggregated stats
 
 ## getStats
 
 Get task statistics
 
-Returns **[Promise][1580]<[Object][1577]>** Statistics
+Returns **[Promise][1620]<[Object][1617]>** Statistics
 
 ## extractEquipmentName
 
@@ -7294,9 +7505,9 @@ Extract equipment name from natural language query using LLM
 
 ### Parameters
 
-*   `query` **[string][1578]** User's natural language query
+*   `query` **[string][1618]** User's natural language query
 
-Returns **[Promise][1580]<{equipment: [Array][1581]}>** Object containing array of extracted equipment with name, confidence, role
+Returns **[Promise][1620]<{equipment: [Array][1621]}>** Object containing array of extracted equipment with name, confidence, role
 
 ## validateEquipmentArray
 
@@ -7363,9 +7574,9 @@ Check if query matches any facts in the knowledge\_facts materialized view
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
+*   `query` **[string][1618]** The user query
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Fact match result or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Fact match result or null
 
 ## getFactFirstResponse
 
@@ -7373,10 +7584,10 @@ Get fact-first response for a query
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
-*   `context` **[Object][1577]** Additional context (optional, default `{}`)
+*   `query` **[string][1618]** The user query
+*   `context` **[Object][1617]** Additional context (optional, default `{}`)
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Formatted fact response or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Formatted fact response or null
 
 ## shouldAttemptFactFirst
 
@@ -7384,10 +7595,10 @@ Check if fact-first retrieval should be attempted
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
-*   `context` **[Object][1577]** Additional context (optional, default `{}`)
+*   `query` **[string][1618]** The user query
+*   `context` **[Object][1617]** Additional context (optional, default `{}`)
 
-Returns **[boolean][1582]** True if fact-first should be attempted
+Returns **[boolean][1622]** True if fact-first should be attempted
 
 ## getCount
 
@@ -7452,7 +7663,39 @@ Get unique systems from document\_chunks (systems that have been vectorized)
 
 Get all funnel statistics
 
-Returns **[Promise][1580]<[Object][1577]>** Funnel data with all stages
+Returns **[Promise][1620]<[Object][1617]>** Funnel data with all stages
+
+## determineStatus
+
+Determine status for a synthesized step from its counter data.
+Rules: .error → 'error', .warning (no .error) → 'warning', else → 'complete'
+
+### Parameters
+
+*   `counterData` &#x20;
+
+## synthesizeStep
+
+Build a synthesized timing step from job counter data.
+
+### Parameters
+
+*   `stepName` &#x20;
+*   `counterData` &#x20;
+*   `job` &#x20;
+
+## findMatchingJob
+
+Find the best matching job for a doc\_id by type, time proximity, and ordering.
+
+### Parameters
+
+*   `jobs` **[Array][1621]** All jobs for this doc\_id
+*   `jobType` **[string][1618]** 'v5\_parse\_detect' or 'v5\_ingest'
+*   `uploadTimestamp` **[string][1618]** ISO timestamp of the upload timing row
+*   `previousJob` **[Object][1617]?** For v5\_ingest: must be created after this job
+
+Returns **([Object][1617] | null)** Best matching job or null
 
 ## saveTimingPayload
 
@@ -7462,11 +7705,11 @@ Unknown step names are rejected; missing steps are fine.
 
 ### Parameters
 
-*   `ingestRunId` **[string][1578]** UUID for this ingest run
-*   `docId` **[string][1578]** Document ID
-*   `steps` **[Array][1581]<[Object][1577]>** Array of { step, started\_at, ended\_at, duration\_ms, status, metadata }
+*   `ingestRunId` **[string][1618]** UUID for this ingest run
+*   `docId` **[string][1618]** Document ID
+*   `steps` **[Array][1621]<[Object][1617]>** Array of { step, started\_at, ended\_at, duration\_ms, status, metadata }
 
-Returns **[Object][1577]** { inserted: number, rejected: string\[] }
+Returns **[Object][1617]** { inserted: number, rejected: string\[] }
 
 ## getTimingForDocument
 
@@ -7492,9 +7735,9 @@ Groups rows by ingest\_run\_id, computes total duration per run.
 
 ### Parameters
 
-*   `limit` **[number][1579]** Max rows to fetch (default 200) (optional, default `200`)
+*   `limit` **[number][1619]** Max rows to fetch (default 200) (optional, default `200`)
 
-Returns **[Array][1581]<[Object][1577]>** Array of run objects with steps and totals
+Returns **[Array][1621]<[Object][1617]>** Array of run objects with steps and totals
 
 ## classifyUserIntent
 
@@ -7502,9 +7745,9 @@ Classify user query intent and determine processing pipeline
 
 ### Parameters
 
-*   `userQuery` **[string][1578]** The user's query
+*   `userQuery` **[string][1618]** The user's query
 
-Returns **[Promise][1580]<[Object][1577]>** Intent classification result
+Returns **[Promise][1620]<[Object][1617]>** Intent classification result
 
 ## routeQuery
 
@@ -7512,10 +7755,10 @@ Route query to appropriate processing pipeline based on intent
 
 ### Parameters
 
-*   `userQuery` **[string][1578]** The user's query
-*   `context` **[Object][1577]** Processing context (optional, default `{}`)
+*   `userQuery` **[string][1618]** The user's query
+*   `context` **[Object][1617]** Processing context (optional, default `{}`)
 
-Returns **[Promise][1580]<[Object][1577]>** Routing decision
+Returns **[Promise][1620]<[Object][1617]>** Routing decision
 
 ## OpenAI
 
@@ -7530,9 +7773,9 @@ Generate keywords for a system
 
 ### Parameters
 
-*   `system` **[Object][1577]** System data
+*   `system` **[Object][1617]** System data
 
-Returns **[Promise][1580]<[string][1578]>** Generated keywords
+Returns **[Promise][1620]<[string][1618]>** Generated keywords
 
 ## generateSynonyms
 
@@ -7540,10 +7783,10 @@ Generate synonyms for a system
 
 ### Parameters
 
-*   `system` **[Object][1577]** System data
+*   `system` **[Object][1617]** System data
 *   `refContext`   (optional, default `''`)
 
-Returns **[Promise][1580]<[string][1578]>** Generated synonyms
+Returns **[Promise][1620]<[string][1618]>** Generated synonyms
 
 ## generateRefTableSynonyms
 
@@ -7554,9 +7797,9 @@ Called automatically when a new system is created
 
 *   `tableName` &#x20;
 *   `entryName` &#x20;
-*   `assetUid` **[string][1578]** System asset UID
+*   `assetUid` **[string][1618]** System asset UID
 
-Returns **[Promise][1580]<[Object][1577]>** { success, keywords?, synonyms?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, keywords?, synonyms?, error? }
 
 ## generateRefTableSynonyms
 
@@ -7565,10 +7808,10 @@ Called when a user creates a new entry via "+ Add New" in the ingest UI.
 
 ### Parameters
 
-*   `tableName` **[string][1578]** One of: manufacturer, product\_type, system\_category, subsystem\_category
-*   `entryName` **[string][1578]** The name the user entered (e.g., "Grill/Cooktop")
+*   `tableName` **[string][1618]** One of: manufacturer, product\_type, system\_category, subsystem\_category
+*   `entryName` **[string][1618]** The name the user entered (e.g., "Grill/Cooktop")
 
-Returns **[Promise][1580]<{synonyms: [Array][1581]<[string][1578]>, description: [string][1578]}>**&#x20;
+Returns **[Promise][1620]<{synonyms: [Array][1621]<[string][1618]>, description: [string][1618]}>**&#x20;
 
 ## fetchRefTableSynonyms
 
@@ -7587,10 +7830,10 @@ deduplicate, and append normalized (no-space) variants for tsvector matching.
 
 ### Parameters
 
-*   `llmSynonyms` **[string][1578]** Space-separated LLM output
-*   `refTerms` **[Array][1581]<[string][1578]>** Ref table synonyms to append
+*   `llmSynonyms` **[string][1618]** Space-separated LLM output
+*   `refTerms` **[Array][1621]<[string][1618]>** Ref table synonyms to append
 
-Returns **[string][1578]** Processed space-separated synonym string
+Returns **[string][1618]** Processed space-separated synonym string
 
 ## stripAnsiCodes
 
@@ -7641,7 +7884,7 @@ Reads from new organized log structure (chat/, api/, errors/, debug/)
 
 ### Parameters
 
-*   `$0` **[Object][1577]**  (optional, default `{}`)
+*   `$0` **[Object][1617]**  (optional, default `{}`)
 
     *   `$0.level` &#x20;
     *   `$0.service` &#x20;
@@ -7690,9 +7933,9 @@ Validate and sanitize description
 
 ### Parameters
 
-*   `description` **[string][1578]** Task description
+*   `description` **[string][1618]** Task description
 
-Returns **[Object][1577]** { valid: boolean, sanitized?: string, error?: string }
+Returns **[Object][1617]** { valid: boolean, sanitized?: string, error?: string }
 
 ## calculateFrequencyHours
 
@@ -7700,10 +7943,10 @@ Calculate frequency in hours
 
 ### Parameters
 
-*   `value` **[number][1579]** Frequency value
-*   `type` **[string][1578]** Frequency type (hours, days, weeks, months, years)
+*   `value` **[number][1619]** Frequency value
+*   `type` **[string][1618]** Frequency type (hours, days, weeks, months, years)
 
-Returns **[number][1579]** Frequency in hours
+Returns **[number][1619]** Frequency in hours
 
 ## formatTask
 
@@ -7711,15 +7954,15 @@ Transform repository record to API format
 
 ### Parameters
 
-*   `record` **[Object][1577]** Pinecone record
+*   `record` **[Object][1617]** Pinecone record
 
-Returns **[Object][1577]** Formatted task object
+Returns **[Object][1617]** Formatted task object
 
 ## getAllTasks
 
 Get all maintenance tasks
 
-Returns **[Promise][1580]<[Object][1577]>** { tasks: Array, total: number }
+Returns **[Promise][1620]<[Object][1617]>** { tasks: Array, total: number }
 
 ## getTask
 
@@ -7727,9 +7970,9 @@ Get a single task by ID
 
 ### Parameters
 
-*   `taskId` **[string][1578]** Task ID
+*   `taskId` **[string][1618]** Task ID
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Task object or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Task object or null
 
 ## updateTask
 
@@ -7737,19 +7980,19 @@ Update a task
 
 ### Parameters
 
-*   `taskId` **[string][1578]** Task ID
-*   `updates` **[Object][1577]** Updates to apply
+*   `taskId` **[string][1618]** Task ID
+*   `updates` **[Object][1617]** Updates to apply
 
-    *   `updates.description` **[string][1578]?** Task description (max 50 chars)
-    *   `updates.task_category` **[string][1578]?** Task category
-    *   `updates.frequency_value` **[number][1579]?** Frequency value
-    *   `updates.frequency_type` **[string][1578]?** Frequency type
-    *   `updates.frequency_basis` **[string][1578]?** Frequency basis
-    *   `updates.task_type` **[string][1578]?** Task type
-    *   `updates.is_recurring` **[boolean][1582]?** Is recurring
-    *   `updates.review_status` **[string][1578]?** Review status
+    *   `updates.description` **[string][1618]?** Task description (max 50 chars)
+    *   `updates.task_category` **[string][1618]?** Task category
+    *   `updates.frequency_value` **[number][1619]?** Frequency value
+    *   `updates.frequency_type` **[string][1618]?** Frequency type
+    *   `updates.frequency_basis` **[string][1618]?** Frequency basis
+    *   `updates.task_type` **[string][1618]?** Task type
+    *   `updates.is_recurring` **[boolean][1622]?** Is recurring
+    *   `updates.review_status` **[string][1618]?** Review status
 
-Returns **[Promise][1580]<[Object][1577]>** Update result
+Returns **[Promise][1620]<[Object][1617]>** Update result
 
 ## deleteTask
 
@@ -7757,9 +8000,9 @@ Delete a task
 
 ### Parameters
 
-*   `taskId` **[string][1578]** Task ID
+*   `taskId` **[string][1618]** Task ID
 
-Returns **[Promise][1580]<[Object][1577]>** Deletion result
+Returns **[Promise][1620]<[Object][1617]>** Deletion result
 
 ## bulkUpdateStatus
 
@@ -7767,10 +8010,10 @@ Bulk update review status for multiple tasks
 
 ### Parameters
 
-*   `taskIds` **[Array][1581]<[string][1578]>** Array of task IDs
-*   `reviewStatus` **[string][1578]** Review status (pending, approved, rejected)
+*   `taskIds` **[Array][1621]<[string][1618]>** Array of task IDs
+*   `reviewStatus` **[string][1618]** Review status (pending, approved, rejected)
 
-Returns **[Promise][1580]<[Object][1577]>** Results with successful/failed counts
+Returns **[Promise][1620]<[Object][1617]>** Results with successful/failed counts
 
 ## SupabaseMemoryManager
 
@@ -7862,7 +8105,7 @@ Semantic search in Pinecone for document chunks during chat
 
 Get or create Pinecone client (singleton)
 
-Returns **[Promise][1580]<[Pinecone][408]>**&#x20;
+Returns **[Promise][1620]<[Pinecone][429]>**&#x20;
 
 ## searchDocuments
 
@@ -7870,14 +8113,14 @@ Search for relevant document chunks using semantic search
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.query` **[string][1578]** User query
-    *   `params.equipmentContext` **[Array][1581]** Equipment context for metadata filtering (optional, default `[]`)
-    *   `params.namespace` **[string][1578]** Pinecone namespace (default: REIMAGINEDDOCS)
-    *   `params.limit` **[number][1579]** Maximum number of results (default: 5) (optional, default `5`)
+    *   `params.query` **[string][1618]** User query
+    *   `params.equipmentContext` **[Array][1621]** Equipment context for metadata filtering (optional, default `[]`)
+    *   `params.namespace` **[string][1618]** Pinecone namespace (default: REIMAGINEDDOCS)
+    *   `params.limit` **[number][1619]** Maximum number of results (default: 5) (optional, default `5`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of document chunks with scores
+Returns **[Promise][1620]<[Array][1621]>** Array of document chunks with scores
 
 ## searchDocuments
 
@@ -7887,12 +8130,12 @@ Perform standard Pinecone search without spec bias
 
 *   `query` &#x20;
 *   `context`   (optional, default `{}`)
-*   `params` **[Object][1577]** Search parameters
+*   `params` **[Object][1617]** Search parameters
 
-    *   `params.query` **[string][1578]** The search query
-    *   `params.context` **[Object][1577]** Search context
+    *   `params.query` **[string][1618]** The search query
+    *   `params.context` **[Object][1617]** Search context
 
-Returns **[Promise][1580]<[Object][1577]>** Search results
+Returns **[Promise][1620]<[Object][1617]>** Search results
 
 ## getDocumentChunks
 
@@ -7900,13 +8143,13 @@ Get document chunks for a specific asset
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.assetUid` **[string][1578]** Asset UID to filter by
-    *   `params.namespace` **[string][1578]** Pinecone namespace (default: REIMAGINEDDOCS)
-    *   `params.limit` **[number][1579]** Maximum number of results (default: 10) (optional, default `10`)
+    *   `params.assetUid` **[string][1618]** Asset UID to filter by
+    *   `params.namespace` **[string][1618]** Pinecone namespace (default: REIMAGINEDDOCS)
+    *   `params.limit` **[number][1619]** Maximum number of results (default: 10) (optional, default `10`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of document chunks
+Returns **[Promise][1620]<[Array][1621]>** Array of document chunks
 
 ## retrieveWithSpecBias
 
@@ -7914,13 +8157,13 @@ Perform spec-biased retrieval from Pinecone
 
 ### Parameters
 
-*   `params` **[Object][1577]** Retrieval parameters
+*   `params` **[Object][1617]** Retrieval parameters
 
-    *   `params.query` **[string][1578]** The search query
-    *   `params.namespace` **[string][1578]** Pinecone namespace
-    *   `params.context` **[Object][1577]** Additional context (optional, default `{}`)
+    *   `params.query` **[string][1618]** The search query
+    *   `params.namespace` **[string][1618]** Pinecone namespace
+    *   `params.context` **[Object][1617]** Additional context (optional, default `{}`)
 
-Returns **[Promise][1580]<[Object][1577]>** Retrieval results with metadata
+Returns **[Promise][1620]<[Object][1617]>** Retrieval results with metadata
 
 ## normalizeQuery
 
@@ -7928,9 +8171,9 @@ Normalize user query by removing common filler phrases and stop words
 
 ### Parameters
 
-*   `raw` **[string][1578]** Raw user input
+*   `raw` **[string][1618]** Raw user input
 
-Returns **[string][1578]** Normalized query
+Returns **[string][1618]** Normalized query
 
 ## callOpenAI
 
@@ -7942,10 +8185,10 @@ Temperature/seed may be ignored. Tone enforced via prompt.
 
 ### Parameters
 
-*   `systemPrompt` **[string][1578]** System instructions
-*   `userPrompt` **[string][1578]** User content
+*   `systemPrompt` **[string][1618]** System instructions
+*   `userPrompt` **[string][1618]** User content
 
-Returns **[Promise][1580]<[string][1578]>** Generated text
+Returns **[Promise][1620]<[string][1618]>** Generated text
 
 ## formatTripsData
 
@@ -7953,9 +8196,9 @@ Format trip data for the prompt
 
 ### Parameters
 
-*   `trips` **[Array][1581]** Trip records
+*   `trips` **[Array][1621]** Trip records
 
-Returns **[string][1578]** Formatted trip data
+Returns **[string][1618]** Formatted trip data
 
 ## formatAnchoragesData
 
@@ -7963,9 +8206,9 @@ Format anchorage data for the prompt
 
 ### Parameters
 
-*   `anchorages` **[Array][1581]** Anchorage records
+*   `anchorages` **[Array][1621]** Anchorage records
 
-Returns **[string][1578]** Formatted anchorage data
+Returns **[string][1618]** Formatted anchorage data
 
 ## getRecap
 
@@ -7973,15 +8216,15 @@ Get stored recap by style
 
 ### Parameters
 
-*   `style` **[string][1578]** 'boring' or 'exciting'
+*   `style` **[string][1618]** 'boring' or 'exciting'
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Stored recap or null
+Returns **[Promise][1620]<([Object][1617] | null)>** Stored recap or null
 
 ## getAllRecaps
 
 Get all recaps
 
-Returns **[Promise][1580]<[Object][1577]>** { boring: recap|null, exciting: recap|null, unhinged: recap|null }
+Returns **[Promise][1620]<[Object][1617]>** { boring: recap|null, exciting: recap|null, unhinged: recap|null }
 
 ## generateRecap
 
@@ -7989,9 +8232,9 @@ Generate and store a new recap
 
 ### Parameters
 
-*   `style` **[string][1578]** 'boring', 'exciting', or 'unhinged'
+*   `style` **[string][1618]** 'boring', 'exciting', or 'unhinged'
 
-Returns **[Promise][1580]<[Object][1577]>** Generated recap record
+Returns **[Promise][1620]<[Object][1617]>** Generated recap record
 
 ## applySuggestions
 
@@ -7999,13 +8242,13 @@ Apply accepted suggestions to configuration files
 
 ### Parameters
 
-*   `params` **[Object][1577]** Apply parameters
+*   `params` **[Object][1617]** Apply parameters
 
-    *   `params.docId` **[string][1578]** Document ID
-    *   `params.accepted` **[Object][1577]** Accepted suggestions (subset of SuggestionsSchema)
-    *   `params.options` **[Object][1577]** Apply options (optional, default `{}`)
+    *   `params.docId` **[string][1618]** Document ID
+    *   `params.accepted` **[Object][1617]** Accepted suggestions (subset of SuggestionsSchema)
+    *   `params.options` **[Object][1617]** Apply options (optional, default `{}`)
 
-Returns **[Promise][1580]<[Object][1577]>** Apply result with snapshot ID and change counts
+Returns **[Promise][1620]<[Object][1617]>** Apply result with snapshot ID and change counts
 
 ## readJson
 
@@ -8013,10 +8256,10 @@ Read JSON file with fallback
 
 ### Parameters
 
-*   `filePath` **[string][1578]** File path
+*   `filePath` **[string][1618]** File path
 *   `fallback` **any** Fallback value if file doesn't exist (optional, default `{}`)
 
-Returns **[Promise][1580]\<any>** Parsed JSON or fallback
+Returns **[Promise][1620]\<any>** Parsed JSON or fallback
 
 ## writeJson
 
@@ -8024,11 +8267,11 @@ Write JSON file
 
 ### Parameters
 
-*   `filePath` **[string][1578]** File path
+*   `filePath` **[string][1618]** File path
 *   `data` **any** Data to write
-*   `dryRun` **[boolean][1582]** If true, don't actually write (optional, default `false`)
+*   `dryRun` **[boolean][1622]** If true, don't actually write (optional, default `false`)
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## mergeJsonMapArray
 
@@ -8036,11 +8279,11 @@ Merge JSON map arrays (for entities aliases)
 
 ### Parameters
 
-*   `targetFile` **[string][1578]** Target file path
-*   `addMap` **[Object][1577]** Map of keys to arrays to add
-*   `dryRun` **[boolean][1582]** If true, don't actually write (optional, default `false`)
+*   `targetFile` **[string][1618]** Target file path
+*   `addMap` **[Object][1617]** Map of keys to arrays to add
+*   `dryRun` **[boolean][1622]** If true, don't actually write (optional, default `false`)
 
-Returns **[Promise][1580]<[number][1579]>** Number of items added
+Returns **[Promise][1620]<[number][1619]>** Number of items added
 
 ## mergeIntentHints
 
@@ -8048,11 +8291,11 @@ Merge intent hints into intents configuration
 
 ### Parameters
 
-*   `filePath` **[string][1578]** Intents file path
-*   `hints` **[Array][1581]** Intent hints to add
-*   `dryRun` **[boolean][1582]** If true, don't actually write (optional, default `false`)
+*   `filePath` **[string][1618]** Intents file path
+*   `hints` **[Array][1621]** Intent hints to add
+*   `dryRun` **[boolean][1622]** If true, don't actually write (optional, default `false`)
 
-Returns **[Promise][1580]<[number][1579]>** Number of hints added
+Returns **[Promise][1620]<[number][1619]>** Number of hints added
 
 ## mergeMaintenanceLexicon
 
@@ -8060,11 +8303,11 @@ Merge maintenance lexicon with playbook suggestions
 
 ### Parameters
 
-*   `filePath` **[string][1578]** Maintenance file path
-*   `playbooks` **[Object][1577]** Playbook suggestions
-*   `dryRun` **[boolean][1582]** If true, don't actually write (optional, default `false`)
+*   `filePath` **[string][1618]** Maintenance file path
+*   `playbooks` **[Object][1617]** Playbook suggestions
+*   `dryRun` **[boolean][1622]** If true, don't actually write (optional, default `false`)
 
-Returns **[Promise][1580]<[number][1579]>** Number of items added
+Returns **[Promise][1620]<[number][1619]>** Number of items added
 
 ## mergeUnits
 
@@ -8072,11 +8315,11 @@ Merge units suggestions into units configuration
 
 ### Parameters
 
-*   `filePath` **[string][1578]** Units file path
-*   `suggestions` **[Array][1581]** Unit suggestions to add
-*   `dryRun` **[boolean][1582]** If true, don't actually write (optional, default `false`)
+*   `filePath` **[string][1618]** Units file path
+*   `suggestions` **[Array][1621]** Unit suggestions to add
+*   `dryRun` **[boolean][1622]** If true, don't actually write (optional, default `false`)
 
-Returns **[Promise][1580]<[number][1579]>** Number of units added
+Returns **[Promise][1620]<[number][1619]>** Number of units added
 
 ## writeGoldenTests
 
@@ -8084,11 +8327,11 @@ Write golden test files
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
-*   `goldenTests` **[Array][1581]** Test cases to write
-*   `dryRun` **[boolean][1582]** If true, don't actually write (optional, default `false`)
+*   `docId` **[string][1618]** Document ID
+*   `goldenTests` **[Array][1621]** Test cases to write
+*   `dryRun` **[boolean][1622]** If true, don't actually write (optional, default `false`)
 
-Returns **[Promise][1580]<[number][1579]>** Number of tests written
+Returns **[Promise][1620]<[number][1619]>** Number of tests written
 
 ## safeName
 
@@ -8096,9 +8339,9 @@ Create safe filename from string
 
 ### Parameters
 
-*   `name` **[string][1578]** Name to make safe
+*   `name` **[string][1618]** Name to make safe
 
-Returns **[string][1578]** Safe filename
+Returns **[string][1618]** Safe filename
 
 ## extractPatternsFromChunk
 
@@ -8125,10 +8368,10 @@ Summarize a conversation thread
 
 ### Parameters
 
-*   `messages` **[Array][1581]** Conversation messages
-*   `systemsContext` **[Array][1581]** Systems context (optional, default `[]`)
+*   `messages` **[Array][1621]** Conversation messages
+*   `systemsContext` **[Array][1621]** Systems context (optional, default `[]`)
 
-Returns **[Promise][1580]<[string][1578]>** Generated summary
+Returns **[Promise][1620]<[string][1618]>** Generated summary
 
 ## generateThreadName
 
@@ -8136,10 +8379,10 @@ Generate a chat name for a thread
 
 ### Parameters
 
-*   `messages` **[Array][1581]** Conversation messages
-*   `systemsContext` **[Array][1581]** Systems context (optional, default `[]`)
+*   `messages` **[Array][1621]** Conversation messages
+*   `systemsContext` **[Array][1621]** Systems context (optional, default `[]`)
 
-Returns **[Promise][1580]<[string][1578]>** Generated chat name
+Returns **[Promise][1620]<[string][1618]>** Generated chat name
 
 ## generateThreadName
 
@@ -8157,10 +8400,10 @@ Generate asset summary for a specific system
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** Asset UID
-*   `systemsContext` **[Array][1581]** Systems context (optional, default `[]`)
+*   `assetUid` **[string][1618]** Asset UID
+*   `systemsContext` **[Array][1621]** Systems context (optional, default `[]`)
 
-Returns **[Promise][1580]<[string][1578]>** Generated asset summary
+Returns **[Promise][1620]<[string][1618]>** Generated asset summary
 
 ## shouldSummarizeThread
 
@@ -8168,12 +8411,12 @@ Check if thread should be summarized based on message count
 
 ### Parameters
 
-*   `messageCount` **[number][1579]** Current message count
-*   `options` **[Object][1577]** Options (optional, default `{}`)
+*   `messageCount` **[number][1619]** Current message count
+*   `options` **[Object][1617]** Options (optional, default `{}`)
 
-    *   `options.summaryFrequency` **[number][1579]** Frequency for summarization
+    *   `options.summaryFrequency` **[number][1619]** Frequency for summarization
 
-Returns **[boolean][1582]** True if should summarize
+Returns **[boolean][1622]** True if should summarize
 
 ## getSummarizationMetadata
 
@@ -8181,10 +8424,10 @@ Get summarization metadata for a thread
 
 ### Parameters
 
-*   `messages` **[Array][1581]** Conversation messages
-*   `systemsContext` **[Array][1581]** Systems context (optional, default `[]`)
+*   `messages` **[Array][1621]** Conversation messages
+*   `systemsContext` **[Array][1621]** Systems context (optional, default `[]`)
 
-Returns **[Object][1577]** Summarization metadata
+Returns **[Object][1617]** Summarization metadata
 
 ## analyzeSupplyPhoto
 
@@ -8192,13 +8435,13 @@ Analyze a photo of a supply item using GPT-4V
 
 ### Parameters
 
-*   `photoUrl` **[string][1578]** URL to the photo (must be publicly accessible)
-*   `options` **[Object][1577]** Optional categories and units from database (optional, default `{}`)
+*   `photoUrl` **[string][1618]** URL to the photo (must be publicly accessible)
+*   `options` **[Object][1617]** Optional categories and units from database (optional, default `{}`)
 
-    *   `options.categories` **[Array][1581]<[string][1578]>** List of category names
-    *   `options.units` **[Array][1581]<[string][1578]>** List of unit names with abbreviations
+    *   `options.categories` **[Array][1621]<[string][1618]>** List of category names
+    *   `options.units` **[Array][1621]<[string][1618]>** List of unit names with abbreviations
 
-Returns **[Promise][1580]<[Object][1577]>** Extracted item details
+Returns **[Promise][1620]<[Object][1617]>** Extracted item details
 
 ## analyzeSupplyPhotoBase64
 
@@ -8206,13 +8449,13 @@ Analyze a photo using base64 data directly (no file system needed)
 
 ### Parameters
 
-*   `imageBase64` **[string][1578]** Base64 data URL (data:image/jpeg;base64,...)
-*   `options` **[Object][1577]** Optional categories and units from database (optional, default `{}`)
+*   `imageBase64` **[string][1618]** Base64 data URL (data:image/jpeg;base64,...)
+*   `options` **[Object][1617]** Optional categories and units from database (optional, default `{}`)
 
-    *   `options.categories` **[Array][1581]<[string][1578]>** List of category names
-    *   `options.units` **[Array][1581]<[string][1578]>** List of unit names with abbreviations
+    *   `options.categories` **[Array][1621]<[string][1618]>** List of category names
+    *   `options.units` **[Array][1621]<[string][1618]>** List of unit names with abbreviations
 
-Returns **[Promise][1580]<[Object][1577]>** Extracted item details
+Returns **[Promise][1620]<[Object][1617]>** Extracted item details
 
 ## analyzeMultipleSupplyPhotos
 
@@ -8221,13 +8464,13 @@ All photos are sent in a single API call for cross-referencing
 
 ### Parameters
 
-*   `imageBase64Array` **[Array][1581]<[string][1578]>** Array of base64 data URLs
-*   `options` **[Object][1577]** Optional categories and units from database (optional, default `{}`)
+*   `imageBase64Array` **[Array][1621]<[string][1618]>** Array of base64 data URLs
+*   `options` **[Object][1617]** Optional categories and units from database (optional, default `{}`)
 
-    *   `options.categories` **[Array][1581]<[string][1578]>** List of category names
-    *   `options.units` **[Array][1581]<[string][1578]>** List of unit names with abbreviations
+    *   `options.categories` **[Array][1621]<[string][1618]>** List of category names
+    *   `options.units` **[Array][1621]<[string][1618]>** List of unit names with abbreviations
 
-Returns **[Promise][1580]<[Object][1577]>** Merged extracted item details
+Returns **[Promise][1620]<[Object][1617]>** Merged extracted item details
 
 ## suggestSystemsForSupply
 
@@ -8236,9 +8479,9 @@ Uses Pinecone semantic search + systems table lookup
 
 ### Parameters
 
-*   `itemData` **[Object][1577]** Supply item details
+*   `itemData` **[Object][1617]** Supply item details
 
-Returns **[Promise][1580]<[Object][1577]>** System recommendations
+Returns **[Promise][1620]<[Object][1617]>** System recommendations
 
 ## uploadSupplyPhoto
 
@@ -8246,11 +8489,11 @@ Upload a supply photo to Supabase Storage
 
 ### Parameters
 
-*   `supplyId` **[string][1578]** The supply UUID
-*   `base64Data` **[string][1578]** Base64 data URL (data:image/jpeg;base64,...)
-*   `photoIndex` **[number][1579]** Photo index (1-based, default 1) (optional, default `1`)
+*   `supplyId` **[string][1618]** The supply UUID
+*   `base64Data` **[string][1618]** Base64 data URL (data:image/jpeg;base64,...)
+*   `photoIndex` **[number][1619]** Photo index (1-based, default 1) (optional, default `1`)
 
-Returns **[Promise][1580]<[string][1578]>** Public URL of uploaded photo
+Returns **[Promise][1620]<[string][1618]>** Public URL of uploaded photo
 
 ## deleteSupplyPhoto
 
@@ -8258,9 +8501,9 @@ Delete a supply photo from Supabase Storage
 
 ### Parameters
 
-*   `supplyId` **[string][1578]** The supply UUID
-*   `photoIndex` **[number][1579]** Photo index (1-based) (optional, default `1`)
-*   `extension` **[string][1578]** File extension (default 'jpg') (optional, default `'jpg'`)
+*   `supplyId` **[string][1618]** The supply UUID
+*   `photoIndex` **[number][1619]** Photo index (1-based) (optional, default `1`)
+*   `extension` **[string][1618]** File extension (default 'jpg') (optional, default `'jpg'`)
 
 ## uploadAnchoragePhoto
 
@@ -8268,11 +8511,11 @@ Upload an anchorage photo to Supabase Storage
 
 ### Parameters
 
-*   `anchorageId` **[string][1578]** The anchorage UUID
-*   `base64Data` **[string][1578]** Base64 data URL (data:image/jpeg;base64,...)
-*   `photoIndex` **[number][1579]** Photo index (1-based, default 1) (optional, default `1`)
+*   `anchorageId` **[string][1618]** The anchorage UUID
+*   `base64Data` **[string][1618]** Base64 data URL (data:image/jpeg;base64,...)
+*   `photoIndex` **[number][1619]** Photo index (1-based, default 1) (optional, default `1`)
 
-Returns **[Promise][1580]<[string][1578]>** Public URL of uploaded photo
+Returns **[Promise][1620]<[string][1618]>** Public URL of uploaded photo
 
 ## getManufacturersList
 
@@ -8285,7 +8528,7 @@ Follows cursor rules: Business logic only, no direct DB access.
 
 Get list of all manufacturers
 
-Returns **[Promise][1580]<[Object][1577]>** { success, manufacturers?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, manufacturers?, error? }
 
 ## getModelsForManufacturer
 
@@ -8293,9 +8536,9 @@ Get models for a manufacturer
 
 ### Parameters
 
-*   `manufacturer` **[string][1578]** Manufacturer name
+*   `manufacturer` **[string][1618]** Manufacturer name
 
-Returns **[Promise][1580]<[Object][1577]>** { success, models?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, models?, error? }
 
 ## searchSystem
 
@@ -8303,10 +8546,10 @@ Search for a system by manufacturer and model
 
 ### Parameters
 
-*   `manufacturer` **[string][1578]** Manufacturer name
-*   `model` **[string][1578]** Model name
+*   `manufacturer` **[string][1618]** Manufacturer name
+*   `model` **[string][1618]** Model name
 
-Returns **[Promise][1580]<[Object][1577]>** { success, systems?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, systems?, error? }
 
 ## getSystemWithInstances
 
@@ -8315,9 +8558,9 @@ Uses existing getSystemSvc + queries instances
 
 ### Parameters
 
-*   `assetUid` **[string][1578]** System asset UID
+*   `assetUid` **[string][1618]** System asset UID
 
-Returns **[Promise][1580]<[Object][1577]>** { success, system?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, system?, error? }
 
 ## deleteInstance
 
@@ -8325,27 +8568,27 @@ Delete an instance (archive it)
 
 ### Parameters
 
-*   `instanceUid` **[string][1578]** Instance UID
+*   `instanceUid` **[string][1618]** Instance UID
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## getRefManufacturersList
 
 Get list of all manufacturers from ref\_manufacturers
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## getRefProductTypesList
 
 Get list of all product types from ref\_product\_types
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## getRefSystemCategoriesList
 
 Get list of all system categories from ref\_system\_categories
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## getRefSubsystemCategoriesList
 
@@ -8353,21 +8596,21 @@ Get list of subsystem categories, optionally filtered by parent category
 
 ### Parameters
 
-*   `categoryId` **([string][1578] | null)** Optional parent category ID (optional, default `null`)
+*   `categoryId` **([string][1618] | null)** Optional parent category ID (optional, default `null`)
 
-Returns **[Promise][1580]<[Object][1577]>** { success, data?, error? }
+Returns **[Promise][1620]<[Object][1617]>** { success, data?, error? }
 
 ## start
 
 Initialize and start the bot with polling
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## stop
 
 Stop the bot
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## setupCommandHandlers
 
@@ -8383,26 +8626,26 @@ Send error message to user
 
 ### Parameters
 
-*   `chatId` **([string][1578] | [number][1579])** Telegram chat ID
-*   `message` **[string][1578]** Error message
+*   `chatId` **([string][1618] | [number][1619])** Telegram chat ID
+*   `message` **[string][1618]** Error message
 
 ## isActive
 
 Check if bot is running
 
-Returns **[boolean][1582]**&#x20;
+Returns **[boolean][1622]**&#x20;
 
 ## getBot
 
 Initialize bot instance
 
-Returns **([TelegramBot][926] | null)**&#x20;
+Returns **([TelegramBot][959] | null)**&#x20;
 
 ## isConfigured
 
 Check if Telegram is configured
 
-Returns **[boolean][1582]**&#x20;
+Returns **[boolean][1622]**&#x20;
 
 ## sendMessage
 
@@ -8410,10 +8653,10 @@ Send a plain text message
 
 ### Parameters
 
-*   `message` **[string][1578]** Message text
-*   `chatId` **[string][1578]?** Override default chat ID (optional, default `null`)
+*   `message` **[string][1618]** Message text
+*   `chatId` **[string][1618]?** Override default chat ID (optional, default `null`)
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendAnchorWatchStatus
 
@@ -8421,9 +8664,9 @@ Format and send anchor watch status message
 
 ### Parameters
 
-*   `status` **[Object][1577]** Anchor watch status object
+*   `status` **[Object][1617]** Anchor watch status object
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendAnchorWatchAlert
 
@@ -8431,10 +8674,10 @@ Format and send anchor watch alert (status change)
 
 ### Parameters
 
-*   `status` **[Object][1577]** Current anchor watch status
-*   `previousStatus` **[string][1578]** Previous status value
+*   `status` **[Object][1617]** Current anchor watch status
+*   `previousStatus` **[string][1618]** Previous status value
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendRecentPositions
 
@@ -8442,9 +8685,9 @@ Format and send recent GPS positions
 
 ### Parameters
 
-*   `positions` **[Array][1581]** Array of position objects
+*   `positions` **[Array][1621]** Array of position objects
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendActivationConfirmation
 
@@ -8452,28 +8695,28 @@ Send activation confirmation
 
 ### Parameters
 
-*   `config` **[Object][1577]** Activation config (lat, lon, radius)
+*   `config` **[Object][1617]** Activation config (lat, lon, radius)
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendDeactivationConfirmation
 
 Send deactivation confirmation
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendHelpMessage
 
 Send help/welcome message
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## getCurrentTelemetry
 
 Get current telemetry data formatted for dashboard display
 Groups data by category and formats for easy consumption
 
-Returns **[Promise][1580]<[Object][1577]>** Formatted telemetry data
+Returns **[Promise][1620]<[Object][1617]>** Formatted telemetry data
 
 ## groupByCategory
 
@@ -8481,9 +8724,9 @@ Group raw telemetry data by device category
 
 ### Parameters
 
-*   `rawData` **[Array][1581]** Raw telemetry readings
+*   `rawData` **[Array][1621]** Raw telemetry readings
 
-Returns **[Object][1577]** Data grouped by category
+Returns **[Object][1617]** Data grouped by category
 
 ## extractSummary
 
@@ -8491,9 +8734,9 @@ Extract key summary metrics for dashboard header
 
 ### Parameters
 
-*   `grouped` **[Object][1577]** Grouped telemetry data
+*   `grouped` **[Object][1617]** Grouped telemetry data
 
-Returns **[Object][1577]** Summary metrics
+Returns **[Object][1617]** Summary metrics
 
 ## getTankType
 
@@ -8501,10 +8744,10 @@ Determine tank type from device ID or name
 
 ### Parameters
 
-*   `deviceId` **[string][1578]** Device ID
-*   `name` **[string][1578]** Tank name
+*   `deviceId` **[string][1618]** Device ID
+*   `name` **[string][1618]** Tank name
 
-Returns **[string][1578]** 'water', 'fuel', or 'waste'
+Returns **[string][1618]** 'water', 'fuel', or 'waste'
 
 ## getLatestTimestamp
 
@@ -8512,27 +8755,27 @@ Get the most recent timestamp from readings
 
 ### Parameters
 
-*   `rawData` **[Array][1581]** Raw telemetry readings
+*   `rawData` **[Array][1621]** Raw telemetry readings
 
-Returns **([string][1578] | null)** ISO timestamp or null
+Returns **([string][1618] | null)** ISO timestamp or null
 
 ## getBatteryDetails
 
 Get battery details
 
-Returns **[Promise][1580]<[Object][1577]>** Battery telemetry data
+Returns **[Promise][1620]<[Object][1617]>** Battery telemetry data
 
 ## getSolarDetails
 
 Get solar charger details
 
-Returns **[Promise][1580]<[Object][1577]>** Solar telemetry data
+Returns **[Promise][1620]<[Object][1617]>** Solar telemetry data
 
 ## getTankDetails
 
 Get tank levels
 
-Returns **[Promise][1580]<[Object][1577]>** Tank telemetry data
+Returns **[Promise][1620]<[Object][1617]>** Tank telemetry data
 
 ## getAnalysisForRun
 
@@ -8540,9 +8783,9 @@ Get analysis results for a specific test run.
 
 ### Parameters
 
-*   `runId` **[string][1578]** UUID of the test run
+*   `runId` **[string][1618]** UUID of the test run
 
-Returns **[Promise][1580]<{byFailureKey: [Object][1577], summary: [Object][1577]}>**&#x20;
+Returns **[Promise][1620]<{byFailureKey: [Object][1617], summary: [Object][1617]}>**&#x20;
 
 ## hasAnalysisForRun
 
@@ -8550,9 +8793,9 @@ Check if analysis exists for a run.
 
 ### Parameters
 
-*   `runId` **[string][1578]** UUID of the test run
+*   `runId` **[string][1618]** UUID of the test run
 
-Returns **[Promise][1580]<[boolean][1582]>**&#x20;
+Returns **[Promise][1620]<[boolean][1622]>**&#x20;
 
 ## getRecentAnalysisRuns
 
@@ -8560,9 +8803,9 @@ Get recent analysis runs with their summaries.
 
 ### Parameters
 
-*   `limit` **[number][1579]** Maximum number of runs to return (optional, default `10`)
+*   `limit` **[number][1619]** Maximum number of runs to return (optional, default `10`)
 
-Returns **[Promise][1580]<[Array][1581]>**&#x20;
+Returns **[Promise][1620]<[Array][1621]>**&#x20;
 
 ## shouldNameThread
 
@@ -8611,12 +8854,12 @@ Call OpenAI API specifically for summary generation with temperature support
 
 ### Parameters
 
-*   `systemPrompt` **[string][1578]** System prompt
-*   `userPrompt` **[string][1578]** User prompt
-*   `model` **[string][1578]** OpenAI model to use
-*   `temperature` **[number][1579]** Temperature for response generation
+*   `systemPrompt` **[string][1618]** System prompt
+*   `userPrompt` **[string][1618]** User prompt
+*   `model` **[string][1618]** OpenAI model to use
+*   `temperature` **[number][1619]** Temperature for response generation
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Parsed JSON response or null if failed
+Returns **[Promise][1620]<([Object][1617] | null)>** Parsed JSON response or null if failed
 
 ## generateThreadSummary
 
@@ -8624,9 +8867,9 @@ Generate a summary for a thread using the first Q\&A pair
 
 ### Parameters
 
-*   `threadId` **[string][1578]** Thread ID to generate summary for
+*   `threadId` **[string][1618]** Thread ID to generate summary for
 
-Returns **[Promise][1580]<([string][1578] | null)>** Generated summary or null if failed
+Returns **[Promise][1620]<([string][1618] | null)>** Generated summary or null if failed
 
 ## generateQASummary
 
@@ -8634,10 +8877,10 @@ Generate QA summary JSON from user question and assistant answer
 
 ### Parameters
 
-*   `userQuestion` **[string][1578]** User's question
-*   `assistantAnswer` **[string][1578]** Assistant's answer
+*   `userQuestion` **[string][1618]** User's question
+*   `assistantAnswer` **[string][1618]** Assistant's answer
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Generated QA summary JSON or null if failed
+Returns **[Promise][1620]<([Object][1617] | null)>** Generated QA summary JSON or null if failed
 
 ## processQASummaryForMessage
 
@@ -8645,10 +8888,10 @@ Process and store QA summary for an assistant message
 
 ### Parameters
 
-*   `threadId` **[string][1578]** Thread ID containing the messages
-*   `assistantSequenceNumber` **[number][1579]** Sequence number of the assistant message
+*   `threadId` **[string][1618]** Thread ID containing the messages
+*   `assistantSequenceNumber` **[number][1619]** Sequence number of the assistant message
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Generated QA summary or null if failed
+Returns **[Promise][1620]<([Object][1617] | null)>** Generated QA summary or null if failed
 
 ## checkAndGenerateQASummary
 
@@ -8657,9 +8900,9 @@ This is called after an assistant message is saved
 
 ### Parameters
 
-*   `threadId` **[string][1578]** Thread ID to check
-*   `sequenceNumber` **[number][1579]** Sequence number of the just-saved message
-*   `role` **[string][1578]** Role of the just-saved message
+*   `threadId` **[string][1618]** Thread ID to check
+*   `sequenceNumber` **[number][1619]** Sequence number of the just-saved message
+*   `role` **[string][1618]** Role of the just-saved message
 
 ## generateSummaryFromMessages
 
@@ -8667,10 +8910,10 @@ Generate summary text from user question and assistant answer
 
 ### Parameters
 
-*   `userQuestion` **[string][1578]** User's question
-*   `assistantAnswer` **[string][1578]** Assistant's answer
+*   `userQuestion` **[string][1618]** User's question
+*   `assistantAnswer` **[string][1618]** Assistant's answer
 
-Returns **[Promise][1580]<([string][1578] | null)>** Generated summary or null if failed
+Returns **[Promise][1620]<([string][1618] | null)>** Generated summary or null if failed
 
 ## checkAndGenerateSummary
 
@@ -8679,9 +8922,9 @@ This is called after an assistant message is saved
 
 ### Parameters
 
-*   `threadId` **[string][1578]** Thread ID to check
-*   `sequenceNumber` **[number][1579]** Sequence number of the just-saved message
-*   `role` **[string][1578]** Role of the just-saved message
+*   `threadId` **[string][1618]** Thread ID to check
+*   `sequenceNumber` **[number][1619]** Sequence number of the just-saved message
+*   `role` **[string][1618]** Role of the just-saved message
 
 ## haversineDistance
 
@@ -8725,7 +8968,7 @@ List trips with optional filters
 
 ### Parameters
 
-*   `$0` **[Object][1577]**  (optional, default `{}`)
+*   `$0` **[Object][1617]**  (optional, default `{}`)
 
     *   `$0.status` &#x20;
     *   `$0.limit`   (optional, default `20`)
@@ -8746,6 +8989,10 @@ Get active trip (if any)
 ## startTrip
 
 Start a new trip
+
+### Parameters
+
+*   `journeyId` **([string][1618] | null)** Optional journey UUID to link this trip to (optional, default `null`)
 
 ## stopTrip
 
@@ -8771,7 +9018,7 @@ All fields optional - only provided fields are updated
 ### Parameters
 
 *   `tripId` &#x20;
-*   `$1` **[Object][1577]**&#x20;
+*   `$1` **[Object][1617]**&#x20;
 
     *   `$1.title` &#x20;
     *   `$1.started_at` &#x20;
@@ -8803,7 +9050,7 @@ For completed trips, pass allowCompleted and provide times manually
 
 *   `tripId` &#x20;
 *   `sailConfig` &#x20;
-*   `$2` **[Object][1577]**  (optional, default `{}`)
+*   `$2` **[Object][1617]**  (optional, default `{}`)
 
     *   `$2.allowCompleted`   (optional, default `false`)
 
@@ -8886,11 +9133,11 @@ Also captures units from sibling meta.units
 
 ### Parameters
 
-*   `obj` **[Object][1577]** SignalK data object
-*   `prefix` **[string][1578]** Current path prefix (optional, default `''`)
-*   `result` **[Object][1577]** Accumulated results { values: {}, units: {} } (optional, default `{values:{},units:{}}`)
+*   `obj` **[Object][1617]** SignalK data object
+*   `prefix` **[string][1618]** Current path prefix (optional, default `''`)
+*   `result` **[Object][1617]** Accumulated results { values: {}, units: {} } (optional, default `{values:{},units:{}}`)
 
-Returns **[Object][1577]** { values: { path: value }, units: { path: unit } }
+Returns **[Object][1617]** { values: { path: value }, units: { path: unit } }
 
 ## filterLowVarianceColumns
 
@@ -8898,10 +9145,10 @@ Filter out columns with low variance (all same value or mostly null)
 
 ### Parameters
 
-*   `samples` **[Array][1581]** Array of sample objects
-*   `columns` **[Array][1581]** Array of column names
+*   `samples` **[Array][1621]** Array of sample objects
+*   `columns` **[Array][1621]** Array of column names
 
-Returns **[Array][1581]** Filtered column names
+Returns **[Array][1621]** Filtered column names
 
 ## getTelemetrySamples
 
@@ -8928,7 +9175,7 @@ Uses shared nominatim utility with town-first preference and country context
 Regenerate titles for all trips with telemetry data
 Uses shared nominatim utility with rate limiting
 
-Returns **[Promise][1580]<[Object][1577]>** { updated: number, trips: Array<{id, oldTitle, newTitle}> }
+Returns **[Promise][1620]<[Object][1617]>** { updated: number, trips: Array<{id, oldTitle, newTitle}> }
 
 ## fetchMarineWeather
 
@@ -8983,13 +9230,13 @@ Sends critical anchor watch alerts via SMS
 
 Initialize Twilio client
 
-Returns **([Object][1577] | null)**&#x20;
+Returns **([Object][1617] | null)**&#x20;
 
 ## isConfigured
 
 Check if Twilio SMS is configured
 
-Returns **[boolean][1582]**&#x20;
+Returns **[boolean][1622]**&#x20;
 
 ## sendSMS
 
@@ -8997,9 +9244,9 @@ Send SMS message
 
 ### Parameters
 
-*   `message` **[string][1578]** Message text
+*   `message` **[string][1618]** Message text
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendCriticalAlert
 
@@ -9007,15 +9254,15 @@ Send critical anchor watch alert via SMS
 
 ### Parameters
 
-*   `status` **[Object][1577]** Anchor watch status
+*   `status` **[Object][1617]** Anchor watch status
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## sendTestMessage
 
 Send test SMS
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## runV5ColloquialKeywords
 
@@ -9026,7 +9273,7 @@ Updates systems.colloquial\_keywords for the installed system.
 
 ### Parameters
 
-*   `$0` **[Object][1577]**&#x20;
+*   `$0` **[Object][1617]**&#x20;
 
     *   `$0.assetUid` &#x20;
     *   `$0.docId` &#x20;
@@ -9038,15 +9285,15 @@ Run v5 DIP extraction for a document
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.docId` **[string][1578]** Document ID
-    *   `params.selectedModels` **[Array][1581]<[string][1578]>** User's installed primary model(s)
-    *   `params.referencedSelections` **[Array][1581]<[string][1578]>** User's selected referenced systems (optional, default `[]`)
-    *   `params.modes` **[Array][1581]<[string][1578]>?** DIP modes to run (default: all) (optional, default `['specs','troubleshooting','procedures','golden_rules','intent_router']`)
-    *   `params.forceRerun` **[boolean][1582]** If true, delete existing DIP rows first (optional, default `false`)
+    *   `params.docId` **[string][1618]** Document ID
+    *   `params.selectedModels` **[Array][1621]<[string][1618]>** User's installed primary model(s)
+    *   `params.referencedSelections` **[Array][1621]<[string][1618]>** User's selected referenced systems (optional, default `[]`)
+    *   `params.modes` **[Array][1621]<[string][1618]>?** DIP modes to run (default: all) (optional, default `['specs','troubleshooting','procedures','golden_rules','intent_router']`)
+    *   `params.forceRerun` **[boolean][1622]** If true, delete existing DIP rows first (optional, default `false`)
 
-Returns **[Promise][1580]<[Object][1577]>** DIP extraction results
+Returns **[Promise][1620]<[Object][1617]>** DIP extraction results
 
 ## runV5Indexing
 
@@ -9054,15 +9301,15 @@ Run v5 indexing for a document
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.docId` **[string][1578]** Document ID
-    *   `params.selectedModels` **[Array][1581]<[string][1578]>** User's installed primary model(s)
-    *   `params.referencedSelections` **[Array][1581]<[string][1578]>** User's selected referenced systems (optional, default `[]`)
-    *   `params.forceReindex` **[boolean][1582]** If true, delete existing chunks first (optional, default `false`)
+    *   `params.docId` **[string][1618]** Document ID
+    *   `params.selectedModels` **[Array][1621]<[string][1618]>** User's installed primary model(s)
+    *   `params.referencedSelections` **[Array][1621]<[string][1618]>** User's selected referenced systems (optional, default `[]`)
+    *   `params.forceReindex` **[boolean][1622]** If true, delete existing chunks first (optional, default `false`)
     *   `params.aliasMap`   (optional, default `{}`)
 
-Returns **[Promise][1580]<[Object][1577]>** Indexing results
+Returns **[Promise][1620]<[Object][1617]>** Indexing results
 
 ## startIngestRun
 
@@ -9070,17 +9317,17 @@ Start a background ingest run for a document
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.docId` **[string][1578]** Document ID
-    *   `params.storagePath` **[string][1578]** Storage path to PDF
-    *   `params.selectedModels` **[Array][1581]<[string][1578]>** User's installed primary models
-    *   `params.referencedSelections` **[Array][1581]<[string][1578]>** User's selected referenced systems (optional, default `[]`)
-    *   `params.installedAssetUid` **[string][1578]?** Primary system asset\_uid (optional, default `null`)
-    *   `params.skipDip` **[boolean][1582]** Skip DIP extraction (optional, default `false`)
+    *   `params.docId` **[string][1618]** Document ID
+    *   `params.storagePath` **[string][1618]** Storage path to PDF
+    *   `params.selectedModels` **[Array][1621]<[string][1618]>** User's installed primary models
+    *   `params.referencedSelections` **[Array][1621]<[string][1618]>** User's selected referenced systems (optional, default `[]`)
+    *   `params.installedAssetUid` **[string][1618]?** Primary system asset\_uid (optional, default `null`)
+    *   `params.skipDip` **[boolean][1622]** Skip DIP extraction (optional, default `false`)
     *   `params.filename`   (optional, default `null`)
 
-Returns **[Promise][1580]<[Object][1577]>** { job\_id, doc\_id, status\_v2 }
+Returns **[Promise][1620]<[Object][1617]>** { job\_id, doc\_id, status\_v2 }
 
 ## runIngestPipeline
 
@@ -9096,9 +9343,9 @@ Get the current status of an ingest job for a document
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Job status or null if no job exists
+Returns **[Promise][1620]<([Object][1617] | null)>** Job status or null if no job exists
 
 ## startParseDetectRun
 
@@ -9107,13 +9354,13 @@ Creates a job, returns immediately, kicks off pipeline via setImmediate().
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.docId` **[string][1578]** Document ID (SHA256 hash)
-    *   `params.storagePath` **[string][1578]** Supabase Storage path to PDF
-    *   `params.filename` **[string][1578]** Original filename
+    *   `params.docId` **[string][1618]** Document ID (SHA256 hash)
+    *   `params.storagePath` **[string][1618]** Supabase Storage path to PDF
+    *   `params.filename` **[string][1618]** Original filename
 
-Returns **[Promise][1580]<[Object][1577]>** { success, job\_id, doc\_id, status\_v2 } or { success: false, error }
+Returns **[Promise][1620]<[Object][1617]>** { success, job\_id, doc\_id, status\_v2 } or { success: false, error }
 
 ## runParseDetectPipeline
 
@@ -9129,9 +9376,9 @@ Get the current status of a parse-detect job for a document
 
 ### Parameters
 
-*   `docId` **[string][1578]** Document ID
+*   `docId` **[string][1618]** Document ID
 
-Returns **[Promise][1580]<([Object][1577] | null)>** Job status or null if no job exists
+Returns **[Promise][1620]<([Object][1617] | null)>** Job status or null if no job exists
 
 ## createFailureTodo
 
@@ -9168,17 +9415,17 @@ Run the full vision pipeline for a document
 
 ### Parameters
 
-*   `params` **[Object][1577]**&#x20;
+*   `params` **[Object][1617]**&#x20;
 
-    *   `params.docId` **[string][1578]** Document ID
-    *   `params.storagePath` **[string][1578]** Supabase Storage path to PDF
-    *   `params.selectedModels` **[Array][1581]<[string][1578]>** User-approved primary models (tag universe)
-    *   `params.referencedSelections` **[Array][1581]<[string][1578]>** User's selected referenced systems (optional, default `[]`)
-    *   `params.pages` **[string][1578]** Page range to analyze (optional, default `'1-10'`)
-    *   `params.context` **[string][1578]** Document context for Vision prompt (optional, default `''`)
+    *   `params.docId` **[string][1618]** Document ID
+    *   `params.storagePath` **[string][1618]** Supabase Storage path to PDF
+    *   `params.selectedModels` **[Array][1621]<[string][1618]>** User-approved primary models (tag universe)
+    *   `params.referencedSelections` **[Array][1621]<[string][1618]>** User's selected referenced systems (optional, default `[]`)
+    *   `params.pages` **[string][1618]** Page range to analyze (optional, default `'1-10'`)
+    *   `params.context` **[string][1618]** Document context for Vision prompt (optional, default `''`)
     *   `params.aliasMap`   (optional, default `{}`)
 
-Returns **[Promise][1580]<[Object][1577]>** Pipeline results
+Returns **[Promise][1620]<[Object][1617]>** Pipeline results
 
 ## getDocumentAssets
 
@@ -9208,7 +9455,7 @@ Delete all assets for a document (for re-processing)
 
 Ensure critical lexicon files exist with sensible defaults
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## ensureFile
 
@@ -9216,22 +9463,22 @@ Ensure a file exists, create with default content if missing
 
 ### Parameters
 
-*   `relPath` **[string][1578]** Relative file path
-*   `seedObj` **[Object][1577]** Default object to write if file doesn't exist
+*   `relPath` **[string][1618]** Relative file path
+*   `seedObj` **[Object][1617]** Default object to write if file doesn't exist
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## defaultMaintenance
 
 Default maintenance lexicon content
 
-Returns **[Object][1577]** Default maintenance configuration
+Returns **[Object][1617]** Default maintenance configuration
 
 ## defaultUnits
 
 Default units lexicon content
 
-Returns **[Object][1577]** Default units configuration
+Returns **[Object][1617]** Default units configuration
 
 ## env
 
@@ -9314,9 +9561,9 @@ Check if a query is a follow-up question that needs context
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
+*   `query` **[string][1618]** The user query
 
-Returns **[boolean][1582]** True if it's a follow-up question
+Returns **[boolean][1622]** True if it's a follow-up question
 
 ## containsAmbiguousPronoun
 
@@ -9324,9 +9571,9 @@ Check if query contains ambiguous pronouns
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
+*   `query` **[string][1618]** The user query
 
-Returns **[boolean][1582]** True if contains ambiguous pronouns
+Returns **[boolean][1622]** True if contains ambiguous pronouns
 
 ## extractEquipmentTerms
 
@@ -9334,9 +9581,9 @@ Extract equipment terms from query by removing common prefixes
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
+*   `query` **[string][1618]** The user query
 
-Returns **[string][1578]** Cleaned query with equipment terms
+Returns **[string][1618]** Cleaned query with equipment terms
 
 ## hasExistingSystemsContext
 
@@ -9344,10 +9591,10 @@ Check if we have existing systems context from thread metadata or recent message
 
 ### Parameters
 
-*   `threadMetadata` **[Object][1577]** Thread metadata
-*   `recentMessages` **[Array][1581]** Recent messages
+*   `threadMetadata` **[Object][1617]** Thread metadata
+*   `recentMessages` **[Array][1621]** Recent messages
 
-Returns **[boolean][1582]** True if we have existing systems context
+Returns **[boolean][1622]** True if we have existing systems context
 
 ## getExistingSystemsContext
 
@@ -9355,10 +9602,10 @@ Get existing systems context from thread metadata or recent messages
 
 ### Parameters
 
-*   `threadMetadata` **[Object][1577]** Thread metadata
-*   `recentMessages` **[Array][1581]** Recent messages
+*   `threadMetadata` **[Object][1617]** Thread metadata
+*   `recentMessages` **[Array][1621]** Recent messages
 
-Returns **[Array][1581]** Systems context array
+Returns **[Array][1621]** Systems context array
 
 ## contextRewrite
 
@@ -9366,10 +9613,10 @@ Rewrite query with systems context for better understanding
 
 ### Parameters
 
-*   `query` **[string][1578]** The user query
-*   `systemsContext` **[Array][1581]** Systems context array
+*   `query` **[string][1618]** The user query
+*   `systemsContext` **[Array][1621]** Systems context array
 
-Returns **[string][1578]** Rewritten query with context
+Returns **[string][1618]** Rewritten query with context
 
 ## withTimeout
 
@@ -9377,11 +9624,11 @@ Create timeout wrapper for promises
 
 ### Parameters
 
-*   `promise` **[Promise][1580]** The promise to wrap
-*   `ms` **[number][1579]** Timeout in milliseconds
-*   `onTimeoutMsg` **[string][1578]** Message for timeout error (optional, default `'Timed out'`)
+*   `promise` **[Promise][1620]** The promise to wrap
+*   `ms` **[number][1619]** Timeout in milliseconds
+*   `onTimeoutMsg` **[string][1618]** Message for timeout error (optional, default `'Timed out'`)
 
-Returns **[Promise][1580]** Promise with timeout
+Returns **[Promise][1620]** Promise with timeout
 
 ## formatFactAnswer
 
@@ -9448,10 +9695,10 @@ Calculate Levenshtein distance between two strings
 
 #### Parameters
 
-*   `a` **[string][1578]** First string
-*   `b` **[string][1578]** Second string
+*   `a` **[string][1618]** First string
+*   `b` **[string][1618]** Second string
 
-Returns **[number][1579]** Edit distance
+Returns **[number][1619]** Edit distance
 
 ### findBestMatch
 
@@ -9459,10 +9706,10 @@ Find the best fuzzy match for input against a list of candidates
 
 #### Parameters
 
-*   `input` **[string][1578]** Input string to match
-*   `candidates` **[Array][1581]<[string][1578]>** Array of candidate strings
+*   `input` **[string][1618]** Input string to match
+*   `candidates` **[Array][1621]<[string][1618]>** Array of candidate strings
 
-Returns **([Object][1577] | null)** Best match object or null if no good match found
+Returns **([Object][1617] | null)** Best match object or null if no good match found
 
 ### findMultipleMatches
 
@@ -9470,10 +9717,10 @@ Find multiple fuzzy matches above confidence threshold
 
 #### Parameters
 
-*   `input` **[string][1578]** Input string to match
-*   `candidates` **[Array][1581]<[string][1578]>** Array of candidate strings
+*   `input` **[string][1618]** Input string to match
+*   `candidates` **[Array][1621]<[string][1618]>** Array of candidate strings
 
-Returns **[Array][1581]** Array of match objects sorted by confidence
+Returns **[Array][1621]** Array of match objects sorted by confidence
 
 ### isLikelyTypo
 
@@ -9481,10 +9728,10 @@ Check if input is likely a typo of any candidate
 
 #### Parameters
 
-*   `input` **[string][1578]** Input string to check
-*   `candidates` **[Array][1581]<[string][1578]>** Array of candidate strings
+*   `input` **[string][1618]** Input string to check
+*   `candidates` **[Array][1621]<[string][1618]>** Array of candidate strings
 
-Returns **[boolean][1582]** True if likely typo found
+Returns **[boolean][1622]** True if likely typo found
 
 ## decideStyle
 
@@ -9492,7 +9739,7 @@ Determines the appropriate style preset based on the user's question
 
 ### Parameters
 
-*   `question` **[string][1578]** The user's question
+*   `question` **[string][1618]** The user's question
 
 Returns **(`"specBrief"` | `"steps"` | `"bullets3"` | `"brief"` | `"technical"`)** The style preset to use
 
@@ -9502,9 +9749,9 @@ Gets a random opening phrase for the given style
 
 ### Parameters
 
-*   `style` **[string][1578]** The style preset
+*   `style` **[string][1618]** The style preset
 
-Returns **[string][1578]** A random opening phrase
+Returns **[string][1618]** A random opening phrase
 
 ## startTimer
 
@@ -9512,8 +9759,8 @@ Start timing an operation
 
 ### Parameters
 
-*   `operation` **[string][1578]** Operation name
-*   `tags` **[Object][1577]** Additional tags for the operation (optional, default `{}`)
+*   `operation` **[string][1618]** Operation name
+*   `tags` **[Object][1617]** Additional tags for the operation (optional, default `{}`)
 
 ## endTimer
 
@@ -9521,10 +9768,10 @@ End timing an operation and record the duration
 
 ### Parameters
 
-*   `operation` **[string][1578]** Operation name
-*   `tags` **[Object][1577]** Additional tags for the operation (optional, default `{}`)
+*   `operation` **[string][1618]** Operation name
+*   `tags` **[Object][1617]** Additional tags for the operation (optional, default `{}`)
 
-Returns **[number][1579]** Duration in milliseconds
+Returns **[number][1619]** Duration in milliseconds
 
 ## recordMetric
 
@@ -9532,9 +9779,9 @@ Record a metric value
 
 ### Parameters
 
-*   `name` **[string][1578]** Metric name
-*   `value` **[number][1579]** Metric value
-*   `tags` **[Object][1577]** Additional tags (optional, default `{}`)
+*   `name` **[string][1618]** Metric name
+*   `value` **[number][1619]** Metric value
+*   `tags` **[Object][1617]** Additional tags (optional, default `{}`)
 
 ## incrementCounter
 
@@ -9542,9 +9789,9 @@ Increment a counter metric
 
 ### Parameters
 
-*   `name` **[string][1578]** Counter name
-*   `tags` **[Object][1577]** Additional tags (optional, default `{}`)
-*   `increment` **[number][1579]** Increment amount (default: 1) (optional, default `1`)
+*   `name` **[string][1618]** Counter name
+*   `tags` **[Object][1617]** Additional tags (optional, default `{}`)
+*   `increment` **[number][1619]** Increment amount (default: 1) (optional, default `1`)
 
 ## recordSuccess
 
@@ -9552,15 +9799,15 @@ Record a success/failure event
 
 ### Parameters
 
-*   `operation` **[string][1578]** Operation name
-*   `success` **[boolean][1582]** Whether the operation succeeded
-*   `tags` **[Object][1577]** Additional tags (optional, default `{}`)
+*   `operation` **[string][1618]** Operation name
+*   `success` **[boolean][1622]** Whether the operation succeeded
+*   `tags` **[Object][1617]** Additional tags (optional, default `{}`)
 
 ## getMetrics
 
 Get all metrics
 
-Returns **[Object][1577]** All collected metrics
+Returns **[Object][1617]** All collected metrics
 
 ## getOperationSummary
 
@@ -9568,9 +9815,9 @@ Get metrics summary for specific operations
 
 ### Parameters
 
-*   `operation` **[string][1578]** Operation name
+*   `operation` **[string][1618]** Operation name
 
-Returns **[Object][1577]** Metrics summary
+Returns **[Object][1617]** Metrics summary
 
 ## getSuccessRate
 
@@ -9578,9 +9825,9 @@ Get success rate for an operation
 
 ### Parameters
 
-*   `operation` **[string][1578]** Operation name
+*   `operation` **[string][1618]** Operation name
 
-Returns **[number][1579]** Success rate (0-1)
+Returns **[number][1619]** Success rate (0-1)
 
 ## reset
 
@@ -9592,16 +9839,16 @@ Build a key for metrics storage
 
 ### Parameters
 
-*   `name` **[string][1578]** Metric name
-*   `tags` **[Object][1577]** Tags
+*   `name` **[string][1618]** Metric name
+*   `tags` **[Object][1617]** Tags
 
-Returns **[string][1578]** Storage key
+Returns **[string][1618]** Storage key
 
 ## getDashboardMetrics
 
 Get metrics in a format suitable for monitoring dashboards
 
-Returns **[Object][1577]** Dashboard-ready metrics
+Returns **[Object][1617]** Dashboard-ready metrics
 
 ## \_calculatePerformanceScore
 
@@ -9609,11 +9856,11 @@ Calculate performance score based on success rate and duration
 
 ### Parameters
 
-*   `successRate` **[number][1579]** Success rate (0-1)
-*   `avgDuration` **[number][1579]** Average duration in ms
-*   `targetDuration` **[number][1579]** Target duration in ms
+*   `successRate` **[number][1619]** Success rate (0-1)
+*   `avgDuration` **[number][1619]** Average duration in ms
+*   `targetDuration` **[number][1619]** Target duration in ms
 
-Returns **[number][1579]** Performance score (0-100)
+Returns **[number][1619]** Performance score (0-100)
 
 ## getPerformanceMetrics
 
@@ -9621,9 +9868,9 @@ Get detailed performance metrics for a specific operation
 
 ### Parameters
 
-*   `operation` **[string][1578]** Operation name
+*   `operation` **[string][1618]** Operation name
 
-Returns **[Object][1577]** Detailed performance metrics
+Returns **[Object][1617]** Detailed performance metrics
 
 ## FRENCH\_CARIBBEAN\_TERRITORIES
 
@@ -9636,8 +9883,8 @@ Optimized for Caribbean sailing locations
 
 ### Parameters
 
-*   `lat` **[number][1579]** Latitude
-*   `lon` **[number][1579]** Longitude
+*   `lat` **[number][1619]** Latitude
+*   `lon` **[number][1619]** Longitude
 
 ### Examples
 
@@ -9646,7 +9893,7 @@ const place = await reverseGeocode(16.3089, -61.7989);
 // Returns: "Deshaies, Guadeloupe"
 ```
 
-Returns **[Promise][1580]<([string][1578] | null)>** Place name (e.g., "Deshaies, Guadeloupe") or null
+Returns **[Promise][1620]<([string][1618] | null)>** Place name (e.g., "Deshaies, Guadeloupe") or null
 
 ## delay
 
@@ -9655,9 +9902,9 @@ Nominatim requires max 1 request per second
 
 ### Parameters
 
-*   `ms` **[number][1579]** Milliseconds to delay (default 1100ms for safety margin) (optional, default `1100`)
+*   `ms` **[number][1619]** Milliseconds to delay (default 1100ms for safety margin) (optional, default `1100`)
 
-Returns **[Promise][1580]\<void>**&#x20;
+Returns **[Promise][1620]\<void>**&#x20;
 
 ## batchReverseGeocode
 
@@ -9693,9 +9940,9 @@ Examples:
 
 ### Parameters
 
-*   `raw` **[string][1578]** Raw model string
+*   `raw` **[string][1618]** Raw model string
 
-Returns **[string][1578]** Normalized model key
+Returns **[string][1618]** Normalized model key
 
 ## DEFAULT\_RETRY\_OPTIONS
 
@@ -9707,16 +9954,16 @@ Execute a function with retry and exponential backoff
 
 ### Parameters
 
-*   `fn` **[Function][1583]** Async function to execute
-*   `options` **[Object][1577]** Retry options (optional, default `{}`)
+*   `fn` **[Function][1623]** Async function to execute
+*   `options` **[Object][1617]** Retry options (optional, default `{}`)
 
-    *   `options.maxAttempts` **[number][1579]** Maximum number of attempts (default: 3)
-    *   `options.baseDelayMs` **[number][1579]** Base delay in ms (default: 1000)
-    *   `options.maxDelayMs` **[number][1579]** Maximum delay in ms (default: 10000)
-    *   `options.retryOn` **[Function][1583]** Function(error) that returns true if should retry
-    *   `options.onRetry` **[Function][1583]** Callback(attempt, error, delay) on each retry
+    *   `options.maxAttempts` **[number][1619]** Maximum number of attempts (default: 3)
+    *   `options.baseDelayMs` **[number][1619]** Base delay in ms (default: 1000)
+    *   `options.maxDelayMs` **[number][1619]** Maximum delay in ms (default: 10000)
+    *   `options.retryOn` **[Function][1623]** Function(error) that returns true if should retry
+    *   `options.onRetry` **[Function][1623]** Callback(attempt, error, delay) on each retry
 
-Returns **[Promise][1580]\<any>** Result of fn()
+Returns **[Promise][1620]\<any>** Result of fn()
 
 ## isRetryableError
 
@@ -9736,9 +9983,9 @@ Does NOT retry on:
 
 ### Parameters
 
-*   `error` **[Error][1585]** The error to check
+*   `error` **[Error][1625]** The error to check
 
-Returns **[boolean][1582]** Whether to retry
+Returns **[boolean][1622]** Whether to retry
 
 ## createRetryWrapper
 
@@ -9746,9 +9993,9 @@ Create a retry wrapper with preset options
 
 ### Parameters
 
-*   `defaultOptions` **[Object][1577]** Default options for all retries (optional, default `{}`)
+*   `defaultOptions` **[Object][1617]** Default options for all retries (optional, default `{}`)
 
-Returns **[Function][1583]** withRetry function with defaults
+Returns **[Function][1623]** withRetry function with defaults
 
 ## withOpenAIRetry
 
@@ -9772,13 +10019,13 @@ headersTimeout that cannot be overridden.
 
 ### Parameters
 
-*   `path` **[string][1578]** Relative path starting with / (e.g. '/v1/dip/run')
-*   `options` **[Object][1577]?**  (optional, default `{}`)
+*   `path` **[string][1618]** Relative path starting with / (e.g. '/v1/dip/run')
+*   `options` **[Object][1617]?**  (optional, default `{}`)
 
-    *   `options.method` **[string][1578]**  (optional, default `'GET'`)
-    *   `options.headers` **[Object][1577]?**&#x20;
-    *   `options.body` **([string][1578] | [Buffer][1586])?**&#x20;
-    *   `options.timeout` **[number][1579]** Timeout in ms (default 5 min) (optional, default `300000`)
+    *   `options.method` **[string][1618]**  (optional, default `'GET'`)
+    *   `options.headers` **[Object][1617]?**&#x20;
+    *   `options.body` **([string][1618] | [Buffer][1626])?**&#x20;
+    *   `options.timeout` **[number][1619]** Timeout in ms (default 5 min) (optional, default `300000`)
     *   `options.signal` **AbortSignal?** External abort signal (e.g. client disconnect)
 
 ## collectBody
@@ -9806,9 +10053,9 @@ Create a snapshot of specified files
 
 ### Parameters
 
-*   `files` **[Array][1581]<[string][1578]>** Array of file paths to snapshot (relative to project root)
+*   `files` **[Array][1621]<[string][1618]>** Array of file paths to snapshot (relative to project root)
 
-Returns **[Promise][1580]<[Object][1577]>** Snapshot result with ID and directory
+Returns **[Promise][1620]<[Object][1617]>** Snapshot result with ID and directory
 
 ## rollbackTo
 
@@ -9816,15 +10063,15 @@ Restore files from a snapshot
 
 ### Parameters
 
-*   `snapshotId` **[string][1578]** Snapshot ID to restore from
+*   `snapshotId` **[string][1618]** Snapshot ID to restore from
 
-Returns **[Promise][1580]<[Object][1577]>** Restore result with restored files count
+Returns **[Promise][1620]<[Object][1617]>** Restore result with restored files count
 
 ## listSnapshots
 
 List all available snapshots
 
-Returns **[Promise][1580]<[Array][1581]>** Array of snapshot information
+Returns **[Promise][1620]<[Array][1621]>** Array of snapshot information
 
 ## deleteSnapshot
 
@@ -9832,9 +10079,9 @@ Delete a snapshot
 
 ### Parameters
 
-*   `snapshotId` **[string][1578]** Snapshot ID to delete
+*   `snapshotId` **[string][1618]** Snapshot ID to delete
 
-Returns **[Promise][1580]<[Object][1577]>** Deletion result
+Returns **[Promise][1620]<[Object][1617]>** Deletion result
 
 ## getSnapshotInfo
 
@@ -9842,9 +10089,9 @@ Get snapshot information
 
 ### Parameters
 
-*   `snapshotId` **[string][1578]** Snapshot ID
+*   `snapshotId` **[string][1618]** Snapshot ID
 
-Returns **[Promise][1580]<[Object][1577]>** Snapshot information
+Returns **[Promise][1620]<[Object][1617]>** Snapshot information
 
 ## cleanupSnapshots
 
@@ -9852,9 +10099,9 @@ Clean up old snapshots (keep only the most recent N)
 
 ### Parameters
 
-*   `keepCount` **[number][1579]** Number of snapshots to keep (default: 10) (optional, default `10`)
+*   `keepCount` **[number][1619]** Number of snapshots to keep (default: 10) (optional, default `10`)
 
-Returns **[Promise][1580]<[Object][1577]>** Cleanup result
+Returns **[Promise][1620]<[Object][1617]>** Cleanup result
 
 ## listFiles
 
@@ -9862,16 +10109,16 @@ Helper function to recursively list files in a directory
 
 ### Parameters
 
-*   `dir` **[string][1578]** Directory path
-*   `prefix` **[string][1578]** Path prefix for relative paths (optional, default `''`)
+*   `dir` **[string][1618]** Directory path
+*   `prefix` **[string][1618]** Path prefix for relative paths (optional, default `''`)
 
-Returns **[Promise][1580]<[Array][1581]>** Array of relative file paths
+Returns **[Promise][1620]<[Array][1621]>** Array of relative file paths
 
 ## loadMaintenanceLexicon
 
 Load maintenance lexicon from config file
 
-Returns **[Object][1577]** Maintenance lexicon with tokens and regexes
+Returns **[Object][1617]** Maintenance lexicon with tokens and regexes
 
 ## extractMaintenanceTerms
 
@@ -9879,9 +10126,9 @@ Extract potential maintenance terms from text
 
 ### Parameters
 
-*   `text` **[string][1578]** Text to analyze
+*   `text` **[string][1618]** Text to analyze
 
-Returns **[Array][1581]<[string][1578]>** Array of potential maintenance terms
+Returns **[Array][1621]<[string][1618]>** Array of potential maintenance terms
 
 ## checkMaintenanceContent
 
@@ -9889,10 +10136,10 @@ Check if text contains maintenance-related content using exact and fuzzy matchin
 
 ### Parameters
 
-*   `text` **[string][1578]** Text to check
-*   `lexicon` **[Object][1577]** Maintenance lexicon
+*   `text` **[string][1618]** Text to check
+*   `lexicon` **[Object][1617]** Maintenance lexicon
 
-Returns **[Object][1577]** Result with match details
+Returns **[Object][1617]** Result with match details
 
 ## filterSpecLike
 
@@ -9900,15 +10147,15 @@ Enhanced spec filter that includes maintenance content detection
 
 ### Parameters
 
-*   `chunks` **[Array][1581]** Array of chunks to filter
+*   `chunks` **[Array][1621]** Array of chunks to filter
 
-Returns **[Array][1581]** Filtered chunks that contain specs or maintenance content
+Returns **[Array][1621]** Filtered chunks that contain specs or maintenance content
 
 ## loadUnitsLexicon
 
 Load units lexicon from config file
 
-Returns **[Object][1577]** Units lexicon with canonical forms and aliases
+Returns **[Object][1617]** Units lexicon with canonical forms and aliases
 
 ## getUnitCategory
 
@@ -9916,10 +10163,10 @@ Get the unit category for a canonical unit
 
 ### Parameters
 
-*   `canonical` **[string][1578]** Canonical unit form
-*   `lexicon` **[Object][1577]** Units lexicon
+*   `canonical` **[string][1618]** Canonical unit form
+*   `lexicon` **[Object][1617]** Units lexicon
 
-Returns **[string][1578]** Unit category or 'unknown'
+Returns **[string][1618]** Unit category or 'unknown'
 
 ## checkDisambiguation
 
@@ -9927,11 +10174,11 @@ Check if context hints suggest a specific unit meaning
 
 ### Parameters
 
-*   `unit` **[string][1578]** Unit to check
-*   `hint` **[string][1578]** Context hint
-*   `lexicon` **[Object][1577]** Units lexicon
+*   `unit` **[string][1618]** Unit to check
+*   `hint` **[string][1618]** Context hint
+*   `lexicon` **[Object][1617]** Units lexicon
 
-Returns **([string][1578] | null)** Suggested canonical form or null
+Returns **([string][1618] | null)** Suggested canonical form or null
 
 ## normalizeUnitToken
 
@@ -9939,13 +10186,13 @@ Normalize a unit token with fuzzy matching support
 
 ### Parameters
 
-*   `token` **[string][1578]** Unit token to normalize
-*   `options` **[Object][1577]** Options for normalization (optional, default `{}`)
+*   `token` **[string][1618]** Unit token to normalize
+*   `options` **[Object][1617]** Options for normalization (optional, default `{}`)
 
-    *   `options.hint` **[string][1578]** Context hint for disambiguation
-    *   `options.fuzzy` **[boolean][1582]** Enable fuzzy matching (default: true)
+    *   `options.hint` **[string][1618]** Context hint for disambiguation
+    *   `options.fuzzy` **[boolean][1622]** Enable fuzzy matching (default: true)
 
-Returns **[Object][1577]** Normalization result
+Returns **[Object][1617]** Normalization result
 
 ## normalizeUnitsInText
 
@@ -9953,16 +10200,16 @@ Normalize multiple unit tokens in a text
 
 ### Parameters
 
-*   `text` **[string][1578]** Text containing unit tokens
-*   `options` **[Object][1577]** Options for normalization (optional, default `{}`)
+*   `text` **[string][1618]** Text containing unit tokens
+*   `options` **[Object][1617]** Options for normalization (optional, default `{}`)
 
-Returns **[Array][1581]** Array of normalization results
+Returns **[Array][1621]** Array of normalization results
 
 ## getUnitCategories
 
 Get all available unit categories
 
-Returns **[Array][1581]** Array of unit categories
+Returns **[Array][1621]** Array of unit categories
 
 ## getUnitsInCategory
 
@@ -9970,9 +10217,9 @@ Get all units in a specific category
 
 ### Parameters
 
-*   `category` **[string][1578]** Unit category
+*   `category` **[string][1618]** Unit category
 
-Returns **[Array][1581]** Array of units in the category
+Returns **[Array][1621]** Array of units in the category
 
 ## isValidUrl
 
@@ -9991,9 +10238,9 @@ Validate URL format
 
 ### Parameters
 
-*   `url` **[string][1578]** URL to validate
+*   `url` **[string][1618]** URL to validate
 
-Returns **[boolean][1582]** True if valid URL or empty
+Returns **[boolean][1622]** True if valid URL or empty
 
 ## isValidJson
 
@@ -10001,9 +10248,9 @@ Validate JSON string
 
 ### Parameters
 
-*   `jsonString` **[string][1578]** JSON to validate
+*   `jsonString` **[string][1618]** JSON to validate
 
-Returns **[boolean][1582]** True if valid JSON or empty
+Returns **[boolean][1622]** True if valid JSON or empty
 
 ## isRequired
 
@@ -10013,7 +10260,7 @@ Validate required field
 
 *   `value` **any** Value to check
 
-Returns **[boolean][1582]** True if not null/undefined/empty string
+Returns **[boolean][1622]** True if not null/undefined/empty string
 
 ## sanitizeText
 
@@ -10021,9 +10268,9 @@ Sanitize text field (trim and convert empty to null)
 
 ### Parameters
 
-*   `value` **[string][1578]** Text to sanitize
+*   `value` **[string][1618]** Text to sanitize
 
-Returns **([string][1578] | null)** Trimmed string or null
+Returns **([string][1618] | null)** Trimmed string or null
 
 ## validateSystemData
 
@@ -10031,10 +10278,10 @@ Validate system data for CREATE/UPDATE (v5 schema)
 
 ### Parameters
 
-*   `data` **[Object][1577]** System data to validate
-*   `isUpdate` **[boolean][1582]** True if updating existing system (optional, default `false`)
+*   `data` **[Object][1617]** System data to validate
+*   `isUpdate` **[boolean][1622]** True if updating existing system (optional, default `false`)
 
-Returns **[Object][1577]** { valid: boolean, errors: Object }
+Returns **[Object][1617]** { valid: boolean, errors: Object }
 
 ## validateInstanceData
 
@@ -10042,9 +10289,9 @@ Validate instance data
 
 ### Parameters
 
-*   `data` **[Object][1577]** Instance data to validate
+*   `data` **[Object][1617]** Instance data to validate
 
-Returns **[Object][1577]** { valid: boolean, errors: Object }
+Returns **[Object][1617]** { valid: boolean, errors: Object }
 
 ## sanitizeSystemData
 
@@ -10052,9 +10299,9 @@ Sanitize system data before DB insert/update (v5 schema)
 
 ### Parameters
 
-*   `data` **[Object][1577]** Raw system data
+*   `data` **[Object][1617]** Raw system data
 
-Returns **[Object][1577]** Sanitized data
+Returns **[Object][1617]** Sanitized data
 
 [1]: #oaijson
 
@@ -10182,3050 +10429,3130 @@ Returns **[Object][1577]** Sanitized data
 
 [63]: #getadmintoken
 
-[64]: #anchoragesmanager
+[64]: #anchorageratingmanager
 
-[65]: #loadanchorages
+[65]: #getanchorageid
 
-[66]: #detectnewanchorages
+[66]: #loadanchorage
 
-[67]: #saveanchorage
+[67]: #rendercontext
 
-[68]: #parameters-26
+[68]: #renderfactors
 
-[69]: #deleteanchorage
+[69]: #setrating
 
-[70]: #parameters-27
+[70]: #parameters-26
 
-[71]: #uploadphoto
+[71]: #updateoverall
 
-[72]: #parameters-28
+[72]: #saveratings
 
-[73]: #filetobase64
+[73]: #formatdate
 
-[74]: #parameters-29
+[74]: #parameters-27
 
-[75]: #renderanchorages
+[75]: #escapehtml
 
-[76]: #rendercard
+[76]: #parameters-28
 
-[77]: #parameters-30
+[77]: #showtoast
 
-[78]: #formatdate
+[78]: #parameters-29
 
-[79]: #parameters-31
+[79]: #anchoragesmanager
 
-[80]: #escapehtml
+[80]: #loadanchorages
 
-[81]: #parameters-32
+[81]: #detectnewanchorages
 
-[82]: #showtoast
+[82]: #saveanchorage
 
-[83]: #parameters-33
+[83]: #parameters-30
 
-[84]: #stagecolors
+[84]: #deleteanchorage
 
-[85]: #formatnumber
+[85]: #parameters-31
 
-[86]: #parameters-34
+[86]: #uploadphoto
 
-[87]: #renderstage
+[87]: #parameters-32
 
-[88]: #parameters-35
+[88]: #filetobase64
 
-[89]: #renderbreakdown
+[89]: #parameters-33
 
-[90]: #parameters-36
+[90]: #renderanchorages
 
-[91]: #renderdipdetails
+[91]: #rendercard
 
-[92]: #parameters-37
+[92]: #parameters-34
 
-[93]: #rendermaintenancedetails
+[93]: #computeoverall
 
-[94]: #parameters-38
+[94]: #parameters-35
 
-[95]: #renderlivetaskdetails
+[95]: #formatdate-1
 
-[96]: #parameters-39
+[96]: #parameters-36
 
-[97]: #togglebreakdown
+[97]: #escapehtml-1
 
-[98]: #parameters-40
+[98]: #parameters-37
 
-[99]: #rendersummarycards
+[99]: #showtoast-1
 
-[100]: #parameters-41
+[100]: #parameters-38
 
-[101]: #renderbranch
+[101]: #stagecolors
 
-[102]: #parameters-42
+[102]: #formatnumber
 
-[103]: #loadfunnel
+[103]: #parameters-39
 
-[104]: #renderissues
+[104]: #renderstage
 
-[105]: #parameters-43
+[105]: #parameters-40
 
-[106]: #__hamburgermenuinitialized
+[106]: #renderbreakdown
 
-[107]: #__mobilenavinitialized
+[107]: #parameters-41
 
-[108]: #api_base
+[108]: #renderdipdetails
 
-[109]: #api_base-1
+[109]: #parameters-42
 
-[110]: #suppliesai
+[110]: #rendermaintenancedetails
 
-[111]: #analyzephoto
+[111]: #parameters-43
 
-[112]: #parameters-44
+[112]: #renderlivetaskdetails
 
-[113]: #getsystemrecommendations
+[113]: #parameters-44
 
-[114]: #parameters-45
+[114]: #togglebreakdown
 
-[115]: #showsystemrecommendationsmodal
+[115]: #parameters-45
 
-[116]: #parameters-46
+[116]: #rendersummarycards
 
-[117]: #closesystemrecommendationsmodal
+[117]: #parameters-46
 
-[118]: #loadallsystems
+[118]: #renderbranch
 
-[119]: #renderallsystems
+[119]: #parameters-47
 
-[120]: #filtersystems
+[120]: #loadfunnel
 
-[121]: #parameters-47
+[121]: #renderissues
 
-[122]: #togglesystemselection
+[122]: #parameters-48
 
-[123]: #parameters-48
+[123]: #__hamburgermenuinitialized
 
-[124]: #acceptselectedsystems
+[124]: #__mobilenavinitialized
 
-[125]: #getselectedsystems
+[125]: #api_base
 
-[126]: #showtoast-1
+[126]: #api_base-1
 
-[127]: #parameters-49
+[127]: #suppliesai
 
-[128]: #escapehtml-1
+[128]: #analyzephoto
 
-[129]: #parameters-50
+[129]: #parameters-49
 
-[130]: #apirequest
+[130]: #getsystemrecommendations
 
-[131]: #parameters-51
+[131]: #parameters-50
 
-[132]: #suppliesapi
+[132]: #showsystemrecommendationsmodal
 
-[133]: #list
+[133]: #parameters-51
 
-[134]: #parameters-52
+[134]: #closesystemrecommendationsmodal
 
-[135]: #getbyid
+[135]: #loadallsystems
 
-[136]: #parameters-53
+[136]: #renderallsystems
 
-[137]: #create
+[137]: #filtersystems
 
-[138]: #parameters-54
+[138]: #parameters-52
 
-[139]: #update
+[139]: #togglesystemselection
 
-[140]: #parameters-55
+[140]: #parameters-53
 
-[141]: #delete
+[141]: #acceptselectedsystems
 
-[142]: #parameters-56
+[142]: #getselectedsystems
 
-[143]: #search
+[143]: #showtoast-2
 
-[144]: #parameters-57
+[144]: #parameters-54
 
-[145]: #getlowstock
+[145]: #escapehtml-2
 
-[146]: #getbycategory
+[146]: #parameters-55
 
-[147]: #parameters-58
+[147]: #apirequest
 
-[148]: #getbysystem
+[148]: #parameters-56
 
-[149]: #parameters-59
+[149]: #suppliesapi
 
-[150]: #getcategories
+[150]: #list
 
-[151]: #parameters-60
+[151]: #parameters-57
 
-[152]: #createcategory
+[152]: #getbyid
 
-[153]: #parameters-61
+[153]: #parameters-58
 
-[154]: #deletecategory
+[154]: #create
 
-[155]: #parameters-62
+[155]: #parameters-59
 
-[156]: #getunits
+[156]: #update
 
-[157]: #getlocations
+[157]: #parameters-60
 
-[158]: #getstats
+[158]: #delete
 
-[159]: #suppliesapi-1
+[159]: #parameters-61
 
-[160]: #list-1
+[160]: #search
 
-[161]: #parameters-63
+[161]: #parameters-62
 
-[162]: #getbyid-1
+[162]: #getlowstock
 
-[163]: #parameters-64
+[163]: #getbycategory
 
-[164]: #create-1
+[164]: #parameters-63
 
-[165]: #parameters-65
+[165]: #getbysystem
 
-[166]: #update-1
+[166]: #parameters-64
 
-[167]: #parameters-66
+[167]: #getcategories
 
-[168]: #delete-1
+[168]: #parameters-65
 
-[169]: #parameters-67
+[169]: #createcategory
 
-[170]: #search-1
+[170]: #parameters-66
 
-[171]: #parameters-68
+[171]: #deletecategory
 
-[172]: #getlowstock-1
+[172]: #parameters-67
 
-[173]: #getbycategory-1
+[173]: #getunits
 
-[174]: #parameters-69
+[174]: #getlocations
 
-[175]: #getbysystem-1
+[175]: #getstats
 
-[176]: #parameters-70
+[176]: #suppliesapi-1
 
-[177]: #getcategories-1
+[177]: #list-1
 
-[178]: #parameters-71
+[178]: #parameters-68
 
-[179]: #createcategory-1
+[179]: #getbyid-1
 
-[180]: #parameters-72
+[180]: #parameters-69
 
-[181]: #deletecategory-1
+[181]: #create-1
 
-[182]: #parameters-73
+[182]: #parameters-70
 
-[183]: #getunits-1
+[183]: #update-1
 
-[184]: #getlocations-1
+[184]: #parameters-71
 
-[185]: #getstats-1
+[185]: #delete-1
 
-[186]: #suppliesapi-2
+[186]: #parameters-72
 
-[187]: #list-2
+[187]: #search-1
 
-[188]: #parameters-74
+[188]: #parameters-73
 
-[189]: #getbyid-2
+[189]: #getlowstock-1
 
-[190]: #parameters-75
+[190]: #getbycategory-1
 
-[191]: #create-2
+[191]: #parameters-74
 
-[192]: #parameters-76
+[192]: #getbysystem-1
 
-[193]: #update-2
+[193]: #parameters-75
 
-[194]: #parameters-77
+[194]: #getcategories-1
 
-[195]: #delete-2
+[195]: #parameters-76
 
-[196]: #parameters-78
+[196]: #createcategory-1
 
-[197]: #search-2
+[197]: #parameters-77
 
-[198]: #parameters-79
+[198]: #deletecategory-1
 
-[199]: #getlowstock-2
+[199]: #parameters-78
 
-[200]: #getbycategory-2
+[200]: #getunits-1
 
-[201]: #parameters-80
+[201]: #getlocations-1
 
-[202]: #getbysystem-2
+[202]: #getstats-1
 
-[203]: #parameters-81
+[203]: #suppliesapi-2
 
-[204]: #getcategories-2
+[204]: #list-2
 
-[205]: #parameters-82
+[205]: #parameters-79
 
-[206]: #createcategory-2
+[206]: #getbyid-2
 
-[207]: #parameters-83
+[207]: #parameters-80
 
-[208]: #deletecategory-2
+[208]: #create-2
 
-[209]: #parameters-84
+[209]: #parameters-81
 
-[210]: #getunits-2
+[210]: #update-2
 
-[211]: #getlocations-2
+[211]: #parameters-82
 
-[212]: #getstats-2
+[212]: #delete-2
 
-[213]: #suppliesapi-3
+[213]: #parameters-83
 
-[214]: #list-3
+[214]: #search-2
 
-[215]: #parameters-85
+[215]: #parameters-84
 
-[216]: #getbyid-3
+[216]: #getlowstock-2
 
-[217]: #parameters-86
+[217]: #getbycategory-2
 
-[218]: #create-3
+[218]: #parameters-85
 
-[219]: #parameters-87
+[219]: #getbysystem-2
 
-[220]: #update-3
+[220]: #parameters-86
 
-[221]: #parameters-88
+[221]: #getcategories-2
 
-[222]: #delete-3
+[222]: #parameters-87
 
-[223]: #parameters-89
+[223]: #createcategory-2
 
-[224]: #search-3
+[224]: #parameters-88
 
-[225]: #parameters-90
+[225]: #deletecategory-2
 
-[226]: #getlowstock-3
+[226]: #parameters-89
 
-[227]: #getbycategory-3
+[227]: #getunits-2
 
-[228]: #parameters-91
+[228]: #getlocations-2
 
-[229]: #getbysystem-3
+[229]: #getstats-2
 
-[230]: #parameters-92
+[230]: #suppliesapi-3
 
-[231]: #getcategories-3
+[231]: #list-3
 
-[232]: #parameters-93
+[232]: #parameters-90
 
-[233]: #createcategory-3
+[233]: #getbyid-3
 
-[234]: #parameters-94
+[234]: #parameters-91
 
-[235]: #deletecategory-3
+[235]: #create-3
 
-[236]: #parameters-95
+[236]: #parameters-92
 
-[237]: #getunits-3
+[237]: #update-3
 
-[238]: #getlocations-3
+[238]: #parameters-93
 
-[239]: #getstats-3
+[239]: #delete-3
 
-[240]: #autofillfromai
+[240]: #parameters-94
 
-[241]: #parameters-96
+[241]: #search-3
 
-[242]: #opensystemrecommendations
+[242]: #parameters-95
 
-[243]: #setaisuggestedsystems
+[243]: #getlowstock-3
 
-[244]: #parameters-97
+[244]: #getbycategory-3
 
-[245]: #suppliesphotos
+[245]: #parameters-96
 
-[246]: #getpendingphotos
+[246]: #getbysystem-3
 
-[247]: #uploadpendingphotos
+[247]: #parameters-97
 
-[248]: #parameters-98
+[248]: #getcategories-3
 
-[249]: #tripdetail
+[249]: #parameters-98
 
-[250]: #generatecolumnname
+[250]: #createcategory-3
 
 [251]: #parameters-99
 
-[252]: #formatvaluewithunit
+[252]: #deletecategory-3
 
 [253]: #parameters-100
 
-[254]: #tripeditor
+[254]: #getunits-3
 
-[255]: #tripsmanager
+[255]: #getlocations-3
 
-[256]: #aisrepository
+[256]: #getstats-3
 
-[257]: #getvessels
+[257]: #autofillfromai
 
-[258]: #getfriends
+[258]: #parameters-101
 
-[259]: #isfriend
+[259]: #opensystemrecommendations
 
-[260]: #parameters-101
+[260]: #setaisuggestedsystems
 
-[261]: #addfriend
+[261]: #parameters-102
 
-[262]: #parameters-102
+[262]: #suppliesphotos
 
-[263]: #removefriend
+[263]: #getpendingphotos
 
-[264]: #parameters-103
+[264]: #uploadpendingphotos
 
-[265]: #getvesselbymmsi
+[265]: #parameters-103
 
-[266]: #parameters-104
+[266]: #tripdetail
 
-[267]: #updatefriendlastseen
+[267]: #generatecolumnname
 
-[268]: #parameters-105
+[268]: #parameters-104
 
-[269]: #anchoragesrepository
+[269]: #formatvaluewithunit
 
-[270]: #findall
+[270]: #parameters-105
 
-[271]: #findbyid
+[271]: #tripeditor
 
-[272]: #parameters-106
+[272]: #tripsmanager
 
-[273]: #create-4
+[273]: #aisrepository
 
-[274]: #parameters-107
+[274]: #getvessels
 
-[275]: #update-4
+[275]: #getfriends
 
-[276]: #parameters-108
+[276]: #isfriend
 
-[277]: #remove
+[277]: #parameters-106
 
-[278]: #parameters-109
+[278]: #addfriend
 
-[279]: #getrecentanchorages
+[279]: #parameters-107
 
-[280]: #parameters-110
+[280]: #removefriend
 
-[281]: #detectfromgpshistory
+[281]: #parameters-108
 
-[282]: #parameters-111
+[282]: #getvesselbymmsi
 
-[283]: #grouppositionsbyhour
+[283]: #parameters-109
 
-[284]: #parameters-112
+[284]: #updatefriendlastseen
 
-[285]: #averageangle
+[285]: #parameters-110
 
-[286]: #parameters-113
+[286]: #anchoragesrepository
 
-[287]: #findstationaryperiods
+[287]: #findall
 
-[288]: #parameters-114
+[288]: #findbyid
 
-[289]: #grouptocandidate
+[289]: #parameters-111
 
-[290]: #parameters-115
+[290]: #create-4
 
-[291]: #findtripneartime
+[291]: #parameters-112
 
-[292]: #parameters-116
+[292]: #update-4
 
-[293]: #findatlocation
+[293]: #parameters-113
 
-[294]: #parameters-117
+[294]: #remove
 
-[295]: #exists
+[295]: #parameters-114
 
-[296]: #parameters-118
+[296]: #getrecentanchorages
 
-[297]: #anthropicextractionrepository
+[297]: #parameters-115
 
-[298]: #storespecsuggestions
+[298]: #detectfromgpshistory
 
-[299]: #parameters-119
+[299]: #parameters-116
 
-[300]: #storegoldenrules
+[300]: #grouppositionsbyhour
 
-[301]: #parameters-120
+[301]: #parameters-117
 
-[302]: #storeintentrouter
+[302]: #averageangle
 
-[303]: #parameters-121
+[303]: #parameters-118
 
-[304]: #storeplaybookhints
+[304]: #findstationaryperiods
 
-[305]: #parameters-122
+[305]: #parameters-119
 
-[306]: #readjsonfile
+[306]: #grouptocandidate
 
-[307]: #parameters-123
+[307]: #parameters-120
 
-[308]: #docassetsrepository
+[308]: #findtripneartime
 
-[309]: #upsertasset
+[309]: #parameters-121
 
-[310]: #parameters-124
+[310]: #findatlocation
 
-[311]: #upsertassets
+[311]: #parameters-122
 
-[312]: #parameters-125
+[312]: #exists
 
-[313]: #getassetsbydocid
+[313]: #parameters-123
 
-[314]: #parameters-126
+[314]: #anthropicextractionrepository
 
-[315]: #getassetsbymodel
+[315]: #storespecsuggestions
 
-[316]: #parameters-127
+[316]: #parameters-124
 
-[317]: #getassetsbysystem
+[317]: #storegoldenrules
 
-[318]: #parameters-128
+[318]: #parameters-125
 
-[319]: #getassetsbykind
+[319]: #storeintentrouter
 
-[320]: #parameters-129
+[320]: #parameters-126
 
-[321]: #deleteassetsbydocid
+[321]: #storeplaybookhints
 
-[322]: #parameters-130
+[322]: #parameters-127
 
-[323]: #countassetsbydocid
+[323]: #readjsonfile
 
-[324]: #parameters-131
+[324]: #parameters-128
 
-[325]: #getassetsummary
+[325]: #docassetsrepository
 
-[326]: #parameters-132
+[326]: #upsertasset
 
-[327]: #addspectag
+[327]: #parameters-129
 
-[328]: #parameters-133
+[328]: #upsertassets
 
-[329]: #getsupabaseclient
+[329]: #parameters-130
 
-[330]: #getsupabaseclient-1
+[330]: #getassetsbydocid
 
-[331]: #getsupabaseclient-2
+[331]: #parameters-131
 
-[332]: #getsupabaseclient-3
+[332]: #getassetsbymodel
 
-[333]: #getsupabaseclient-4
+[333]: #parameters-132
 
-[334]: #getsupabaseclient-5
+[334]: #getassetsbysystem
 
-[335]: #getsupabaseclient-6
+[335]: #parameters-133
 
-[336]: #getsupabaseclient-7
+[336]: #getassetsbykind
 
-[337]: #getsupabaseclient-8
+[337]: #parameters-134
 
-[338]: #getsupabaseclient-9
+[338]: #deleteassetsbydocid
 
-[339]: #getsupabaseclient-10
+[339]: #parameters-135
 
-[340]: #getsupabaseclient-11
+[340]: #countassetsbydocid
 
-[341]: #getreviewedpairs
+[341]: #parameters-136
 
-[342]: #ispairreviewed
+[342]: #getassetsummary
 
-[343]: #parameters-134
+[343]: #parameters-137
 
-[344]: #savereviewdecision
+[344]: #addspectag
 
-[345]: #parameters-135
+[345]: #parameters-138
 
-[346]: #markpairasreviewed
+[346]: #getsupabaseclient
 
-[347]: #parameters-136
+[347]: #getsupabaseclient-1
 
-[348]: #savedeletedtask
+[348]: #getsupabaseclient-2
 
-[349]: #parameters-137
+[349]: #getsupabaseclient-3
 
-[350]: #getreviewstats
+[350]: #getsupabaseclient-4
 
-[351]: #getdeletedtasks
+[351]: #getsupabaseclient-5
 
-[352]: #getdeletedtask
+[352]: #getsupabaseclient-6
 
-[353]: #parameters-138
+[353]: #getsupabaseclient-7
 
-[354]: #gpsrepository
+[354]: #getsupabaseclient-8
 
-[355]: #getcurrentposition
+[355]: #getsupabaseclient-9
 
-[356]: #getrecentpositions
+[356]: #getsupabaseclient-10
 
-[357]: #parameters-139
+[357]: #getsupabaseclient-11
 
-[358]: #getpositionsinrange
+[358]: #getreviewedpairs
 
-[359]: #parameters-140
+[359]: #ispairreviewed
 
-[360]: #inserttimingrows
+[360]: #parameters-139
 
-[361]: #parameters-141
+[361]: #savereviewdecision
 
-[362]: #gettimingbydocid
+[362]: #parameters-140
 
-[363]: #parameters-142
+[363]: #markpairasreviewed
 
-[364]: #gettimingbyrunid
+[364]: #parameters-141
 
-[365]: #parameters-143
+[365]: #savedeletedtask
 
-[366]: #getrecenttimingrows
+[366]: #parameters-142
 
-[367]: #parameters-144
+[367]: #getreviewstats
 
-[368]: #getsystemnamesfordocs
+[368]: #getdeletedtasks
 
-[369]: #parameters-145
+[369]: #getdeletedtask
 
-[370]: #getallintentroutes
+[370]: #parameters-143
 
-[371]: #parameters-146
+[371]: #gpsrepository
 
-[372]: #getintentroutebyid
+[372]: #getcurrentposition
 
-[373]: #parameters-147
+[373]: #getrecentpositions
 
-[374]: #createintentroute
+[374]: #parameters-144
 
-[375]: #parameters-148
+[375]: #getpositionsinrange
 
-[376]: #updateintentroute
+[376]: #parameters-145
 
-[377]: #parameters-149
+[377]: #getpositionssummaryinrange
 
-[378]: #deleteintentroute
+[378]: #parameters-146
 
-[379]: #parameters-150
+[379]: #inserttimingrows
 
-[380]: #findmatchingroute
+[380]: #parameters-147
 
-[381]: #parameters-151
+[381]: #gettimingbydocid
 
-[382]: #getintentroutestats
+[382]: #parameters-148
 
-[383]: #getjobbyid
+[383]: #gettimingbyrunid
 
-[384]: #parameters-152
+[384]: #parameters-149
 
-[385]: #updatejobstatus
+[385]: #getrecenttimingrows
 
-[386]: #parameters-153
+[386]: #parameters-150
 
-[387]: #getjobsbystatus
+[387]: #getsystemnamesfordocs
 
-[388]: #parameters-154
+[388]: #parameters-151
 
-[389]: #createjob
+[389]: #getjobsfordocs
 
-[390]: #parameters-155
+[390]: #parameters-152
 
-[391]: #logger
+[391]: #getallintentroutes
 
-[392]: #logger-1
+[392]: #parameters-153
 
-[393]: #logger-2
+[393]: #getintentroutebyid
 
-[394]: #logger-3
+[394]: #parameters-154
 
-[395]: #logger-4
+[395]: #createintentroute
 
-[396]: #logger-5
+[396]: #parameters-155
 
-[397]: #logger-6
+[397]: #updateintentroute
 
-[398]: #logger-7
+[398]: #parameters-156
 
-[399]: #logger-8
+[399]: #deleteintentroute
 
-[400]: #logger-9
+[400]: #parameters-157
 
-[401]: #findfactmatchbyquery
+[401]: #findmatchingroute
 
-[402]: #parameters-156
+[402]: #parameters-158
 
-[403]: #findfactsbydocument
+[403]: #getintentroutestats
 
-[404]: #parameters-157
+[404]: #getjobbyid
 
-[405]: #findfactsbytype
+[405]: #parameters-159
 
-[406]: #parameters-158
+[406]: #updatejobstatus
 
-[407]: #getfactstatistics
+[407]: #parameters-160
 
-[408]: #pinecone
+[408]: #getjobsbystatus
 
-[409]: #listalltasks
+[409]: #parameters-161
 
-[410]: #gettaskbyid
+[410]: #createjob
 
-[411]: #parameters-159
+[411]: #parameters-162
 
-[412]: #updatetaskmetadata
+[412]: #logger
 
-[413]: #parameters-160
+[413]: #logger-1
 
-[414]: #deletetask
+[414]: #logger-2
 
-[415]: #parameters-161
+[415]: #logger-3
 
-[416]: #bulkupdatetasks
+[416]: #logger-4
 
-[417]: #parameters-162
+[417]: #logger-5
 
-[418]: #gettaskstats
+[418]: #logger-6
 
-[419]: #createsupabaseclientfactory
+[419]: #logger-7
 
-[420]: #parameters-163
+[420]: #logger-8
 
-[421]: #setsupabaseclientfactory
+[421]: #logger-9
 
-[422]: #parameters-164
+[422]: #findfactmatchbyquery
 
-[423]: #examples-2
+[423]: #parameters-163
 
-[424]: #resetsupabaseclient
+[424]: #findfactsbydocument
 
-[425]: #getsupabasestorageclient
+[425]: #parameters-164
 
-[426]: #checksupabaseavailability
+[426]: #findfactsbytype
 
-[427]: #checksupabaseavailability-1
+[427]: #parameters-165
 
-[428]: #listsupplies
+[428]: #getfactstatistics
 
-[429]: #parameters-165
+[429]: #pinecone
 
-[430]: #listsupplies-1
+[430]: #listalltasks
 
-[431]: #parameters-166
+[431]: #gettaskbyid
 
-[432]: #getsupplybyid
+[432]: #parameters-166
 
-[433]: #parameters-167
+[433]: #updatetaskmetadata
 
-[434]: #getsupplybyid-1
+[434]: #parameters-167
 
-[435]: #parameters-168
+[435]: #deletetask
 
-[436]: #createsupply
+[436]: #parameters-168
 
-[437]: #parameters-169
+[437]: #bulkupdatetasks
 
-[438]: #createsupply-1
+[438]: #parameters-169
 
-[439]: #parameters-170
+[439]: #gettaskstats
 
-[440]: #updatesupply
+[440]: #createsupabaseclientfactory
 
-[441]: #parameters-171
+[441]: #parameters-170
 
-[442]: #updatesupply-1
+[442]: #setsupabaseclientfactory
 
-[443]: #parameters-172
+[443]: #parameters-171
 
-[444]: #deletesupply
+[444]: #examples-2
 
-[445]: #parameters-173
+[445]: #resetsupabaseclient
 
-[446]: #deletesupply-1
+[446]: #getsupabasestorageclient
 
-[447]: #parameters-174
+[447]: #checksupabaseavailability
 
-[448]: #searchsupplies
+[448]: #checksupabaseavailability-1
 
-[449]: #parameters-175
+[449]: #listsupplies
 
-[450]: #searchsupplies-1
+[450]: #parameters-172
 
-[451]: #parameters-176
+[451]: #listsupplies-1
 
-[452]: #getlowstocksupplies
+[452]: #parameters-173
 
-[453]: #parameters-177
+[453]: #getsupplybyid
 
-[454]: #getlowstocksupplies-1
+[454]: #parameters-174
 
-[455]: #parameters-178
+[455]: #getsupplybyid-1
 
-[456]: #getsuppliesbycategory
+[456]: #parameters-175
 
-[457]: #parameters-179
+[457]: #createsupply
 
-[458]: #getsuppliesbycategory-1
+[458]: #parameters-176
 
-[459]: #parameters-180
+[459]: #createsupply-1
 
-[460]: #getsuppliesbysystem
+[460]: #parameters-177
 
-[461]: #parameters-181
+[461]: #updatesupply
 
-[462]: #getsuppliesbysystem-1
+[462]: #parameters-178
 
-[463]: #parameters-182
+[463]: #updatesupply-1
 
-[464]: #getmanufacturers
+[464]: #parameters-179
 
-[465]: #getmanufacturers-1
+[465]: #deletesupply
 
-[466]: #getmodelsbymanufacturer
+[466]: #parameters-180
 
-[467]: #parameters-183
+[467]: #deletesupply-1
 
-[468]: #findsystembymanufacturermodel
+[468]: #parameters-181
 
-[469]: #parameters-184
+[469]: #searchsupplies
 
-[470]: #getinstancesbyassetuid
+[470]: #parameters-182
 
-[471]: #parameters-185
+[471]: #searchsupplies-1
 
-[472]: #createsystem
+[472]: #parameters-183
 
-[473]: #parameters-186
+[473]: #getlowstocksupplies
 
-[474]: #createsystem-1
+[474]: #parameters-184
 
-[475]: #parameters-187
+[475]: #getlowstocksupplies-1
 
-[476]: #updatesystem
+[476]: #parameters-185
 
-[477]: #parameters-188
+[477]: #getsuppliesbycategory
 
-[478]: #updatesystem-1
+[478]: #parameters-186
 
-[479]: #parameters-189
+[479]: #getsuppliesbycategory-1
 
-[480]: #deletesystem
+[480]: #parameters-187
 
-[481]: #parameters-190
+[481]: #getsuppliesbysystem
 
-[482]: #deletesystem-1
+[482]: #parameters-188
 
-[483]: #parameters-191
+[483]: #getsuppliesbysystem-1
 
-[484]: #createinstance
+[484]: #parameters-189
 
-[485]: #parameters-192
+[485]: #getmanufacturers
 
-[486]: #createinstance-1
+[486]: #getmanufacturers-1
 
-[487]: #parameters-193
+[487]: #getmodelsbymanufacturer
 
-[488]: #updateinstance
+[488]: #parameters-190
 
-[489]: #parameters-194
+[489]: #findsystembymanufacturermodel
 
-[490]: #updateinstance-1
+[490]: #parameters-191
 
-[491]: #parameters-195
+[491]: #getinstancesbyassetuid
 
-[492]: #archiveinstance
+[492]: #parameters-192
 
-[493]: #parameters-196
+[493]: #createsystem
 
-[494]: #getnextinstanceindex
+[494]: #parameters-193
 
-[495]: #parameters-197
+[495]: #createsystem-1
 
-[496]: #getsystemstofetch
+[496]: #parameters-194
 
-[497]: #getrefmanufacturers
+[497]: #updatesystem
 
-[498]: #getrefproducttypes
+[498]: #parameters-195
 
-[499]: #getrefsystemcategories
+[499]: #updatesystem-1
 
-[500]: #getrefsubsystemcategories
+[500]: #parameters-196
 
-[501]: #parameters-198
+[501]: #deletesystem
 
-[502]: #lookupsystembymanufacturerandmodel
+[502]: #parameters-197
 
-[503]: #parameters-199
+[503]: #deletesystem-1
 
-[504]: #getsystembyuid
+[504]: #parameters-198
 
-[505]: #parameters-200
+[505]: #createinstance
 
-[506]: #updatespeckeywords
+[506]: #parameters-199
 
-[507]: #parameters-201
+[507]: #createinstance-1
 
-[508]: #listminimal
+[508]: #parameters-200
 
-[509]: #resolvemodelaliases
+[509]: #updateinstance
 
-[510]: #parameters-202
+[510]: #parameters-201
 
-[511]: #telemetryrepository
+[511]: #updateinstance-1
 
-[512]: #getcurrentstate
+[512]: #parameters-202
 
-[513]: #getcurrentstatebycategory
+[513]: #archiveinstance
 
 [514]: #parameters-203
 
-[515]: #getdevices
+[515]: #getnextinstanceindex
 
-[516]: #getaggregateddata
+[516]: #parameters-204
 
-[517]: #parameters-204
+[517]: #getsystemstofetch
 
-[518]: #gettankhistory
+[518]: #getrefmanufacturers
 
-[519]: #parameters-205
+[519]: #getrefproducttypes
 
-[520]: #hasexistingtask
+[520]: #getrefsystemcategories
 
-[521]: #parameters-206
+[521]: #getrefsubsystemcategories
 
-[522]: #createusertask
+[522]: #parameters-205
 
-[523]: #parameters-207
+[523]: #lookupsystembymanufacturerandmodel
 
-[524]: #checkdocumentstatus
+[524]: #parameters-206
 
-[525]: #parameters-208
+[525]: #getsystembyuid
 
-[526]: #completedocumentingesttask
+[526]: #parameters-207
 
-[527]: #parameters-209
+[527]: #updatespeckeywords
 
-[528]: #get
+[528]: #parameters-208
 
-[529]: #get-1
+[529]: #listminimal
 
-[530]: #get-2
+[530]: #resolvemodelaliases
 
-[531]: #get-3
+[531]: #parameters-209
 
-[532]: #get-4
+[532]: #telemetryrepository
 
-[533]: #get-5
+[533]: #getcurrentstate
 
-[534]: #get-6
+[534]: #getcurrentstatebycategory
 
-[535]: #get-7
+[535]: #parameters-210
 
-[536]: #get-8
+[536]: #getdevices
 
-[537]: #get-9
+[537]: #getaggregateddata
 
-[538]: #get-10
+[538]: #parameters-211
 
-[539]: #get-11
+[539]: #gettankhistory
 
-[540]: #get-12
+[540]: #parameters-212
 
-[541]: #get-13
+[541]: #hasexistingtask
 
-[542]: #get-14
+[542]: #parameters-213
 
-[543]: #get-15
+[543]: #createusertask
 
-[544]: #get-16
+[544]: #parameters-214
 
-[545]: #get-17
+[545]: #checkdocumentstatus
 
-[546]: #get-18
+[546]: #parameters-215
 
-[547]: #get-19
+[547]: #completedocumentingesttask
 
-[548]: #get-20
+[548]: #parameters-216
 
-[549]: #get-21
+[549]: #get
 
-[550]: #get-22
+[550]: #get-1
 
-[551]: #get-23
+[551]: #get-2
 
-[552]: #get-24
+[552]: #get-3
 
-[553]: #parameters-210
+[553]: #get-4
 
-[554]: #get-25
+[554]: #get-5
 
-[555]: #get-26
+[555]: #get-6
 
-[556]: #get-27
+[556]: #get-7
 
-[557]: #get-28
+[557]: #get-8
 
-[558]: #get-29
+[558]: #get-9
 
-[559]: #get-30
+[559]: #get-10
 
-[560]: #get-31
+[560]: #get-11
 
-[561]: #get-32
+[561]: #get-12
 
-[562]: #get-33
+[562]: #get-13
 
-[563]: #get-34
+[563]: #get-14
 
-[564]: #get-35
+[564]: #get-15
 
-[565]: #get-36
+[565]: #get-16
 
-[566]: #get-37
+[566]: #get-17
 
-[567]: #get-38
+[567]: #get-18
 
-[568]: #get-39
+[568]: #get-19
 
-[569]: #get-40
+[569]: #get-20
 
-[570]: #get-41
+[570]: #get-21
 
-[571]: #get-42
+[571]: #get-22
 
-[572]: #get-43
+[572]: #get-23
 
-[573]: #get-44
+[573]: #get-24
 
-[574]: #get-45
+[574]: #parameters-217
 
-[575]: #get-46
+[575]: #get-25
 
-[576]: #get-47
+[576]: #get-26
 
-[577]: #get-48
+[577]: #get-27
 
-[578]: #get-49
+[578]: #get-28
 
-[579]: #get-50
+[579]: #get-29
 
-[580]: #get-51
+[580]: #get-30
 
-[581]: #get-52
+[581]: #get-31
 
-[582]: #get-53
+[582]: #get-32
 
-[583]: #get-54
+[583]: #get-33
 
-[584]: #get-55
+[584]: #get-34
 
-[585]: #get-56
+[585]: #get-35
 
-[586]: #get-57
+[586]: #get-36
 
-[587]: #get-58
+[587]: #get-37
 
-[588]: #get-59
+[588]: #get-38
 
-[589]: #get-60
+[589]: #get-39
 
-[590]: #get-61
+[590]: #get-40
 
-[591]: #get-62
+[591]: #get-41
 
-[592]: #get-63
+[592]: #get-42
 
-[593]: #get-64
+[593]: #get-43
 
-[594]: #post
+[594]: #get-44
 
-[595]: #post-1
+[595]: #get-45
 
-[596]: #post-2
+[596]: #get-46
 
-[597]: #post-3
+[597]: #get-47
 
-[598]: #post-4
+[598]: #get-48
 
-[599]: #post-5
+[599]: #get-49
 
-[600]: #post-6
+[600]: #get-50
 
-[601]: #post-7
+[601]: #get-51
 
-[602]: #post-8
+[602]: #get-52
 
-[603]: #post-9
+[603]: #get-53
 
-[604]: #post-10
+[604]: #get-54
 
-[605]: #post-11
+[605]: #get-55
 
-[606]: #post-12
+[606]: #get-56
 
-[607]: #post-13
+[607]: #get-57
 
-[608]: #post-14
+[608]: #get-58
 
-[609]: #post-15
+[609]: #get-59
 
-[610]: #post-16
+[610]: #get-60
 
-[611]: #post-17
+[611]: #get-61
 
-[612]: #post-18
+[612]: #get-62
 
-[613]: #post-19
+[613]: #get-63
 
-[614]: #post-20
+[614]: #get-64
 
-[615]: #post-21
+[615]: #get-65
 
-[616]: #post-22
+[616]: #get-66
 
-[617]: #post-23
+[617]: #post
 
-[618]: #post-24
+[618]: #post-1
 
-[619]: #post-25
+[619]: #post-2
 
-[620]: #post-26
+[620]: #post-3
 
-[621]: #post-27
+[621]: #post-4
 
-[622]: #post-28
+[622]: #post-5
 
-[623]: #post-29
+[623]: #post-6
 
-[624]: #post-30
+[624]: #post-7
 
-[625]: #post-31
+[625]: #post-8
 
-[626]: #post-32
+[626]: #post-9
 
-[627]: #post-33
+[627]: #post-10
 
-[628]: #post-34
+[628]: #post-11
 
-[629]: #post-35
+[629]: #post-12
 
-[630]: #post-36
+[630]: #post-13
 
-[631]: #post-37
+[631]: #post-14
 
-[632]: #post-38
+[632]: #post-15
 
-[633]: #post-39
+[633]: #post-16
 
-[634]: #post-40
+[634]: #post-17
 
-[635]: #post-41
+[635]: #post-18
 
-[636]: #post-42
+[636]: #post-19
 
-[637]: #delete-4
+[637]: #post-20
 
-[638]: #delete-5
+[638]: #post-21
 
-[639]: #delete-6
+[639]: #post-22
 
-[640]: #delete-7
+[640]: #post-23
 
-[641]: #delete-8
+[641]: #post-24
 
-[642]: #delete-9
+[642]: #post-25
 
-[643]: #delete-10
+[643]: #post-26
 
-[644]: #delete-11
+[644]: #post-27
 
-[645]: #delete-12
+[645]: #post-28
 
-[646]: #delete-13
+[646]: #post-29
 
-[647]: #delete-14
+[647]: #post-30
 
-[648]: #delete-15
+[648]: #post-31
 
-[649]: #delete-16
+[649]: #post-32
 
-[650]: #delete-17
+[650]: #post-33
 
-[651]: #delete-18
+[651]: #post-34
 
-[652]: #delete-19
+[652]: #post-35
 
-[653]: #express
+[653]: #post-36
 
-[654]: #express-1
+[654]: #post-37
 
-[655]: #express-2
+[655]: #post-38
 
-[656]: #express-3
+[656]: #post-39
 
-[657]: #express-4
+[657]: #post-40
 
-[658]: #express-5
+[658]: #post-41
 
-[659]: #express-6
+[659]: #post-42
 
-[660]: #express-7
+[660]: #delete-4
 
-[661]: #router
+[661]: #delete-5
 
-[662]: #router-1
+[662]: #delete-6
 
-[663]: #router-2
+[663]: #delete-7
 
-[664]: #router-3
+[664]: #delete-8
 
-[665]: #patch
+[665]: #delete-9
 
-[666]: #patch-1
+[666]: #delete-10
 
-[667]: #patch-2
+[667]: #delete-11
 
-[668]: #patch-3
+[668]: #delete-12
 
-[669]: #patch-4
+[669]: #delete-13
 
-[670]: #expressjson
+[670]: #delete-14
 
-[671]: #anchoragesrouter
+[671]: #delete-15
 
-[672]: #boatnowrouter
+[672]: #delete-16
 
-[673]: #seasonrecaprouter
+[673]: #delete-17
 
-[674]: #put
+[674]: #delete-18
 
-[675]: #put-1
+[675]: #delete-19
 
-[676]: #put-2
+[676]: #express
 
-[677]: #put-3
+[677]: #express-1
 
-[678]: #put-4
+[678]: #express-2
 
-[679]: #put-5
+[679]: #express-3
 
-[680]: #router-4
+[680]: #express-4
 
-[681]: #tripsrouter
+[681]: #express-5
 
-[682]: #systemuid
+[682]: #express-6
 
-[683]: #hashoruuid
+[683]: #express-7
 
-[684]: #z
+[684]: #router
 
-[685]: #validatedip
+[685]: #router-1
 
-[686]: #parameters-211
+[686]: #router-2
 
-[687]: #validatesuggestions
+[687]: #router-3
 
-[688]: #parameters-212
+[688]: #patch
 
-[689]: #validateapplyrequest
+[689]: #patch-1
 
-[690]: #parameters-213
+[690]: #patch-2
 
-[691]: #validaterollbackrequest
+[691]: #patch-3
 
-[692]: #parameters-214
+[692]: #patch-4
 
-[693]: #createdefaultdip
+[693]: #expressjson
 
-[694]: #parameters-215
+[694]: #anchoragesrouter
 
-[695]: #createdefaultsuggestions
+[695]: #boatnowrouter
 
-[696]: #parameters-216
+[696]: #seasonrecaprouter
 
-[697]: #speckeywordschema
+[697]: #put
 
-[698]: #acceptspecpayload
+[698]: #put-1
 
-[699]: #classificationschema
+[699]: #put-2
 
-[700]: #uploaddocumentschema
+[700]: #put-3
 
-[701]: #flexibleuploaddocumentschema
+[701]: #put-4
 
-[702]: #documentuploadrequestschema
+[702]: #put-5
 
-[703]: #systemmetadataschema
+[703]: #router-4
 
-[704]: #documentcreationschema
+[704]: #tripsrouter
 
-[705]: #computeconfidence
+[705]: #systemuid
 
-[706]: #parameters-217
+[706]: #hashoruuid
 
-[707]: #getembedding
+[707]: #z
 
-[708]: #parameters-218
+[708]: #validatedip
 
-[709]: #itemtotext
+[709]: #parameters-218
 
-[710]: #parameters-219
+[710]: #validatesuggestions
 
-[711]: #selectdiverseexamples
+[711]: #parameters-219
 
-[712]: #parameters-220
+[712]: #validateapplyrequest
 
-[713]: #getsimilardecisions
+[713]: #parameters-220
 
-[714]: #parameters-221
+[714]: #validaterollbackrequest
 
-[715]: #storedecisionembedding
+[715]: #parameters-221
 
-[716]: #parameters-222
+[716]: #createdefaultdip
 
-[717]: #checkembeddingreadiness
+[717]: #parameters-222
 
-[718]: #runmetrics
+[718]: #createdefaultsuggestions
 
 [719]: #parameters-223
 
-[720]: #recordevent
+[720]: #speckeywordschema
 
-[721]: #parameters-224
+[721]: #acceptspecpayload
 
-[722]: #getstats-4
+[722]: #classificationschema
 
-[723]: #savecompleted
+[723]: #uploaddocumentschema
 
-[724]: #savefailed
+[724]: #flexibleuploaddocumentschema
 
-[725]: #parameters-225
+[725]: #documentuploadrequestschema
 
-[726]: #generatereport
+[726]: #systemmetadataschema
 
-[727]: #acquirerunlock
+[727]: #documentcreationschema
 
-[728]: #parameters-226
+[728]: #computeconfidence
 
-[729]: #clearstaleprocessingmarks
+[729]: #parameters-224
 
-[730]: #parameters-227
+[730]: #getembedding
 
-[731]: #getrunhistory
+[731]: #parameters-225
 
-[732]: #parameters-228
+[732]: #itemtotext
 
-[733]: #getlastrun
+[733]: #parameters-226
 
-[734]: #parameters-229
+[734]: #selectdiverseexamples
 
-[735]: #default_limits
+[735]: #parameters-227
 
-[736]: #runlimits
+[736]: #getsimilardecisions
 
-[737]: #parameters-230
+[737]: #parameters-228
 
-[738]: #reject_keywords
+[738]: #storedecisionembedding
 
-[739]: #reject_categories
+[739]: #parameters-229
 
-[740]: #getcontenttext
+[740]: #checkembeddingreadiness
 
-[741]: #parameters-231
+[741]: #runmetrics
 
-[742]: #prefilter
+[742]: #parameters-230
 
-[743]: #parameters-232
+[743]: #recordevent
 
-[744]: #gettablethresholds
+[744]: #parameters-231
 
-[745]: #parameters-233
+[745]: #getstats-4
 
-[746]: #applypolicy
+[746]: #savecompleted
 
-[747]: #parameters-234
+[747]: #savefailed
 
-[748]: #sleep
+[748]: #parameters-232
 
-[749]: #parameters-235
+[749]: #generatereport
 
-[750]: #sleep-1
+[750]: #acquirerunlock
 
-[751]: #parameters-236
+[751]: #parameters-233
 
-[752]: #sleep-2
+[752]: #clearstaleprocessingmarks
 
-[753]: #parameters-237
+[753]: #parameters-234
 
-[754]: #createratelimiter
+[754]: #getrunhistory
 
-[755]: #parameters-238
+[755]: #parameters-235
 
-[756]: #getagentconfig
+[756]: #getlastrun
 
-[757]: #buildevaluationprompt
+[757]: #parameters-236
 
-[758]: #parameters-239
+[758]: #default_limits
 
-[759]: #evaluateitem
+[759]: #runlimits
 
-[760]: #parameters-240
+[760]: #parameters-237
 
-[761]: #recordagentdecision
+[761]: #reject_keywords
 
-[762]: #parameters-241
+[762]: #reject_categories
 
-[763]: #updateitemstatus
+[763]: #getcontenttext
 
-[764]: #parameters-242
+[764]: #parameters-238
 
-[765]: #processitem
+[765]: #prefilter
 
-[766]: #parameters-243
+[766]: #parameters-239
 
-[767]: #getpendingitems
+[767]: #gettablethresholds
 
-[768]: #parameters-244
+[768]: #parameters-240
 
-[769]: #getagentstats
+[769]: #applypolicy
 
-[770]: #aisservice
+[770]: #parameters-241
 
-[771]: #calculatedistancenm
+[771]: #sleep
 
-[772]: #parameters-245
+[772]: #parameters-242
 
-[773]: #getvesselsaroundus
+[773]: #sleep-1
 
-[774]: #getfriendswithpositions
+[774]: #parameters-243
 
-[775]: #addfriend-1
+[775]: #sleep-2
 
-[776]: #parameters-246
+[776]: #parameters-244
 
-[777]: #removefriend-1
+[777]: #createratelimiter
 
-[778]: #parameters-247
+[778]: #parameters-245
 
-[779]: #buildpipelinemodelparams
+[779]: #getagentconfig
 
-[780]: #parameters-248
+[780]: #buildevaluationprompt
 
-[781]: #start
+[781]: #parameters-246
 
-[782]: #stop
+[782]: #evaluateitem
 
-[783]: #checkstatus
+[783]: #parameters-247
 
-[784]: #sendstatuschangealert
+[784]: #recordagentdecision
 
-[785]: #parameters-249
+[785]: #parameters-248
 
-[786]: #sendperiodicupdate
+[786]: #updateitemstatus
 
-[787]: #parameters-250
+[787]: #parameters-249
 
-[788]: #sendactivationnotification
+[788]: #processitem
 
-[789]: #parameters-251
+[789]: #parameters-250
 
-[790]: #senddeactivationnotification
+[790]: #getpendingitems
 
-[791]: #isactive
+[791]: #parameters-251
 
-[792]: #calculatedistance
+[792]: #getagentstats
 
-[793]: #parameters-252
+[793]: #aisservice
 
-[794]: #calculatecentroid
+[794]: #calculatedistancenm
 
-[795]: #determinestatus
+[795]: #parameters-252
 
-[796]: #parameters-253
+[796]: #getvesselsaroundus
 
-[797]: #getstatus
+[797]: #getfriendswithpositions
 
-[798]: #getpositionswithdistance
+[798]: #addfriend-1
 
-[799]: #parameters-254
+[799]: #parameters-253
 
-[800]: #activate
+[800]: #removefriend-1
 
-[801]: #parameters-255
+[801]: #parameters-254
 
-[802]: #deactivate
+[802]: #buildpipelinemodelparams
 
-[803]: #updateradius
+[803]: #parameters-255
 
-[804]: #parameters-256
+[804]: #start
 
-[805]: #anchoragesrepository-1
+[805]: #stop
 
-[806]: #formatcoordinate
+[806]: #checkstatus
 
-[807]: #parameters-257
+[807]: #sendstatuschangealert
 
-[808]: #computeanchorposition
+[808]: #parameters-256
 
-[809]: #parameters-258
+[809]: #sendperiodicupdate
 
-[810]: #formatduration
+[810]: #parameters-257
 
-[811]: #parameters-259
+[811]: #sendactivationnotification
 
-[812]: #formatduration-1
+[812]: #parameters-258
 
-[813]: #parameters-260
+[813]: #senddeactivationnotification
 
-[814]: #getcompasslabel
+[814]: #isactive
 
-[815]: #parameters-261
+[815]: #_getactivezone
 
-[816]: #listanchorages
+[816]: #calculatedistance
 
-[817]: #getanchorage
+[817]: #parameters-259
 
-[818]: #parameters-262
+[818]: #calculatecentroid
 
-[819]: #updateanchorage
+[819]: #determinestatus
 
-[820]: #parameters-263
+[820]: #parameters-260
 
-[821]: #deleteanchorage-1
+[821]: #getstatus
 
-[822]: #parameters-264
+[822]: #getstatusquick
 
-[823]: #distancedegrees
+[823]: #getpositionswithdistance
 
-[824]: #parameters-265
+[824]: #parameters-261
 
-[825]: #mergecandidates
+[825]: #activate
 
-[826]: #parameters-266
+[826]: #parameters-262
 
-[827]: #detectnewanchorages-1
+[827]: #deactivate
 
-[828]: #parameters-267
+[828]: #updateradius
 
-[829]: #mergeexistingduplicates
+[829]: #parameters-263
 
-[830]: #populatelocationnames
+[830]: #computeconvexhull
 
-[831]: #createanchorage
+[831]: #parameters-264
 
-[832]: #parameters-268
+[832]: #catenaryhorizontalreach
 
-[833]: #anthropicextractionservice
+[833]: #parameters-265
 
-[834]: #runanthropicextraction
+[834]: #getsafebox
 
-[835]: #parameters-269
+[835]: #parameters-266
 
-[836]: #callpythonsidecarforextraction
+[836]: #anchoragesrepository-1
 
-[837]: #parameters-270
+[837]: #formatcoordinate
 
-[838]: #storeextractionresults
+[838]: #parameters-267
 
-[839]: #parameters-271
+[839]: #computeanchorposition
 
-[840]: #generateenhancedassistantresponse
+[840]: #parameters-268
 
-[841]: #parameters-272
+[841]: #formatduration
 
-[842]: #extractpressurespecs
+[842]: #parameters-269
 
-[843]: #parameters-273
+[843]: #formatduration-1
 
-[844]: #generatepressureresponse
+[844]: #parameters-270
 
-[845]: #parameters-274
+[845]: #getcompasslabel
 
-[846]: #generatestandardresponse
+[846]: #parameters-271
 
-[847]: #parameters-275
+[847]: #listanchorages
 
-[848]: #generatestructuredcontent
+[848]: #getanchorage
 
-[849]: #parameters-276
+[849]: #parameters-272
 
-[850]: #detectresponsestyle
+[850]: #updateanchorage
 
-[851]: #parameters-277
+[851]: #parameters-273
 
-[852]: #gpsrepository-1
+[852]: #deleteanchorage-1
 
-[853]: #fetchcurrentweather
+[853]: #parameters-274
 
-[854]: #parameters-278
+[854]: #distancedegrees
 
-[855]: #weathercodetodescription
+[855]: #parameters-275
 
-[856]: #parameters-279
+[856]: #mergecandidates
 
-[857]: #degreestocompass
+[857]: #parameters-276
 
-[858]: #parameters-280
+[858]: #detectnewanchorages-1
 
-[859]: #downsamplebyinterval
+[859]: #parameters-277
 
-[860]: #parameters-281
+[860]: #mergeexistingduplicates
 
-[861]: #getboatstatus
+[861]: #populatelocationnames
 
-[862]: #parameters-282
+[862]: #createanchorage
 
-[863]: #openaiclient
+[863]: #parameters-278
 
-[864]: #getopenaiclient
+[864]: #anthropicextractionservice
 
-[865]: #getopenaiclient-1
+[865]: #runanthropicextraction
 
-[866]: #buildsystemprompt
+[866]: #parameters-279
 
-[867]: #parameters-283
+[867]: #callpythonsidecarforextraction
 
-[868]: #buildsystemprompt-1
+[868]: #parameters-280
 
-[869]: #parameters-284
+[869]: #storeextractionresults
 
-[870]: #processchatcompletion
+[870]: #parameters-281
 
-[871]: #parameters-285
+[871]: #generateenhancedassistantresponse
 
-[872]: #createchatproxyservice
+[872]: #parameters-282
 
-[873]: #parameters-286
+[873]: #extractpressurespecs
 
-[874]: #examples-3
+[874]: #parameters-283
 
-[875]: #extractkeywords
+[875]: #generatepressureresponse
 
-[876]: #parameters-287
+[876]: #parameters-284
 
-[877]: #examples-4
+[877]: #generatestandardresponse
 
-[878]: #fetchpineconechunks
+[878]: #parameters-285
 
-[879]: #parameters-288
+[879]: #generatestructuredcontent
 
-[880]: #fetchpineconechunksv5
+[880]: #parameters-286
 
-[881]: #parameters-289
+[881]: #detectresponsestyle
 
-[882]: #extracttermswithllm
+[882]: #parameters-287
 
-[883]: #parameters-290
+[883]: #gpsrepository-1
 
-[884]: #extractcolloquialkeywords
+[884]: #fetchcurrentweather
 
-[885]: #parameters-291
+[885]: #parameters-288
 
-[886]: #extractcolloquialkeywordsv5
+[886]: #weathercodetodescription
 
-[887]: #parameters-292
+[887]: #parameters-289
 
-[888]: #memory_weights
+[888]: #degreestocompass
 
-[889]: #getweightedconversationcontext
+[889]: #parameters-290
 
-[890]: #parameters-293
+[890]: #downsamplebyinterval
 
-[891]: #groupmessagesintoexchanges
+[891]: #parameters-291
 
-[892]: #parameters-294
+[892]: #getboatstatus
 
-[893]: #generateweightedcontext
+[893]: #parameters-292
 
-[894]: #parameters-295
+[894]: #gethistory
 
-[895]: #calculateexchangeweight
+[895]: #parameters-293
 
-[896]: #parameters-296
+[896]: #openaiclient
 
-[897]: #createexchangesummary
+[897]: #getopenaiclient
 
-[898]: #parameters-297
+[898]: #getopenaiclient-1
 
-[899]: #extractaccumulatedequipment
+[899]: #buildsystemprompt
 
-[900]: #parameters-298
+[900]: #parameters-294
 
-[901]: #getequipmentrelationshipcontext
+[901]: #buildsystemprompt-1
 
-[902]: #parameters-299
+[902]: #parameters-295
 
-[903]: #searchspecsuggestions
+[903]: #processchatcompletion
 
-[904]: #parameters-300
+[904]: #parameters-296
 
-[905]: #searchspecsuggestions-1
+[905]: #createchatproxyservice
 
-[906]: #parameters-301
+[906]: #parameters-297
 
-[907]: #searchplaybookhints
+[907]: #examples-3
 
-[908]: #parameters-302
+[908]: #extractkeywords
 
-[909]: #searchintentrouter
+[909]: #parameters-298
 
-[910]: #parameters-303
+[910]: #examples-4
 
-[911]: #searchgoldentests
+[911]: #fetchpineconechunks
 
-[912]: #parameters-304
+[912]: #parameters-299
 
-[913]: #searchalldiptables
+[913]: #fetchpineconechunksv5
 
-[914]: #parameters-305
+[914]: #parameters-300
 
-[915]: #log
+[915]: #extracttermswithllm
 
-[916]: #log-1
+[916]: #parameters-301
 
-[917]: #log-2
+[917]: #extractcolloquialkeywords
 
-[918]: #log-3
+[918]: #parameters-302
 
-[919]: #log-4
+[919]: #extractcolloquialkeywordsv5
 
-[920]: #log-5
+[920]: #parameters-303
 
-[921]: #log-6
+[921]: #memory_weights
 
-[922]: #rundipwithcallback
+[922]: #getweightedconversationcontext
 
-[923]: #parameters-306
+[923]: #parameters-304
 
-[924]: #processsseevent
+[924]: #groupmessagesintoexchanges
 
-[925]: #parameters-307
+[925]: #parameters-305
 
-[926]: #telegrambot
+[926]: #generateweightedcontext
 
-[927]: #telegrambot-1
+[927]: #parameters-306
 
-[928]: #telegrambot-2
+[928]: #calculateexchangeweight
 
-[929]: #safeanswercallback
+[929]: #parameters-307
 
-[930]: #parameters-308
+[930]: #createexchangesummary
 
-[931]: #start-1
+[931]: #parameters-308
 
-[932]: #stop-1
+[932]: #extractaccumulatedequipment
 
-[933]: #setupcommandhandlers
+[933]: #parameters-309
 
-[934]: #setupcallbackhandlers
+[934]: #getequipmentrelationshipcontext
 
-[935]: #setupmessagehandlers
+[935]: #parameters-310
 
-[936]: #setuperrorhandlers
+[936]: #searchspecsuggestions
 
-[937]: #recordtelegramdecision
+[937]: #parameters-311
 
-[938]: #parameters-309
+[938]: #searchspecsuggestions-1
 
-[939]: #updateitemstatus-1
+[939]: #parameters-312
 
-[940]: #parameters-310
+[940]: #searchplaybookhints
 
-[941]: #sendescalation
+[941]: #parameters-313
 
-[942]: #parameters-311
+[942]: #searchintentrouter
 
-[943]: #cleanupoldescalations
+[943]: #parameters-314
 
-[944]: #escapemarkdown
+[944]: #searchgoldentests
 
-[945]: #parameters-312
+[945]: #parameters-315
 
-[946]: #getsystemname
+[946]: #searchalldiptables
 
-[947]: #parameters-313
+[947]: #parameters-316
 
-[948]: #formatitemfordisplay
+[948]: #log
 
-[949]: #parameters-314
+[949]: #log-1
 
-[950]: #isactive-1
+[950]: #log-2
 
-[951]: #getbot
+[951]: #log-3
 
-[952]: #ingestdipoutputstodb
+[952]: #log-4
 
-[953]: #parameters-315
+[953]: #log-5
 
-[954]: #ingestdipoutputstodb-1
+[954]: #log-6
 
-[955]: #parameters-316
+[955]: #rundipwithcallback
 
-[956]: #processspecsuggestions
+[956]: #parameters-317
 
-[957]: #parameters-317
+[957]: #processsseevent
 
-[958]: #processplaybookhints
+[958]: #parameters-318
 
-[959]: #parameters-318
+[959]: #telegrambot
 
-[960]: #processintentrouter
+[960]: #telegrambot-1
 
-[961]: #parameters-319
+[961]: #telegrambot-2
 
-[962]: #processgoldentests
+[962]: #safeanswercallback
 
-[963]: #parameters-320
+[963]: #parameters-319
 
-[964]: #fetchjsonfromstorage
+[964]: #start-1
 
-[965]: #parameters-321
+[965]: #stop-1
 
-[966]: #rundippacket
+[966]: #setupcommandhandlers
 
-[967]: #parameters-322
+[967]: #setupcallbackhandlers
 
-[968]: #rundippacket-1
+[968]: #setupmessagehandlers
 
-[969]: #parameters-323
+[969]: #setuperrorhandlers
 
-[970]: #checkdipavailability
+[970]: #recordtelegramdecision
 
-[971]: #getdipstats
+[971]: #parameters-320
 
-[972]: #parameters-324
+[972]: #updateitemstatus-1
 
-[973]: #documentdeletionservice
+[973]: #parameters-321
 
-[974]: #getdeletionpreview
+[974]: #sendescalation
 
-[975]: #parameters-325
+[975]: #parameters-322
 
-[976]: #deletedocument
+[976]: #cleanupoldescalations
 
-[977]: #parameters-326
+[977]: #escapemarkdown
 
-[978]: #archivestorage
+[978]: #parameters-323
 
-[979]: #parameters-327
+[979]: #getsystemname
 
-[980]: #deletepineconevectors
+[980]: #parameters-324
 
-[981]: #parameters-328
+[981]: #formatitemfordisplay
 
-[982]: #countdipentries
+[982]: #parameters-325
 
-[983]: #parameters-329
+[983]: #isactive-1
 
-[984]: #deletedipentries
+[984]: #getbot
 
-[985]: #parameters-330
+[985]: #ingestdipoutputstodb
 
-[986]: #getstorageinfo
+[986]: #parameters-326
 
-[987]: #parameters-331
+[987]: #ingestdipoutputstodb-1
 
-[988]: #getsysteminfo
+[988]: #parameters-327
 
-[989]: #parameters-332
+[989]: #processspecsuggestions
 
-[990]: #countpineconevectors
+[990]: #parameters-328
 
-[991]: #parameters-333
+[991]: #processplaybookhints
 
-[992]: #parsedberror
+[992]: #parameters-329
 
-[993]: #parameters-334
+[993]: #processintentrouter
 
-[994]: #lookupreferenceids
+[994]: #parameters-330
 
-[995]: #parameters-335
+[995]: #processgoldentests
 
-[996]: #findorcreatesystem
+[996]: #parameters-331
 
-[997]: #parameters-336
+[997]: #fetchjsonfromstorage
 
-[998]: #createinstanceforsystem
+[998]: #parameters-332
 
-[999]: #parameters-337
+[999]: #rundippacket
 
-[1000]: #createdocumentsystemlink
+[1000]: #parameters-333
 
-[1001]: #parameters-338
+[1001]: #rundippacket-1
 
-[1002]: #savereferencedsystems
+[1002]: #parameters-334
 
-[1003]: #parameters-339
+[1003]: #checkdipavailability
 
-[1004]: #upsertdocumentrecord
+[1004]: #getdipstats
 
-[1005]: #parameters-340
+[1005]: #parameters-335
 
-[1006]: #savedetectionresults
+[1006]: #documentdeletionservice
 
-[1007]: #parameters-341
+[1007]: #getdeletionpreview
 
-[1008]: #validateinstalledprimary
+[1008]: #parameters-336
 
-[1009]: #parameters-342
+[1009]: #deletedocument
 
-[1010]: #fetchdetectionreferencedata
+[1010]: #parameters-337
 
-[1011]: #generatedocid
+[1011]: #archivestorage
 
-[1012]: #parameters-343
+[1012]: #parameters-338
 
-[1013]: #extracttextpreview
+[1013]: #deletepineconevectors
 
-[1014]: #parameters-344
+[1014]: #parameters-339
 
-[1015]: #extractfromdatabase
+[1015]: #countdipentries
 
-[1016]: #parameters-345
+[1016]: #parameters-340
 
-[1017]: #extractfromstorage
+[1017]: #deletedipentries
 
-[1018]: #parameters-346
+[1018]: #parameters-341
 
-[1019]: #getfromcache
+[1019]: #getstorageinfo
 
-[1020]: #parameters-347
+[1020]: #parameters-342
 
-[1021]: #setcache
+[1021]: #getsysteminfo
 
-[1022]: #parameters-348
+[1022]: #parameters-343
 
-[1023]: #gettextextractionmetrics
+[1023]: #countpineconevectors
 
-[1024]: #cleartextcache
+[1024]: #parameters-344
 
-[1025]: #getcachestats
+[1025]: #parsedberror
 
-[1026]: #createingestjob
+[1026]: #parameters-345
 
-[1027]: #parameters-349
+[1027]: #lookupreferenceids
 
-[1028]: #processjob
+[1028]: #parameters-346
 
-[1029]: #parameters-350
+[1029]: #findorcreatesystem
 
-[1030]: #listjobs
+[1030]: #parameters-347
 
-[1031]: #parameters-351
+[1031]: #createinstanceforsystem
 
-[1032]: #getjobstatus
+[1032]: #parameters-348
 
-[1033]: #parameters-352
+[1033]: #createdocumentsystemlink
 
-[1034]: #getdocument
+[1034]: #parameters-349
 
-[1035]: #parameters-353
+[1035]: #savereferencedsystems
 
-[1036]: #listdocuments
+[1036]: #parameters-350
 
-[1037]: #parameters-354
+[1037]: #upsertdocumentrecord
 
-[1038]: #detectmodelsfromdocument
+[1038]: #parameters-351
 
-[1039]: #parameters-355
+[1039]: #savedetectionresults
 
-[1040]: #fs
+[1040]: #parameters-352
 
-[1041]: #fs-1
+[1041]: #validateinstalledprimary
 
-[1042]: #fs-2
+[1042]: #parameters-353
 
-[1043]: #fs-3
+[1043]: #fetchdetectionreferencedata
 
-[1044]: #fs-4
+[1044]: #generatedocid
 
-[1045]: #fs-5
+[1045]: #parameters-354
 
-[1046]: #getlatestdeduplicationfile
+[1046]: #extracttextpreview
 
-[1047]: #findpairinlatestjson
+[1047]: #parameters-355
 
-[1048]: #parameters-356
+[1048]: #extractfromdatabase
 
-[1049]: #getcandidates
+[1049]: #parameters-356
 
-[1050]: #computefeatures
+[1050]: #extractfromstorage
 
 [1051]: #parameters-357
 
-[1052]: #computefrequencydiff
+[1052]: #getfromcache
 
 [1053]: #parameters-358
 
-[1054]: #submitdecision
+[1054]: #setcache
 
 [1055]: #parameters-359
 
-[1056]: #getstats-5
+[1056]: #gettextextractionmetrics
 
-[1057]: #getstats-6
+[1057]: #cleartextcache
 
-[1058]: #extractequipmentname
+[1058]: #getcachestats
 
-[1059]: #parameters-360
+[1059]: #createingestjob
 
-[1060]: #validateequipmentarray
+[1060]: #parameters-360
 
-[1061]: #parameters-361
+[1061]: #processjob
 
-[1062]: #inferequipmentrelationships
+[1062]: #parameters-361
 
-[1063]: #parameters-362
+[1063]: #listjobs
 
-[1064]: #analyzeequipmentrelationships
+[1064]: #parameters-362
 
-[1065]: #parameters-363
+[1065]: #getjobstatus
 
-[1066]: #extractequipmentfromhistory
+[1066]: #parameters-363
 
-[1067]: #parameters-364
+[1067]: #getdocument
 
-[1068]: #expandequipmentcontext
+[1068]: #parameters-364
 
-[1069]: #parameters-365
+[1069]: #listdocuments
 
-[1070]: #quickreferencecheck
+[1070]: #parameters-365
 
-[1071]: #parameters-366
+[1071]: #detectmodelsfromdocument
 
-[1072]: #findfactmatch
+[1072]: #parameters-366
 
-[1073]: #parameters-367
+[1073]: #fs
 
-[1074]: #getfactfirstresponse
+[1074]: #fs-1
 
-[1075]: #parameters-368
+[1075]: #fs-2
 
-[1076]: #shouldattemptfactfirst
+[1076]: #fs-3
 
-[1077]: #parameters-369
+[1077]: #fs-4
 
-[1078]: #getcount
+[1078]: #fs-5
 
-[1079]: #parameters-370
+[1079]: #getlatestdeduplicationfile
 
-[1080]: #getsystemswithdocuments
+[1080]: #findpairinlatestjson
 
-[1081]: #getdataissues
+[1081]: #parameters-367
 
-[1082]: #getgroupedcounts
+[1082]: #getcandidates
 
-[1083]: #parameters-371
+[1083]: #computefeatures
 
-[1084]: #getpineconestats
+[1084]: #parameters-368
 
-[1085]: #getallrows
+[1085]: #computefrequencydiff
 
-[1086]: #parameters-372
+[1086]: #parameters-369
 
-[1087]: #getdipstagingstats
+[1087]: #submitdecision
 
-[1088]: #getdipproductionstats
+[1088]: #parameters-370
 
-[1089]: #getlivetaskstats
+[1089]: #getstats-5
 
-[1090]: #getmaintenanceagentstats
+[1090]: #getstats-6
 
-[1091]: #getvectorizedsystemscount
+[1091]: #extractequipmentname
 
-[1092]: #getfunnelstats
+[1092]: #parameters-371
 
-[1093]: #savetimingpayload
+[1093]: #validateequipmentarray
 
-[1094]: #parameters-373
+[1094]: #parameters-372
 
-[1095]: #gettimingfordocument
+[1095]: #inferequipmentrelationships
 
-[1096]: #parameters-374
+[1096]: #parameters-373
 
-[1097]: #gettimingforrun
+[1097]: #analyzeequipmentrelationships
 
-[1098]: #parameters-375
+[1098]: #parameters-374
 
-[1099]: #getrecentingesttimingruns
+[1099]: #extractequipmentfromhistory
 
-[1100]: #parameters-376
+[1100]: #parameters-375
 
-[1101]: #classifyuserintent
+[1101]: #expandequipmentcontext
 
-[1102]: #parameters-377
+[1102]: #parameters-376
 
-[1103]: #routequery
+[1103]: #quickreferencecheck
 
-[1104]: #parameters-378
+[1104]: #parameters-377
 
-[1105]: #openai
+[1105]: #findfactmatch
 
-[1106]: #generatekeywords
+[1106]: #parameters-378
 
-[1107]: #parameters-379
+[1107]: #getfactfirstresponse
 
-[1108]: #generatesynonyms
+[1108]: #parameters-379
 
-[1109]: #parameters-380
+[1109]: #shouldattemptfactfirst
 
-[1110]: #generatereftablesynonyms
+[1110]: #parameters-380
 
-[1111]: #parameters-381
+[1111]: #getcount
 
-[1112]: #generatereftablesynonyms-1
+[1112]: #parameters-381
 
-[1113]: #parameters-382
+[1113]: #getsystemswithdocuments
 
-[1114]: #fetchreftablesynonyms
+[1114]: #getdataissues
 
-[1115]: #parameters-383
+[1115]: #getgroupedcounts
 
-[1116]: #postprocesssynonyms
+[1116]: #parameters-382
 
-[1117]: #parameters-384
+[1117]: #getpineconestats
 
-[1118]: #stripansicodes
+[1118]: #getallrows
 
-[1119]: #parameters-385
+[1119]: #parameters-383
 
-[1120]: #parselogfile
+[1120]: #getdipstagingstats
 
-[1121]: #parameters-386
+[1121]: #getdipproductionstats
 
-[1122]: #maptypetolevel
+[1122]: #getlivetaskstats
 
-[1123]: #parameters-387
+[1123]: #getmaintenanceagentstats
 
-[1124]: #parselogtimestamp
+[1124]: #getvectorizedsystemscount
 
-[1125]: #parameters-388
+[1125]: #getfunnelstats
 
-[1126]: #calculatesincetimestamp
+[1126]: #determinestatus-1
 
-[1127]: #parameters-389
+[1127]: #parameters-384
 
-[1128]: #getlogs
+[1128]: #synthesizestep
 
-[1129]: #parameters-390
+[1129]: #parameters-385
 
-[1130]: #getlogmetadata
+[1130]: #findmatchingjob
 
-[1131]: #maintenancetasksrepository
+[1131]: #parameters-386
 
-[1132]: #frequency_conversions
+[1132]: #savetimingpayload
 
-[1133]: #valid_categories
+[1133]: #parameters-387
 
-[1134]: #valid_frequency_bases
+[1134]: #gettimingfordocument
 
-[1135]: #valid_frequency_types
+[1135]: #parameters-388
 
-[1136]: #valid_review_statuses
+[1136]: #gettimingforrun
 
-[1137]: #validatedescription
+[1137]: #parameters-389
 
-[1138]: #parameters-391
+[1138]: #getrecentingesttimingruns
 
-[1139]: #calculatefrequencyhours
+[1139]: #parameters-390
 
-[1140]: #parameters-392
+[1140]: #classifyuserintent
 
-[1141]: #formattask
+[1141]: #parameters-391
 
-[1142]: #parameters-393
+[1142]: #routequery
 
-[1143]: #getalltasks
+[1143]: #parameters-392
 
-[1144]: #gettask
+[1144]: #openai
 
-[1145]: #parameters-394
+[1145]: #generatekeywords
 
-[1146]: #updatetask
+[1146]: #parameters-393
 
-[1147]: #parameters-395
+[1147]: #generatesynonyms
 
-[1148]: #deletetask-1
+[1148]: #parameters-394
 
-[1149]: #parameters-396
+[1149]: #generatereftablesynonyms
 
-[1150]: #bulkupdatestatus
+[1150]: #parameters-395
 
-[1151]: #parameters-397
+[1151]: #generatereftablesynonyms-1
 
-[1152]: #supabasememorymanager
+[1152]: #parameters-396
 
-[1153]: #parameters-398
+[1153]: #fetchreftablesynonyms
 
-[1154]: #addmessage
+[1154]: #parameters-397
 
-[1155]: #parameters-399
+[1155]: #postprocesssynonyms
 
-[1156]: #getmessages
+[1156]: #parameters-398
 
-[1157]: #parameters-400
+[1157]: #stripansicodes
 
-[1158]: #getformattedhistory
+[1158]: #parameters-399
 
-[1159]: #parameters-401
+[1159]: #parselogfile
 
-[1160]: #clearhistory
+[1160]: #parameters-400
 
-[1161]: #getequipmentcontext
+[1161]: #maptypetolevel
 
-[1162]: #updateequipmentcontext
+[1162]: #parameters-401
 
-[1163]: #parameters-402
+[1163]: #parselogtimestamp
 
-[1164]: #ensurethread
+[1164]: #parameters-402
 
-[1165]: #incrementmessagecount
+[1165]: #calculatesincetimestamp
 
-[1166]: #getsummary
+[1166]: #parameters-403
 
-[1167]: #updatesummary
+[1167]: #getlogs
 
-[1168]: #parameters-403
+[1168]: #parameters-404
 
-[1169]: #clearcache
+[1169]: #getlogmetadata
 
-[1170]: #parameters-404
+[1170]: #maintenancetasksrepository
 
-[1171]: #pineconeclient
+[1171]: #frequency_conversions
 
-[1172]: #getpineconeclient
+[1172]: #valid_categories
 
-[1173]: #searchdocuments
+[1173]: #valid_frequency_bases
 
-[1174]: #parameters-405
+[1174]: #valid_frequency_types
 
-[1175]: #searchdocuments-1
+[1175]: #valid_review_statuses
 
-[1176]: #parameters-406
+[1176]: #validatedescription
 
-[1177]: #getdocumentchunks
+[1177]: #parameters-405
 
-[1178]: #parameters-407
+[1178]: #calculatefrequencyhours
 
-[1179]: #retrievewithspecbias
+[1179]: #parameters-406
 
-[1180]: #parameters-408
+[1180]: #formattask
 
-[1181]: #normalizequery
+[1181]: #parameters-407
 
-[1182]: #parameters-409
+[1182]: #getalltasks
 
-[1183]: #callopenai
+[1183]: #gettask
 
-[1184]: #parameters-410
+[1184]: #parameters-408
 
-[1185]: #formattripsdata
+[1185]: #updatetask
 
-[1186]: #parameters-411
+[1186]: #parameters-409
 
-[1187]: #formatanchoragesdata
+[1187]: #deletetask-1
 
-[1188]: #parameters-412
+[1188]: #parameters-410
 
-[1189]: #getrecap
+[1189]: #bulkupdatestatus
 
-[1190]: #parameters-413
+[1190]: #parameters-411
 
-[1191]: #getallrecaps
+[1191]: #supabasememorymanager
 
-[1192]: #generaterecap
+[1192]: #parameters-412
 
-[1193]: #parameters-414
+[1193]: #addmessage
 
-[1194]: #applysuggestions
+[1194]: #parameters-413
 
-[1195]: #parameters-415
+[1195]: #getmessages
 
-[1196]: #readjson
+[1196]: #parameters-414
 
-[1197]: #parameters-416
+[1197]: #getformattedhistory
 
-[1198]: #writejson
+[1198]: #parameters-415
 
-[1199]: #parameters-417
+[1199]: #clearhistory
 
-[1200]: #mergejsonmaparray
+[1200]: #getequipmentcontext
 
-[1201]: #parameters-418
+[1201]: #updateequipmentcontext
 
-[1202]: #mergeintenthints
+[1202]: #parameters-416
 
-[1203]: #parameters-419
+[1203]: #ensurethread
 
-[1204]: #mergemaintenancelexicon
+[1204]: #incrementmessagecount
 
-[1205]: #parameters-420
+[1205]: #getsummary
 
-[1206]: #mergeunits
+[1206]: #updatesummary
 
-[1207]: #parameters-421
+[1207]: #parameters-417
 
-[1208]: #writegoldentests
+[1208]: #clearcache
 
-[1209]: #parameters-422
+[1209]: #parameters-418
 
-[1210]: #safename
+[1210]: #pineconeclient
 
-[1211]: #parameters-423
+[1211]: #getpineconeclient
 
-[1212]: #extractpatternsfromchunk
+[1212]: #searchdocuments
 
-[1213]: #parameters-424
+[1213]: #parameters-419
 
-[1214]: #buildintentsuggestions
+[1214]: #searchdocuments-1
 
-[1215]: #parameters-425
+[1215]: #parameters-420
 
-[1216]: #summarizethread
+[1216]: #getdocumentchunks
 
-[1217]: #parameters-426
+[1217]: #parameters-421
 
-[1218]: #generatethreadname
+[1218]: #retrievewithspecbias
 
-[1219]: #parameters-427
+[1219]: #parameters-422
 
-[1220]: #generatethreadname-1
+[1220]: #normalizequery
 
-[1221]: #parameters-428
+[1221]: #parameters-423
 
-[1222]: #generatesystemsummary
+[1222]: #callopenai
 
-[1223]: #parameters-429
+[1223]: #parameters-424
 
-[1224]: #shouldsummarizethread
+[1224]: #formattripsdata
 
-[1225]: #parameters-430
+[1225]: #parameters-425
 
-[1226]: #getsummarizationmetadata
+[1226]: #formatanchoragesdata
 
-[1227]: #parameters-431
+[1227]: #parameters-426
 
-[1228]: #analyzesupplyphoto
+[1228]: #getrecap
 
-[1229]: #parameters-432
+[1229]: #parameters-427
 
-[1230]: #analyzesupplyphotobase64
+[1230]: #getallrecaps
 
-[1231]: #parameters-433
+[1231]: #generaterecap
 
-[1232]: #analyzemultiplesupplyphotos
+[1232]: #parameters-428
 
-[1233]: #parameters-434
+[1233]: #applysuggestions
 
-[1234]: #suggestsystemsforsupply
+[1234]: #parameters-429
 
-[1235]: #parameters-435
+[1235]: #readjson
 
-[1236]: #uploadsupplyphoto
+[1236]: #parameters-430
 
-[1237]: #parameters-436
+[1237]: #writejson
 
-[1238]: #deletesupplyphoto
+[1238]: #parameters-431
 
-[1239]: #parameters-437
+[1239]: #mergejsonmaparray
 
-[1240]: #uploadanchoragephoto
+[1240]: #parameters-432
 
-[1241]: #parameters-438
+[1241]: #mergeintenthints
 
-[1242]: #getmanufacturerslist
+[1242]: #parameters-433
 
-[1243]: #getmanufacturerslist-1
+[1243]: #mergemaintenancelexicon
 
-[1244]: #getmodelsformanufacturer
+[1244]: #parameters-434
 
-[1245]: #parameters-439
+[1245]: #mergeunits
 
-[1246]: #searchsystem
+[1246]: #parameters-435
 
-[1247]: #parameters-440
+[1247]: #writegoldentests
 
-[1248]: #getsystemwithinstances
+[1248]: #parameters-436
 
-[1249]: #parameters-441
+[1249]: #safename
 
-[1250]: #deleteinstance
+[1250]: #parameters-437
 
-[1251]: #parameters-442
+[1251]: #extractpatternsfromchunk
 
-[1252]: #getrefmanufacturerslist
+[1252]: #parameters-438
 
-[1253]: #getrefproducttypeslist
+[1253]: #buildintentsuggestions
 
-[1254]: #getrefsystemcategorieslist
+[1254]: #parameters-439
 
-[1255]: #getrefsubsystemcategorieslist
+[1255]: #summarizethread
 
-[1256]: #parameters-443
+[1256]: #parameters-440
 
-[1257]: #start-2
+[1257]: #generatethreadname
 
-[1258]: #stop-2
+[1258]: #parameters-441
 
-[1259]: #setupcommandhandlers-1
+[1259]: #generatethreadname-1
 
-[1260]: #setuperrorhandlers-1
+[1260]: #parameters-442
 
-[1261]: #senderrormessage
+[1261]: #generatesystemsummary
 
-[1262]: #parameters-444
+[1262]: #parameters-443
 
-[1263]: #isactive-2
+[1263]: #shouldsummarizethread
 
-[1264]: #getbot-1
+[1264]: #parameters-444
 
-[1265]: #isconfigured
+[1265]: #getsummarizationmetadata
 
-[1266]: #sendmessage
+[1266]: #parameters-445
 
-[1267]: #parameters-445
+[1267]: #analyzesupplyphoto
 
-[1268]: #sendanchorwatchstatus
+[1268]: #parameters-446
 
-[1269]: #parameters-446
+[1269]: #analyzesupplyphotobase64
 
-[1270]: #sendanchorwatchalert
+[1270]: #parameters-447
 
-[1271]: #parameters-447
+[1271]: #analyzemultiplesupplyphotos
 
-[1272]: #sendrecentpositions
+[1272]: #parameters-448
 
-[1273]: #parameters-448
+[1273]: #suggestsystemsforsupply
 
-[1274]: #sendactivationconfirmation
+[1274]: #parameters-449
 
-[1275]: #parameters-449
+[1275]: #uploadsupplyphoto
 
-[1276]: #senddeactivationconfirmation
+[1276]: #parameters-450
 
-[1277]: #sendhelpmessage
+[1277]: #deletesupplyphoto
 
-[1278]: #getcurrenttelemetry
+[1278]: #parameters-451
 
-[1279]: #groupbycategory
+[1279]: #uploadanchoragephoto
 
-[1280]: #parameters-450
+[1280]: #parameters-452
 
-[1281]: #extractsummary
+[1281]: #getmanufacturerslist
 
-[1282]: #parameters-451
+[1282]: #getmanufacturerslist-1
 
-[1283]: #gettanktype
+[1283]: #getmodelsformanufacturer
 
-[1284]: #parameters-452
+[1284]: #parameters-453
 
-[1285]: #getlatesttimestamp
+[1285]: #searchsystem
 
-[1286]: #parameters-453
+[1286]: #parameters-454
 
-[1287]: #getbatterydetails
+[1287]: #getsystemwithinstances
 
-[1288]: #getsolardetails
+[1288]: #parameters-455
 
-[1289]: #gettankdetails
+[1289]: #deleteinstance
 
-[1290]: #getanalysisforrun
+[1290]: #parameters-456
 
-[1291]: #parameters-454
+[1291]: #getrefmanufacturerslist
 
-[1292]: #hasanalysisforrun
+[1292]: #getrefproducttypeslist
 
-[1293]: #parameters-455
+[1293]: #getrefsystemcategorieslist
 
-[1294]: #getrecentanalysisruns
+[1294]: #getrefsubsystemcategorieslist
 
-[1295]: #parameters-456
+[1295]: #parameters-457
 
-[1296]: #shouldnamethread
+[1296]: #start-2
 
-[1297]: #parameters-457
+[1297]: #stop-2
 
-[1298]: #generatefallbackthreadname
+[1298]: #setupcommandhandlers-1
 
-[1299]: #parameters-458
+[1299]: #setuperrorhandlers-1
 
-[1300]: #namethread
+[1300]: #senderrormessage
 
-[1301]: #parameters-459
+[1301]: #parameters-458
 
-[1302]: #callopenaisummary
+[1302]: #isactive-2
 
-[1303]: #parameters-460
+[1303]: #getbot-1
 
-[1304]: #callopenaisummary-1
+[1304]: #isconfigured
 
-[1305]: #parameters-461
+[1305]: #sendmessage
 
-[1306]: #generatethreadsummary
+[1306]: #parameters-459
 
-[1307]: #parameters-462
+[1307]: #sendanchorwatchstatus
 
-[1308]: #generateqasummary
+[1308]: #parameters-460
 
-[1309]: #parameters-463
+[1309]: #sendanchorwatchalert
 
-[1310]: #processqasummaryformessage
+[1310]: #parameters-461
 
-[1311]: #parameters-464
+[1311]: #sendrecentpositions
 
-[1312]: #checkandgenerateqasummary
+[1312]: #parameters-462
 
-[1313]: #parameters-465
+[1313]: #sendactivationconfirmation
 
-[1314]: #generatesummaryfrommessages
+[1314]: #parameters-463
 
-[1315]: #parameters-466
+[1315]: #senddeactivationconfirmation
 
-[1316]: #checkandgeneratesummary
+[1316]: #sendhelpmessage
 
-[1317]: #parameters-467
+[1317]: #getcurrenttelemetry
 
-[1318]: #haversinedistance
+[1318]: #groupbycategory
 
-[1319]: #parameters-468
+[1319]: #parameters-464
 
-[1320]: #calculatetotaldistance
+[1320]: #extractsummary
 
-[1321]: #parameters-469
+[1321]: #parameters-465
 
-[1322]: #average
+[1322]: #gettanktype
 
-[1323]: #parameters-470
+[1323]: #parameters-466
 
-[1324]: #simplifytrack
+[1324]: #getlatesttimestamp
 
-[1325]: #parameters-471
+[1325]: #parameters-467
 
-[1326]: #listtrips
+[1326]: #getbatterydetails
 
-[1327]: #parameters-472
+[1327]: #getsolardetails
 
-[1328]: #gettrip
+[1328]: #gettankdetails
 
-[1329]: #parameters-473
+[1329]: #getanalysisforrun
 
-[1330]: #getactivetrip
+[1330]: #parameters-468
 
-[1331]: #starttrip
+[1331]: #hasanalysisforrun
 
-[1332]: #stoptrip
+[1332]: #parameters-469
 
-[1333]: #parameters-474
+[1333]: #getrecentanalysisruns
 
-[1334]: #resumetrip
+[1334]: #parameters-470
 
-[1335]: #parameters-475
+[1335]: #shouldnamethread
 
-[1336]: #updatetrip
+[1336]: #parameters-471
 
-[1337]: #parameters-476
+[1337]: #generatefallbackthreadname
 
-[1338]: #deletetrip
+[1338]: #parameters-472
 
-[1339]: #parameters-477
+[1339]: #namethread
 
-[1340]: #getactivetripstats
+[1340]: #parameters-473
 
-[1341]: #parameters-478
+[1341]: #callopenaisummary
 
-[1342]: #recordsailevent
+[1342]: #parameters-474
 
-[1343]: #parameters-479
+[1343]: #callopenaisummary-1
 
-[1344]: #getsailevents
+[1344]: #parameters-475
 
-[1345]: #parameters-480
+[1345]: #generatethreadsummary
 
-[1346]: #getcurrentsailconfig
+[1346]: #parameters-476
 
-[1347]: #parameters-481
+[1347]: #generateqasummary
 
-[1348]: #addcomment
+[1348]: #parameters-477
 
-[1349]: #parameters-482
+[1349]: #processqasummaryformessage
 
-[1350]: #getcomments
+[1350]: #parameters-478
 
-[1351]: #parameters-483
+[1351]: #checkandgenerateqasummary
 
-[1352]: #deletecomment
+[1352]: #parameters-479
 
-[1353]: #parameters-484
+[1353]: #generatesummaryfrommessages
 
-[1354]: #updatesailevent
+[1354]: #parameters-480
 
-[1355]: #parameters-485
+[1355]: #checkandgeneratesummary
 
-[1356]: #deletesailevent
+[1356]: #parameters-481
 
-[1357]: #parameters-486
+[1357]: #haversinedistance
 
-[1358]: #updatecomment
+[1358]: #parameters-482
 
-[1359]: #parameters-487
+[1359]: #calculatetotaldistance
 
-[1360]: #extractsignalkvalues
+[1360]: #parameters-483
 
-[1361]: #parameters-488
+[1361]: #average
 
-[1362]: #filterlowvariancecolumns
+[1362]: #parameters-484
 
-[1363]: #parameters-489
+[1363]: #simplifytrack
 
-[1364]: #gettelemetrysamples
+[1364]: #parameters-485
 
-[1365]: #parameters-490
+[1365]: #listtrips
 
-[1366]: #generatetriptitle
+[1366]: #parameters-486
 
-[1367]: #parameters-491
+[1367]: #gettrip
 
-[1368]: #regeneratetriptitles
+[1368]: #parameters-487
 
-[1369]: #fetchmarineweather
+[1369]: #getactivetrip
 
-[1370]: #parameters-492
+[1370]: #starttrip
 
-[1371]: #fetchstandardweather
+[1371]: #parameters-488
 
-[1372]: #parameters-493
+[1372]: #stoptrip
 
-[1373]: #collectweatherfortrip
+[1373]: #parameters-489
 
-[1374]: #parameters-494
+[1374]: #resumetrip
 
-[1375]: #collectweatherforactivetrips
+[1375]: #parameters-490
 
-[1376]: #startweathercollector
+[1376]: #updatetrip
 
-[1377]: #stopweathercollector
+[1377]: #parameters-491
 
-[1378]: #triggerweathercollection
+[1378]: #deletetrip
 
-[1379]: #twilio
+[1379]: #parameters-492
 
-[1380]: #getclient
+[1380]: #getactivetripstats
 
-[1381]: #isconfigured-1
+[1381]: #parameters-493
 
-[1382]: #sendsms
+[1382]: #recordsailevent
 
-[1383]: #parameters-495
+[1383]: #parameters-494
 
-[1384]: #sendcriticalalert
+[1384]: #getsailevents
 
-[1385]: #parameters-496
+[1385]: #parameters-495
 
-[1386]: #sendtestmessage
+[1386]: #getcurrentsailconfig
 
-[1387]: #runv5colloquialkeywords
+[1387]: #parameters-496
 
-[1388]: #parameters-497
+[1388]: #addcomment
 
-[1389]: #rundipextraction
+[1389]: #parameters-497
 
-[1390]: #parameters-498
+[1390]: #getcomments
 
-[1391]: #runv5indexing
+[1391]: #parameters-498
 
-[1392]: #parameters-499
+[1392]: #deletecomment
 
-[1393]: #startingestrun
+[1393]: #parameters-499
 
-[1394]: #parameters-500
+[1394]: #updatesailevent
 
-[1395]: #runingestpipeline
+[1395]: #parameters-500
 
-[1396]: #parameters-501
+[1396]: #deletesailevent
 
-[1397]: #getingeststatus
+[1397]: #parameters-501
 
-[1398]: #parameters-502
+[1398]: #updatecomment
 
-[1399]: #startparsedetectrun
+[1399]: #parameters-502
 
-[1400]: #parameters-503
+[1400]: #extractsignalkvalues
 
-[1401]: #runparsedetectpipeline
+[1401]: #parameters-503
 
-[1402]: #parameters-504
+[1402]: #filterlowvariancecolumns
 
-[1403]: #getparsedetectstatus
+[1403]: #parameters-504
 
-[1404]: #parameters-505
+[1404]: #gettelemetrysamples
 
-[1405]: #createfailuretodo
+[1405]: #parameters-505
 
-[1406]: #parameters-506
+[1406]: #generatetriptitle
 
-[1407]: #refreshknowledgefactsview
+[1407]: #parameters-506
 
-[1408]: #refreshknowledgefactsviewsafe
+[1408]: #regeneratetriptitles
 
-[1409]: #getviewrefreshstats
+[1409]: #fetchmarineweather
 
-[1410]: #checkviewhealth
+[1410]: #parameters-507
 
-[1411]: #runvisionpipeline
+[1411]: #fetchstandardweather
 
-[1412]: #parameters-507
+[1412]: #parameters-508
 
-[1413]: #getdocumentassets
+[1413]: #collectweatherfortrip
 
-[1414]: #parameters-508
+[1414]: #parameters-509
 
-[1415]: #getdocumentassetsummary
+[1415]: #collectweatherforactivetrips
 
-[1416]: #parameters-509
+[1416]: #startweathercollector
 
-[1417]: #deletedocumentassets
+[1417]: #stopweathercollector
 
-[1418]: #parameters-510
+[1418]: #triggerweathercollection
 
-[1419]: #ensurelexicons
+[1419]: #twilio
 
-[1420]: #ensurefile
+[1420]: #getclient
 
-[1421]: #parameters-511
+[1421]: #isconfigured-1
 
-[1422]: #defaultmaintenance
+[1422]: #sendsms
 
-[1423]: #defaultunits
+[1423]: #parameters-510
 
-[1424]: #env
+[1424]: #sendcriticalalert
 
-[1425]: #step
+[1425]: #parameters-511
 
-[1426]: #parameters-512
+[1426]: #sendtestmessage
 
-[1427]: #state
+[1427]: #runv5colloquialkeywords
 
-[1428]: #parameters-513
+[1428]: #parameters-512
 
-[1429]: #transform
+[1429]: #rundipextraction
 
-[1430]: #parameters-514
+[1430]: #parameters-513
 
-[1431]: #apicall
+[1431]: #runv5indexing
 
-[1432]: #parameters-515
+[1432]: #parameters-514
 
-[1433]: #timing
+[1433]: #startingestrun
 
-[1434]: #parameters-516
+[1434]: #parameters-515
 
-[1435]: #error
+[1435]: #runingestpipeline
 
-[1436]: #parameters-517
+[1436]: #parameters-516
 
-[1437]: #timed
+[1437]: #getingeststatus
 
-[1438]: #parameters-518
+[1438]: #parameters-517
 
-[1439]: #isfollowupquestion
+[1439]: #startparsedetectrun
 
-[1440]: #parameters-519
+[1440]: #parameters-518
 
-[1441]: #containsambiguouspronoun
+[1441]: #runparsedetectpipeline
 
-[1442]: #parameters-520
+[1442]: #parameters-519
 
-[1443]: #extractequipmentterms
+[1443]: #getparsedetectstatus
 
-[1444]: #parameters-521
+[1444]: #parameters-520
 
-[1445]: #hasexistingsystemscontext
+[1445]: #createfailuretodo
 
-[1446]: #parameters-522
+[1446]: #parameters-521
 
-[1447]: #getexistingsystemscontext
+[1447]: #refreshknowledgefactsview
 
-[1448]: #parameters-523
+[1448]: #refreshknowledgefactsviewsafe
 
-[1449]: #contextrewrite
+[1449]: #getviewrefreshstats
 
-[1450]: #parameters-524
+[1450]: #checkviewhealth
 
-[1451]: #withtimeout
+[1451]: #runvisionpipeline
 
-[1452]: #parameters-525
+[1452]: #parameters-522
 
-[1453]: #formatfactanswer
+[1453]: #getdocumentassets
 
-[1454]: #parameters-526
+[1454]: #parameters-523
 
-[1455]: #formatspecanswer
+[1455]: #getdocumentassetsummary
 
-[1456]: #parameters-527
+[1456]: #parameters-524
 
-[1457]: #formatintentanswer
+[1457]: #deletedocumentassets
 
-[1458]: #parameters-528
+[1458]: #parameters-525
 
-[1459]: #formatgoldentestanswer
+[1459]: #ensurelexicons
 
-[1460]: #parameters-529
+[1460]: #ensurefile
 
-[1461]: #createfactresponse
+[1461]: #parameters-526
 
-[1462]: #parameters-530
+[1462]: #defaultmaintenance
 
-[1463]: #formatmultiplefacts
+[1463]: #defaultunits
 
-[1464]: #parameters-531
+[1464]: #env
 
-[1465]: #fuzzymatcher
+[1465]: #step
 
-[1466]: #parameters-532
+[1466]: #parameters-527
 
-[1467]: #levenshteindistance
+[1467]: #state
 
-[1468]: #parameters-533
+[1468]: #parameters-528
 
-[1469]: #findbestmatch
+[1469]: #transform
 
-[1470]: #parameters-534
+[1470]: #parameters-529
 
-[1471]: #findmultiplematches
+[1471]: #apicall
 
-[1472]: #parameters-535
+[1472]: #parameters-530
 
-[1473]: #islikelytypo
+[1473]: #timing
 
-[1474]: #parameters-536
+[1474]: #parameters-531
 
-[1475]: #decidestyle
+[1475]: #error
 
-[1476]: #parameters-537
+[1476]: #parameters-532
 
-[1477]: #getstyleopening
+[1477]: #timed
 
-[1478]: #parameters-538
+[1478]: #parameters-533
 
-[1479]: #starttimer
+[1479]: #isfollowupquestion
 
-[1480]: #parameters-539
+[1480]: #parameters-534
 
-[1481]: #endtimer
+[1481]: #containsambiguouspronoun
 
-[1482]: #parameters-540
+[1482]: #parameters-535
 
-[1483]: #recordmetric
+[1483]: #extractequipmentterms
 
-[1484]: #parameters-541
+[1484]: #parameters-536
 
-[1485]: #incrementcounter
+[1485]: #hasexistingsystemscontext
 
-[1486]: #parameters-542
+[1486]: #parameters-537
 
-[1487]: #recordsuccess
+[1487]: #getexistingsystemscontext
 
-[1488]: #parameters-543
+[1488]: #parameters-538
 
-[1489]: #getmetrics
+[1489]: #contextrewrite
 
-[1490]: #getoperationsummary
+[1490]: #parameters-539
 
-[1491]: #parameters-544
+[1491]: #withtimeout
 
-[1492]: #getsuccessrate
+[1492]: #parameters-540
 
-[1493]: #parameters-545
+[1493]: #formatfactanswer
 
-[1494]: #reset
+[1494]: #parameters-541
 
-[1495]: #_buildkey
+[1495]: #formatspecanswer
 
-[1496]: #parameters-546
+[1496]: #parameters-542
 
-[1497]: #getdashboardmetrics
+[1497]: #formatintentanswer
 
-[1498]: #_calculateperformancescore
+[1498]: #parameters-543
 
-[1499]: #parameters-547
+[1499]: #formatgoldentestanswer
 
-[1500]: #getperformancemetrics
+[1500]: #parameters-544
 
-[1501]: #parameters-548
+[1501]: #createfactresponse
 
-[1502]: #french_caribbean_territories
+[1502]: #parameters-545
 
-[1503]: #reversegeocode
+[1503]: #formatmultiplefacts
 
-[1504]: #parameters-549
+[1504]: #parameters-546
 
-[1505]: #examples-5
+[1505]: #fuzzymatcher
 
-[1506]: #delay
+[1506]: #parameters-547
 
-[1507]: #parameters-550
+[1507]: #levenshteindistance
 
-[1508]: #batchreversegeocode
+[1508]: #parameters-548
 
-[1509]: #parameters-551
+[1509]: #findbestmatch
 
-[1510]: #examples-6
+[1510]: #parameters-549
 
-[1511]: #normalizemodelkey
+[1511]: #findmultiplematches
 
-[1512]: #parameters-552
+[1512]: #parameters-550
 
-[1513]: #default_retry_options
+[1513]: #islikelytypo
 
-[1514]: #withretry
+[1514]: #parameters-551
 
-[1515]: #parameters-553
+[1515]: #decidestyle
 
-[1516]: #isretryableerror
+[1516]: #parameters-552
 
-[1517]: #parameters-554
+[1517]: #getstyleopening
 
-[1518]: #createretrywrapper
+[1518]: #parameters-553
 
-[1519]: #parameters-555
+[1519]: #starttimer
 
-[1520]: #withopenairetry
+[1520]: #parameters-554
 
-[1521]: #withsupabaseretry
+[1521]: #endtimer
 
-[1522]: #withtelegramretry
+[1522]: #parameters-555
 
-[1523]: #sidecarfetch
+[1523]: #recordmetric
 
 [1524]: #parameters-556
 
-[1525]: #collectbody
+[1525]: #incrementcounter
 
 [1526]: #parameters-557
 
-[1527]: #wraperror
+[1527]: #recordsuccess
 
 [1528]: #parameters-558
 
-[1529]: #createsnapshot
+[1529]: #getmetrics
 
-[1530]: #parameters-559
+[1530]: #getoperationsummary
 
-[1531]: #rollbackto
+[1531]: #parameters-559
 
-[1532]: #parameters-560
+[1532]: #getsuccessrate
 
-[1533]: #listsnapshots
+[1533]: #parameters-560
 
-[1534]: #deletesnapshot
+[1534]: #reset
 
-[1535]: #parameters-561
+[1535]: #_buildkey
 
-[1536]: #getsnapshotinfo
+[1536]: #parameters-561
 
-[1537]: #parameters-562
+[1537]: #getdashboardmetrics
 
-[1538]: #cleanupsnapshots
+[1538]: #_calculateperformancescore
 
-[1539]: #parameters-563
+[1539]: #parameters-562
 
-[1540]: #listfiles
+[1540]: #getperformancemetrics
 
-[1541]: #parameters-564
+[1541]: #parameters-563
 
-[1542]: #loadmaintenancelexicon
+[1542]: #french_caribbean_territories
 
-[1543]: #extractmaintenanceterms
+[1543]: #reversegeocode
 
-[1544]: #parameters-565
+[1544]: #parameters-564
 
-[1545]: #checkmaintenancecontent
+[1545]: #examples-5
 
-[1546]: #parameters-566
+[1546]: #delay
 
-[1547]: #filterspeclike
+[1547]: #parameters-565
 
-[1548]: #parameters-567
+[1548]: #batchreversegeocode
 
-[1549]: #loadunitslexicon
+[1549]: #parameters-566
 
-[1550]: #getunitcategory
+[1550]: #examples-6
 
-[1551]: #parameters-568
+[1551]: #normalizemodelkey
 
-[1552]: #checkdisambiguation
+[1552]: #parameters-567
 
-[1553]: #parameters-569
+[1553]: #default_retry_options
 
-[1554]: #normalizeunittoken
+[1554]: #withretry
 
-[1555]: #parameters-570
+[1555]: #parameters-568
 
-[1556]: #normalizeunitsintext
+[1556]: #isretryableerror
 
-[1557]: #parameters-571
+[1557]: #parameters-569
 
-[1558]: #getunitcategories
+[1558]: #createretrywrapper
 
-[1559]: #getunitsincategory
+[1559]: #parameters-570
 
-[1560]: #parameters-572
+[1560]: #withopenairetry
 
-[1561]: #isvalidurl
+[1561]: #withsupabaseretry
 
-[1562]: #parameters-573
+[1562]: #withtelegramretry
 
-[1563]: #isvalidurl-1
+[1563]: #sidecarfetch
 
-[1564]: #parameters-574
+[1564]: #parameters-571
 
-[1565]: #isvalidjson
+[1565]: #collectbody
 
-[1566]: #parameters-575
+[1566]: #parameters-572
 
-[1567]: #isrequired
+[1567]: #wraperror
 
-[1568]: #parameters-576
+[1568]: #parameters-573
 
-[1569]: #sanitizetext
+[1569]: #createsnapshot
 
-[1570]: #parameters-577
+[1570]: #parameters-574
 
-[1571]: #validatesystemdata
+[1571]: #rollbackto
 
-[1572]: #parameters-578
+[1572]: #parameters-575
 
-[1573]: #validateinstancedata
+[1573]: #listsnapshots
 
-[1574]: #parameters-579
+[1574]: #deletesnapshot
 
-[1575]: #sanitizesystemdata
+[1575]: #parameters-576
 
-[1576]: #parameters-580
+[1576]: #getsnapshotinfo
 
-[1577]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[1577]: #parameters-577
 
-[1578]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[1578]: #cleanupsnapshots
 
-[1579]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[1579]: #parameters-578
 
-[1580]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[1580]: #listfiles
 
-[1581]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[1581]: #parameters-579
 
-[1582]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[1582]: #loadmaintenancelexicon
 
-[1583]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[1583]: #extractmaintenanceterms
 
-[1584]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date
+[1584]: #parameters-580
 
-[1585]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[1585]: #checkmaintenancecontent
 
-[1586]: https://nodejs.org/api/buffer.html
+[1586]: #parameters-581
 
-[1587]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+[1587]: #filterspeclike
+
+[1588]: #parameters-582
+
+[1589]: #loadunitslexicon
+
+[1590]: #getunitcategory
+
+[1591]: #parameters-583
+
+[1592]: #checkdisambiguation
+
+[1593]: #parameters-584
+
+[1594]: #normalizeunittoken
+
+[1595]: #parameters-585
+
+[1596]: #normalizeunitsintext
+
+[1597]: #parameters-586
+
+[1598]: #getunitcategories
+
+[1599]: #getunitsincategory
+
+[1600]: #parameters-587
+
+[1601]: #isvalidurl
+
+[1602]: #parameters-588
+
+[1603]: #isvalidurl-1
+
+[1604]: #parameters-589
+
+[1605]: #isvalidjson
+
+[1606]: #parameters-590
+
+[1607]: #isrequired
+
+[1608]: #parameters-591
+
+[1609]: #sanitizetext
+
+[1610]: #parameters-592
+
+[1611]: #validatesystemdata
+
+[1612]: #parameters-593
+
+[1613]: #validateinstancedata
+
+[1614]: #parameters-594
+
+[1615]: #sanitizesystemdata
+
+[1616]: #parameters-595
+
+[1617]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[1618]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[1619]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[1620]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[1621]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[1622]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[1623]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[1624]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date
+
+[1625]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+[1626]: https://nodejs.org/api/buffer.html
+
+[1627]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
