@@ -73,12 +73,16 @@ Charts showing data from `gps_position` table, downsampled server-side via `gps_
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  GET /api/boat-now                                              │
-│  └── boat-now.service.js                                        │
+│  GET /api/boat-now (initial load)                                │
+│  └── boat-now.service.js → getBoatStatus()                      │
 │      ├── gpsRepository.getCurrentPosition()                     │
 │      ├── gpsRepository.getPositionsSummaryInRange(N hours, 600s) │
 │      ├── reverseGeocode() from nominatim utility                │
 │      └── fetchCurrentWeather() from Open-Meteo                  │
+│                                                                  │
+│  GET /api/boat-now/history (time window switch)                  │
+│  └── boat-now.service.js → getHistory()                         │
+│      └── gpsRepository.getPositionsSummaryInRange() only         │
 └─────────────────────────────────────────────────────────────────┘
                               │
               ┌───────────────┼───────────────┐
@@ -92,11 +96,11 @@ Charts showing data from `gps_position` table, downsampled server-side via `gps_
 
 ---
 
-## API Endpoint
+## API Endpoints
 
 ### GET /api/boat-now
 
-Returns current boat status with weather and historical data.
+Returns current boat status with weather and historical data. Used on initial page load.
 
 **Query Parameters:**
 - `hours` (optional, default: 5) - Hours of history to fetch
@@ -144,6 +148,25 @@ Returns current boat status with weather and historical data.
   }
 }
 ```
+
+### GET /api/boat-now/history
+
+Returns historical GPS data only (no weather, no geocode). Used when switching between 5h/12h time windows — avoids re-fetching current conditions and external APIs.
+
+**Query Parameters:**
+- `hours` (optional, default: 5) - Hours of history to fetch
+
+**Response:** Same shape as the `history` object above, returned directly in `data`.
+
+---
+
+## Charts (2026-04-06)
+
+Both wind charts include:
+- **Average line** (orange dashed) — flat horizontal line showing mean value, labeled at right
+- **Trend line** (red dashed) — linear regression from first to last data point, labeled at left with direction arrow (e.g., "↑ +2.1 kts" or "↓ -1.3 kts")
+
+The trend line shows whether wind speed is building or dying, and whether direction is veering or backing over the selected time window.
 
 ---
 
