@@ -38,4 +38,33 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * GET /api/boat-now/history
+ * Get historical GPS data only (no weather/geocode) for time window switching
+ */
+router.get('/history', async (req, res) => {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    const hoursBack = parseInt(req.query.hours) || 5;
+
+    requestLogger.info('Fetching boat history', { hoursBack });
+
+    const history = await boatNowService.getHistory(hoursBack);
+
+    return res.json({
+      success: true,
+      data: history,
+      requestId: res.locals.requestId
+    });
+  } catch (error) {
+    requestLogger.error('Error fetching boat history', { error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      requestId: res.locals.requestId
+    });
+  }
+});
+
 export default router;

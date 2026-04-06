@@ -188,6 +188,35 @@ export async function getBoatStatus(hoursBack = 5) {
   };
 }
 
+/**
+ * Get historical GPS data only (no weather, no geocode)
+ * Used by the frontend when switching time windows
+ * @param {number} hoursBack - Hours of history to fetch
+ * @returns {Promise<Object>} Historical data for charts
+ */
+export async function getHistory(hoursBack = 5) {
+  const endTime = new Date();
+  const startTime = new Date(endTime.getTime() - (hoursBack * 60 * 60 * 1000));
+  const summaryResult = await gpsRepository.getPositionsSummaryInRange(startTime, endTime, 600);
+  const sortedHistory = (summaryResult.positions || []).sort((a, b) =>
+    new Date(a.timestamp) - new Date(b.timestamp)
+  );
+
+  return {
+    hoursBack,
+    pointCount: sortedHistory.length,
+    data: {
+      timestamps: sortedHistory.map(p => p.timestamp),
+      windSpeed: sortedHistory.map(p => p.true_wind_speed),
+      windDirection: sortedHistory.map(p => p.true_wind_direction),
+      latitude: sortedHistory.map(p => p.latitude),
+      longitude: sortedHistory.map(p => p.longitude),
+      sog: sortedHistory.map(p => p.speed_over_ground)
+    }
+  };
+}
+
 export default {
-  getBoatStatus
+  getBoatStatus,
+  getHistory
 };

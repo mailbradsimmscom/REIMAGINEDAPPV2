@@ -383,10 +383,10 @@
             document.getElementById('historyTitle').textContent = 'Loading...';
 
             try {
-                const response = await fetch(`/api/boat-now?hours=${hours}`);
+                const response = await fetch(`/api/boat-now/history?hours=${hours}`);
                 const result = await response.json();
-                if (result.success && result.data.hasData) {
-                    const { history } = result.data;
+                if (result.success && result.data.pointCount > 0) {
+                    const history = result.data;
                     document.getElementById('historyTitle').textContent =
                         `Last ${history.hoursBack} Hours (${history.pointCount} readings)`;
 
@@ -395,6 +395,8 @@
                     if (windDirChart) { windDirChart.destroy(); windDirChart = null; }
 
                     initCharts(history.data);
+                } else {
+                    document.getElementById('historyTitle').textContent = 'No data for this period';
                 }
             } catch (error) {
                 console.error('Error reloading history:', error);
@@ -428,10 +430,52 @@
                 return validValues.reduce((a, b) => a + b, 0) / validValues.length;
             }
 
+            // Linear regression for trend line
+            function linearRegression(values) {
+                const valid = values.map((v, i) => [i, v]).filter(([, v]) => v !== null && v !== undefined);
+                if (valid.length < 2) return null;
+                const n = valid.length;
+                const sumX = valid.reduce((s, [x]) => s + x, 0);
+                const sumY = valid.reduce((s, [, y]) => s + y, 0);
+                const sumXY = valid.reduce((s, [x, y]) => s + x * y, 0);
+                const sumX2 = valid.reduce((s, [x]) => s + x * x, 0);
+                const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                const intercept = (sumY - slope * sumX) / n;
+                return { start: intercept, end: intercept + slope * (values.length - 1), slope };
+            }
+
+            // Build trend dataset (straight line from first to last point)
+            function trendDataset(values, trend) {
+                if (!trend) return null;
+                const trendData = new Array(values.length).fill(null);
+                trendData[0] = trend.start;
+                trendData[trendData.length - 1] = trend.end;
+                return {
+                    data: trendData,
+                    borderColor: 'rgba(255, 59, 48, 0.5)',
+                    borderWidth: 2,
+                    borderDash: [4, 4],
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0,
+                    spanGaps: true
+                };
+            }
+
+            // Format trend label
+            function trendLabel(trend, unit) {
+                if (!trend) return '';
+                const change = trend.end - trend.start;
+                const arrow = change >= 0 ? '↑' : '↓';
+                return `${arrow} ${change >= 0 ? '+' : ''}${change.toFixed(1)}${unit}`;
+            }
+
             const windSpeedRange = getAxisRange(data.windSpeed);
             const windDirRange = getAxisRange(data.windDirection);
             const windSpeedAvg = getAverage(data.windSpeed);
             const windDirAvg = getAverage(data.windDirection);
+            const windSpeedTrend = linearRegression(data.windSpeed);
+            const windDirTrend = linearRegression(data.windDirection);
 
             // Common chart options
             const commonOptions = {
@@ -456,19 +500,23 @@
                 }
             };
 
-            // Wind Speed Chart (dynamic Y-axis with average line)
+            // Wind Speed Chart (dynamic Y-axis with average + trend lines)
+            const windSpeedDatasets = [{
+                data: data.windSpeed,
+                borderColor: '#007AFF',
+                backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 0
+            }];
+            const windSpeedTrendDs = trendDataset(data.windSpeed, windSpeedTrend);
+            if (windSpeedTrendDs) windSpeedDatasets.push(windSpeedTrendDs);
+
             windSpeedChart = new Chart(document.getElementById('windSpeedChart'), {
                 type: 'line',
                 data: {
                     labels: timestamps,
-                    datasets: [{
-                        data: data.windSpeed,
-                        borderColor: '#007AFF',
-                        backgroundColor: 'rgba(0, 122, 255, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 0
-                    }]
+                    datasets: windSpeedDatasets
                 },
                 options: {
                     ...commonOptions,
@@ -491,7 +539,19 @@
                                         color: '#fff',
                                         font: { size: 11 }
                                     }
-                                }
+                                },
+                                ...(windSpeedTrend ? {
+                                    trendLabel: {
+                                        type: 'label',
+                                        xValue: timestamps[0],
+                                        yValue: windSpeedTrend.start,
+                                        content: trendLabel(windSpeedTrend, ' kts'),
+                                        backgroundColor: 'rgba(255, 59, 48, 0.7)',
+                                        color: '#fff',
+                                        font: { size: 10 },
+                                        position: 'start'
+                                    }
+                                } : {})
                             }
                         }
                     },
@@ -507,19 +567,23 @@
                 }
             });
 
-            // Wind Direction Chart (dynamic Y-axis with average line)
+            // Wind Direction Chart (dynamic Y-axis with average + trend lines)
+            const windDirDatasets = [{
+                data: data.windDirection,
+                borderColor: '#34C759',
+                backgroundColor: 'rgba(52, 199, 89, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 0
+            }];
+            const windDirTrendDs = trendDataset(data.windDirection, windDirTrend);
+            if (windDirTrendDs) windDirDatasets.push(windDirTrendDs);
+
             windDirChart = new Chart(document.getElementById('windDirectionChart'), {
                 type: 'line',
                 data: {
                     labels: timestamps,
-                    datasets: [{
-                        data: data.windDirection,
-                        borderColor: '#34C759',
-                        backgroundColor: 'rgba(52, 199, 89, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 0
-                    }]
+                    datasets: windDirDatasets
                 },
                 options: {
                     ...commonOptions,
@@ -542,7 +606,19 @@
                                         color: '#fff',
                                         font: { size: 11 }
                                     }
-                                }
+                                },
+                                ...(windDirTrend ? {
+                                    trendLabel: {
+                                        type: 'label',
+                                        xValue: timestamps[0],
+                                        yValue: windDirTrend.start,
+                                        content: trendLabel(windDirTrend, '°'),
+                                        backgroundColor: 'rgba(255, 59, 48, 0.7)',
+                                        color: '#fff',
+                                        font: { size: 10 },
+                                        position: 'start'
+                                    }
+                                } : {})
                             }
                         }
                     },
