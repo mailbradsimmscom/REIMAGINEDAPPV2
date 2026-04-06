@@ -1,4 +1,5 @@
-{
+/** @type {import('dependency-cruiser').IConfiguration} */
+export default {
   "forbidden": [
     {
       "name": "no-circular",
@@ -22,9 +23,6 @@
   ],
   "allowed": [
     {
-      "name": "routes-to-services",
-      "severity": "info",
-      "comment": "Routes should call services, not repositories directly",
       "from": {
         "path": "^src/routes"
       },
@@ -33,9 +31,6 @@
       }
     },
     {
-      "name": "services-to-repositories",
-      "severity": "info",
-      "comment": "Services should call repositories",
       "from": {
         "path": "^src/services"
       },
@@ -60,9 +55,6 @@
     },
     "moduleSystems": ["es6"],
     "tsPreCompilationDeps": false,
-    "tsConfig": {
-      "fileName": "./tsconfig.json"
-    },
     "enhancedResolveOptions": {
       "exportsFields": ["exports"],
       "conditionNames": ["import", "require", "node", "default"]
@@ -73,4 +65,4 @@
       }
     }
   }
-}
+};

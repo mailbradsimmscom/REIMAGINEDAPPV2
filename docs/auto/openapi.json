@@ -1,0 +1,9 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "BoatOS API",
+    "version": "1.0.0",
+    "description": "Auto-generated API specification for BoatOS"
+  },
+  "paths": {}
+}
