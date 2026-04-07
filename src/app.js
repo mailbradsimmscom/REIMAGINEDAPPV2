@@ -22,7 +22,8 @@ const app = express();
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Disable CSP for development
-  crossOriginEmbedderPolicy: false // Disable COEP for development
+  crossOriginEmbedderPolicy: false, // Disable COEP for development
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' } // OSM tiles require Referer header
 }));
 
 // CORS configuration - environment-based
