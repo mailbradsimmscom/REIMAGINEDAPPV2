@@ -177,8 +177,9 @@ export async function getActiveTrip() {
 
 /**
  * Start a new trip
+ * @param {string|null} journeyId - Optional journey UUID to link this trip to
  */
-export async function startTrip() {
+export async function startTrip(journeyId = null) {
   const supabase = await getSupabaseClient();
 
   // Check no active trip exists
@@ -194,12 +195,14 @@ export async function startTrip() {
     year: 'numeric'
   })}`;
 
+  const insertData = { status: 'active', title };
+  if (journeyId) {
+    insertData.journey_id = journeyId;
+  }
+
   const { data: trip, error } = await supabase
     .from('trips')
-    .insert({
-      status: 'active',
-      title
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -208,7 +211,7 @@ export async function startTrip() {
     throw new Error(`Failed to start trip: ${error.message}`);
   }
 
-  requestLogger.info('Trip started', { tripId: trip.id, title });
+  requestLogger.info('Trip started', { tripId: trip.id, title, journeyId });
   return trip;
 }
 

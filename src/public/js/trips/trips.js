@@ -382,26 +382,185 @@ class TripsManager {
       this.startTripBtn.disabled = true;
       this.startTripBtn.textContent = 'Starting...';
 
+      // Check for planning journeys (non-blocking — if agent is down, skip)
+      let journeys = [];
+      try {
+        this.startTripBtn.textContent = 'Checking journeys...';
+        journeys = await this.fetchPlanningJourneys();
+      } catch (err) {
+        console.warn('Journey check failed, starting trip directly:', err.message);
+      }
+
+      if (journeys.length > 0) {
+        // Show journey selection modal
+        this.startTripBtn.textContent = 'Start Trip';
+        this.startTripBtn.disabled = false;
+        this.showJourneyModal(journeys);
+        return;
+      }
+
+      // No journeys — start trip directly
+      await this.executeStartTrip(null, null, null);
+    } catch (error) {
+      console.error('Failed to start trip:', error);
+      this.showToast(error.message || 'Failed to start trip');
+      this.startTripBtn.disabled = false;
+      this.startTripBtn.textContent = 'Start Trip';
+    }
+  }
+
+  async executeStartTrip(journeyId, routeId, departureTime) {
+    try {
+      this.startTripBtn.disabled = true;
+      this.startTripBtn.textContent = 'Starting...';
+
       const response = await fetch('/api/trips/start', {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ journey_id: journeyId }),
       });
       const result = await response.json();
 
-      if (result.success) {
-        this.activeTrip = result.data;
-        this.showActiveTrip();
-        this.startStatsPolling();
-        this.showToast('Trip started');
-      } else {
-        throw new Error(result.error);
+      if (!result.success) throw new Error(result.error);
+
+      this.activeTrip = result.data;
+
+      // If journey selected, begin the journey (planning → sailing)
+      if (journeyId && routeId) {
+        try {
+          const journeyBase = this.getJourneyApiBase();
+          const beginRes = await fetch(`${journeyBase}/${journeyId}/begin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              route_id: routeId,
+              departure_time: departureTime || new Date().toISOString(),
+              trip_id: this.activeTrip.id,
+            }),
+          });
+          const beginResult = await beginRes.json();
+          if (!beginResult.success) {
+            console.error('Journey begin failed:', beginResult.error);
+            this.showToast('Trip started but journey begin failed: ' + beginResult.error);
+          }
+        } catch (err) {
+          console.error('Journey begin error:', err);
+          this.showToast('Trip started but journey transition failed');
+        }
       }
+
+      this.showActiveTrip();
+      this.startStatsPolling();
+      this.showToast(journeyId ? 'Trip started — journey is active' : 'Trip started');
     } catch (error) {
       console.error('Failed to start trip:', error);
       this.showToast(error.message || 'Failed to start trip');
     } finally {
       this.startTripBtn.disabled = false;
       this.startTripBtn.textContent = 'Start Trip';
+      this.hideJourneyModal();
     }
+  }
+
+  getJourneyApiBase() {
+    return window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+      ? 'http://localhost:3001/api/journey'
+      : 'https://boatos-maintenance.onrender.com/api/journey';
+  }
+
+  async fetchPlanningJourneys() {
+    try {
+      const base = this.getJourneyApiBase();
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+      const res = await fetch(`${base}?status=planning`, { signal: controller.signal });
+      clearTimeout(timeout);
+      const data = await res.json();
+      if (!data.success) return [];
+      return (data.data || []).filter(j => j.status === 'planning');
+    } catch (err) {
+      console.warn('Journey check unavailable:', err.message);
+      return [];
+    }
+  }
+
+  showJourneyModal(journeys) {
+    const modal = document.getElementById('journeyModal');
+    const list = document.getElementById('journeySelectList');
+
+    list.innerHTML = journeys.map(j => `
+      <div class="journey-select-item" data-journey-id="${j.id}" onclick="window.tripsManager.selectJourneyForTrip('${j.id}')">
+        <div style="font-weight:600; font-size:15px">${j.title}</div>
+        <div style="font-size:12px; color:#8E8E93; margin-top:2px">
+          ${j.start_name || 'Start'} \u2192 ${j.end_name || 'End'}
+        </div>
+      </div>
+    `).join('');
+
+    modal.classList.add('show');
+  }
+
+  hideJourneyModal() {
+    const modal = document.getElementById('journeyModal');
+    if (modal) modal.classList.remove('show');
+    const routeModal = document.getElementById('routeSelectModal');
+    if (routeModal) routeModal.classList.remove('show');
+  }
+
+  async selectJourneyForTrip(journeyId) {
+    // Fetch full journey to get routes
+    try {
+      const base = this.getJourneyApiBase();
+      const res = await fetch(`${base}/${journeyId}`);
+      const data = await res.json();
+      if (!data.success) {
+        this.showToast('Failed to load journey details');
+        return;
+      }
+
+      const journey = data.data;
+      const selectedRoutes = (journey.routes || []).filter(r => r.is_selected);
+
+      if (selectedRoutes.length === 0) {
+        this.showToast('No routes selected in this journey');
+        return;
+      }
+
+      // If only one selected route, use it directly
+      if (selectedRoutes.length === 1) {
+        this.hideJourneyModal();
+        const route = selectedRoutes[0];
+        await this.executeStartTrip(journeyId, route.id, journey.selected_departure || journey.earliest_departure);
+        return;
+      }
+
+      // Multiple routes — show route selection
+      this.showRouteSelectModal(journey, selectedRoutes);
+    } catch (err) {
+      console.error('Failed to load journey:', err);
+      this.showToast('Failed to load journey');
+    }
+  }
+
+  showRouteSelectModal(journey, routes) {
+    document.getElementById('journeyModal').classList.remove('show');
+    const modal = document.getElementById('routeSelectModal');
+    const list = document.getElementById('routeSelectList');
+
+    list.innerHTML = routes.map(r => {
+      const dur = r.estimated_duration_hrs < 24
+        ? `${r.estimated_duration_hrs}hrs`
+        : `${Math.floor(r.estimated_duration_hrs / 24)}d ${Math.round(r.estimated_duration_hrs % 24)}h`;
+      return `
+        <div class="journey-select-item" onclick="window.tripsManager.executeStartTrip('${journey.id}', '${r.id}', '${journey.earliest_departure || new Date().toISOString()}')">
+          <div style="font-weight:600; font-size:15px">${r.name}</div>
+          <div style="font-size:12px; color:#8E8E93; margin-top:2px">${r.distance_nm}nm | ${dur}</div>
+          ${r.ai_description ? `<div style="font-size:11px; color:#8E8E93; margin-top:2px">${r.ai_description}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    modal.classList.add('show');
   }
 
   async stopTrip() {

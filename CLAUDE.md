@@ -156,6 +156,25 @@ npm run docs
 
 **Why:** Documentation is how future sessions (and humans) understand the system. Outdated docs cause confusion and wrong assumptions.
 
+
+### Rule #5: Keep /QA Updated
+
+The `/tests` and UI coverage inventory for this codebase must stay current with frontend changes.
+
+**When UI coverage must be updated:**
+
+- If a UI page, route, workflow, or navigation surface is added, removed, or changed, update the UI coverage inventory and Playwright coverage in the same change.
+- If a feature is being deprecated, remove it from navigation first, mark it legacy, and only delete it after verification.
+- No frontend cleanup deletion is allowed without corresponding smoke coverage for the affected supported surface.
+
+**Testing expectations:**
+
+- Aim for near-100% Playwright smoke coverage of supported named pages and primary user/admin workflows.
+- At minimum, supported pages must load without uncaught JavaScript errors, failed bootstrap requests, or missing critical DOM anchors.
+- Destructive actions and high-risk flows must have workflow coverage before cleanup or removal work begins.
+
+**Why:** Frontend cleanup is risky in this codebase. Coverage must be kept current so deprecated or unused surfaces can be removed safely without breaking active user paths.
+
 ---
 
 ## Additional Rules (.cursorrules)

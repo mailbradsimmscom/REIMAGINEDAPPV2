@@ -471,6 +471,20 @@
             color: white;
         }
 
+        .journey-select-item {
+            padding: 14px;
+            border: 1px solid #E5E5EA;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .journey-select-item:hover,
+        .journey-select-item:active {
+            background: #F2F2F7;
+        }
+
         /* Sail Configuration */
         .sail-config-section {
             background: #F2F2F7;
@@ -722,6 +736,26 @@
                 <button class="modal-btn" id="deleteTripBtn" style="background: #FF3B30; color: white;">Delete Trip</button>
                 <button class="modal-btn cancel" id="cancelOptions">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Journey Selection Modal -->
+    <div class="modal-overlay" id="journeyModal">
+        <div class="modal" style="max-width:360px">
+            <div class="modal-title">Part of a Journey?</div>
+            <div class="modal-text">Link this trip to a planned journey, or start a standalone trip.</div>
+            <div id="journeySelectList" style="max-height:240px; overflow-y:auto; margin-bottom:16px"></div>
+            <button class="modal-btn cancel" style="width:100%" onclick="window.tripsManager.hideJourneyModal(); window.tripsManager.executeStartTrip(null, null, null);">No, Just Start Trip</button>
+        </div>
+    </div>
+
+    <!-- Route Selection Modal -->
+    <div class="modal-overlay" id="routeSelectModal">
+        <div class="modal" style="max-width:360px">
+            <div class="modal-title">Select Route</div>
+            <div class="modal-text">Which route are you taking?</div>
+            <div id="routeSelectList" style="max-height:240px; overflow-y:auto; margin-bottom:16px"></div>
+            <button class="modal-btn cancel" style="width:100%" onclick="window.tripsManager.hideJourneyModal();">Cancel</button>
         </div>
     </div>
 

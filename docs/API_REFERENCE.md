@@ -1114,6 +1114,25 @@ Status values: `pending`, `keep_both`, `merge`, `delete_task1`, `delete_task2`, 
 | POST | `/api/weather/areas/:id/fetch` | Trigger fetch |
 | GET | `/api/weather/credits` | Meteoblue credits |
 
+#### Journey Endpoints (`/api/journey`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/journey` | Create journey (auto-generates AI routes) |
+| GET | `/api/journey` | List journeys (`?status=planning\|sailing\|completed`) |
+| GET | `/api/journey/:id` | Get journey with routes and scenarios |
+| PUT | `/api/journey/:id` | Update journey |
+| DELETE | `/api/journey/:id` | Delete journey (planning only) |
+| POST | `/api/journey/:id/routes` | Add route manually |
+| POST | `/api/journey/:id/routes/generate` | Re-generate AI routes |
+| PUT | `/api/journey/:id/routes/select` | Select routes for comparison (max 3) |
+| POST | `/api/journey/:id/score` | Score scenarios (routes x departure windows) |
+| GET | `/api/journey/:id/scenarios` | Get all scored scenarios |
+| GET | `/api/journey/:id/scenarios/:scenarioId` | Waypoint-by-waypoint breakdown |
+| GET | `/api/journey/:id/ahead` | Forward weather (`?lat=X&lon=Y&sog=Z`) |
+| POST | `/api/journey/:id/begin` | Planning to sailing transition |
+| POST | `/api/journey/:id/complete` | Sailing to completed transition |
+
 ---
 
 ### WebSocket API

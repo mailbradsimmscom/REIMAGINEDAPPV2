@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Journey Sailing</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --color-primary: #007AFF;
+            --color-success: #34C759;
+            --color-warning: #FF9500;
+            --color-error: #FF3B30;
+            --color-bg: #F2F2F7;
+            --color-surface: #FFFFFF;
+            --color-text: #000000;
+            --color-text-secondary: #8E8E93;
+            --color-border: #C6C6C8;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            -webkit-font-smoothing: antialiased;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--color-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--color-text);
+            font-size: 18px;
+            margin-right: var(--spacing-md);
+        }
+
+        .header h1 { font-size: 18px; font-weight: 600; flex: 1; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .content {
+            padding: var(--spacing-md);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        #map {
+            height: 350px;
+            min-height: 250px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-border);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .current-pos {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--color-bg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .current-pos strong { color: var(--color-text); }
+
+        .wp-ahead {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--color-bg);
+        }
+
+        .wp-ahead:last-child { border-bottom: none; }
+
+        .wp-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: 4px;
+        }
+
+        .wp-arrow { color: var(--color-primary); font-weight: 600; }
+
+        .wp-name { font-weight: 600; font-size: 14px; }
+
+        .wp-dist {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-left: auto;
+        }
+
+        .wp-details {
+            display: flex;
+            gap: var(--spacing-md);
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-left: 20px;
+        }
+
+        .wp-score {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .wp-destination {
+            background: #F0F7FF;
+            border: 1px solid #BDE0FE;
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-top: var(--spacing-sm);
+        }
+
+        .wp-destination .wp-name { font-size: 15px; }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-complete { background: var(--color-success); color: white; }
+        .btn-secondary { background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-border); }
+
+        .refresh-info {
+            text-align: center;
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            margin-top: var(--spacing-sm);
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--color-text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-msg {
+            background: #FFE5E5;
+            color: var(--color-error);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            font-size: 13px;
+            display: none;
+        }
+
+        .mt-sm { margin-top: var(--spacing-sm); }
+        .mt-md { margin-top: var(--spacing-md); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/public/journey-plan.html" class="back-button">&larr;</a>
+        <h1 id="header-title">Journey</h1>
+        <span class="status-badge">Sailing</span>
+    </div>
+
+    <div class="content">
+        <div id="error-msg" class="error-msg"></div>
+
+        <div class="panel">
+            <div id="journey-info">
+                <div id="route-name" style="font-size:16px; font-weight:600"></div>
+                <div id="departed-info" style="font-size:12px; color:var(--color-text-secondary); margin-top:2px"></div>
+            </div>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="panel">
+            <div class="panel-title">What's Ahead</div>
+            <div id="ahead-content">
+                <div class="loading"><div class="spinner"></div><div class="mt-sm">Fetching position & weather...</div></div>
+            </div>
+        </div>
+
+        <div id="refresh-info" class="refresh-info"></div>
+
+        <div class="mt-md">
+            <button class="btn btn-complete" id="btn-complete" onclick="completeJourney()">Complete Journey</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const JOURNEY_API = window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+            ? 'http://localhost:3001/api/journey'
+            : 'https://boatos-maintenance.onrender.com/api/journey';
+
+        const GPS_API = '/api/gps/current';
+
+        let map = null;
+        let mapLayers = [];
+        let journeyId = null;
+        let refreshTimer = null;
+
+        // Get journey ID from URL
+        const params = new URLSearchParams(window.location.search);
+        journeyId = params.get('id');
+
+        function showError(msg) {
+            const el = document.getElementById('error-msg');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function getScoreColor(score) {
+            if (score >= 75) return '#34C759';
+            if (score >= 55) return '#FF9500';
+            return '#FF3B30';
+        }
+
+        async function loadJourneyInfo() {
+            try {
+                const res = await fetch(`${JOURNEY_API}/${journeyId}`);
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+
+                const j = data.data;
+                document.getElementById('header-title').textContent = j.title;
+                const route = (j.routes || []).find(r => r.id === j.selected_route_id);
+                document.getElementById('route-name').textContent = route?.name || 'Route';
+
+                if (j.selected_departure) {
+                    const dt = new Date(j.selected_departure);
+                    document.getElementById('departed-info').textContent =
+                        `Departed: ${dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} ${dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}` +
+                        (route ? ` | ${route.distance_nm}nm` : '');
+                }
+
+                return j;
+            } catch (err) {
+                showError(err.message);
+                return null;
+            }
+        }
+
+        async function fetchGpsPosition() {
+            try {
+                const res = await fetch(GPS_API);
+                const data = await res.json();
+                if (data.success && data.data) {
+                    return {
+                        lat: data.data.latitude,
+                        lon: data.data.longitude,
+                        sog: data.data.speed_over_ground || 0,
+                    };
+                }
+            } catch (err) {
+                console.warn('GPS fetch failed:', err.message);
+            }
+            return null;
+        }
+
+        async function loadAhead() {
+            const gps = await fetchGpsPosition();
+            if (!gps) {
+                document.getElementById('ahead-content').innerHTML =
+                    '<div style="color:var(--color-text-secondary); text-align:center; padding:16px">GPS position unavailable</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${JOURNEY_API}/${journeyId}/ahead?lat=${gps.lat}&lon=${gps.lon}&sog=${gps.sog}`);
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+
+                renderAhead(data.data, gps);
+                renderMap(data.data, gps);
+                document.getElementById('refresh-info').textContent =
+                    `Last updated: ${new Date().toLocaleTimeString()} | Auto-refresh every 5 min`;
+            } catch (err) {
+                showError(err.message);
+                document.getElementById('ahead-content').innerHTML = '';
+            }
+        }
+
+        function renderAhead(data, gps) {
+            const container = document.getElementById('ahead-content');
+            const ahead = data.ahead || [];
+
+            let html = `
+                <div class="current-pos">
+                    <strong>Current:</strong> ${gps.lat.toFixed(4)}, ${gps.lon.toFixed(4)} | SOG: ${gps.sog.toFixed(1)}kt
+                    ${data.passed_count > 0 ? ` | ${data.passed_count} waypoint${data.passed_count > 1 ? 's' : ''} passed` : ''}
+                </div>
+            `;
+
+            if (ahead.length === 0) {
+                html += '<div style="text-align:center; padding:16px; color:var(--color-text-secondary)">Near destination</div>';
+                container.innerHTML = html;
+                return;
+            }
+
+            ahead.forEach((wp, i) => {
+                const isLast = i === ahead.length - 1;
+                const color = getScoreColor(wp.score);
+                const eta = new Date(wp.eta);
+                const etaStr = eta.toLocaleDateString('en-US', { weekday: 'short' }) + ' ' +
+                    eta.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                const hoursStr = wp.hours_away < 1
+                    ? `${Math.round(wp.hours_away * 60)}min`
+                    : wp.hours_away < 24
+                        ? `${wp.hours_away.toFixed(1)}hrs`
+                        : `${Math.floor(wp.hours_away / 24)}d ${Math.round(wp.hours_away % 24)}h`;
+
+                if (isLast) {
+                    html += `
+                        <div class="wp-destination">
+                            <div class="wp-header">
+                                <span style="font-size:16px">&#127937;</span>
+                                <span class="wp-name">${wp.name}</span>
+                                <span class="wp-dist">${wp.distance_nm}nm | ~${hoursStr}</span>
+                            </div>
+                            <div class="wp-details">
+                                <span>ETA: <strong>${etaStr}</strong></span>
+                                <span class="wp-score" style="color:${color}">${Math.round(wp.score)}/100</span>
+                                <span>${wp.wind_kts != null ? wp.wind_kts + 'kt' : ''}</span>
+                                <span>${wp.effective_wave_m != null ? wp.effective_wave_m + 'm' : ''}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="wp-ahead">
+                            <div class="wp-header">
+                                <span class="wp-arrow">&rarr;</span>
+                                <span class="wp-name">${wp.name}</span>
+                                <span class="wp-dist">${wp.distance_nm}nm | ~${hoursStr}</span>
+                            </div>
+                            <div class="wp-details">
+                                <span class="wp-score" style="color:${color}">${Math.round(wp.score)}</span>
+                                <span>Wind: ${wp.wind_kts != null ? wp.wind_kts + 'kt' : '—'}</span>
+                                <span>Waves: ${wp.effective_wave_m != null ? wp.effective_wave_m + 'm' : '—'}${wp.period_s ? ' @' + wp.period_s + 's' : ''}</span>
+                                <span>${wp.seaRelation || ''}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderMap(data, gps) {
+            if (!map) {
+                map = L.map('map').setView([gps.lat, gps.lon], 8);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors',
+                    maxZoom: 18
+                }).addTo(map);
+            }
+
+            // Clear existing
+            mapLayers.forEach(l => map.removeLayer(l));
+            mapLayers = [];
+
+            const ahead = data.ahead || [];
+            const bounds = L.latLngBounds();
+
+            // Boat icon
+            const boatIcon = L.divIcon({
+                className: '',
+                html: '<div style="background:#007AFF; width:14px; height:14px; border-radius:50%; border:3px solid white; box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>',
+                iconSize: [14, 14],
+                iconAnchor: [7, 7]
+            });
+            const boatMarker = L.marker([gps.lat, gps.lon], { icon: boatIcon })
+                .bindPopup(`<b>Current Position</b><br>SOG: ${gps.sog.toFixed(1)}kt`)
+                .addTo(map);
+            mapLayers.push(boatMarker);
+            bounds.extend([gps.lat, gps.lon]);
+
+            // Route line ahead (dashed, color-coded by worst score)
+            if (ahead.length > 0) {
+                const routeCoords = [[gps.lat, gps.lon], ...ahead.map(wp => [wp.lat, wp.lon])];
+                const routeLine = L.polyline(routeCoords, {
+                    color: '#007AFF',
+                    weight: 3,
+                    dashArray: '8,6',
+                    opacity: 0.7
+                }).addTo(map);
+                mapLayers.push(routeLine);
+
+                // Waypoint markers
+                ahead.forEach((wp, i) => {
+                    const isLast = i === ahead.length - 1;
+                    const color = getScoreColor(wp.score);
+                    const icon = L.divIcon({
+                        className: '',
+                        html: `<div style="background:${isLast ? '#FF3B30' : color}; width:${isLast ? 14 : 10}px; height:${isLast ? 14 : 10}px; border-radius:50%; border:2px solid white; box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>`,
+                        iconSize: [isLast ? 14 : 10, isLast ? 14 : 10],
+                        iconAnchor: [isLast ? 7 : 5, isLast ? 7 : 5]
+                    });
+                    const marker = L.marker([wp.lat, wp.lon], { icon })
+                        .bindPopup(`<b>${wp.name}</b><br>Score: ${Math.round(wp.score)}/100<br>ETA: ${new Date(wp.eta).toLocaleTimeString()}`)
+                        .addTo(map);
+                    mapLayers.push(marker);
+                    bounds.extend([wp.lat, wp.lon]);
+                });
+            }
+
+            if (bounds.isValid()) {
+                map.fitBounds(bounds.pad(0.15));
+            }
+        }
+
+        async function completeJourney() {
+            if (!confirm('Mark this journey as completed?')) return;
+
+            const btn = document.getElementById('btn-complete');
+            btn.disabled = true;
+            btn.textContent = 'Completing...';
+
+            try {
+                const res = await fetch(`${JOURNEY_API}/${journeyId}/complete`, { method: 'POST' });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+
+                if (refreshTimer) clearInterval(refreshTimer);
+                alert('Journey completed!');
+                window.location.href = '/public/journey-plan.html';
+            } catch (err) {
+                showError(err.message);
+                btn.disabled = false;
+                btn.textContent = 'Complete Journey';
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!journeyId) {
+                showError('No journey ID provided. Use ?id=<journey-uuid>');
+                return;
+            }
+
+            await loadJourneyInfo();
+            await loadAhead();
+
+            // Auto-refresh every 5 minutes
+            refreshTimer = setInterval(loadAhead, 5 * 60 * 1000);
+        });
+    </script>
+    <script src="/public/js/mobile-hamburger.js"></script>
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

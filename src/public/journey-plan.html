@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Journey Planner</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --color-primary: #007AFF;
+            --color-secondary: #5856D6;
+            --color-success: #34C759;
+            --color-warning: #FF9500;
+            --color-error: #FF3B30;
+            --color-bg: #F2F2F7;
+            --color-surface: #FFFFFF;
+            --color-text: #000000;
+            --color-text-secondary: #8E8E93;
+            --color-border: #C6C6C8;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            -webkit-font-smoothing: antialiased;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--color-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--color-text);
+            font-size: 18px;
+            margin-right: var(--spacing-md);
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .content {
+            padding: var(--spacing-md);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Form */
+        .form-row {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--color-bg);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Map */
+        #map, #create-map {
+            height: 350px;
+            min-height: 250px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-border);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Map instruction banner */
+        .map-instruction {
+            text-align: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: #E3F2FD;
+            color: #1565C0;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Point labels under map */
+        .point-display {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .point-tag {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 13px;
+            flex: 1;
+            padding: var(--spacing-sm);
+            background: var(--color-bg);
+            border-radius: var(--radius-sm);
+            min-height: 36px;
+        }
+
+        .point-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .point-dot-start { background: var(--color-success); }
+        .point-dot-end { background: var(--color-error); }
+
+        .point-text {
+            flex: 1;
+            color: var(--color-text-secondary);
+        }
+
+        .point-text.set {
+            color: var(--color-text);
+        }
+
+        .point-clear {
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+        }
+
+        /* Route list */
+        .route-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--color-bg);
+        }
+
+        .route-item:last-child {
+            border-bottom: none;
+        }
+
+        .route-checkbox {
+            margin-right: var(--spacing-sm);
+            width: 20px;
+            height: 20px;
+            accent-color: var(--color-primary);
+        }
+
+        .route-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: var(--spacing-sm);
+            flex-shrink: 0;
+        }
+
+        .route-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .route-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .route-stats {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .route-desc {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-planning { background: #E3F2FD; color: #1565C0; }
+        .status-sailing { background: #E8F5E9; color: #2E7D32; }
+        .status-completed { background: #F3E5F5; color: #7B1FA2; }
+
+        /* Journey list */
+        .journey-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .journey-item:hover { background: var(--color-bg); }
+        .journey-item:last-child { border-bottom: none; }
+
+        .journey-info { flex: 1; }
+
+        .journey-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .journey-subtitle {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+        }
+
+        .journey-arrow {
+            color: var(--color-text-secondary);
+            font-size: 18px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--color-text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Error */
+        .error-msg {
+            background: #FFE5E5;
+            color: var(--color-error);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            font-size: 13px;
+            display: none;
+        }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Flex utilities */
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gap-sm { gap: var(--spacing-sm); }
+        .mt-sm { margin-top: var(--spacing-sm); }
+        .mt-md { margin-top: var(--spacing-md); }
+
+        /* Scoring grid */
+        .score-grid {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .score-grid th {
+            text-align: left;
+            padding: var(--spacing-sm);
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            border-bottom: 2px solid var(--color-border);
+            font-weight: 600;
+        }
+
+        .score-grid td {
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-bg);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .score-grid td:hover {
+            background: var(--color-bg);
+        }
+
+        .score-cell {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .score-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .score-value {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .score-best {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--color-success);
+            margin-left: 4px;
+        }
+
+        /* AI summary */
+        .ai-summary {
+            background: #F0F7FF;
+            border: 1px solid #BDE0FE;
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-md);
+            font-size: 13px;
+            line-height: 1.5;
+            color: #1E3A5F;
+        }
+
+        /* Waypoint detail table */
+        .wp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .wp-table th {
+            text-align: left;
+            padding: 6px 8px;
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .wp-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--color-bg);
+        }
+
+        .wp-table .score-bar {
+            display: inline-block;
+            height: 6px;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/public/other-links.html" class="back-button">&larr;</a>
+        <h1>Journey Planner</h1>
+    </div>
+
+    <div class="content">
+        <div id="error-msg" class="error-msg"></div>
+
+        <!-- VIEW: Journey List -->
+        <div id="view-list" class="view active">
+            <div class="flex-between" style="margin-bottom: var(--spacing-md)">
+                <div class="panel-title" style="margin-bottom:0">Journeys</div>
+                <button class="btn btn-primary btn-small" onclick="showView('create')">+ New Journey</button>
+            </div>
+            <div id="journey-list" class="panel">
+                <div class="loading"><div class="spinner"></div><div class="mt-sm">Loading...</div></div>
+            </div>
+        </div>
+
+        <!-- VIEW: Create Journey -->
+        <div id="view-create" class="view">
+            <div class="panel">
+                <div class="panel-title">New Journey</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="create-title" placeholder="e.g. Antigua to BVI">
+                    </div>
+                </div>
+            </div>
+
+            <div id="create-map-instruction" class="map-instruction">Tap the map to set your START point</div>
+            <div id="create-map"></div>
+
+            <div class="point-display">
+                <div class="point-tag">
+                    <div class="point-dot point-dot-start"></div>
+                    <span id="start-label" class="point-text">Start — tap map</span>
+                    <button class="point-clear" id="start-clear" onclick="clearPoint('start')" style="display:none">&times;</button>
+                </div>
+                <div class="point-tag">
+                    <div class="point-dot point-dot-end"></div>
+                    <span id="end-label" class="point-text">End — tap map</span>
+                    <button class="point-clear" id="end-clear" onclick="clearPoint('end')" style="display:none">&times;</button>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <button class="btn btn-secondary" onclick="cancelCreate()">Cancel</button>
+                <button class="btn btn-primary" id="btn-create" onclick="createJourney()" disabled>Create Journey</button>
+            </div>
+        </div>
+
+        <!-- VIEW: Journey Detail -->
+        <div id="view-detail" class="view">
+            <div class="flex-between" style="margin-bottom: var(--spacing-md)">
+                <button class="btn btn-secondary btn-small" onclick="showView('list'); loadJourneys();">&larr; Back</button>
+                <div>
+                    <button class="btn btn-secondary btn-small" id="btn-regenerate" onclick="regenerateRoutes()">Regenerate Routes</button>
+                    <button class="btn btn-secondary btn-small" id="btn-delete" onclick="deleteJourney()" style="color:var(--color-error)">Delete</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="flex-between">
+                    <div>
+                        <span id="detail-title" style="font-size:16px; font-weight:600"></span>
+                        <span id="detail-status" class="status-badge" style="margin-left:8px"></span>
+                    </div>
+                </div>
+                <div id="detail-subtitle" class="route-stats mt-sm"></div>
+            </div>
+
+            <div id="map"></div>
+
+            <div class="panel">
+                <div class="flex-between">
+                    <div class="panel-title" style="margin-bottom:0">Routes</div>
+                    <span id="route-count" class="route-stats"></span>
+                </div>
+                <div id="route-list" class="mt-sm"></div>
+                <div id="select-actions" class="mt-md" style="display:none">
+                    <button class="btn btn-primary btn-block" id="btn-save-selection" onclick="saveRouteSelection()">Save Selection</button>
+                </div>
+            </div>
+
+            <!-- Departure & Scoring (Phase 3) -->
+            <div class="panel" id="scoring-panel" style="display:none">
+                <div class="panel-title">Departure & Scoring</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Earliest Departure</label>
+                        <input type="datetime-local" id="departure-input" style="width:100%; padding:8px 10px; border:1px solid var(--color-border); border-radius:var(--radius-sm); font-size:14px; font-family:inherit;">
+                    </div>
+                </div>
+                <div class="route-stats mt-sm" id="departure-info">6 windows will be scored (12hr intervals over 3 days)</div>
+                <button class="btn btn-primary btn-block mt-md" id="btn-score" onclick="scoreScenarios()">Score Scenarios</button>
+            </div>
+
+            <!-- Scoring Results Grid -->
+            <div class="panel" id="grid-panel" style="display:none">
+                <div class="panel-title">Scenario Comparison</div>
+                <div id="score-grid-container" class="mt-sm"></div>
+            </div>
+
+            <!-- AI Summary -->
+            <div id="ai-summary-panel" class="panel" style="display:none">
+                <div class="panel-title">AI Recommendation</div>
+                <div id="ai-summary-content" class="ai-summary"></div>
+            </div>
+
+            <!-- Begin Journey -->
+            <div id="begin-panel" class="panel" style="display:none">
+                <div class="panel-title">Begin Journey</div>
+                <div class="route-stats" id="begin-info"></div>
+                <button class="btn btn-primary btn-block mt-md" id="btn-begin" onclick="beginJourney()" style="background:var(--color-success)">Begin Journey</button>
+            </div>
+        </div>
+
+        <!-- VIEW: Scenario Detail -->
+        <div id="view-scenario" class="view">
+            <div class="flex-between" style="margin-bottom: var(--spacing-md)">
+                <button class="btn btn-secondary btn-small" onclick="showView('detail'); renderJourneyDetail();">&larr; Back to Journey</button>
+            </div>
+            <div class="panel">
+                <div id="scenario-header" style="font-size:15px; font-weight:600"></div>
+                <div id="scenario-subtitle" class="route-stats mt-sm"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Waypoint Breakdown</div>
+                <div id="scenario-waypoints" class="mt-sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+            ? 'http://localhost:3001/api/journey'
+            : 'https://boatos-maintenance.onrender.com/api/journey';
+
+        const ROUTE_COLORS = ['#007AFF', '#FF9500', '#34C759', '#FF3B30', '#5856D6'];
+
+        let map = null;
+        let createMap = null;
+        let routeLayers = [];
+        let currentJourney = null;
+
+        // Create flow state
+        let createStart = null; // { lat, lon, marker }
+        let createEnd = null;   // { lat, lon, marker }
+
+        // ========== VIEWS ==========
+
+        function showView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${name}`).classList.add('active');
+            hideError();
+            if (name === 'detail' && !map) {
+                setTimeout(initMap, 50);
+            }
+            if (name === 'create') {
+                setTimeout(initCreateMap, 50);
+            }
+        }
+
+        // ========== ERROR ==========
+
+        function showError(msg) {
+            const el = document.getElementById('error-msg');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error-msg').style.display = 'none';
+        }
+
+        // ========== API ==========
+
+        async function apiCall(path, method = 'GET', body = null) {
+            const opts = {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+            };
+            if (body) opts.body = JSON.stringify(body);
+
+            const res = await fetch(`${API_BASE}${path}`, opts);
+            const data = await res.json();
+            if (!data.success) throw new Error(data.error || 'API error');
+            return data.data;
+        }
+
+        // ========== JOURNEY LIST ==========
+
+        async function loadJourneys() {
+            const container = document.getElementById('journey-list');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><div class="mt-sm">Loading...</div></div>';
+
+            try {
+                const journeys = await apiCall('');
+                if (journeys.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--color-text-secondary)">No journeys yet. Create one to get started.</div>';
+                    return;
+                }
+
+                container.innerHTML = journeys.map(j => `
+                    <div class="journey-item" onclick="loadJourney('${j.id}')">
+                        <div class="journey-info">
+                            <div class="journey-title">${j.title}</div>
+                            <div class="journey-subtitle">
+                                ${j.start_name || 'Start'} &rarr; ${j.end_name || 'Destination'}
+                            </div>
+                        </div>
+                        <span class="status-badge status-${j.status}">${j.status}</span>
+                        <span class="journey-arrow" style="margin-left:8px">&rsaquo;</span>
+                    </div>
+                `).join('');
+            } catch (err) {
+                showError(err.message);
+                container.innerHTML = '';
+            }
+        }
+
+        // ========== CREATE JOURNEY ==========
+
+        function initCreateMap() {
+            if (createMap) {
+                createMap.invalidateSize();
+                return;
+            }
+            createMap = L.map('create-map').setView([20, -65], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(createMap);
+
+            createMap.on('click', onCreateMapClick);
+        }
+
+        function onCreateMapClick(e) {
+            const lat = Math.round(e.latlng.lat * 10000) / 10000;
+            const lon = Math.round(e.latlng.lng * 10000) / 10000;
+
+            if (!createStart) {
+                // Set start
+                createStart = {
+                    lat, lon,
+                    marker: L.marker([lat, lon], {
+                        icon: L.divIcon({
+                            className: '',
+                            html: '<div style="background:#34C759; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>',
+                            iconSize: [16, 16],
+                            iconAnchor: [8, 8]
+                        })
+                    }).addTo(createMap)
+                };
+                document.getElementById('start-label').textContent = `${lat}, ${lon}`;
+                document.getElementById('start-label').classList.add('set');
+                document.getElementById('start-clear').style.display = '';
+                document.getElementById('create-map-instruction').textContent = 'Now tap to set your END point';
+            } else if (!createEnd) {
+                // Set end
+                createEnd = {
+                    lat, lon,
+                    marker: L.marker([lat, lon], {
+                        icon: L.divIcon({
+                            className: '',
+                            html: '<div style="background:#FF3B30; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>',
+                            iconSize: [16, 16],
+                            iconAnchor: [8, 8]
+                        })
+                    }).addTo(createMap)
+                };
+                document.getElementById('end-label').textContent = `${lat}, ${lon}`;
+                document.getElementById('end-label').classList.add('set');
+                document.getElementById('end-clear').style.display = '';
+                document.getElementById('create-map-instruction').textContent = 'Start and end set. Enter a title and create.';
+
+                // Draw line between points
+                createEnd.line = L.polyline(
+                    [[createStart.lat, createStart.lon], [lat, lon]],
+                    { color: '#007AFF', weight: 2, dashArray: '6,4', opacity: 0.6 }
+                ).addTo(createMap);
+
+                // Fit bounds
+                createMap.fitBounds([
+                    [createStart.lat, createStart.lon],
+                    [lat, lon]
+                ], { padding: [40, 40] });
+            }
+
+            updateCreateButton();
+        }
+
+        function clearPoint(which) {
+            if (which === 'start' && createStart) {
+                createMap.removeLayer(createStart.marker);
+                if (createEnd && createEnd.line) {
+                    createMap.removeLayer(createEnd.line);
+                    createEnd.line = null;
+                }
+                createStart = null;
+                document.getElementById('start-label').textContent = 'Start — tap map';
+                document.getElementById('start-label').classList.remove('set');
+                document.getElementById('start-clear').style.display = 'none';
+
+                // Also clear end since start must come first
+                if (createEnd) clearPoint('end');
+                document.getElementById('create-map-instruction').textContent = 'Tap the map to set your START point';
+            }
+            if (which === 'end' && createEnd) {
+                createMap.removeLayer(createEnd.marker);
+                if (createEnd.line) createMap.removeLayer(createEnd.line);
+                createEnd = null;
+                document.getElementById('end-label').textContent = 'End — tap map';
+                document.getElementById('end-label').classList.remove('set');
+                document.getElementById('end-clear').style.display = 'none';
+                document.getElementById('create-map-instruction').textContent = 'Now tap to set your END point';
+            }
+            updateCreateButton();
+        }
+
+        function cancelCreate() {
+            clearPoint('start');
+            document.getElementById('create-title').value = '';
+            showView('list');
+        }
+
+        function updateCreateButton() {
+            const title = document.getElementById('create-title').value.trim();
+            document.getElementById('btn-create').disabled = !(createStart && createEnd);
+        }
+
+        async function createJourney() {
+            if (!createStart || !createEnd) return;
+
+            const btn = document.getElementById('btn-create');
+            btn.disabled = true;
+            btn.textContent = 'Generating routes...';
+
+            try {
+                const title = document.getElementById('create-title').value.trim() ||
+                    `${createStart.lat.toFixed(2)}, ${createStart.lon.toFixed(2)} to ${createEnd.lat.toFixed(2)}, ${createEnd.lon.toFixed(2)}`;
+
+                const body = {
+                    title,
+                    start_lat: createStart.lat,
+                    start_lon: createStart.lon,
+                    end_lat: createEnd.lat,
+                    end_lon: createEnd.lon,
+                };
+
+                const journey = await apiCall('', 'POST', body);
+                currentJourney = journey;
+
+                // Reset create state
+                clearPoint('start');
+                document.getElementById('create-title').value = '';
+
+                showView('detail');
+                renderJourneyDetail();
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Journey';
+            }
+        }
+
+        // ========== JOURNEY DETAIL ==========
+
+        async function loadJourney(id) {
+            showView('detail');
+            try {
+                currentJourney = await apiCall(`/${id}`);
+                renderJourneyDetail();
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        function renderJourneyDetail() {
+            const j = currentJourney;
+            if (!j) return;
+
+            document.getElementById('detail-title').textContent = j.title;
+            const badge = document.getElementById('detail-status');
+            badge.textContent = j.status;
+            badge.className = `status-badge status-${j.status}`;
+            document.getElementById('detail-subtitle').textContent =
+                `${j.start_name || 'Start'} \u2192 ${j.end_name || 'Destination'}`;
+
+            // Show/hide controls based on status
+            const isPlanning = j.status === 'planning';
+            document.getElementById('btn-regenerate').style.display = isPlanning ? '' : 'none';
+            document.getElementById('btn-delete').style.display = isPlanning ? '' : 'none';
+
+            // If sailing, show link to sailing view
+            if (j.status === 'sailing') {
+                document.getElementById('detail-subtitle').innerHTML =
+                    `${j.start_name || 'Start'} \u2192 ${j.end_name || 'Destination'} &mdash; <a href="/public/journey-sailing.html?id=${j.id}" style="color:var(--color-primary); font-weight:600">View Sailing Dashboard &rarr;</a>`;
+            }
+
+            renderRoutes();
+            renderMap();
+            renderScoringPanel();
+        }
+
+        function renderRoutes() {
+            const j = currentJourney;
+            const routes = j.routes || [];
+            const container = document.getElementById('route-list');
+            document.getElementById('route-count').textContent = `${routes.length} route${routes.length !== 1 ? 's' : ''}`;
+
+            if (routes.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--color-text-secondary)">No routes generated yet.</div>';
+                document.getElementById('select-actions').style.display = 'none';
+                return;
+            }
+
+            const isPlanning = j.status === 'planning';
+
+            container.innerHTML = routes.map((r, i) => {
+                const color = ROUTE_COLORS[i % ROUTE_COLORS.length];
+                const checked = r.is_selected ? 'checked' : '';
+                const durationStr = r.estimated_duration_hrs < 24
+                    ? `${r.estimated_duration_hrs}hrs`
+                    : `${Math.floor(r.estimated_duration_hrs / 24)}d ${Math.round(r.estimated_duration_hrs % 24)}h`;
+
+                return `
+                    <div class="route-item">
+                        ${isPlanning ? `<input type="checkbox" class="route-checkbox" data-route-id="${r.id}" ${checked} onchange="onRouteCheckChange()">` : ''}
+                        <div class="route-color" style="background:${color}"></div>
+                        <div class="route-info">
+                            <div class="route-name">${r.name}</div>
+                            <div class="route-stats">${r.distance_nm}nm | ${durationStr} | ${r.waypoints.length} waypoints</div>
+                            ${r.ai_description ? `<div class="route-desc">${r.ai_description}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('select-actions').style.display = isPlanning && routes.length > 1 ? '' : 'none';
+        }
+
+        function onRouteCheckChange() {
+            const checked = document.querySelectorAll('.route-checkbox:checked');
+            const btn = document.getElementById('btn-save-selection');
+            if (checked.length > 3) {
+                showError('Maximum 3 routes can be selected');
+                // Uncheck the last one
+                checked[checked.length - 1].checked = false;
+                return;
+            }
+            hideError();
+        }
+
+        async function saveRouteSelection() {
+            const checked = document.querySelectorAll('.route-checkbox:checked');
+            const routeIds = Array.from(checked).map(cb => cb.dataset.routeId);
+
+            const btn = document.getElementById('btn-save-selection');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                await apiCall(`/${currentJourney.id}/routes/select`, 'PUT', { routeIds });
+                currentJourney = await apiCall(`/${currentJourney.id}`);
+                renderJourneyDetail();
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Selection';
+            }
+        }
+
+        // ========== REGENERATE ==========
+
+        async function regenerateRoutes() {
+            if (!confirm('This will replace all existing routes. Continue?')) return;
+
+            const btn = document.getElementById('btn-regenerate');
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            try {
+                await apiCall(`/${currentJourney.id}/routes/generate`, 'POST');
+                currentJourney = await apiCall(`/${currentJourney.id}`);
+                renderJourneyDetail();
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Regenerate Routes';
+            }
+        }
+
+        // ========== DELETE ==========
+
+        async function deleteJourney() {
+            if (!confirm(`Delete journey "${currentJourney.title}"?`)) return;
+
+            try {
+                await apiCall(`/${currentJourney.id}`, 'DELETE');
+                currentJourney = null;
+                showView('list');
+                loadJourneys();
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        // ========== MAP ==========
+
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView([20, -65], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+
+            if (currentJourney) renderMap();
+        }
+
+        function renderMap() {
+            if (!map || !currentJourney) return;
+
+            // Clear existing layers
+            routeLayers.forEach(l => map.removeLayer(l));
+            routeLayers = [];
+
+            const j = currentJourney;
+            const routes = j.routes || [];
+            const bounds = L.latLngBounds();
+
+            // Add start marker
+            const startMarker = L.marker([j.start_lat, j.start_lon], {
+                icon: L.divIcon({
+                    className: '',
+                    html: '<div style="background:#34C759; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>',
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                })
+            }).bindPopup(`<b>Start:</b> ${j.start_name || 'Start'}`).addTo(map);
+            routeLayers.push(startMarker);
+            bounds.extend([j.start_lat, j.start_lon]);
+
+            // Add end marker
+            const endMarker = L.marker([j.end_lat, j.end_lon], {
+                icon: L.divIcon({
+                    className: '',
+                    html: '<div style="background:#FF3B30; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>',
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                })
+            }).bindPopup(`<b>Destination:</b> ${j.end_name || 'Destination'}`).addTo(map);
+            routeLayers.push(endMarker);
+            bounds.extend([j.end_lat, j.end_lon]);
+
+            // Draw each route
+            routes.forEach((route, i) => {
+                const color = ROUTE_COLORS[i % ROUTE_COLORS.length];
+                const opacity = route.is_selected ? 0.9 : 0.4;
+                const weight = route.is_selected ? 3 : 2;
+
+                const latlngs = route.waypoints.map(wp => [wp.lat, wp.lon]);
+                const line = L.polyline(latlngs, {
+                    color,
+                    weight,
+                    opacity,
+                    dashArray: route.is_selected ? null : '8,6'
+                }).addTo(map);
+
+                line.bindPopup(`<b>${route.name}</b><br>${route.distance_nm}nm`);
+                routeLayers.push(line);
+
+                // Add waypoint dots
+                route.waypoints.forEach((wp, wi) => {
+                    // Skip first and last (start/end markers already added)
+                    if (wi === 0 || wi === route.waypoints.length - 1) return;
+
+                    bounds.extend([wp.lat, wp.lon]);
+                    const dot = L.circleMarker([wp.lat, wp.lon], {
+                        radius: 4,
+                        color,
+                        fillColor: color,
+                        fillOpacity: opacity,
+                        weight: 1
+                    }).addTo(map);
+                    dot.bindPopup(`<b>${wp.name || `WP ${wi}`}</b><br>${wp.lat.toFixed(3)}, ${wp.lon.toFixed(3)}`);
+                    routeLayers.push(dot);
+                });
+
+                latlngs.forEach(ll => bounds.extend(ll));
+            });
+
+            if (bounds.isValid()) {
+                map.fitBounds(bounds.pad(0.15));
+            }
+        }
+
+        let selectedScenario = null; // scenario chosen for begin journey
+
+        // ========== SCORING (Phase 3) ==========
+
+        function renderScoringPanel() {
+            const j = currentJourney;
+            if (!j || j.status !== 'planning') {
+                document.getElementById('scoring-panel').style.display = 'none';
+                document.getElementById('grid-panel').style.display = 'none';
+                document.getElementById('ai-summary-panel').style.display = 'none';
+                document.getElementById('begin-panel').style.display = 'none';
+                return;
+            }
+
+            const selectedRoutes = (j.routes || []).filter(r => r.is_selected);
+            const hasSelected = selectedRoutes.length > 0;
+
+            document.getElementById('scoring-panel').style.display = hasSelected ? '' : 'none';
+
+            // Pre-fill departure if journey has one saved
+            if (j.earliest_departure) {
+                const dt = new Date(j.earliest_departure);
+                document.getElementById('departure-input').value = toLocalDatetimeStr(dt);
+            } else {
+                // Default to tomorrow 6am local
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(6, 0, 0, 0);
+                document.getElementById('departure-input').value = toLocalDatetimeStr(tomorrow);
+            }
+
+            // Render existing scenarios if present
+            const scenarios = j.scenarios || [];
+            if (scenarios.length > 0) {
+                renderScoreGrid(scenarios, selectedRoutes);
+            } else {
+                document.getElementById('grid-panel').style.display = 'none';
+                document.getElementById('ai-summary-panel').style.display = 'none';
+            }
+        }
+
+        function toLocalDatetimeStr(dt) {
+            const y = dt.getFullYear();
+            const m = String(dt.getMonth() + 1).padStart(2, '0');
+            const d = String(dt.getDate()).padStart(2, '0');
+            const h = String(dt.getHours()).padStart(2, '0');
+            const min = String(dt.getMinutes()).padStart(2, '0');
+            return `${y}-${m}-${d}T${h}:${min}`;
+        }
+
+        async function scoreScenarios() {
+            const departureInput = document.getElementById('departure-input').value;
+            if (!departureInput) {
+                showError('Set an earliest departure date/time first');
+                return;
+            }
+
+            const btn = document.getElementById('btn-score');
+            btn.disabled = true;
+            btn.textContent = 'Scoring... (fetching weather)';
+
+            try {
+                const earliestDeparture = new Date(departureInput).toISOString();
+                const result = await apiCall(`/${currentJourney.id}/score`, 'POST', { earliest_departure: earliestDeparture });
+
+                // Reload journey to get updated scenarios
+                currentJourney = await apiCall(`/${currentJourney.id}`);
+                const selectedRoutes = (currentJourney.routes || []).filter(r => r.is_selected);
+                renderScoreGrid(result.scenarios || currentJourney.scenarios, selectedRoutes);
+
+                if (result.aiSummary) {
+                    document.getElementById('ai-summary-panel').style.display = '';
+                    document.getElementById('ai-summary-content').textContent = result.aiSummary;
+                }
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Score Scenarios';
+            }
+        }
+
+        function renderScoreGrid(scenarios, routes) {
+            if (!scenarios || scenarios.length === 0) {
+                document.getElementById('grid-panel').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('grid-panel').style.display = '';
+
+            // Group scenarios by departure time
+            const departureTimes = [...new Set(scenarios.map(s => s.departure_time))].sort();
+            const routeIds = routes.map(r => r.id);
+
+            // Find best score
+            const bestScore = Math.max(...scenarios.map(s => s.overall_score));
+
+            let html = '<table class="score-grid"><thead><tr><th>Departure</th>';
+            routes.forEach(r => {
+                html += `<th>${r.name.length > 20 ? r.name.substring(0, 18) + '...' : r.name}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            departureTimes.forEach(dt => {
+                const dtObj = new Date(dt);
+                const dayStr = dtObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                const timeStr = dtObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+                html += `<tr><td style="white-space:nowrap; font-weight:500">${dayStr}<br><span style="color:var(--color-text-secondary); font-weight:400">${timeStr}</span></td>`;
+
+                routes.forEach(r => {
+                    const scenario = scenarios.find(s => s.route_id === r.id && s.departure_time === dt);
+                    if (scenario) {
+                        const score = scenario.overall_score;
+                        const color = getScoreColor(score);
+                        const isBest = score === bestScore;
+                        html += `<td onclick="showScenarioDetail('${scenario.id}')">
+                            <div class="score-cell">
+                                <div class="score-dot" style="background:${color}"></div>
+                                <span class="score-value">${Math.round(score)}</span>
+                                ${isBest ? '<span class="score-best">BEST</span>' : ''}
+                            </div>
+                        </td>`;
+                    } else {
+                        html += '<td>—</td>';
+                    }
+                });
+
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('score-grid-container').innerHTML = html;
+
+            // Show AI summary if best scenario has one
+            const bestScenario = scenarios.find(s => s.overall_score === bestScore);
+            if (bestScenario?.ai_summary) {
+                document.getElementById('ai-summary-panel').style.display = '';
+                document.getElementById('ai-summary-content').textContent = bestScenario.ai_summary;
+            }
+
+            // Auto-select best scenario for "Begin Journey"
+            if (bestScenario) {
+                selectScenarioForBegin(bestScenario, routes);
+            }
+        }
+
+        function selectScenarioForBegin(scenario, routes) {
+            selectedScenario = scenario;
+            const route = routes.find(r => r.id === scenario.route_id);
+            const dt = new Date(scenario.departure_time);
+            const dayStr = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            const timeStr = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+            document.getElementById('begin-panel').style.display = '';
+            document.getElementById('begin-info').textContent =
+                `${route?.name || 'Route'} — ${dayStr} ${timeStr} — Score: ${Math.round(scenario.overall_score)}/100`;
+            document.getElementById('btn-begin').textContent =
+                `Begin Journey: ${route?.name || 'Route'}, ${dayStr} ${timeStr}`;
+        }
+
+        function getScoreColor(score) {
+            if (score >= 75) return '#34C759';  // green
+            if (score >= 55) return '#FF9500';  // orange
+            if (score >= 40) return '#FF9500';  // orange
+            return '#FF3B30';                    // red
+        }
+
+        async function showScenarioDetail(scenarioId) {
+            showView('scenario');
+            try {
+                const scenario = await apiCall(`/${currentJourney.id}/scenarios/${scenarioId}`);
+                renderScenarioDetail(scenario);
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        function renderScenarioDetail(scenario) {
+            const dtObj = new Date(scenario.departure_time);
+            const dayStr = dtObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            const timeStr = dtObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+            document.getElementById('scenario-header').innerHTML =
+                `${scenario.route_name || 'Route'} — <span style="color:${getScoreColor(scenario.overall_score)}">${Math.round(scenario.overall_score)}/100</span>`;
+            document.getElementById('scenario-subtitle').textContent =
+                `Departing ${dayStr} at ${timeStr}` + (scenario.route_distance_nm ? ` | ${scenario.route_distance_nm}nm` : '');
+
+            const wpScores = scenario.waypoint_scores || [];
+            if (wpScores.length === 0) {
+                document.getElementById('scenario-waypoints').innerHTML = '<div style="color:var(--color-text-secondary)">No waypoint data</div>';
+                return;
+            }
+
+            let html = `<table class="wp-table"><thead><tr>
+                <th>Waypoint</th><th>ETA</th><th>Score</th><th>Wind</th><th>Waves</th><th>Sea</th><th>Current</th>
+            </tr></thead><tbody>`;
+
+            wpScores.forEach(wp => {
+                const eta = new Date(wp.estimated_arrival);
+                const etaStr = eta.toLocaleDateString('en-US', { weekday: 'short' }) + ' ' +
+                    eta.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                const color = getScoreColor(wp.score);
+                const barWidth = Math.max(wp.score, 5);
+
+                html += `<tr>
+                    <td style="font-weight:500">${wp.name}</td>
+                    <td style="white-space:nowrap; font-size:11px">${etaStr}</td>
+                    <td>
+                        <span style="font-weight:600; color:${color}">${Math.round(wp.score)}</span>
+                        <span class="score-bar" style="width:${barWidth}px; background:${color}"></span>
+                    </td>
+                    <td>${wp.wind_kts != null ? wp.wind_kts + 'kt' : '—'}</td>
+                    <td>${wp.effective_wave_m != null ? wp.effective_wave_m + 'm' : '—'}${wp.period_s ? ' @' + wp.period_s + 's' : ''}</td>
+                    <td style="font-size:11px">${wp.seaRelation || '—'}</td>
+                    <td style="font-size:11px">${wp.currentRelation || '—'}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('scenario-waypoints').innerHTML = html;
+        }
+
+        // ========== BEGIN JOURNEY (Phase 4) ==========
+
+        async function beginJourney() {
+            if (!selectedScenario || !currentJourney) return;
+
+            const route = (currentJourney.routes || []).find(r => r.id === selectedScenario.route_id);
+            const dt = new Date(selectedScenario.departure_time);
+            const dayStr = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            const timeStr = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+            if (!confirm(`Begin journey with ${route?.name || 'selected route'} departing ${dayStr} ${timeStr}?\n\nThis will start a trip and transition the journey to sailing state.`)) {
+                return;
+            }
+
+            const btn = document.getElementById('btn-begin');
+            btn.disabled = true;
+            btn.textContent = 'Starting trip...';
+
+            try {
+                // Step 1: Start trip via main app (with journey_id)
+                const tripRes = await fetch('/api/trips/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ journey_id: currentJourney.id }),
+                });
+                const tripResult = await tripRes.json();
+                if (!tripResult.success) throw new Error(tripResult.error || 'Failed to start trip');
+
+                const tripId = tripResult.data.id;
+
+                // Step 2: Begin journey (planning → sailing)
+                btn.textContent = 'Beginning journey...';
+                const beginResult = await apiCall(`/${currentJourney.id}/begin`, 'POST', {
+                    route_id: selectedScenario.route_id,
+                    departure_time: selectedScenario.departure_time,
+                    trip_id: tripId,
+                });
+
+                // Reload journey to see updated state
+                currentJourney = await apiCall(`/${currentJourney.id}`);
+                renderJourneyDetail();
+
+                // Navigate to sailing view
+                if (confirm('Journey started! Go to sailing dashboard?')) {
+                    window.location.href = `/public/journey-sailing.html?id=${currentJourney.id}`;
+                }
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Begin Journey';
+            }
+        }
+
+        // ========== INIT ==========
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadJourneys();
+            document.getElementById('create-title').addEventListener('input', updateCreateButton);
+        });
+    </script>
+    <script src="/public/js/mobile-hamburger.js"></script>
+    <script src="/public/js/mobile-nav.js"></script>
+</body>
+</html>

@@ -128,7 +128,7 @@ router.post('/start', async (req, res) => {
   const requestLogger = logger.createRequestLogger();
 
   try {
-    const trip = await tripsService.startTrip();
+    const trip = await tripsService.startTrip(req.body?.journey_id || null);
 
     requestLogger.info('Trip started', { tripId: trip.id });
 
