@@ -564,7 +564,11 @@
 
             <!-- Scoring Results Grid -->
             <div class="panel" id="grid-panel" style="display:none">
-                <div class="panel-title">Scenario Comparison</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="panel-title" style="margin:0">Scenario Comparison</div>
+                    <button class="btn" id="btn-refresh-scores" onclick="refreshScores()" style="font-size:13px; padding:6px 12px;">Refresh Scores</button>
+                </div>
+                <div id="scores-stale-notice" style="display:none; color:var(--color-warning); font-size:13px; margin-top:6px;"></div>
                 <div id="score-grid-container" class="mt-sm"></div>
             </div>
 
@@ -1146,6 +1150,47 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Score Scenarios';
+            }
+        }
+
+        async function refreshScores() {
+            const saved = currentJourney.earliest_departure;
+            if (!saved) {
+                showError('No departure date saved — set one above and score first');
+                return;
+            }
+
+            const earliestDt = new Date(saved);
+            if (earliestDt < new Date()) {
+                document.getElementById('score-grid-container').innerHTML = '';
+                document.getElementById('scores-stale-notice').style.display = '';
+                document.getElementById('scores-stale-notice').innerHTML =
+                    'Departure date has passed — update it above and re-score.';
+                document.getElementById('begin-panel').style.display = 'none';
+                document.getElementById('ai-summary-panel').style.display = 'none';
+                return;
+            }
+
+            const btn = document.getElementById('btn-refresh-scores');
+            btn.disabled = true;
+            btn.textContent = 'Refreshing...';
+
+            try {
+                const result = await apiCall(`/${currentJourney.id}/score`, 'POST', { earliest_departure: saved });
+                currentJourney = await apiCall(`/${currentJourney.id}`);
+                const selectedRoutes = (currentJourney.routes || []).filter(r => r.is_selected);
+                renderScoreGrid(result.scenarios || currentJourney.scenarios, selectedRoutes);
+                document.getElementById('scores-stale-notice').style.display = 'none';
+
+                if (result.aiSummary) {
+                    document.getElementById('ai-summary-panel').style.display = '';
+                    document.getElementById('ai-summary-content').textContent = result.aiSummary;
+                }
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Refresh Scores';
             }
         }
 
