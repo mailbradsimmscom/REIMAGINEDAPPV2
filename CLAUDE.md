@@ -1,7 +1,7 @@
 # Claude Code Quick Reference
 
 **Project:** REIMAGINEDAPPV2 - AI-Powered Boat/OS for Catamarans
-**Last Updated:** 2026-03-03
+**Last Updated:** 2026-04-07
 **Compliance Status:** ✅ A Grade (Excellent)
 
 ---
@@ -12,8 +12,8 @@ All three services are on **paid Render plans**. They do NOT spin down, do NOT c
 
 | Service | Render Name | Public URL | Internal URL | Branch |
 |---------|-------------|------------|--------------|--------|
-| Node.js backend | boatos-main | boatos-main.onrender.com | — | main |
-| Python sidecar | boatos-python | boatos-python.onrender.com | http://boatos-python:10000 | main |
+| Node.js backend | boatos-main | boatos-main.onrender.com | — | Stable-v4-Working |
+| Python sidecar | boatos-python | boatos-python.onrender.com | http://boatos-python:10000 | Stable-v4-Working |
 | Maintenance agent | boatos-maintenance | boatos-maintenance.onrender.com | — | Agent-Enablement |
 
 - Internal URLs are for service-to-service calls within Render (not public access)
