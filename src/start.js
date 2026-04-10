@@ -37,15 +37,13 @@ const server = app.listen(port, async () => {
     logger.warn('Weather collector failed to start', { error: error.message });
   }
 
-  // Ed email scheduler runs in ALL environments
-  try {
-    startEdEmailScheduler();
-  } catch (error) {
-    logger.warn('Ed email scheduler failed to start', { error: error.message });
-  }
-
   // Other services run in PRODUCTION ONLY (prevents polling conflicts locally)
   if (env.NODE_ENV === 'production') {
+    try {
+      startEdEmailScheduler();
+    } catch (error) {
+      logger.warn('Ed email scheduler failed to start', { error: error.message });
+    }
     try {
       await telegramBotService.start();
       await dipTelegramBotService.start();

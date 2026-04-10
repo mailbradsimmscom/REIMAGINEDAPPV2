@@ -17,7 +17,7 @@ BoatOS hosts the scheduler only because it runs 24/7 on Render, unlike the ed-em
 | File | Purpose |
 |------|---------|
 | `src/services/ed-email-scheduler.service.js` | Cron job (every minute) that checks if it's time to send the daily email. Sends directly via nodemailer (Yahoo SMTP). Has in-memory `sending` lock to prevent overlapping sends. |
-| `src/start.js` (the `startEdEmailScheduler` / `stopEdEmailScheduler` lines only) | Starts scheduler on server boot, stops on SIGTERM/SIGINT. Runs in all environments. |
+| `src/start.js` (the `startEdEmailScheduler` / `stopEdEmailScheduler` lines only) | Starts scheduler on server boot, stops on SIGTERM/SIGINT. Production only (`NODE_ENV=production`). |
 | `src/routes/admin/email-proxy.route.js` | Nodemailer SMTP proxy. Used by the ed-email "Send Now" button (not by the scheduler — scheduler sends directly). |
 | `src/public/other-links.html` | Contains the "Email to Ed" link pointing to `https://ed-email.onrender.com`. |
 
