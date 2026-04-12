@@ -569,6 +569,7 @@
                     <button class="btn" id="btn-refresh-scores" onclick="refreshScores()" style="font-size:13px; padding:6px 12px;">Refresh Scores</button>
                 </div>
                 <div id="scores-stale-notice" style="display:none; color:var(--color-warning); font-size:13px; margin-top:6px;"></div>
+                <div id="weather-status-notice" style="display:none; font-size:13px; margin-top:6px; padding:8px 12px; border-radius:var(--radius-sm);"></div>
                 <div id="score-grid-container" class="mt-sm"></div>
             </div>
 
@@ -1140,6 +1141,7 @@
                 currentJourney = await apiCall(`/${currentJourney.id}`);
                 const selectedRoutes = (currentJourney.routes || []).filter(r => r.is_selected);
                 renderScoreGrid(result.scenarios || currentJourney.scenarios, selectedRoutes);
+                showWeatherStatus(result.weatherStatus, result.weatherError);
 
                 if (result.aiSummary) {
                     document.getElementById('ai-summary-panel').style.display = '';
@@ -1181,6 +1183,7 @@
                 const selectedRoutes = (currentJourney.routes || []).filter(r => r.is_selected);
                 renderScoreGrid(result.scenarios || currentJourney.scenarios, selectedRoutes);
                 document.getElementById('scores-stale-notice').style.display = 'none';
+                showWeatherStatus(result.weatherStatus, result.weatherError);
 
                 if (result.aiSummary) {
                     document.getElementById('ai-summary-panel').style.display = '';
@@ -1191,6 +1194,25 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Refresh Scores';
+            }
+        }
+
+        function showWeatherStatus(status, error) {
+            const el = document.getElementById('weather-status-notice');
+            if (!status || status === 'ok') {
+                el.style.display = 'none';
+                return;
+            }
+            el.style.display = '';
+            if (status === 'failed') {
+                el.style.background = '#FFF3CD';
+                el.style.color = '#856404';
+                el.innerHTML = 'Weather data unavailable — scores are estimates only. Try again in a few minutes.' +
+                    (error ? '<br><small style="opacity:0.7">Error: ' + error + '</small>' : '');
+            } else if (status === 'partial') {
+                el.style.background = '#FFF3CD';
+                el.style.color = '#856404';
+                el.textContent = 'Some waypoints missing weather data — affected scores may be less accurate.';
             }
         }
 
