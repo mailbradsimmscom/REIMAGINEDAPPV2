@@ -48,6 +48,33 @@ function average(arr) {
 }
 
 /**
+ * Fetch all telemetry rows for a trip, paginating past Supabase's 1000-row default limit.
+ */
+async function fetchAllTelemetry(supabase, tripId, select = 'latitude, longitude, recorded_at, sog') {
+  const allRows = [];
+  const pageSize = 1000;
+  let offset = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from('trip_telemetry')
+      .select(select)
+      .eq('trip_id', tripId)
+      .order('recorded_at', { ascending: true })
+      .range(offset, offset + pageSize - 1);
+
+    if (error) throw new Error(`Failed to get telemetry: ${error.message}`);
+    if (!data || data.length === 0) break;
+
+    allRows.push(...data);
+    if (data.length < pageSize) break;
+    offset += pageSize;
+  }
+
+  return allRows;
+}
+
+/**
  * Simplify track for map display (take every Nth point)
  */
 function simplifyTrack(telemetryRows, sampleRate = 5) {
@@ -103,12 +130,8 @@ export async function getTrip(tripId) {
     throw new Error(`Trip not found: ${tripError.message}`);
   }
 
-  // Get telemetry for track
-  const { data: telemetry } = await supabase
-    .from('trip_telemetry')
-    .select('latitude, longitude, recorded_at, sog')
-    .eq('trip_id', tripId)
-    .order('recorded_at', { ascending: true });
+  // Get telemetry for track (paginated to handle long passages)
+  const telemetry = await fetchAllTelemetry(supabase, tripId, 'latitude, longitude, recorded_at, sog');
 
   // Get sail events
   const { data: sailEvents } = await supabase
@@ -236,16 +259,8 @@ export async function stopTrip(tripId) {
     throw new Error('Trip is not active');
   }
 
-  // Get all telemetry for summary computation
-  const { data: telemetry, error: telemetryError } = await supabase
-    .from('trip_telemetry')
-    .select('latitude, longitude, sog, recorded_at')
-    .eq('trip_id', tripId)
-    .order('recorded_at', { ascending: true });
-
-  if (telemetryError) {
-    throw new Error(`Failed to get telemetry: ${telemetryError.message}`);
-  }
+  // Get all telemetry for summary computation (paginated to handle long passages)
+  const telemetry = await fetchAllTelemetry(supabase, tripId);
 
   // Compute summary (even if no telemetry)
   let summary = {
@@ -457,12 +472,8 @@ export async function getActiveTripStats(tripId) {
     throw new Error('Trip not found');
   }
 
-  // Get telemetry
-  const { data: telemetry } = await supabase
-    .from('trip_telemetry')
-    .select('latitude, longitude, sog, recorded_at')
-    .eq('trip_id', tripId)
-    .order('recorded_at', { ascending: true });
+  // Get telemetry (paginated to handle long passages)
+  const telemetry = await fetchAllTelemetry(supabase, tripId);
 
   const now = new Date();
   const started = new Date(trip.started_at);
@@ -897,13 +908,9 @@ function filterLowVarianceColumns(samples, columns) {
 export async function getTelemetrySamples(tripId, intervalMinutes = 15) {
   const supabase = await getSupabaseClient();
 
-  // Fetch telemetry and weather in parallel
-  const [telemetryResult, weatherResult] = await Promise.all([
-    supabase
-      .from('trip_telemetry')
-      .select('recorded_at, latitude, longitude, sog, cog, heading, signalk_data')
-      .eq('trip_id', tripId)
-      .order('recorded_at', { ascending: true }),
+  // Fetch telemetry (paginated) and weather in parallel
+  const [telemetry, weatherResult] = await Promise.all([
+    fetchAllTelemetry(supabase, tripId, 'recorded_at, latitude, longitude, sog, cog, heading, signalk_data'),
     supabase
       .from('trip_weather')
       .select('recorded_at, wind_speed_kts, wind_direction, wind_gusts_kts, wave_height_m, wave_period_s, wave_direction, swell_height_m, swell_period_s, swell_direction, air_temp_c, pressure_hpa, cloud_cover_pct, visibility_m')
@@ -911,11 +918,6 @@ export async function getTelemetrySamples(tripId, intervalMinutes = 15) {
       .order('recorded_at', { ascending: true })
   ]);
 
-  if (telemetryResult.error) {
-    throw new Error(`Failed to get telemetry: ${telemetryResult.error.message}`);
-  }
-
-  const telemetry = telemetryResult.data || [];
   const weather = weatherResult.data || [];
 
   if (telemetry.length === 0) {
