@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Month View — Guardianage</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="/guardianage" class="back-link">← Dashboard</a>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <div class="month-header">
+        <button id="prevMonth" class="btn btn-small">←</button>
+        <h2 id="monthTitle">-</h2>
+        <button id="nextMonth" class="btn btn-small">→</button>
+      </div>
+
+      <div class="status-row">
+        <div class="status-card summary">
+          <div class="status-label">Complete</div>
+          <div id="completeCount" class="status-value big">0</div>
+        </div>
+        <div class="status-card summary">
+          <div class="status-label">Open</div>
+          <div id="openCount" class="status-value big">0</div>
+        </div>
+        <div class="status-card summary" id="monthStatusCard">
+          <div class="status-label">Status</div>
+          <div id="monthStatus" class="status-value">-</div>
+        </div>
+      </div>
+
+      <div id="weeksContainer"></div>
+
+      <section class="task-section" id="monthlySection">
+        <h2>Monthly Recurring</h2>
+        <div id="monthlyList" class="task-list">
+          <div class="empty-state">No monthly tasks</div>
+        </div>
+      </section>
+
+      <section class="task-section" id="majorSection">
+        <h2>Major Items</h2>
+        <div id="majorList" class="task-list">
+          <div class="empty-state">No major items this month</div>
+        </div>
+      </section>
+
+      <section class="task-section" id="notesSection">
+        <h2>Notes</h2>
+        <div class="notes-container">
+          <div id="notesMeta" class="notes-meta" style="display: none;"></div>
+          <textarea id="notesText" rows="4" placeholder="Add monthly notes..."></textarea>
+          <button id="saveNotesBtn" class="btn btn-primary" style="margin-top: 8px;">Save Notes</button>
+        </div>
+      </section>
+
+      <section class="task-section" id="suppliesSection">
+        <h2>Supplies Purchased</h2>
+        <div id="suppliesList" class="task-list">
+          <div class="empty-state">No supplies recorded</div>
+        </div>
+        <button id="addSupplyBtn" class="btn btn-primary" style="margin-top: 8px;">Add Supply</button>
+
+        <div id="supplyForm" class="supply-form" style="display: none;">
+          <h3 id="supplyFormTitle">Add Supply</h3>
+          <div class="form-group"><label>Item Name *</label><input type="text" id="supplyName"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Amount</label><input type="number" id="supplyAmount" step="0.01"></div>
+            <div class="form-group"><label>Currency</label>
+              <select id="supplyCurrency"><option value="USD">USD</option><option value="XCD">XCD</option></select>
+            </div>
+          </div>
+          <div class="form-group"><label>Date</label><input type="date" id="supplyDate"></div>
+          <div class="form-group"><label>Vendor</label><input type="text" id="supplyVendor"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="supplyCategory"></div>
+          <div class="form-group"><label>Note</label><input type="text" id="supplyNote"></div>
+          <div class="form-row">
+            <button id="cancelSupplyBtn" class="btn btn-secondary">Cancel</button>
+            <button id="submitSupplyBtn" class="btn btn-primary">Save</button>
+          </div>
+          <input type="hidden" id="editSupplyId" value="">
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    let currentMonthId = null;
+    let allMonths = [];
+
+    async function init() {
+      // Get month ID from URL
+      const path = window.location.pathname;
+      currentMonthId = path.split('/month/')[1];
+
+      // Load all months for navigation
+      const monthsRes = await fetch('/guardianage/api/months');
+      const monthsData = await monthsRes.json();
+      if (monthsRes.status === 401) { window.location.href = '/guardianage/login'; return; }
+      allMonths = monthsData.data?.months || [];
+
+      await loadMonth(currentMonthId);
+    }
+
+    async function loadMonth(monthId) {
+      currentMonthId = monthId;
+      history.replaceState(null, '', `/guardianage/month/${monthId}`);
+
+      const res = await fetch(`/guardianage/api/months/${monthId}`);
+      if (res.status === 401) { window.location.href = '/guardianage/login'; return; }
+      const { data } = await res.json();
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+
+      document.getElementById('monthTitle').textContent = data.month.display_name;
+      document.getElementById('completeCount').textContent = data.summary.complete;
+      document.getElementById('openCount').textContent = data.summary.open;
+
+      const statusEl = document.getElementById('monthStatus');
+      statusEl.textContent = data.monthStatus;
+      const card = document.getElementById('monthStatusCard');
+      card.className = 'status-card summary';
+      if (data.monthStatus === 'attention') card.classList.add('overdue');
+
+      // Navigation
+      const idx = allMonths.findIndex(m => m.id === monthId);
+      document.getElementById('prevMonth').style.visibility = idx > 0 ? 'visible' : 'hidden';
+      document.getElementById('nextMonth').style.visibility = idx < allMonths.length - 1 ? 'visible' : 'hidden';
+      document.getElementById('prevMonth').onclick = () => idx > 0 && loadMonth(allMonths[idx - 1].id);
+      document.getElementById('nextMonth').onclick = () => idx < allMonths.length - 1 && loadMonth(allMonths[idx + 1].id);
+
+      // Weeks
+      const weeksHtml = data.weeks.map(week => {
+        const statusIcon = week.status === 'complete' ? '✓' : week.status === 'attention' ? '!' : '';
+        const statusClass = week.status;
+        const tasksHtml = week.tasks.map(t => taskItem(t)).join('');
+        return `
+          <section class="task-section">
+            <h2 class="week-header ${statusClass}">
+              ${week.display_name}
+              <span class="week-count">${week.complete}/${week.total}</span>
+              ${statusIcon ? `<span class="week-status-icon ${statusClass}">${statusIcon}</span>` : ''}
+            </h2>
+            <div class="task-list">${tasksHtml || '<div class="empty-state">No tasks</div>'}</div>
+          </section>`;
+      }).join('');
+      document.getElementById('weeksContainer').innerHTML = weeksHtml;
+
+      // Monthly recurring
+      if (data.monthlyRecurring.length > 0) {
+        document.getElementById('monthlyList').innerHTML = data.monthlyRecurring.map(t => taskItem(t)).join('');
+      } else {
+        document.getElementById('monthlyList').innerHTML = '<div class="empty-state">No monthly tasks</div>';
+      }
+
+      // Major items
+      if (data.majorItems.length > 0) {
+        document.getElementById('majorList').innerHTML = data.majorItems.map(t => taskItem(t)).join('');
+      } else {
+        document.getElementById('majorList').innerHTML = '<div class="empty-state">No major items this month</div>';
+      }
+
+      // Load notes and supplies
+      await loadNotes(monthId);
+      await loadSupplies(monthId);
+    }
+
+    function taskItem(task) {
+      const statusClass = task.status === 'complete' ? 'complete' : (task.is_overdue ? 'overdue' : 'open');
+      return `<a href="/guardianage/task/${task.id}" class="task-item ${statusClass}">
+        <span class="task-status-dot"></span>
+        <span class="task-title">${task.title}</span>
+      </a>`;
+    }
+
+    // --- Notes ---
+    async function loadNotes(monthId) {
+      const res = await fetch(`/guardianage/api/months/${monthId}/notes`);
+      const { data } = await res.json();
+      const note = data?.note;
+      if (note) {
+        document.getElementById('notesText').value = note.current_text || '';
+        if (note.last_saved_by && note.last_saved_at) {
+          const time = new Date(note.last_saved_at).toLocaleString('en', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+          document.getElementById('notesMeta').textContent = `Last saved by ${note.last_saved_by} at ${time}`;
+          document.getElementById('notesMeta').style.display = 'block';
+        }
+      }
+    }
+
+    document.getElementById('saveNotesBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('saveNotesBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      try {
+        const res = await fetch(`/guardianage/api/months/${currentMonthId}/notes/save`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: document.getElementById('notesText').value }),
+        });
+        const { data } = await res.json();
+        if (data) {
+          const time = new Date(data.last_saved_at).toLocaleString('en', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+          document.getElementById('notesMeta').textContent = `Last saved by ${data.last_saved_by} at ${time}`;
+          document.getElementById('notesMeta').style.display = 'block';
+        }
+      } catch { }
+      btn.disabled = false;
+      btn.textContent = 'Save Notes';
+    });
+
+    // --- Supplies ---
+    async function loadSupplies(monthId) {
+      const res = await fetch(`/guardianage/api/months/${monthId}/supplies`);
+      const { data } = await res.json();
+      const supplies = data?.supplies || [];
+      if (supplies.length > 0) {
+        document.getElementById('suppliesList').innerHTML = supplies.map(s => {
+          const amt = s.amount ? `${s.currency_code} ${Number(s.amount).toFixed(2)}` : '';
+          const date = s.purchase_date ? new Date(s.purchase_date + 'T00:00:00').toLocaleDateString('en', { month: 'short', day: 'numeric' }) : '';
+          return `<div class="task-item open" onclick="editSupply('${s.id}', ${JSON.stringify(s).replace(/'/g, "&#39;").replace(/"/g, '&quot;')})">
+            <span class="task-title">${s.item_name}${amt ? ' — ' + amt : ''}${date ? ' (' + date + ')' : ''}</span>
+          </div>`;
+        }).join('');
+      } else {
+        document.getElementById('suppliesList').innerHTML = '<div class="empty-state">No supplies recorded</div>';
+      }
+    }
+
+    document.getElementById('addSupplyBtn').addEventListener('click', () => {
+      document.getElementById('editSupplyId').value = '';
+      document.getElementById('supplyFormTitle').textContent = 'Add Supply';
+      document.getElementById('supplyName').value = '';
+      document.getElementById('supplyAmount').value = '';
+      document.getElementById('supplyCurrency').value = 'USD';
+      document.getElementById('supplyDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('supplyVendor').value = '';
+      document.getElementById('supplyCategory').value = '';
+      document.getElementById('supplyNote').value = '';
+      document.getElementById('supplyForm').style.display = 'block';
+      document.getElementById('addSupplyBtn').style.display = 'none';
+    });
+
+    window.editSupply = function(id, supply) {
+      const s = typeof supply === 'string' ? JSON.parse(supply) : supply;
+      document.getElementById('editSupplyId').value = id;
+      document.getElementById('supplyFormTitle').textContent = 'Edit Supply';
+      document.getElementById('supplyName').value = s.item_name || '';
+      document.getElementById('supplyAmount').value = s.amount || '';
+      document.getElementById('supplyCurrency').value = s.currency_code || 'USD';
+      document.getElementById('supplyDate').value = s.purchase_date || '';
+      document.getElementById('supplyVendor').value = s.vendor || '';
+      document.getElementById('supplyCategory').value = s.category || '';
+      document.getElementById('supplyNote').value = s.note || '';
+      document.getElementById('supplyForm').style.display = 'block';
+      document.getElementById('addSupplyBtn').style.display = 'none';
+    };
+
+    document.getElementById('cancelSupplyBtn').addEventListener('click', () => {
+      document.getElementById('supplyForm').style.display = 'none';
+      document.getElementById('addSupplyBtn').style.display = 'block';
+    });
+
+    document.getElementById('submitSupplyBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('submitSupplyBtn');
+      const name = document.getElementById('supplyName').value.trim();
+      if (!name) { alert('Item name is required'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const body = {
+        item_name: name,
+        amount: parseFloat(document.getElementById('supplyAmount').value) || undefined,
+        currency_code: document.getElementById('supplyCurrency').value,
+        purchase_date: document.getElementById('supplyDate').value || undefined,
+        vendor: document.getElementById('supplyVendor').value || undefined,
+        category: document.getElementById('supplyCategory').value || undefined,
+        note: document.getElementById('supplyNote').value || undefined,
+      };
+
+      const editId = document.getElementById('editSupplyId').value;
+      try {
+        if (editId) {
+          await fetch(`/guardianage/api/supplies/${editId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+        } else {
+          await fetch(`/guardianage/api/months/${currentMonthId}/supplies`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+        }
+        document.getElementById('supplyForm').style.display = 'none';
+        document.getElementById('addSupplyBtn').style.display = 'block';
+        await loadSupplies(currentMonthId);
+      } catch { alert('Failed to save supply'); }
+
+      btn.disabled = false;
+      btn.textContent = 'Save';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    init();
+  </script>
+</body>
+</html>

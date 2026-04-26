@@ -74,6 +74,9 @@ const EnvSchema = z.object({
   YAHOO_PASSWORD: z.string().optional(),
   // Ed email scheduler: primary recipient (overrides EDemail.to_emails when set; use locally to avoid sending to Ed)
   ED_EMAIL_TO: z.string().optional(),
+  // Guardianage session cookie signing (not currently used for HMAC — session tokens are random + hashed)
+  GUARDIANAGE_SESSION_SECRET: z.string().optional(),
+  GUARDIANAGE_ADMIN_PASSWORD: z.string().optional(),
 }).refine((data) => {
   // In production, require certain critical variables
   if (data.NODE_ENV === 'production') {

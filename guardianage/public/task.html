@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Task — Guardianage</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <a id="backLink" href="/guardianage" class="back-link">← Back</a>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <div class="task-detail-header">
+        <span id="taskType" class="task-type-badge">-</span>
+        <span id="taskStatus" class="task-status-badge">-</span>
+      </div>
+
+      <h2 id="taskTitle" class="task-detail-title">-</h2>
+
+      <div id="taskDueWindow" class="task-due-window"></div>
+
+      <div id="taskInstructions" class="task-instructions" style="display: none;"></div>
+
+      <!-- Completion note -->
+      <div id="noteSection" class="task-note-section">
+        <label for="completionNote">Note (optional)</label>
+        <textarea id="completionNote" rows="3" placeholder="Add a note..."></textarea>
+      </div>
+
+      <!-- Action buttons -->
+      <div id="actionSection" class="task-actions">
+        <button id="completeBtn" class="btn btn-primary btn-full">Mark Complete</button>
+        <button id="reopenBtn" class="btn btn-secondary btn-full" style="display: none;">Reopen Task</button>
+      </div>
+
+      <!-- Photo section -->
+      <div id="photoSection" class="task-photo-section">
+        <h3>Photos <span id="photoCount"></span></h3>
+        <div id="photoList" class="photo-grid"></div>
+        <div class="photo-upload-area">
+          <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
+          <button id="addPhotoBtn" class="btn btn-secondary" style="margin-top: 8px;">Add Photos</button>
+          <div id="uploadProgress" style="display: none; margin-top: 8px; font-size: 13px; color: #888;">Uploading...</div>
+        </div>
+      </div>
+
+      <!-- Event history -->
+      <section id="historySection" class="task-section" style="display: none;">
+        <h3>History</h3>
+        <div id="eventList" class="event-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    let taskData = null;
+
+    async function init() {
+      const taskId = window.location.pathname.split('/task/')[1];
+
+      const res = await fetch(`/guardianage/api/tasks/${taskId}`);
+      if (res.status === 401) { window.location.href = '/guardianage/login'; return; }
+      const result = await res.json();
+
+      if (!result.success) {
+        document.getElementById('loading').textContent = 'Task not found';
+        return;
+      }
+
+      taskData = result.data;
+      const { task, events, photos } = taskData;
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+
+      // Back link to month
+      document.getElementById('backLink').href = `/guardianage/month/${task.month_id}`;
+
+      // Header
+      const typeLabels = {
+        weekly_recurring: 'Weekly',
+        monthly_recurring: 'Monthly',
+        monthly_major: 'Major Item',
+      };
+      document.getElementById('taskType').textContent = typeLabels[task.task_type] || task.task_type;
+      document.getElementById('taskType').className = `task-type-badge ${task.task_type}`;
+
+      const statusEl = document.getElementById('taskStatus');
+      statusEl.textContent = task.status === 'complete' ? 'Complete' : 'Open';
+      statusEl.className = `task-status-badge ${task.status}`;
+
+      // Check overdue
+      const now = new Date();
+      const astNow = new Date(now.getTime() - 4 * 60 * 60 * 1000);
+      const todayStr = astNow.toISOString().slice(0, 10);
+      if (task.status === 'open' && task.due_end_date && todayStr > task.due_end_date) {
+        statusEl.textContent = 'Overdue';
+        statusEl.className = 'task-status-badge overdue';
+      }
+
+      document.getElementById('taskTitle').textContent = task.title;
+
+      // Due window
+      if (task.due_start_date && task.due_end_date) {
+        const start = new Date(task.due_start_date + 'T00:00:00');
+        const end = new Date(task.due_end_date + 'T00:00:00');
+        const fmt = d => d.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+        document.getElementById('taskDueWindow').textContent = `Due: ${fmt(start)} – ${fmt(end)}`;
+      }
+
+      // Instructions
+      if (task.instructions) {
+        document.getElementById('taskInstructions').textContent = task.instructions;
+        document.getElementById('taskInstructions').style.display = 'block';
+      }
+
+      // Action buttons
+      const completeBtn = document.getElementById('completeBtn');
+      const reopenBtn = document.getElementById('reopenBtn');
+      const noteSection = document.getElementById('noteSection');
+
+      if (task.status === 'complete') {
+        completeBtn.style.display = 'none';
+        noteSection.style.display = 'none';
+        reopenBtn.style.display = 'block';
+
+        // Major items: only show reopen to admin (we check server-side, but hide the button for team)
+        if (task.task_type === 'monthly_major') {
+          reopenBtn.textContent = 'Reopen Major Item (Admin Only)';
+        }
+      } else {
+        completeBtn.style.display = 'block';
+        noteSection.style.display = 'block';
+        reopenBtn.style.display = 'none';
+      }
+
+      completeBtn.onclick = () => completeTask(task.id);
+      reopenBtn.onclick = () => reopenTask(task.id);
+
+      // Photos
+      document.getElementById('photoCount').textContent = photos?.length ? `(${photos.length}/40)` : '';
+      if (photos && photos.length > 0) {
+        document.getElementById('photoList').innerHTML = photos.map(p =>
+          `<div class="photo-thumb">
+            <img src="${p.url}" alt="${p.original_filename || 'Photo'}" onclick="window.open('${p.url}', '_blank')">
+          </div>`
+        ).join('');
+      }
+
+      // Events
+      if (events && events.length > 0) {
+        document.getElementById('historySection').style.display = 'block';
+        document.getElementById('eventList').innerHTML = events.map(e => {
+          const time = new Date(e.occurred_at).toLocaleString('en', {
+            month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+          });
+          const labels = {
+            completed: 'Completed',
+            reopened: 'Reopened',
+            note_updated: 'Note updated',
+            photo_added: 'Photo added',
+            photo_removed: 'Photo removed',
+          };
+          return `<div class="event-item">
+            <span class="event-type">${labels[e.event_type] || e.event_type}</span>
+            <span class="event-time">${time}</span>
+            ${e.note_text ? `<div class="event-note">${e.note_text}</div>` : ''}
+          </div>`;
+        }).join('');
+      }
+    }
+
+    async function completeTask(taskId) {
+      const note = document.getElementById('completionNote').value.trim();
+      const btn = document.getElementById('completeBtn');
+      btn.disabled = true;
+      btn.textContent = 'Completing...';
+
+      try {
+        const res = await fetch(`/guardianage/api/tasks/${taskId}/complete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note: note || undefined }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.href = `/guardianage/month/${taskData.task.month_id}`;
+        } else {
+          alert(data.error || 'Failed to complete task');
+          btn.disabled = false;
+          btn.textContent = 'Mark Complete';
+        }
+      } catch {
+        alert('Connection error');
+        btn.disabled = false;
+        btn.textContent = 'Mark Complete';
+      }
+    }
+
+    async function reopenTask(taskId) {
+      if (!confirm('Reopen this task?')) return;
+
+      const btn = document.getElementById('reopenBtn');
+      btn.disabled = true;
+      btn.textContent = 'Reopening...';
+
+      try {
+        const res = await fetch(`/guardianage/api/tasks/${taskId}/reopen`, {
+          method: 'POST',
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.reload();
+        } else {
+          alert(data.error || 'Failed to reopen task');
+          btn.disabled = false;
+          btn.textContent = 'Reopen Task';
+        }
+      } catch {
+        alert('Connection error');
+        btn.disabled = false;
+        btn.textContent = 'Reopen Task';
+      }
+    }
+
+    // --- Photo upload ---
+    document.getElementById('addPhotoBtn').addEventListener('click', () => {
+      document.getElementById('photoInput').click();
+    });
+
+    document.getElementById('photoInput').addEventListener('change', async (e) => {
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+
+      const taskId = window.location.pathname.split('/task/')[1];
+      const progress = document.getElementById('uploadProgress');
+      const btn = document.getElementById('addPhotoBtn');
+
+      progress.style.display = 'block';
+      progress.textContent = `Uploading ${files.length} photo(s)...`;
+      btn.disabled = true;
+
+      try {
+        // Client-side resize before upload
+        const resizedFiles = [];
+        for (const file of files) {
+          const resized = await resizeImage(file, 1920);
+          resizedFiles.push(resized);
+        }
+
+        const formData = new FormData();
+        for (const file of resizedFiles) {
+          formData.append('photos', file);
+        }
+
+        const res = await fetch(`/guardianage/api/tasks/${taskId}/photos`, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.reload();
+        } else {
+          alert(data.error || 'Upload failed');
+        }
+      } catch (err) {
+        alert('Upload failed');
+      } finally {
+        progress.style.display = 'none';
+        btn.disabled = false;
+        e.target.value = '';
+      }
+    });
+
+    function resizeImage(file, maxDim) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        const canvas = document.createElement('canvas');
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+              (blob) => resolve(new File([blob], file.name, { type: 'image/jpeg' })),
+              'image/jpeg',
+              0.85
+            );
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    init();
+  </script>
+</body>
+</html>

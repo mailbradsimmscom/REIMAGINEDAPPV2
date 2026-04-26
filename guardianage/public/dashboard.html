@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Guardianage Dashboard</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>Reimagined Guardianage</h1>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <div class="status-card">
+        <div class="status-label">Season</div>
+        <div id="seasonName" class="status-value">-</div>
+      </div>
+
+      <div class="status-row">
+        <a id="monthLink" href="#" class="status-card" style="text-decoration:none;color:inherit;">
+          <div class="status-label">Current Month</div>
+          <div id="currentMonth" class="status-value">-</div>
+        </a>
+        <div class="status-card">
+          <div class="status-label">Current Week</div>
+          <div id="currentWeek" class="status-value">-</div>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-card summary">
+          <div class="status-label">Completed</div>
+          <div id="completedCount" class="status-value big">0</div>
+        </div>
+        <div class="status-card summary">
+          <div class="status-label">Open</div>
+          <div id="openCount" class="status-value big">0</div>
+        </div>
+        <div class="status-card summary overdue">
+          <div class="status-label">Overdue</div>
+          <div id="overdueCount" class="status-value big">0</div>
+        </div>
+      </div>
+
+      <section class="task-section" id="overdueSection" style="display: none;">
+        <h2>Overdue</h2>
+        <div id="overdueList" class="task-list"></div>
+      </section>
+
+      <section class="task-section">
+        <h2>This Week</h2>
+        <div id="weeklyList" class="task-list">
+          <div class="empty-state">No tasks this week</div>
+        </div>
+      </section>
+
+      <section class="task-section">
+        <h2>Monthly Tasks</h2>
+        <div id="monthlyList" class="task-list">
+          <div class="empty-state">All monthly tasks complete</div>
+        </div>
+      </section>
+
+      <section class="task-section">
+        <h2>Major Items</h2>
+        <div id="majorList" class="task-list">
+          <div class="empty-state">No major items this month</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/guardianage/api/dashboard');
+        if (res.status === 401) {
+          window.location.href = '/guardianage/login';
+          return;
+        }
+        const { data } = await res.json();
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+        document.getElementById('seasonName').textContent = data.season?.name || 'No active season';
+        document.getElementById('currentMonth').textContent = data.currentMonth?.display_name || '-';
+        if (data.currentMonth?.id) {
+          document.getElementById('monthLink').href = `/guardianage/month/${data.currentMonth.id}`;
+        }
+        document.getElementById('currentWeek').textContent = data.currentWeek?.display_name || '-';
+        document.getElementById('completedCount').textContent = data.summary?.completedTasks || 0;
+        document.getElementById('openCount').textContent = data.summary?.openTasks || 0;
+        document.getElementById('overdueCount').textContent = data.summary?.overdueCount || 0;
+
+        // Overdue
+        if (data.overdueTasks?.length > 0) {
+          document.getElementById('overdueSection').style.display = 'block';
+          document.getElementById('overdueList').innerHTML = data.overdueTasks
+            .map(t => taskItem(t, 'overdue')).join('');
+        }
+
+        // Weekly
+        if (data.weeklyTasksDue?.length > 0) {
+          document.getElementById('weeklyList').innerHTML = data.weeklyTasksDue
+            .map(t => taskItem(t)).join('');
+        }
+
+        // Monthly
+        if (data.monthlyTasksOpen?.length > 0) {
+          document.getElementById('monthlyList').innerHTML = data.monthlyTasksOpen
+            .map(t => taskItem(t)).join('');
+        }
+
+        // Major
+        if (data.majorItemsOpen?.length > 0) {
+          document.getElementById('majorList').innerHTML = data.majorItemsOpen
+            .map(t => taskItem(t)).join('');
+        }
+      } catch (err) {
+        document.getElementById('loading').textContent = 'Failed to load dashboard';
+      }
+    }
+
+    function taskItem(task, extraClass = '') {
+      const statusClass = task.status === 'complete' ? 'complete' : 'open';
+      return `<a href="/guardianage/task/${task.id}" class="task-item ${statusClass} ${extraClass}">
+        <span class="task-status-dot"></span>
+        <span class="task-title">${task.title}</span>
+      </a>`;
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>

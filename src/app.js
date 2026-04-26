@@ -15,6 +15,7 @@ import anchoragesRouter from './routes/anchorages/index.js';
 import funnelRouter from './routes/funnel/index.js';
 import seasonRecapRouter from './routes/season-recap/index.js';
 import boatNowRouter from './routes/boat-now/index.js';
+import guardianageRouter from '../guardianage/index.js';
 
 // Create Express app
 const app = express();
@@ -263,6 +264,10 @@ app.use('/api/season-recap', seasonRecapRouter);
 // Boat Now API routes
 boatNowRouter._mountPath = '/api/boat-now';
 app.use('/api/boat-now', boatNowRouter);
+
+// Guardianage app (self-contained — all routes, auth, and static assets)
+guardianageRouter._mountPath = '/guardianage';
+app.use('/guardianage', guardianageRouter);
 
 // Admin dashboard route (no auth required for HTML page)
 app.get('/admin', async (req, res) => {
