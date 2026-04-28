@@ -9,7 +9,10 @@
 <body>
   <header class="app-header">
     <h1>Reimagined Guardianage</h1>
-    <button id="logoutBtn" class="btn btn-small">Logout</button>
+    <div class="header-actions">
+      <a id="adminLink" href="/guardianage/admin/users" class="btn btn-small" style="display:none; text-decoration:none;">Admin</a>
+      <button id="logoutBtn" class="btn btn-small">Logout</button>
+    </div>
   </header>
 
   <main class="dashboard">
@@ -22,13 +25,21 @@
       </div>
 
       <div class="status-row">
-        <a id="monthLink" href="#" class="status-card" style="text-decoration:none;color:inherit;">
+        <a id="monthLink" href="#" class="status-card nav-card" style="text-decoration:none;color:inherit;">
           <div class="status-label">Current Month</div>
-          <div id="currentMonth" class="status-value">-</div>
+          <div class="nav-row">
+            <button id="prevMonth" class="nav-arrow" style="visibility:hidden;">&#8249;</button>
+            <div id="currentMonth" class="status-value">-</div>
+            <button id="nextMonth" class="nav-arrow" style="visibility:hidden;">&#8250;</button>
+          </div>
         </a>
-        <div class="status-card">
+        <div class="status-card nav-card">
           <div class="status-label">Current Week</div>
-          <div id="currentWeek" class="status-value">-</div>
+          <div class="nav-row">
+            <button id="prevWeek" class="nav-arrow" style="visibility:hidden;">&#8249;</button>
+            <div id="currentWeek" class="status-value">-</div>
+            <button id="nextWeek" class="nav-arrow" style="visibility:hidden;">&#8250;</button>
+          </div>
         </div>
       </div>
 
@@ -72,13 +83,61 @@
           <div class="empty-state">No major items this month</div>
         </div>
       </section>
+
+      <section class="task-section" id="notesSection">
+        <h2>Notes</h2>
+        <div class="notes-container">
+          <div id="notesMeta" class="notes-meta" style="display: none;"></div>
+          <textarea id="notesText" rows="4" placeholder="Add monthly notes..."></textarea>
+          <button id="saveNotesBtn" class="btn btn-primary" style="margin-top: 8px;">Save Notes</button>
+        </div>
+      </section>
+
+      <section class="task-section" id="suppliesSection">
+        <h2>Supplies Purchased</h2>
+        <div id="suppliesList" class="task-list">
+          <div class="empty-state">No supplies recorded</div>
+        </div>
+        <button id="addSupplyBtn" class="btn btn-primary" style="margin-top: 8px;">Add Supply</button>
+
+        <div id="supplyForm" class="supply-form" style="display: none;">
+          <h3 id="supplyFormTitle">Add Supply</h3>
+          <div class="form-group"><label>Item Name *</label><input type="text" id="supplyName"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Amount</label><input type="number" id="supplyAmount" step="0.01"></div>
+            <div class="form-group"><label>Currency</label>
+              <select id="supplyCurrency"><option value="USD">USD</option><option value="XCD">XCD</option></select>
+            </div>
+          </div>
+          <div class="form-group"><label>Date</label><input type="date" id="supplyDate"></div>
+          <div class="form-group"><label>Vendor</label><input type="text" id="supplyVendor"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="supplyCategory"></div>
+          <div class="form-group"><label>Note</label><input type="text" id="supplyNote"></div>
+          <div class="form-row">
+            <button id="cancelSupplyBtn" class="btn btn-secondary">Cancel</button>
+            <button id="submitSupplyBtn" class="btn btn-primary">Save</button>
+          </div>
+          <input type="hidden" id="editSupplyId" value="">
+        </div>
+      </section>
     </div>
   </main>
 
   <script>
-    async function loadDashboard() {
+    let monthNav = [];
+    let weekNav = [];
+    let currentMonthId = null;
+    let currentWeekId = null;
+
+    async function loadDashboard(monthId, weekId) {
       try {
-        const res = await fetch('/guardianage/api/dashboard');
+        let url = '/guardianage/api/dashboard';
+        const params = [];
+        if (monthId) params.push(`month_id=${monthId}`);
+        if (weekId) params.push(`week_id=${weekId}`);
+        if (params.length) url += '?' + params.join('&');
+
+        const res = await fetch(url);
         if (res.status === 401) {
           window.location.href = '/guardianage/login';
           return;
@@ -88,12 +147,35 @@
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
 
+        // Show admin link for admin users
+        if (data.user?.role === 'admin') {
+          document.getElementById('adminLink').style.display = 'inline-flex';
+        }
+
         document.getElementById('seasonName').textContent = data.season?.name || 'No active season';
+
+        // Month navigation
+        monthNav = data.monthNav || [];
+        currentMonthId = data.currentMonth?.id;
         document.getElementById('currentMonth').textContent = data.currentMonth?.display_name || '-';
         if (data.currentMonth?.id) {
           document.getElementById('monthLink').href = `/guardianage/month/${data.currentMonth.id}`;
         }
+
+        const monthIdx = monthNav.findIndex(m => m.id === currentMonthId);
+        document.getElementById('prevMonth').style.visibility = monthIdx > 0 ? 'visible' : 'hidden';
+        document.getElementById('nextMonth').style.visibility = monthIdx < monthNav.length - 1 ? 'visible' : 'hidden';
+
+        // Week navigation
+        weekNav = data.weekNav || [];
+        currentWeekId = data.currentWeek?.id;
         document.getElementById('currentWeek').textContent = data.currentWeek?.display_name || '-';
+
+        const weekIdx = weekNav.findIndex(w => w.id === currentWeekId);
+        document.getElementById('prevWeek').style.visibility = weekIdx > 0 ? 'visible' : 'hidden';
+        document.getElementById('nextWeek').style.visibility = weekIdx < weekNav.length - 1 ? 'visible' : 'hidden';
+
+        // Counts
         document.getElementById('completedCount').textContent = data.summary?.completedTasks || 0;
         document.getElementById('openCount').textContent = data.summary?.openTasks || 0;
         document.getElementById('overdueCount').textContent = data.summary?.overdueCount || 0;
@@ -103,25 +185,36 @@
           document.getElementById('overdueSection').style.display = 'block';
           document.getElementById('overdueList').innerHTML = data.overdueTasks
             .map(t => taskItem(t, 'overdue')).join('');
+        } else {
+          document.getElementById('overdueSection').style.display = 'none';
         }
 
         // Weekly
         if (data.weeklyTasksDue?.length > 0) {
           document.getElementById('weeklyList').innerHTML = data.weeklyTasksDue
             .map(t => taskItem(t)).join('');
+        } else {
+          document.getElementById('weeklyList').innerHTML = '<div class="empty-state">No tasks this week</div>';
         }
 
         // Monthly
         if (data.monthlyTasksOpen?.length > 0) {
           document.getElementById('monthlyList').innerHTML = data.monthlyTasksOpen
             .map(t => taskItem(t)).join('');
+        } else {
+          document.getElementById('monthlyList').innerHTML = '<div class="empty-state">All monthly tasks complete</div>';
         }
 
         // Major
         if (data.majorItemsOpen?.length > 0) {
           document.getElementById('majorList').innerHTML = data.majorItemsOpen
             .map(t => taskItem(t)).join('');
+        } else {
+          document.getElementById('majorList').innerHTML = '<div class="empty-state">No major items this month</div>';
         }
+        // Load notes and supplies for current month
+        await Promise.all([loadNotes(), loadSupplies()]);
+
       } catch (err) {
         document.getElementById('loading').textContent = 'Failed to load dashboard';
       }
@@ -134,6 +227,170 @@
         <span class="task-title">${task.title}</span>
       </a>`;
     }
+
+    // Month navigation
+    document.getElementById('prevMonth').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const idx = monthNav.findIndex(m => m.id === currentMonthId);
+      if (idx > 0) loadDashboard(monthNav[idx - 1].id, null);
+    });
+    document.getElementById('nextMonth').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const idx = monthNav.findIndex(m => m.id === currentMonthId);
+      if (idx < monthNav.length - 1) loadDashboard(monthNav[idx + 1].id, null);
+    });
+
+    // Week navigation
+    document.getElementById('prevWeek').addEventListener('click', () => {
+      const idx = weekNav.findIndex(w => w.id === currentWeekId);
+      if (idx > 0) loadDashboard(currentMonthId, weekNav[idx - 1].id);
+    });
+    document.getElementById('nextWeek').addEventListener('click', () => {
+      const idx = weekNav.findIndex(w => w.id === currentWeekId);
+      if (idx < weekNav.length - 1) loadDashboard(currentMonthId, weekNav[idx + 1].id);
+    });
+
+    // --- Notes ---
+    async function loadNotes() {
+      if (!currentMonthId) return;
+      try {
+        const res = await fetch(`/guardianage/api/months/${currentMonthId}/notes`);
+        const { data } = await res.json();
+        const note = data?.note;
+        if (note) {
+          document.getElementById('notesText').value = note.current_text || '';
+          if (note.last_saved_by && note.last_saved_at) {
+            const time = new Date(note.last_saved_at).toLocaleString('en', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+            document.getElementById('notesMeta').textContent = `Last saved by ${note.last_saved_by} at ${time}`;
+            document.getElementById('notesMeta').style.display = 'block';
+          }
+        } else {
+          document.getElementById('notesText').value = '';
+          document.getElementById('notesMeta').style.display = 'none';
+        }
+      } catch {}
+    }
+
+    document.getElementById('saveNotesBtn').addEventListener('click', async () => {
+      if (!currentMonthId) return;
+      const btn = document.getElementById('saveNotesBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      try {
+        const res = await fetch(`/guardianage/api/months/${currentMonthId}/notes/save`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: document.getElementById('notesText').value }),
+        });
+        const { data } = await res.json();
+        if (data) {
+          const time = new Date(data.last_saved_at).toLocaleString('en', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+          document.getElementById('notesMeta').textContent = `Last saved by ${data.last_saved_by} at ${time}`;
+          document.getElementById('notesMeta').style.display = 'block';
+        }
+      } catch {}
+      btn.disabled = false;
+      btn.textContent = 'Save Notes';
+    });
+
+    // --- Supplies ---
+    async function loadSupplies() {
+      if (!currentMonthId) return;
+      try {
+        const res = await fetch(`/guardianage/api/months/${currentMonthId}/supplies`);
+        const { data } = await res.json();
+        const supplies = data?.supplies || [];
+        if (supplies.length > 0) {
+          document.getElementById('suppliesList').innerHTML = supplies.map(s => {
+            const amt = s.amount ? `${s.currency_code} ${Number(s.amount).toFixed(2)}` : '';
+            const date = s.purchase_date ? new Date(s.purchase_date + 'T00:00:00').toLocaleDateString('en', { month: 'short', day: 'numeric' }) : '';
+            return `<div class="task-item open" onclick="editSupply('${s.id}', ${JSON.stringify(s).replace(/'/g, "&#39;").replace(/"/g, '&quot;')})">
+              <span class="task-title">${s.item_name}${amt ? ' — ' + amt : ''}${date ? ' (' + date + ')' : ''}</span>
+            </div>`;
+          }).join('');
+        } else {
+          document.getElementById('suppliesList').innerHTML = '<div class="empty-state">No supplies recorded</div>';
+        }
+      } catch {}
+    }
+
+    document.getElementById('addSupplyBtn').addEventListener('click', () => {
+      document.getElementById('editSupplyId').value = '';
+      document.getElementById('supplyFormTitle').textContent = 'Add Supply';
+      document.getElementById('supplyName').value = '';
+      document.getElementById('supplyAmount').value = '';
+      document.getElementById('supplyCurrency').value = 'USD';
+      document.getElementById('supplyDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('supplyVendor').value = '';
+      document.getElementById('supplyCategory').value = '';
+      document.getElementById('supplyNote').value = '';
+      document.getElementById('supplyForm').style.display = 'block';
+      document.getElementById('addSupplyBtn').style.display = 'none';
+    });
+
+    window.editSupply = function(id, supply) {
+      const s = typeof supply === 'string' ? JSON.parse(supply) : supply;
+      document.getElementById('editSupplyId').value = id;
+      document.getElementById('supplyFormTitle').textContent = 'Edit Supply';
+      document.getElementById('supplyName').value = s.item_name || '';
+      document.getElementById('supplyAmount').value = s.amount || '';
+      document.getElementById('supplyCurrency').value = s.currency_code || 'USD';
+      document.getElementById('supplyDate').value = s.purchase_date || '';
+      document.getElementById('supplyVendor').value = s.vendor || '';
+      document.getElementById('supplyCategory').value = s.category || '';
+      document.getElementById('supplyNote').value = s.note || '';
+      document.getElementById('supplyForm').style.display = 'block';
+      document.getElementById('addSupplyBtn').style.display = 'none';
+    };
+
+    document.getElementById('cancelSupplyBtn').addEventListener('click', () => {
+      document.getElementById('supplyForm').style.display = 'none';
+      document.getElementById('addSupplyBtn').style.display = 'block';
+    });
+
+    document.getElementById('submitSupplyBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('submitSupplyBtn');
+      const name = document.getElementById('supplyName').value.trim();
+      if (!name) { alert('Item name is required'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const body = {
+        item_name: name,
+        amount: parseFloat(document.getElementById('supplyAmount').value) || undefined,
+        currency_code: document.getElementById('supplyCurrency').value,
+        purchase_date: document.getElementById('supplyDate').value || undefined,
+        vendor: document.getElementById('supplyVendor').value || undefined,
+        category: document.getElementById('supplyCategory').value || undefined,
+        note: document.getElementById('supplyNote').value || undefined,
+      };
+
+      const editId = document.getElementById('editSupplyId').value;
+      try {
+        if (editId) {
+          await fetch(`/guardianage/api/supplies/${editId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+        } else {
+          await fetch(`/guardianage/api/months/${currentMonthId}/supplies`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+        }
+        document.getElementById('supplyForm').style.display = 'none';
+        document.getElementById('addSupplyBtn').style.display = 'block';
+        await loadSupplies();
+      } catch { alert('Failed to save supply'); }
+
+      btn.disabled = false;
+      btn.textContent = 'Save';
+    });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await fetch('/guardianage/api/auth/logout', { method: 'POST' });

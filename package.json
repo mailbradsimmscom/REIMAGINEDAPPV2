@@ -18,6 +18,7 @@
     "test:nightly": "node --test --test-force-exit tests/nightly/",
     "test:dip": "node --test --test-force-exit tests/integration/dip/",
     "test:golden": "node --test --test-force-exit tests/integration/golden/",
+    "test:guardianage": "node --test --test-force-exit guardianage/tests/",
     "test:python": "cd python-sidecar && pytest tests -v",
     "test:python:cov": "cd python-sidecar && pytest tests -v --cov=app",
     "test:e2e": "playwright test tests/e2e/",

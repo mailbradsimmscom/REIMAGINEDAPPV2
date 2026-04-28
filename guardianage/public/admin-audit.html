@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Audit — Guardianage Admin</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="/guardianage" class="back-link">← Dashboard</a>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <nav class="admin-nav">
+    <a href="/guardianage/admin/users" class="admin-nav-link">Users</a>
+    <a href="/guardianage/admin/templates" class="admin-nav-link">Templates</a>
+    <a href="/guardianage/admin/audit" class="admin-nav-link active">Audit</a>
+  </nav>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <h2 class="admin-page-title">Audit & Activity</h2>
+
+      <!-- Tab bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="audit" onclick="switchTab('audit')">Activity Log</button>
+        <button class="tab-btn" data-tab="tasks" onclick="switchTab('tasks')">Task History</button>
+      </div>
+
+      <!-- Activity Log tab -->
+      <div id="auditTab">
+        <div class="filter-bar">
+          <select id="entityFilter" onchange="loadAudit()">
+            <option value="">All types</option>
+            <option value="auth">Auth</option>
+            <option value="user">User</option>
+            <option value="template">Template</option>
+            <option value="supply">Supply</option>
+            <option value="note">Note</option>
+          </select>
+        </div>
+        <div id="auditList" class="event-list"></div>
+        <div class="pagination">
+          <button id="auditPrev" class="btn btn-small" onclick="auditPage(-1)" disabled>Previous</button>
+          <span id="auditPageInfo" class="page-info"></span>
+          <button id="auditNext" class="btn btn-small" onclick="auditPage(1)">Next</button>
+        </div>
+      </div>
+
+      <!-- Task History tab -->
+      <div id="tasksTab" style="display: none;">
+        <div id="taskEventList" class="event-list"></div>
+        <div class="pagination">
+          <button id="tasksPrev" class="btn btn-small" onclick="tasksPage(-1)" disabled>Previous</button>
+          <span id="tasksPageInfo" class="page-info"></span>
+          <button id="tasksNext" class="btn btn-small" onclick="tasksPage(1)">Next</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const PAGE_SIZE = 50;
+    let auditOffset = 0;
+    let tasksOffset = 0;
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add('active');
+      document.getElementById('auditTab').style.display = tab === 'audit' ? 'block' : 'none';
+      document.getElementById('tasksTab').style.display = tab === 'tasks' ? 'block' : 'none';
+    }
+
+    function fmtTime(iso) {
+      if (!iso) return '-';
+      return new Date(iso).toLocaleString('en', {
+        month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+      });
+    }
+
+    // --- Audit Log ---
+
+    async function loadAudit() {
+      const entityType = document.getElementById('entityFilter').value;
+      let url = `/guardianage/api/admin/audit?limit=${PAGE_SIZE}&offset=${auditOffset}`;
+      if (entityType) url += `&entity_type=${entityType}`;
+
+      const res = await fetch(url);
+      if (res.status === 401) { window.location.href = '/guardianage/login'; return; }
+      if (res.status === 403) { window.location.href = '/guardianage'; return; }
+      const { data } = await res.json();
+
+      const list = document.getElementById('auditList');
+      if (!data.entries || data.entries.length === 0) {
+        list.innerHTML = '<div class="empty-state">No entries</div>';
+      } else {
+        list.innerHTML = data.entries.map(e => `
+          <div class="event-item">
+            <div>
+              <span class="event-type">${formatAction(e.action_type)}</span>
+              <span class="event-time">${fmtTime(e.created_at)}</span>
+            </div>
+            <div class="event-note">${e.summary || ''} ${e.actor_name ? `<span style="color:#888">— ${e.actor_name}</span>` : ''}</div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('auditPrev').disabled = auditOffset === 0;
+      document.getElementById('auditNext').disabled = (data.entries || []).length < PAGE_SIZE;
+      document.getElementById('auditPageInfo').textContent =
+        `${auditOffset + 1}–${auditOffset + (data.entries || []).length}`;
+    }
+
+    function auditPage(dir) {
+      auditOffset = Math.max(0, auditOffset + dir * PAGE_SIZE);
+      loadAudit();
+    }
+
+    // --- Task Events ---
+
+    async function loadTaskEvents() {
+      const res = await fetch(`/guardianage/api/admin/task-events?limit=${PAGE_SIZE}&offset=${tasksOffset}`);
+      if (res.status === 401) { window.location.href = '/guardianage/login'; return; }
+      const { data } = await res.json();
+
+      const list = document.getElementById('taskEventList');
+      if (!data.events || data.events.length === 0) {
+        list.innerHTML = '<div class="empty-state">No task events</div>';
+      } else {
+        list.innerHTML = data.events.map(e => `
+          <div class="event-item">
+            <div>
+              <span class="event-type">${formatAction(e.event_type)}</span>
+              <span class="event-time">${fmtTime(e.occurred_at)}</span>
+            </div>
+            <div class="event-note">
+              ${e.task_title ? `<strong>${e.task_title}</strong>` : ''}
+              ${e.note_text ? ` — ${e.note_text}` : ''}
+              ${e.actor_name ? `<span style="color:#888"> — ${e.actor_name}</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('tasksPrev').disabled = tasksOffset === 0;
+      document.getElementById('tasksNext').disabled = (data.events || []).length < PAGE_SIZE;
+      document.getElementById('tasksPageInfo').textContent =
+        `${tasksOffset + 1}–${tasksOffset + (data.events || []).length}`;
+    }
+
+    function tasksPage(dir) {
+      tasksOffset = Math.max(0, tasksOffset + dir * PAGE_SIZE);
+      loadTaskEvents();
+    }
+
+    function formatAction(type) {
+      const labels = {
+        login_success: 'Login',
+        login_failed: 'Login Failed',
+        login_locked: 'Login Locked',
+        logout: 'Logout',
+        user_created: 'User Created',
+        user_updated: 'User Updated',
+        user_deactivated: 'User Deactivated',
+        password_reset: 'Password Reset',
+        template_created: 'Template Created',
+        template_updated: 'Template Updated',
+        template_deactivated: 'Template Deactivated',
+        note_saved: 'Note Saved',
+        supply_created: 'Supply Added',
+        receipt_uploaded: 'Receipt Upload',
+        completed: 'Completed',
+        reopened: 'Reopened',
+        note_updated: 'Note Updated',
+        photo_added: 'Photo Added',
+        photo_removed: 'Photo Removed',
+      };
+      return labels[type] || type;
+    }
+
+    async function init() {
+      const res = await fetch('/guardianage/api/admin/users');
+      if (res.status === 401) { window.location.href = '/guardianage/login'; return; }
+      if (res.status === 403) { window.location.href = '/guardianage'; return; }
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+
+      await Promise.all([loadAudit(), loadTaskEvents()]);
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    init();
+  </script>
+</body>
+</html>

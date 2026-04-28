@@ -1,6 +1,7 @@
 /**
  * Guardianage Dashboard Route
  * Returns current season overview data.
+ * Supports ?month_id=X&week_id=Y for navigation.
  */
 
 import express from 'express';
@@ -11,6 +12,8 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const supabase = await getSupabaseClient();
+    const requestedMonthId = req.query.month_id || null;
+    const requestedWeekId = req.query.week_id || null;
 
     // Get active season
     const { data: season } = await supabase
@@ -30,14 +33,20 @@ router.get('/', async (req, res) => {
       .eq('season_id', season.id)
       .order('sort_order', { ascending: true });
 
-    // Find current month based on today in AST (UTC-4)
+    // Find current month based on today in AST (UTC-4), or use requested month
     const now = new Date();
     const astNow = new Date(now.getTime() - 4 * 60 * 60 * 1000);
     const todayStr = astNow.toISOString().slice(0, 10);
 
-    let currentMonth = months?.find(m =>
-      todayStr >= m.month_start_date && todayStr <= m.month_end_date
-    );
+    let currentMonth = null;
+    if (requestedMonthId) {
+      currentMonth = months?.find(m => m.id === requestedMonthId);
+    }
+    if (!currentMonth) {
+      currentMonth = months?.find(m =>
+        todayStr >= m.month_start_date && todayStr <= m.month_end_date
+      );
+    }
 
     // Outside season: show nearest month
     if (!currentMonth && months?.length > 0) {
@@ -48,7 +57,8 @@ router.get('/', async (req, res) => {
       }
     }
 
-    // Get current week
+    // Get all weeks for current month
+    let allWeeks = [];
     let currentWeek = null;
     if (currentMonth) {
       const { data: weeks } = await supabase
@@ -57,16 +67,23 @@ router.get('/', async (req, res) => {
         .eq('month_id', currentMonth.id)
         .order('sort_order', { ascending: true });
 
-      currentWeek = weeks?.find(w =>
-        todayStr >= w.week_start_date && todayStr <= w.week_end_date
-      );
+      allWeeks = weeks || [];
+
+      if (requestedWeekId) {
+        currentWeek = allWeeks.find(w => w.id === requestedWeekId);
+      }
+      if (!currentWeek) {
+        currentWeek = allWeeks.find(w =>
+          todayStr >= w.week_start_date && todayStr <= w.week_end_date
+        );
+      }
 
       // If outside all weeks in current month, show first or last
-      if (!currentWeek && weeks?.length > 0) {
-        if (todayStr < weeks[0].week_start_date) {
-          currentWeek = weeks[0];
+      if (!currentWeek && allWeeks.length > 0) {
+        if (todayStr < allWeeks[0].week_start_date) {
+          currentWeek = allWeeks[0];
         } else {
-          currentWeek = weeks[weeks.length - 1];
+          currentWeek = allWeeks[allWeeks.length - 1];
         }
       }
     }
@@ -91,12 +108,19 @@ router.get('/', async (req, res) => {
       t.status === 'open' && t.due_end_date && todayStr > t.due_end_date
     ) || [];
 
+    // Build month/week navigation lists (id + display_name only)
+    const monthNav = (months || []).map(m => ({ id: m.id, display_name: m.display_name }));
+    const weekNav = allWeeks.map(w => ({ id: w.id, display_name: w.display_name }));
+
     return res.json({
       success: true,
       data: {
+        user: { role: req.guardianageUser.role, display_name: req.guardianageUser.display_name },
         season: { id: season.id, name: season.name, status: season.status },
         currentMonth: currentMonth ? { id: currentMonth.id, display_name: currentMonth.display_name, month_key: currentMonth.month_key } : null,
         currentWeek: currentWeek ? { id: currentWeek.id, display_name: currentWeek.display_name } : null,
+        monthNav,
+        weekNav,
         weeklyTasksDue: weeklyTasks,
         monthlyTasksOpen: monthlyTasks.filter(t => t.status === 'open'),
         majorItemsOpen: majorItems.filter(t => t.status === 'open'),

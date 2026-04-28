@@ -17,6 +17,7 @@ import monthsRoutes from './routes/months.js';
 import tasksRoutes from './routes/tasks.js';
 import notesRoutes from './routes/notes.js';
 import suppliesRoutes from './routes/supplies.js';
+import adminRoutes from './routes/admin.js';
 
 const router = express.Router();
 
@@ -68,6 +69,37 @@ router.get('/task/:taskId', async (req, res) => {
   }
 });
 
+// Admin pages
+router.get('/admin/users', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'guardianage/public/admin-users.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Admin users page not found' });
+  }
+});
+
+router.get('/admin/templates', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'guardianage/public/admin-templates.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Admin templates page not found' });
+  }
+});
+
+router.get('/admin/audit', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'guardianage/public/admin-audit.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Admin audit page not found' });
+  }
+});
+
 // Static assets (JS, CSS)
 router.use('/public', express.static(join(process.cwd(), 'guardianage/public'), {
   setHeaders: (res, path) => {
@@ -87,5 +119,6 @@ router.use('/api/months', notesRoutes);
 router.use('/api/supplies', suppliesRoutes);
 // Also mount month-scoped supplies
 router.use('/api/months', suppliesRoutes);
+router.use('/api/admin', adminRoutes);
 
 export default router;

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Users — Guardianage Admin</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="/guardianage" class="back-link">← Dashboard</a>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <nav class="admin-nav">
+    <a href="/guardianage/admin/users" class="admin-nav-link active">Users</a>
+    <a href="/guardianage/admin/templates" class="admin-nav-link">Templates</a>
+    <a href="/guardianage/admin/audit" class="admin-nav-link">Audit</a>
+  </nav>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <h2 class="admin-page-title">User Management</h2>
+
+      <!-- User list -->
+      <div id="userList" class="admin-table-wrap"></div>
+
+      <!-- Add user form -->
+      <div class="admin-form-card">
+        <h3>Add User</h3>
+        <div id="formError" class="error-message" style="display:none;"></div>
+        <div class="form-group">
+          <label for="loginId">Login ID</label>
+          <input type="text" id="loginId" placeholder="e.g. john" autocapitalize="none" autocorrect="off">
+        </div>
+        <div class="form-group">
+          <label for="displayName">Display Name</label>
+          <input type="text" id="displayName" placeholder="e.g. John Smith">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="text" id="password" placeholder="Min 4 characters">
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role">
+            <option value="team_user">Team User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button id="addUserBtn" class="btn btn-primary btn-full">Add User</button>
+      </div>
+    </div>
+
+    <!-- Edit modal -->
+    <div id="editModal" class="modal-overlay" style="display:none;">
+      <div class="modal-card">
+        <h3>Edit User</h3>
+        <div id="editError" class="error-message" style="display:none;"></div>
+        <div class="form-group">
+          <label for="editDisplayName">Display Name</label>
+          <input type="text" id="editDisplayName">
+        </div>
+        <div class="form-group">
+          <label for="editRole">Role</label>
+          <select id="editRole">
+            <option value="team_user">Team User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button id="saveEditBtn" class="btn btn-primary">Save</button>
+          <button id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+
+        <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;">
+
+        <h4 style="font-size:14px; margin-bottom:8px;">Reset Password</h4>
+        <div class="form-group">
+          <input type="text" id="newPassword" placeholder="New password (min 4 chars)">
+        </div>
+        <button id="resetPwBtn" class="btn btn-secondary btn-full" style="margin-bottom:12px;">Reset Password</button>
+
+        <button id="deactivateBtn" class="btn btn-danger btn-full">Deactivate User</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let users = [];
+    let editingUserId = null;
+
+    async function loadUsers() {
+      const res = await fetch('/guardianage/api/admin/users');
+      if (res.status === 401) { window.location.href = '/guardianage/login'; return; }
+      if (res.status === 403) { window.location.href = '/guardianage'; return; }
+      const { data } = await res.json();
+      users = data.users;
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      renderUsers();
+    }
+
+    function renderUsers() {
+      const list = document.getElementById('userList');
+      if (users.length === 0) {
+        list.innerHTML = '<div class="empty-state">No users</div>';
+        return;
+      }
+      list.innerHTML = `<table class="admin-table">
+        <thead><tr><th>Login</th><th>Name</th><th>Role</th><th>Status</th><th></th></tr></thead>
+        <tbody>${users.map(u => `<tr>
+          <td>${u.login_id}</td>
+          <td>${u.display_name}</td>
+          <td><span class="role-badge ${u.role}">${u.role === 'admin' ? 'Admin' : 'Team'}</span></td>
+          <td><span class="status-dot ${u.is_active ? 'active' : 'inactive'}"></span>${u.is_active ? 'Active' : 'Inactive'}</td>
+          <td><button class="btn btn-small" onclick="openEdit('${u.id}')">Edit</button></td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+    }
+
+    function openEdit(userId) {
+      const user = users.find(u => u.id === userId);
+      if (!user) return;
+      editingUserId = userId;
+      document.getElementById('editDisplayName').value = user.display_name;
+      document.getElementById('editRole').value = user.role;
+      document.getElementById('newPassword').value = '';
+      document.getElementById('editError').style.display = 'none';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    document.getElementById('cancelEditBtn').addEventListener('click', () => {
+      document.getElementById('editModal').style.display = 'none';
+      editingUserId = null;
+    });
+
+    document.getElementById('saveEditBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('saveEditBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/guardianage/api/admin/users/${editingUserId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            display_name: document.getElementById('editDisplayName').value.trim(),
+            role: document.getElementById('editRole').value,
+          }),
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('editError').textContent = data.error;
+          document.getElementById('editError').style.display = 'block';
+          return;
+        }
+        document.getElementById('editModal').style.display = 'none';
+        await loadUsers();
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('resetPwBtn').addEventListener('click', async () => {
+      const pw = document.getElementById('newPassword').value;
+      if (pw.length < 4) {
+        document.getElementById('editError').textContent = 'Password must be at least 4 characters';
+        document.getElementById('editError').style.display = 'block';
+        return;
+      }
+      if (!confirm('Reset password? This will log the user out of all sessions.')) return;
+      const btn = document.getElementById('resetPwBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/guardianage/api/admin/users/${editingUserId}/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw }),
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('editError').textContent = data.error;
+          document.getElementById('editError').style.display = 'block';
+          return;
+        }
+        alert('Password reset successfully');
+        document.getElementById('newPassword').value = '';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('deactivateBtn').addEventListener('click', async () => {
+      if (!confirm('Deactivate this user? They will be logged out immediately.')) return;
+      const btn = document.getElementById('deactivateBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/guardianage/api/admin/users/${editingUserId}/deactivate`, {
+          method: 'PATCH',
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('editError').textContent = data.error;
+          document.getElementById('editError').style.display = 'block';
+          return;
+        }
+        document.getElementById('editModal').style.display = 'none';
+        await loadUsers();
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('addUserBtn').addEventListener('click', async () => {
+      const loginId = document.getElementById('loginId').value.trim();
+      const displayName = document.getElementById('displayName').value.trim();
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+
+      if (!loginId || !displayName || password.length < 4) {
+        document.getElementById('formError').textContent = 'All fields required, password min 4 chars';
+        document.getElementById('formError').style.display = 'block';
+        return;
+      }
+
+      const btn = document.getElementById('addUserBtn');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+      try {
+        const res = await fetch('/guardianage/api/admin/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ login_id: loginId, display_name: displayName, password, role }),
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('formError').textContent = data.error;
+          document.getElementById('formError').style.display = 'block';
+          return;
+        }
+        document.getElementById('formError').style.display = 'none';
+        document.getElementById('loginId').value = '';
+        document.getElementById('displayName').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('role').value = 'team_user';
+        await loadUsers();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Add User';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    loadUsers();
+  </script>
+</body>
+</html>

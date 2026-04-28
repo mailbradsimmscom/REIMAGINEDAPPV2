@@ -1365,13 +1365,13 @@ Output:
 
 ---
 
-## REMAINING WORK — Steps 6-9
+## REMAINING WORK — Steps 8-9
 
-The following steps should be completed in a new conversation. Read this plan file first for full context.
+Steps 6-7 completed. Steps 8-9 remain.
 
 ---
 
-## Step 6. Admin Surface
+## Step 6. Admin Surface — COMPLETE
 
 ### 6a. User Management
 
@@ -1451,7 +1451,7 @@ Add admin link to dashboard for admin users only (check `req.guardianageUser.rol
 
 ---
 
-## Step 7. Hardening
+## Step 7. Hardening — COMPLETE
 
 ### 7a. Input Validation
 

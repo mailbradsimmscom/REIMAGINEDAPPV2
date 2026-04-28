@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Templates — Guardianage Admin</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="/guardianage" class="back-link">← Dashboard</a>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <nav class="admin-nav">
+    <a href="/guardianage/admin/users" class="admin-nav-link">Users</a>
+    <a href="/guardianage/admin/templates" class="admin-nav-link active">Templates</a>
+    <a href="/guardianage/admin/audit" class="admin-nav-link">Audit</a>
+  </nav>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <h2 class="admin-page-title">Task Templates</h2>
+
+      <section class="task-section">
+        <h2>Weekly Recurring</h2>
+        <div id="weeklyList" class="task-list"><div class="empty-state">None</div></div>
+      </section>
+
+      <section class="task-section">
+        <h2>Monthly Recurring</h2>
+        <div id="monthlyList" class="task-list"><div class="empty-state">None</div></div>
+      </section>
+
+      <section class="task-section">
+        <h2>Monthly Major</h2>
+        <div id="majorList" class="task-list"><div class="empty-state">None</div></div>
+      </section>
+
+      <!-- Add template form -->
+      <div class="admin-form-card">
+        <h3>Add Template</h3>
+        <div id="formError" class="error-message" style="display:none;"></div>
+        <div class="form-group">
+          <label for="tplTitle">Title</label>
+          <input type="text" id="tplTitle" placeholder="Task title">
+        </div>
+        <div class="form-group">
+          <label for="tplType">Type</label>
+          <select id="tplType" onchange="toggleMonthSelect()">
+            <option value="weekly_recurring">Weekly Recurring</option>
+            <option value="monthly_recurring">Monthly Recurring</option>
+            <option value="monthly_major">Monthly Major</option>
+          </select>
+        </div>
+        <div class="form-group" id="monthSelectGroup" style="display:none;">
+          <label for="tplMonth">Target Month</label>
+          <select id="tplMonth"></select>
+        </div>
+        <div class="form-group">
+          <label for="tplDescription">Description (optional)</label>
+          <input type="text" id="tplDescription" placeholder="Brief description">
+        </div>
+        <div class="form-group">
+          <label for="tplInstructions">Instructions (optional)</label>
+          <textarea id="tplInstructions" rows="3" placeholder="Task instructions for field team"></textarea>
+        </div>
+        <button id="addTplBtn" class="btn btn-primary btn-full">Add Template</button>
+      </div>
+    </div>
+
+    <!-- Edit modal -->
+    <div id="editModal" class="modal-overlay" style="display:none;">
+      <div class="modal-card">
+        <h3>Edit Template</h3>
+        <div id="editError" class="error-message" style="display:none;"></div>
+        <div class="form-group">
+          <label for="editTitle">Title</label>
+          <input type="text" id="editTitle">
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Description</label>
+          <input type="text" id="editDescription">
+        </div>
+        <div class="form-group">
+          <label for="editInstructions">Instructions</label>
+          <textarea id="editInstructions" rows="3"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button id="saveEditBtn" class="btn btn-primary">Save</button>
+          <button id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+
+        <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;">
+
+        <button id="deactivateBtn" class="btn btn-danger btn-full">Deactivate Template</button>
+        <p class="form-hint">Deactivating cancels all open current/future task instances.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let templates = [];
+    let months = [];
+    let editingTemplateId = null;
+
+    async function loadData() {
+      const [tplRes, monthRes] = await Promise.all([
+        fetch('/guardianage/api/admin/templates'),
+        fetch('/guardianage/api/months'),
+      ]);
+
+      if (tplRes.status === 401) { window.location.href = '/guardianage/login'; return; }
+      if (tplRes.status === 403) { window.location.href = '/guardianage'; return; }
+
+      const tplData = await tplRes.json();
+      const monthData = await monthRes.json();
+
+      templates = tplData.data.templates;
+      months = monthData.data?.months || [];
+
+      // Populate month dropdown
+      const monthSelect = document.getElementById('tplMonth');
+      monthSelect.innerHTML = months.map(m =>
+        `<option value="${m.id}">${m.display_name}</option>`
+      ).join('');
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      renderTemplates();
+    }
+
+    function renderTemplates() {
+      const weekly = templates.filter(t => t.task_type === 'weekly_recurring');
+      const monthly = templates.filter(t => t.task_type === 'monthly_recurring');
+      const major = templates.filter(t => t.task_type === 'monthly_major');
+
+      renderGroup('weeklyList', weekly);
+      renderGroup('monthlyList', monthly);
+      renderGroup('majorList', major);
+    }
+
+    function renderGroup(containerId, items) {
+      const el = document.getElementById(containerId);
+      if (items.length === 0) {
+        el.innerHTML = '<div class="empty-state">None</div>';
+        return;
+      }
+      el.innerHTML = items.map(t => `
+        <div class="task-item ${t.is_active ? 'open' : 'complete'}" onclick="openEdit('${t.id}')" style="cursor:pointer;">
+          <span class="task-status-dot"></span>
+          <span class="task-title">${t.title}</span>
+          ${!t.is_active ? '<span class="deactivated-badge">Inactive</span>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function toggleMonthSelect() {
+      const type = document.getElementById('tplType').value;
+      document.getElementById('monthSelectGroup').style.display =
+        type === 'monthly_major' ? 'block' : 'none';
+    }
+
+    function openEdit(templateId) {
+      const tpl = templates.find(t => t.id === templateId);
+      if (!tpl) return;
+      editingTemplateId = templateId;
+      document.getElementById('editTitle').value = tpl.title;
+      document.getElementById('editDescription').value = tpl.description || '';
+      document.getElementById('editInstructions').value = tpl.default_instructions || '';
+      document.getElementById('editError').style.display = 'none';
+      document.getElementById('deactivateBtn').style.display = tpl.is_active ? 'block' : 'none';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    document.getElementById('cancelEditBtn').addEventListener('click', () => {
+      document.getElementById('editModal').style.display = 'none';
+      editingTemplateId = null;
+    });
+
+    document.getElementById('saveEditBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('saveEditBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/guardianage/api/admin/templates/${editingTemplateId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: document.getElementById('editTitle').value.trim(),
+            description: document.getElementById('editDescription').value.trim() || undefined,
+            default_instructions: document.getElementById('editInstructions').value.trim() || undefined,
+          }),
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('editError').textContent = data.error;
+          document.getElementById('editError').style.display = 'block';
+          return;
+        }
+        document.getElementById('editModal').style.display = 'none';
+        if (data.data?.tasksUpdated > 0) {
+          alert(`Template saved. ${data.data.tasksUpdated} open task(s) updated.`);
+        }
+        await loadData();
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('deactivateBtn').addEventListener('click', async () => {
+      if (!confirm('Deactivate this template? All open current/future tasks will be cancelled.')) return;
+      const btn = document.getElementById('deactivateBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/guardianage/api/admin/templates/${editingTemplateId}/deactivate`, {
+          method: 'POST',
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('editError').textContent = data.error;
+          document.getElementById('editError').style.display = 'block';
+          return;
+        }
+        alert(`Template deactivated. ${data.data.tasksCancelled} tasks cancelled.`);
+        document.getElementById('editModal').style.display = 'none';
+        await loadData();
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('addTplBtn').addEventListener('click', async () => {
+      const title = document.getElementById('tplTitle').value.trim();
+      const taskType = document.getElementById('tplType').value;
+
+      if (!title) {
+        document.getElementById('formError').textContent = 'Title is required';
+        document.getElementById('formError').style.display = 'block';
+        return;
+      }
+
+      const body = {
+        title,
+        task_type: taskType,
+        description: document.getElementById('tplDescription').value.trim() || undefined,
+        default_instructions: document.getElementById('tplInstructions').value.trim() || undefined,
+      };
+
+      if (taskType === 'monthly_major') {
+        body.target_month_id = document.getElementById('tplMonth').value;
+      }
+
+      const btn = document.getElementById('addTplBtn');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+      try {
+        const res = await fetch('/guardianage/api/admin/templates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('formError').textContent = data.error;
+          document.getElementById('formError').style.display = 'block';
+          return;
+        }
+        document.getElementById('formError').style.display = 'none';
+        document.getElementById('tplTitle').value = '';
+        document.getElementById('tplDescription').value = '';
+        document.getElementById('tplInstructions').value = '';
+        alert(`Template created. ${data.data.instancesCreated} task instances propagated.`);
+        await loadData();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Add Template';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

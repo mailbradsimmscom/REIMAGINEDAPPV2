@@ -553,3 +553,317 @@ a.task-item {
 .form-row .btn {
   flex: 1;
 }
+
+/* --- Nav Arrows (dashboard month/week) --- */
+
+.nav-card {
+  position: relative;
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.nav-arrow {
+  background: none;
+  border: none;
+  font-size: 22px;
+  font-weight: 600;
+  color: #4a9eff;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  min-width: 24px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.nav-arrow:active {
+  background: #f0f7ff;
+}
+
+/* --- Header Actions --- */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- Admin Navigation --- */
+
+.admin-nav {
+  display: flex;
+  background: #0d1520;
+  padding: 0 16px;
+  gap: 0;
+}
+
+.admin-nav-link {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #8899aa;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.admin-nav-link.active {
+  color: #4a9eff;
+  border-bottom-color: #4a9eff;
+}
+
+.admin-page-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* --- Admin Table --- */
+
+.admin-table-wrap {
+  background: #fff;
+  border-radius: 10px;
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.role-badge.admin { background: #fed7d7; color: #9b2c2c; }
+.role-badge.team_user { background: #bee3f8; color: #2a4365; }
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-dot.active { background: #38a169; }
+.status-dot.inactive { background: #e53e3e; }
+
+.deactivated-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f5f5f5;
+  color: #999;
+  margin-left: auto;
+}
+
+/* --- Admin Form Card --- */
+
+.admin-form-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.admin-form-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.admin-form-card .form-group {
+  margin-bottom: 12px;
+}
+
+.admin-form-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.admin-form-card input,
+.admin-form-card select,
+.admin-form-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: #999;
+  margin-top: 6px;
+}
+
+/* --- Modal --- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.modal-card .form-group {
+  margin-bottom: 12px;
+}
+
+.modal-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.modal-card input,
+.modal-card select,
+.modal-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.modal-actions .btn { flex: 1; }
+
+.btn-danger {
+  background: #e53e3e;
+  color: #fff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #c53030;
+}
+
+/* --- Tabs --- */
+
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  background: #fff;
+  color: #888;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: #4a9eff;
+  background: #f0f7ff;
+}
+
+/* --- Filter Bar --- */
+
+.filter-bar {
+  margin-bottom: 12px;
+}
+
+.filter-bar select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+/* --- Pagination --- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 0;
+}
+
+.page-info {
+  font-size: 13px;
+  color: #888;
+}
