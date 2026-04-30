@@ -25,7 +25,15 @@
 
       <div id="taskDueWindow" class="task-due-window"></div>
 
+      <div id="taskDescription" class="task-description" style="display: none;"></div>
+
       <div id="taskInstructions" class="task-instructions" style="display: none;"></div>
+
+      <!-- Notes from completion/reopen events -->
+      <div id="taskNotes" class="task-notes-list" style="display: none;">
+        <h3>Notes</h3>
+        <div id="taskNotesList"></div>
+      </div>
 
       <!-- Completion note -->
       <div id="noteSection" class="task-note-section">
@@ -114,10 +122,31 @@
         document.getElementById('taskDueWindow').textContent = `Due: ${fmt(start)} – ${fmt(end)}`;
       }
 
+      // Description
+      if (task.description) {
+        document.getElementById('taskDescription').textContent = task.description;
+        document.getElementById('taskDescription').style.display = 'block';
+      }
+
       // Instructions
       if (task.instructions) {
         document.getElementById('taskInstructions').textContent = task.instructions;
         document.getElementById('taskInstructions').style.display = 'block';
+      }
+
+      // Show notes from events (completed, reopened, note_updated)
+      const notesFromEvents = (events || []).filter(e => e.note_text);
+      if (notesFromEvents.length > 0) {
+        document.getElementById('taskNotes').style.display = 'block';
+        document.getElementById('taskNotesList').innerHTML = notesFromEvents.map(e => {
+          const time = new Date(e.occurred_at).toLocaleString('en', {
+            month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+          });
+          return `<div class="task-note-item">
+            <div class="task-note-text">${e.note_text}</div>
+            <div class="task-note-meta">${time}</div>
+          </div>`;
+        }).join('');
       }
 
       // Action buttons
