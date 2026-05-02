@@ -291,6 +291,17 @@ app.get('/supplies', async (req, res) => {
   }
 });
 
+// Supply audit quick-add page
+app.get('/supplies/quick-add', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'src/public/supplies-quick-add.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Quick-add page not found' });
+  }
+});
+
 // Supplies admin page (manage categories, units, locations)
 app.get('/supplies/admin', async (req, res) => {
   try {

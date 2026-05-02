@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Quick Add Supply | BoatOS</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #007AFF;
+      --primary-dark: #0056CC;
+      --danger: #FF3B30;
+      --success: #34C759;
+      --warning: #FF9500;
+      --bg: #F2F2F7;
+      --card: #FFFFFF;
+      --border: #E5E5EA;
+      --text: #1C1C1E;
+      --text-secondary: #8E8E93;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    /* Header */
+    .header {
+      background: var(--card);
+      padding: max(env(safe-area-inset-top), 12px) 16px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--primary);
+      font-size: 18px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .capture-count {
+      font-size: 14px;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    /* Content */
+    .content {
+      padding: 16px;
+      padding-bottom: max(env(safe-area-inset-bottom), 24px);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Section */
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .section-header:active {
+      background: var(--bg);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-toggle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: transform 0.2s;
+    }
+
+    .section-toggle.collapsed {
+      transform: rotate(-90deg);
+    }
+
+    .section-body {
+      padding: 0 16px 16px;
+    }
+
+    .section-body.collapsed {
+      display: none;
+    }
+
+    /* Location Manager */
+    .loc-add-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .loc-add-row input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .loc-add-row input:focus {
+      border-color: var(--primary);
+    }
+
+    .loc-list {
+      list-style: none;
+    }
+
+    .loc-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg);
+      gap: 8px;
+    }
+
+    .loc-item:last-child {
+      border-bottom: none;
+    }
+
+    .loc-name {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .loc-count {
+      font-size: 13px;
+      color: var(--text-secondary);
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .loc-edit-input {
+      flex: 1;
+      padding: 6px 8px;
+      border: 1px solid var(--primary);
+      border-radius: 6px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .loc-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .loc-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .loc-btn:active {
+      opacity: 0.7;
+    }
+
+    .loc-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .loc-btn.save { color: var(--success); }
+    .loc-btn.cancel { color: var(--text-secondary); }
+    .loc-btn.delete { color: var(--danger); }
+
+    .loc-empty {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 16px 0;
+      font-size: 14px;
+    }
+
+    /* Quick Capture Form */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      background: var(--card);
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+
+    select.form-input {
+      cursor: pointer;
+    }
+
+    /* Photo capture */
+    .photo-area {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .photo-add-btn {
+      width: 80px;
+      height: 80px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+      font-size: 24px;
+      color: var(--text-secondary);
+    }
+
+    .photo-add-btn span {
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .photo-add-btn:active {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .photo-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 11px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Quantity row */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qty-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      color: var(--primary);
+    }
+
+    .qty-btn:active {
+      background: var(--bg);
+    }
+
+    .qty-input {
+      width: 80px;
+      text-align: center;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 600;
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+    }
+
+    .qty-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.2s;
+    }
+
+    .btn:active { opacity: 0.8; }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    .btn-add-loc {
+      background: var(--primary);
+      color: white;
+      white-space: nowrap;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: max(env(safe-area-inset-bottom), 20px);
+      left: 16px;
+      right: 16px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      pointer-events: auto;
+      text-align: center;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast-success { background: var(--success); color: white; }
+    .toast-error { background: var(--danger); color: white; }
+    .toast-warning { background: var(--warning); color: white; }
+    .toast-info { background: #636366; color: white; }
+
+    /* Hidden file input */
+    #photoInput { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <a href="/supplies" class="back-btn">&#8592;</a>
+    <h1>Quick Add</h1>
+    <div class="capture-count" id="captureCount">0 captured</div>
+  </div>
+
+  <div class="content">
+
+    <!-- Location Manager -->
+    <div class="section">
+      <div class="section-header" id="locToggle">
+        <div class="section-title">Locations</div>
+        <span class="section-toggle" id="locToggleIcon">&#9660;</span>
+      </div>
+      <div class="section-body" id="locBody">
+        <div class="loc-add-row">
+          <input type="text" id="locAddInput" placeholder="New location name..." autocomplete="off">
+          <button class="btn btn-sm btn-add-loc" id="locAddBtn">Add</button>
+        </div>
+        <ul class="loc-list" id="locList">
+          <li class="loc-empty">Loading locations...</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Quick Capture Form -->
+    <div class="section">
+      <div class="section-header" style="cursor: default;">
+        <div class="section-title">Capture Item</div>
+      </div>
+      <div class="section-body">
+        <form id="quickAddForm" autocomplete="off">
+
+          <!-- Item Name -->
+          <div class="form-group">
+            <label class="form-label" for="itemName">Item Name *</label>
+            <input type="text" class="form-input" id="itemName" placeholder="What is it?" required>
+          </div>
+
+          <!-- Photos -->
+          <div class="form-group">
+            <label class="form-label">Photos</label>
+            <div class="photo-area" id="photoArea">
+              <div class="photo-add-btn" id="photoAddBtn">
+                &#128247;
+                <span>Add</span>
+              </div>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" capture="environment" multiple>
+          </div>
+
+          <!-- Quantity -->
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" id="qtyMinus">-</button>
+              <input type="number" class="qty-input" id="qtyInput" value="1" min="0" step="1" inputmode="numeric">
+              <button type="button" class="qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label class="form-label" for="locationSelect">Location *</label>
+            <select class="form-input" id="locationSelect" required>
+              <option value="">Select location...</option>
+            </select>
+          </div>
+
+          <!-- Notes (optional) -->
+          <div class="form-group">
+            <label class="form-label" for="notesInput">Notes</label>
+            <input type="text" class="form-input" id="notesInput" placeholder="Optional notes...">
+          </div>
+
+          <!-- Save -->
+          <button type="submit" class="btn btn-primary" id="saveBtn">Save &amp; Next</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JS -->
+  <script type="module" src="/js/supplies/supplies-quick-add.js"></script>
+</body>
+</html>
