@@ -200,6 +200,13 @@ body {
   font-size: 28px;
 }
 
+.season-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .status-card.overdue .status-value {
   color: #e53e3e;
 }
@@ -904,4 +911,95 @@ a.task-item {
 .page-info {
   font-size: 13px;
   color: #888;
+}
+
+/* --- Season Context Editor --- */
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  background: #f7fafc;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid #ddd;
+  border-bottom: none;
+}
+
+.editor-toolbar button {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+}
+
+.editor-toolbar button:active {
+  background: #edf2f7;
+}
+
+.context-editor {
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  padding: 12px;
+  min-height: 200px;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: inherit;
+  outline: none;
+  background: #fff;
+  overflow-y: auto;
+}
+
+.context-editor:focus {
+  border-color: #4a9eff;
+}
+
+.context-content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  min-height: 120px;
+}
+
+.context-readonly {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.context-readonly:empty::after {
+  content: 'No season context has been added yet.';
+  color: #aaa;
+  font-style: italic;
+}
+
+.context-content h2,
+.context-content h3 {
+  margin: 12px 0 8px;
+}
+
+.context-content h2:first-child,
+.context-content h3:first-child {
+  margin-top: 0;
+}
+
+.context-content ul,
+.context-content ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+
+.context-content p {
+  margin: 8px 0;
+  line-height: 1.5;
 }

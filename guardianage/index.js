@@ -18,6 +18,7 @@ import tasksRoutes from './routes/tasks.js';
 import notesRoutes from './routes/notes.js';
 import suppliesRoutes from './routes/supplies.js';
 import adminRoutes from './routes/admin.js';
+import seasonContextRoutes from './routes/season-context.js';
 
 const router = express.Router();
 
@@ -66,6 +67,16 @@ router.get('/task/:taskId', async (req, res) => {
     res.end(content);
   } catch (error) {
     res.status(404).json({ error: 'Task page not found' });
+  }
+});
+
+router.get('/context', async (req, res) => {
+  try {
+    const content = await fs.readFile(join(process.cwd(), 'guardianage/public/context.html'));
+    res.setHeader('content-type', 'text/html');
+    res.end(content);
+  } catch (error) {
+    res.status(404).json({ error: 'Context page not found' });
   }
 });
 
@@ -120,5 +131,6 @@ router.use('/api/supplies', suppliesRoutes);
 // Also mount month-scoped supplies
 router.use('/api/months', suppliesRoutes);
 router.use('/api/admin', adminRoutes);
+router.use('/api/seasons', seasonContextRoutes);
 
 export default router;

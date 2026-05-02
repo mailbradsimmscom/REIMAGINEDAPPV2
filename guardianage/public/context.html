@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Season Context — Guardianage</title>
+  <link rel="stylesheet" href="/guardianage/public/css/guardianage.css">
+</head>
+<body>
+  <header class="app-header">
+    <a href="/guardianage" class="back-link">← Back</a>
+    <button id="logoutBtn" class="btn btn-small">Logout</button>
+  </header>
+
+  <main class="dashboard">
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="content" style="display: none;">
+      <h2 id="pageTitle" style="margin: 0 0 12px;">Season Context</h2>
+      <div id="contextMeta" class="notes-meta" style="display: none;"></div>
+
+      <!-- Admin: rich text editor -->
+      <div id="editorSection" style="display: none;">
+        <div class="editor-toolbar">
+          <button type="button" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
+          <button type="button" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
+          <button type="button" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+          <button type="button" onclick="execCmd('insertUnorderedList')" title="Bullet List">&#8226;</button>
+          <button type="button" onclick="execCmd('insertOrderedList')" title="Numbered List">1.</button>
+          <button type="button" onclick="execCmd('formatBlock', 'h3')" title="Heading">H</button>
+          <button type="button" onclick="execCmd('removeFormat')" title="Clear Formatting">&times;</button>
+        </div>
+        <div id="contextEditor" class="context-editor" contenteditable="true"></div>
+        <button id="saveBtn" class="btn btn-primary btn-full" style="margin-top: 12px;">Save Context</button>
+      </div>
+
+      <!-- Team user: read-only view -->
+      <div id="readonlySection" class="context-content context-readonly" style="display: none;"></div>
+    </div>
+  </main>
+
+  <script>
+    let seasonId = null;
+
+    async function init() {
+      // Get season ID and user role from dashboard API
+      const dashRes = await fetch('/guardianage/api/dashboard');
+      if (dashRes.status === 401) { window.location.href = '/guardianage/login'; return; }
+      const dashData = await dashRes.json();
+
+      if (!dashData.data?.season?.id) {
+        document.getElementById('loading').textContent = 'No active season';
+        return;
+      }
+
+      seasonId = dashData.data.season.id;
+      const isAdmin = dashData.data.user?.role === 'admin';
+
+      // Load context
+      const res = await fetch(`/guardianage/api/seasons/${seasonId}/context`);
+      const result = await res.json();
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+
+      const note = result.data?.note;
+
+      // Show metadata
+      if (note?.last_saved_by && note?.last_saved_at) {
+        const time = new Date(note.last_saved_at).toLocaleString('en', {
+          month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+        });
+        document.getElementById('contextMeta').textContent = `Last saved by ${note.last_saved_by} at ${time}`;
+        document.getElementById('contextMeta').style.display = 'block';
+      }
+
+      if (isAdmin) {
+        document.getElementById('editorSection').style.display = 'block';
+        document.getElementById('contextEditor').innerHTML = note?.current_html || '';
+      } else {
+        document.getElementById('readonlySection').style.display = 'block';
+        document.getElementById('readonlySection').innerHTML = note?.current_html || '';
+      }
+    }
+
+    function execCmd(command, value) {
+      document.execCommand(command, false, value || null);
+      document.getElementById('contextEditor').focus();
+    }
+
+    // Strip unwanted tags/attributes on paste
+    document.addEventListener('paste', (e) => {
+      const editor = document.getElementById('contextEditor');
+      if (!editor.contains(e.target) && e.target !== editor) return;
+
+      e.preventDefault();
+      const html = e.clipboardData.getData('text/html');
+      const text = e.clipboardData.getData('text/plain');
+
+      if (html) {
+        // Keep only basic formatting tags
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        // Remove script, style, iframe tags
+        temp.querySelectorAll('script, style, iframe, object, embed').forEach(el => el.remove());
+        // Remove on* attributes and javascript: hrefs
+        temp.querySelectorAll('*').forEach(el => {
+          for (const attr of [...el.attributes]) {
+            if (attr.name.startsWith('on') || (attr.name === 'href' && attr.value.startsWith('javascript:'))) {
+              el.removeAttribute(attr.name);
+            }
+          }
+        });
+        document.execCommand('insertHTML', false, temp.innerHTML);
+      } else {
+        document.execCommand('insertText', false, text);
+      }
+    });
+
+    // Save
+    document.getElementById('saveBtn')?.addEventListener('click', async () => {
+      if (!seasonId) return;
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        const html = document.getElementById('contextEditor').innerHTML;
+        const res = await fetch(`/guardianage/api/seasons/${seasonId}/context/save`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html }),
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          const time = new Date(result.data.last_saved_at).toLocaleString('en', {
+            month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+          });
+          document.getElementById('contextMeta').textContent = `Last saved by ${result.data.last_saved_by} at ${time}`;
+          document.getElementById('contextMeta').style.display = 'block';
+          btn.textContent = 'Saved!';
+          setTimeout(() => { btn.textContent = 'Save Context'; }, 1500);
+        } else {
+          alert(result.error || 'Failed to save');
+          btn.textContent = 'Save Context';
+        }
+      } catch {
+        alert('Connection error');
+        btn.textContent = 'Save Context';
+      }
+      btn.disabled = false;
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/guardianage/api/auth/logout', { method: 'POST' });
+      window.location.href = '/guardianage/login';
+    });
+
+    init();
+  </script>
+</body>
+</html>
