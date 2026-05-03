@@ -1,14 +1,15 @@
 // src/routes/supplies/quick-add.route.js
 // Self-contained route for supply audit quick-add tool.
 // Uses its own tables (supply_audit_locations, supply_audit_items) and
-// its own storage bucket (supply-audit). Zero production table dependencies.
+// its own storage folder (supply-audit/ inside documents bucket). Zero production table dependencies.
 
 import express from 'express';
 import { getSupabaseClient } from '../../repositories/supabaseClient.js';
 import { logger } from '../../utils/logger.js';
 
 const router = express.Router();
-const BUCKET = 'supply-audit';
+const BUCKET = 'documents';
+const FOLDER = 'supply-audit';
 const MAX_PHOTOS = 5;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB decoded
 
@@ -296,7 +297,7 @@ router.post('/item/:id/photo', async (req, res) => {
 
     // Upload to supply-audit bucket
     const extension = imageType === 'jpeg' ? 'jpg' : imageType;
-    const filePath = `${id}-${index}.${extension}`;
+    const filePath = `${FOLDER}/${id}-${index}.${extension}`;
 
     const { error: uploadError } = await supabase.storage
       .from(BUCKET)
