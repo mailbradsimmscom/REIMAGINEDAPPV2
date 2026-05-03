@@ -92,11 +92,29 @@ router.get('/', async (req, res) => {
     const { data: tasks } = currentMonth
       ? await supabase
           .from('guardianage_tasks')
-          .select('id, title, task_type, status, due_start_date, due_end_date, week_id')
+          .select('id, title, task_type, status, due_start_date, due_end_date, week_id, instructions')
           .eq('month_id', currentMonth.id)
           .neq('status', 'cancelled')
           .order('display_order', { ascending: true })
       : { data: [] };
+
+    // Find tasks that have event notes
+    const taskIds = (tasks || []).map(t => t.id);
+    const taskIdsWithNotes = new Set();
+    if (taskIds.length > 0) {
+      const { data: events } = await supabase
+        .from('guardianage_task_events')
+        .select('task_id')
+        .in('task_id', taskIds)
+        .not('note_text', 'is', null);
+      for (const e of (events || [])) taskIdsWithNotes.add(e.task_id);
+    }
+
+    // Add has_notes flag and remove instructions from response payload
+    for (const t of (tasks || [])) {
+      t.has_notes = !!(t.instructions || taskIdsWithNotes.has(t.id));
+      delete t.instructions;
+    }
 
     // Categorize tasks
     const weeklyTasks = tasks?.filter(t => t.task_type === 'weekly_recurring' && t.week_id === currentWeek?.id) || [];

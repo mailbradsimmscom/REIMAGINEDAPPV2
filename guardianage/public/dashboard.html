@@ -225,9 +225,10 @@
 
     function taskItem(task, extraClass = '') {
       const statusClass = task.status === 'complete' ? 'complete' : 'open';
+      const noteIndicator = task.has_notes ? ' <span style="color:#e53e3e;font-weight:600;">(n)</span>' : '';
       return `<a href="/guardianage/task/${task.id}" class="task-item ${statusClass} ${extraClass}">
         <span class="task-status-dot"></span>
-        <span class="task-title">${task.title}</span>
+        <span class="task-title">${task.title}${noteIndicator}</span>
       </a>`;
     }
 
