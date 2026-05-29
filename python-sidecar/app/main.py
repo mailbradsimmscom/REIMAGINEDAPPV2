@@ -35,7 +35,8 @@ from .models import (
     VisionAnalyzeRequest, VisionAnalyzeResponse, VisionAnalysisPath,
     VisionCropRequest, VisionCropResponse, VisionAsset,
     DIPRunRequest, DIPRunResponse, DIPModeResult,
-    IndexDocumentRequest, IndexDocumentResponse
+    IndexDocumentRequest, IndexDocumentResponse,
+    DoclingExtractResponse,
 )
 import asyncio
 import anthropic
@@ -4846,6 +4847,65 @@ def _extract_snippet_for_asset(page_data: dict, asset_index: int, asset_kind: st
                 snippet_parts.append(f"[TEXT] {item.get('value', '').strip()[:200]}")
 
     return '\n'.join(snippet_parts)
+
+
+# ============================================================================
+# CONTENT MCP — DOCLING EXTRACTION
+# ============================================================================
+
+from fastapi import Depends, Header
+
+_CONTENT_DOCLING_TOKEN = os.getenv("CONTENT_DOCLING_TOKEN", "")
+
+
+async def _verify_content_token(authorization: str = Header(...)):
+    """Validate Bearer token for Content MCP routes only."""
+    if not _CONTENT_DOCLING_TOKEN:
+        raise HTTPException(status_code=500, detail="CONTENT_DOCLING_TOKEN not configured")
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing Bearer token")
+    if authorization[7:] != _CONTENT_DOCLING_TOKEN:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
+@app.get("/v1/content/docling/health")
+async def docling_health():
+    """Check if Docling is importable."""
+    try:
+        import docling  # noqa: F401
+        return {"docling": True}
+    except ImportError:
+        return JSONResponse(status_code=503, content={"docling": False, "error": "docling not installed"})
+
+
+@app.post("/v1/content/docling/extract", response_model=DoclingExtractResponse)
+async def docling_extract(
+    file: UploadFile = File(...),
+    document_id: Optional[str] = Form(None),
+    _auth: None = Depends(_verify_content_token),
+):
+    """
+    Extract text, markdown, and raw JSON from a PDF using Docling.
+    Auth: Bearer CONTENT_DOCLING_TOKEN.
+    Timeout: may take up to 600s for large manuals.
+    """
+    from .docling_service import extract_pdf
+
+    if file.content_type and file.content_type != "application/pdf":
+        return DoclingExtractResponse(ok=False, error=f"Expected application/pdf, got {file.content_type}")
+
+    try:
+        pdf_bytes = await file.read()
+        result = extract_pdf(pdf_bytes, document_id)
+        return DoclingExtractResponse(
+            ok=True,
+            markdown=result["markdown"],
+            text=result["text"],
+            raw_json=result["raw_json"],
+        )
+    except Exception as e:
+        logger.error(f"Docling extraction failed: {e}", exc_info=True)
+        return DoclingExtractResponse(ok=False, error=str(e))
 
 
 if __name__ == "__main__":

@@ -445,3 +445,16 @@ class DIPRunResponse(BaseModel):
     cache_read_input_tokens: int = Field(default=0, description="Tokens read from cache (subsequent calls)")
     error_code: Optional[str] = None
     error: Optional[str] = None
+
+
+# ============================================================================
+# Docling Extraction Models (Content MCP integration)
+# ============================================================================
+
+class DoclingExtractResponse(BaseModel):
+    """Response from Docling PDF extraction"""
+    ok: bool
+    markdown: Optional[str] = Field(default=None, description="Markdown output from Docling")
+    text: Optional[str] = Field(default=None, description="Plain text output from Docling")
+    raw_json: Optional[Any] = Field(default=None, description="Raw Docling document dict")
+    error: Optional[str] = Field(default=None, description="Error message on failure")
