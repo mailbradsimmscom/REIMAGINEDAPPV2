@@ -4,7 +4,9 @@
 
 Mobile-first operational app for managing off-season boat care for REIMAGINED. Built as a self-contained module at `/guardianage/`, mounted in `src/app.js` with one line.
 
-**Season:** May 1 – November 8 2026 (7 months, 32 weeks, 304 task instances, 31 templates)
+**Season:** May 1 – November 8 2026 (7 months, 29 weeks, 31 templates)
+
+**Week alignment:** Weeks through Jul 14 2026 were seeded as day-of-month blocks (1st–7th, 8th–14th, …) and are preserved as history. From Jul 15 2026 (after a short Jul 15–19 transition week) weeks run continuously **Monday–Sunday** through season end. A week spanning a month boundary (e.g. Jul 27–Aug 2) belongs to the month containing its Monday; the dashboard finds the active week by date across the whole season and the displayed month follows it. Overdue is computed season-wide, so open tasks stay visible past month turns. Migrated 2026-07-16 by `guardianage/scripts/migrate-weeks-monsun.mjs` (backup: `scripts/backups/2026-07-16_guardianage_week_migration/`).
 
 ## Architecture
 
