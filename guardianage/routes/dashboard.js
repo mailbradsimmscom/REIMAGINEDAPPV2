@@ -33,14 +33,38 @@ router.get('/', async (req, res) => {
       .eq('season_id', season.id)
       .order('sort_order', { ascending: true });
 
-    // Find current month based on today in AST (UTC-4), or use requested month
+    // Find current month/week based on today in AST (UTC-4), or use requested month
     const now = new Date();
     const astNow = new Date(now.getTime() - 4 * 60 * 60 * 1000);
     const todayStr = astNow.toISOString().slice(0, 10);
 
+    // Get all weeks for the season up front — weeks may span month boundaries
+    // (e.g. Jul 27-Aug 2 filed under July), so the active week must be found
+    // by date across the whole season, not within a single month.
+    const monthIds = (months || []).map(m => m.id);
+    let seasonWeeks = [];
+    if (monthIds.length > 0) {
+      const { data: weeks } = await supabase
+        .from('guardianage_weeks')
+        .select('*')
+        .in('month_id', monthIds)
+        .order('week_start_date', { ascending: true });
+      seasonWeeks = weeks || [];
+    }
+
     let currentMonth = null;
     if (requestedMonthId) {
       currentMonth = months?.find(m => m.id === requestedMonthId);
+    }
+
+    // Default view: the month follows the week containing today
+    if (!currentMonth) {
+      const activeWeek = seasonWeeks.find(w =>
+        todayStr >= w.week_start_date && todayStr <= w.week_end_date
+      );
+      if (activeWeek) {
+        currentMonth = months?.find(m => m.id === activeWeek.month_id);
+      }
     }
     if (!currentMonth) {
       currentMonth = months?.find(m =>
@@ -57,17 +81,13 @@ router.get('/', async (req, res) => {
       }
     }
 
-    // Get all weeks for current month
+    // Weeks for the displayed month
     let allWeeks = [];
     let currentWeek = null;
     if (currentMonth) {
-      const { data: weeks } = await supabase
-        .from('guardianage_weeks')
-        .select('*')
-        .eq('month_id', currentMonth.id)
-        .order('sort_order', { ascending: true });
-
-      allWeeks = weeks || [];
+      allWeeks = seasonWeeks
+        .filter(w => w.month_id === currentMonth.id)
+        .sort((a, b) => a.sort_order - b.sort_order);
 
       if (requestedWeekId) {
         currentWeek = allWeeks.find(w => w.id === requestedWeekId);
@@ -98,8 +118,19 @@ router.get('/', async (req, res) => {
           .order('display_order', { ascending: true })
       : { data: [] };
 
+    // Overdue is season-wide (AST): open tasks past their due window stay
+    // visible even after the dashboard rolls into the next month/week.
+    const { data: overdueData } = await supabase
+      .from('guardianage_tasks')
+      .select('id, title, task_type, status, due_start_date, due_end_date, week_id, instructions')
+      .eq('season_id', season.id)
+      .eq('status', 'open')
+      .lt('due_end_date', todayStr)
+      .order('due_end_date', { ascending: true });
+    const overdueTasks = overdueData || [];
+
     // Find tasks that have event notes
-    const taskIds = (tasks || []).map(t => t.id);
+    const taskIds = [...new Set([...(tasks || []), ...overdueTasks].map(t => t.id))];
     const taskIdsWithNotes = new Set();
     if (taskIds.length > 0) {
       const { data: events } = await supabase
@@ -111,7 +142,7 @@ router.get('/', async (req, res) => {
     }
 
     // Add has_notes flag and remove instructions from response payload
-    for (const t of (tasks || [])) {
+    for (const t of [...(tasks || []), ...overdueTasks]) {
       t.has_notes = !!(t.instructions || taskIdsWithNotes.has(t.id));
       delete t.instructions;
     }
@@ -120,11 +151,6 @@ router.get('/', async (req, res) => {
     const weeklyTasks = tasks?.filter(t => t.task_type === 'weekly_recurring' && t.week_id === currentWeek?.id) || [];
     const monthlyTasks = tasks?.filter(t => t.task_type === 'monthly_recurring') || [];
     const majorItems = tasks?.filter(t => t.task_type === 'monthly_major') || [];
-
-    // Calculate overdue (AST)
-    const overdueTasks = tasks?.filter(t =>
-      t.status === 'open' && t.due_end_date && todayStr > t.due_end_date
-    ) || [];
 
     // Build month/week navigation lists (id + display_name only)
     const monthNav = (months || []).map(m => ({ id: m.id, display_name: m.display_name }));
